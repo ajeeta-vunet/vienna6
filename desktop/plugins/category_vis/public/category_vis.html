@@ -1,0 +1,43 @@
+<div ng-controller="KbnCategoryVisController" class="category-vis">
+    <div class="container">
+        <div ng-show="show_dashboards">
+            <div class="row display-dashboard">
+                <div class="col-md-9 category-title-small">
+                     <p>{{vis.params.name}}</p>
+                </div>
+                <div class="col-md-3">
+                    <img ng-src="{{category_image}}" class="category-image-small">
+                </div>
+            </div>
+        </div>
+        <div ng-show="!show_dashboards">
+           <div class="category-image-div">
+              <img ng-src="{{category_image}}" class="category-image">
+          </div>
+
+           <div class="category-title-description">
+             <div class="category-title">
+                 <p class="category-title-p">{{vis.params.name}}</p>
+             </div>
+             <div class="category-description">
+                  <p>{{vis.params.description}}</p>
+             </div>
+           </div>
+        </div>
+        <div ng-show="show_dashboards">
+            <ul class="category-dashboard-ul">
+                <li ng-repeat="dashboard in dashboards" class="category-dashboard">
+                    <a ng-href="{{dashboard.url}}" class="category-dashboard-li">{{dashboard.title}} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+                <div ng-click="toggleDisplayDashboards()" ng-if="!show_dashboards" class="category-toggle">
+                    <i class="fa fa-angle-down fa-2x" aria-hidden="true"></i>
+                </div>
+                <div ng-click="toggleDisplayDashboards()" ng-if="show_dashboards" class="category-toggle">
+                    <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
+                </div>
+         </div>
+    </div>
+</div>

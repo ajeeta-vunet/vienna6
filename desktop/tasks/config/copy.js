@@ -22,6 +22,7 @@ module.exports = function () {
         'ui_framework/src/**',
         'webpackShims/**',
         'config/kibana.yml',
+        'plugins/**'
       ],
       dest: 'build/kibana',
       expand: true

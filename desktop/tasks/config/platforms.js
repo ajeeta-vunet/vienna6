@@ -7,9 +7,7 @@ module.exports = function (grunt) {
   const baseUri = `https://nodejs.org/dist/v${nodeVersion}`;
 
   return [
-    'darwin-x64',
-    'linux-x64',
-    'windows-x64'
+    'linux-x64'
   ].map(function (baseName) {
     const win = baseName === 'windows-x64';
 

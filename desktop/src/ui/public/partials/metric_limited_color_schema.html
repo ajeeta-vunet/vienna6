@@ -1,0 +1,130 @@
+<div>
+  <div>
+    <label>Metric Color Schema
+      <kbn-tooltip
+        text="Configure metric color schema for coloring the metric based on different ranges. If metric doesn't fall under any range, it will use the default color."
+        placement="bottom"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+  </div>
+  <div class="metric-vis-color-schema">
+    <table class="color-schema-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Min</th>
+          <th>Max</th>
+          <th>Color</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="colorRange in visObj.params.colorSchema">
+          <td class="metric-vis-color-values">{{colorRange.metric}}</td>
+          <td class="metric-vis-color-values">{{colorRange.min}}</td>
+          <td class="metric-vis-color-values">{{colorRange.max}}</td>
+          <td class="metric-vis-color-values">{{colorRange.color}}</td>
+          <td>
+            <kbn-tooltip
+              text="Edit this color schema"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="editRange(colorRange, $index)"
+                class="metric-vis-color-edit"
+                aria-label="Edit">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-pencil">
+                </i>
+              </a>
+            </kbn-tooltip>
+            <kbn-tooltip
+              text="Delete this color schema"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="deleteRange($index)"
+                class="metric-vis-color-delete"
+                aria-label="Delete">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-trash-o">
+                </i>
+              </a>
+            </kbn-tooltip>
+          </td>
+          </tr>
+          <tr ng-show="visObj.params.colorSchema.length === 0">
+          <td colspan="4">
+            There are no color ranges to show
+          </td>
+	      </tr>
+	    </tbody>
+	  </table>
+    <hr>
+    <div class="color-range-form">
+      <label>Metric</label>
+      <select
+        ng-show="!showInputFieldForMetric"
+        class="form-control"
+        ng-options="metric for metric in metricList"
+        ng-model="metric">
+      </select>
+      <input
+      ng-show="showInputFieldForMetric"
+      type="text"
+      ng-model="metric"
+      class="form-control">
+      <label class="metric-vis-color-label">Min</label>
+      <input
+        type="number"
+        ng-model="min"
+        class="form-control">
+      <div class="error">{{minError}}</div>
+      <label class="metric-vis-color-label">Max</label>
+      <input
+        type="number"
+        ng-model="max"
+        class="form-control">
+      <div class="error">{{maxError}}</div>
+      <label class="metric-vis-color-label">Color</label>
+      <select
+        ng-model="color"
+        class="form-control">
+        <option value="Red">Red</option>
+        <option value="Orange">Orange</option>
+        <option value="Green">Green</option>
+      </select>
+      <div class="error">{{colorError}}</div>
+      <br />
+      <div
+        ng-hide="editIndex >= 0"
+        class="row">
+        <input
+          type="button"
+          value="Add range"
+          ng-click="addRange()"
+          class="form-control metric-vis-color-add">
+      </div>
+      <div
+        ng-show="editIndex >= 0"
+        class="row">
+        <input
+          type="button"
+          value="Update range"
+          ng-click="updateRange()"
+          class="form-control">
+      </div>
+    </div>
+  </div>
+</div>

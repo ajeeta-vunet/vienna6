@@ -1,0 +1,32 @@
+<div ng-controller="HeartbeatVisController" class="heartbeat-vis">
+  <div 
+    ng-if="(!data.nodes.length && !data.edges.length)" 
+    class="table-vis-error">
+    <h2 aria-hidden="true">
+      <i
+        aria-hidden="true" 
+        class="fa fa-exclamation-triangle">
+      </i>
+    </h2>
+    <h4>No results found</h4>
+  </div>
+  <div 
+    ng-if="((data.nodes.length>0) && (data.edges.length>0))" 
+    class="table-vis-error">
+    <div
+      ng-if="typeVal=='tracepath_beat'" 
+      ng-hide="full_path" 
+      ng-click="search()">
+      <p class="network-map-back-button"> Back </p>
+    </div>
+    <vis-map map-data="data"
+      ng-if="typeVal=='tracepath_beat'"
+      class="network-map-vis"
+      on-link-select="onLinkSelect">
+    </vis-map>
+    <vis-map map-data="data"
+      ng-if="typeVal!='tracepath_beat'"
+      class="network-map-vis">
+    </vis-map>
+  </div>
+</div>

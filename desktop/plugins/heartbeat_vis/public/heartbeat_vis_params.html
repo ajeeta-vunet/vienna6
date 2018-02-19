@@ -1,0 +1,84 @@
+<div ng-controller="HeartbeatVisParamsController"
+  class="heartbeat-vis-params-container">
+  <div class="form-group">
+    <div>
+      <label>
+        Data source
+        <kbn-tooltip
+          text="Select a data source to display heartbeat map visualization"
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+    </div>
+    <select
+      class="form-control"
+      name="index"
+      ng-options="title for title in indexPatternIds"
+      ng-model="vis.params.index"
+      ng-change="setIndexPattern($index)"
+      required>
+    </select>
+  </div>
+  <div class="form-group">
+    <div>
+      <label>
+        Data Source Type
+        <kbn-tooltip
+          text="Select the document type to display the visualization"
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+    </div>
+    <select
+      class="form-control"
+      name="index"
+      ng-model="vis.params.type"
+      required>
+      <option value="device_heartbeat">Device Heartbeat</option>
+      <option value="url_heartbeat">URL Heartbeat</option>
+      <option value="service_heartbeat">Service Heartbeat</option>
+      <option value="tracepath_beat">Tracepathbeat</option>
+    </select>
+  </div>
+  <div class="form-group">
+   <div>
+     <label>Filter
+       <kbn-tooltip
+          text="Use this to enter additional filters.To perform a free text based filter, simply enter a text string. To filter based on a value in a specific field, prefix the value with the name of the field. For example, enter status:200 to limit the rule to data that contain the value 200 in the status field. To specify multiple such conditions, use operators"
+         placement="right"
+         append-to-body="1">
+         <span>
+           <i class="fa fa-question-circle"
+             area-hidden="true">
+           </i>
+         </span>
+       </kbn-tooltip>
+     </label>
+    </div>
+    <input
+      type="text"
+      class="heartbeat-filter alert-condition form-control"
+      name="filter"
+      ng-model="vis.params.filter">
+  </div>
+
+  <metric-limited-color-schema
+    vis-obj="vis"
+    metric-list="metricList">
+  </metric-limited-color-schema>
+ </div>
+</div>

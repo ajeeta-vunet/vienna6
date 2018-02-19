@@ -1,17 +1,40 @@
-import { createNumeralFormat } from './_numeral';
-
+import { roundOffToTwoDigits } from '../../utils/round_of_two_digits';
 export function createPercentFormat(FieldFormat) {
-  return createNumeralFormat(FieldFormat, {
-    id: 'percent',
-    title: 'Percentage',
-    getParamDefaults: (getConfig) => {
+  return class PercentFormat extends FieldFormat {
+    getParamDefaults() {
       return {
-        pattern: getConfig('format:percent:defaultPattern'),
-        fractional: true
+        transform: false
       };
-    },
-    afterConvert(val) {
-      return this.param('fractional') ? val : val / 100;
     }
-  });
+
+    zeroToOneRangeConverter = function (val) {
+      val = roundOffToTwoDigits(val * 100);
+      return String(val) + '%';
+    }
+
+    zeroToHundredRangeConverter = function (val) {
+      val = roundOffToTwoDigits(val);
+      return String(val) + '%';
+    }
+
+    _convert(val) {
+      let result = '';
+      switch (this.param('transform')) {
+        case '0-1_range':
+          result = this.zeroToOneRangeConverter(val);
+          return result;
+        case '0-100_range':
+          result = this.zeroToHundredRangeConverter(val);
+          return result;
+        default:
+          return val;
+      }
+    }
+
+    static id = 'percentage';
+    static title = 'Percentage';
+    static fieldType = [
+      'number'
+    ];
+  };
 }

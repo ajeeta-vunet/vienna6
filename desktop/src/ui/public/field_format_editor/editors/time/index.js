@@ -1,0 +1,1 @@
+export { timeEditor } from './string';

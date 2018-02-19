@@ -1,0 +1,1 @@
+export { bitsEditor } from './percent';

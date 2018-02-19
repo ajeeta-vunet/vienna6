@@ -12,6 +12,8 @@ import { createSourceFormat } from '../../common/field_formats/types/source';
 import { createColorFormat } from '../../common/field_formats/types/color';
 import { createTruncateFormat } from '../../common/field_formats/types/truncate';
 import { createBoolFormat } from '../../common/field_formats/types/boolean';
+import { createBitsFormat } from '../../common/field_formats/types/bits';
+import { createTimeFormat } from '../../common/field_formats/types/time';
 
 RegistryFieldFormatsProvider.register(createUrlFormat);
 RegistryFieldFormatsProvider.register(createBytesFormat);
@@ -26,3 +28,5 @@ RegistryFieldFormatsProvider.register(createSourceFormat);
 RegistryFieldFormatsProvider.register(createColorFormat);
 RegistryFieldFormatsProvider.register(createTruncateFormat);
 RegistryFieldFormatsProvider.register(createBoolFormat);
+RegistryFieldFormatsProvider.register(createBitsFormat);
+RegistryFieldFormatsProvider.register(createTimeFormat);

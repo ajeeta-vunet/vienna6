@@ -10,10 +10,10 @@ export default function (kibana) {
         'plugins/uvmap_vis/uvmap_vis'
       ]
     },
-    init(server, options) {
+    init(server) {
       // Add server routes and initialize the plugin here
       uvMapRouteHandler(server);
     }
   });
 
-};
+}

@@ -1,0 +1,32 @@
+<form
+  role="form"
+  ng-submit="opts.doSave()"
+>
+  <h2 class="kuiLocalDropdownTitle">
+    Save Alert
+  </h2>
+
+  <input
+    class="kuiLocalDropdownInput"
+    input-focus="select"
+    type="text"
+    data-test-subj="alertTitleInput"
+    name="alertTitle"
+    ng-model="opts.alertcfg.title"
+    aria-label="Name"
+    required
+  >
+
+  <saved-object-save-as-check-box
+    class="kuiVerticalRhythmSmall"
+    saved-object="opts.alertcfg"
+  ></saved-object-save-as-check-box>
+
+  <button
+    data-test-subj="saveAlertButton"
+    type="submit"
+    class="kuiButton kuiButton--primary kuiVerticalRhythmSmall"
+  >
+    Save
+  </button>
+</form>

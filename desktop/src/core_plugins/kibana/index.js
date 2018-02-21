@@ -39,6 +39,7 @@ export default function (kibana) {
         'plugins/kibana/visualize/saved_visualizations/saved_visualization_register',
         'plugins/kibana/discover/saved_searches/saved_search_register',
         'plugins/kibana/dashboard/saved_dashboard/saved_dashboard_register',
+        'plugins/kibana/alert/saved_alert/saved_alert_register',
       ],
       app: {
         id: 'kibana',
@@ -67,6 +68,14 @@ export default function (kibana) {
 
       links: [
         {
+          id: 'kibana:alert',
+          title: 'Alert',
+          order: -1004,
+          url: `${kbnBaseUrl}#/alerts`,
+          description: 'Smart and intelligent alerts',
+          subUrlBase: `${kbnBaseUrl}#/alert`,
+          icon: 'plugins/kibana/assets/alert.svg',
+        }, {
           id: 'kibana:discover',
           title: 'Discover',
           order: -1003,

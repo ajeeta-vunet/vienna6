@@ -2,6 +2,7 @@ export const DEFAULT_ESLINT_PATHS = [
   'Gruntfile.js',
   'bin',
   'config',
+  'plugins',
   'src',
   'scripts',
   'tasks',

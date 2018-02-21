@@ -24,9 +24,25 @@ function CategoryVisProvider(Private) {
     visConfig: {
       template: categoryVisTemplate,
       defaults: {
-        images: ['server.png', 'network_element.png', 'application.png', 'security.png', 'administration.png', 'others.png', 'bank.png', 'alert.png', 'iot.png', 'kpi.png', 'mobile_app.png', 'credit.png', 'log_analytics.png', 'user_behaviour.png', 'wifi.png', 'database.png'],
+        images: [
+          'server.png',
+          'network_element.png',
+          'application.png',
+          'security.png',
+          'administration.png',
+          'others.png',
+          'bank.png',
+          'alert.png',
+          'iot.png',
+          'kpi.png',
+          'mobile_app.png',
+          'credit.png',
+          'log_analytics.png',
+          'user_behaviour.png',
+          'wifi.png',
+          'database.png'],
         fontSize: 12,
-        dashboards:[]
+        dashboards: []
       }
     },
     editorConfig: {

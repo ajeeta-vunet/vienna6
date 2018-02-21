@@ -24,6 +24,83 @@
       }
     }
   },
+  "alert": {
+    "properties": {
+      "kibanaSavedObjectMeta": {
+        "properties": {
+          "searchSourceJSON": {
+            "type": "text"
+          }
+        }
+      },
+      "title": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text"
+      },
+      "ruleList": {
+        "type": "text"
+      },
+      "ruleLevelThreshold": {
+        "type": "text"
+      },
+      "evalCriteria": {
+        "type": "text"
+      },
+      "severity": {
+        "type": "text"
+      },
+      "summary": {
+        "type": "text"
+      },
+      "allowedRolesJSON": {
+        "type": "text"
+      },
+      "enableThrottle": {
+        "type": "text"
+      },
+      "throttleDurationType": {
+        "type": "text"
+      },
+      "throttleDuration": {
+        "type": "text"
+      },
+      "alertByTicket": {
+        "type": "boolean"
+      },
+      "alertByEmail": {
+        "type": "boolean"
+      },
+      "alertEmailId": {
+        "type": "text"
+      },
+      "lastModifiedTime": {
+        "type": "text"
+      },
+      "activeStartTime": {
+        "type": "text"
+      },
+      "activeEndTime": {
+        "type": "text"
+      },
+      "enableAlert": {
+        "type": "text"
+      },
+      "activeAlertCheck": {
+        "type": "text"
+      },
+      "weekdays": {
+        "type": "text"
+      },
+      "evalCriteriaAlias": {
+        "type": "text"
+      },
+      "advancedConfiguration": {
+        "type": "text"
+      }
+    }
+  },
   "visualization": {
     "properties": {
       "description": {

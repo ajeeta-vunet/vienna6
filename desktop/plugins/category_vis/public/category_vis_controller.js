@@ -13,19 +13,19 @@ module.controller('KbnCategoryVisController', function ($scope, Private) {
   });
 
   // Show dashboards which are behind the category description
-  $scope.toggleDisplayDashboards = function(theme) {
+  $scope.toggleDisplayDashboards = function () {
     $scope.show_dashboards = !$scope.show_dashboards;
   };
 
   // Find the title for each dashboard by the dashboard ids in vis object
-  $scope.$watch('vis.params.dashboards', function(dashboardIds) {
+  $scope.$watch('vis.params.dashboards', function (dashboardIds) {
 
-    if ( dashboardIds.length !== 0 ) {
+    if (dashboardIds.length !== 0) {
 
       $scope.dashboards = [];
-      
-      dashboardIds.forEach(function(dashboardId){
-        
+
+      dashboardIds.forEach(function (dashboardId) {
+
         savedObjectsClient.get('dashboard', dashboardId).then(results => {
           $scope.dashboards.push({
             id: dashboardId,

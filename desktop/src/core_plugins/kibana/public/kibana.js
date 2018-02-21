@@ -7,6 +7,7 @@ import { uiModules } from 'ui/modules';
 
 import 'ui/autoload/all';
 import 'plugins/kibana/home/index';
+import 'plugins/kibana/alert/index';
 import 'plugins/kibana/discover/index';
 import 'plugins/kibana/visualize/index';
 import 'plugins/kibana/dashboard/index';

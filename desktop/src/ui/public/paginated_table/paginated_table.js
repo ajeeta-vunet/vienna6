@@ -7,7 +7,6 @@ uiModules
   .get('kibana')
   .directive('paginatedTable', function ($filter) {
     const orderBy = $filter('orderBy');
-
     return {
       restrict: 'E',
       template: paginatedTableTemplate,
@@ -22,7 +21,15 @@ uiModules
         sort: '=?',
         showSelector: '=?',
         showTotal: '=',
-        totalFunc: '='
+        totalFunc: '=',
+        isMatrix: '=',
+        colorSchema: '=?',
+        interval: '=?',
+        printReport: '=?',
+        isCollapseTimeHeaders: '=?',
+        addSrNumber: '=?',
+        cumulativeRowOperation: '=?',
+        cumulativeColumnOperation: '=?'
       },
       controllerAs: 'paginatedTable',
       controller: function ($scope) {

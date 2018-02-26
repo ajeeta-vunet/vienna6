@@ -15,7 +15,15 @@ uiModules
         sort: '=?',
         exportTitle: '=?',
         showTotal: '=',
-        totalFunc: '='
+        totalFunc: '=',
+        isMatrix: '=',
+        colorSchema: '=?',
+        interval: '=?',
+        printReport: '=?',
+        isCollapseTimeHeaders: '=?',
+        addSrNumber: '=?',
+        cumulativeRowOperation: '=?',
+        cumulativeColumnOperation: '=?'
       },
       compile: function ($el) {
       // Use the compile function from the RecursionHelper,

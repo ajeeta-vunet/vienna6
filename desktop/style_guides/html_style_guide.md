@@ -82,3 +82,64 @@ similar elements which appear sequentially in the markup.
 ```html
 <div><span>hi</span></div>
 ```
+
+## Leaf element in a nested elements can be in a single line
+
+As per the previous rule, nested elements should be placed on multiple lines. But the leaf element can be placed in a single line, if it does not exeed 140 charecters.
+
+Eg: 1
+
+### Allowed
+
+```html
+<div>
+  <span>hi</span>
+</div>
+```
+
+### This is not needed
+
+```html
+<div>
+  <span>
+    hi
+  </span>
+</div>
+```
+
+Eg: 2
+
+### Allowed
+
+```html
+<select
+  id="rowOperation"
+  ng-model="vis.params.cumulativeRowOperation"
+>
+  <option value="sum">Sum</option>
+  <option value="avg">Average</option>
+  <option value="min">Min</option>
+  <option value="max">Max</option>
+</select>
+```
+### This is not needed
+
+```html
+<select
+  id="rowOperation"
+  ng-model="vis.params.cumulativeRowOperation"
+>
+  <option value="sum">
+    Sum
+  </option>
+  <option value="avg">
+    Average
+  </option>
+  <option value="min">
+    Min
+  </option>
+  <option value="max">
+    Max
+  </option>
+</select>
+```

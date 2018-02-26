@@ -6,6 +6,7 @@ let i = 0;
 export default function AggConfigResult(aggConfig, parent, value, key) {
   this.key = key;
   this.value = value;
+  this.sum = -1;
   this.aggConfig = aggConfig;
   this.$parent = parent;
   this.$order = ++i;

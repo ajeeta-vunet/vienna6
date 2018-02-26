@@ -5,13 +5,12 @@ import _ from 'lodash';
 import { uiModules } from 'ui/modules';
 import aggTableTemplate from 'ui/agg_table/agg_table.html';
 import { RegistryFieldFormatsProvider } from 'ui/registry/field_formats';
-
+import { addSrNumberAndTotalsRow } from 'ui/utils/cell_utils';
 uiModules
   .get('kibana')
   .directive('kbnAggTable', function ($filter, config, Private, compileRecursiveDirective) {
     const fieldFormats = Private(RegistryFieldFormatsProvider);
     const numberFormatter = fieldFormats.getDefaultInstance('number').getConverterFor('text');
-
     return {
       restrict: 'E',
       template: aggTableTemplate,
@@ -21,7 +20,15 @@ uiModules
         sort: '=?',
         exportTitle: '=?',
         showTotal: '=',
-        totalFunc: '='
+        totalFunc: '=',
+        isMatrix: '=',
+        colorSchema: '=?',
+        interval: '=?',
+        printReport: '=?',
+        isCollapseTimeHeaders: '=?',
+        addSrNumber: '=?',
+        cumulativeRowOperation: '=?',
+        cumulativeColumnOperation: '=?'
       },
       controllerAs: 'aggTable',
       compile: function ($el) {
@@ -31,6 +38,11 @@ uiModules
       },
       controller: function ($scope) {
         const self = this;
+
+        self.srHeaderAdded = false;
+        self.cumulativeColumnHeaderAdded = false;
+        self.row_result = -1;
+        self.column_result = [];
 
         self._saveAs = require('@elastic/filesaver').saveAs;
         self.csv = {
@@ -48,6 +60,17 @@ uiModules
           const columns = formatted ? $scope.formattedColumns : $scope.table.columns;
           const nonAlphaNumRE = /[^a-zA-Z0-9]/;
           const allDoubleQuoteRE = /"/g;
+          const srNumber = -1;
+
+          if ($scope.addSrNumber && !self.srHeaderAdded) {
+            columns.unshift({ title: 'Sr. No.' });
+            self.srHeaderAdded = true;
+          }
+
+          if ($scope.cumulativeColumnOperation && !self.cumulativeColumnHeaderAdded) {
+            columns.push({ title: 'Cumulative ( ' + _.startCase($scope.cumulativeColumnOperation) + ' )' });
+            self.cumulativeColumnHeaderAdded = true;
+          }
 
           function escape(val) {
             if (!formatted && _.isObject(val)) val = val.valueOf();
@@ -68,8 +91,17 @@ uiModules
             return escape(col.title);
           }));
 
-          return csvRows.map(function (row) {
-            return row.join(self.csv.separator) + '\r\n';
+          // Add the cumulative results row / column.
+          // Based on the configured row / column cumulative operation,
+          // calculate the cumulative result and add it to the results table
+          return csvRows.map(function (row, rowNumber) {
+            addSrNumberAndTotalsRow(row,
+              rowNumber,
+              csvRows,
+              $scope.cumulativeRowOperation,
+              $scope.cumulativeColumnOperation,
+              $scope.addSrNumber,
+              srNumber);
           }).join('');
         };
 

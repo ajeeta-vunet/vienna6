@@ -8,6 +8,7 @@ import { TimeBucketsProvider } from 'ui/time_buckets';
 import { AggTypesBucketsCreateFilterDateHistogramProvider } from 'ui/agg_types/buckets/create_filter/date_histogram';
 import { AggTypesBucketsIntervalOptionsProvider } from 'ui/agg_types/buckets/_interval_options';
 import intervalTemplate from 'ui/agg_types/controls/time_interval.html';
+import { getIntervalByNoOfColumns, getOneDayInterval } from 'ui/utils/interval_utils';
 
 export function AggTypesBucketsDateHistogramProvider(timefilter, config, Private) {
   const BucketAggType = Private(AggTypesBucketsBucketAggTypeProvider);
@@ -23,7 +24,27 @@ export function AggTypesBucketsDateHistogramProvider(timefilter, config, Private
     if (interval && interval.val === 'custom') {
       return _.get(agg, ['params', 'customInterval']);
     }
-    return interval;
+
+    // Vienna migration to use Kibana 6.1.0
+
+    // In the Matrix visualization, when the user wants to display a specific
+    // no of columns, the interval has to be calculated based on the timeframe
+    // and the no of columns configured.
+    if(agg.vis && agg.vis.type && agg.vis.type.name === 'matrix') {
+      if(agg.vis.params.enableNoOfColumns) {
+        const inervalForMatrix = getIntervalByNoOfColumns(timefilter, agg.vis.params.NoOfColumns);
+        return inervalForMatrix;
+      } else {
+        // set the interval to 24 hours when the collapse time headers is enabled
+        // in matrix visualization.
+        if(agg.vis.params.collapseTimeHeaders) {
+          return getOneDayInterval();
+        }
+        return interval;
+      }
+    } else {
+      return interval;
+    }
   }
 
   function setBounds(agg, force) {

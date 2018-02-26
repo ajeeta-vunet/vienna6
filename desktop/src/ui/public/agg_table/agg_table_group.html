@@ -1,7 +1,10 @@
-<table ng-if="rows" class="table agg-table-group" ng-repeat="table in rows">
+<table ng-if="rows"
+       class="table agg-table-group"
+       ng-repeat="table in rows">
   <thead>
     <tr>
-      <th ng-if="table.tables" scope="col">
+      <th ng-if="table.tables"
+          scope="col">
         <span class="agg-table-group-header">{{ table.title }}</span>
       </th>
     </tr>
@@ -9,31 +12,44 @@
   <tbody>
     <tr>
       <td>
-        <kbn-agg-table-group
-          ng-if="table.tables"
-          group="table"
-          per-page="perPage"
-          sort="sort"
-          show-total="showTotal"
-          total-func="totalFunc"></kbn-agg-table-group>
-        <kbn-agg-table
-          ng-if="table.rows"
-          table="table"
-          export-title="exportTitle"
-          per-page="perPage"
-          sort="sort"
-          show-total="showTotal"
-          total-func="totalFunc">
+        <kbn-agg-table-group ng-if="table.tables"
+                             group="table"
+                             per-page="perPage"
+                             sort="sort"
+                             show-total="showTotal"
+                             total-func="totalFunc"
+                             color-schema="colorSchema"
+                             add-sr-number="addSrNumber"
+                             cumulative-row-operation="cumulativeRowOperation"
+                             cumulative-column-operation="cumulativeColumnOperation">
+        </kbn-agg-table-group>
+        <kbn-agg-table ng-if="table.rows"
+                       table="table"
+                       export-title="exportTitle"
+                       per-page="perPage"
+                       sort="sort"
+                       show-total="showTotal"
+                       total-func="totalFunc"
+                       is-matrix="isMatrix"
+                       color-schema="colorSchema"
+                       interval="interval"
+                       print-report="printReport"
+                       is-collapse-time-headers="isCollapseTimeHeaders"
+                       add-sr-number="addSrNumber"
+                       cumulative-row-operation="cumulativeRowOperation"
+                       cumulative-column-operation="cumulativeColumnOperation">
         </kbn-agg-table>
       </td>
     </tr>
   </tbody>
 </table>
-
-<table ng-if="columns" class="table agg-table-group">
+<table ng-if="columns"
+       class="table agg-table-group">
   <thead>
     <tr>
-      <th ng-repeat="table in columns" ng-if="table.tables" scope="col">
+      <th ng-repeat="table in columns"
+          ng-if="table.tables"
+          scope="col">
         <span class="agg-table-group-header">{{ table.title }}</span>
       </th>
     </tr>
@@ -41,21 +57,32 @@
   <tbody>
     <tr>
       <td ng-repeat="table in columns">
-        <kbn-agg-table-group
-          ng-if="table.tables"
-          group="table"
-          per-page="perPage"
-          sort="sort"
-          show-total="showTotal"
-          total-func="totalFunc"></kbn-agg-table-group>
-        <kbn-agg-table
-          ng-if="table.rows"
-          table="table"
-          export-title="exportTitle"
-          per-page="perPage"
-          sort="sort"
-          show-total="showTotal"
-          total-func="totalFunc">
+        <kbn-agg-table-group ng-if="table.tables"
+                             group="table"
+                             per-page="perPage"
+                             sort="sort"
+                             show-total="showTotal"
+                             total-func="totalFunc"
+                             color-schema="colorSchema"
+                             add-sr-number="addSrNumber"
+                             cumulative-row-operation="cumulativeRowOperation"
+                             cumulative-column-operation="cumulativeColumnOperation">
+        </kbn-agg-table-group>
+        <kbn-agg-table ng-if="table.rows"
+                       table="table"
+                       export-title="exportTitle"
+                       per-page="perPage"
+                       sort="sort"
+                       show-total="showTotal"
+                       total-func="totalFunc"
+                       is-matrix="isMatrix"
+                       per-page="perPage"
+                       color-schema="colorSchema"
+                       interval="interval"
+                       print-report="printReport"
+                       add-sr-number="addSrNumber"
+                       cumulative-row-operation="cumulativeRowOperation"
+                       cumulative-column-operation="cumulativeColumnOperation">
         </kbn-agg-table>
       </td>
     </tr>

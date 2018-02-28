@@ -7,6 +7,7 @@ import 'ui/directives/infinite_scroll';
 import 'ui/doc_table/components/table_header';
 import 'ui/doc_table/components/table_row';
 import { uiModules } from 'ui/modules';
+import { searchExportAsCsv } from 'ui/utils/search_export_csv';
 
 import { getLimitedSearchResultsMessage } from './doc_table_strings';
 
@@ -21,6 +22,7 @@ uiModules.get('kibana')
         hits: '=?', // You really want either hits & indexPattern, OR searchSource
         indexPattern: '=?',
         searchSource: '=?',
+        searchTitle: '=?',
         infiniteScroll: '=?',
         filter: '=?',
         filters: '=?',
@@ -82,7 +84,7 @@ uiModules.get('kibana')
 
           // Set the watcher after initialization
           $scope.$watchCollection('sorting', function (newSort, oldSort) {
-          // Don't react if sort values didn't really change
+            // Don't react if sort values didn't really change
             if (newSort === oldSort) return;
             $scope.searchSource.sort(getSort(newSort, $scope.indexPattern));
             $scope.searchSource.fetchQueued();
@@ -123,6 +125,11 @@ uiModules.get('kibana')
           startSearching();
           courier.fetch();
         });
+
+        $scope.exportAsCsv = function () {
+          const filename = $scope.searchTitle + '.csv';
+          searchExportAsCsv(filename, config, $scope.hits, $scope.columns, $scope.indexPattern);
+        };
 
         $scope.pageOfItems = [];
         $scope.onPageNext = () => {

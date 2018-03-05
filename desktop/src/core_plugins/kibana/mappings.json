@@ -101,6 +101,74 @@
       }
     }
   },
+  "anomaly": {
+    "properties": {
+      "kibanaSavedObjectMeta": {
+        "properties": {
+          "searchSourceJSON": {
+            "type": "text"
+          }
+        }
+      },
+      "title": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text"
+      },
+      "metric": {
+        "type": "text"
+      },
+      "index": {
+        "type": "text"
+      },
+      "metricField": {
+        "type": "text"
+      },
+      "window": {
+        "type": "text"
+      },
+      "filter": {
+        "type": "text"
+      },
+      "groupByField": {
+        "type": "text"
+      },
+      "model": {
+        "type": "text"
+      },
+      "periodicity": {
+        "type": "text"
+      },
+      "type": {
+        "type": "text"
+      },
+      "docType": {
+        "type": "text"
+      },
+      "macroInterval": {
+        "type": "text"
+      },
+      "macroIntervalType": {
+        "type": "text"
+      },
+      "microInterval": {
+        "type": "text"
+      },
+      "microIntervalType": {
+        "type": "text"
+      },
+      "timeDuration": {
+        "type": "text"
+      },
+      "timeDurationType": {
+        "type": "text"
+      },
+      "allowedRolesJSON": {
+        "type": "text"
+      }
+    }
+  },
   "visualization": {
     "properties": {
       "description": {

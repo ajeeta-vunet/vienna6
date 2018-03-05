@@ -1,0 +1,31 @@
+<form
+  role="form"
+  ng-submit="opts.doSave()"
+>
+  <h2 class="kuiLocalDropdownTitle">
+    Save Anomaly
+
+  <input
+    class="kuiLocalDropdownInput"
+    input-focus="select"
+    type="text"
+    data-test-subj="anomalyTitleInput"
+    name="anomalyTitle"
+    ng-model="opts.anomaly.title"
+    aria-label="Name"
+    required
+  >
+
+  <saved-object-save-as-check-box
+    class="kuiVerticalRhythmSmall"
+    saved-object="opts.anomaly"
+  ></saved-object-save-as-check-box>
+
+  <button
+    data-test-subj="saveAnomalyButton"
+    type="submit"
+    class="kuiButton kuiButton--primary kuiVerticalRhythmSmall"
+  >
+    Save
+  </button>
+</form>

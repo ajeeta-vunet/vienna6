@@ -40,6 +40,7 @@ export default function (kibana) {
         'plugins/kibana/discover/saved_searches/saved_search_register',
         'plugins/kibana/dashboard/saved_dashboard/saved_dashboard_register',
         'plugins/kibana/alert/saved_alert/saved_alert_register',
+        'plugins/kibana/anomaly/saved_anomaly/saved_anomaly_register',
       ],
       app: {
         id: 'kibana',
@@ -68,6 +69,13 @@ export default function (kibana) {
 
       links: [
         {
+          id: 'kibana:anomaly',
+          title: 'Anomaly',
+          order: -1005,
+          url: `${kbnBaseUrl}#/anomalies`,
+          description: 'Anomaly Detection',
+          subUrlBase: `${kbnBaseUrl}#/anomaly`,
+        }, {
           id: 'kibana:alert',
           title: 'Alert',
           order: -1004,

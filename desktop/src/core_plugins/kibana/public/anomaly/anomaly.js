@@ -12,6 +12,7 @@ import { AnomalyConstants, createAnomalyEditUrl } from './anomaly_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { Notifier } from 'ui/notify/notifier';
 import { DocTitleProvider } from 'ui/doc_title';
+const angular = require('angular');
 
 uiRoutes
   .when(AnomalyConstants.CREATE_PATH, {
@@ -163,7 +164,8 @@ function anomalyAppEditor($scope,
     // Populate the index object reference based on what is stored
     // in anomaly
     _.each($scope.indexPatternList, function (indexPattern) {
-      if(indexPattern.id === anomaly.index) {
+      const anomalyIndex = JSON.parse(anomaly.index);
+      if(indexPattern.id === anomalyIndex.id) {
         $scope.selectedIndex = indexPattern;
         return false;
       }
@@ -253,7 +255,7 @@ function anomalyAppEditor($scope,
     // anomaly.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
     anomaly.description = $scope.description;
     // Store only the id of the selected index
-    anomaly.index = $scope.selectedIndex.id;
+    anomaly.index = angular.toJson($scope.selectedIndex);
     anomaly.type = $scope.type;
     anomaly.metric = $scope.metric;
     anomaly.window = $scope.windowSize;

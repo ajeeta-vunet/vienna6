@@ -1,4 +1,4 @@
-<div class="content" chrome-context data-test-subj="kibanaChrome">
+<div id="globalChromeContent" class="content content-normal" chrome-context data-test-subj="kibanaChrome">
   <global-nav
     chrome="chrome"
     data-test-subj="globalNav"
@@ -8,7 +8,7 @@
     app-title="chrome.getAppTitle()"
   ></global-nav>
 
-  <div class="app-wrapper" ng-class="{ 'hidden-chrome': !chrome.getVisible() }">
+  <div id="globalAppWrapper" class="app-wrapper app-wrapper-normal" ng-class="{ 'hidden-chrome': !chrome.getVisible() }">
     <div class="app-wrapper-panel">
       <kbn-notifications list="notifList"></kbn-notifications>
       <kbn-loading-indicator></kbn-loading-indicator>

@@ -1,0 +1,286 @@
+@import (reference) "~ui/styles/variables";
+@import (reference) "~ui/styles/mixins";
+
+@report-bg:     #fff;
+
+.tab-report {
+  background-color: @report-bg;
+}
+
+.report-panel-picker > li.list-group-item {
+  border-top: 0px;
+}
+
+.panel-heading {
+  padding: 8.1111px;
+  color:#01b5d5 !important;
+  font-weight: bold;
+}
+
+// css for first page of the reports
+
+.report-main-page {
+  padding: 5px;
+}
+
+// css for adding numbering to the table-of-contents
+ol {
+  counter-reset: item;
+  color:#2e3458 !important;
+  font-weight: bold;
+}
+
+ol > li {
+  counter-increment: item;
+}
+
+ol ol > li {
+  display: block;
+}
+
+ol ol > li:before {
+  content: counters(item, ".") ". ";
+  margin-left: -20px;
+}
+
+.report-company {
+  color:#01b5d5 !important;
+  margin:1%;
+  border-bottom:1px solid;
+}
+
+.report-company-name {
+  text-align: center;
+  margin-top: 10px;
+  color:#01b5d5 !important;
+}
+
+.report-name-header {
+  text-align: center;
+  margin-top: 40px;
+  color:#2e3458 !important;
+}
+
+.report-time {
+  text-align: center;
+  margin-top:10px;
+  color:#2e3458 !important;
+}
+
+.report-prepared-by {
+  text-align: center; 
+  margin-top: 10px;
+  color:#2e3458 !important;
+}
+
+.report-date {
+  text-align: center;
+  color:#2e3458 !important;
+}
+
+.report-content {
+  text-align: center;
+  margin-top: 20px;
+  color:#01b5d5 !important;
+  padding-top:12px;
+  padding-left:5px;
+}
+
+.report-main-page ol {    
+  list-style-type: decimal;
+  li {
+    margin: 15px;
+    font-size: 16px;
+  }    
+}
+
+.exec-summary-header {
+  text-align: center;
+  margin-top: 20px;
+  color:#01b5d5 !important;
+  padding-top:12px;
+  padding-left:5px;
+}
+
+.exec-summary-content {
+  margin: 20px;
+  font-size: 15px;
+  white-space: pre-wrap;
+}
+
+.executive-summary {
+  padding-left: 3px;
+}
+
+.page-break {
+  page-break-after:always;
+  page-break-inside:avoid;
+}
+
+.display-notes {
+  text-align: center;
+  padding: 20px;
+}
+
+//styling the labels of report form fields.
+.report-component-label {
+  color:#080820;
+  padding:0px !important;
+  font-size: 13px;
+}
+
+.add-section {
+  color:#4d515b;
+}
+
+//styling for all select boxes in reports
+.report-text {
+  padding-left: 3px;
+  width:250px;
+  height:22px !important;
+}
+
+.report-visualization {
+  padding-top: 5px;
+}
+
+.report-visualization-row {
+  padding-top: 3px;
+}
+
+.report-button {
+  color: #2e3458 !important;
+}
+
+.report-section-hr {
+  border-color: #4d515b;
+}
+
+.report-front-image {
+  margin-top:40px;
+  margin-left:275px;
+  height:330px;
+  width:500px;
+}
+
+
+// new UI for reports
+
+.report-section {
+  border:1px solid #bac5ce;
+  background-color: #f7f9fb;
+  padding: 13px 30px;
+  -moz-box-shadow:    inset 0 0 10px #bac5ce;
+  -webkit-box-shadow: inset 0 0 10px #bac5ce;
+  box-shadow: inset 0 0 10px #bac5ce;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+// for the section header icon
+.step-indicator {
+  background-color: @text-color;
+  border-radius: 50%;
+  padding: 6px 12px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+// for the section header text
+.step-title {
+  margin:30px 0px 15px 0px;
+}
+
+// for bottom spacing
+.bottom-space {
+  margin-bottom:7px;
+}
+
+// add and remove buttons
+.crud_buttons {
+  background-color: #F7F9FB;
+  padding:0px;
+  &:hover,
+  &.active {
+    color:@text-color;
+  }
+}
+
+// operational buttons on visualization list
+.priority_buttons {
+  background-color: #e6e6e6;
+  padding: 2px 6px;
+  &:hover,
+  &.active {
+    color:@text-color;
+  }
+}
+
+.add-section-button {
+  background-color: #fff;
+  color:#D80364;
+  font-size: 15px;
+  padding: 2px 6px;
+  &:hover,
+  &.active {
+    color:#D80364;
+  }
+}
+
+.add-vis-button {
+  background-color: #F7F9FB;
+  color:#D80364;
+  font-size: 13px;
+  &:hover,
+  &.active {
+    color:#D80364;
+  }
+}
+
+// To align report elements in a single line
+.report-element-inline {
+  display: block;
+  float: left;
+  margin-right: 10px;
+}
+
+.newline {
+  clear: both;
+  padding-top: 8px;
+}
+
+.visualization-section-wrapper {
+  margin-bottom: 8px;
+}
+
+// This is added to take care of width of help text
+.report-body-container .tooltiptext {
+  max-width: 350px;
+}
+
+.report-body-container .tooltip-inner {
+  background: black;
+  opacity:1;
+}
+
+.schedule-frequency {
+  width: 110px;
+  height: 22px !important;
+}
+
+.recipients {
+  width: 400px;
+  padding-left: 3px;
+  height: 22px !important;
+}
+
+.shipper-address-url {
+  color: #1A0DAB !important;
+  text-decoration: underline;
+  text-align: center;
+  font-size: 16px;
+  a[href]:after { content : "" }
+  a {
+    color:#1a0dab !important;
+  }
+}

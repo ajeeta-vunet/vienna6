@@ -1,19 +1,20 @@
-<paginated-table ng-if="rows.length"
-                 rows="rows"
-                 columns="formattedColumns"
-                 per-page="perPage"
-                 sort="sort"
-                 show-total="showTotal"
-                 totalFunc="totalFunc"
-                 is-matrix="isMatrix"
-                 color-schema="colorSchema"
-                 interval="interval"
-                 print-report="printReport"
-                 is-collapse-time-headers="isCollapseTimeHeaders"
-                 add-sr-number="addSrNumber"
-                 cumulative-row-operation="cumulativeRowOperation"
-                 cumulative-column-operation="cumulativeColumnOperation">
-  <div class="agg-table-controls">
+<paginated-table
+  ng-if="rows.length"
+  rows="rows"
+  columns="formattedColumns"
+  per-page="perPage"
+  sort="sort"
+  show-total="showTotal"
+  totalFunc="totalFunc"
+  is-matrix="isMatrix"
+  color-schema="colorSchema"
+  interval="interval"
+  print-report="printReport"
+  is-collapse-time-headers="isCollapseTimeHeaders"
+  add-sr-number="addSrNumber"
+  cumulative-row-operation="cumulativeRowOperation"
+  cumulative-column-operation="cumulativeColumnOperation">
+  <div class="agg-table-controls" ng-if="!printReport">
     <small>Export:</small>&nbsp;&nbsp;
     <a class="small"
        ng-click="aggTable.exportAsCsv(false)">

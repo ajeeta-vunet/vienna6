@@ -11,13 +11,14 @@ export function AngularVisTypeProvider(Private, $compile, $rootScope) {
       this.vis = vis;
     }
 
-    render(esResponse) {
+    render(esResponse, printReport) {
 
       return new Promise((resolve, reject) => {
         const updateScope = () => {
           this.$scope.vis = this.vis.clone();
           this.$scope.vis.setUiState(this.vis.getUiState());
           this.$scope.esResponse = esResponse;
+          this.$scope.printReport = printReport;
           this.$scope.renderComplete = resolve;
           this.$scope.renderFailed = reject;
           this.$scope.resize = Date.now();

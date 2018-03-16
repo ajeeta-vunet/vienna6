@@ -21,6 +21,7 @@ uiModules
         vis: '=',
         visData: '=',
         uiState: '=?',
+        printReport: '=',
         searchSource: '='
       },
       template: visualizationTemplate,
@@ -109,7 +110,7 @@ uiModules
           if (!container) return;
           $scope.vis.size = [container.width(), container.height()];
           const status = getUpdateStatus($scope);
-          visualization.render($scope.visData, status)
+          visualization.render($scope.visData, $scope.printReport, status)
             .then(() => {
             // renderComplete
               $scope.$emit('renderComplete');
@@ -122,6 +123,7 @@ uiModules
           if (!$scope.vis || !$scope.vis.initialized || ($scope.vis.type.requiresSearch && !$scope.visData)) {
             return;
           }
+
           $scope.addLegend = $scope.vis.params.addLegend;
           $scope.vis.refreshLegend++;
           $timeout(renderFunction);

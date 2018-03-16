@@ -4,6 +4,7 @@
   vis="vis"
   vis-data="visData"
   ui-state="uiState"
+  print-report="printReport"
   class="vis-editor-content"
   search-source="savedObj.searchSource"
   show-spy-panel="shouldShowSpyPanel()"
@@ -16,4 +17,7 @@
   ui-state="uiState"
   search-source="savedObj.searchSource"
   show-spy-panel="shouldShowSpyPanel()"
+  id = "vis_visualization"
+  print-report="printReport"
+  ng-class="{'report-print-non-table': printReport}"
 />

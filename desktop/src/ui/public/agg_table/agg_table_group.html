@@ -12,16 +12,18 @@
   <tbody>
     <tr>
       <td>
-        <kbn-agg-table-group ng-if="table.tables"
-                             group="table"
-                             per-page="perPage"
-                             sort="sort"
-                             show-total="showTotal"
-                             total-func="totalFunc"
-                             color-schema="colorSchema"
-                             add-sr-number="addSrNumber"
-                             cumulative-row-operation="cumulativeRowOperation"
-                             cumulative-column-operation="cumulativeColumnOperation">
+        <kbn-agg-table-group
+          ng-if="table.tables"
+          group="table"
+          per-page="perPage"
+          sort="sort"
+          print-report="printReport"
+          show-total="showTotal"
+          total-func="totalFunc"
+          color-schema="colorSchema"
+          add-sr-number="addSrNumber"
+          cumulative-row-operation="cumulativeRowOperation"
+          cumulative-column-operation="cumulativeColumnOperation">
         </kbn-agg-table-group>
         <kbn-agg-table ng-if="table.rows"
                        table="table"

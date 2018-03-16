@@ -60,7 +60,16 @@ export default async (kbnServer, server, config) => {
 
       try {
         if (kbnServer.status.isGreen()) {
-          await reply.renderApp(app);
+          // The important information coming in all requests...
+          const vunetPayload = {
+            'userName': req.headers.username,
+            'userRole': req.headers.user_group,
+            'userPermission': req.headers.permissions,
+            'userHomeDashboard': req.headers.home_page,
+            'shipperUrl': req.headers.shipper_url,
+          };
+
+          await reply.renderApp(app, vunetPayload);
         } else {
           await reply.renderStatusPage();
         }
@@ -70,7 +79,7 @@ export default async (kbnServer, server, config) => {
     }
   });
 
-  async function getKibanaPayload({ app, request, includeUserProvidedConfig, injectedVarsOverrides }) {
+  async function getKibanaPayload({ app, request, vunetPayload, includeUserProvidedConfig, injectedVarsOverrides }) {
     const uiSettings = request.getUiSettingsService();
     const translations = await uiI18n.getTranslationsForRequest(request);
 
@@ -84,6 +93,11 @@ export default async (kbnServer, server, config) => {
       basePath: config.get('server.basePath'),
       serverName: config.get('server.name'),
       devMode: config.get('env.dev'),
+      userName: vunetPayload.userName,
+      userRole: vunetPayload.userRole,
+      userPermission: vunetPayload.userPermission,
+      userHomeDashboard: vunetPayload.userHomeDashboard,
+      shipperUrl: vunetPayload.shipperUrl,
       translations: translations,
       uiSettings: await props({
         defaults: uiSettings.getDefaults(),
@@ -97,7 +111,7 @@ export default async (kbnServer, server, config) => {
     };
   }
 
-  async function renderApp({ app, reply, includeUserProvidedConfig = true, injectedVarsOverrides = {} }) {
+  async function renderApp({ app, reply, vunetPayload, includeUserProvidedConfig = true, injectedVarsOverrides = {} }) {
     try {
       const request = reply.request;
       const translations = await uiI18n.getTranslationsForRequest(request);
@@ -107,6 +121,7 @@ export default async (kbnServer, server, config) => {
         kibanaPayload: await getKibanaPayload({
           app,
           request,
+          vunetPayload,
           includeUserProvidedConfig,
           injectedVarsOverrides
         }),
@@ -118,10 +133,12 @@ export default async (kbnServer, server, config) => {
     }
   }
 
-  server.decorate('reply', 'renderApp', function (app, injectedVarsOverrides) {
+  server.decorate('reply', 'renderApp', function (app, vunetPayload, injectedVarsOverrides) {
+    console.log('VunerPayload here is ', vunetPayload);
     return renderApp({
       app,
       reply: this,
+      vunetPayload,
       includeUserProvidedConfig: true,
       injectedVarsOverrides,
     });

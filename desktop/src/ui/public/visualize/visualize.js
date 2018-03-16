@@ -41,6 +41,7 @@ uiModules
         uiState: '=?',
         savedId: '=?',
         timeRange: '=?',
+        printReport: '=?',
       },
       template: visualizeTemplate,
       link: async function ($scope, $el) {

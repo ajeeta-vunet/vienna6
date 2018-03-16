@@ -1,7 +1,7 @@
 <div
   class="doc-table-container"
   ng-if="hits.length"
-  ng-class="{ loading: searchSource.activeFetchCount > 0 }"
+  ng-class="{ loading: searchSource.activeFetchCount > 0, 'vis-container-report': printReport }"
 >
   <div ng-if="!infiniteScroll">
     <div class="kuiBar docTableBar">
@@ -14,11 +14,13 @@
         </div>
         <!-- Pagination -->
         <tool-bar-pager-text
+          ng-if="!printReport"
           start-item="pager.startItem"
           end-item="pager.endItem"
           total-items="totalHitCount"
         ></tool-bar-pager-text>
         <tool-bar-pager-buttons
+          ng-if="!printReport"
           has-previous-page="pager.hasPreviousPage"
           has-next-page="pager.hasNextPage"
           on-page-next="onPageNext"
@@ -62,11 +64,13 @@
         </div>
         <!-- Pagination -->
         <tool-bar-pager-text
+          ng-if="!printReport"
           start-item="pager.startItem"
           end-item="pager.endItem"
           total-items="totalHitCount"
         ></tool-bar-pager-text>
         <tool-bar-pager-buttons
+          ng-if="!printReport"
           has-previous-page="pager.hasPreviousPage"
           has-next-page="pager.hasNextPage"
           on-page-next="onPageNext"

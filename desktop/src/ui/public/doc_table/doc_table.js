@@ -23,6 +23,7 @@ uiModules.get('kibana')
         indexPattern: '=?',
         searchSource: '=?',
         searchTitle: '=?',
+        printReport: '=?',
         infiniteScroll: '=?',
         filter: '=?',
         filters: '=?',
@@ -95,7 +96,7 @@ uiModules.get('kibana')
           });
 
           function onResults(resp) {
-          // Reset infinite scroll limit
+            // Reset infinite scroll limit
             $scope.limit = 50;
 
             // Abort if something changed
@@ -105,10 +106,20 @@ uiModules.get('kibana')
             if ($scope.hits.length === 0) {
               $el.trigger('renderComplete');
             }
+
             // We limit the number of returned results, but we want to show the actual number of hits, not
             // just how many we retrieved.
             $scope.totalHitCount = resp.hits.total;
-            $scope.pager = pagerFactory.create($scope.hits.length, 50, 1);
+            let numPageHits = 50;
+
+            // If we are printing report, lets make sure we print everything
+            // in 1 page..
+            if($scope.printReport) {
+              numPageHits = $scope.totalHitCount;
+              $scope.limit = numPageHits;
+            }
+
+            $scope.pager = pagerFactory.create($scope.hits.length, numPageHits, 1);
             calculateItemsOnPage();
 
             return $scope.searchSource.onResults().then(onResults);

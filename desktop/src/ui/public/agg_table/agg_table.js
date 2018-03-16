@@ -28,7 +28,8 @@ uiModules
         isCollapseTimeHeaders: '=?',
         addSrNumber: '=?',
         cumulativeRowOperation: '=?',
-        cumulativeColumnOperation: '=?'
+        cumulativeColumnOperation: '=?',
+        printReport: '=?'
       },
       controllerAs: 'aggTable',
       compile: function ($el) {

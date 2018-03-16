@@ -10,6 +10,7 @@ import { importApi } from './server/routes/api/import';
 import { exportApi } from './server/routes/api/export';
 import scripts from './server/routes/api/scripts';
 import { registerSuggestionsApi } from './server/routes/api/suggestions';
+import { reportDownloadApi } from './server/routes/api/report';
 import { registerFieldFormats } from './server/field_formats/register';
 import * as systemApi from './server/lib/system_api';
 import handleEsError from './server/lib/handle_es_error';
@@ -41,6 +42,7 @@ export default function (kibana) {
         'plugins/kibana/dashboard/saved_dashboard/saved_dashboard_register',
         'plugins/kibana/alert/saved_alert/saved_alert_register',
         'plugins/kibana/anomaly/saved_anomaly/saved_anomaly_register',
+        'plugins/kibana/report/saved_report/saved_report_register',
       ],
       app: {
         id: 'kibana',
@@ -71,18 +73,25 @@ export default function (kibana) {
         {
           id: 'kibana:anomaly',
           title: 'Anomaly',
-          order: -1005,
+          order: -1006,
           url: `${kbnBaseUrl}#/anomalies`,
           description: 'Anomaly Detection',
           subUrlBase: `${kbnBaseUrl}#/anomaly`,
         }, {
           id: 'kibana:alert',
           title: 'Alert',
-          order: -1004,
+          order: -1005,
           url: `${kbnBaseUrl}#/alerts`,
           description: 'Smart and intelligent alerts',
           subUrlBase: `${kbnBaseUrl}#/alert`,
           icon: 'plugins/kibana/assets/alert.svg',
+        }, {
+          id: 'kibana:report',
+          title: 'Report',
+          order: -1004,
+          url: `${kbnBaseUrl}#/reports`,
+          description: 'create highly customized reports',
+          icon: 'plugins/kibana/assets/report.svg',
         }, {
           id: 'kibana:discover',
           title: 'Discover',
@@ -166,6 +175,7 @@ export default function (kibana) {
       exportApi(server);
       registerSuggestionsApi(server);
       registerFieldFormats(server);
+      reportDownloadApi(server);
 
       server.expose('systemApi', systemApi);
       server.expose('handleEsError', handleEsError);

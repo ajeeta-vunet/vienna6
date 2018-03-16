@@ -1,5 +1,6 @@
 import { uiModules } from 'ui/modules';
 import { assign } from 'lodash';
+import { fixTableHeightForPrintReport } from 'ui/utils/print_report_utils';
 
 // get the kibana/table_vis module, and make sure that it requires the "kibana" module if it
 // didn't already
@@ -7,7 +8,7 @@ const module = uiModules.get('kibana/table_vis', ['kibana']);
 
 // add a controller to tha module, which will transform the esResponse into a
 // tabular format that we can pass to the table directive
-module.controller('KbnTableVisController', function ($scope) {
+module.controller('KbnTableVisController', function ($scope, $element) {
   const uiStateSort = ($scope.uiState) ? $scope.uiState.get('vis.params.sort') : {};
   assign($scope.vis.params.sort, uiStateSort);
 
@@ -41,6 +42,19 @@ module.controller('KbnTableVisController', function ($scope) {
     if (hasSomeRows) {
       $scope.tableGroups = tableGroups;
     }
+
+    // Update perPage in vis using number-of-rows
+    // Updating the perPage value for tables.
+    // We assume that the tableGroups always has one table.
+    // And set the perpage to the no of rows in this table.
+    // If there are multiple tables, then we will have to handle this case
+    if ($scope.printReport) {
+      if ($scope.tableGroups) {
+        $scope.vis.params.perPage = $scope.tableGroups.tables[0].rows.length;
+        fixTableHeightForPrintReport($scope, $element);
+      }
+    }
+
   });
 });
 

@@ -1,0 +1,393 @@
+<report-app class="app-container">
+
+  <!-- Local nav. -->
+  <kbn-top-nav name="report" config="topNavMenu">
+    <!-- Transcluded elements. -->
+    <div data-transclude-slots>
+      <!-- Title. -->
+      <div
+        data-transclude-slot="topLeftCorner"
+        class="kuiLocalBreadcrumbs"
+        data-test-subj="breadcrumbs"
+        role="heading"
+        aria-level="1"
+      >
+        <div class="kuiLocalBreadcrumb">
+          <a class="kuiLocalBreadcrumb__link" href="{{landingPageUrl()}}">Report</a>
+        </div>
+        <div class="kuiLocalBreadcrumb">
+          {{ getReportTitle() }}
+        </div>
+      </div>
+
+    </div>
+  </kbn-top-nav>
+
+  <div class="report-main-page" ng-if="printReport">
+    <div class="report-company">
+      <h1 class="report-company-name">{{reportcfg.company_name}}</h1>
+    </div>
+    <h1 class="report-name-header"> {{reportcfg.title}}</h1>
+    <h3 class="report-time"> Period: {{timeDurationStart|
+      date:'dd-MMM-yyyy HH:mm:ss'}}   to   {{timeDurationEnd| date:'dd-MMM-yyyy HH:mm:ss'}} </h3>
+    <img class="report-front-image" src="/ui/vienna_images/report_front.jpg">
+    <h3 class="report-prepared-by"> Prepared By: {{ owner.name }}</h3>
+    <h3 class="report-date"> Date: {{reportDate | date:'dd-MMM-yyyy'}}</h3>
+    <div class="shipper-address-url">
+      <a href="{{ shipper_address_url }}">{{ shipperAddress }}</a> 
+    </div>
+    <div class="page-break"></div>
+    <h3 class="report-content"> Table of Contents</h3>
+    <ol>
+      <h5>Executive Summary</h5>
+      <li ng-repeat="section in sections">{{section.id}}
+        <ol>
+          <li ng-repeat="vis in section.visuals">{{vis.title}}</li>
+        </ol>
+      </li>
+    </ol>
+    <div class="page-break"></div>
+    <h3 class="exec-summary-header"> 1. Executive Summary</h3>
+    <p class="exec-summary-content">{{ reportcfg.execSummary }}</p>
+    <div class="page-break"></div>
+  </div>
+
+  <report-details  ng-if="printReport"> </report-details>
+
+  <div class="container-fluid report-body-container" role="main" ng-if="!printReport">
+    <form name="reportcfgForm">
+      <h4 class="step-title"> <span class="step-indicator">1</span> What's the report about ?</h4>
+      <div class="report-section">
+        <div class="row">
+          <p class="report-component-label">
+            Executive Summary
+            <kbn-tooltip
+              text="Provide a brief information that summarizes this report. This will be added at the beginning of this report." 
+              placement="bottom" append-to-body="1">
+              <span>
+                <i class="fa fa-question-circle" aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>:
+          </p>
+          <textarea
+            type="text"
+            rows="4"
+            cols="88"
+            class="executive-summary form-control"
+            name="exectiveSummary"
+            ng-model="reportcfg.execSummary"
+            ng-maxlength="4000"
+            ng-class="{error: reportcfgForm.executiveSummary.$error.required}"
+            required>
+          </textarea>
+          <p class="error-highlight"
+            ng-show="reportcfgForm.exectiveSummary.$error.maxlength">
+            'Executive Summary' content must be less than 4000 characters
+          </p>
+        </div>
+      </div>
+
+      <h4 class="step-title">
+        <span class="step-indicator">
+          2
+        </span>
+        Schedule your report
+      </h4>
+
+      <div class="report-section">
+        <div class="row">
+          <p class="report-component-label report-element-inline">
+            Add a schedule
+            <kbn-tooltip
+              text="Select the checkbox to enable scheduling of reports"
+              placement="bottom"
+              append-to-body="1">
+              <span>
+                <i class="fa fa-question-circle" aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </p>
+          <div class="report-element-inline">
+            <input
+              type="checkbox"
+              ng-model="enable_scheduling"
+              ng-change="handleChangeInReportType(enable_scheduling)">
+          </div>
+
+          <div
+            ng-if="enable_scheduling"
+            class="report-element-inline">
+            <p class="report-component-label report-element-inline">
+              to generate this report
+            </p>
+            <div class=" report-element-inline">
+              <select
+                class="schedule-frequency"
+                ng-required="enable_scheduling"
+                name="scheduleFrequency"
+                ng-model="schedule.frequency"
+                ng-class="{error: reportcfgForm.enable_scheduling.$error.required}"
+                ng-change="updateTimeFilter()">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+              <kbn-tooltip
+                text="Schedule reports as per your needs. Please note all reports are generated at 00:00:00 hrs &#10; Daily - The report will be generated daily by considering the data from the last 24 hrs.&#10; Weekly - The report will be generated on every Monday by collecting the data from its previous week. (Monday to Sunday).&#10; Monthly - The report will be generated on first of every month by considering the data of previous month"
+                placement="bottom"
+                append-to-body="1">
+                <span>
+                  <i class="fa fa-question-circle" aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </div>
+            <p class="report-component-label report-element-inline">
+              and email it to
+            </p>
+            <div class="report-element-inline">
+              <input
+                multiple-emails
+                class="recipients"
+                ng-required="enable_scheduling"
+                type="text"
+                maxlength="250"
+                ng-model="schedule.recipients"
+                name="reportRecipients"
+                ng-class="{error: reportcfgForm.reportRecipients.$invalid}">
+              <kbn-tooltip
+                text="Provide recipients email to receive the scheduled reports. Multiple emails can be added separated by ',' "
+                placement="bottom"
+                append-to-body="1">
+                <span>
+                  <i class="fa fa-question-circle" aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+              <p class="error-highlight" ng-show="reportcfgForm.reportRecipients.$invalid">Please provide valid email address. You can enter multiple email address separated by a comma ','
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="step-title">
+        <span class="step-indicator">
+          3
+        </span>
+        Manage report contents
+      </h4>
+
+      <div>
+        <div ng-repeat="section in sections">
+          <div class="report-section">
+            <div class="row bottom-space">
+              <div class="col-md-2">
+                SECTION {{$index + 1}}
+              </div>
+              <div class="col-md-10">
+                <kbn-tooltip
+                  class="pull-right"
+                  text="Delete Section"
+                  placement="bottom"
+                  append-to-body="1">
+                  <span
+                    class="crud_buttons"
+                    aria-label="Delete Section"
+                    aria-haspopup="true"
+                    confirm-click="removeSection(section)"
+                    confirmation="Are you sure want to delete this section? This action is irreversible!">
+                    <i aria-hidden="true" class="fa fa-trash">
+                    </i>
+                  </span>
+                </kbn-tooltip>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-2">
+                <p class="report-component-label">Name:</p>
+              </div>
+              <div class="col-md-6">
+                <input
+                  class="report-text"
+                  type="text"
+                  ng-model="section.id"
+                  name="sectionName"
+                  ng-maxlength="200"
+                  required>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-2">
+                <p class="report-component-label">
+                  Description
+                  <kbn-tooltip
+                    text="Provide a brief information that summarizes this section. This will be added at the beginning of this section."
+                    placement="bottom"
+                    append-to-body="1">
+                    <span>
+                      <i class="fa fa-question-circle" aria-hidden="true">
+                      </i>
+                    </span>
+                  </kbn-tooltip> :
+                </p>
+              </div>
+
+              <div class="col-md-6">
+                <textarea
+                  type="text"
+                  rows="4"
+                  cols="63"
+                  ng-maxlength="4000"
+                  class="executive-summary form-control"
+                  name="sectionDescription"
+                  ng-model="section.description" required>
+                </textarea>
+                <p
+                  class="error-highlight"
+                  ng-show="reportcfgForm.sectionDescription.$error.maxlength">
+                  'Description' content must be less than 4000 characters
+                </p>
+              </div>
+              <div class="col-md-4">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-2">
+                <p class="report-component-label">
+                  Visualizations:
+                </p>
+              </div>
+
+              <div class="col-md-10">
+                <div class="visualization-section-wrapper">
+                  <div ng-repeat="vis in section.visuals">
+                    <div class="row report-visualization-row">
+                      <div class="col-md-4 report-visualization">
+                        <span>
+                          {{vis.title}}
+                        </span>
+                      </div>
+                      <div class="col-md-3">
+                        <kbn-tooltip
+                          text="Move Up"
+                          placement="bottom"
+                          append-to-body="1">
+                          <button
+                            class="priority_buttons"
+                            aria-label="Move Up"
+                            aria-haspopup="true"
+                            class="report-button"
+                            ng-click="moveVisUpInSection(section, vis);">
+                            <i aria-hidden="true" class="fa fa-arrow-up">
+                            </i>
+                          </button>
+                        </kbn-tooltip>
+                        <kbn-tooltip
+                          text="Delete Visualizations"
+                          placement="bottom"
+                          append-to-body="1">
+                          <button
+                            class="priority_buttons"
+                            aria-label="Delete Visualizations"
+                            aria-haspopup="true"
+                            class="report-button"
+                            confirm-click="removeVisFromSection(section, vis);"
+                            confirmation="Are you sure want to delete this visualization? This action is irreversible!">
+                            <i aria-hidden="true" class="fa fa-trash"></i>
+                          </button>
+                        </kbn-tooltip>
+                        <kbn-tooltip
+                          text="Move Down"
+                          placement="bottom"
+                          append-to-body="1">
+                          <button
+                            class="priority_buttons"
+                            aria-label="Move Down"
+                            aria-haspopup="true"
+                            class="report-button"
+                            ng-click="moveVisDownInSection(section, vis);">
+                            <i aria-hidden="true" class="fa fa-arrow-down">
+                            </i>
+                          </button>
+                        </kbn-tooltip>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <span
+                    class="add-vis-button"
+                    aria-label="Add Visualization"
+                    ng-click="addVisToSection(section);">
+                    Add visualization
+                    <i aria-hidden="true" class="fa fa-plus-circle">
+                    </i>
+                  </span>
+								
+                  <div
+                    ng-if="showVisForSection(section)"
+                    ng-switch
+                    on="mode"
+                    ng-init="mode = 'visualization'"
+                    class="report-panel-picker">
+                    <button
+                      style="float:right"
+                      ng-click="closeVisForSection()">
+                      <span class="fa fa-chevron-circle-up">
+                      </span>
+                    </button>
+                    <ul class="nav nav-tabs">
+                      <li ng-class="{active: mode == 'visualization'}">
+                        <a ng-click="mode='visualization'" title="Visualizations">
+                          Visualizations
+                        </a>
+                      </li>
+                      <li ng-class="{active: mode == 'search'}">
+                        <a ng-click="mode='search'" title="Searches">
+                          Searches
+                        </a>
+                      </li>
+                    </ul>
+
+                    <div class="list-group-item" ng-switch-when="visualization">
+                      <saved-object-finder
+                        title="Choose a visualization"
+                        type="visualizations"
+                        on-choose="opts.addVis">
+                      </saved-object-finder>
+                    </div>
+
+                    <div class="list-group-item" ng-switch-when="search">
+                      <saved-object-finder
+                        title="Choose a search"
+                        type="searches"
+                        on-choose="opts.addSearch">
+                      </saved-object-finder>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span
+          ng-click="addSection()"
+          aria-label="Add Section"
+          class="add-section-button">
+          Add another section
+          <i aria-hidden="true" class="fa fa-plus-circle">
+          </i>
+        </span>
+      </div>
+    </form>
+  </div>
+</report-app>

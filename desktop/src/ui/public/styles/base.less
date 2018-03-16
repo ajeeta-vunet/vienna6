@@ -5,6 +5,7 @@
 @import "./react-input-range";
 @import "./react-select";
 @import "./directive-utils";
+@import "./vunet_utils";
 
 html,
 body {
@@ -73,11 +74,18 @@ ul.navbar-inline li {
     white-space: normal;
   }
 
+.content-normal {
+  overflow: hidden;
+}
+
+.content-print {
+  overflow: visible;
+}
+
 .content {
   .real-flex-parent(@flow: row nowrap);
   width: 100%;
   height: 100%;
-  overflow: hidden;
 
   > nav {
     z-index: 1;

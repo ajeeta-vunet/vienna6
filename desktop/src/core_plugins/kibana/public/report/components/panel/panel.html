@@ -1,0 +1,62 @@
+<div
+  ng-class="printReport ? 'panel panel-default-print' : 'panel panel-default'"
+  ng-switch on="panel.type"
+  ng-if="savedObj || error">
+  <div class="panel-heading">
+    <span
+      class="panel-title"
+      ng-if="!printReport">
+      <i
+        class="fa"
+        ng-class="savedObj.vis.type.icon"
+        aria-label="{{savedObj.vis.type.title}} Icon"
+        title="{{savedObj.vis.type.title}}">
+      </i>
+      {{savedObj.title}}
+    </span>
+    <span
+      class="panel-title"
+      ng-if="printReport && savedObj.vis.type.title!='Markdown widget'">
+        {{panel_id}} {{savedObj.title}}
+    </span>
+    <div
+      class="clearfix"
+      ng-if="!printReport">
+    </div>
+  </div>
+
+  <div
+    ng-if="error"
+    class="load-error">
+    <i
+      aria-hidden="true"
+      class="fa fa-exclamation-triangle"></i>
+    <span ng-bind="error"></span>
+  </div>
+
+  <visualize
+    ng-switch-when="visualization"
+    vis="savedObj.vis"
+    saved-obj="savedObj"
+    search-source="savedObj.searchSource"
+    show-spy-panel="chrome.getVisible()"
+    element="$el"
+    ui-state="uiState"
+    print-report="printingReport">
+  </visualize>
+
+  <doc-table
+    ng-switch-when="search"
+    search-source="savedObj.searchSource"
+    sorting="panel.sort"
+    columns="panel.columns"
+    print-report="printingReport"
+    filter="filter">
+  </doc-table>
+
+  <p
+    ng-if="savedObj.vis.params.notes"
+    class="display-notes">
+    {{savedObj.vis.params.notes}}
+  </p>
+</div>

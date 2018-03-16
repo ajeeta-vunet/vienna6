@@ -4,9 +4,17 @@
 
 body { overflow-x: hidden; }
 
+.app-wrapper-normal {
+  position: absolute;
+}
+
+.app-wrapper-report {
+  position: relative;
+  width:100%;
+}
+
 .app-wrapper {
   .real-flex-parent();
-  position: absolute;
   left: @global-nav-closed-width;
   top: 0;
   right: 0;

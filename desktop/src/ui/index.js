@@ -67,6 +67,8 @@ export default async (kbnServer, server, config) => {
             'userPermission': req.headers.permissions,
             'userHomeDashboard': req.headers.home_page,
             'shipperUrl': req.headers.shipper_url,
+            'tenantId': req.headers.tenant_id,
+            'buId': req.headers.bu_id,
           };
 
           await reply.renderApp(app, vunetPayload);
@@ -98,6 +100,8 @@ export default async (kbnServer, server, config) => {
       userPermission: vunetPayload.userPermission,
       userHomeDashboard: vunetPayload.userHomeDashboard,
       shipperUrl: vunetPayload.shipperUrl,
+      tenantId: vunetPayload.tenantId,
+      buId: vunetPayload.buId,
       translations: translations,
       uiSettings: await props({
         defaults: uiSettings.getDefaults(),
@@ -134,7 +138,6 @@ export default async (kbnServer, server, config) => {
   }
 
   server.decorate('reply', 'renderApp', function (app, vunetPayload, injectedVarsOverrides) {
-    console.log('VunerPayload here is ', vunetPayload);
     return renderApp({
       app,
       reply: this,

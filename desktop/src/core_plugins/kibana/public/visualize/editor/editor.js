@@ -85,32 +85,49 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
   const { vis, searchSource } = savedVis;
   $scope.vis = vis;
 
-  $scope.topNavMenu = [{
-    key: 'save',
-    description: 'Save Visualization',
-    template: require('plugins/kibana/visualize/editor/panels/save.html'),
-    testId: 'visualizeSaveButton',
-    disableButton() {
-      return Boolean(vis.dirty);
-    },
-    tooltip() {
-      if (vis.dirty) {
-        return 'Apply or Discard your changes before saving';
+  // Get allowedRols
+  $scope.allowedRoles = savedVis.allowedRolesJSON ? JSON.parse(savedVis.allowedRolesJSON) : [];
+
+  // Find out if user can modify, if he/she can't, we hide write controls..
+  let userRoleCanModify = false;
+  if (chrome.isCurrentUserAdmin()) {
+    userRoleCanModify = true;
+  } else {
+    // Set a flag whether the current user's role can modify this object
+    userRoleCanModify = chrome.canCurrentUserModifyPermissions($scope.allowedRoles);
+  }
+
+  // If user can modify the existing object or is allowed to create an object
+  if(userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+    $scope.topNavMenu = [{
+      key: 'save',
+      description: 'Save Visualization',
+      template: require('plugins/kibana/visualize/editor/panels/save.html'),
+      testId: 'visualizeSaveButton',
+      disableButton() {
+        return Boolean(vis.dirty);
+      },
+      tooltip() {
+        if (vis.dirty) {
+          return 'Apply or Discard your changes before saving';
+        }
       }
-    }
-  }, {
-    key: 'share',
-    description: 'Share Visualization',
-    template: require('plugins/kibana/visualize/editor/panels/share.html'),
-    testId: 'visualizeShareButton',
-  }, {
-    key: 'refresh',
-    description: 'Refresh',
-    run: function () {
-      vis.forceReload();
-    },
-    testId: 'visualizeRefreshButton',
-  }];
+    }, {
+      key: 'share',
+      description: 'Share Visualization',
+      template: require('plugins/kibana/visualize/editor/panels/share.html'),
+      testId: 'visualizeShareButton',
+    }, {
+      key: 'refresh',
+      description: 'Refresh',
+      run: function () {
+        vis.forceReload();
+      },
+      testId: 'visualizeRefreshButton',
+    }];
+  } else {
+    $scope.topNavMenu = [];
+  }
 
   let stateMonitor;
 
@@ -176,7 +193,7 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
 
 
     $scope.timefilter = timefilter;
-    $scope.opts = _.pick($scope, 'doSave', 'savedVis', 'shareData', 'timefilter', 'isAddToDashMode');
+    $scope.opts = _.pick($scope, 'doSave', 'savedVis', 'shareData', 'timefilter', 'isAddToDashMode', 'allowedRoles');
 
     stateMonitor = stateMonitorFactory.create($state, stateDefaults);
     stateMonitor.ignoreProps([ 'vis.listeners' ]).onChange((status) => {
@@ -234,6 +251,7 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
     $state.vis.type = savedVis.type || $state.vis.type;
     savedVis.visState = $state.vis;
     savedVis.uiStateJSON = angular.toJson($scope.uiState.getChanges());
+    savedVis.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
 
     savedVis.save()
       .then(function (id) {

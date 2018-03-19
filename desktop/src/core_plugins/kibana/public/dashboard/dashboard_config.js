@@ -1,6 +1,8 @@
 import { uiModules } from 'ui/modules';
+
 uiModules.get('kibana')
   .provider('dashboardConfig', () => {
+
     let hideWriteControls = false;
 
     return {
@@ -15,6 +17,9 @@ uiModules.get('kibana')
         return {
           getHideWriteControls() {
             return hideWriteControls;
+          },
+          turnHideWriteControlsOn() {
+            hideWriteControls = true;
           }
         };
       }

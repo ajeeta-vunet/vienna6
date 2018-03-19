@@ -6,6 +6,7 @@ import 'ui/collapsible_sidebar';
 import 'ui/share';
 import 'ui/query_bar';
 import uiRoutes from 'ui/routes';
+import chrome from 'ui/chrome';
 import { uiModules } from 'ui/modules';
 import anomalyTemplate from 'plugins/kibana/anomaly/anomaly.html';
 import { AnomalyConstants, createAnomalyEditUrl } from './anomaly_constants';
@@ -108,41 +109,34 @@ function anomalyAppEditor($scope,
 
   $scope.listAnomaly = $route.current.locals.listAnomaly;
   // Populate allowedRoles from anomaly
-  //const allowedRoles = anomaly.allowedRolesJSON ? JSON.parse(anomaly.allowedRolesJSON) : [];
+  const allowedRoles = anomaly.allowedRolesJSON ? JSON.parse(anomaly.allowedRolesJSON) : [];
 
-  // Add the save button on top. Disable it when the form is not valid.
-  $scope.topNavMenu = [{
-    key: 'save',
-    description: 'Save Anomaly',
-    template: require('plugins/kibana/anomaly/panels/save.html'),
-    testId: 'anomalySaveButton',
-    disableButton() {
-      const anomalyForm = document.getElementById('anomalyForm');
-      return Boolean(!anomalyForm.checkValidity());
-    },
-  }];
-
+  let userRoleCanModify = false;
   // Get the RBAC stuff here...
-  // Set whether the current logged in user be allowed to create a new
-  // object or not
-  //$scope.creation_allowed = false;
-  //if (chrome.canCurrentUserCreateObject()) {
-  //  $scope.creation_allowed = true;
-  //}
-
   // For an admin used, we always show modify permissions during save..
-  //let user_role_can_modify = false;
-  //if (chrome.isCurrentUserAdmin()) {
-  //  user_role_can_modify = true;
-  //} else {
-  // Set a flag whether the current user's role can modify this object
-  //  user_role_can_modify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-  //}
+  // const userRoleCanModify = false;
+  if (chrome.isCurrentUserAdmin()) {
+    userRoleCanModify = true;
+  } else {
+    // Set a flag whether the current user's role can modify this object
+    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
+  }
 
-  // Show the anomaly operational butttons on clicking the show toolbar button
-  $scope.toggleToolbar = function () {
-    $scope.showToolbar = !$scope.showToolbar;
-  };
+  // If user can modify the existing object or is allowed to create an object
+  if(userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+    $scope.topNavMenu = [{
+      key: 'save',
+      description: 'Save Anomaly',
+      template: require('plugins/kibana/anomaly/panels/save.html'),
+      testId: 'anomalySaveButton',
+      disableButton() {
+        const anomalyForm = document.getElementById('anomalyForm');
+        return Boolean(!anomalyForm.checkValidity());
+      },
+    }];
+  } else {
+    $scope.topNavMenu = [];
+  }
 
   const stateDefaults = {
     title: anomaly.title,
@@ -252,7 +246,7 @@ function anomalyAppEditor($scope,
       return;
     }
     $state.save();
-    // anomaly.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
+    anomaly.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
     anomaly.description = $scope.description;
     // Store only the id of the selected index
     anomaly.index = angular.toJson($scope.selectedIndex);
@@ -335,9 +329,8 @@ function anomalyAppEditor($scope,
   // Setup configurable values for config directive, after objects are initialized
   $scope.opts = {
     anomaly: anomaly,
-    // allowedRoles: allowedRoles,
+    allowedRoles: allowedRoles,
     doSave: $scope.save,
-    // user_role_can_modify: user_role_can_modify,
   };
   init();
 }

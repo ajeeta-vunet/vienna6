@@ -234,6 +234,9 @@
           }
         }
       },
+      "allowedRolesJSON": {
+        "type": "text"
+      },
       "savedSearchId": {
         "type": "keyword"
       },
@@ -257,6 +260,9 @@
         "type": "keyword"
       },
       "description": {
+        "type": "text"
+      },
+      "allowedRolesJSON": {
         "type": "text"
       },
       "hits": {
@@ -294,6 +300,9 @@
             "type": "text"
           }
         }
+      },
+      "allowedRolesJSON": {
+        "type": "text"
       },
       "optionsJSON": {
         "type": "text"

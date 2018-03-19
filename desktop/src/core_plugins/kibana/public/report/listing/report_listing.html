@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div class="kuiToolBarSection">
+      <div class="kuiToolBarSection" ng-if="creationAllowed">
         <!-- Bulk delete button -->
         <button
           class="kuiButton kuiButton--danger"
@@ -102,7 +102,7 @@
     <!-- EmptyTablePrompt -->
     <div
       class="kuiPanel kuiPanel--centered kuiPanel--withToolBar"
-      ng-if="!listingController.isFetchingItems && !listingController.items.length && !listingController.filter"
+      ng-if="!listingController.isFetchingItems && !listingController.items.length && !listingController.filter" && "creationAllowed"
     >
       <div class="kuiEmptyTablePrompt">
         <div class="kuiEmptyTablePrompt__message">

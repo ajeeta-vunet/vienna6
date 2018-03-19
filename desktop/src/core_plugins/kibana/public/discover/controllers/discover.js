@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import angular from 'angular';
+import chrome from 'ui/chrome';
 import { getSort } from 'ui/doc_table/lib/get_sort';
 import * as columnActions from 'ui/doc_table/actions/columns';
 import * as filterActions from 'ui/doc_table/actions/filter';
@@ -131,33 +132,64 @@ function discoverController(
     return interval.val !== 'custom';
   };
 
-  $scope.topNavMenu = [{
-    key: 'new',
-    description: 'New Search',
-    run: function () { kbnUrl.change('/discover'); },
-    testId: 'discoverNewButton',
-  }, {
-    key: 'save',
-    description: 'Save Search',
-    template: require('plugins/kibana/discover/partials/save_search.html'),
-    testId: 'discoverSaveButton',
-  }, {
-    key: 'open',
-    description: 'Open Saved Search',
-    template: require('plugins/kibana/discover/partials/load_search.html'),
-    testId: 'discoverOpenButton',
-  }, {
-    key: 'share',
-    description: 'Share Search',
-    template: require('plugins/kibana/discover/partials/share_search.html'),
-    testId: 'discoverShareButton',
-  }];
   $scope.timefilter = timefilter;
 
 
   // the saved savedSearch
   const savedSearch = $route.current.locals.savedSearch;
   $scope.$on('$destroy', savedSearch.destroy);
+
+  // Get allowedRoles from object
+  const allowedRoles = savedSearch.allowedRolesJSON ? JSON.parse(savedSearch.allowedRolesJSON) : [];
+
+  // Find out if user can modify, if he/she can't, we hide write controls..
+  let userRoleCanModify = false;
+  if (chrome.isCurrentUserAdmin()) {
+    userRoleCanModify = true;
+  } else {
+    // Set a flag whether the current user's role can modify this object
+    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
+  }
+
+  // Check with chrome if the creation is allowed for this user or not
+  // Set whether the current logged in user be allowed to create a new
+  // object or not
+  $scope.creationAllowed = false;
+  if (chrome.canCurrentUserCreateObject()) {
+    $scope.creationAllowed = true;
+  }
+
+  // If user cannot modify, allow only open
+  if(!userRoleCanModify || !$scope.creationAllowed) {
+    $scope.topNavMenu = [{
+      key: 'open',
+      description: 'Open Saved Search',
+      template: require('plugins/kibana/discover/partials/load_search.html'),
+      testId: 'discoverOpenButton',
+    }];
+  } else {
+    $scope.topNavMenu = [{
+      key: 'new',
+      description: 'New Search',
+      run: function () { kbnUrl.change('/discover'); },
+      testId: 'discoverNewButton',
+    }, {
+      key: 'save',
+      description: 'Save Search',
+      template: require('plugins/kibana/discover/partials/save_search.html'),
+      testId: 'discoverSaveButton',
+    }, {
+      key: 'open',
+      description: 'Open Saved Search',
+      template: require('plugins/kibana/discover/partials/load_search.html'),
+      testId: 'discoverOpenButton',
+    }, {
+      key: 'share',
+      description: 'Share Search',
+      template: require('plugins/kibana/discover/partials/share_search.html'),
+      testId: 'discoverShareButton',
+    }];
+  }
 
   // the actual courier.SearchSource
   $scope.searchSource = savedSearch.searchSource;
@@ -273,7 +305,8 @@ function discoverController(
     timefield: $scope.indexPattern.timeFieldName,
     savedSearch: savedSearch,
     indexPatternList: $route.current.locals.ip.list,
-    timefilter: $scope.timefilter
+    timefilter: $scope.timefilter,
+    allowedRoles: allowedRoles
   };
 
   const init = _.once(function () {
@@ -403,6 +436,7 @@ function discoverController(
       .then(function () {
         savedSearch.columns = $scope.state.columns;
         savedSearch.sort = $scope.state.sort;
+        savedSearch.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
 
         return savedSearch.save()
           .then(function (id) {

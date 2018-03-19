@@ -173,6 +173,22 @@ export class IndexPatternAlreadyExists extends KbnError {
   }
 }
 
+
+/**
+ * A saved object cannot be loaded
+ */
+export class SavedObjectNotAllowed extends KbnError {
+  constructor(type, id) {
+    const idMsg = id ? ` (id: ${id})` : '';
+    const message = `Cannot access ${type}${idMsg}`;
+
+    super(message, SavedObjectNotAllowed);
+
+    this.savedObjectType = type;
+    this.savedObjectId = id;
+  }
+}
+
 /**
  * A saved object was not found
  */

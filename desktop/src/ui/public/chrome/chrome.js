@@ -38,6 +38,10 @@ const internals = _.defaults(
   }
 );
 
+internals.user_name = 'modify';
+internals.user_role = 'modify';
+internals.user_permission = 'modify';
+
 appsApi(chrome, internals);
 initChromeXsrfApi(chrome, internals);
 initChromeNavApi(chrome, internals);

@@ -39,6 +39,7 @@ uiModules
           }()),
           uiStateJSON: '{}',
           description: '',
+          allowedRolesJSON: '',
           savedSearchId: opts.savedSearchId,
           version: 1
         },
@@ -54,6 +55,7 @@ uiModules
       visState: 'json',
       uiStateJSON: 'text',
       description: 'text',
+      allowedRolesJSON: 'text',
       savedSearchId: 'keyword',
       version: 'integer'
     };

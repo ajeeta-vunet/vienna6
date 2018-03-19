@@ -4,6 +4,7 @@ import 'ui/vis/editors/default/sidebar';
 import 'ui/collapsible_sidebar';
 import 'ui/share';
 import 'ui/query_bar';
+import chrome from 'ui/chrome';
 import angular from 'angular';
 import { Notifier } from 'ui/notify/notifier';
 import { DocTitleProvider } from 'ui/doc_title';
@@ -102,31 +103,30 @@ function alertAppEditor($scope,
   });
 
   // Populate allowedRoles from alertcfg
-  // var allowedRoles = alertcfg.allowedRolesJSON ? JSON.parse(alertcfg.allowedRolesJSON) : [];
+  const allowedRoles = alertcfg.allowedRolesJSON ? JSON.parse(alertcfg.allowedRolesJSON) : [];
 
-  $scope.topNavMenu = [{
-    key: 'save',
-    description: 'Save Alert',
-    template: require('plugins/kibana/alert/panels/save.html'),
-    testId: 'alertSaveButton',
-  }];
-
+  let userRoleCanModify = false;
   // Get the RBAC stuff here...
-  // Set whether the current logged in user be allowed to create a new
-  // object or not
-  // $scope.creation_allowed = false;
-  //if ( chrome.canCurrentUserCreateObject() ) {
-  //  $scope.creation_allowed = true;
-  //}
-
   // For an admin used, we always show modify permissions during save..
   // const userRoleCanModify = false;
-  //if ( chrome.isCurrentUserAdmin() ) {
-  //  userRoleCanModify = true;
-  //} else {
-  //  // Set a flag whether the current user's role can modify this object
-  //  userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-  //}
+  if (chrome.isCurrentUserAdmin()) {
+    userRoleCanModify = true;
+  } else {
+    // Set a flag whether the current user's role can modify this object
+    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
+  }
+
+  // If user can modify the existing object or is allowed to create an object
+  if(userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+    $scope.topNavMenu = [{
+      key: 'save',
+      description: 'Save Alert',
+      template: require('plugins/kibana/alert/panels/save.html'),
+      testId: 'alertSaveButton',
+    }];
+  } else {
+    $scope.topNavMenu = [];
+  }
 
   // Let us get the ruleList from alertCfg, it will be empty if its a new
   // alert
@@ -383,7 +383,7 @@ function alertAppEditor($scope,
     }
 
     $state.save();
-    //alertcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
+    alertcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
 
     Number.prototype.padLeft = function (base, chr) {
       const len = (String(base || 10).length - String(this).length) + 1;
@@ -496,9 +496,8 @@ function alertAppEditor($scope,
   // Setup configurable values for config directive, after objects are initialized
   $scope.opts = {
     alertcfg: alertcfg,
-    //allowedRoles: allowedRoles,
+    allowedRoles: allowedRoles,
     doSave: $scope.save,
-    //userRoleCanModify: userRoleCanModify,
   };
 
   init();

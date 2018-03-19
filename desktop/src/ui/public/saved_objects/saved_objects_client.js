@@ -4,6 +4,7 @@ import chrome from 'ui/chrome';
 import { resolve as resolveUrl, format as formatUrl } from 'url';
 import { keysToSnakeCaseShallow, keysToCamelCaseShallow } from '../../../utils/case_conversion';
 import { SavedObject } from './saved_object';
+import { filterSavedObjectUsingRbac } from './saved_objects_client_rbac';
 
 const join = (...uriComponents) => (
   uriComponents.filter(Boolean).map(encodeURIComponent).join('/')
@@ -86,6 +87,10 @@ export class SavedObjectsClient {
 
     return this._request('GET', url).then(resp => {
       resp.saved_objects = resp.saved_objects.map(d => this.createSavedObject(d));
+
+      // Filter babsed on RBAC
+      resp.saved_objects = filterSavedObjectUsingRbac(resp);
+
       return keysToCamelCaseShallow(resp);
     });
   }

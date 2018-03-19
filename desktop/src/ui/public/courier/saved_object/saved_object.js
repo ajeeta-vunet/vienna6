@@ -10,14 +10,17 @@
  */
 
 import angular from 'angular';
+import chrome from 'ui/chrome';
 import _ from 'lodash';
 
-import { SavedObjectNotFound } from 'ui/errors';
+import { SavedObjectNotFound, SavedObjectNotAllowed } from 'ui/errors';
 import MappingSetupProvider from 'ui/utils/mapping_setup';
 
 import { SearchSourceProvider } from '../data_source/search_source';
 import { SavedObjectsClientProvider, findObjectByTitle } from 'ui/saved_objects';
 import { migrateLegacyQuery } from '../../utils/migrateLegacyQuery.js';
+
+import { rbacCheckForModifyPermission } from '../../utils/vunet_rbac.js';
 
 /**
  * An error message to be used when the user rejects a confirm overwrite.
@@ -192,6 +195,21 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
       this._source = _.cloneDeep(resp._source);
 
       if (resp.found != null && !resp.found) throw new SavedObjectNotFound(esType, this.id);
+
+      // Get visState for visualization objects
+      let visState = undefined;
+      if (resp._type === 'visualization') {
+        visState = JSON.parse(this._source.visState);
+      }
+
+      // Check if we should allow loading of this object based on the user's
+      // permission and the allowedRolesJSON in this object
+      const allowedRoles = this._source.allowedRolesJSON ? JSON.parse(this._source.allowedRolesJSON) : [];
+
+      const loadAllowed = rbacCheckForModifyPermission(chrome, resp._type, this._source.title, visState, allowedRoles, ['modify', 'view']);
+      if (!loadAllowed) {
+        throw new SavedObjectNotAllowed(esType, this.id);
+      }
 
       const meta = resp._source.kibanaSavedObjectMeta || {};
       delete resp._source.kibanaSavedObjectMeta;

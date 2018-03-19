@@ -97,19 +97,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     location: 'Report'
   });
 
-  $scope.topNavMenu = [{
-    key: 'save',
-    description: 'Save Report',
-    template: require('plugins/kibana/report/panels/save.html'),
-    testId: 'reportSaveButton',
-  },
-  {
-    key: 'download',
-    description: 'Download Report',
-    testId: 'reportSaveButton',
-    run: function () { $scope.downloadReport(); },
-  }];
-
   // Since vienna is in a iframe, we use the window.parent to
   // get the url in the browser.
   $scope.shipperAddress = window.parent.location.href;
@@ -117,6 +104,43 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   let isNewReport = $route.current.locals.isNewReport;
   const loadedReportId = $route.current.locals.loadedReportId;
   const reportcfg = $scope.reportcfg = $route.current.locals.reportcfg;
+
+  const allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
+
+  let userRoleCanModify = false;
+
+  // Get the RBAC stuff here...
+  // For an admin used, we always show modify permissions during save..
+  // const userRoleCanModify = false;
+  if (chrome.isCurrentUserAdmin()) {
+    userRoleCanModify = true;
+  } else {
+    // Set a flag whether the current user's role can modify this object
+    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
+  }
+
+  // If user can modify the existing object or is allowed to create an object
+  if(userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+    $scope.topNavMenu = [{
+      key: 'save',
+      description: 'Save Report',
+      template: require('plugins/kibana/report/panels/save.html'),
+      testId: 'reportSaveButton',
+    },
+    {
+      key: 'download',
+      description: 'Download Report',
+      testId: 'reportSaveButton',
+      run: function () { $scope.downloadReport(); },
+    }];
+  } else {
+    $scope.topNavMenu = [{
+      key: 'download',
+      description: 'Download Report',
+      testId: 'reportSaveButton',
+      run: function () { $scope.downloadReport(); }
+    }];
+  }
 
   // We will enable it when we integrate with backend: Bharat
   // when reports tab (/report/) is hit, company_name
@@ -128,29 +152,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   } else {
     $scope.company_name = $route.current.locals.reportcfg.company_name || '';
   }
-
-  // We will enable it when we integrate with backend: Bharat
-  // Populate allowedRoles from reportcfgboard
-  //var allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
-
-  // Set whether the current logged in user be allowed to create a new
-  // object or not
-  //$scope.creation_allowed = false;
-  //if ( chrome.canCurrentUserCreateObject() ) {
-  //   $scope.creation_allowed = true;
-  //}
-  $scope.creation_allowed = true;
-
-  // We will enable it when we integrate with backend: Bharat
-  // For an admin used, we always show modify permissions during save..
-  // var userRoleCanModify = false;
-  // if ( chrome.isCurrentUserAdmin() ) {
-  //     userRoleCanModify = true;
-  // } else {
-  // Set a flag whether the current user's role can modify this object
-  //     userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-  // }
-  const userRoleCanModify = true;
 
   $scope.printReport = $route.current.locals.printReport;
   $scope.sections = [{ id: '', description: '', visuals: [] }];
@@ -440,8 +441,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     reportcfg.uiStateJSON = angular.toJson($uiState.getChanges());
 
     // We will enable this with RBAC support: Bharat
-    //reportcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
-    //
+    reportcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
     reportcfg.timeFrom = timefilter.time.from;
     reportcfg.timeTo = timefilter.time.to;
     reportcfg.optionsJSON = angular.toJson($state.options);
@@ -541,7 +541,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   $scope.opts = {
     reportcfg: reportcfg,
     ui: $state.options,
-    //allowedRoles: allowedRoles,
+    allowedRoles: allowedRoles,
     userRoleCanModify: userRoleCanModify,
     save: $scope.save,
     addVis: $scope.addVis,

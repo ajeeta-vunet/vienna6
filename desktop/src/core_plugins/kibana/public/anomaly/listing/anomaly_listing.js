@@ -1,6 +1,7 @@
 import { SavedObjectRegistryProvider } from 'ui/saved_objects/saved_object_registry';
 import 'ui/pager_control';
 import 'ui/pager';
+import chrome from 'ui/chrome';
 import { AnomalyConstants, createAnomalyEditUrl } from '../anomaly_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
@@ -14,6 +15,14 @@ export function AnomalyListingController($injector, $scope, $location) {
   const timefilter = $injector.get('timefilter');
   const config = $injector.get('config');
   //const anomalyConfig = $injector.get('anomalyConfig');
+
+  // Check with chrome if the creation is allowed for this user or not
+  // Set whether the current logged in user be allowed to create a new
+  // object or not
+  $scope.creationAllowed = false;
+  if (chrome.canCurrentUserCreateObject()) {
+    $scope.creationAllowed = true;
+  }
 
   timefilter.enabled = false;
 

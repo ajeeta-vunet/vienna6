@@ -21,6 +21,7 @@ module.factory('SavedSearch', function (courier) {
         title: 'New Saved Search',
         description: '',
         columns: [],
+        allowedRolesJSON: '',
         hits: 0,
         sort: [],
         version: 1
@@ -35,6 +36,7 @@ module.factory('SavedSearch', function (courier) {
     description: 'text',
     hits: 'integer',
     columns: 'keyword',
+    allowedRolesJSON: 'text',
     sort: 'keyword',
     version: 'integer'
   };

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import chrome from 'ui/chrome';
 
 import { SortableProperties } from 'ui_framework/services';
 import { Pager } from 'ui/pager';
@@ -217,9 +218,16 @@ export class VisualizeListingTable extends Component {
   }
 
   renderToolBarActions() {
-    return this.state.selectedRowIds.length > 0 ?
-      <KuiListingTableDeleteButton onDelete={this.onDelete} aria-label="Delete selected visualizations"/> :
-      <KuiListingTableCreateButton onCreate={this.onCreate} aria-label="Create new visualization"/>;
+    // Check with chrome if the creation is allowed for this user or not
+    // Set whether the current logged in user be allowed to create a new
+    // object or not
+    if (chrome.canCurrentUserCreateObject()) {
+      return this.state.selectedRowIds.length > 0 ?
+        <KuiListingTableDeleteButton onDelete={this.onDelete} aria-label="Delete selected visualizations"/> :
+        <KuiListingTableCreateButton onCreate={this.onCreate} aria-label="Create new visualization"/>;
+    } else {
+      return;
+    }
   }
 
   renderPager() {

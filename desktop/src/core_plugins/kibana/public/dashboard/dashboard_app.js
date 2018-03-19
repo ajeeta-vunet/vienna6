@@ -66,6 +66,23 @@ app.directive('dashboardApp', function ($injector) {
         docTitle.change(dash.title);
       }
 
+      // Get allowedRoles from object
+      const allowedRoles = dash.allowedRolesJSON ? JSON.parse(dash.allowedRolesJSON) : [];
+
+      // Find out if user can modify, if he/she can't, we hide write controls..
+      let userRoleCanModify = false;
+      if (chrome.isCurrentUserAdmin()) {
+        userRoleCanModify = true;
+      } else {
+        // Set a flag whether the current user's role can modify this object
+        userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
+      }
+
+      // If user cannot create a new one or modify the current existing one, hide write controls
+      if(!userRoleCanModify || !chrome.canCurrentUserCreateObject()) {
+        dashboardConfig.turnHideWriteControlsOn();
+      }
+
       const dashboardStateManager = new DashboardStateManager(dash, AppState, dashboardConfig.getHideWriteControls());
 
       $scope.getDashboardState = () => dashboardStateManager;
@@ -254,6 +271,8 @@ app.directive('dashboardApp', function ($injector) {
       };
 
       $scope.save = function () {
+        // Convert allowedRolesJSON
+        dash.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
         return saveDashboard(angular.toJson, timefilter, dashboardStateManager)
           .then(function (id) {
             $scope.kbnTopNav.close('save');
@@ -357,7 +376,8 @@ app.directive('dashboardApp', function ($injector) {
         addVis: $scope.addVis,
         addNewVis,
         addSearch: $scope.addSearch,
-        timefilter: $scope.timefilter
+        timefilter: $scope.timefilter,
+        allowedRoles: allowedRoles,
       };
     }
   };

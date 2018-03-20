@@ -210,14 +210,15 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                 configObj = cell.aggConfig.vis.aggs.find(obj => obj.id === cell.aggConfig.id);
                 let firstDateTimeBucket = null;
                 if (configObj && (configObj.type.title === 'Count' || configObj.type.title === 'Unique Count')) {
-                  // We will search for the first timestamp field (date field)
+                  // We will search for the first timestamp field (date field) for the Date Histogram
                   // and use its interval duration configured to scale
                   // the current value to the same duration
                   cell.aggConfig.vis.aggs.forEach(function (agg) {
                     if(!firstDateTimeBucket
                       && agg.type.type === 'buckets'
                       && agg.params.field.type === 'date'
-                      && cell.aggConfig.vis.indexPattern.timeFieldName === agg.params.field.name) {
+                      && cell.aggConfig.vis.indexPattern.timeFieldName === agg.params.field.name
+                      && _.has(agg, 'buckets')) {
 
                       const valueInterval = agg.buckets.getInterval()._milliseconds / 1000;
                       multiplier = valueInterval;

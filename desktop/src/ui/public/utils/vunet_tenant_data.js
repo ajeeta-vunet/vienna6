@@ -1,4 +1,4 @@
-export function getTenantData($http, notify) {
+export function getTenantData($http) {
   // We currently assume tenant-id is 1
   const tenantId = 1;
   const url = '/vuSmartMaps/api/' + tenantId + '/';
@@ -12,7 +12,5 @@ export function getTenantData($http, notify) {
   return httpResult
     .then(function (resp) {
       return resp;
-    }).catch(function () {
-      notify.error('Unable to print the report');
     });
 }

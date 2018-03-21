@@ -1,0 +1,112 @@
+@import (reference) "~ui/styles/mixins";
+@import (reference) "~ui/styles/variables";
+
+// Css for top level tabs (dashboards, discover, events etc)
+.vunet-global-nav {
+  padding-top: 10px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  background-color: @vunet-top-nav-bakground-color !important;
+  overflow: hidden;
+  a {
+    color: @vunet-text-color !important;
+  }
+}
+
+.vunet-global-nav-link {
+  width: 90px !important;
+  height: 0px;
+  background-color: @vunet-top-nav-bakground-color;
+  &.is-global-nav-link-disabled {
+     opacity: 0.5;
+ 
+     .global-nav-link__anchor {
+       background-color: @vunet-top-nav-bakground-color;
+       cursor: default;
+     }
+  }
+  &:hover,
+  &:focus {
+
+    .global-nav-link__title {
+      background: @white !important;
+      border-left: 1px solid @vunet-border-color;
+      border-right: 1px solid @vunet-border-color;
+      border-top: 1px solid @vunet-border-color;
+      border-radius: 4px 4px 0px 0px;
+    }
+    .global-nav-link__anchor {
+      outline: 0;
+    }
+  }
+
+  &.active {
+    background-color: @vunet-top-nav-bakground-color;
+
+    .global-nav-link__anchor {
+      color: @white;
+      text-decoration: none;
+      background-color: @vunet-top-nav-bakground-color;
+      outline: 0;
+    }
+
+    .global-nav-link__title {
+      background-color: @vunet-background-color;
+      border: 1px solid @vunet-border-color;
+      border-bottom: transparent;
+      border-radius: 4px 4px 0px 0px;
+    }
+  }
+}
+
+.vunet-global-nav-link__anchor{
+  background-color: @vunet-top-nav-bakground-color;
+}
+
+.vunet-global-nav-link__title {
+  display: block !important;
+  width: 90px;
+  float: left;
+  font-size: 11px;
+  text-align: center;
+  padding: 0px 8px 0px 8px;
+
+  .is-global-nav-open & {
+    display: inline-block;
+  }
+}
+
+.vunet-global-nav__links {
+  background: @vunet-top-nav-bakground-color;
+  height: 35px;
+  overflow-x: visible !important;
+  overflow-y: hidden;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.global-nav-link-container{
+  height: 35px;
+  width: 100%;
+  border-bottom: 1px solid @vunet-border-color;
+}
+
+.vunet-app-wrapper {
+  left: 0 !important;
+}
+
+.tab-header {
+  padding: 6px 20px 0px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid #bdbdbd;
+}
+
+// css for 2nd level tabs (search, operational buttons)
+.vunetLocalNav {
+  background: @vunet-background-color;
+}

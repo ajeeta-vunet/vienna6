@@ -18,7 +18,7 @@ export function kbnChromeProvider(chrome, internals) {
     .directive('kbnChrome', () => {
       return {
         template() {
-          const $content = $(require('./kbn_chrome.html'));
+          const $content = $(require('./vunet_kbn_chrome.html'));
           const $app = $content.find('.application');
 
           if (internals.rootController) {

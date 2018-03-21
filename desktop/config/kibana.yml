@@ -31,7 +31,7 @@ elasticsearch.url: "http://localhost:19200"
 #kibana.index: ".kibana"
 
 # The default application to load.
-#kibana.defaultAppId: "home"
+kibana.defaultAppId: "dashboards"
 
 # If your Elasticsearch is protected with basic authentication, these settings provide
 # the username and password that the Kibana server uses to perform maintenance on the Kibana

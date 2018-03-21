@@ -1,0 +1,17 @@
+<div class="global-nav-link {{classes}} vunet-global-nav-link"
+  ng-class="{ active: isActive, 'is-global-nav-link-disabled': isDisabled }"
+  tooltip="{{ tooltipContent }}"
+  tooltip-placement="right"
+  tooltip-popup-delay="0"
+  tooltip-append-to-body="1">
+  <a
+    class="global-nav-link__anchor vunet-global-nav-link__anchor"
+    href="{{ getHref() }}"
+    ng-click="onClick({ $event: $event })"
+    data-test-subj="appLink"
+    aria-label="{{::label}}">
+    <div class="global-nav-link__title vunet-global-nav-link__title">
+    {{ label | uppercase }}
+    </div>
+  </a>
+</div>

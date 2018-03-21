@@ -1,0 +1,23 @@
+<div id="globalChromeContent" class="content content-normal" chrome-context data-test-subj="kibanaChrome">
+  <div id="globalAppWrapper" class="app-wrapper app-wrapper-normal vunet-app-wrapper"
+    ng-class="{ 'hidden-chrome': !chrome.getVisible() }">
+    <div class="app-wrapper-panel">
+      <kbn-notifications list="notifList"></kbn-notifications>
+      <kbn-loading-indicator></kbn-loading-indicator>
+      <global-nav
+        chrome="chrome"
+        data-test-subj="globalNav"
+        is-visible="chrome.getVisible()"
+        logo-brand="chrome.getBrand('logo')"
+        small-logo-brand="chrome.getBrand('smallLogo')"
+        app-title="chrome.getAppTitle()">
+      </global-nav>
+      <div
+        class="application"
+        ng-class="'tab-' + chrome.getFirstPathSegment() + ' ' + chrome.getApplicationClasses()"
+        ng-view
+      >
+      </div>
+    </div>
+  </div>
+</div>

@@ -29,8 +29,8 @@ uiRoutes
       reportcfg: function (savedReports) {
         return savedReports.get();
       },
-      company_name: function ($http, notify) {
-        return getTenantData($http, notify);
+      company_name: function ($http) {
+        return getTenantData($http);
       },
       // This flag indicates if new report is being
       // created.

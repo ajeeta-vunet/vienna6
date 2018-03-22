@@ -1,0 +1,167 @@
+<div>
+  <div ng-show="metricTypeSelected != 'Average'">
+    <label>
+      Interval
+      <kbn-tooltip
+        text="Select the time interval based on which you want to decide the range for color indicators. If metric selected is not 'Average', varying this time interval or global time selector will result in scaling the range for color indicators linearly. &#10; For example : for 'Count' metric, if range for color green is 0-100 with interval selected as 1 hour and if each column in the output is for 2 hour interval, color for a cell will be green if the value is between 0-200."
+        placement="right"
+        append-to-body="1"
+      >
+        <i class="fa fa-question-circle"></i>
+      </kbn-tooltip>
+    </label>
+    <select
+      ng-model="visObj.params.interval"
+      class="form-control"
+    >
+      <option value="s">Second</option>
+      <option value="m">Minute</option>
+      <option value="h">Hour</option>
+      <option value="d">Day</option>
+      <option value="w">Week</option>
+      <option value="M">Month</option>
+      <option value="y">Year</option>
+      <option value="custom">Custom</option>
+    </select>
+    <br />
+    <div ng-show="visObj.params.interval === 'custom'">
+      <label>Custom Interval</label>
+      <input
+        type="number"
+        ng-model="visObj.params.customInterval"
+        class="form-control"
+      />
+      <select
+        ng-model="visObj.params.customIntervalType"
+        class="form-control"
+      >
+        <option value="s">Second</option>
+        <option value="m">Minute</option>
+        <option value="h">Hour</option>
+        <option value="d">Day</option>
+        <option value="w">Week</option>
+        <option value="M">Month</option>
+        <option value="y">Year</option>
+      </select>
+      <br />
+    </div>
+  </div>
+  <div
+    class="color-range-form"
+    ng-show="(visObj.params.colorSchema.length < 5) || (editIndex >= 0)"
+  >
+    <label>Color</label>
+    <input
+      colorpicker
+      type="text"
+      ng-model="color"
+      class="form-control"
+    />
+    <div class="error">
+      {{ colorError }}
+    </div>
+    <label>Min</label>
+    <input
+      type="number"
+      ng-model="min"
+      class="form-control"
+    />
+    <div class="error">{{ minError }}</div>
+    <label>Max</label>
+    <input
+      type="number"
+      ng-model="max"
+      class="form-control"
+    />
+    <div class="error">{{ maxError }}</div>
+    <br />
+    <div ng-hide="editIndex >= 0">
+      <input
+        type="button"
+        value="Add range"
+        ng-click="addOrUpdateRange()"
+        class="form-control"
+      />
+    </div>
+    <div ng-show="editIndex >= 0"
+      class="row"
+    >
+      <div class="col-xs-6">
+        <input
+          type="button"
+          value="Update range"
+          ng-click="addOrUpdateRange()"
+          class="form-control"
+        />
+      </div>
+      <div class="col-xs-6">
+        <input
+          type="button"
+          value="Cancel"
+          ng-click="cancelEdit()"
+          class="form-control"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="vis-color-schema"
+    ng-show="visObj.params.colorSchema.length > 0"
+  >
+    <table class="color-schema-table">
+      <thead>
+        <tr>
+          <th>Color</th>
+          <th>Min</th>
+          <th>Max</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="colorRange in visObj.params.colorSchema">
+          <td ng-style="{ 'background-color': colorRange.color }"></td>
+          <td style="text-align: center"> {{ colorRange.min }} </td>
+          <td style="text-align: center"> {{ colorRange.max }} </td>
+          <td>
+            <button
+              ng-click="editRange($index)"
+              class="form-control"
+            >
+              <a
+                href=""
+                aria-label="Edit"
+              >
+              <i
+                aria-hidden="true"
+                class="fa fa-pencil"
+              ></i>
+              </a>
+            </button>
+          </td>
+          <td>
+            <button
+              ng-click="deleteRange($index)"
+              class="form-control"
+            >
+            <a
+              href=""
+              aria-label="Delete"
+            >
+            <i
+              aria-hidden="true"
+              class="fa fa-trash-o"
+            ></i>
+            </a>
+            </button>
+          </td>
+        </tr>
+        <tr ng-show="visObj.params.colorSchema.length === 0">
+          <td colspan="4">
+            There are no color ranges to show
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

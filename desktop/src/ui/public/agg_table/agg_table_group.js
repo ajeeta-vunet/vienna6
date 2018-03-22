@@ -24,7 +24,6 @@ uiModules
         addSrNumber: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?',
-        printReport: '=?'
       },
       compile: function ($el) {
       // Use the compile function from the RecursionHelper,

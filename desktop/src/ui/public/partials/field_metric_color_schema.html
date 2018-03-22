@@ -1,0 +1,230 @@
+<div>
+  <div class="checkbox">
+    <label>
+      <input
+        type="checkbox"
+        ng-model="visObj.params.colorCodeValues"
+      />
+      Enable color coding values
+      <kbn-tooltip
+        text="Enable this to change the background color of cells."
+        placement="right"
+        append-to-body="1"
+      >
+        <i class="fa fa-question-circle table-vis-help-hover"></i>
+      </kbn-tooltip>
+    </label>
+  </div>
+  <div
+    class="table-color-range-form"
+    ng-show="visObj.params.colorCodeValues"
+    >
+    <div ng-show="isIntervalRequired() && !isStringField(field)">
+      <label>
+        Interval
+        <kbn-tooltip
+          text="Select the time interval based on which you want to decide the range for color indicators. If metric selected is not 'Average', varying this time interval or global time selector will result in scaling the range for color indicators linearly. &#10; For example : for 'Count' metric, if range for color green is 0-100 with interval selected as 1 hour and if each row in the output is for 2 hour interval, color for a cell will be green if the value is between 0-200."
+          placement="right"
+          append-to-body="1">
+          <i class="fa fa-question-circle"></i>
+        </kbn-tooltip>
+      </label>
+      <select
+        ng-model="interval"
+        class="form-control"
+        >
+        <option value=""></option>
+        <option value="s">Second</option>
+        <option value="m">Minute</option>
+        <option value="h">Hour</option>
+        <option value="d">Day</option>
+        <option value="w">Week</option>
+        <option value="M">Month</option>
+        <option value="y">Year</option>
+        <option value="custom">Custom</option>
+      </select>
+      <br />
+      <div ng-show="interval === 'custom'">
+        <label>Custom Interval</label>
+        <input
+          type="number"
+          ng-model="customInterval"
+          class="form-control"
+        />
+        <br/>
+        <select
+          ng-model="customIntervalType"
+          class="form-control"
+          >
+          <option value="s">Second</option>
+          <option value="m">Minute</option>
+          <option value="h">Hour</option>
+          <option value="d">Day</option>
+          <option value="w">Week</option>
+          <option value="M">Month</option>
+          <option value="y">Year</option>
+        </select>
+        <br/>
+      </div>
+    </div>
+    <label>
+      Field
+      <kbn-tooltip
+        text="Select the field for which a metric is being calculated. For 'Count' leave this empty."
+        placement="right"
+        append-to-body="1"
+        >
+        <i class="fa fa-question-circle"></i>
+      </kbn-tooltip>
+    </label>
+    <select
+      class="form-control ng-pristine ng-touched"
+      name="field"
+      ng-model="field"
+      ng-show="visObj.indexPattern.fields.length"
+      auto-select-if-only-one="field"
+      ng-options="field as field.name group by field.type for field in visObj.indexPattern.fields"
+      ng-change="fieldChanged(field)"
+      >
+      <option value=""></option>
+    </select>
+    <br/>
+    <label>Color</label>
+    <input
+      colorpicker
+      type="text"
+      ng-model="color"
+      class="form-control"
+    />
+    <div class="table-color-range-error">{{colorError}}</div>
+    <br/>
+    <div
+      class="string-match"
+      ng-show="isStringField(field)"
+      >
+      <label>Match</label>
+      <input
+        type="string"
+        ng-model="match"
+        class="form-control"
+      />
+      <div class="table-color-range-error">{{matchError}}</div>
+      <br/>
+    </div>
+    <div
+      class="range-compare"
+      ng-show="isNumberField(field) || !field"
+      >
+      <label>Min</label>
+      <input
+        type="number"
+        ng-model="min"
+        class="form-control"
+      />
+      <div class="table-color-range-error">{{minError}}</div>
+      <br/>
+      <label>Max</label>
+      <input
+        type="number"
+        ng-model="max"
+        class="form-control"
+      />
+      <div class="table-color-range-error">{{maxError}}</div>
+      <br/>
+    </div>
+    <div
+      class="table-color-range-error"
+      ng-show="field && !isNumberField(field) && !isStringField(field)"
+      >
+      Unsupported type {{ field.type }}
+    </div>
+    <div ng-hide="editIndex >= 0">
+      <input
+        type="button"
+        value="Add range"
+        ng-click="addOrUpdateRange()"
+        class="form-control"
+      />
+    </div>
+    <div ng-show="editIndex >= 0"
+      class="row"
+      >
+      <div class="col-xs-6">
+        <input
+          type="button"
+          value="Update range"
+          ng-click="addOrUpdateRange()"
+          class="form-control"
+        />
+      </div>
+      <div class="col-xs-6">
+        <input
+          type="button"
+          value="Cancel"
+          ng-click="cancelEdit()"
+          class="form-control"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="vis-color-schema"
+    ng-show="visObj.params.colorCodeValues && (visObj.params.colorSchema.length > 0)"
+    >
+    <table class="table-color-schema-table">
+      <thead>
+        <tr>
+          <th>Interval</th>
+          <th>Field</th>
+          <th>Color</th>
+          <th>Match</th>
+          <th>Min</th>
+          <th>Max</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="colorRange in visObj.params.colorSchema">
+          <td style="text-align: center">{{getIntervalStr(colorRange)}}</td>
+          <td style="text-align: center">{{colorRange.field.name}}</td>
+          <td ng-style="{ 'background-color': colorRange.color }"></td>
+          <td style="text-align: center">{{colorRange.match}}</td>
+          <td style="text-align: center">{{colorRange.min}}</td>
+          <td style="text-align: center">{{colorRange.max}}</td>
+          <td>
+            <button
+              class="table-color-range-action-button"
+              ng-click="editRange($index)"
+              class="form-control"
+              >
+            <a
+              href=""
+              aria-label="Edit"
+              >
+            <i
+              aria-hidden="true"
+              class="fa fa-pencil"
+              ></i>
+            </a>
+            </button>
+            <button
+              class="table-color-range-action-button"
+              ng-click="deleteRange($index)"
+              class="form-control"
+              >
+            <a
+              href=""
+              aria-label="Delete"
+              >
+            <i
+              aria-hidden="true"
+              class="fa fa-trash-o"
+              ></i>
+            </a>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div

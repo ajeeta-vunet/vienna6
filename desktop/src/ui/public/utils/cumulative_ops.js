@@ -6,7 +6,9 @@
 // Supported operations are 'sum', 'avg', 'min' and 'max'
 export function doCumulativeOperation(operation, currentData, newValue, currentIndex) {
   if (operation === 'sum' || operation === 'avg') {
-    if (currentData === -1) {
+    // currentData is -1 when this function is called for the first entry in the row.
+    // It is undefined when this function is called for the first entry in each cloumn
+    if (currentData === -1 || currentData === undefined) {
       currentData = 0;
     }
     if (operation === 'sum') {

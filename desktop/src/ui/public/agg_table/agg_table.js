@@ -42,14 +42,14 @@ uiModules
 
         self.srHeaderAdded = false;
         self.cumulativeColumnHeaderAdded = false;
-        self.row_result = -1;
-        self.column_result = [];
 
         self._saveAs = require('@elastic/filesaver').saveAs;
         self.csv = {
           separator: config.get('csv:separator'),
           quoteValues: config.get('csv:quoteValues')
         };
+
+        self.results = {};
 
         self.exportAsCsv = function (formatted) {
           const csv = new Blob([self.toCsv(formatted)], { type: 'text/plain;charset=utf-8' });
@@ -61,7 +61,7 @@ uiModules
           const columns = formatted ? $scope.formattedColumns : $scope.table.columns;
           const nonAlphaNumRE = /[^a-zA-Z0-9]/;
           const allDoubleQuoteRE = /"/g;
-          const srNumber = -1;
+          let srNumber = -1;
 
           if ($scope.addSrNumber && !self.srHeaderAdded) {
             columns.unshift({ title: 'Sr. No.' });
@@ -96,13 +96,19 @@ uiModules
           // Based on the configured row / column cumulative operation,
           // calculate the cumulative result and add it to the results table
           return csvRows.map(function (row, rowNumber) {
-            addSrNumberAndTotalsRow(row,
+            if ($scope.addSrNumber) {
+              srNumber += 1;
+            }
+            return addSrNumberAndTotalsRow(row,
               rowNumber,
               csvRows,
               $scope.cumulativeRowOperation,
               $scope.cumulativeColumnOperation,
               $scope.addSrNumber,
-              srNumber);
+              srNumber,
+              self.csv,
+              self.results
+            );
           }).join('');
         };
 

@@ -46,8 +46,11 @@ function TableVisTypeProvider(Private) {
           columnIndex: null,
           direction: null
         },
-        showTotal: false,
-        totalFunc: 'sum'
+        colorCodeValues: false,
+        colorSchema: [],
+        addSrNumber: false,
+        showCumulativeRow: false,
+        cumulativeRowOperation: 'sum'
       },
       template: tableVisTemplate,
     },

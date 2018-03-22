@@ -140,58 +140,66 @@ export function applyColorSchemaForTableVis(val, multiplier, cell, configObj, sc
   });
 }
 
-// This function prepares the data for cumulative operation. Based on the
-// cumulative operation, it caluculates the row cumulative result or column
-// cumulative result
-export function executeCumulativeOperation(rowOperation, rowValue, columnOperation, rowIndex) {
-  if (rowOperation || columnOperation) {
-    rowValue.forEach(function (value, i) {
-      // Remove ',' and '"' (double quotes) in the value.
-      const numValue = Number(value.replace(/,/g, '').replace(/"/g, ''));
-      // We continue only if the value is a number
-      if (!isNaN(numValue)) {
-        if (rowOperation) {
-          self.row_result = doCumulativeOperation(rowOperation, self.rowResult, numValue, rowIndex);
-        }
-        if (columnOperation) {
-          self.column_result[i] = doCumulativeOperation(columnOperation, self.columnResult[i], numValue, rowIndex);
-        }
-      }
-    });
-  }
-}
-
 // This function is used to add the row / column cumulative result based on the
 // configuration. This also add serial number column.
-export function addSrNumberAndTotalsRow(row, rowNumber, csvRows, cumulativeRowOperation, cumulativeColumnOperation, addSrNumber, srNumber) {
-  let rowAsCsv = row.join(self.csv.separator);
+export function addSrNumberAndTotalsRow(row, rowNumber, csvRows, cumulativeRowOperation,
+  cumulativeColumnOperation, addSrNumber, srNumber, csv, results) {
+  results.rowResult = -1;
+
+  let rowAsCsv = row.join(csv.separator);
+  if(rowNumber === 0) {
+    results.columnResult = [];
+  }
+
   if (rowNumber > 0) {
-    executeCumulativeOperation(cumulativeColumnOperation, row, cumulativeRowOperation, rowNumber);
+    executeCumulativeOperation(cumulativeColumnOperation, row, cumulativeRowOperation, rowNumber, results);
+
     if (cumulativeColumnOperation) {
-      rowAsCsv += self.csv.separator + self.row_result;
-      self.row_result = -1;
+      rowAsCsv += csv.separator + results.rowResult;
+      results.rowResult = -1;
     }
+
     if (cumulativeRowOperation) {
-      if (rowNumber === (length - 1)) {
-        rowAsCsv += '\r\n' + 'Cumulative ( ' + _.startCase(cumulativeRowOperation) + ' )' + self.csv.separator;
-        rowAsCsv += self.column_result.slice(1).join(self.csv.separator);
+      if (rowNumber === (csvRows.length - 1)) {
+        rowAsCsv += '\r\n' + 'Cumulative ( ' + _.startCase(cumulativeRowOperation) + ' )' + csv.separator;
+        if (addSrNumber) {
+          rowAsCsv += csv.separator;
+        }
+        rowAsCsv += results.columnResult.slice(1).join(csv.separator);
       }
     }
   }
-
   // If we are supposed to add a serial number column
-  if (addSrNumber) {
+  if (addSrNumber && rowNumber > 0) {
     // If the srNumber is -1, means this is the row
     // with only column names. Nothing special to be done.
     if (srNumber === -1) {
-      srNumber += 1;
       return rowAsCsv + '\r\n';
     }
     // We are now handling rows with values, then append the serial
     // number to it
-    srNumber += 1;
-    return srNumber + self.csv.separator + rowAsCsv + '\r\n';
+    return srNumber + csv.separator + rowAsCsv + '\r\n';
   } else {
     return rowAsCsv + '\r\n';
+  }
+}
+
+// This function prepares the data for cumulative operation. Based on the
+// cumulative operation, it caluculates the row cumulative result or column
+// cumulative result
+function executeCumulativeOperation(rowOperation, rowValue, columnOperation, rowIndex, results) {
+  if (rowOperation || columnOperation) {
+    rowValue.forEach(function (value, i) {
+      const numValue = Number(value.replace(/,/g, '').replace(/"/g, ''));
+      // We continue only if the value is a number
+      if (!isNaN(numValue)) {
+        if (rowOperation) {
+          results.rowResult = doCumulativeOperation(rowOperation, results.rowResult, numValue, rowIndex);
+        }
+        if (columnOperation) {
+          results.columnResult[i] = doCumulativeOperation(columnOperation, results.columnResult[i], numValue, rowIndex);
+        }
+      }
+    });
   }
 }

@@ -1,0 +1,33 @@
+<div class="checkbox">
+  <label>
+    <input
+      type="checkbox"
+      ng-model="vis.params.showCumulativeRow"
+      >
+    Show row with cumulative results
+    <kbn-tooltip
+      text="Enable this to show an additional row with cumulative results"
+      placement="right"
+      append-to-body="1"
+      >
+      <i class="fa fa-question-circle table-vis-help-hover"></i>
+    </kbn-tooltip>
+  </label>
+  <div
+    class="dropdown cumulative-container"
+    ng-show="vis.params.showCumulativeRow"
+    >
+    <label>
+      <span> Cumulative operation to be done </span>
+      <select
+        id="rowOperation"
+        ng-model="vis.params.cumulativeRowOperation"
+        >
+        <option value="sum">Sum</option>
+        <option value="avg">Average</option>
+        <option value="min">Min</option>
+        <option value="max">Max</option>
+      </select>
+    </label>
+  </div>
+</div>

@@ -102,6 +102,9 @@ function alertAppEditor($scope,
     };
   });
 
+  // Set the landing page for alerts section
+  $scope.landingPageUrl = () => `#${AlertConstants.LANDING_PAGE_PATH}`;
+
   // Populate allowedRoles from alertcfg
   const allowedRoles = alertcfg.allowedRolesJSON ? JSON.parse(alertcfg.allowedRolesJSON) : [];
 

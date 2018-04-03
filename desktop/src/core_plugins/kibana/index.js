@@ -107,9 +107,21 @@ export default function (kibana) {
           description: 'create highly customized reports',
           icon: 'plugins/kibana/assets/report.svg',
         }, {
+          id: 'kibana:event',
+          title: 'Event',
+          order: -1006,
+          url: `${kbnBaseUrl}#/event`,
+          // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
+          // above. This app has to use a different subUrlBase. When we introduced a landing page, we needed to change
+          // the url above in order to preserve the original url for BWC. The subUrlBase helps the Chrome api nav
+          // to determine what url to use for the app link.
+          subUrlBase: `${kbnBaseUrl}#/event`,
+          description: 'compose visualizations for much win',
+          icon: 'plugins/kibana/assets/event.svg',
+        }, {
           id: 'kibana:dashboard',
           title: 'Dashboard',
-          order: -1006,
+          order: -1007,
           url: `${kbnBaseUrl}#/dashboards`,
           // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
           // above. This app has to use a different subUrlBase, in addition to the url above, because "#/dashboard"

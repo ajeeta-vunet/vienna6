@@ -80,6 +80,10 @@ export function getUiSettingDefaults() {
       value: 500,
       description: 'The number of rows to show in the table',
     },
+    'event:sampleSize': {
+      value: 100,
+      description: 'The number of events to show in the list of events table',
+    },
     'discover:aggs:terms:size': {
       value: 20,
       type: 'number',

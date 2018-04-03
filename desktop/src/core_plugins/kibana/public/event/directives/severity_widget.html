@@ -1,0 +1,24 @@
+<div>
+  <div class="severity-circle-inner-wrapper">
+    <div class="severity-circle-text">
+      <div>{{ widget.selected_period }}</div>
+      <p class="severity-header">{{ widget.type }}</p>
+    </div>
+  </div>
+  <div class="severity-sub-widget">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="sub-widget-count">{{ widget.last_7_days }}</div>
+        <div class="sub-widget-text">1 week</div>
+      </div>
+      <div class="col-md-4">
+        <div class="sub-widget-count">{{ widget.last_1_day }}</div>
+        <div class="sub-widget-text">1 day</div>
+      </div>
+      <div class="col-md-4">
+        <div class="sub-widget-count">{{ widget.last_1_hour}}</div>
+        <div class="sub-widget-text">1 hour</div>
+      </div>
+    </div>
+  </div>
+</div>

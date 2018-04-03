@@ -11,6 +11,12 @@ export default function (chrome, internals) {
    *     determines if the Kibana chrome should be displayed
    */
 
+  // Hard coding the tenant and bu ids which will be
+  // populated later through api calls.
+  const tenantId = 1;
+  const buId = 1;
+  const BASE_URL = 'vuSmartMaps/api';
+
   let permanentlyHideChrome = false;
   internals.permanentlyHideChrome = () => {
     permanentlyHideChrome = true;
@@ -39,5 +45,21 @@ export default function (chrome, internals) {
   chrome.getVisible = function () {
     if (_.isUndefined(internals.visible)) return !permanentlyHideChrome;
     return internals.visible;
+  };
+
+  // Prepare first part of the url using the
+  // tenant and bu ids which can be used by
+  // different apis to prepare the complete urls.
+  chrome.getUrlBase = function () {
+    const url = '/' + BASE_URL + '/' + tenantId + '/bu/' + buId;
+    return url;
+  };
+
+  // This function returns the notification index.
+  // We prepare the notification index using the
+  // tenant id and bu id.
+  chrome.getVunetIndexName = function (indexType) {
+    const index = 'vunet-' + tenantId + '-' + buId + '-' + indexType + '-*';
+    return index;
   };
 }

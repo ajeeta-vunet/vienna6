@@ -1,0 +1,114 @@
+<event-app class="event app-container">
+  <kbn-top-nav name="event" config="topNavMenu">
+
+    <!-- Transcluded elements. -->
+    <div data-transclude-slots>
+
+      <!-- Title. -->
+      <div data-transclude-slot="topLeftCorner" class="kuiLocalBreadcrumbs" data-test-subj="breadcrumbs" role="heading" aria-level="1">
+        <div class="kuiLocalBreadcrumb">
+          Events of Interest
+        </div>
+      </div>
+
+    </div>
+  </kbn-top-nav>
+
+  <div class="app-container event-container">
+    <filter-bar state="state"></filter-bar>
+    <div class="row top-widget">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8">
+        <div class="table severity-container">
+          <div ng-if="severityWidgetList">
+            <div class="severity-widget-container">
+              <div class="severity-circle-wrapper" ng-class="setCssForSeverityBasedWidgets(widget.type)" ng-repeat="widget in severityWidgetList"
+                ng-click="filter(widget.type)">
+                <div severity-widget widget="widget">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-if="!severityWidgetList">
+            No results found
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="listOfEvents.length" class="row">
+      <div st-table="displayData" st-safe-src="listOfEvents" class="col-md-4 event-list-container">
+        <div class="row event-search-wrapper">
+          <input st-search="" class="form-control smart-search" placeholder="search here" type="text" />
+        </div>
+        <div class="row sample-size-message" ng-if="totalEventsCount > eventSampleSize || totalEventsCount > 1000">
+          These are the first {{noOfEvents}} events. Refine your search to see others
+        </div>
+        <div class="row events-table-wrapper">
+          <table>
+            <tr ng-repeat="event in displayData" st-select-row="event">
+              <td event-summary event="event" show-event-information="showEventInformation({id: id, summary: summary})">
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="row" st-pagination="" st-items-by-page="itemsByPage">
+        </div>
+      </div>
+      <div ng-if="eventInfoList.length" class="col-md-8 alert-content-block-container">
+        <div class="row alert-quick-links">
+          <div class="col-md-4 event-details-header">VuSmart Alerts</div>
+          <div ng-if="ticketId != ''" class="col-md-4">
+            Service Now Ticket Id: {{ ticketId }}
+          </div>
+        </div>
+        <div class="row detailed-alert-info">
+          <div class="col-md-6" ng-repeat="section in eventInfoList" event-detailed-info section="section">
+          </div>
+        </div>
+        <div ng-if="additionalInfoList.length" class="additional-info-container">
+          <div class="row alert-content-block-wrapper" ng-repeat="section in additionalInfoList" additional-info section="section">
+          </div>
+        </div>
+        <div class="comment-container">
+          <div class="row">
+            <div ng-if="listOfComments.length <= 0" class="comment-section-header">
+              Leave a comment
+            </div>
+            <div ng-if="listOfComments.length === 1" class="comment-section-header">
+              {{ listOfComments.length }} Comment
+            </div>
+            <div ng-if="listOfComments.length > 1" class="comment-section-header">
+              {{ listOfComments.length }} Comments
+            </div>
+            <div class="row comment-item">
+              <div class="col-md-10 comment-text-section">
+                <form name="commentForm">
+                  <textarea type="text" rows="4" cols="80" name="commentBox" ng-maxlength="350" ng-model="comment.commentString">
+                    </textarea>
+                  <p class="error-highlight" ng-show="commentForm.commentBox.$error.maxlength">
+                    Comments cannot exceed 350 characters
+                  </p>
+                  <p>
+                    <input type="submit" class="comment-button" ng-disabled="comment.commentString.length <= 0" ng-click="postComment()">
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div ng-repeat="comment in listOfComments" class="row comment-item">
+            <div class="comment-text-section">
+              <div class="commentor-name">
+                {{ comment.username }}
+                <span class="comment-time" am-time-ago="{{ comment.timestamp | amUtc | amParse:'YYYY-MM-DD HH:mm:ss' }}">
+                  {{ comment.timestamp }}
+                </span>
+              </div>
+              <div class="comment-text">{{comment.comment}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</event-app>

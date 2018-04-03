@@ -1,0 +1,18 @@
+<div>
+  <div class="alert-content-block-header"> {{ section.header }}</div>
+  <div class="alert-content-block-header sub-header"> 
+    {{ section.subHeader }}
+  </div>
+  <table class="table agg-table-group custom-table">
+    <thead>
+      <tr>
+        <td ng-repeat="colHeader in section.tableHeaders">{{ colHeader }}</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="row in section.tableRowsList track by $index">
+        <td ng-repeat="colValue in row track by $index">{{ colValue }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

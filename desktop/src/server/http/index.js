@@ -166,6 +166,7 @@ export default async function (kbnServer, server, config) {
   server.exposeStaticDir('/ui/fonts/{path*}', resolve(__dirname, '../../ui/public/assets/fonts'));
   server.exposeStaticDir('/ui/favicons/{path*}', resolve(__dirname, '../../ui/public/assets/favicons'));
   server.exposeStaticDir('/ui/vienna_images/{path*}', resolve(__dirname, '../../ui/vienna_images'));
+  server.exposeStaticDir('/ui/vienna_data/{path*}', resolve(__dirname, '../../ui/vienna_data'));
 
   kbnServer.mixin(versionCheckMixin);
 

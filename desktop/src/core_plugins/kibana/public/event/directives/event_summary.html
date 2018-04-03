@@ -1,0 +1,73 @@
+<div
+  class="event-item"
+  ng-class="{'al-active': event.isSelected===true}"
+  ng-click="showEventInformation({id: event.id, summary: event.summary})">
+  <div class="event-name">
+    <i
+      class="fa event-list-icon"
+      ng-class="setIconsForAlertItems(event.severity)"
+      aria-hidden="true"></i>
+    <span class="event-list-header"> {{ event.type }} </span>
+    <span class="event-list-time">{{ event.timestamp | date : 'yyyy-MM-dd HH:mm:ss Z' }}</span>
+  </div>
+  <div class="row">
+    <div class="col-md-8 event-summary">
+      {{ event.summary }}
+    </div>
+    <div class="col-md-4 risk-score-container">
+      <span class="risk-score-header"> Risk Score</span>
+      <span class="risk-score">{{ event['risk-score'] }}</span>
+    </div>
+  </div>
+  <div class="event-history-header">Alert History</div>
+  <div class="row event-list-global-count">
+    <div
+      ng-if="event.History.Alert_Frequency_for_Today"
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Alert_Frequency_for_Today | toHour }}
+      </span>
+      <span class="event-count-unit">Hour</span>
+      <p>Today</p>
+    </div>
+    <div
+      ng-if="event.History.Alert_Frequency_in_Last_2_Days"
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Alert_Frequency_in_Last_2_Days | toHour }}
+      </span>
+      <span class="event-count-unit">Hour</span>
+      <p> In 48 hours</p>
+    </div>
+    <div
+      ng-if="event.History.Alert_Frequency_in_Last_7_Days"
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Alert_Frequency_in_Last_7_Days | toHour }}
+      </span>
+      <span class="event-count-unit">Hour</span>
+      <p>In 7 days</p>
+    </div>
+    <div
+      ng-if="event.History.Alert_Active_For"
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Alert_Active_For | toHour }}
+      </span>
+      <span class="event-count-unit">Hour</span>
+      <p>Active for</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <span class="event-view-button">
+        Number of similar events: {{event.Similar_Events_Count}}
+      </span>
+    </div>
+  </div>
+  <div
+    ng-if="event.isSelected===true" 
+    class="triangle">
+    <img src="/ui/vienna_images/triangle.png">
+  </div>
+</div>

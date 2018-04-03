@@ -1,0 +1,300 @@
+<form name="vudataMetricForm">
+  <div class="form-group bottom-space">
+    <label>
+      Aggregation
+    </label>
+    <select
+      class="form-control"
+      ng-model="metric.type"
+      ng-change="opts.updateMetricType()"
+      name="type"
+      ng-class="{error: vudataMetricForm.metric.type.$error.required}"
+      required>
+      <option value="count">Count</option>
+      <option value="sum">Sum</option>
+      <option value="avg">Average</option>
+      <option value="min">Min</option>
+      <option value="max">Max</option>
+      <option value="cardinality">Unique Count</option>
+      <option value="latest">Latest value</option>
+    </select>
+  </div>
+  <div ng-show="opts.showFields">
+    <div class="form-group bottom-space">
+      <label>
+        Field
+      </label>
+      <select
+        ng-show="!opts.showStringFields"
+        class="form-control"
+        name="field"
+        ng-options="field.name as field.name group by field.type for field in indexFields | filter:field.type='number' | orderBy:'name'"
+        ng-model="metric.field"
+        ng-change="opts.updateFieldName()"
+        ng-required="opts.showFields"
+        ng-class="{error: vudataMetricForm.metric.field.$error.required}">
+      </select>
+      <select
+        ng-show="opts.showStringFields"
+        class="form-control"
+        name="field"
+        ng-options="field.name as field.name group by field.type for field in indexFields | orderBy:'name'"
+        ng-model="metric.field"
+        ng-change="opts.updateFieldName()"
+        ng-required="opts.showFields"
+        ng-class="{error: vudataMetricForm.metric.field.$error.required}">
+      </select>
+    </div>
+  </div>
+  <div class="form-group bottom-space">
+    <label>
+      Custom Label
+    </label>
+    <input
+      class="form-control"
+      type="text"
+      ng-model="metric.label"
+      name="metricAlias"
+      required/>
+  </div>
+  <div class="form-group bottom-space">
+    <label>
+      Description
+      <kbn-tooltip
+        text="Description added here will be shown as a help text when hovered over the help icon next to 'Custom Label'"
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+    <input
+      class="form-control"
+      type="text"
+      ng-model="metric.description"
+      name="metricDescription"/>
+  </div>
+  <div class="form-group bottom-space">
+    <label>
+      Options
+      <kbn-tooltip
+        text="Enable this to customize the visualization according to your requirements"
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+    <input
+      type="checkbox"
+      class="vudata-checkbox"
+      ng-model="opts.optionsEnabled"/>
+  </div>
+  <div class="vudata-options"
+    ng-show="opts.optionsEnabled">
+    <div class="form-group bottom-space">
+      <label>
+        Filter
+        <kbn-tooltip
+        text="Use this to enter additional filters.To perform a free text based filter, simply enter a text string. To filter based on a value in a specific field, prefix the value with the name of the field. For example, enter status:200 to limit the rule to data that contain the value 200 in the status field. To specify multiple such conditions, use operators"
+        placement="right"
+        append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <input
+        class="form-control"
+        type="text"
+        ng-model="metric.filter"
+        name="metricFilter"/>
+    </div>
+    <div class="form-group">
+      <label>Font Size - {{ metric.fontSize }}pt</label>
+      <input
+        type="range"
+        ng-model="metric.fontSize"
+        class="form-control"
+        min="12"
+        max="120" />
+    </div>
+    <div class="form-group bottom-space">
+      <label>
+        Goal
+        <kbn-tooltip
+        text="Provide insights regarding the feasible range for the business metric visualization. This will be shown below the metric value"
+        placement="right"
+        append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <input
+        class="form-control"
+        type="text"
+        ng-model="metric.goalLabel"
+        name="metricgoalLabel"/>
+    </div
+
+    <!-- Color schema config  starts-->
+    <div class="collapse-header-wrapper">
+      <button
+        aria-label="{{ showColorSchemaOptions ? 'Close' : 'Open' }}"
+        ng-click="showColorSchemaOptions = !showColorSchemaOptions"
+        type="button"
+        class="btn btn-default btn-xs vis-editor-agg-header-toggle">
+          <i
+            aria-hidden="true"
+            ng-class="{ 'fa-caret-down': showColorSchemaOptions,
+            'fa-caret-right': !showColorSchemaOptions }"
+            class="fa">
+          </i>
+      </button>
+
+      <!-- title -->
+      <span class="collapse-header">
+        Color Schema
+      </span>
+    </div>
+
+    <div
+      ng-if="showColorSchemaOptions">
+      <div class="form-group bottom-space">
+        <label>
+          Enable color schema
+          <kbn-tooltip text="Configure color indicators for this metric. It allows you to specify colors to be used. If metric doesn't fall under any range, it will use the default color." placement="right" append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="opts.colorSchemaEnabled"
+          ng-change="opts.toggleColorSchema()"/>
+      </div>
+      <div
+        class="form-group bottom-space"
+        ng-show="opts.colorSchemaEnabled">
+          <vudata-metric-color-schema
+            metric-type="metric.type"
+            color-schema="metric.colorSchema"
+            index-fields="indexFields"
+            field="opts.fieldObj">
+          </vudata-metric-color-schema>
+      </div>
+      <div class="form-group bottom-space">
+        <label>
+          Enable background theme
+          <kbn-tooltip text="Enable this to have background color as a severity indicator for the metric"
+            placement="right" append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="metric.bgColorEnabled"/>
+      </div>
+    </div>
+    <!-- Color schema config ends-->
+
+    <!-- time shift config starts -->
+    <div class="collapse-header-wrapper">
+      <button
+        aria-label="{{ showTimeShiftOptions ? 'Close' : 'Open' }}"
+        ng-click="showTimeShiftOptions = !showTimeShiftOptions"
+        type="button"
+        class="btn btn-default btn-xs vis-editor-agg-header-toggle">
+        <i
+          aria-hidden="true"
+          ng-class="{ 'fa-caret-down': showTimeShiftOptions,
+                      'fa-caret-right': !showTimeShiftOptions }"
+          class="fa">
+        </i>
+      </button>
+
+      <!-- title -->
+      <span class="collapse-header">
+        Time Shift
+      </span>
+    </div>
+
+    <div
+      ng-if="showTimeShiftOptions">
+      <div class="form-group bottom-space">
+        <label>
+          Enable time shift values
+          <kbn-tooltip text="Use this to display metric values or change in percentage with respect to business metric in different time periods"
+            placement="right"
+            append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="opts.timeShiftEnabled"
+          ng-change="opts.toggletimeShift()"/>
+      </div>
+      <div
+        class="form-group bottom-space"
+        ng-show="opts.timeShiftEnabled">
+        <time-shift-metric
+        time-shift="metric.timeShift">
+        </time-shift-metric>
+        <div class="form-group bottom-space">
+          <label>
+            Display time shift values in percentage
+            <kbn-tooltip
+              text="Enable this checkbox to display time shift values in percentage"
+              placement="bottom"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="metric.timeShiftPercentageEnabled"/>
+        </div>
+      </div>
+    </div>
+    <!-- time shift config starts -->
+  </div>
+</form>

@@ -1,1 +1,1 @@
-export { timeEditor } from './string';
+export { timeEditor } from './time';

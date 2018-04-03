@@ -1,0 +1,42 @@
+<form name="vuReferenceLinkForm">
+  <div class="form-group bottom-space">
+    <label>
+      Reference Link
+      <kbn-tooltip
+        text="Enable this to provide a reference to a specific Dashboard or Events page"
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+    <input
+      type="checkbox"
+      class="vudata-checkbox"
+      ng-model="referenceLink.enabled"/>
+    <div ng-if="referenceLink.enabled">
+      <select 
+        class="form-control"
+        name="type"
+        ng-model="referenceLink.type"
+        >
+        <option value="dashboard">Dashboard</option>
+        <option value="event">Events</option>
+      </select>
+      <div class="referenceLinkDashboard" ng-if='referenceLink.type=="dashboard"'>
+        Select Dashboard:
+        <select 
+          class="form-control"
+          name="referenceLinkDashboard"
+          ng-options="option as option.title for option in dashboardList track by option.id"
+          ng-model="referenceLink.dashboard"
+          ng-required='referenceLink.type=="dashboard"'>
+        </select>
+      </div>
+    </div>
+  </div>
+</form>

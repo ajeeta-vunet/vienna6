@@ -828,7 +828,6 @@ export default function (server) {
         // if aggregation doesnot exist we initialize
         // nodes and edges to []
         if(!resp.hasOwnProperty('aggregations')) {
-          const data = { 'nodes': [], 'edges': [] };
           return reply({ 'data': [] });
         }
         processESResponse(esQuery, resp.aggregations, instanceDict, responseList);

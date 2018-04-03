@@ -10,7 +10,7 @@ export default function (kibana) {
         'plugins/heartbeat_vis/heartbeat_vis'
       ]
     },
-    init(server, options) {
+    init(server) {
       // Add server routes and initialize the plugin here
       heartbeatRouteHandler(server);
     }

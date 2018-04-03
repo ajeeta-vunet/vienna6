@@ -1,1 +1,1 @@
-export { bitsEditor } from './percent';
+export { bitsEditor } from './bits';

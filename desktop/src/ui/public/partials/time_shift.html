@@ -1,0 +1,167 @@
+<div class="timeshift-config-container">
+  <form>
+    <table class="time-shift-table">
+      <thead>
+        <tr>
+          <th class="time-shift-label">Label</th>
+          <th class="value">Value</th>
+          <th class="unit">Unit</th>
+          <th class="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          data-ng-repeat="item in timeShift track by $index">
+          <td class="time-shift-label">
+            {{ item.label }}
+          </td>
+          <td class="value">
+            {{ item.value }}
+          </td>
+          <td class="unit">
+            {{ item.unit }}
+          </td>
+          <td>
+            <kbn-tooltip
+              text="Edit this time shift value"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="editConfig(item, $index)"
+                class=""
+                aria-label="Edit">
+                <i
+                  aria-hidden="true"
+                 class="fa fa-pencil">
+                </i>
+              </a>
+            </kbn-tooltip>
+            <kbn-tooltip
+              text="Delete this time shift value"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="deleteConfig($index)"
+                class=""
+                aria-label="Delete">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-trash-o">
+                </i>
+              </a>
+            </kbn-tooltip>
+          </td>
+        </tr>
+        <tr ng-show="timeShift.length < 1">
+          <td colspan="4" class="time-shift-default-message">
+            No time shift values have been configured.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      ng-show="addingtimeShift || (editIndex >= 0)"
+      class="timeshift-form">
+      <div class="row timeshift-element">
+        <label>
+          Label
+          <kbn-tooltip
+            text="Provide a display name for the time shift metric"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <input
+          class="form-control time-shift-input"
+          type="text"
+          ng-model="label"
+          name="timeShiftLabel"/>
+      </div>
+      <div class="row timeshift-element">
+        <label>
+          Duration
+          <kbn-tooltip
+            text="Provide a duration value for the time shift metric."
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <input
+          class="form-control time-shift-input"
+          type="text"
+          ng-model="value"
+          name="timeShiftValue"/>
+      </div>
+      <div class="row timeshift-element">
+        <label>
+          Unit
+          <kbn-tooltip
+            text="Provide a duration unit for the time shift metric."
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <select
+          class="form-control"
+          name="timeShiftUnit"
+          ng-model="unit">
+          <option value="s">Second</option>
+          <option value="m">Minute</option>
+          <option value="h">Hour</option>
+          <option value="d">Day</option>
+          <option value="w">Week</option>
+          <option value="M">Month</option>
+          <option value="y">Year</option>
+        </select>
+      </div>
+      <div
+        ng-hide="editIndex >= 0"
+        class="row">
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Add config"
+            ng-click="addConfig()"
+            class="form-control">
+        </div>
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Cancel"
+            ng-click="cancelEdit()"
+            class="form-control">
+        </div>
+      </div>
+      <div
+        ng-show="editIndex >= 0"
+        class="row">
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Update config"
+            ng-click="updateConfig()"
+            class="form-control">
+        </div>
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Cancel"
+            ng-click="cancelEdit()"
+            class="form-control">
+        </div>
+      </div>
+    </div>
+    <button
+      ng-if="timeShift.length < 3"
+      type="text"
+      ng-click="addtimeShift()"
+      class="btn btn-default add-timeshift-button">
+      Add a time shift metric
+    </button>
+  </form>
+</div>

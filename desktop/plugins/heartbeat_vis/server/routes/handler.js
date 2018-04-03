@@ -1,13 +1,13 @@
 export default (server) => {
 
-  const heartbeat_vis = require('./heartbeat_vis')(server);
+  const heartbeatVis = require('./heartbeat_vis')(server);
 
   server.route({
     path: '/api/heartbeat_vis/run',
     method: 'POST',
     handler: (req, reply) => {
       console.log('Got a request from frontend');
-      return heartbeat_vis.heartbeat_vis_full_path(req, reply);
+      return heartbeatVis.heartbeat_vis_full_path(req, reply);
     }
   });
 
@@ -16,7 +16,7 @@ export default (server) => {
     method: 'POST',
     handler: (req, reply) => {
       console.log('Got a request from frontend');
-      return heartbeat_vis.tracepath_vis_hop(req, reply);
+      return heartbeatVis.tracepath_vis_hop(req, reply);
     }
   });
 };

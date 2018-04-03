@@ -1,0 +1,115 @@
+<div
+  ng-controller="BusinessMetricVisController"
+  class="business-metric-container-wrapper">
+  <div
+    ng-if="!apiError"
+    class="business-metric-container"
+    ng-style="vis.params.metric.bgColorEnabled &&
+      {'background-color': metricData.color, 'color': '#fff' }">
+    <div
+      class="view-more-link flex-container"
+      ng-if="vis.params.referenceLink.enabled">
+      <div ng-click="viewDashboardForThisMetric()">
+        <kbn-tooltip
+          text="View More"
+          placement="left"
+          append-to-body="1">
+          <i
+            class="fa fa-arrow-circle-o-right"
+            ng-class="{'white': vis.params.metric.bgColorEnabled }"
+            aria-hidden="true">
+          </i>
+        </kbn-tooltip>
+      </div>
+    </div>
+    <div class="bs-metric-vis">
+      <div class="bs-metric-container">
+        <div class="bs-metric-label">
+          {{ vis.params.metric.label }}
+          <kbn-tooltip
+            ng-if="vis.params.metric.description"
+            text="{{vis.params.metric.description}}"
+            placement="bottom"
+            append-to-body="1">
+            <i
+              class="fa fa-question-circle"
+              ng-class="{'white': vis.params.metric.bgColorEnabled }"
+              aria-hidden="true">
+            </i>
+          </kbn-tooltip>
+        </div>
+        <div
+          class="bs-metric-value"
+          ng-style="vis.params.metric.bgColorEnabled ?
+          {'font-size': vis.params.metric.fontSize+'pt', 'background': metricData.color }:
+          {'font-size': vis.params.metric.fontSize+'pt', 'color': metricData.color }">
+          {{ metricData.formattedValue }}
+        </div>
+        <div class="goal-label">{{ vis.params.metric.goalLabel }}</div>
+      </div>
+    </div>
+    <div
+      class="flex-container more-info-container"
+      ng-if="metricData.timeshift.length"
+      ng-style="vis.params.metric.bgColorEnabled &&
+      {'background-color': darkShade,
+       'color': '#fff',
+       'border-color': darkShade}"
+      ng-class="{'align-timeshift-metric':metricData.timeshift.length===1}">
+      <div
+        class="timeshift-block"
+        ng-repeat="timeshiftObj in metricData.timeshift">
+        <div ng-class="{'red': timeshiftObj.icon==='fa-caret-down' && !vis.params.metric.bgColorEnabled,
+        'green': timeshiftObj.icon==='fa-caret-up' &&
+        !vis.params.metric.bgColorEnabled}">
+          <div
+            class="timeshift-label">
+            {{ timeshiftObj.label }}
+          </div>
+          <div class="value-indicators">
+            <i
+              class="timeshift-value fa"
+              ng-class="timeshiftObj.icon"
+              aria-hidden="true">
+            </i>
+            <!-- Display time shift values in percentage -->
+            <span ng-if="vis.params.metric.timeShiftPercentageEnabled">
+              <span ng-if="timeshiftObj.value">
+                <!-- Handle infinity case -->
+                <span
+                  ng-if="timeshiftObj.percentage === -1"
+                  class="timeshift-value">
+                  &#8734;
+                </span>
+                <!-- Display percentage values -->
+                <span
+                  ng-if="timeshiftObj.percentage !== -1"
+                  class="timeshift-value">
+                  {{ timeshiftObj.percentage }}%
+                </span>
+              </span>
+            </span>
+            <!-- Display formatted values -->
+            <span ng-if="!vis.params.metric.timeShiftPercentageEnabled"
+              class="timeshift-value">
+              {{timeshiftObj.formattedValue}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    ng-if="apiError"
+    class="business-metric-container api-error-container">
+    <div class="api-error-inner-container">
+      <h2 aria-hidden="true">
+        <i
+          aria-hidden="true"
+          class="fa fa-meh-o">
+        </i>
+      </h2>
+      <h4>No results found</h4>
+    </div>
+  </div>
+</div>

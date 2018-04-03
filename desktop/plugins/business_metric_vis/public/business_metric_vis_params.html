@@ -1,0 +1,64 @@
+<div
+  ng-controller="BusinessMetricVisParamsController"
+  class="business-metric-sidebar-container">
+  <div class="form-group">
+    <label>
+      Index
+      <kbn-tooltip 
+        text="Select a data source to display business metric visualization"
+        placement="right"
+        append-to-body="1">
+        <span> 
+          <i
+            class="fa fa-question-circle" 
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+    <select 
+      class="form-control"
+      name="index"
+      ng-options="option.title for option in indexPatternIds |orderBy"
+      ng-model="index"
+      ng-change="setIndexPattern()"
+      required>
+    </select>
+  </div>
+  <div class="form-group">
+    <vudata-metric
+     metric="vis.params.metric"
+     index-fields="indexFields">
+    </vudata-metric>
+  </div>
+  <div class="form-group">
+    <vudata-reference-link
+      reference-link="vis.params.referenceLink">
+    </vudata-reference-link>
+  </div>
+  <div class="form-group bottom-space">
+    <div class="uvmap-vis-editor-expression">
+      <div>
+        <label>
+          Advanced Configuration
+          <kbn-tooltip
+            text="Provide advanced configuration for business metric"
+            placement="bottom"
+            append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+      </div>
+      <textarea
+        ng-model="vis.params.advancedConfig"
+        class="form-control"
+        rows="5">
+      </textarea>
+    </div>
+  </div>
+</div>

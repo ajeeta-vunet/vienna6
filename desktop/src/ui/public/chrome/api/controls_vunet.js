@@ -100,11 +100,15 @@ export default function (chrome, internals) {
    * Get Dashboard name configured for the User
    */
   chrome.getUserHomeDashboard = function () {
-    if (internals.userHomeDashboard === '') {
-      return '/' + chrome.getInjected('kbnDefaultAppId', 'dashboard');
+    // If the home dashboard is configured for the user return it
+    if (internals.userHomeDashboard) {
+      const userHomeDashboard = JSON.parse(internals.userHomeDashboard);
+      return 'dashboard/' + userHomeDashboard.id;
+    } else {
+      // If no home dashboard is configured for the user return the
+      // default app id configured in the config/kibana.yml
+      return chrome.getInjected('kbnDefaultAppId', 'dashboard');
     }
-
-    return '/dashboard/' + internals.userHomeDashboard;
   };
 
   /*

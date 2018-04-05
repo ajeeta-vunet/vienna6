@@ -30,7 +30,7 @@ routes.enable();
 
 routes
   .otherwise({
-    redirectTo: `/${chrome.getInjected('kbnDefaultAppId', 'discover')}`
+    redirectTo: `/${chrome.getUserHomeDashboard()}`
   });
 
 chrome.setRootController('kibana', KibanaRootController);

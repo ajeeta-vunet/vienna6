@@ -23,7 +23,10 @@ module.directive('rbacUserRole', function ($http) {
 
       const httpResult = $http({
         method: 'GET',
-        url: '/api/default/user_groups/'
+        // Harcoded the default tenant id (1) and bu id (1) in the REST API url
+        // This has to be fixed in some other ERs.
+        // url: '/api/default/user_groups/'
+        url: '/vuSmartMaps/api/1/bu/1/user_groups/'
       })
         .then(resp => resp.data)
         .catch(resp => { throw resp.data; });

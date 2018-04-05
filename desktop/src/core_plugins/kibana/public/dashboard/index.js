@@ -74,6 +74,8 @@ uiRoutes
               notify.error(
                 'The url "dashboard/create" is deprecated and will be removed in 6.0. Please update your bookmarks.');
             } else {
+              // Display the error message to the user.
+              notify.error(error);
               throw error;
             }
           })

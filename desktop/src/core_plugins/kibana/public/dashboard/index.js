@@ -13,6 +13,7 @@ import { DashboardConstants, createDashboardEditUrl } from './dashboard_constant
 import { SavedObjectNotFound } from 'ui/errors';
 import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/registry/feature_catalogue';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
+import { getCategory } from './dashboard_category';
 
 uiRoutes
   .defaults(/dashboard/, {
@@ -45,7 +46,12 @@ uiRoutes
             'dashboard': DashboardConstants.LANDING_PAGE_PATH
           }));
         }
-      }
+      },
+
+      // Used when dashboard is saved - to attach the dashboard to a category
+      categories: function (Private, courier) {
+        return getCategory(Private, courier);
+      },
     }
   })
   .when(DashboardConstants.CREATE_NEW_DASHBOARD_URL, {
@@ -56,6 +62,11 @@ uiRoutes
           .catch(courier.redirectWhenMissing({
             'dashboard': DashboardConstants.LANDING_PAGE_PATH
           }));
+      },
+
+      // Used when dashboard is saved - to attach the dashboard to a category
+      categories: function (Private, courier) {
+        return getCategory(Private, courier);
       }
     }
   })
@@ -82,6 +93,11 @@ uiRoutes
           .catch(courier.redirectWhenMissing({
             'dashboard': DashboardConstants.LANDING_PAGE_PATH
           }));
+      },
+
+      // Used when dashboard is saved - to attach the dashboard to a category
+      categories: function (Private, courier) {
+        return getCategory(Private, courier);
       }
     }
   });

@@ -295,6 +295,17 @@ export class DashboardStateManager {
     this.saveState();
   }
 
+  // Returns the current category
+  getCategory() {
+    return this.appState.options.category;
+  }
+
+  // Sets the category to current category.
+  setCategory(category) {
+    this.appState.options.category = category;
+    this.saveState();
+  }
+
   getTimeRestore() {
     return this.appState.timeRestore;
   }

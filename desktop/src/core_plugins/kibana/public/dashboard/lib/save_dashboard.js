@@ -10,7 +10,8 @@ import { updateSavedDashboard } from './update_saved_dashboard';
  * @returns {Promise<string>} A promise that if resolved, will contain the id of the newly saved
  * dashboard.
  */
-export function saveDashboard(toJson, timeFilter, dashboardStateManager) {
+export function saveDashboard(toJson, timeFilter, dashboardStateManager, dashId) {
+
   dashboardStateManager.saveState();
 
   const savedDashboard = dashboardStateManager.savedDashboard;

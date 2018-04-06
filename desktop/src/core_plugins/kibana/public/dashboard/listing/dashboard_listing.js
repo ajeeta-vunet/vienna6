@@ -5,8 +5,9 @@ import chrome from 'ui/chrome';
 import { DashboardConstants, createDashboardEditUrl } from '../dashboard_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
+import { deleteDash } from '../dashboard_category';
 
-export function DashboardListingController($injector, $scope, $location) {
+export function DashboardListingController($injector, $scope, $location, savedDashboards, savedVisualizations) {
   const $filter = $injector.get('$filter');
   const confirmModal = $injector.get('confirmModal');
   const Notifier = $injector.get('Notifier');
@@ -130,13 +131,7 @@ export function DashboardListingController($injector, $scope, $location) {
   this.deleteSelectedItems = function deleteSelectedItems() {
     const doDelete = () => {
       const selectedIds = selectedItems.map(item => item.id);
-
-      dashboardService.delete(selectedIds)
-        .then(fetchItems)
-        .then(() => {
-          deselectAll();
-        })
-        .catch(error => notify.error(error));
+      deleteDash(selectedIds, savedVisualizations, savedDashboards, dashboardService, fetchItems, deselectAll, notify);
     };
 
     confirmModal(

@@ -86,7 +86,8 @@
 
         <div class="kuiToolBarSection">
           <!-- Bulk delete button -->
-          <button
+          <button 
+            ng-if="service.type == 'search'"
             class="kuiButton kuiButton--danger kuiButton--iconText"
             ng-click="bulkDelete()"
             aria-label="Delete selected objects"

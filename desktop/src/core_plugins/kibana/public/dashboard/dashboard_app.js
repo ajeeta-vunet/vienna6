@@ -24,6 +24,7 @@ import { FilterManagerProvider } from 'ui/filter_manager';
 import { EmbeddableFactoriesRegistryProvider } from 'ui/embeddable/embeddable_factories_registry';
 
 import { DashboardViewportProvider } from './viewport/dashboard_viewport_provider';
+import { dashboardVisualization, addToCategory } from './dashboard_category';
 
 const app = uiModules.get('app/dashboard', [
   'elasticsearch',
@@ -53,7 +54,7 @@ app.directive('dashboardApp', function ($injector) {
   return {
     restrict: 'E',
     controllerAs: 'dashboardApp',
-    controller: function ($scope, $rootScope, $route, $routeParams, $location, getAppState, $compile, dashboardConfig) {
+    controller: function ($scope, $rootScope, $route, $routeParams, $location, getAppState, $compile, dashboardConfig, savedVisualizations) {
       const filterManager = Private(FilterManagerProvider);
       const filterBar = Private(FilterBarQueryFilterProvider);
       const docTitle = Private(DocTitleProvider);
@@ -62,6 +63,7 @@ app.directive('dashboardApp', function ($injector) {
       $scope.getEmbeddableFactory = panelType => embeddableFactories.byName[panelType];
 
       const dash = $scope.dash = $route.current.locals.dash;
+      const categories = $route.current.locals.categories;
       if (dash.id) {
         docTitle.change(dash.title);
       }
@@ -270,17 +272,31 @@ app.directive('dashboardApp', function ($injector) {
         );
       };
 
+      let categoryVal = '';
+      const curCategory = dashboardStateManager.getCategory();
+      _.each(categories, function (category) {
+        if (category.id === curCategory.id) {
+          categoryVal = category;
+        }
+      });
+
       $scope.save = function () {
         // Convert allowedRolesJSON
         dash.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
-        return saveDashboard(angular.toJson, timefilter, dashboardStateManager)
+        const categoryObj = angular.fromJson($scope.opts.category);
+        const dashId = dash.id;
+        const oldCategory = dashboardStateManager.getCategory();
+        dashboardStateManager.setCategory($scope.opts.category);
+        return saveDashboard(angular.toJson, timefilter, dashboardStateManager, dashId)
           .then(function (id) {
             $scope.kbnTopNav.close('save');
             if (id) {
               notify.info(`Saved Dashboard as "${dash.title}"`);
               if (dash.id !== $routeParams.id) {
                 kbnUrl.change(createDashboardEditUrl(dash.id));
+                addToCategory(dash, categoryObj, savedVisualizations);
               } else {
+                dashboardVisualization(dash, categoryObj, savedVisualizations, oldCategory);
                 docTitle.change(dash.lastSavedTitle);
                 updateViewMode(DashboardViewMode.VIEW);
               }
@@ -372,6 +388,8 @@ app.directive('dashboardApp', function ($injector) {
       $scope.opts = {
         displayName: dash.getDisplayName(),
         dashboard: dash,
+        category: categoryVal,
+        categories: categories,
         save: $scope.save,
         addVis: $scope.addVis,
         addNewVis,

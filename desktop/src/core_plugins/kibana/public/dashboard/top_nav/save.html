@@ -76,10 +76,27 @@
   <rbac-user-role allowed-roles="opts.allowedRoles">
   </rbac-user-role>
 
+  <div>
+    <div class="form-group">
+      <p>Category</p>
+      <div class="row">
+        <div class="col-md-6">
+          <select
+            class="form-control"
+            required
+            ng-model="opts.category"
+            ng-options="item.title for item in opts.categories"
+          >
+            {{category.title}}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
   <button
     data-test-subj="confirmSaveDashboardButton"
     type="submit"
-    ng-disabled="!model.title"
+    ng-disabled="!(model.title && opts.category.title)"
     class="kuiButton kuiButton--primary kuiVerticalRhythm"
     aria-label="Save dashboard"
   >

@@ -29,6 +29,7 @@ module.factory('SavedDashboard', function (courier, config) {
           // for BWC reasons we can't default dashboards that already exist without this setting to true.
           useMargins: id ? false : true,
           hidePanelTitles: false,
+          category: '',
         }),
         uiStateJSON: '{}',
         allowedRolesJSON: '',

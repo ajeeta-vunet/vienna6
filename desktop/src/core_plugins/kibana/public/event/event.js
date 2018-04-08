@@ -96,21 +96,28 @@ app.directive('eventApp', function () {
       // This function is called when any severity type
       // is clicked in vusmartmaps.
       $scope.filter = function (severity) {
-        $scope.severity = severity.split('_')[0];
-        if (severity !== 'total') {
-          // Add a new filter via the filter manager
-          filterManager.add(
-            // The field to filter for
-            'severity',
-            // The value to filter for
-            $scope.severity,
-            // Whether the filter is negated.
-            // If you want to create a negated filter pass '-' here
-            null,
-            // The index 'id' for the filter
-            index
-          );
+        if(index !== '') {
+          $scope.severity = severity.split('_')[0];
+          if (severity !== 'total') {
+            // Add a new filter via the filter manager
+            filterManager.add(
+              // The field to filter for
+              'severity',
+              // The value to filter for
+              $scope.severity,
+              // Whether the filter is negated.
+              // If you want to create a negated filter pass '-' here
+              null,
+              // The index 'id' for the filter
+              index
+            );
+          }
+        } else {
+          const tenantBu = chrome.getTenantBu();
+          notify.error('Please create index pattern "vunet-' + tenantBu[0] + '-' + tenantBu[1] +
+                       '-notification-*"');
         }
+
       };
 
       // This function is called when any Rest Api fails

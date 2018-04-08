@@ -17,6 +17,14 @@ export default function (chrome, internals) {
   const buId = 1;
   const BASE_URL = 'vuSmartMaps/api';
 
+  /*
+   * This function is called to fetch the Tenant and BU id for the logged in
+   * user
+   */
+  chrome.getTenantBu = function () {
+    return [tenantId, buId];
+  };
+
   /**
    * @return {current user, role and permission} - get current user
    */
@@ -124,5 +132,13 @@ export default function (chrome, internals) {
   chrome.getUrlBase = function () {
     const url = '/' + BASE_URL + '/' + tenantId + '/bu/' + buId;
     return url;
+  };
+
+  // This function returns the notification index.
+  // We prepare the notification index using the
+  // tenant id and bu id.
+  chrome.getVunetIndexName = function (indexType) {
+    const index = 'vunet-' + tenantId + '-' + buId + '-' + indexType + '-*';
+    return index;
   };
 }

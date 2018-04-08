@@ -16,7 +16,7 @@ export function getUiSettingDefaults() {
     },
     'search:queryLanguage': {
       value: 'lucene',
-      description: 'Query language used by the query bar. Kuery is an experimental new language built specifically for Kibana.',
+      description: 'Query language used by the query bar. Kuery is an experimental new language built specifically for analytics.',
       type: 'select',
       options: ['lucene', 'kuery']
     },
@@ -259,7 +259,7 @@ export function getUiSettingDefaults() {
   "to": "now",
   "mode": "quick"
 }`,
-      description: 'The timefilter selection to use when Kibana is started without one'
+      description: 'The timefilter selection to use when vuSmartMaps is started without one'
     },
     'timepicker:refreshIntervalDefaults': {
       type: 'json',

@@ -16,7 +16,7 @@ management.register('elasticsearch', {
 });
 
 management.register('kibana', {
-  display: 'Kibana',
+  display: 'vuSmartMaps',
   order: 30,
 });
 

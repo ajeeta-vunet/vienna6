@@ -23,9 +23,8 @@ uiRoutes
 
         // Get the index object and then the 'id' using the index 'title'
         return findObjectByTitle(savedObjectsClient, 'index-pattern', indexTitle)
-          .then((idx) => {
-            return idx.id;
-          });
+          .then(idx => idx.id)
+          .catch(() => '');
       }
     }
   });

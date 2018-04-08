@@ -1,4 +1,4 @@
 {
-  "UI-WELCOME_MESSAGE": "Loading Kibana",
-  "UI-WELCOME_ERROR": "Kibana did not load properly. Check the server output for more information."
+  "UI-WELCOME_MESSAGE": "Loading...",
+  "UI-WELCOME_ERROR": "Please try reloading the page. If the problem persists, contact your system administrator."
 }

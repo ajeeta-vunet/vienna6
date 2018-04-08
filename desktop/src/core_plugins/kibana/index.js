@@ -71,41 +71,49 @@ export default function (kibana) {
 
       links: [
         {
+          id: 'kibana:management',
+          title: 'Advanced',
+          order: -1000,
+          url: `${kbnBaseUrl}#/management`,
+          description: 'define index patterns, change config, and more',
+          icon: 'plugins/kibana/assets/settings.svg',
+          linkToLastSubUrl: false
+        }, {
           id: 'kibana:anomaly',
-          title: 'Anomaly',
+          title: 'Anomaly Detection',
           order: -1001,
           url: `${kbnBaseUrl}#/anomalies`,
           description: 'Anomaly Detection',
           subUrlBase: `${kbnBaseUrl}#/anomaly`,
         }, {
-          id: 'kibana:alert',
-          title: 'Alert',
+          id: 'kibana:report',
+          title: 'Report',
           order: -1002,
+          url: `${kbnBaseUrl}#/reports`,
+          description: 'create highly customized reports',
+          icon: 'plugins/kibana/assets/report.svg',
+        }, {
+          id: 'kibana:alert',
+          title: 'Manage Alerts',
+          order: -1003,
           url: `${kbnBaseUrl}#/alerts`,
           description: 'Smart and intelligent alerts',
           subUrlBase: `${kbnBaseUrl}#/alert`,
           icon: 'plugins/kibana/assets/alert.svg',
         }, {
           id: 'kibana:visualize',
-          title: 'Visualize',
-          order: -1003,
+          title: 'Visualizations',
+          order: -1004,
           url: `${kbnBaseUrl}#/visualize`,
           description: 'design data visualizations',
           icon: 'plugins/kibana/assets/visualize.svg',
         }, {
           id: 'kibana:discover',
-          title: 'Discover',
-          order: -1004,
+          title: 'Search',
+          order: -1005,
           url: `${kbnBaseUrl}#/discover`,
           description: 'interactively explore your data',
           icon: 'plugins/kibana/assets/discover.svg',
-        }, {
-          id: 'kibana:report',
-          title: 'Report',
-          order: -1005,
-          url: `${kbnBaseUrl}#/reports`,
-          description: 'create highly customized reports',
-          icon: 'plugins/kibana/assets/report.svg',
         }, {
           id: 'kibana:event',
           title: 'Event',
@@ -120,7 +128,7 @@ export default function (kibana) {
           icon: 'plugins/kibana/assets/event.svg',
         }, {
           id: 'kibana:dashboard',
-          title: 'Dashboard',
+          title: 'Insights',
           order: -1007,
           url: `${kbnBaseUrl}#/dashboards`,
           // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
@@ -131,22 +139,16 @@ export default function (kibana) {
           subUrlBase: `${kbnBaseUrl}#/dashboard`,
           description: 'compose visualizations for much win',
           icon: 'plugins/kibana/assets/dashboard.svg',
-        }, {
-          id: 'kibana:dev_tools',
-          title: 'Dev Tools',
-          order: 9001,
-          url: '/app/kibana#/dev_tools',
-          description: 'development tools',
-          icon: 'plugins/kibana/assets/wrench.svg'
-        }, {
-          id: 'kibana:management',
-          title: 'Management',
-          order: 9003,
-          url: `${kbnBaseUrl}#/management`,
-          description: 'define index patterns, change config, and more',
-          icon: 'plugins/kibana/assets/settings.svg',
-          linkToLastSubUrl: false
         },
+        // Hide dev tools section in top navbar.
+        // {
+        //   id: 'kibana:dev_tools',
+        //   title: 'Dev Tools',
+        //   order: 9001,
+        //   url: '/app/kibana#/dev_tools',
+        //   description: 'development tools',
+        //   icon: 'plugins/kibana/assets/wrench.svg'
+        // },
       ],
 
       injectDefaultVars(server, options) {

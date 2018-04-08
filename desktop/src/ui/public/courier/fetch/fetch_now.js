@@ -42,6 +42,7 @@ export function FetchNowProvider(Private, Promise) {
     return startRequests(requests)
       .then(function () {
         replaceAbortedRequests();
+        window.parent.postMessage('RequestStart', '*');
         return callClient(requests);
       })
       .then(function (responses) {

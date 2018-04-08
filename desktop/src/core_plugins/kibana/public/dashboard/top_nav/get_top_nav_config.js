@@ -18,6 +18,7 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
             getFullScreenConfig(actions[TopNavIds.FULL_SCREEN])
           ]
           : [
+            getHomeConfig(actions[TopNavIds.HOME]),
             getFullScreenConfig(actions[TopNavIds.FULL_SCREEN]),
             getShareConfig(),
             getCloneConfig(actions[TopNavIds.CLONE]),
@@ -26,6 +27,7 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
       );
     case DashboardViewMode.EDIT:
       return [
+        getHomeConfig(actions[TopNavIds.HOME]),
         getSaveConfig(),
         getViewConfig(actions[TopNavIds.EXIT_EDIT_MODE]),
         getAddConfig(),
@@ -126,5 +128,17 @@ function getOptionsConfig() {
     description: 'Options',
     testId: 'dashboardOptionsButton',
     template: require('plugins/kibana/dashboard/top_nav/options.html')
+  };
+}
+
+/**
+ * @returns {kbnTopNavConfig}
+ */
+function getHomeConfig(action) {
+  return {
+    key: 'home',
+    description: 'Home',
+    testId: 'dashboardHome',
+    run: action
   };
 }

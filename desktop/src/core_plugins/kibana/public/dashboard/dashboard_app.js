@@ -104,6 +104,12 @@ app.directive('dashboardApp', function ($injector) {
         dashboardStateManager.syncTimefilterWithDashboard(timefilter, quickRanges);
       }
 
+      // Special handling for "Home" dashboard
+      // For "Home" dashboard, hide the title
+      if(dash.title === 'Home') {
+        dashboardStateManager.setHidePanelTitles(true);
+      }
+
       const updateState = () => {
         // Following the "best practice" of always have a '.' in your ng-models –
         // https://github.com/angular/angular.js/wiki/Understanding-Scopes
@@ -274,16 +280,23 @@ app.directive('dashboardApp', function ($injector) {
 
       let categoryVal = '';
       const curCategory = dashboardStateManager.getCategory();
-      _.each(categories, function (category) {
-        if (category.id === curCategory.id) {
-          categoryVal = category;
-        }
-      });
+      if(curCategory) {
+        _.each(categories, function (category) {
+          if (category.id === curCategory.id) {
+            categoryVal = category;
+          }
+        });
+      }
 
       $scope.save = function () {
         // Convert allowedRolesJSON
         dash.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
         const categoryObj = angular.fromJson($scope.opts.category);
+        // Special handling for Home dashboard.
+        //Save the Home dashboard with id "Home"
+        if(dash.title === 'Home') {
+          dash.id = dash.title;
+        }
         const dashId = dash.id;
         const oldCategory = dashboardStateManager.getCategory();
         dashboardStateManager.setCategory($scope.opts.category);
@@ -316,6 +329,10 @@ app.directive('dashboardApp', function ($injector) {
         $scope.kbnTopNav.click('edit');
       };
       const navActions = {};
+      navActions[TopNavIds.HOME] = () =>{
+        onChangeViewMode(DashboardViewMode.VIEW);
+        window.location = `#/${chrome.getUserHomeDashboard()}`;
+      };
       navActions[TopNavIds.FULL_SCREEN] = () =>
         dashboardStateManager.setFullScreenMode(true);
       navActions[TopNavIds.EXIT_EDIT_MODE] = () => onChangeViewMode(DashboardViewMode.VIEW);

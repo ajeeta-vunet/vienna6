@@ -35,6 +35,7 @@ function ResponsiveGrid({
   children,
   maximizedPanelId,
   useMargins,
+  isHomeDashboard
 }) {
   // This is to prevent a bug where view mode changes when the panel is expanded.  View mode changes will trigger
   // the grid to re-render, but when a panel is expanded, the size will be 0. Minimizing the panel won't cause the
@@ -47,7 +48,15 @@ function ResponsiveGrid({
     'layout-with-margins': useMargins,
   });
 
-  const MARGINS = useMargins ? 8 : 0;
+  let MARGINS;
+  // Special handling for "Home" dashboard. For "Home" dashboard, set margin as
+  // 40 px to make it looks nice with more space between category widgets.
+  if(isHomeDashboard) {
+    MARGINS = 40;
+  } else {
+    MARGINS = useMargins ? 8 : 0;
+  }
+
   // We can't take advantage of isDraggable or isResizable due to performance concerns:
   // https://github.com/STRML/react-grid-layout/issues/240
   return (
@@ -194,7 +203,7 @@ export class DashboardGrid extends React.Component {
   }
 
   render() {
-    const { dashboardViewMode, maximizedPanelId, useMargins } = this.props;
+    const { dashboardViewMode, maximizedPanelId, useMargins,  isHomeDashboard } = this.props;
     const isViewMode = dashboardViewMode === DashboardViewMode.VIEW;
     return (
       <ResponsiveSizedGrid
@@ -203,6 +212,7 @@ export class DashboardGrid extends React.Component {
         onLayoutChange={this.onLayoutChange}
         maximizedPanelId={maximizedPanelId}
         useMargins={useMargins}
+        isHomeDashboard={isHomeDashboard}
       >
         {this.renderDOM()}
       </ResponsiveSizedGrid>
@@ -218,4 +228,5 @@ DashboardGrid.propTypes = {
   onPanelsUpdated: PropTypes.func.isRequired,
   maximizedPanelId: PropTypes.string,
   useMargins: PropTypes.bool.isRequired,
+  isHomeDashboard: PropTypes.bool.isRequired
 };

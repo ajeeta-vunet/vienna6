@@ -5,12 +5,14 @@ import {
   getPanels,
   getViewMode,
   getUseMargins,
+  getTitle,
 } from '../selectors';
 
 const mapStateToProps = ({ dashboard }) => ({
   panels: getPanels(dashboard),
   dashboardViewMode: getViewMode(dashboard),
   useMargins: getUseMargins(dashboard),
+  isHomeDashboard: (getTitle(dashboard)  === 'Home' ? true : false)
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -21,4 +23,3 @@ export const DashboardGridContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(DashboardGrid);
-

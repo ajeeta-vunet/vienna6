@@ -5,8 +5,9 @@ import chrome from 'ui/chrome';
 import { AlertConstants, createAlertEditUrl } from '../alert_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
+import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 
-export function AlertListingController($injector, $scope, $location) {
+export function AlertListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
   const confirmModal = $injector.get('confirmModal');
   const Notifier = $injector.get('Notifier');
@@ -131,11 +132,11 @@ export function AlertListingController($injector, $scope, $location) {
   this.deleteSelectedItems = function deleteSelectedItems() {
     const doDelete = () => {
       const selectedIds = selectedItems.map(item => item.id);
-
       alertService.delete(selectedIds)
         .then(fetchItems)
         .then(() => {
           deselectAll();
+          logUserOperationForDeleteMultipleObjects($http, selectedIds, 'alert');
         })
         .catch(error => notify.error(error));
     };

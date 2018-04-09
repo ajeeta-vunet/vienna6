@@ -13,6 +13,7 @@ import { AnomalyConstants, createAnomalyEditUrl } from './anomaly_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { Notifier } from 'ui/notify/notifier';
 import { DocTitleProvider } from 'ui/doc_title';
+import { logUserOperation } from 'plugins/kibana/log_user_operation';
 const angular = require('angular');
 
 uiRoutes
@@ -55,7 +56,6 @@ uiRoutes
 
       },
       anomaly: function (savedAnomalies, $route) {
-        //lup.logUserOperation($http, 'GET','alert', $route.current.params.id);
         return savedAnomalies.get($route.current.params.id);
       },
       isNewAnomaly: function () {
@@ -87,6 +87,7 @@ function anomalyAppEditor($scope,
   savedAnomalies,
   $filter,
   courier,
+  $http,
   AppState,
   timefilter,
   kbnUrl) {
@@ -98,6 +99,7 @@ function anomalyAppEditor($scope,
   const anomaly = $scope.anomaly = $route.current.locals.anomaly;
   let isNewAnomaly = $route.current.locals.isNewAnomaly;
   const loadedAnomalyId = $route.current.locals.loadedAnomalyId;
+  logUserOperation($http, 'GET', 'anomaly', anomaly.title, anomaly.id);
 
   $scope.indexPatternList = $route.current.locals.indexPatternIds.map(pattern => {
     const id = pattern.id;
@@ -233,7 +235,7 @@ function anomalyAppEditor($scope,
 
   //calling the save function to save the anomaly details filled in the anomaly form
   $scope.save = function () {
-    $state.title = anomaly.id = anomaly.title;
+    $state.title = anomaly.title;
     if (anomaly.title === 'Home') {
       // We can't allow anyone to save a Home anomaly so inform the user
       // about it
@@ -303,7 +305,7 @@ function anomalyAppEditor($scope,
         if (anomaly.id !== $routeParams.id) {
           kbnUrl.change('/anomaly/{{id}}', { id: anomaly.id });
         }
-        //lup.logUserOperation($http, 'POST', 'anomaly', id);
+        logUserOperation($http, 'POST', 'anomaly', anomaly.title, anomaly.id);
       }
     })
       .catch(notify.fatal);

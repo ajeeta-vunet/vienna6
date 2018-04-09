@@ -31,6 +31,7 @@ import { StateProvider } from 'ui/state_management/state';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { FilterManagerProvider } from 'ui/filter_manager';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
+import { logUserOperation } from 'plugins/kibana/log_user_operation';
 
 const app = uiModules.get('apps/discover', [
   'kibana/notify',
@@ -111,6 +112,7 @@ function discoverController(
   config,
   courier,
   kbnUrl,
+  $http,
   timefilter,
 ) {
 
@@ -137,6 +139,7 @@ function discoverController(
 
   // the saved savedSearch
   const savedSearch = $route.current.locals.savedSearch;
+  logUserOperation($http, 'GET', 'search', savedSearch.title, savedSearch.id);
   $scope.$on('$destroy', savedSearch.destroy);
 
   // Get allowedRoles from object
@@ -452,6 +455,7 @@ function discoverController(
                 $state.setDefaults(getStateDefaults());
                 docTitle.change(savedSearch.lastSavedTitle);
               }
+              logUserOperation($http, 'POST', 'search', savedSearch.title, savedSearch.id);
             }
           });
       })

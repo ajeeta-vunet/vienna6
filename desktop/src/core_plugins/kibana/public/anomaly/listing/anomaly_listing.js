@@ -5,8 +5,9 @@ import chrome from 'ui/chrome';
 import { AnomalyConstants, createAnomalyEditUrl } from '../anomaly_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
+import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 
-export function AnomalyListingController($injector, $scope, $location) {
+export function AnomalyListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
   const confirmModal = $injector.get('confirmModal');
   const Notifier = $injector.get('Notifier');
@@ -136,6 +137,7 @@ export function AnomalyListingController($injector, $scope, $location) {
         .then(fetchItems)
         .then(() => {
           deselectAll();
+          logUserOperationForDeleteMultipleObjects($http, selectedIds, 'anomaly');
         })
         .catch(error => notify.error(error));
     };

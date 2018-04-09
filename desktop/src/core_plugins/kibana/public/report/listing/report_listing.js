@@ -5,8 +5,9 @@ import chrome from 'ui/chrome';
 import { ReportConstants, createReportEditUrl } from '../report_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
+import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 
-export function ReportListingController($injector, $scope, $location) {
+export function ReportListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
   const confirmModal = $injector.get('confirmModal');
   const Notifier = $injector.get('Notifier');
@@ -144,6 +145,7 @@ export function ReportListingController($injector, $scope, $location) {
         .then(fetchItems)
         .then(() => {
           deselectAll();
+          logUserOperationForDeleteMultipleObjects($http, selectedIds, 'report');
         })
         .catch(error => notify.error(error));
     };

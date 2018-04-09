@@ -4,6 +4,7 @@ import { DashboardConstants } from 'plugins/kibana/dashboard/dashboard_constants
 import { Notifier } from 'ui/notify';
 const Promise = require('bluebird');
 import angular from 'angular';
+import {  logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 const notify = new Notifier();
 
 // This function is used to get the categories list.
@@ -75,7 +76,7 @@ export function removeFromCategory(dash, categoryObj, savedVisualizations) {
 }
 
 //This function is to delete the dashboard id in category object
-export function deleteDash(selectedIds, savedVisualizations, savedDashboards, dashboardService, fetchItems, deselectAll, notify) {
+export function deleteDash(selectedIds, savedVisualizations, savedDashboards, dashboardService, fetchItems, deselectAll, notify, $http) {
   const categoryList = [];
   // deletes all selected dashboards
   Promise.map(selectedIds, function (id) {
@@ -85,6 +86,7 @@ export function deleteDash(selectedIds, savedVisualizations, savedDashboards, da
       return dashboardService.delete(id).then(fetchItems)
         .then(() => {
           deselectAll();
+          logUserOperationForDeleteMultipleObjects($http, selectedIds, 'dashboard');
         })
         .catch(error => notify.error(error));
     })

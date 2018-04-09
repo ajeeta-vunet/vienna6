@@ -23,6 +23,7 @@ import * as filterActions from 'ui/doc_table/actions/filter';
 import { FilterManagerProvider } from 'ui/filter_manager';
 import { EmbeddableFactoriesRegistryProvider } from 'ui/embeddable/embeddable_factories_registry';
 
+import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { DashboardViewportProvider } from './viewport/dashboard_viewport_provider';
 import { dashboardVisualization, addToCategory } from './dashboard_category';
 
@@ -40,7 +41,7 @@ app.directive('dashboardViewportProvider', function (reactDirective) {
   return reactDirective(DashboardViewportProvider);
 });
 
-app.directive('dashboardApp', function ($injector) {
+app.directive('dashboardApp', function ($injector, $http) {
   const Notifier = $injector.get('Notifier');
   const courier = $injector.get('courier');
   const AppState = $injector.get('AppState');
@@ -67,6 +68,7 @@ app.directive('dashboardApp', function ($injector) {
       if (dash.id) {
         docTitle.change(dash.title);
       }
+      logUserOperation($http, 'GET', 'dashboard', dash.title, dash.id);
 
       // Get allowedRoles from object
       const allowedRoles = dash.allowedRolesJSON ? JSON.parse(dash.allowedRolesJSON) : [];
@@ -313,6 +315,7 @@ app.directive('dashboardApp', function ($injector) {
                 docTitle.change(dash.lastSavedTitle);
                 updateViewMode(DashboardViewMode.VIEW);
               }
+              logUserOperation($http, 'POST', 'dashboard', dash.title, dash.id);
             }
             return id;
           }).catch(notify.error);

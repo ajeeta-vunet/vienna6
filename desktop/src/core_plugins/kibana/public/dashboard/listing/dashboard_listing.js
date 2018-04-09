@@ -7,7 +7,7 @@ import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
 import { deleteDash } from '../dashboard_category';
 
-export function DashboardListingController($injector, $scope, $location, savedDashboards, savedVisualizations) {
+export function DashboardListingController($injector, $scope, $location, savedDashboards, savedVisualizations, $http) {
   const $filter = $injector.get('$filter');
   const confirmModal = $injector.get('confirmModal');
   const Notifier = $injector.get('Notifier');
@@ -131,7 +131,7 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   this.deleteSelectedItems = function deleteSelectedItems() {
     const doDelete = () => {
       const selectedIds = selectedItems.map(item => item.id);
-      deleteDash(selectedIds, savedVisualizations, savedDashboards, dashboardService, fetchItems, deselectAll, notify);
+      deleteDash(selectedIds, savedVisualizations, savedDashboards, dashboardService, fetchItems, deselectAll, notify, $http);
     };
 
     confirmModal(

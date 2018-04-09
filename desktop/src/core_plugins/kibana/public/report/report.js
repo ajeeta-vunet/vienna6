@@ -20,6 +20,7 @@ import { getTenantData } from 'ui/utils/vunet_tenant_data';
 import uiRoutes from 'ui/routes';
 import { uiModules } from 'ui/modules';
 import { ReportConstants, createReportEditUrl, createReportPrintUrl } from './report_constants';
+import { logUserOperation } from 'plugins/kibana/log_user_operation';
 
 uiRoutes
   .when(ReportConstants.CREATE_PATH, {
@@ -44,7 +45,6 @@ uiRoutes
     resolve: {
       printReport: function () {return false;},
       reportcfg: function (savedReports, $route) {
-        //lup.logUserOperation($http, 'GET','report', $route.current.params.id);
         return savedReports.get($route.current.params.id);
       },
       company_name: function () {return '';},
@@ -97,6 +97,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     location: 'Report'
   });
 
+  // Set the landing page for alerts section
+  $scope.landingPageUrl = () => `#${ReportConstants.LANDING_PAGE_PATH}`;
+
   // Since vienna is in a iframe, we use the window.parent to
   // get the url in the browser.
   $scope.shipperAddress = window.parent.location.href;
@@ -104,6 +107,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   let isNewReport = $route.current.locals.isNewReport;
   const loadedReportId = $route.current.locals.loadedReportId;
   const reportcfg = $scope.reportcfg = $route.current.locals.reportcfg;
+  logUserOperation($http, 'GET', 'report', reportcfg.title, reportcfg.id);
 
   const allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
 
@@ -468,7 +472,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
           if (reportcfg.id !== $routeParams.id) {
             kbnUrl.change('/report/{{id}}', { id: reportcfg.id });
           }
-          //lup.logUserOperation($http, 'POST','report', $route.current.params.id);
+          logUserOperation($http, 'POST', 'report', reportcfg.title, reportcfg.id);
         }
       })
       .catch(notify.fatal);

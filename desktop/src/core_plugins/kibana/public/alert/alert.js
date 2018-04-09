@@ -13,6 +13,7 @@ import { uiModules } from 'ui/modules';
 import alertTemplate from 'plugins/kibana/alert/alert.html';
 import { AlertConstants, createAlertEditUrl } from './alert_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
+import { logUserOperation } from 'plugins/kibana/log_user_operation';
 
 uiRoutes
   .when(AlertConstants.CREATE_PATH, {
@@ -51,7 +52,6 @@ uiRoutes
         }).then(response => response.savedObjects);
       },
       alertcfg: function (savedAlerts, $route) {
-        //lup.logUserOperation($http, 'GET','alert', $route.current.params.id);
         return savedAlerts.get($route.current.params.id);
       },
       isNewAlert: function () {
@@ -92,6 +92,7 @@ function alertAppEditor($scope,
 
   const alertcfg = $scope.alertcfg = $route.current.locals.alertcfg;
   let isNewAlert = $route.current.locals.isNewAlert;
+  logUserOperation($http, 'GET', 'alert', alertcfg.title, alertcfg.id);
   const loadedAlertId = $route.current.locals.loadedAlertId;
 
   $scope.indexPatternList = $route.current.locals.indexPatternIds.map(pattern => {
@@ -478,7 +479,7 @@ function alertAppEditor($scope,
         if (alertcfg.id !== $routeParams.id) {
           kbnUrl.change('/alert/{{id}}', { id: alertcfg.id });
         }
-        //lup.logUserOperation($http, 'POST','alert', id);
+        logUserOperation($http, 'POST', 'alert', alertcfg.title, alertcfg.id);
       }
     })
       .catch(notify.fatal);

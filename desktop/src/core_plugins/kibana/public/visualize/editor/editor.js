@@ -21,6 +21,7 @@ import { VisualizeConstants } from '../visualize_constants';
 import { KibanaParsedUrl } from 'ui/url/kibana_parsed_url';
 import { absoluteToParsedUrl } from 'ui/url/absolute_to_parsed_url';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
+import { logUserOperation } from 'plugins/kibana/log_user_operation';
 
 uiRoutes
   .when(VisualizeConstants.CREATE_PATH, {
@@ -70,7 +71,7 @@ uiModules
     };
   });
 
-function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courier, Private, Promise, config, kbnBaseUrl) {
+function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courier, Private, Promise, config, kbnBaseUrl, $http) {
   const docTitle = Private(DocTitleProvider);
   const queryFilter = Private(FilterBarQueryFilterProvider);
 
@@ -80,6 +81,7 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
 
   // Retrieve the resolved SavedVis instance.
   const savedVis = $route.current.locals.savedVis;
+  logUserOperation($http, 'GET', 'visualization', savedVis.title, savedVis.id);
   // vis is instance of src/ui/public/vis/vis.js.
   // SearchSource is a promise-based stream of search results that can inherit from other search sources.
   const { vis, searchSource } = savedVis;
@@ -259,6 +261,7 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
         $scope.kbnTopNav.close('save');
 
         if (id) {
+          logUserOperation($http, 'POST', 'visualization', savedVis.title, savedVis.id);
           notify.info('Saved Visualization "' + savedVis.title + '"');
           if ($scope.isAddToDashMode()) {
             const savedVisualizationParsedUrl = new KibanaParsedUrl({

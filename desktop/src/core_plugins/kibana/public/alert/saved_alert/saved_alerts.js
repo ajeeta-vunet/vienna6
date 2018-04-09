@@ -3,7 +3,6 @@ import { SavedObjectLoader } from 'ui/courier/saved_object/saved_object_loader';
 
 const module = require('ui/modules').get('app/alert');
 
-//const lup = require('plugins/kibana/log_user_operation');
 // bring in the factory
 require('plugins/kibana/alert/saved_alert/_saved_alert');
 

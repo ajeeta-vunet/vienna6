@@ -1,3 +1,5 @@
+@import (reference) "~ui/styles/variables";
+
 // These classes use for reports
 .report-print-non-table {
   height: 575px;
@@ -12,4 +14,74 @@
 // These classes are used in business metric
 .referenceLinkDashboard {
   padding-top: 10px;
+}
+
+// This css belongs to multilevel drop down menu under dashboards section.
+.navigate {
+  .navbar-nav {
+    ul {
+      padding:0px;
+    }
+    margin: 0px 8px;
+    li a {
+      color: @vunet-text-color;
+      border-bottom: 1px solid @vunet-border-color;
+      padding: 8px 15px;
+      font-size: 12px;
+      &:hover {
+        background: @vunet-background-color;
+      }
+    }
+    .dropdown-link {
+      padding: 3px 0px !important;
+      border-bottom: 0px !important;
+      background-color: @vunet-background-color !important;
+      border-color: none;
+      &:hover {
+        background-color: @vunet-background-color !important;
+      }
+    }
+  }
+
+  .dropdown-submenu {
+    position: relative;
+  }
+
+  .dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    margin-left: -1px;
+  }
+
+  .dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color:@vunet-text-color;
+    margin-top: 5px;
+    margin-right: -10px;
+  }
+
+  .dropdown-submenu:hover > a:after {
+    border-left-color: @vunet-text-color;
+  }
+
+  .dropdown-submenu.pull-left {
+    float: none;
+  }
+
+  .dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+  }
 }

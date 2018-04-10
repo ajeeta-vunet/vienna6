@@ -1,12 +1,10 @@
 import { uiModules } from 'ui/modules';
-import { SavedObjectsClientProvider } from 'ui/saved_objects';
 
 const module = uiModules.get('kibana/category_vis', ['kibana']);
 
-module.controller('KbnCategoryVisController', function ($scope, Private) {
+module.controller('KbnCategoryVisController', function ($scope) {
   $scope.show_dashboards = false;
   $scope.dashboards = [];
-  const savedObjectsClient = Private(SavedObjectsClientProvider);
 
   $scope.$watch('vis.params', function (resp) {
     $scope.category_image = `/ui/vienna_images/${resp.image}`;
@@ -18,20 +16,20 @@ module.controller('KbnCategoryVisController', function ($scope, Private) {
   };
 
   // Find the title for each dashboard by the dashboard ids in vis object
-  $scope.$watch('vis.params.dashboards', function (dashboardIds) {
+  $scope.$watch('vis.params.dashboards', function (dashboardList) {
 
-    if (dashboardIds.length !== 0) {
+    if (dashboardList.length !== 0) {
 
+      // Initializing a list to store dashboard objects containing
+      // id, title and url.
       $scope.dashboards = [];
 
-      dashboardIds.forEach(function (dashboardId) {
-
-        savedObjectsClient.get('dashboard', dashboardId).then(results => {
-          $scope.dashboards.push({
-            id: dashboardId,
-            title: results.attributes.title,
-            url: `#/dashboard/${dashboardId}`
-          });
+      // prepare the dashboard object with id, title and url.
+      dashboardList.forEach(function (dashboard) {
+        $scope.dashboards.push({
+          id: dashboard.id,
+          title: dashboard.title,
+          url: `#/dashboard/${dashboard.id}`
         });
       });
     }

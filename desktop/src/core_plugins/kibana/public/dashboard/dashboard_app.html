@@ -14,6 +14,16 @@
         role="heading"
         aria-level="1"
       >
+        <div class="navigate">
+          <ul class="nav navbar-nav">
+            <li dropdown>
+              <a class="dropdown-link" href="#" dropdown-toggle>
+                <i class="fa fa-th-large" aria-hidden="true"></i>
+              </a>
+              <sub-menu-tree tree='subMenuTree'></sub-menu-tree>
+            </li>
+          </ul>
+        </div>
         <div class="kuiLocalBreadcrumb">
           <a class="kuiLocalBreadcrumb__link" href="{{landingPageUrl()}}">Dashboard</a>
         </div>

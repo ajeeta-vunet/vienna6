@@ -38,10 +38,15 @@ export function getCategory(Private, courier) {
 // category
 export function addToCategory(dash, categoryObj, savedVisualizations) {
   savedVisualizations.get(categoryObj.id).then(function (newVisual) {
-    const dashboardUrl = dash.id;
-    // Add the dashboard to the list
-    if (!(newVisual.visState.params.dashboards.includes(dashboardUrl))) {
-      newVisual.visState.params.dashboards.push(dashboardUrl);
+
+    // prepare dashboard object with title and id.
+    const dashboardObj = {};
+    dashboardObj.id = dash.id;
+    dashboardObj.title = dash.title;
+
+    // Add the dashboard object to the list
+    if (!(newVisual.visState.params.dashboards.includes(dashboardObj.id))) {
+      newVisual.visState.params.dashboards.push(dashboardObj);
       newVisual.save().then(function () {
         // Nothing needs to be done..
       }).catch(error => {
@@ -61,11 +66,13 @@ export function removeFromCategory(dash, categoryObj, savedVisualizations) {
     // Check if the visState is available, if not, it means it does
     // not exist
     if (newVisual.visState) {
-      const dashboardUrl = dash.id;
-      // Removed the dashboard from the list
-      newVisual.visState.params.dashboards = _.without(newVisual.visState.params.dashboards, dashboardUrl);
+      const dashboardId = dash.id;
+      // Removed the dashboard object from the list
+      newVisual.visState.params.dashboards = _.without(
+        newVisual.visState.params.dashboards, _.findWhere(
+          newVisual.visState.params.dashboards, { id: dashboardId }));
       newVisual.save().then(function () {
-        // Nothing needs to be done..
+      // Nothing needs to be done..
       }).catch(error => {
         notify.error(error);
       });
@@ -76,7 +83,15 @@ export function removeFromCategory(dash, categoryObj, savedVisualizations) {
 }
 
 //This function is to delete the dashboard id in category object
-export function deleteDash(selectedIds, savedVisualizations, savedDashboards, dashboardService, fetchItems, deselectAll, notify, $http) {
+export function deleteDash(
+  selectedIds,
+  savedVisualizations,
+  savedDashboards,
+  dashboardService,
+  fetchItems,
+  deselectAll,
+  notify,
+  $http) {
   const categoryList = [];
   // deletes all selected dashboards
   Promise.map(selectedIds, function (id) {
@@ -114,8 +129,10 @@ export function deleteDash(selectedIds, savedVisualizations, savedDashboards, da
     for (const resultCategory in parentResultCategory) {
       if(parentResultCategory.hasOwnProperty(resultCategory)) {
         savedVisualizations.get(resultCategory).then(function (visual) {
-          _.each(parentResultCategory[resultCategory], function (dashboardUrl) {
-            visual.visState.params.dashboards = _.without(visual.visState.params.dashboards, dashboardUrl);
+          _.each(parentResultCategory[resultCategory], function (dashboardId) {
+            visual.visState.params.dashboards = _.without(
+              visual.visState.params.dashboards, _.findWhere(
+                visual.visState.params.dashboards, { id: dashboardId }));
           });
           return visual.save();
         });

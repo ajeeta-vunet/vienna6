@@ -4,6 +4,8 @@ import { uiModules } from 'ui/modules';
 import chrome from 'ui/chrome';
 
 import 'ui/query_bar';
+import 'ui/directives/sub_menu_tree';
+import 'ui/directives/sub_menu_leaf';
 
 import { getDashboardTitle, getUnsavedChangesWarningMessage } from './dashboard_strings';
 import { DashboardViewMode } from './dashboard_view_mode';
@@ -26,6 +28,7 @@ import { EmbeddableFactoriesRegistryProvider } from 'ui/embeddable/embeddable_fa
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { DashboardViewportProvider } from './viewport/dashboard_viewport_provider';
 import { dashboardVisualization, addToCategory } from './dashboard_category';
+import { prepareMultilevelCategoryDropdown } from './multilevel_dashboard_navigation';
 
 const app = uiModules.get('app/dashboard', [
   'elasticsearch',
@@ -55,7 +58,17 @@ app.directive('dashboardApp', function ($injector, $http) {
   return {
     restrict: 'E',
     controllerAs: 'dashboardApp',
-    controller: function ($scope, $rootScope, $route, $routeParams, $location, getAppState, $compile, dashboardConfig, savedVisualizations) {
+    controller: function (
+      $scope,
+      $rootScope,
+      $route,
+      $routeParams,
+      $location,
+      getAppState,
+      $compile,
+      dashboardConfig,
+      savedVisualizations,
+      Promise) {
       const filterManager = Private(FilterManagerProvider);
       const filterBar = Private(FilterBarQueryFilterProvider);
       const docTitle = Private(DocTitleProvider);
@@ -299,10 +312,9 @@ app.directive('dashboardApp', function ($injector, $http) {
         if(dash.title === 'Home') {
           dash.id = dash.title;
         }
-        const dashId = dash.id;
         const oldCategory = dashboardStateManager.getCategory();
         dashboardStateManager.setCategory($scope.opts.category);
-        return saveDashboard(angular.toJson, timefilter, dashboardStateManager, dashId)
+        return saveDashboard(angular.toJson, timefilter, dashboardStateManager)
           .then(function (id) {
             $scope.kbnTopNav.close('save');
             if (id) {
@@ -404,6 +416,11 @@ app.directive('dashboardApp', function ($injector, $http) {
         kbnUrl.change(
           `${VisualizeConstants.WIZARD_STEP_1_PAGE_PATH}?${DashboardConstants.ADD_VISUALIZATION_TO_DASHBOARD_MODE_PARAM}`);
       };
+
+      // Get the data required to display the multilevel dropdown menu
+      prepareMultilevelCategoryDropdown(Private, Promise, categories).then(function (data) {
+        $scope.subMenuTree = data;
+      });
 
       $scope.opts = {
         displayName: dash.getDisplayName(),

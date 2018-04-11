@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 // eslint-disable-next-line @elastic/kibana-custom/no-default-export
 export default function (chrome, internals) {
+
   /**
    * ui/chrome Controls API
    *
@@ -11,19 +12,23 @@ export default function (chrome, internals) {
    *     determines if the Kibana chrome should be displayed
    */
 
-  // Hard coding the tenant and bu ids which will be
-  // populated later through api calls.
-  const tenantId = 1;
-  const buId = 1;
-  const BASE_URL = 'vuSmartMaps/api';
+  /*
+   * Returns TRUE if the current user belongs to super Tenant and BU
+   */
+  chrome.isUserFromSuperTenant = function () {
+    return (internals.tenantId === '1' && internals.buId === '1');
+  };
 
   /*
    * This function is called to fetch the Tenant and BU id for the logged in
    * user
    */
   chrome.getTenantBu = function () {
-    return [tenantId, buId];
+    return [internals.tenantId, internals.buId];
   };
+
+  // Our Base URL
+  const BASE_URL = 'vuSmartMaps/api';
 
   /**
    * @return {current user, role and permission} - get current user
@@ -130,7 +135,7 @@ export default function (chrome, internals) {
   // tenant and bu ids which can be used by
   // different apis to prepare the complete urls.
   chrome.getUrlBase = function () {
-    const url = '/' + BASE_URL + '/' + tenantId + '/bu/' + buId;
+    const url = '/' + BASE_URL + '/' + internals.tenantId + '/bu/' + internals.buId;
     return url;
   };
 
@@ -138,7 +143,7 @@ export default function (chrome, internals) {
   // We prepare the notification index using the
   // tenant id and bu id.
   chrome.getVunetIndexName = function (indexType) {
-    const index = 'vunet-' + tenantId + '-' + buId + '-' + indexType + '-*';
+    const index = 'vunet-' + internals.tenantId + '-' + internals.buId + '-' + indexType + '-*';
     return index;
   };
 }

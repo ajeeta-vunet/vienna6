@@ -14,6 +14,7 @@ import alertTemplate from 'plugins/kibana/alert/alert.html';
 import { AlertConstants, createAlertEditUrl } from './alert_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
+import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 
 uiRoutes
   .when(AlertConstants.CREATE_PATH, {
@@ -461,21 +462,10 @@ function alertAppEditor($scope,
 
     alertcfg.save(isNewAlert).then(function (id) {
       $scope.kbnTopNav.close('save');
-      //var tenant_bu = chrome.getTenantBu();
       if (id) {
-        /*
-        // making a post call to vusmartmaps with 'alert_id' and
-        // 'action' (save/modify alert). This information will be
-        // used to generate alerts.
-        var modify_alert = $http({
-          method: 'POST',
-          url: '/vuSmartMaps/api/alert_status/',
-          data: {'alert_id': id, 'alert_title': alertcfg.title,  'action':'modify', 'tenant_id': tenant_bu[0], 'bu_id': tenant_bu[1] },
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        }).success(function (data, status, headers, config) {
-        }).error(function (data, status, headers, config) {
-          notify.error('Failed to notify for the alert change')
-        }); */
+
+        alertcfg.id = id;
+        updateVunetObjectOperation([alertcfg], 'alert', $http, 'modify', chrome);
         if (alertcfg.id !== $routeParams.id) {
           kbnUrl.change('/alert/{{id}}', { id: alertcfg.id });
         }

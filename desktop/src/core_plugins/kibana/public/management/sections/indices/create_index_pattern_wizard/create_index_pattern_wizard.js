@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { IndexPatternMissingIndices } from 'ui/errors';
+import chrome from 'ui/chrome';
 import 'ui/directives/validate_index_pattern';
 import 'ui/directives/auto_select_if_only_one';
 import 'ui/directives/documentation_href';
@@ -7,6 +8,7 @@ import uiRoutes from 'ui/routes';
 import { uiModules } from 'ui/modules';
 import template from './create_index_pattern_wizard.html';
 import { sendCreateIndexPatternRequest } from './send_create_index_pattern_request';
+import { filterIndexBucketsForTenant } from './filter_index_for_tenants';
 import './step_index_pattern';
 import './step_time_field';
 import './matching_indices_list';
@@ -26,7 +28,8 @@ uiModules.get('apps/management')
     indexPatterns,
     kbnUrl,
     Notifier,
-    Promise
+    Promise,
+    $http
   ) {
   // This isn't ideal. We want to avoid searching for 20 indices
   // then filtering out the majority of them because they are sysetm indices.
@@ -109,12 +112,7 @@ uiModules.get('apps/management')
           if (!response || response.error || !response.aggregations) {
             return [];
           }
-
-          return _.sortBy(response.aggregations.indices.buckets.map(bucket => {
-            return {
-              name: bucket.key
-            };
-          }), 'name');
+          return filterIndexBucketsForTenant(response.aggregations.indices.buckets, $http, chrome);
         })
         .catch(err => {
           const type = _.get(err, 'body.error.caused_by.type');

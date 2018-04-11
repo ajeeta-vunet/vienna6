@@ -58,8 +58,7 @@ app.directive('dashboardApp', function ($injector, $http) {
   return {
     restrict: 'E',
     controllerAs: 'dashboardApp',
-    controller: function (
-      $scope,
+    controller: function ($scope,
       $rootScope,
       $route,
       $routeParams,

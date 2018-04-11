@@ -119,6 +119,12 @@ export default function (kibana) {
       createProxy(server, 'POST', '/{index}/_search');
       createProxy(server, 'POST', '/_msearch');
 
+      // This is for supporting multi-tenancy in Kibana.. It allows operation
+      // on kibana index created for different tenants
+      createProxy(server, 'POST', '/{index}/{paths*}');
+      createProxy(server, 'PUT', '/{index}/{paths*}');
+      createProxy(server, 'DELETE', '/{index}/{paths*}');
+
       // Set up the health check service and start it.
       const { start, waitUntilReady } = healthCheck(this, server);
       server.expose('waitUntilReady', waitUntilReady);

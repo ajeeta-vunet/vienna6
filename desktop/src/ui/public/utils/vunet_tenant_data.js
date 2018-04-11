@@ -1,7 +1,6 @@
-export function getTenantData($http) {
-  // We currently assume tenant-id is 1
-  const tenantId = 1;
-  const url = '/vuSmartMaps/api/' + tenantId + '/';
+export function getTenantData($http, chrome) {
+  const tenantBu = chrome.getTenantBu();
+  const url = '/vuSmartMaps/api/' + tenantBu[0] + '/';
   const httpResult = $http({
     method: 'GET',
     url: url

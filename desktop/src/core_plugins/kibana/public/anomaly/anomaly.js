@@ -14,6 +14,7 @@ import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { Notifier } from 'ui/notify/notifier';
 import { DocTitleProvider } from 'ui/doc_title';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
+import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 const angular = require('angular');
 
 uiRoutes
@@ -290,18 +291,8 @@ function anomalyAppEditor($scope,
     anomaly.save(isNewAnomaly).then(function (id) {
       $scope.kbnTopNav.close('save');
       if (id) {
-        // making a post call to vusmartmaps with 'detector_id' and
-        // 'action' (save/modify anomaly). This information will be
-        // used to generate anomalies.
-        // const modify_alert = $http({
-        //   method: 'POST',
-        //   url: '/vuSmartMaps/api/anomaly_status/',
-        //   data: { 'detector_id': id, 'detector_title': anomaly.title,  'action': 'modify' },
-        //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        // }).success(function (data, status, headers, config) {
-        // }).error(function (data, status, headers, config) {
-        //   notify.error('Failed to notify for the anomaly change');
-        // });
+        anomaly.id = id;
+        updateVunetObjectOperation([anomaly], 'anomaly', $http, 'modify', chrome);
         if (anomaly.id !== $routeParams.id) {
           kbnUrl.change('/anomaly/{{id}}', { id: anomaly.id });
         }

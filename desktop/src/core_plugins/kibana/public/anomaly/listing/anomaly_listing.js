@@ -6,6 +6,7 @@ import { AnomalyConstants, createAnomalyEditUrl } from '../anomaly_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
 import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
+import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 
 export function AnomalyListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
@@ -136,6 +137,7 @@ export function AnomalyListingController($injector, $scope, $location, $http) {
       anomalyService.delete(selectedIds)
         .then(fetchItems)
         .then(() => {
+          updateVunetObjectOperation(selectedItems, 'anomaly', $http, 'delete', chrome);
           deselectAll();
           logUserOperationForDeleteMultipleObjects($http, selectedIds, 'anomaly');
         })

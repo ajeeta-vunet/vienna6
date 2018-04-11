@@ -21,12 +21,15 @@ module.directive('rbacUserRole', function ($http) {
       // Now get all the roles available
       const currentUser = chrome.getCurrentUser();
 
+      // Get the first part of the url containing the tenant
+      // and bu id to prepare urls for api calls.
+      // Example output: /vuSmartMaps/api/1/bu/1/
+      const urlBase = chrome.getUrlBase();
+      const url = urlBase + '/user_groups/';
+
       const httpResult = $http({
         method: 'GET',
-        // Harcoded the default tenant id (1) and bu id (1) in the REST API url
-        // This has to be fixed in some other ERs.
-        // url: '/api/default/user_groups/'
-        url: '/vuSmartMaps/api/1/bu/1/user_groups/'
+        url: url
       })
         .then(resp => resp.data)
         .catch(resp => { throw resp.data; });

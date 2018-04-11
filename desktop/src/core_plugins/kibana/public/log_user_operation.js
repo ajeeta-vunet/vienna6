@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import chrome from 'ui/chrome';
 
 // This function will make a api call to vusmartmaps
 // to log the user operations like load, save and delete.
@@ -13,9 +14,12 @@ export function logUserOperation(http, method, type, title, id) {
     objectTitle = id;
   }
 
+  const tenantBu = chrome.getTenantBu();
+  const url = '/vuSmartMaps/api/' + tenantBu[0] + '/vienna/' + type + '/' +  objectTitle + '/';
+
   const operationObject = http({
     method: method,
-    url: '/vuSmartMaps/api/1/vienna/' + type + '/' +  objectTitle + '/',
+    url: url,
     data: {},
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   })

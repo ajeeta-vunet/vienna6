@@ -6,6 +6,7 @@ import { AlertConstants, createAlertEditUrl } from '../alert_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
 import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
+import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 
 export function AlertListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
@@ -135,6 +136,8 @@ export function AlertListingController($injector, $scope, $location, $http) {
       alertService.delete(selectedIds)
         .then(fetchItems)
         .then(() => {
+          // Update backend with operation
+          updateVunetObjectOperation(selectedItems, 'alert', $http, 'delete', chrome);
           deselectAll();
           logUserOperationForDeleteMultipleObjects($http, selectedIds, 'alert');
         })

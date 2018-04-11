@@ -30,8 +30,8 @@ uiRoutes
       reportcfg: function (savedReports) {
         return savedReports.get();
       },
-      company_name: function ($http) {
-        return getTenantData($http);
+      company_name: function ($http, chrome) {
+        return getTenantData($http, chrome);
       },
       // This flag indicates if new report is being
       // created.
@@ -394,6 +394,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
     // Get current user
     const currentUser = chrome.getCurrentUser();
+    const tenantBu = chrome.getTenantBu();
 
     const httpResult = $http({
       method: 'POST',
@@ -403,6 +404,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         username: currentUser[0],
         userRole: currentUser[1],
         permissions: currentUser[2],
+        tenantId: tenantBu[0],
+        buId: tenantBu[1],
         shipperUrl: $scope.shipperAddress
       },
       responseType: 'blob'

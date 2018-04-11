@@ -71,7 +71,13 @@ uiModules.get('kibana')
             _.pull($scope.columns, '_source');
           }
 
-          if ($scope.columns.length === 0) $scope.columns.push('_source');
+          if ($scope.columns.length === 0) {
+            const timeFieldName = $scope.indexPattern.timeFieldName;
+            if ($scope.indexPattern && timeFieldName) {
+              $scope.columns.push(timeFieldName);
+            }
+            $scope.columns.push('_source');
+          }
         });
 
 

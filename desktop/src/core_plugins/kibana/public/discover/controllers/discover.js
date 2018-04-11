@@ -285,10 +285,17 @@ function discoverController(
   $scope.uiState = $state.makeStateful('uiState');
 
   function getStateDefaults() {
+    // Add the timestamp field to the defaultColumns list. This is needed to
+    // display the timestamp field by default along with _source field
+    const defaultColumns = config.get('defaultColumns');
+    const timeFieldName = $scope.indexPattern.timeFieldName;
+    if ($scope.indexPattern && timeFieldName && defaultColumns.indexOf(timeFieldName)) {
+      defaultColumns.unshift(timeFieldName);
+    }
     return {
       query: $scope.searchSource.get('query') || { query: '', language: config.get('search:queryLanguage') },
       sort: getSort.array(savedSearch.sort, $scope.indexPattern, config.get('discover:sort:defaultOrder')),
-      columns: savedSearch.columns.length > 0 ? savedSearch.columns : config.get('defaultColumns').slice(),
+      columns: savedSearch.columns.length > 0 ? savedSearch.columns : defaultColumns,
       index: $scope.indexPattern.id,
       interval: 'auto',
       filters: _.cloneDeep($scope.searchSource.getOwn('filter'))

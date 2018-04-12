@@ -344,8 +344,8 @@ app.directive('dashboardApp', function ($injector, $http) {
       };
       const navActions = {};
       navActions[TopNavIds.HOME] = () =>{
-        onChangeViewMode(DashboardViewMode.VIEW);
         window.location = `#/${chrome.getUserHomeDashboard()}`;
+        onChangeViewMode(DashboardViewMode.VIEW);
       };
       navActions[TopNavIds.FULL_SCREEN] = () =>
         dashboardStateManager.setFullScreenMode(true);

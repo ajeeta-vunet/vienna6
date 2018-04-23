@@ -112,8 +112,8 @@ export function AggResponseTabifyProvider(Private, Notifier) {
           } else {
             // process the next agg at this same level
             collectBucket(write, bucket, metricList, key, aggScale);
-            metricList.pop(value);
           }
+          metricList.pop(value);
         });
         break;
     }

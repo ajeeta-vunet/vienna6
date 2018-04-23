@@ -333,7 +333,7 @@ export default function (server) {
       esQuery.aggs = {};
       esQuery.aggs['4'] = {};
       esQuery.aggs['4'].terms = {
-        'field': 'from.keyword',
+        'field': 'from',
         'size': 100,
         'order': {
 	  '1': 'desc'
@@ -347,7 +347,7 @@ export default function (server) {
       };
       esQuery.aggs['4'].aggs['5'] = {};
       esQuery.aggs['4'].aggs['5'].terms = {
-        'field': 'hop-ip.keyword',
+        'field': 'hop-ip',
         'size': 5,
         'order': {
           '1': 'desc'
@@ -421,7 +421,7 @@ export default function (server) {
       esQuery.query.bool.must = [];
       esQuery.query.bool.must.query = {};
       esQuery.query.bool.must.query.query_string = {};
-      esQuery.query.bool.must.query.query_string.query = 'type:hop AND host.keyword:' + source + ' AND target:' + destination;
+      esQuery.query.bool.must.query.query_string.query = 'type:hop AND host:' + source + ' AND target:' + destination;
       esQuery.query.bool.must.query.query_string.analyze_wildcard = true;
 
       esQuery.query.bool.must.filter = {};
@@ -497,8 +497,8 @@ export default function (server) {
           const rtt = Math.round(responseObj.average_rtt);
           const jitter = Math.round(responseObj.avg_jitter);
           const lostP = Math.round(responseObj.loss_percent);
-          const from = responseObj['from.keyword'];
-          const to = responseObj['hop-ip.keyword'];
+          const from = responseObj.from;
+          const to = responseObj['hop-ip'];
           const org = responseObj.org;
           const Location = responseObj.Location;
           const hopId = responseObj.hop;
@@ -643,7 +643,7 @@ export default function (server) {
       esQuery.aggs = {};
       esQuery.aggs['2'] = {};
       esQuery.aggs['2'].terms = {
-        'field': 'host.keyword',
+        'field': 'host',
         'size': 100,
         'order': {
           '1': 'desc'
@@ -662,7 +662,7 @@ export default function (server) {
         };
         esQuery.aggs['2'].aggs['3'] = {
           'terms': {
-            'field': 'target.keyword',
+            'field': 'target',
             'size': 100,
             'order': {
               '1': 'desc'
@@ -695,7 +695,7 @@ export default function (server) {
         else if (typeVal === 'tcpping') {
           esQuery.aggs['2'].aggs['3'].aggs['4'] = {
             'terms': {
-              'field': 'port.keyword',
+              'field': 'port',
               'size': 5,
               'order': {
                 '1': 'desc'
@@ -721,7 +721,7 @@ export default function (server) {
         };
         esQuery.aggs['2'].aggs['3'] = {};
         esQuery.aggs['2'].aggs['3'].terms = {
-          'field': 'url.keyword',
+          'field': 'url',
           'size': 100,
           'order': {
             '1': 'desc'
@@ -746,7 +746,7 @@ export default function (server) {
         filterString = esFilterVal;
       }
 
-      let dataSourceTypeVal = 'type.keyword:';
+      let dataSourceTypeVal = 'type:';
       dataSourceTypeVal += typeVal;
       // Create a filter using type alone
       esQuery.query = {};
@@ -834,13 +834,13 @@ export default function (server) {
 
         _.forEach(responseList, function (responseObj) {
           // If we haven't got host itself, let us return..
-          if (!('host.keyword' in responseObj)) {
+          if (!('host' in responseObj)) {
             return false;
           }
 
           // Populate local variable for this response..
-          const source = responseObj['host.keyword'];
-          const dest = responseObj['target.keyword'];
+          const source = responseObj.host;
+          const dest = responseObj.target;
           let desturl;
           let downloadTime;
           let port;
@@ -850,14 +850,14 @@ export default function (server) {
 
           // Based on the type fetching perticular response.
           if (typeVal === 'urlbeat') {
-            desturl = responseObj['url.keyword'];
+            desturl = responseObj.url;
             downloadTime = Math.round(responseObj.download_time);
           } else {
             rtt = Math.round(responseObj.average_rtt);
           }
 
           if (typeVal === 'tcpping') {
-            port = responseObj['port.keyword'];
+            port = responseObj.port;
           }
 
           if (typeVal === 'full-path') {

@@ -186,7 +186,7 @@ export class VisualizeListingTable extends Component {
     return (
       <KuiModalOverlay>
         <KuiConfirmModal
-          message="Are you sure you want to delete the selected visualizations? This action is irreversible!"
+          children="Are you sure you want to delete the selected visualizations? This action is irreversible!"
           title="Warning"
           onCancel={this.closeModal}
           onConfirm={this.deleteSelectedItems}

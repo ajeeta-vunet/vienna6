@@ -1,0 +1,4 @@
+// Primary
+$buttonPrimaryBackgroundColor: $kuiPrimaryButtonColor;
+$buttonPrimaryHoverBackgroundColor: darken($kuiPrimaryButtonColor, 10%);
+$buttonPrimaryDisabledBackgroundColor: desaturate($kuiPrimaryButtonColor, 70%);

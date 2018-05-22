@@ -186,12 +186,15 @@ function discoverController(
       description: 'Open Saved Search',
       template: require('plugins/kibana/discover/partials/load_search.html'),
       testId: 'discoverOpenButton',
-    }, {
-      key: 'share',
-      description: 'Share Search',
-      template: require('plugins/kibana/discover/partials/share_search.html'),
-      testId: 'discoverShareButton',
-    }];
+    }
+    // Hiding the share button as we dont need this.
+    //, {
+    //   key: 'share',
+    //   description: 'Share Search',
+    //   template: require('plugins/kibana/discover/partials/share_search.html'),
+    //   testId: 'discoverShareButton',
+    // }
+    ];
   }
 
   // the actual courier.SearchSource

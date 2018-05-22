@@ -44,5 +44,6 @@ $buttonWarningDisabledBackgroundColor: lighten($buttonWarningBackgroundColor, 10
 // Hollow
 $buttonHollowDiabledTextColor: #dddddd;
 
+@import "vunet_index";
 @import "button";
 @import "button_group/button_group";

@@ -33,12 +33,12 @@
       }
     }
     .dropdown-link {
-      padding: 3px 0px !important;
-      border-bottom: 0px !important;
-      background-color: @vunet-background-color !important;
+      padding: 3px 0px;
+      border-bottom: 0px;
+      background-color: @vunet-background-color;
       border-color: none;
       &:hover {
-        background-color: @vunet-background-color !important;
+        background-color: @vunet-background-color;
       }
     }
   }
@@ -83,5 +83,74 @@
   .dropdown-submenu.pull-left > .dropdown-menu {
     left: -100%;
     margin-left: 10px;
+  }
+}
+
+// Remove white spaces for business metric panels
+.bs-metric-panel {
+  padding: 0px !important;
+}
+
+// Get rid of extra white spaces in visualisations
+// added under a dashboard.
+.dashboard-panel {
+  .panel-content {
+    padding: 0px !important;
+  }
+}
+
+// Data table css
+
+// Table header background
+.table-condensed thead tr th{
+  background: @data-tables-header-background;
+}
+
+.agg-table-group {
+  margin-bottom: 0px;
+}
+
+.agg-table-group tbody tr:nth-child(odd) {
+    background-color: @white;
+} /*odd*/
+
+.agg-table-group tbody tr:nth-child(even) {
+    background-color: @data-tables-even-row-background;
+} /* even*/
+
+.table-condensed {
+  margin:0px;
+}
+
+.table-condensed tr th {
+  border-left: 1px solid @data-tables-border;
+  border-top: 1px solid @data-tables-border;
+  border-right: 1px solid @data-tables-border;
+  border-bottom:0px;
+  padding: 4px 5px;
+  font-size: 13px;
+  font-weight: normal;
+  color: #000;
+}
+
+.table-condensed tbody td {
+  border-left: 1px solid @data-tables-border;
+  border-bottom: 1px solid @data-tables-border;
+  border-right: 1px solid @data-tables-border;
+  border-top: 0px;
+  padding: 4px 5px;
+  font-size: 12px;
+  color: #000;
+}
+
+.table-condensed tbody tr td {
+  padding:4px 5px;
+}
+
+.agg-table-paginated {
+  border:1px solid @data-tables-border;
+  // Set the height of empty rows in table / matrix to 22px
+  tr td {
+    height: 22px;
   }
 }

@@ -88,7 +88,6 @@
     }
   }
 
-
 // /src/ui/public/styles/bootstrap/list-group.less
   .list-group-item {
     background-color: @list-group-bg;
@@ -759,5 +758,70 @@
 
   .react-grid-item > .react-resizable-handle {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6'%3E%3Cpolygon fill='%23EFEEEE' points='6 6 0 6 0 4.2 4 4.2 4.2 4.2 4.2 0 6 0' opacity='.302'/%3E%3C/svg%3E%0A");
+  }
+}
+
+.theme-dark {
+  // Dark theme data table css
+
+  // Table header background
+  .table-condensed thead tr th {
+    background: @black;
+  }
+
+  .agg-table-group tbody tr:nth-child(odd) {
+    background-color: @data-tables-odd-row-background;
+  } /*odd*/
+
+  .agg-table-group tbody tr:nth-child(even) {
+    background-color: @data-tables-even-row-background;
+  } /* even*/
+
+  .table-condensed tr th {
+    border-left: 1px solid @dashboard-bg;
+    border-top: 1px solid @dashboard-bg;
+    border-right: 1px solid @dashboard-bg;
+    color: @text-color;
+  }
+
+  .table-condensed tbody td {
+    border-left: 1px solid @dashboard-bg;
+    border-bottom: 1px solid @dashboard-bg;
+    border-right: 1px solid @dashboard-bg;
+    color: @text-color;
+  }
+
+  .agg-table-paginated {
+    border:1px solid @dashboard-bg;
+  }
+}
+
+.theme-dark {
+  .navigate {
+    .navbar-nav {
+      li a {
+        color: @text-color;
+        border-bottom: 1px solid @dashboard-bg;
+        background: @dashboard-bg;
+        &:hover {
+          background: @dashboard-bg;
+        }
+      }
+      .dropdown-link {
+        color: @text-color;
+        background-color: @body-bg;
+        &:hover {
+          background-color: @body-bg;
+        }
+      }
+    }
+
+    .dropdown-submenu > a:after {
+      border-left-color:@text-color;
+    }
+
+    .dropdown-submenu:hover > a:after {
+      border-left-color: @text-color;
+    }
   }
 }

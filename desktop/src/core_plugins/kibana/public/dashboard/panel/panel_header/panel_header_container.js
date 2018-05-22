@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { PanelHeader } from './panel_header';
-import { PanelOptionsMenuContainer } from './panel_options_menu_container';
+import { PanelEditOptionsContainer } from './panel_edit_options_container';
 import { PanelMaximizeIcon } from './panel_maximize_icon';
 import { PanelMinimizeIcon } from './panel_minimize_icon';
 import { DashboardViewMode } from '../../dashboard_view_mode';
@@ -51,7 +51,11 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       <PanelMaximizeIcon onMaximize={onMaximizePanel} />;
   } else {
     actions = (
-      <PanelOptionsMenuContainer
+      // <PanelOptionsMenuContainer
+      //   panelId={panelId}
+      //   embeddableFactory={embeddableFactory}
+      // />
+      <PanelEditOptionsContainer
         panelId={panelId}
         embeddableFactory={embeddableFactory}
       />

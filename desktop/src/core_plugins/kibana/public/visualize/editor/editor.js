@@ -114,12 +114,15 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
           return 'Apply or Discard your changes before saving';
         }
       }
-    }, {
-      key: 'share',
-      description: 'Share Visualization',
-      template: require('plugins/kibana/visualize/editor/panels/share.html'),
-      testId: 'visualizeShareButton',
-    }, {
+    },
+    // Hiding the share button as we dont need this.
+    // {
+    //   key: 'share',
+    //   description: 'Share Visualization',
+    //   template: require('plugins/kibana/visualize/editor/panels/share.html'),
+    //   testId: 'visualizeShareButton',
+    // },
+    {
       key: 'refresh',
       description: 'Refresh',
       run: function () {

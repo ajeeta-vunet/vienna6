@@ -19,5 +19,6 @@
   show-spy-panel="shouldShowSpyPanel()"
   id = "vis_visualization"
   print-report="printReport"
-  ng-class="{'report-print-non-table': printReport}"
+  ng-class="{'report-print-non-table': printReport,
+             'bs-metric-panel':vis.type.name === 'business_metric'}"
 />

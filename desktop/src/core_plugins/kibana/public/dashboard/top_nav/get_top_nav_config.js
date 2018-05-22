@@ -19,9 +19,10 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
           ]
           : [
             getHomeConfig(actions[TopNavIds.HOME]),
-            getFullScreenConfig(actions[TopNavIds.FULL_SCREEN]),
-            getShareConfig(),
-            getCloneConfig(actions[TopNavIds.CLONE]),
+            // Hiding the 'Full Screen' and 'Share' options
+            //getFullScreenConfig(actions[TopNavIds.FULL_SCREEN]),
+            //getShareConfig(),
+            //getCloneConfig(actions[TopNavIds.CLONE]),
             getEditConfig(actions[TopNavIds.ENTER_EDIT_MODE])
           ]
       );
@@ -32,7 +33,9 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
         getViewConfig(actions[TopNavIds.EXIT_EDIT_MODE]),
         getAddConfig(),
         getOptionsConfig(),
-        getShareConfig()];
+        // Hiding the 'Share' option in 'Edit' mode.
+        //getShareConfig()
+      ];
     default:
       return [];
   }
@@ -86,14 +89,14 @@ function getViewConfig(action) {
 /**
  * @returns {kbnTopNavConfig}
  */
-function getCloneConfig(action) {
-  return {
-    key: 'clone',
-    description: 'Create a copy of your dashboard',
-    testId: 'dashboardClone',
-    run: action
-  };
-}
+// function getCloneConfig(action) {
+//   return {
+//     key: 'clone',
+//     description: 'Create a copy of your dashboard',
+//     testId: 'dashboardClone',
+//     run: action
+//   };
+// }
 
 /**
  * @returns {kbnTopNavConfig}
@@ -110,14 +113,14 @@ function getAddConfig() {
 /**
  * @returns {kbnTopNavConfig}
  */
-function getShareConfig() {
-  return {
-    key: TopNavIds.SHARE,
-    description: 'Share Dashboard',
-    testId: 'dashboardShareButton',
-    template: require('plugins/kibana/dashboard/top_nav/share.html')
-  };
-}
+// function getShareConfig() {
+//   return {
+//     key: TopNavIds.SHARE,
+//     description: 'Share Dashboard',
+//     testId: 'dashboardShareButton',
+//     template: require('plugins/kibana/dashboard/top_nav/share.html')
+//   };
+// }
 
 /**
  * @returns {kbnTopNavConfig}

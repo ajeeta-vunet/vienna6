@@ -1,0 +1,17 @@
+// True colors
+
+$kuiColorBlue: #292F4F;
+
+// Normal colors
+
+$kuiLinkColor: #2e3458;
+$kuiLinkColor-isHover: darken($kuiLinkColor, 10%);
+
+// Colors
+
+$kuiFocusColor: $kuiColorBlue;
+$kuiLinkHoverColor: #292F4F;
+$kuiSelectedBorderColor: $kuiColorBlue;
+
+// Vunet: Newly added variables
+$kuiPrimaryButtonColor: #D8034D;

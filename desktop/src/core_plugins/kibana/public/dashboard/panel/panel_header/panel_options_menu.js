@@ -18,15 +18,15 @@ export class PanelOptionsMenu extends React.Component {
   };
   closePopover = () => this.setState({ isPopoverOpen: false });
 
-  onEditPanel = () => {
-    window.location = this.props.editUrl;
-  };
+  // onEditPanel = () => {
+  //   window.location = this.props.editUrl;
+  // };
 
-  onDeletePanel = () => {
-    if (this.props.onDeletePanel) {
-      this.props.onDeletePanel();
-    }
-  };
+  // onDeletePanel = () => {
+  //   if (this.props.onDeletePanel) {
+  //     this.props.onDeletePanel();
+  //   }
+  // };
 
   onToggleExpandPanel = () => {
     this.closePopover();

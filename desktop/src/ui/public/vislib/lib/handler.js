@@ -205,7 +205,7 @@ export function VisHandlerProvider(Private) {
           .attr('class', 'text-center visualize-error visualize-chart')
           .append('div').attr('class', 'item top')
           .append('div').attr('class', 'item')
-          .append('h2').html('<i class="fa fa-meh-o"></i>')
+          .append('h2').html('<i class="fa fa-warning"></i>')
           .append('h4').text(message);
 
         div.append('div').attr('class', 'item bottom');

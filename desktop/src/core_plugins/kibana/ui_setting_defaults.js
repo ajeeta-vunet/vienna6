@@ -162,7 +162,7 @@ export function getUiSettingDefaults() {
     'visualization:colorMapping': {
       type: 'json',
       value: JSON.stringify({
-        Count: '#00A69B'
+        Count: '#414665'
       }),
       description: 'Maps values to specified colors within visualizations'
     },

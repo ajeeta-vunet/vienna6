@@ -1,23 +1,43 @@
-import { resolve } from 'path';
+import {
+  resolve
+} from 'path';
 
 import Promise from 'bluebird';
-import { mkdirp as mkdirpNode } from 'mkdirp';
+import {
+  mkdirp as mkdirpNode
+} from 'mkdirp';
 
 import manageUuid from './server/lib/manage_uuid';
 import search from './server/routes/api/search';
-import { scrollSearchApi } from './server/routes/api/scroll_search';
-import { importApi } from './server/routes/api/import';
-import { exportApi } from './server/routes/api/export';
+import {
+  scrollSearchApi
+} from './server/routes/api/scroll_search';
+import {
+  importApi
+} from './server/routes/api/import';
+import {
+  exportApi
+} from './server/routes/api/export';
 import scripts from './server/routes/api/scripts';
-import { registerSuggestionsApi } from './server/routes/api/suggestions';
-import { reportDownloadApi } from './server/routes/api/report';
-import { registerFieldFormats } from './server/field_formats/register';
+import {
+  registerSuggestionsApi
+} from './server/routes/api/suggestions';
+import {
+  reportDownloadApi
+} from './server/routes/api/report';
+import {
+  registerFieldFormats
+} from './server/field_formats/register';
 import * as systemApi from './server/lib/system_api';
 import handleEsError from './server/lib/handle_es_error';
 import mappings from './mappings.json';
-import { getUiSettingDefaults } from './ui_setting_defaults';
+import {
+  getUiSettingDefaults
+} from './ui_setting_defaults';
 
-import { injectVars } from './inject_vars';
+import {
+  injectVars
+} from './inject_vars';
 
 const mkdirp = Promise.promisify(mkdirpNode);
 
@@ -69,77 +89,77 @@ export default function (kibana) {
         injectVars,
       },
 
-      links: [
-        {
-          id: 'kibana:management',
-          title: 'Advanced',
-          order: -1000,
-          url: `${kbnBaseUrl}#/management`,
-          description: 'define index patterns, change config, and more',
-          icon: 'plugins/kibana/assets/settings.svg',
-          linkToLastSubUrl: false
-        }, {
-          id: 'kibana:anomaly',
-          title: 'Anomaly Detection',
-          order: -1001,
-          url: `${kbnBaseUrl}#/anomalies`,
-          description: 'Anomaly Detection',
-          subUrlBase: `${kbnBaseUrl}#/anomaly`,
-        }, {
-          id: 'kibana:report',
-          title: 'Report',
-          order: -1002,
-          url: `${kbnBaseUrl}#/reports`,
-          description: 'create highly customized reports',
-          icon: 'plugins/kibana/assets/report.svg',
-        }, {
-          id: 'kibana:alert',
-          title: 'Manage Alerts',
-          order: -1003,
-          url: `${kbnBaseUrl}#/alerts`,
-          description: 'Smart and intelligent alerts',
-          subUrlBase: `${kbnBaseUrl}#/alert`,
-          icon: 'plugins/kibana/assets/alert.svg',
-        }, {
-          id: 'kibana:visualize',
-          title: 'Visualizations',
-          order: -1004,
-          url: `${kbnBaseUrl}#/visualize`,
-          description: 'design data visualizations',
-          icon: 'plugins/kibana/assets/visualize.svg',
-        }, {
-          id: 'kibana:discover',
-          title: 'Search',
-          order: -1005,
-          url: `${kbnBaseUrl}#/discover`,
-          description: 'interactively explore your data',
-          icon: 'plugins/kibana/assets/discover.svg',
-        }, {
-          id: 'kibana:event',
-          title: 'Event',
-          order: -1006,
-          url: `${kbnBaseUrl}#/event`,
-          // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
-          // above. This app has to use a different subUrlBase. When we introduced a landing page, we needed to change
-          // the url above in order to preserve the original url for BWC. The subUrlBase helps the Chrome api nav
-          // to determine what url to use for the app link.
-          subUrlBase: `${kbnBaseUrl}#/event`,
-          description: 'compose visualizations for much win',
-          icon: 'plugins/kibana/assets/event.svg',
-        }, {
-          id: 'kibana:dashboard',
-          title: 'Insights',
-          order: -1007,
-          url: `${kbnBaseUrl}#/dashboards`,
-          // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
-          // above. This app has to use a different subUrlBase, in addition to the url above, because "#/dashboard"
-          // routes to a page that creates a new dashboard. When we introduced a landing page, we needed to change
-          // the url above in order to preserve the original url for BWC. The subUrlBase helps the Chrome api nav
-          // to determine what url to use for the app link.
-          subUrlBase: `${kbnBaseUrl}#/dashboard`,
-          description: 'compose visualizations for much win',
-          icon: 'plugins/kibana/assets/dashboard.svg',
-        },
+      links: [{
+        id: 'kibana:management',
+        title: 'Advanced',
+        order: -1000,
+        url: `${kbnBaseUrl}#/management`,
+        description: 'define index patterns, change config, and more',
+        icon: 'plugins/kibana/assets/settings.svg',
+        linkToLastSubUrl: false
+      }, {
+        id: 'kibana:anomaly',
+        title: 'Anomaly Detection',
+        order: -1001,
+        url: `${kbnBaseUrl}#/anomalys`,
+        description: 'Anomaly Detection',
+        subUrlBase: `${kbnBaseUrl}#/anomaly`,
+      }, {
+        id: 'kibana:report',
+        title: 'Report',
+        order: -1002,
+        url: `${kbnBaseUrl}#/reports`,
+        description: 'create highly customized reports',
+        icon: 'plugins/kibana/assets/report.svg',
+        subUrlBase: `${kbnBaseUrl}#/report`,
+      }, {
+        id: 'kibana:alert',
+        title: 'Manage Alerts',
+        order: -1003,
+        url: `${kbnBaseUrl}#/alerts`,
+        description: 'Smart and intelligent alerts',
+        subUrlBase: `${kbnBaseUrl}#/alert`,
+        icon: 'plugins/kibana/assets/alert.svg',
+      }, {
+        id: 'kibana:visualize',
+        title: 'Visualizations',
+        order: -1004,
+        url: `${kbnBaseUrl}#/visualize`,
+        description: 'design data visualizations',
+        icon: 'plugins/kibana/assets/visualize.svg',
+      }, {
+        id: 'kibana:discover',
+        title: 'Search',
+        order: -1005,
+        url: `${kbnBaseUrl}#/discover`,
+        description: 'interactively explore your data',
+        icon: 'plugins/kibana/assets/discover.svg',
+      }, {
+        id: 'kibana:event',
+        title: 'Event',
+        order: -1006,
+        url: `${kbnBaseUrl}#/event`,
+        // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
+        // above. This app has to use a different subUrlBase. When we introduced a landing page, we needed to change
+        // the url above in order to preserve the original url for BWC. The subUrlBase helps the Chrome api nav
+        // to determine what url to use for the app link.
+        subUrlBase: `${kbnBaseUrl}#/event`,
+        description: 'compose visualizations for much win',
+        icon: 'plugins/kibana/assets/event.svg',
+      }, {
+        id: 'kibana:dashboard',
+        title: 'Insights',
+        order: -1007,
+        url: `${kbnBaseUrl}#/dashboards`,
+        // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
+        // above. This app has to use a different subUrlBase, in addition to the url above, because "#/dashboard"
+        // routes to a page that creates a new dashboard. When we introduced a landing page, we needed to change
+        // the url above in order to preserve the original url for BWC. The subUrlBase helps the Chrome api nav
+        // to determine what url to use for the app link.
+        subUrlBase: `${kbnBaseUrl}#/dashboard`,
+        description: 'compose visualizations for much win',
+        icon: 'plugins/kibana/assets/dashboard.svg',
+      },
         // Hide dev tools section in top navbar.
         // {
         //   id: 'kibana:dev_tools',

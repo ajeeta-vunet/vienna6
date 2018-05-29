@@ -56,8 +56,11 @@ uiRoutes
         }).then(response => response.savedObjects);
 
       },
-      anomaly: function (savedAnomalies, $route) {
-        return savedAnomalies.get($route.current.params.id);
+      anomaly: function (savedAnomalies, $route, courier) {
+        return savedAnomalies.get($route.current.params.id)
+          .catch(courier.redirectWhenMissing({
+            'anomaly': AnomalyConstants.LANDING_PAGE_PATH
+          }));
       },
       isNewAnomaly: function () {
         return false;

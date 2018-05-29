@@ -44,8 +44,11 @@ uiRoutes
     template: require('plugins/kibana/report/report.html'),
     resolve: {
       printReport: function () {return false;},
-      reportcfg: function (savedReports, $route) {
-        return savedReports.get($route.current.params.id);
+      reportcfg: function (savedReports, $route, courier) {
+        return savedReports.get($route.current.params.id)
+          .catch(courier.redirectWhenMissing({
+            'report': ReportConstants.LANDING_PAGE_PATH
+          }));
       },
       company_name: function () {return '';},
       isNewReport: function () {

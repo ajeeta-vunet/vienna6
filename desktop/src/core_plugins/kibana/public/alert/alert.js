@@ -52,8 +52,11 @@ uiRoutes
           perPage: 10000
         }).then(response => response.savedObjects);
       },
-      alertcfg: function (savedAlerts, $route) {
-        return savedAlerts.get($route.current.params.id);
+      alertcfg: function (savedAlerts, $route, courier) {
+        return savedAlerts.get($route.current.params.id)
+          .catch(courier.redirectWhenMissing({
+            'alert': AlertConstants.LANDING_PAGE_PATH
+          }));
       },
       isNewAlert: function () {
         return false;
@@ -389,12 +392,12 @@ function alertAppEditor($scope,
 
     $state.save();
     alertcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
-
+    /*eslint-disable */
     Number.prototype.padLeft = function (base, chr) {
       const len = (String(base || 10).length - String(this).length) + 1;
       return len > 0 ? new Array(len).join(chr || '0') + this : this;
     };
-
+    /*eslint-enable */
     const dateObj = new Date();
     const month = (dateObj.getMonth() + 1).padLeft(); //months from 1-12
     const day = dateObj.getDate().padLeft();

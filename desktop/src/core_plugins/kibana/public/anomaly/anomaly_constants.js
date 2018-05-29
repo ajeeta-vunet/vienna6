@@ -1,5 +1,5 @@
 export const AnomalyConstants = {
-  LANDING_PAGE_PATH: '/anomalies',
+  LANDING_PAGE_PATH: '/anomalys',
   CREATE_PATH: '/anomaly',
 };
 

@@ -384,6 +384,27 @@ app.directive('eventApp', function () {
               $scope.ticketId = '';
             }
 
+            // This function checks if there are Formatted fields
+            // in a docSection and update the docSection fields
+            // with formatted fields.
+            const checkAndUseFormattedFields = function (docSection) {
+
+              // Check if formatted fields exists and
+              // replace the actual values with formatted
+              // values
+              if (_.has(docSection, 'Formatted_fields')) {
+                for (const fkey in docSection.Formatted_fields) {
+                  if (docSection.Formatted_fields.hasOwnProperty(fkey)) {
+                    docSection[fkey] = docSection.Formatted_fields[fkey];
+                  }
+                }
+                // Get rid of Formatted fields as we don't
+                // display them.
+                delete docSection.Formatted_fields;
+              }
+            };
+
+
             // This function takes the nested object as input and
             // prepares a section with table structure to be displayed in the
             // event details page.
@@ -498,15 +519,41 @@ app.directive('eventApp', function () {
                 General[key] = respData[key];
               }
               else {
+
+                // Flag which will be set to true if
+                // the current object has any objects under it
+                let isTwoLevelNestedObject = false;
+
                 // Check for nested objects.
                 const obj = respData[key];
+
+                // Get formatted fields if exists for this section
+                checkAndUseFormattedFields(obj);
+
                 for (const item in obj) {
-                  if (!isKeyAnObject(obj[item])) {
-                    eventInfoDict[key] = respData[key];
+
+                  // check if the current object is one level
+                  // or two level deep
+                  if (isKeyAnObject(obj[item])) {
+                    isTwoLevelNestedObject = true;
+
+                    // Check for nested objects.
+                    const nestedObj = obj[item];
+                    for (const item in nestedObj) {
+                      if (nestedObj.hasOwnProperty(item)) {
+                        // Get formatted fields if exists for this section
+                        checkAndUseFormattedFields(nestedObj[item]);
+                      }
+                    }
                   }
-                  else {
-                    additionalInfoDict[key] = respData[key];
-                  }
+                }
+
+                // Add the resp[key] under the appropriate
+                // object list based on the Nesting level flag.
+                if (isTwoLevelNestedObject) {
+                  additionalInfoDict[key] = respData[key];
+                } else {
+                  eventInfoDict[key] = respData[key];
                 }
               }
             }

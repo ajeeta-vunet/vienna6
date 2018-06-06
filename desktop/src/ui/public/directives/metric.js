@@ -20,6 +20,21 @@ app.directive('vudataMetric', function () {
         scope.metric.fontSize = 40;
       }
 
+      // set the default text font size.
+      if (!scope.metric.textFontSize) {
+        // If the metric font size is less than or equal tp 24pt,
+        // set the text font size to 70% the size of metric
+        // font size.
+        if (scope.metric.fontSize <= 24) {
+          scope.metric.textFontSize = scope.metric.fontSize * 70 / 100;
+        } else {
+          // If the metric font size is greater than 24pt,
+          // set the text font size to 16pt.
+          scope.metric.textFontSize = 16;
+        }
+      }
+
+
       // Add all the flags and functions required
       // to hide / show input components when user interacts
       // with the side bar for business metric visualization.

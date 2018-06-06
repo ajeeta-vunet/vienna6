@@ -206,6 +206,23 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter) {
         $scope.advancedConfig = '';
       };
 
+      // Clear runBookScript input field if RunBookAutomation
+      // channel is not checked.
+      $scope.clearRunBookField = function () {
+        if (!$scope.enableRunBookAutomation) {
+          $scope.runBookScript = '';
+        }
+      };
+
+      // Clear Playbook config fields when AnsiblePlaybook
+      // channel is not checked.
+      $scope.clearAnsiblePlaybookFields = function () {
+        if (!$scope.enableAnsiblePlaybook) {
+          $scope.ansiblePlaybookName = '';
+          $scope.ansiblePlaybookOptions = '';
+        }
+      };
+
       // Check for atleast one day in the week is selected
       $scope.isAlertEnabledForADay = function () {
         return ($scope.alertOnMonday || $scope.alertOnTuesday ||

@@ -297,6 +297,11 @@ function alertAppEditor($scope,
     $scope.alertByTicket = alertcfg.alertByTicket;
     $scope.alertByEmail = alertcfg.alertByEmail;
     $scope.alertEmailId = alertcfg.alertEmailId;
+    $scope.enableRunBookAutomation = alertcfg.enable_runbook_automation;
+    $scope.runBookScript = alertcfg.runbook_script;
+    $scope.enableAnsiblePlaybook = alertcfg.enable_ansible_playbook;
+    $scope.ansiblePlaybookName = alertcfg.ansible_playbook_name;
+    $scope.ansiblePlaybookOptions = alertcfg.ansible_playbook_options;
     $scope.activeStartTime = alertcfg.activeStartTime;
     $scope.activeEndTime = alertcfg.activeEndTime;
     $scope.enableAlert = alertcfg.enableAlert;
@@ -416,6 +421,11 @@ function alertAppEditor($scope,
     alertcfg.alertByTicket = $scope.alertByTicket;
     alertcfg.alertByEmail = $scope.alertByEmail;
     alertcfg.alertEmailId = $scope.alertEmailId;
+    alertcfg.enable_runbook_automation = $scope.enableRunBookAutomation;
+    alertcfg.runbook_script = $scope.runBookScript;
+    alertcfg.enable_ansible_playbook = $scope.enableAnsiblePlaybook;
+    alertcfg.ansible_playbook_name = $scope.ansiblePlaybookName;
+    alertcfg.ansible_playbook_options = $scope.ansiblePlaybookOptions;
     alertcfg.ruleLevelThreshold = $scope.ruleLevelThreshold;
     alertcfg.evalCriteria = angular.toJson($scope.evalCriteria);
     alertcfg.evalCriteriaAlias = $scope.evalCriteriaAlias;

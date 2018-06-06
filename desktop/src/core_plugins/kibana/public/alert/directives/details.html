@@ -771,8 +771,8 @@
                 </div>
               </div>
               <div class="row bottom-space">
-                <span
-                  class="alert-days"
+                <div
+                  class="alert-days alert-condition"
                   ng-repeat="day in weekdays">
                   <input
                     type="checkbox"
@@ -781,7 +781,7 @@
                     value="{{day.name}}"
                     ng-model="day.selected">
                   {{day.name}}
-                </span>
+                </div>
               </div>
             </div>
             <div class="advanced-config-container">
@@ -815,7 +815,7 @@
               </p>
             </div>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-5 alert-channels-container">
             <p class="alert-component-label">
               Report alerts using
               <kbn-tooltip
@@ -825,43 +825,146 @@
                 </i>
               </kbn-tooltip>
             </p>
-            <div>
-              <input
-                type="checkbox"
-                class="alert-checkbox"
-                ng-model="alertByTicket"
-                name="alertByTicket">
-                <span class="alert-component-label">
-                  Tickets
-                </span>
+            <div class="row no-padding channel">
+              <div class="row">
+                <div class="col-md-3 channel-title-wrapper">
+                    <input type="checkbox" class="alert-checkbox" ng-model="alertByTicket" name="alertByTicket">
+                    <span class="alert-component-label">
+                      Tickets
+                      <kbn-tooltip
+                        text="Open/update ticket in the ITSM system for this alert"
+                        placement="bottom"
+                        append-to-body="1">
+                        <i class="fa fa-question-circle"></i>
+                      </kbn-tooltip>
+                    </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <input
-                type="checkbox"
-                class="alert-checkbox"
-                ng-model="alertByEmail"
-                ng-change="clearEmailField()"
-                name="alertByEmail">
-              <span class="alert-component-label">
-                Email
-              </span>
-              <span
-                ng-show="alertByEmail"
-                class="alert-email">
+            <div class="row no-padding channel">
+              <div class="col-md-3 channel-title-wrapper">
                 <input
-                  type="text"
-                  maxlength="512"
-                  multiple-emails
-                  ng-model="alertEmailId"
-                  ng-required="alertByEmail"
-                  name="alertEmailId"
-                  ng-class="{error: alertcfgForm.alertEmailId.$invalid}">
-                <p
-                  class="error-highlight"
-                  ng-show="alertcfgForm.alertEmailId.$invalid">
-                  Please provide valid email address. You can enter multiple email address separated by a comma ','
-                </p>
-              </span>
+                  type="checkbox"
+                  class="alert-checkbox"
+                  ng-model="alertByEmail"
+                  ng-change="clearEmailField()"
+                  name="alertByEmail">
+                <span
+                  class="alert-component-label">
+                  Email
+                  <kbn-tooltip
+                    text="Notify the recipients over email for this alert"
+                    placement="bottom"
+                    append-to-body="1">
+                    <i class="fa fa-question-circle"></i>
+                  </kbn-tooltip>
+                </span>
+              </div>
+              <div class="col-md-9 channel-component-wrapper">
+                <span class="alert-email">
+                  <input
+                    type="text"
+                    ng-show="alertByEmail"
+                    maxlength="512"
+                    multiple-emails
+                    ng-model="alertEmailId"
+                    ng-required="alertByEmail"
+                    name="alertEmailId"
+                    ng-class="{error: alertcfgForm.alertEmailId.$invalid}">
+                  <p
+                    class="error-highlight"
+                    ng-show="alertcfgForm.alertEmailId.$invalid">
+                    Please provide valid email address. You can enter multiple email address separated by a comma ','
+                  </p>
+                </span>
+              </div>
+            </div>
+            <div class="row no-padding channel">
+              <div class="row">
+                <input
+                  type="checkbox"
+                  class="alert-checkbox"
+                  ng-model="enableRunBookAutomation"
+                  ng-change="clearRunBookField()"
+                  name="enableRunBookAutomation">
+                <span class="alert-component-label">
+                  Runbook Automation
+                  <kbn-tooltip
+                    text="Trigger the script for this alert"
+                    placement="bottom"
+                    append-to-body="1">
+                    <i class="fa fa-question-circle"></i>
+                  </kbn-tooltip>
+                </span>
+              </div>
+              <div ng-show="enableRunBookAutomation"
+                    class="row channel-property-container">
+                <div class="col-md-3 channel-label">
+                  Script
+                </div>
+                <div class="col-md-9 channel-component-wrapper">
+                  <span class="alert-email">
+                      <input type="text"
+                              maxlength="255"
+                              ng-model="runBookScript"
+                              ng-required="enableRunBookAutomation"
+                              name="runBookScript"
+                              ng-class="{error: alertcfgForm.runBookScript.$invalid}">
+                      <p class="error-highlight" ng-show="alertcfgForm.runBookScript.$invalid">
+                      Please provide the path of runbook automation script</p>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row no-padding channel">
+              <div class="row">
+                <input type="checkbox" class="alert-checkbox"
+                        ng-model="enableAnsiblePlaybook"
+                        ng-change="clearAnsiblePlaybookFields()"
+                        name="enableAnsiblePlaybook">
+                <span class="alert-component-label">
+                  Ansible Playbook
+                  <kbn-tooltip
+                    text="Run the playbook for this alert"
+                    placement="bottom"
+                    append-to-body="1">
+                    <i class="fa fa-question-circle"></i>
+                  </kbn-tooltip>
+                </span>
+              </div>
+              <div ng-show="enableAnsiblePlaybook">
+                <div class="row channel-property-container">
+                  <div class="col-md-3 channel-label">
+                    Name
+                  </div>
+                  <div class="col-md-9 channel-component-wrapper">
+                    <span class="alert-email">
+                      <input type="text"
+                              maxlength="255"
+                              ng-model="ansiblePlaybookName"
+                              ng-required="enableAnsiblePlaybook"
+                              name="ansiblePlaybookName"
+                              ng-class="{error: alertcfgForm.ansiblePlaybookName.$invalid}">
+                      <p class="error-highlight" ng-show="alertcfgForm.ansiblePlaybookName.$invalid">
+                      Please provide a playbook name</p>
+                    </span>
+                  </div>
+                </div>
+                <div class="row channel-property-container">
+                  <div class="col-md-3 channel-label">
+                    Options
+                  </div>
+                  <div class="col-md-9 channel-component-wrapper">
+                    <span class="alert-email">
+                      <input type="text"
+                              maxlength="255"
+                              ng-model="ansiblePlaybookOptions"
+                              name="ansiblePlaybookOptions"
+                              ng-class="{error: alertcfgForm.ansiblePlaybookOptions.$invalid}">
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

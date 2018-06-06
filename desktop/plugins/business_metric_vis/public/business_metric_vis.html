@@ -24,7 +24,9 @@
     </div>
     <div class="bs-metric-vis">
       <div class="bs-metric-container">
-        <div class="bs-metric-label">
+        <div
+          class="bs-metric-label"
+          ng-style="{'font-size': txtFontSize+'pt'}">
           {{ vis.params.metric.label }}
           <kbn-tooltip
             ng-if="vis.params.metric.description"
@@ -45,7 +47,11 @@
           {'font-size': vis.params.metric.fontSize+'pt', 'color': metricData.color }">
           {{ metricData.formattedValue }}
         </div>
-        <div class="goal-label">{{ vis.params.metric.goalLabel }}</div>
+        <div
+          class="goal-label"
+          ng-style="{'font-size': txtFontSize+'pt'}">
+          {{ vis.params.metric.goalLabel }}
+        </div>
       </div>
     </div>
     <div

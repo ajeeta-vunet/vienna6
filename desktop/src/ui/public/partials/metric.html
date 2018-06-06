@@ -122,13 +122,22 @@
         name="metricFilter"/>
     </div>
     <div class="form-group">
-      <label>Font Size - {{ metric.fontSize }}pt</label>
+      <label> Metric Font Size - {{ metric.fontSize }}pt</label>
       <input
         type="range"
         ng-model="metric.fontSize"
         class="form-control"
         min="12"
         max="120" />
+    </div>
+    <div class="form-group">
+      <label>Text Font Size - {{ metric.textFontSize }}pt</label>
+      <input
+        type="range"
+        ng-model="metric.textFontSize"
+        class="form-control"
+        min="7"
+        max="100" />
     </div>
     <div class="form-group bottom-space">
       <label>

@@ -78,6 +78,25 @@ module.controller('BusinessMetricVisController', function ($scope, Private, Noti
   // back end to get the response data.
   $scope.search = function run() {
 
+    // If the textFontSize is defined, lets use it.
+    if ($scope.vis.params.metric.textFontSize) {
+      $scope.txtFontSize = $scope.vis.params.metric.textFontSize;
+
+    // If the textFontSize is not defined, then lets set the defaults
+    } else {
+
+      // If the metric font size is less than or equal tp 24pt,
+      // set the text font size to 70% the size of metric
+      // font size.
+      if ($scope.vis.params.metric.fontSize <= 24) {
+        $scope.txtFontSize = $scope.vis.params.metric.fontSize * 70 / 100;
+      } else {
+        // If the metric font size is greater than 24pt,
+        // set the text font size to 16pt.
+        $scope.txtFontSize = 16;
+      }
+    }
+
     // This function will prepare the arguments
     // and makes a POST call to the back end and gets
     // the response data to be displayed.

@@ -1,0 +1,43 @@
+<td colspan="{{ columns.length + 2 }}" class="userCommentSection">
+  <form name="userCommentForm">
+    <div class="row form-element" ng-if="!commentsList.length">
+      <div class="col-md-2">
+        <span>User comments: </span>
+      </div>
+      <div class="col-md-10">
+        <input
+          type="text"
+          name="userComments"
+          ng-model="opts.comments"
+          ng-class="{error: userCommentForm.userComments.$error.required}"
+          required>
+      </div>
+    </div>
+    <div class="row form-element" ng-if="commentsList.length">
+      <div class="col-md-2">
+        <span> User comments: </span>
+      </div>
+      <div class="col-md-10">
+        <select
+          ng-model="opts.comments"
+          name="userComments"
+          ng-class="{error: userCommentForm.userComments.$error.required}"
+          ng-options="x for x in commentsList"
+          required>
+        </select>
+      </div>
+    </div>
+    <div class="row usercomment-buttons-container">
+      <button
+        type="submit"
+        ng-disabled="userCommentForm.$invalid"
+        ng-click="saveUserComments()"
+        class="btn btn-primary"> Save
+      </button>
+      <button type="button"
+        ng-click="cancelUserComments()"
+        class="btn btn-default"> Cancel
+      </button>
+    </div>
+  </form>
+</td>

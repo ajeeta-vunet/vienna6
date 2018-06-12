@@ -1,8 +1,28 @@
-<td ng-click="toggleRow()" data-test-subj="docTableExpandToggleColumn">
-  <button class="discover-table-open-button">
-    <span
-      class="kuiIcon"
-      ng-class="{ 'fa-caret-down': open, 'fa-caret-right': !open }"
-    ></span>
-  </button>
+<td>
+  <i
+    ng-if="!printReport"
+    confirm-click="deleteRow()"
+    confirmation="Are you sure you want to clear this event?"
+    class="fa fa-trash discover-table-edit-delete-button"
+    > </i>
+  <kbn-tooltip
+    text="Add user comment"
+    placement="bottom" append-to-body="1">
+    <i
+      ng-if="!printReport"
+      ng-click="editRow()"
+      class="fa fa-pencil-square-o discover-table-edit-delete-button"
+      > </i>
+  </kbn-tooltip>
+  <i
+    ng-if="!printReport"
+    ng-click="toggleRow()"
+    data-test-subj="docTableExpandToggleColumn">
+    <button class="discover-table-open-button">
+      <span
+        class="kuiIcon"
+        ng-class="{ 'fa-caret-down': open, 'fa-caret-right': !open }"
+      ></span>
+    </button>
+  </i>
 </td>

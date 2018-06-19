@@ -128,6 +128,21 @@
       "alertEmailId": {
         "type": "text"
       },
+      "enable_runbook_automation": {
+        "type": "boolean"
+      },
+      "runbook_script": {
+        "type": "text"
+      },
+      "enable_ansible_playbook": {
+        "type":"boolean"
+      },
+      "ansible_playbook_name": {
+        "type": "text"
+      },
+      "ansible_playbook_options": {
+        "type": "text"
+      },
       "lastModifiedTime": {
         "type": "text"
       },

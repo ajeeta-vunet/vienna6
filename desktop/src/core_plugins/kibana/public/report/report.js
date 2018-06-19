@@ -102,6 +102,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   // Set the landing page for alerts section
   $scope.landingPageUrl = () => `#${ReportConstants.LANDING_PAGE_PATH}`;
+  $scope.forms = {};
 
   // Since vienna is in a iframe, we use the window.parent to
   // get the url in the browser.
@@ -133,6 +134,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       description: 'Save Report',
       template: require('plugins/kibana/report/panels/save.html'),
       testId: 'reportSaveButton',
+      disableButton() {
+        return Boolean(!$scope.forms.reportcfgForm.$valid);
+      },
     },
     {
       key: 'download',

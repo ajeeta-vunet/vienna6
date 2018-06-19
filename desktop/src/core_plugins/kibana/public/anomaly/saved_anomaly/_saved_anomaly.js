@@ -25,7 +25,7 @@ module.factory('SavedAnomaly', function (courier) {
         metricField: '',
         window: '',
         filter: '',
-        groupByField: '',
+        groupByField: '[]',
         model: '',
         periodicity: '',
         type: '',
@@ -50,25 +50,25 @@ module.factory('SavedAnomaly', function (courier) {
 
   // if type:anomaly has no mapping, we push this mapping into ES
   SavedAnomaly.mapping = {
-    title: 'string',
-    description: 'string',
-    metric: 'string',
-    index: 'string',
-    metricField: 'string',
-    window: 'string',
-    filter: 'string',
-    groupbyField: 'string',
-    model: 'string',
-    periodicity: 'string',
-    type: 'string',
-    docType: 'string',
-    macroInterval: 'string',
-    macroIntervalType: 'string',
-    microInterval: 'string',
-    microIntervalType: 'string',
-    timeDuration: 'string',
-    timeDurationType: 'string',
-    allowedRolesJSON: 'string'
+    title: 'text',
+    description: 'text',
+    metric: 'text',
+    index: 'text',
+    metricField: 'text',
+    window: 'text',
+    filter: 'text',
+    groupByField: 'text',
+    model: 'text',
+    periodicity: 'text',
+    type: 'text',
+    docType: 'text',
+    macroInterval: 'text',
+    macroIntervalType: 'text',
+    microInterval: 'text',
+    microIntervalType: 'text',
+    timeDuration: 'text',
+    timeDurationType: 'text',
+    allowedRolesJSON: 'text'
   };
 
   SavedAnomaly.searchsource = true;

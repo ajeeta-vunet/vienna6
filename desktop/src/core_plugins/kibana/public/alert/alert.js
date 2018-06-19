@@ -131,6 +131,9 @@ function alertAppEditor($scope,
       description: 'Save Alert',
       template: require('plugins/kibana/alert/panels/save.html'),
       testId: 'alertSaveButton',
+      disableButton() {
+        return Boolean(!$scope.alertcfgForm.$valid);
+      },
     }];
   } else {
     $scope.topNavMenu = [];

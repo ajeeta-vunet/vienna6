@@ -9,11 +9,13 @@ export function updateVunetObjectOperation(selectedItems, objType, $http, action
     let url = '';
     let data = '';
     if (objType === 'alert') {
-      data = { 'alert_id': item.id, 'alert_title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
+      const alertId = 'alert:' + item.id;
+      data = { 'alert_id': alertId, 'alert_title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
       url = '/vuSmartMaps/api/alert_status/';
     } else if (objType === 'anomaly') {
+      const anomalyId = 'anomaly:' + item.id;
       url = '/vuSmartMaps/api/anomaly_status/';
-      data = { 'detector_id': item.id, 'detector_title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
+      data = { 'detector_id': anomalyId, 'detector_title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
     }
 
     const httpResult = $http({

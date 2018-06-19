@@ -4,7 +4,7 @@
   ng-show="!listAnomaly"
 >
   <form
-    name ="anomalyForm"
+    name="anomalyForm"
     id="anomalyForm"
   >
     <h4 class="step-title">
@@ -197,6 +197,7 @@
           class="anomaly-select anomaly-condition"
           name="modelType"
           ng-model="modelType"
+          ng-class="{error: anomalyForm.modelType.$error.required}"
           required
         >
           <option value="simple">Simple</option>

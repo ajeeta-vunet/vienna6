@@ -136,8 +136,7 @@ function anomalyAppEditor($scope,
       template: require('plugins/kibana/anomaly/panels/save.html'),
       testId: 'anomalySaveButton',
       disableButton() {
-        const anomalyForm = document.getElementById('anomalyForm');
-        return Boolean(!anomalyForm.checkValidity());
+        return Boolean(!$scope.anomalyForm.$valid);
       },
     }];
   } else {
@@ -207,8 +206,8 @@ function anomalyAppEditor($scope,
         // the order of the fields under groupByField list.
         $scope.groupByFieldList = [];
         let groupByFieldList = [];
-        if(anomaly.groupbyField) {
-          groupByFieldList = JSON.parse(anomaly.groupbyField);
+        if(anomaly.groupByField) {
+          groupByFieldList = JSON.parse(anomaly.groupByField);
         }
         if(groupByFieldList.length) {
           _.each(groupByFieldList, function (grpByField) {

@@ -27,7 +27,8 @@
                 ng-model="summary"
                 name="summary"
                 ng-maxlength="100"
-                ng-class="{error: alertcfgForm.summary.$error.required}">
+                ng-class="{error: alertcfgForm.summary.$error.required}"
+                required>
               <p
                 class="error-highlight"
                 ng-show="alertcfgForm.summary.$error.maxlength">
@@ -100,8 +101,8 @@
                 ng-maxlength="200"
                 maxlength="200"
                 placeholder="Example: 'Monitoring parameter %M' will result in a description of 'Monitoring parameter cpu_used:18.2'"
-                ng-class="{error: alertcfgForm.alertDescription.$error.required}" required>
-              </textarea>
+                ng-class="{error: alertcfgForm.alertDescription.$error.required}"
+                required></textarea>
               <p
                 class="error-highlight"
                 ng-show="alertcfgForm.alertDescription.$error.maxlength">

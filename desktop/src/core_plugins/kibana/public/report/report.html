@@ -55,7 +55,7 @@
   <report-details  ng-if="printReport"> </report-details>
 
   <div class="container-fluid report-body-container" role="main" ng-if="!printReport">
-    <form name="reportcfgForm">
+    <form name="forms.reportcfgForm">
       <h4 class="step-title"> <span class="step-indicator">1</span> What's the report about ?</h4>
       <div class="report-section">
         <div class="row">
@@ -78,11 +78,11 @@
             name="exectiveSummary"
             ng-model="reportcfg.execSummary"
             ng-maxlength="4000"
-            ng-class="{error: reportcfgForm.executiveSummary.$error.required}"
+            ng-class="{error: forms.reportcfgForm.executiveSummary.$error.required}"
             required>
           </textarea>
           <p class="error-highlight"
-            ng-show="reportcfgForm.exectiveSummary.$error.maxlength">
+            ng-show="forms.reportcfgForm.exectiveSummary.$error.maxlength">
             'Executive Summary' content must be less than 4000 characters
           </p>
         </div>
@@ -128,7 +128,7 @@
                 ng-required="enable_scheduling"
                 name="scheduleFrequency"
                 ng-model="schedule.frequency"
-                ng-class="{error: reportcfgForm.enable_scheduling.$error.required}"
+                ng-class="{error: forms.reportcfgForm.enable_scheduling.$error.required}"
                 ng-change="updateTimeFilter()">
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -156,7 +156,7 @@
                 maxlength="250"
                 ng-model="schedule.recipients"
                 name="reportRecipients"
-                ng-class="{error: reportcfgForm.reportRecipients.$invalid}">
+                ng-class="{error: forms.reportcfgForm.reportRecipients.$invalid}">
               <kbn-tooltip
                 text="Provide recipients email to receive the scheduled reports. Multiple emails can be added separated by ',' "
                 placement="bottom"
@@ -166,7 +166,7 @@
                   </i>
                 </span>
               </kbn-tooltip>
-              <p class="error-highlight" ng-show="reportcfgForm.reportRecipients.$invalid">Please provide valid email address. You can enter multiple email address separated by a comma ','
+              <p class="error-highlight" ng-show="forms.reportcfgForm.reportRecipients.$invalid">Please provide valid email address. You can enter multiple email address separated by a comma ','
               </p>
             </div>
           </div>
@@ -217,6 +217,7 @@
                   ng-model="section.id"
                   name="sectionName"
                   ng-maxlength="200"
+                  ng-class="{error: forms.reportcfgForm.sectionName.$error.required}"
                   required>
               </div>
             </div>
@@ -245,11 +246,13 @@
                   ng-maxlength="4000"
                   class="executive-summary form-control"
                   name="sectionDescription"
-                  ng-model="section.description" required>
+                  ng-model="section.description"
+                  ng-class="{error: forms.reportcfgForm.sectionDescription.$error.required}"
+                  required>
                 </textarea>
                 <p
                   class="error-highlight"
-                  ng-show="reportcfgForm.sectionDescription.$error.maxlength">
+                  ng-show="forms.reportcfgForm.sectionDescription.$error.maxlength">
                   'Description' content must be less than 4000 characters
                 </p>
               </div>

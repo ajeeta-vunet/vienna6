@@ -285,6 +285,7 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
      * a create or index error.
      * @resolved {SavedObject}
      */
+    /*
     const createSource = (source) => {
       return savedObjectsClient.create(esType, source, { id: this.id })
         .catch(err => {
@@ -299,6 +300,7 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
           return Promise.reject(err);
         });
     };
+    */
 
     /**
      * Returns a promise that resolves to true if either the title is unique, or if the user confirmed they
@@ -315,6 +317,9 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
         .then(duplicate => {
           if (!duplicate) return true;
           if (duplicate.id === this.id) return true;
+
+          // We always overwrite the existing one if user allows that..
+          this.id = duplicate.id;
 
           const confirmMessage =
             `A ${this.getDisplayName()} with the title '${this.title}' already exists. Would you like to save anyway?`;
@@ -333,7 +338,7 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
      * @return {Promise}
      * @resolved {String} - The id of the doc
      */
-    this.save = ({ confirmOverwrite } = {}) => {
+    this.save = ({} = {}) => {
       // Save the original id in case the save fails.
       const originalId = this.id;
       // Read https://github.com/elastic/kibana/issues/9056 and
@@ -352,11 +357,7 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
 
       return warnIfDuplicateTitle()
         .then(() => {
-          if (confirmOverwrite) {
-            return createSource(source);
-          } else {
-            return savedObjectsClient.create(esType, source, { id: this.id, overwrite: true });
-          }
+          return savedObjectsClient.create(esType, source, { id: this.id, overwrite: true });
         })
         .then((resp) => {
           this.id = resp.id;

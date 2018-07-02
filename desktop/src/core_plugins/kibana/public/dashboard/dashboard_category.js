@@ -44,8 +44,17 @@ export function addToCategory(dash, categoryObj, savedVisualizations) {
     dashboardObj.id = dash.id;
     dashboardObj.title = dash.title;
 
-    // Add the dashboard object to the list
-    if (!(newVisual.visState.params.dashboards.includes(dashboardObj.id))) {
+    // Find if this dashboard already in category... this happens when we save
+    // some other dashboard and overwrite it with this name...
+    let dashboardAdded = false;
+    _.each(newVisual.visState.params.dashboards, function (dashboardData) {
+      if((dashboardData.id === dashboardObj.id) && (dashboardData.title === dashboardObj.title)) {
+        dashboardAdded = true;
+      }
+    });
+
+    // Add the dashboard object to the list if its not already exist..
+    if (!dashboardAdded) {
       newVisual.visState.params.dashboards.push(dashboardObj);
       newVisual.save().then(function () {
         // Nothing needs to be done..

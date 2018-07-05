@@ -27,7 +27,7 @@ import { EmbeddableFactoriesRegistryProvider } from 'ui/embeddable/embeddable_fa
 
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { DashboardViewportProvider } from './viewport/dashboard_viewport_provider';
-import { dashboardVisualization, addToCategory } from './dashboard_category';
+import { updateDashboardInCategory, addToCategory } from './dashboard_category';
 import { prepareMultilevelCategoryDropdown } from './multilevel_dashboard_navigation';
 
 const app = uiModules.get('app/dashboard', [
@@ -322,7 +322,7 @@ app.directive('dashboardApp', function ($injector, $http) {
                 kbnUrl.change(createDashboardEditUrl(dash.id));
                 addToCategory(dash, categoryObj, savedVisualizations);
               } else {
-                dashboardVisualization(dash, categoryObj, savedVisualizations, oldCategory);
+                updateDashboardInCategory(dash, categoryObj, savedVisualizations, oldCategory);
                 docTitle.change(dash.lastSavedTitle);
                 updateViewMode(DashboardViewMode.VIEW);
               }

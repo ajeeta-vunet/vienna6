@@ -51,6 +51,14 @@ export function addToCategory(dash, categoryObj, savedVisualizations) {
       if((dashboardData.id === dashboardObj.id) && (dashboardData.title === dashboardObj.title)) {
         dashboardAdded = true;
       }
+      // If dashboard id is same and title is different with existing dashboard object
+      // it removes dashboard object from category and saves with new dashboard object
+      // having same id and updated title.
+      else if ((dashboardData.id === dashboardObj.id) && (dashboardData.title !== dashboardObj.title)) {
+        newVisual.visState.params.dashboards = _.without(
+          newVisual.visState.params.dashboards, _.findWhere(
+            newVisual.visState.params.dashboards, { id: dashboardObj.id }));
+      }
     });
 
     // Add the dashboard object to the list if its not already exist..
@@ -150,7 +158,7 @@ export function deleteDash(
   });
 }
 
-export function dashboardVisualization(dash, categoryObj, savedVisualizations, oldCategory) {
+export function updateDashboardInCategory(dash, categoryObj, savedVisualizations, oldCategory) {
   // If this dashboard had a category and the category is now
   // changed, we need to remove the dashboard from old category
   // and add it in the new category.. This also takes care
@@ -161,6 +169,11 @@ export function dashboardVisualization(dash, categoryObj, savedVisualizations, o
     // Remove it from older category
     removeFromCategory(dash, oldCategory, savedVisualizations);
     // Add it to the new category..
+    addToCategory(dash, categoryObj, savedVisualizations);
+  } else {
+    // If existing dashboard is saving with different title
+    // in same category. We are calling this function to update
+    // the category object with updated dashboard title.
     addToCategory(dash, categoryObj, savedVisualizations);
   }
 }

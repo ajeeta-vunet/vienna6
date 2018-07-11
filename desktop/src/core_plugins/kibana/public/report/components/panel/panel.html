@@ -42,7 +42,9 @@
     show-spy-panel="chrome.getVisible()"
     element="$el"
     ui-state="uiState"
-    print-report="printingReport">
+    print-report="printingReport"
+    element-height="height"
+    element-width="width">
   </visualize>
 
   <doc-table
@@ -54,9 +56,4 @@
     filter="filter">
   </doc-table>
 
-  <p
-    ng-if="savedObj.vis.params.notes"
-    class="display-notes">
-    {{savedObj.vis.params.notes}}
-  </p>
 </div>

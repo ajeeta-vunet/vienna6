@@ -41,6 +41,8 @@ uiModules
         uiState: '=?',
         savedId: '=?',
         timeRange: '=?',
+        elementHeight: '=?',
+        elementWidth: '=?',
         printReport: '=?',
       },
       template: visualizeTemplate,

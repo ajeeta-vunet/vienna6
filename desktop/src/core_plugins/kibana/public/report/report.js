@@ -526,12 +526,12 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   // called by the saved-object-finder when a user clicks a vis
   $scope.addVis = function (hit) {
-    $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, type: 'visualization' });
+    $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: hit.type.name, type: 'visualization' });
   };
 
   // called by the saved-object-finder when a user clicks a vis
   $scope.addSearch = function (hit) {
-    $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, type: 'search' });
+    $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: 'search', type: 'search' });
   };
 
   // Show the reportcfgboard operational butttons on clicking the show toolbar button

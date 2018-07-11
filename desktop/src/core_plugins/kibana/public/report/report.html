@@ -25,7 +25,8 @@
 
   <div class="report-main-page" ng-if="printReport">
     <div class="report-company">
-      <h1 class="report-company-name">{{reportcfg.company_name}}</h1>
+      <!-- <h1 class="report-company-name">{{reportcfg.company_name}}</h1> -->
+      <img class="report-company-image" src="/ui/vienna_images/customer.png">
     </div>
     <h1 class="report-name-header"> {{reportcfg.title}}</h1>
     <h3 class="report-time"> Period: {{timeDurationStart|
@@ -34,21 +35,8 @@
     <h3 class="report-prepared-by"> Prepared By: {{ owner.name }}</h3>
     <h3 class="report-date"> Date: {{reportDate | date:'dd-MMM-yyyy'}}</h3>
     <div class="shipper-address-url">
-      <a href="{{ shipper_address_url }}">{{ shipperAddress }}</a> 
+      <a href="{{ shipper_address_url }}">{{ shipperAddress }}</a>
     </div>
-    <div class="page-break"></div>
-    <h3 class="report-content"> Table of Contents</h3>
-    <ol>
-      <h5>Executive Summary</h5>
-      <li ng-repeat="section in sections">{{section.id}}
-        <ol>
-          <li ng-repeat="vis in section.visuals">{{vis.title}}</li>
-        </ol>
-      </li>
-    </ol>
-    <div class="page-break"></div>
-    <h3 class="exec-summary-header"> 1. Executive Summary</h3>
-    <p class="exec-summary-content">{{ reportcfg.execSummary }}</p>
     <div class="page-break"></div>
   </div>
 
@@ -56,41 +44,9 @@
 
   <div class="container-fluid report-body-container" role="main" ng-if="!printReport">
     <form name="forms.reportcfgForm">
-      <h4 class="step-title"> <span class="step-indicator">1</span> What's the report about ?</h4>
-      <div class="report-section">
-        <div class="row">
-          <p class="report-component-label">
-            Executive Summary
-            <kbn-tooltip
-              text="Provide a brief information that summarizes this report. This will be added at the beginning of this report." 
-              placement="bottom" append-to-body="1">
-              <span>
-                <i class="fa fa-question-circle" aria-hidden="true">
-                </i>
-              </span>
-            </kbn-tooltip>:
-          </p>
-          <textarea
-            type="text"
-            rows="4"
-            cols="88"
-            class="executive-summary form-control"
-            name="exectiveSummary"
-            ng-model="reportcfg.execSummary"
-            ng-maxlength="4000"
-            ng-class="{error: forms.reportcfgForm.executiveSummary.$error.required}"
-            required>
-          </textarea>
-          <p class="error-highlight"
-            ng-show="forms.reportcfgForm.exectiveSummary.$error.maxlength">
-            'Executive Summary' content must be less than 4000 characters
-          </p>
-        </div>
-      </div>
-
       <h4 class="step-title">
         <span class="step-indicator">
-          2
+          1
         </span>
         Schedule your report
       </h4>
@@ -175,7 +131,7 @@
 
       <h4 class="step-title">
         <span class="step-indicator">
-          3
+          2
         </span>
         Manage report contents
       </h4>
@@ -219,44 +175,6 @@
                   ng-maxlength="200"
                   ng-class="{error: forms.reportcfgForm.sectionName.$error.required}"
                   required>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-2">
-                <p class="report-component-label">
-                  Description
-                  <kbn-tooltip
-                    text="Provide a brief information that summarizes this section. This will be added at the beginning of this section."
-                    placement="bottom"
-                    append-to-body="1">
-                    <span>
-                      <i class="fa fa-question-circle" aria-hidden="true">
-                      </i>
-                    </span>
-                  </kbn-tooltip> :
-                </p>
-              </div>
-
-              <div class="col-md-6">
-                <textarea
-                  type="text"
-                  rows="4"
-                  cols="63"
-                  ng-maxlength="4000"
-                  class="executive-summary form-control"
-                  name="sectionDescription"
-                  ng-model="section.description"
-                  ng-class="{error: forms.reportcfgForm.sectionDescription.$error.required}"
-                  required>
-                </textarea>
-                <p
-                  class="error-highlight"
-                  ng-show="forms.reportcfgForm.sectionDescription.$error.maxlength">
-                  'Description' content must be less than 4000 characters
-                </p>
-              </div>
-              <div class="col-md-4">
               </div>
             </div>
 
@@ -332,7 +250,6 @@
                     <i aria-hidden="true" class="fa fa-plus-circle">
                     </i>
                   </span>
-								
                   <div
                     ng-if="showVisForSection(section)"
                     ng-switch

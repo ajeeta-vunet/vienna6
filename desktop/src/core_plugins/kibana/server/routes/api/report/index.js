@@ -69,6 +69,8 @@ export function reportDownloadApi(server) {
       const fileNameWithTime = req.payload.reportName + '-' + time + '.pdf';
       const filePath = '/tmp/' + fileNameWithTime;
       console.log('Request payload is ', req.payload);
+      const tenantId = req.payload.tenantId;
+      const buId = req.payload.buId;
       const shipperUrl = req.payload.shipperUrl;
       const childArgs = [
         '/opt/kibana/report/report.js',
@@ -78,6 +80,8 @@ export function reportDownloadApi(server) {
         userRole,
         userPermissions,
         duration,
+        tenantId,
+        buId,
         shipperUrl,
       ];
 

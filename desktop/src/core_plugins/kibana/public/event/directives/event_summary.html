@@ -22,40 +22,64 @@
   <div class="event-history-header">Alert History</div>
   <div class="row event-list-global-count">
     <div
-      ng-if="event.History.Alert_Frequency_for_Today"
+      ng-show="event.History.Alert_Frequency_for_Today >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Frequency_for_Today | toHour }}
+        {{ event.History.Alert_Frequency_for_Today | displayTwoTimeUnits }}
       </span>
-      <span class="event-count-unit">Hour</span>
       <p>Today</p>
     </div>
     <div
-      ng-if="event.History.Alert_Frequency_in_Last_2_Days"
+      ng-show="event.History.Alert_Frequency_in_Last_2_Days >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Frequency_in_Last_2_Days | toHour }}
+        {{ event.History.Alert_Frequency_in_Last_2_Days | displayTwoTimeUnits }}
       </span>
-      <span class="event-count-unit">Hour</span>
-      <p> In 48 hours</p>
+      <p>In 48 hours</p>
     </div>
     <div
-      ng-if="event.History.Alert_Frequency_in_Last_7_Days"
+      ng-show="event.History.Alert_Frequency_in_Last_7_Days >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Frequency_in_Last_7_Days | toHour }}
+        {{ event.History.Alert_Frequency_in_Last_7_Days | displayTwoTimeUnits }}
       </span>
-      <span class="event-count-unit">Hour</span>
       <p>In 7 days</p>
     </div>
     <div
-      ng-if="event.History.Alert_Active_For"
+      ng-show="event.History.Alert_Active_For >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Active_For | toHour }}
+        {{ event.History.Alert_Active_For | displayTwoTimeUnits }}
       </span>
-      <span class="event-count-unit">Hour</span>
       <p>Active for</p>
+    </div>
+    <div ng-show="event.History.Downtime_for_Today >= 0"
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Downtime_for_Today | displayTwoTimeUnits }}
+      </span>
+      <p>Today</p>
+    </div>
+    <div ng-show="event.History.Downtime_in_Last_2_Days >= 0"
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Downtime_in_Last_2_Days | displayTwoTimeUnits }}
+      </span>
+      <p>In 48 hours</p>
+    </div>
+    <div ng-show="event.History.Incident_Count_for_Today >=0 "
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Incident_Count_for_Today | displayTwoTimeUnits }}
+      </span>
+      <p>Events Today</p>
+    </div>
+    <div ng-show="event.History.Incident_Count_in_Last_2_Days >=0 "
+      class="event-count-container">
+      <span class="event-count">
+        {{ event.History.Incident_Count_in_Last_2_Days | displayTwoTimeUnits }}
+      </span>
+      <p>Events in 48 hours</p>
     </div>
   </div>
   <div class="row">

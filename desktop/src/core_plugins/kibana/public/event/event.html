@@ -100,7 +100,7 @@
             <div class="comment-text-section">
               <div class="commentor-name">
                 {{ comment.username }}
-                <span class="comment-time" am-time-ago="{{ comment.timestamp | amUtc | amParse:'YYYY-MM-DD HH:mm:ss' }}">
+                <span class="comment-time" am-time-ago="comment.timestamp | amUtc | amParse:'YYYY-MM-DD HH:mm:ss'">
                   {{ comment.timestamp }}
                 </span>
               </div>

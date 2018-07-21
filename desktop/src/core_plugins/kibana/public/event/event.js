@@ -5,6 +5,7 @@ import { uiModules } from 'ui/modules';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { FilterManagerProvider } from 'ui/filter_manager';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
+import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 
 require('ui/courier');
 require('ui/config');
@@ -36,13 +37,14 @@ app.config(function (stConfig) {
 });
 
 // This filter is used to convert the values received in seconds
-// to hour and display in the alert history section
-// for each event.
-app.filter('toHour', function () {
+// to format as shown below:
+// Input(in seconds)	Filter Output
+//  320	               5m 20s
+//  3666	             1h 1m
+app.filter('displayTwoTimeUnits', function () {
   return function (seconds) {
-    const exactHour = parseFloat(seconds / 3600);
-    const hour = Math.round(exactHour * 10) / 10;
-    return hour;
+    const result = displayTwoTimeUnits(seconds);
+    return result;
   };
 });
 

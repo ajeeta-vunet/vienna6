@@ -8,10 +8,8 @@
 
           <!-- Showing values for 'Alert_Active_For' and
           'Alert_Frequency_for_Today' in Hours -->
-          <td ng-if="key=='Alert_Active_For' ||
-                     key=='Alert_Frequency_for_Today' ||
-                     key=='Alert_Frequency_in_Last_2_Days'">
-              {{ value | toHour }} hour(s)
+          <td ng-show="ifDisplayCustomTimeFormat(key)">
+              {{ value | displayTwoTimeUnits }}
           </td>
 
           <!-- Converting the UTC format time to local time format -->
@@ -19,11 +17,7 @@
                      key=='timestamp'">
              {{ value | date : 'yyyy-MM-dd HH:mm:ss Z' }}
           </td>
-          <td ng-if="!(key=='Alert_Active_For'||
-                       key=='Alert_Frequency_for_Today' ||
-                       key=='Alert_Frequency_in_Last_2_Days' ||
-                       key=='Alert_Start_Time'||
-                       key=='timestamp')"> {{ value }}
+          <td ng-show="ifDisplayValue(key)"> {{ value }}
           </td>
         </tr>
       </table>

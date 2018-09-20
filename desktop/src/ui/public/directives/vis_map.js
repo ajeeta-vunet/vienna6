@@ -9,6 +9,7 @@ module.directive('visMap', function () {
       mapData: '=',
       onNodeSelect: '=',
       onLinkSelect: '=',
+      onNodeDragEnd: '=',
     },
     replace: true,
     template: '<div class="network-map"></div>',
@@ -329,8 +330,10 @@ module.directive('visMap', function () {
         // will help people to fix 'x', 'y' for different nodes,
         // data.nodes will print the nodes information
         network.on('dragEnd', () => {
-          console.log(data.nodes);
-          console.log(network.getPositions());
+          //function to update new x and y values in all nodes.
+          if($scope.onNodeDragEnd !== undefined) {
+            $scope.onNodeDragEnd(network.getPositions(), data.nodes);
+          }
         });
       });
     }

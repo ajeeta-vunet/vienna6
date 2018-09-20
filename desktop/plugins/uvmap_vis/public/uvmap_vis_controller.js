@@ -11,6 +11,34 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
     location: 'UVMapVis'
   });
 
+  // Function to update x and y values in visParamsConnection.
+  $scope.onNodeDragEnd = function (positions, nodes) {
+    let visParamsConnection = $scope.vis.params.connection;
+    visParamsConnection = visParamsConnection.split('\n');
+
+    // Iterating through string array
+    _.each(visParamsConnection, function (connectionEle, index) {
+      const regexForXAndY = /x[\s]+[+-]*[0-9]+[\s]y[\s]+[+-]*[0-9]+/;
+      // checking the string having name as substring
+      if (_.includes(connectionEle, 'name')) {
+        // Iterating through all nodes.
+        _.each(nodes, function (node) {
+          const lableVal = node.label.split(/<.+?>/g);
+          // checking node lable in string as substring.
+          // If so getting the id with that updating new x and y values.
+          if (_.includes(connectionEle, lableVal[1])) {
+            const updateXY = 'x ' + positions[node.id].x + ' y ' + positions[node.id].y;
+            visParamsConnection[index] = connectionEle.replace(regexForXAndY, updateXY);
+          }
+        });
+      }
+    });
+    // Reverting string array to string with updated x and y values
+    const newParamsConnection = visParamsConnection.join('\n');
+    // broadcasting an event with updated string.
+    $rootScope.$broadcast('vusop:uvMapData', newParamsConnection);
+  };
+
   $scope.search = function run() {
     const expression = $scope.vis.params.expression;
     const connection = $scope.vis.params.connection;
@@ -34,7 +62,7 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
       colorSchema: colorSchema,
       extended: {
         es: {
-          filter: dashboardContext
+          filter: dashboardContext()
         }
       },
       time: _.extend(timefilter.time, {

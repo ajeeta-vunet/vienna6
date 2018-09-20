@@ -272,8 +272,20 @@ export default function (server) {
           // that the two are connected and use this metric to update
           // the node label.
           _.map(sheet[0].list, function (instance) {
-            if (instance.label.indexOf(nodeObj.label) !== -1) {
-              let dataValue = instance.data[0][1];
+            let dataValue;
+            if (instance.label.split('>')[0] === nodeObj.label) {
+              let queryList = request.payload.sheet[0];
+              queryList = request.payload.sheet[0].split('),');
+              _.each(queryList, function (query) {
+                // For metric count and sum we are adding the 2 buckets.
+                // currently we not supporting for unique count
+                if ((_.includes(query, 'metric=count') || (_.includes(query, 'metric=sum'))) && _.includes(query, instance.label) && (instance.data.length === 2)) {
+                  dataValue = instance.data[0][1] + instance.data[1][1];
+                  return false;
+                } else {
+                  dataValue = instance.data[0][1];
+                }
+              });
               if (typeof dataValue === 'number') {
                 // If its a float, we use only two decimal points
                 if (Math.round(dataValue) !== dataValue) {

@@ -15,6 +15,7 @@ import { AlertConstants, createAlertEditUrl } from './alert_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
+const url = chrome.getUrlBase();
 
 uiRoutes
   .when(AlertConstants.CREATE_PATH, {
@@ -389,6 +390,97 @@ function alertAppEditor($scope,
 
   const $state = $scope.state = new AppState(stateDefaults);
 
+  // Dictionary for debug levels.
+  const setDebugListDict = {
+    '0': 'Error',
+    '1': 'Warning',
+    '2': 'Information',
+    '3': 'Debug',
+    '-1': 'Disable'
+  };
+
+  // API call to set the debug level.
+  $scope.setDebugLevel = function () {
+    $http.post(url + '/alertrule/' + alertcfg.title + '/?debugging_level=' + $scope.setDebug, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    }).then(function () {
+      $scope.successfullyset = true;
+      $scope.failedtoset = false;
+      $scope.debugVal = setDebugListDict[$scope.setDebug];
+    }).catch(function (response) {
+      $scope.failedmsg = response.data['error-string'];
+      $scope.successfullyset = false;
+      $scope.failedtoset = true;
+    });
+  };
+
+  // API call to execute alert
+  $scope.executeLogs = function () {
+    $http.post(url + '/alertrule/' + alertcfg.title + '/?execute_now=True&from=time&to=time', {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    }).then(function () {
+      $scope.successexecuteLogs =  true;
+    }).catch(function () {
+      $scope.failureexecuteLogs = true;
+      $scope.errmessage = 'Fail to process test execution of alert ruleState Change alert';
+    });
+  };
+
+  // API call to execute alert for a specific time
+  $scope.executeSpecificLogs = function (fromtime, totime) {
+    $scope.fromepoctime = Math.round(new Date(fromtime).getTime() / 1000);
+    $scope.toepoctime = Math.round(new Date(totime).getTime() / 1000);
+    $scope.goShowDate();
+    $http.post(url + '/alertrule/' + alertcfg.title + '/?from=' + $scope.fromepoctime + '&to=' + $scope.toepoctime, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    }).then(function () {
+      $scope.successexecuteSpecificLogs = true;
+      $scope.failureexecuteSpecificLogs = false;
+
+    }).catch(function (response) {
+      $scope.successexecuteSpecificLogs = false;
+      $scope.failureexecuteSpecificLogs = true;
+      if (response.data['error-string']) {
+        $scope.errmessagespecificlogs = response.data['error-string'];
+      } else {
+        $scope.errmessagespecificlogs = ' Fail to execute alert rule';
+      }
+
+    });
+  };
+
+  // setting the default value for showDebug .
+  $scope.showDebug = false;
+
+  // Function to hide and show the section.
+  $scope.showDebugs = function () {
+    $scope.showDebug = !$scope.showDebug;
+  };
+
+  // Function to change the name of button after click.
+  $scope.changetext = function () {
+    const elem = document.getElementById('showhide');
+    if (elem.value === 'Show Debugs') elem.value = 'Hide debugs';
+    else elem.value = 'Show Debugs';
+  };
+
+  // API call to show debug level
+  $scope.showDebugLogs = function () {
+    $scope.showDebugs();
+    $http.get(url + '/alertrule/' + alertcfg.title + '/?get_evaluation_logs=True', {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    }).then(function (data) {
+      $scope.failedShowData = false;
+      $scope.displayDebug = data.data;
+      if (data.data.length <= 0) {
+        $scope.displayDebug = 'No logs found';
+      }
+      $scope.changetext();
+    }).catch(function () {
+      $scope.displayDebug = 'No logs found, set the debug level failed';
+    });
+  };
+
   //calling the save function to save the alert details filled in the alert cfg form
   $scope.save = function () {
     $state.title = alertcfg.title;
@@ -507,6 +599,7 @@ function alertAppEditor($scope,
   $scope.opts = {
     alertcfg: alertcfg,
     allowedRoles: allowedRoles,
+    userRoleCanModify: userRoleCanModify,
     doSave: $scope.save,
   };
 

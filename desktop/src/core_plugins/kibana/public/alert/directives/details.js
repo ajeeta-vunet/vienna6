@@ -3,7 +3,8 @@ const $ = require('jquery');
 require('ui/courier');
 require('bootstrap-timepicker');
 require('ui/directives/email_validator.js');
-
+const moment = require('moment');
+import dateMath from '@elastic/datemath';
 const app = require('ui/modules').get('app/alert', [
   'kibana/courier'
 ]);
@@ -131,6 +132,36 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter) {
         rule.compareValueStr = '';
       };
 
+      $scope.showDateValfrom = false;
+      $scope.showDateValto = false;
+
+      // Function to display or hide the Calendar
+      // while clicking From input text box.
+      $scope.showDatefrom = function (element) {
+        if ($(element.target).is('input') ||
+        ($(element.target).parent().parent().is('td') &&
+        $(element.target).parent().hasClass('btn-sm'))) {
+          $scope.showDateValfrom = !$scope.showDateValfrom;
+        }
+      };
+
+      // Function to display or hide the Calendar
+      // while clicking To input text box.
+      $scope.showDateto = function (element) {
+        if ($(element.target).is('input') ||
+        ($(element.target).parent().parent().is('td') &&
+        $(element.target).parent().hasClass('btn-sm'))) {
+          $scope.showDateValto = !$scope.showDateValto;
+        }
+      };
+
+      // Function to hide calander for from and to
+      // after clicking go button.
+      $scope.goShowDate = function () {
+        $scope.showDateValfrom = false;
+        $scope.showDateValto = false;
+      };
+
       // To add a rule
       $scope.addNewRule = function () {
         const newRuleObj = {
@@ -172,6 +203,12 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter) {
           $scope.ruleList[0].informationCollector = false;
         }
       };
+
+      //Default time to set the value of from and to(from-> current time
+      //and to-> current time - 15mins.
+      $scope.fromtime = dateMath.parse($scope.fromtime || moment().subtract(15, 'minutes'));
+      $scope.totime = dateMath.parse($scope.totime || moment(), true);
+
 
       //Time picker start time and end time in Active alert time section
       $('#alert-timepicker1').timepicker({

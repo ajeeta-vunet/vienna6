@@ -308,6 +308,7 @@
                   <input
                     ng-if="!operRuleList[$index].allowStringInCompareValue"
                     type="number"
+                    step="0.0001"
                     class="alert-numericals alert-condition"
                     ng-model="rule.compareValue"
                     name="compareValue"
@@ -567,6 +568,7 @@
               </select>
               <input
                 type="number"
+                step="0.0001"
                 class="alert-numericals alert-condition"
                 ng-model="evalCriteria.compareValue"
                 name="evalCriteriaCompareValue"
@@ -671,7 +673,7 @@
                    append-to-body="1">
                    <i class="fa fa-question-circle">
                    </i>
-                 </kbn-tooltip>,
+                 </kbn-tooltip>
                  <input
                    type="checkbox"
                    class="alert-checkbox"
@@ -966,6 +968,173 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h4 ng-if="opts.userRoleCanModify" class="step-title">
+      <span class="step-indicator">5</span> Test your Alerts
+    </h4>
+    <div ng-if="opts.userRoleCanModify" class="alert-section">
+      <div class="alert-component-wrapper">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row bottom-space">
+              <p class="alert-component-label alert-condition">Execute Alert Now
+                <kbn-tooltip
+                  text="Execute alert with default time"
+                  placement="right"
+                  append-to-body="1">
+                  <i class="fa fa-question-circle"></i>
+                </kbn-tooltip>
+                <button
+                  class="test-button test-space"
+                  ng-click="executeLogs()"> Execute
+                </button>
+              </p>
+              <div
+                ng-show ="successexecuteLogs"
+                class="fa fa-check alert-condition status-message success-highlight">
+                Successfully triggered the alert execution
+              </div>
+              <div
+                ng-show="failureexecuteLogs"
+                class="fa fa-close alert-condition status-message error-highlight"> {{errmessage}}
+              </div>
+            </div>
+            <div class="row bottom-space">
+              <p class="alert-component-label alert-condition">Execute alert with specific time
+                <kbn-tooltip
+                  text="Execute alert with specific time"
+                  placement="right"
+                  append-to-body="1">
+                 <i class="fa fa-question-circle"></i>
+                </kbn-tooltip>
+                <input class="test-space alert-checkbox"
+                  type="checkbox"
+                  ng-model="specificcheck"
+                  ng-change="goShowDate()">
+              </p>
+            </div>
+            <div
+              ng-show="specificcheck"
+              class="row bottom-space">
+              <div class="col-md-5 zero-padding"> From:
+                <input
+                  ng-required="fromtime"
+                  class="datepicker-time-from"
+                  type="text"
+                  ng-model="fromtime"
+                  ng-click="showDatefrom($event)">
+                <datepicker
+                  ng-show="showDateValfrom"
+                  ng-click="showDatefrom($event)"
+                  ng-model="fromtime"
+                  max-date="totime"
+                  show-weeks="false">
+                </datepicker>
+              </div>
+              <div class="col-md-4 zero-padding"> To:
+                <input
+                  ng-required="totime"
+                  class="datepicker-time-to"
+                  type="text"
+                  ng-model="totime"
+                  ng-click="showDateto($event)">
+                <datepicker
+                  ng-show="showDateValto"
+                  ng-click="showDateto($event)"
+                  ng-model="totime"
+                  min-date="fromtime"
+                  show-weeks="false">
+                </datepicker>
+              </div>
+              <div>
+                <button
+                  class="test-button"
+                  ng-click="executeSpecificLogs(fromtime, totime)"> GO
+                </button>
+              </div>
+            </div>
+            <div
+              ng-show ="successexecuteSpecificLogs && specificcheck"
+              class="fa fa-check alert-condition status-message success-highlight">
+              Successfully triggered the alert execution for the specified time
+            </div>
+            <div
+              ng-show="failureexecuteSpecificLogs && specificcheck"
+              class="fa fa-close alert-condition status-message error-highlight"> {{errmessagespecificlogs}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h4 ng-if="!opts.userRoleCanModify" class="step-title">
+      <span class="step-indicator">5</span> Diagnose your alert
+    </h4>
+    <h4 ng-if="opts.userRoleCanModify" class="step-title">
+      <span class="step-indicator">6</span> Diagnose your alert
+    </h4>
+    <div class="alert-section">
+      <div class="alert-component-wrapper">
+        <div class="row bottom-space">
+          <p class="alert-component-label alert-condition">
+            Set Debug Level
+            <kbn-tooltip 
+              text="Set the debug level to <Error, Warning, Information or Debug>"
+              placement="right"
+              append-to-body="1">
+              <i class="fa fa-question-circle"></i>
+            </kbn-tooltip>
+          </p>
+          <div class="alert-condition">
+            <select
+              class="alert-select alert-condition"
+              ng-model="setDebug"
+              name="setDebugLevel"
+              ng-class="{error: alertcfgForm.setDebugLevel.$error.required}"
+              ng-required="setDebug"
+              ng-change="setDebugLevel()">
+              <option value="0">Error</option>
+              <option value="1">Warning</option>
+              <option value="2">Information</option>
+              <option value="3">Debug</option>
+              <option value="-1">Disable</option>
+            </select>
+          </div>
+          <div
+            class="fa fa-check alert-condition alert-component-label status-message success-highlight"
+            ng-if="successfullyset && debugVal != 'Disable'">
+            Successfully set the debug level to {{debugVal}} and this debug will be active for next 3 excution
+          </div>
+          <div
+            class="fa fa-check alert-condition alert-component-label status-message success-highlight"
+            ng-if="successfullyset && debugVal == 'Disable'">
+            Debugging level has been disabled
+          </div>
+          <div
+            class="fa fa-close alert-condition alert-component-label status-message error-highlight"
+            ng-if="failedtoset">
+            {{failedmsg}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <input
+              class="btn btn-ui.primary bottom-space test-button"
+              type="button"
+              id="showhide"
+              ng-click="showDebugLogs()"
+              value="Show Debugs">
+            <div ng-show="showDebug">
+              <textarea
+                readonly
+                type="text"
+                rows="10"
+                cols="100"
+                ng-model="displayDebug">
+              </textarea>
             </div>
           </div>
         </div>

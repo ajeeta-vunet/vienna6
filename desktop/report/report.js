@@ -10,8 +10,8 @@ var page = require('webpage').create(),
 //How to to wait for kibana to load and the data from elasticseatch in milliseconds.
 var waitTime = 60 * 1000;
 
-if (system.args.length < 10 || system.args.length > 12) {
-  console.log("Usage: report.js URL filename username userrole userpermissions tenant_id bu_id duration shipper_url");
+if (system.args.length < 11 || system.args.length > 13) {
+  console.log("Usage: report.js URL filename username userrole userpermissions tenant_id bu_id duration shipper_url search_string");
   phantom.exit(1);
 } else {
   address = system.args[1];
@@ -58,7 +58,8 @@ if (system.args.length < 10 || system.args.length > 12) {
     "permissions": system.args[5],
     "tenant_id": system.args[6],
     "bu_id": system.args[7],
-    "shipper_url": system.args[9]
+    "shipper_url": system.args[9],
+    "search_string": system.args[10]
   };
 
   page.open(address, function (status) {

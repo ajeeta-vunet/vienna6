@@ -19,7 +19,6 @@ module.directive('visMap', function () {
       $scope.$watch('mapData', function () {
 
         if (!$scope.mapData) {
-          console.log('visMap: Returning as no mapData');
           return;
         }
 
@@ -286,8 +285,6 @@ module.directive('visMap', function () {
         // When a node is selected, we check if there is a dashboard
         // associated with it, if so, we load that dashboard.
         network.on('selectNode', (params) => {
-          console.log('Selecting node');
-          console.log(params);
           // Invoke the passed function
           if ($scope.onNodeSelect) {
             $scope.onNodeSelect(params);
@@ -297,8 +294,6 @@ module.directive('visMap', function () {
         // When a node is selected, we check if there is a dashboard
         // associated with it, if so, we load that dashboard.
         network.on('selectEdge', (params) => {
-          console.log('Selecting edge');
-          console.log(params);
           // Invoke the passed function
           if ($scope.onLinkSelect) {
             const linkId = params.edges[0];

@@ -6,6 +6,7 @@ import { ReportConstants, createReportEditUrl } from '../report_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
 import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
+import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 
 export function ReportListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
@@ -144,6 +145,8 @@ export function ReportListingController($injector, $scope, $location, $http) {
       reportService.delete(selectedIds)
         .then(fetchItems)
         .then(() => {
+          // Update backend with operation
+          updateVunetObjectOperation(selectedItems, 'report', $http, 'delete', chrome);
           deselectAll();
           logUserOperationForDeleteMultipleObjects($http, selectedIds, 'report');
         })

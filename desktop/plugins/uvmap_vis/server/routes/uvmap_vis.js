@@ -279,7 +279,10 @@ export default function (server) {
               _.each(queryList, function (query) {
                 // For metric count and sum we are adding the 2 buckets.
                 // currently we not supporting for unique count
-                if ((_.includes(query, 'metric=count') || (_.includes(query, 'metric=sum'))) && _.includes(query, instance.label) && (instance.data.length === 2)) {
+                if ((_.includes(query, 'metric=count') ||
+                      (_.includes(query, 'metric=sum'))) &&
+                    _.includes(query, instance.label) &&
+                    (instance.data.length === 2)) {
                   dataValue = instance.data[0][1] + instance.data[1][1];
                   return false;
                 } else {

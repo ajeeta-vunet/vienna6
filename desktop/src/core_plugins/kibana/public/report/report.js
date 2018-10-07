@@ -12,6 +12,8 @@ import 'ui/share';
 import 'ui/query_bar';
 import 'ui/courier';
 import 'ui/timefilter';
+import 'angular-cron-jobs';
+import 'angular-cron-jobs/src/angular-cron-jobs.less';
 
 import moment from 'moment';
 import { DocTitleProvider } from 'ui/doc_title';
@@ -21,6 +23,8 @@ import uiRoutes from 'ui/routes';
 import { uiModules } from 'ui/modules';
 import { ReportConstants, createReportEditUrl, createReportPrintUrl } from './report_constants';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
+import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
+import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 
 uiRoutes
   .when(ReportConstants.CREATE_PATH, {
@@ -65,6 +69,9 @@ uiRoutes
       printReport: function () {chrome.setVisible(false); return true;},
       reportcfg: function (savedReports, $route, courier) {
         return savedReports.get($route.current.params.id)
+          .then(function (report) {
+            return report;
+          })
           .catch(courier.redirectWhenMissing({
             'report': '/reports'
           }));
@@ -72,17 +79,22 @@ uiRoutes
         // button won't be available to those who can't access the report
       },
       company_name: function () {return '';},
+      isNewReport: function () {
+        return false;
+      },
+      loadedReportId: function ($route) {
+        return $route.current.params.id;
+      }
     },
-    isNewReport: function () {
-      return false;
-    }
   });
 
 
 uiModules
   .get('app/report', [
     'kibana/notify',
-    'kibana/courier'
+    'kibana/courier',
+    'angular-cron-jobs',
+    'kibana/config'
   ])
   .directive('reportApp', function () {
     return {
@@ -92,13 +104,19 @@ uiModules
     };
   });
 
-function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Private, $http, AppState, courier, timefilter, kbnUrl) {
+function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Private, $http, AppState, courier, timefilter, kbnUrl, config) {
 
   const filterBar = Private(FilterBarQueryFilterProvider);
 
   const notify = new Notifier({
     location: 'Report'
   });
+
+  // Configuration for 'cronSelection' directive to
+  // allow multiple selection in a select box.
+  $scope.cronConfig = {
+    allowMultiple: true
+  };
 
   // Set the landing page for alerts section
   $scope.landingPageUrl = () => `#${ReportConstants.LANDING_PAGE_PATH}`;
@@ -114,6 +132,130 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   logUserOperation($http, 'GET', 'report', reportcfg.title, reportcfg.id);
 
   const allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
+
+  // Object to store the user selected values
+  // in report scheduling
+  $scope.cronObj = {};
+  $scope.enable_scheduling = false;
+
+  // Is scheduling enabled... Used by time restore during report save
+  $scope.isScheduleEnabled = function () {
+    return $scope.enable_scheduling;
+  };
+
+  // Check if report scheduling configuration
+  // exists and load them else we initialize it
+  // to empty.
+  if (reportcfg.scheduleFrequency !== '') {
+    $scope.cronObj.value = reportcfg.scheduleFrequency;
+    $scope.enable_scheduling = true;
+  } else {
+    $scope.cronObj.value = '';
+  }
+
+  // This function is called to disable input elements if the user
+  // doesn't have permission to create things
+  $scope.disableInputElements = false;
+  if (!chrome.canCurrentUserCreateObject()) {
+    $scope.disableInputElements = true;
+  }
+
+  // Load the recipients information in the UI.
+  $scope.recipientsData = [];
+  if(reportcfg.recipientsList) {
+    $scope.recipientsData = JSON.parse(reportcfg.recipientsList);
+  }
+
+  // If data exists in the back end populate the UI
+  // with it else create a new object.
+  if ($scope.recipientsData.length &&
+    $scope.recipientsData[0].role !== '') {
+    const currentUser = chrome.getCurrentUser();
+
+    // Display all the
+    if (chrome.isCurrentUserAdmin()) {
+      $scope.recipientsList = $scope.recipientsData;
+    }
+    else {
+      $scope.recipientsList = [];
+
+      // Display only those recipient configuration
+      // which belongs to logged in user's role
+      $scope.recipientsList = _.filter($scope.recipientsData, function (recipient) {
+        return recipient.role === currentUser[1];
+      });
+    }
+  }
+  else {
+    $scope.recipientsList = [{ role: '', recipients: '' }];
+  }
+
+  $scope.printReport = $route.current.locals.printReport;
+
+  if($scope.printReport !== true) {
+
+    // Get all the user groups configured
+    const postCall = $http({
+      method: 'GET',
+      url: chrome.getUrlBase() + '/user_groups/'
+    })
+      .then(resp => resp.data)
+      .catch(resp => {
+        throw resp.data;
+      });
+
+    postCall.then(function (data) {
+      $scope.userGroups = [];
+      // Only admin users can select any user role.
+      // All other users will see only their user role.
+      if (chrome.isCurrentUserAdmin()) {
+        $scope.userGroups = data.user_groups;
+      } else {
+
+        // Get the current logged in user role
+        const currentUser = chrome.getCurrentUser();
+
+        // Display only those user groups
+        // which belongs to logged in user's role
+        $scope.userGroups = _.filter(data.user_groups, function (role) {
+          return role.name === currentUser[1];
+        });
+      }
+    }).catch(function () {
+      $scope.userGroups = [];
+      notify.error('Failed to find user roles');
+    });
+  }
+  // we need a list of recipients in this format
+  // ['obj1', 'obj2', obj3']
+  // To achive this we are initialising dataObj to
+  // {role: '', recipients: ''} every time this function
+  // is called so that we can push the user selected object
+  // into the list.
+  $scope.addRecipients = function () {
+    const dataObj = { role: '', recipients: '' };
+    $scope.recipientsList.push(dataObj);
+  };
+
+  // To delete a recipient
+  $scope.removeRecipients = function (index) {
+    $scope.recipientsList.splice(index, 1);
+  };
+
+  // Reset the schedule frequency when enable scheduling
+  // is unchecked.
+  $scope.toggleEnableSchedule = function () {
+    if (!$scope.enable_scheduling) {
+      $scope.cronObj.value = '';
+    }
+  };
+
+  // Set whether the current logged in user be allowed to create a new
+  // object or not
+  $scope.creation_allowed = false;
+  if (chrome.canCurrentUserCreateObject()) {
+    $scope.creation_allowed = true;
+  }
 
   let userRoleCanModify = false;
 
@@ -141,15 +283,27 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     {
       key: 'download',
       description: 'Download Report',
-      testId: 'reportSaveButton',
+      testId: 'reportDownloadButton',
       run: function () { $scope.downloadReport(); },
+    },
+    {
+      key: 'email',
+      description: 'Email Report',
+      testId: 'reportEmailButton',
+      run: function () { $scope.emailReport(); },
     }];
   } else {
     $scope.topNavMenu = [{
       key: 'download',
       description: 'Download Report',
-      testId: 'reportSaveButton',
+      testId: 'reportDownloadButton',
       run: function () { $scope.downloadReport(); }
+    },
+    {
+      key: 'email',
+      description: 'Email Report',
+      testId: 'reportEmailButton',
+      run: function () { $scope.emailReport(); },
     }];
   }
 
@@ -164,9 +318,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.company_name = $route.current.locals.reportcfg.company_name || '';
   }
 
-  $scope.printReport = $route.current.locals.printReport;
+
   $scope.sections = [{ id: '', description: '', visuals: [] }];
-  $scope.enable_scheduling = false;
+
   // Populate owner, if its available from the backend, use that,
   // otherwise use current user: Bharat
   $scope.owner = {};
@@ -179,9 +333,23 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.owner.permission = currentUser[2];
   }
 
-  if (reportcfg.timeTo && reportcfg.timeFrom) {
-    timefilter.time.to = reportcfg.timeTo;
-    timefilter.time.from = reportcfg.timeFrom;
+  // Let us set the global time selector based on the time we had saved in
+  // the report
+  if (!$scope.printReport && reportcfg.timeRestore && reportcfg.timeTo
+      && reportcfg.timeFrom) {
+
+    // If the report is saved with 'absolute' mode prepare a moment object
+    // for 'from' and 'to' time values and save it in timefilter.
+    if (reportcfg.timeTo.startsWith('now')) {
+      timefilter.time.to = reportcfg.timeTo;
+      timefilter.time.from = reportcfg.timeFrom;
+      timefilter.time.mode = 'quick';
+    } else {
+      timefilter.time.mode = 'absolute';
+      timefilter.time.to = moment(reportcfg.timeTo);
+      timefilter.time.from = moment(reportcfg.timeFrom);
+    }
+
   }
 
   $scope.$on('$destroy', reportcfg.destroy);
@@ -190,9 +358,10 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     return filter.query && filter.query.query_string && !filter.meta;
   };
 
-  const extractQueryFromFilters = function (filters) {
-    const filter = _.find(filters, matchQueryFilter);
-    if (filter) return filter.query;
+  const getQuery = function () {
+    if (!_.isUndefined(reportcfg.searchSource.getOwn('query'))) {
+      return migrateLegacyQuery(reportcfg.searchSource.getOwn('query'));
+    }
   };
 
   const stateDefaults = {
@@ -200,21 +369,17 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     panels: reportcfg.panelsJSON ? JSON.parse(reportcfg.panelsJSON) : [],
     options: reportcfg.optionsJSON ? JSON.parse(reportcfg.optionsJSON) : {},
     uiState: reportcfg.uiStateJSON ? JSON.parse(reportcfg.uiStateJSON) : {},
-    query: extractQueryFromFilters(reportcfg.searchSource.getOwn('filter')) || { query_string: { query: '*' } },
+    query: getQuery() || { query: '', language: config.get('search:queryLanguage') },
     filters: _.reject(reportcfg.searchSource.getOwn('filter'), matchQueryFilter),
   };
 
   $scope.show_toolbar = false;
-  $scope.show_searchbar = false;
 
   const $state = $scope.state = new AppState(stateDefaults);
   const $uiState = $scope.uiState = $state.makeStateful('uiState');
   $scope.sections = reportcfg.sectionJSON ? JSON.parse(reportcfg.sectionJSON) : [{ id: '', description: '', visuals: [] }];
-  $scope.schedule = JSON.parse(reportcfg.schedule);
 
-  if(_.has($scope.schedule, 'frequency')) {
-    $scope.enable_scheduling = true;
-  }
+
 
   if($scope.sections.length === 0)
   {
@@ -223,27 +388,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   $scope.$watchCollection('state.options', function (newVal, oldVal) {
     if (!angular.equals(newVal, oldVal)) $state.save();
   });
-
-  // This function will be called when we change
-  // the report scheduling options using the
-  // select box in section 2
-  $scope.updateTimeFilter = function () {
-    if($scope.schedule.frequency === 'daily')
-    {
-      timefilter.time.to = 'now';
-      timefilter.time.from = 'now-24h';
-    }
-    else if($scope.schedule.frequency === 'weekly')
-    {
-      timefilter.time.to = 'now';
-      timefilter.time.from = 'now-7d';
-    }
-    else if($scope.schedule.frequency === 'monthly')
-    {
-      timefilter.time.to = 'now';
-      timefilter.time.from = 'now-30d';
-    }
-  };
 
   $scope.refresh = _.bindKey(courier, 'fetch');
 
@@ -259,6 +403,19 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   courier.setRootSearchSource(reportcfg.searchSource);
 
   function init() {
+
+    // update model.query to $scope
+    if($state.query) {
+      $scope.model = {
+        query: $state.query
+      };
+    } else {
+      // default query
+      $scope.model = {
+        query: { language: config.get('search:queryLanguage') }
+      };
+    }
+
     updateQueryOnRootSource();
 
     const docTitle = Private(DocTitleProvider);
@@ -294,15 +451,34 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     return ++index;
   }
 
-  function updateQueryOnRootSource() {
-    const filters = filterBar.getFilters();
-    if ($state.query) {
-      reportcfg.searchSource.set('filter', _.union(filters, [{
-        query: $state.query
-      }]));
-    } else {
-      reportcfg.searchSource.set('filter', filters);
+  // Update the filters and query to the searchSource
+  function updateQueryOnRootSource(query) {
+
+    let filters = filterBar.getFilters();
+
+    // If search_string is available, create the query and add it to the filters
+    const searchString = chrome.getSearchString();
+
+    if (searchString !== '') {
+      filters = _.union(filters, [{
+        query: {
+          query_string: {
+            query: searchString,
+            analyze_wildcard: true
+          }
+        }
+      }]);
     }
+
+    // update the filters to the searchSource
+    reportcfg.searchSource.set('filter', filters);
+
+    // update the query to searchSource.
+    if (query) {
+      reportcfg.searchSource.set('query', query);
+    }
+
+    $scope.refresh();
   }
 
   // update root source when filters update
@@ -354,7 +530,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   };
 
   // This function is called when a user clicks on UP arrow icon to move
-  // a visuzliation to the above place.
+  // a visualization to the above place.
   $scope.moveVisUpInSection = function (section, vis) {
     const index = section.visuals.indexOf(vis);
     if (index === 0) {
@@ -366,7 +542,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   };
 
   // This function is called when a user clicks on DOWN arrow icon to move
-  // a visuzliation to the below place.
+  // a visualization to the below place.
   $scope.moveVisDownInSection = function (section, vis) {
     const index = section.visuals.indexOf(vis);
     if (index === section.visuals.length - 1) {
@@ -392,16 +568,80 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $('#globalAppWrapper').addClass('app-wrapper-report');
   }
 
-  // This function is called to print a report. Backend returns the pdf
-  // report
+  // This function is used to prepare the query parameters
+  // for the url to generate reports.
+  const getQueryParamsForReportUrl = function () {
+    let fromTime = '';
+    let toTime = '';
+    let mode = '';
+
+    // If 'absoulute' mode is selected in time filter
+    // we prepare the 'from' and 'to' time in the format:
+    // 'DD-MMM-YYYY hh:mm:ss'
+    if (timefilter.time.mode === 'absolute') {
+      mode = 'quick';
+      fromTime = moment.unix(timefilter.time.from / 1000).format('DD-MMM-YYYY hh:mm:ss');
+      toTime = moment.unix(timefilter.time.to / 1000).format('DD-MMM-YYYY hh:mm:ss');
+    } else {
+      mode = timefilter.time.mode;
+      fromTime = timefilter.time.from;
+      toTime = timefilter.time.to;
+    }
+
+    const queryParams = '?_g=(time:(from:\'' + fromTime + '\',mode:' + mode + ',to:\'' + toTime + '\'))';
+    return queryParams;
+  };
+
+  // This function is called to email report to recipients configured.
+  $scope.emailReport = function () {
+
+    // To notify user that things will happen, we throw a confirm modal
+    const option = confirm('Report will be generated and sent to the configured email ids. Press Ok to continue?');
+
+    // If user pressed ok, we send a request to backend
+    if (option) {
+
+      let url = chrome.getUrlBase();
+      url = url + '/reports/' + reportcfg.id + '/?action=email';
+      const queryParams = getQueryParamsForReportUrl();
+
+      const data = { 'url_query': queryParams };
+
+      const posting = $http({
+        method: 'POST',
+        url: url,
+        data: data,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      });
+
+      posting
+        .then(function () {
+          // Nothing to be done..
+        })
+        .catch(function () {
+          notify.error('Unable to email the report');
+        });
+    }
+  };
+
+
+  // This function is called to print a report. Backend returns the pdf report
   $scope.downloadReport = function () {
     $scope.kbnTopNav.close('download');
     $scope.reportDate = new Date();
-    const url = reportcfg.id;
+    let url = reportcfg.id;
+
+    // Get query parameters for downloading report.
+    const queryParams = getQueryParamsForReportUrl();
+
+    // Create the url using the time from timefilter selected
+    //url = url + '?_g=(time:(from:' + timefilter.time.from + ',mode:' + timefilter.time.mode + ',to:' + timefilter.time.to + '))';
+    url = url + queryParams;
 
     // Get current user
     const currentUser = chrome.getCurrentUser();
     const tenantBu = chrome.getTenantBu();
+    const searchString = chrome.getSearchString();
 
     const httpResult = $http({
       method: 'POST',
@@ -413,7 +653,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         permissions: currentUser[2],
         tenantId: tenantBu[0],
         buId: tenantBu[1],
-        shipperUrl: $scope.shipperAddress
+        shipperUrl: $scope.shipperAddress,
+        searchString: searchString
       },
       responseType: 'blob'
     })
@@ -430,24 +671,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       });
   };
 
-  $scope.filterResults = function () {
-    updateQueryOnRootSource();
-    $state.save();
-    $scope.refresh();
-  };
-
-  // Disable global timer in vienna when the
-  // report scheduling is checked and
-  // Initialise the schedule object
-  $scope.handleChangeInReportType = function (enableScheduling) {
-    $scope.enable_scheduling = enableScheduling;
-    if($scope.enable_scheduling) {
-      $scope.schedule = { 'frequency': 'daily', 'recipients': '' };
-    } else {
-      $scope.schedule = {};
-    }
-  };
-
   function saveReport(reportcfg) {
     $state.save();
     reportcfg.sectionJSON = angular.toJson($scope.sections);
@@ -456,11 +679,20 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
     // We will enable this with RBAC support: Bharat
     reportcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
-    reportcfg.timeFrom = timefilter.time.from;
-    reportcfg.timeTo = timefilter.time.to;
+    reportcfg.timeFrom = reportcfg.timeRestore ? timefilter.time.from : undefined;
+    reportcfg.timeTo = reportcfg.timeRestore ? timefilter.time.to : undefined;
     reportcfg.optionsJSON = angular.toJson($state.options);
     reportcfg.schedule = angular.toJson($scope.schedule);
     reportcfg.company_name = $scope.company_name;
+    reportcfg.scheduleFrequency = $scope.cronObj.value;
+
+    if ($scope.recipientsList.length && $scope.recipientsList[0].role === '') {
+      // Use only the configured recipients. If the role of first
+      // recipient is empty then skip the first 'recipient' object.
+      reportcfg.recipientsList = angular.toJson($scope.recipientsList.slice(0, 1));
+    } else {
+      reportcfg.recipientsList = angular.toJson($scope.recipientsList);
+    }
 
     // collect the report owner details, his role and permissions.
     // If owners name is not populated. It is a new report.
@@ -479,9 +711,15 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         reportcfg.id = id;
         $scope.kbnTopNav.close('save');
         if (id) {
+
+          // Update the backend for this object's operation
+          updateVunetObjectOperation([reportcfg], 'report', $http, 'modify', chrome);
+
           if (reportcfg.id !== $routeParams.id) {
             kbnUrl.change('/report/{{id}}', { id: reportcfg.id });
           }
+
+          // Log the user operation
           logUserOperation($http, 'POST', 'report', reportcfg.title, reportcfg.id);
         }
       })
@@ -489,24 +727,19 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   }
 
   $scope.save = function () {
-    // Notify the user if report scheduling is enabled.
-    // Once user confirms set the global time picker to
-    // the scheduled time selected.
-    if($scope.enable_scheduling === true) {
-      const confirmSaveOperation = confirm('You have enabled scheduling to generate this report '
-            + $scope.schedule.frequency + ' .The time selection will be updated accordingly. Please'
-            + ' click \'OK\' to proceed.');
-
-      // If user clicks 'OK' for the confirm box
-      // update the global time picker.
-      if (confirmSaveOperation === true) {
-        $scope.updateTimeFilter();
-      } else {
-        return;
-      }
+    if (reportcfg.title === 'Home') {
+      // We can't allow anyone to save a Home Report so inform the user
+      // about it
+      //
+      // There is some problem here... when we return first time,
+      // things work fine but if a user press save with 'Home' again,
+      // we end up throwing an error.. Can't find where the error is
+      // coming from... need to look at this later..
+      alert('You cannot create a report with name "Home". Please use a different name');
+    } else {
+      $state.title = reportcfg.title;
+      saveReport(reportcfg);
     }
-    $state.title = reportcfg.title;
-    saveReport(reportcfg);
   };
 
   let pendingVis = _.size($state.panels);
@@ -534,22 +767,11 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: 'search', type: 'search' });
   };
 
-  // Show the reportcfgboard operational butttons on clicking the show toolbar button
-  $scope.toggleToolbar = function () {
-    $scope.show_toolbar = !$scope.show_toolbar;
+  // Function called when the search query is added in search bar in the UI
+  $scope.updateQueryAndFetch = function (query) {
+    $scope.model.query = migrateLegacyQuery(query);
+    updateQueryOnRootSource(query);
   };
-
-  // Expand search bar and close it on clicking the search button
-  $scope.showSearchbar = function () {
-    $scope.show_searchbar = !$scope.show_searchbar;
-  };
-
-  // if a search query exists. Do not collapse the
-  // searchbar. Need not check for $scope.state.query as
-  //$scope.state.query.query_string.query always exists
-  if ($scope.state.query.query_string.query !== '*') {
-    $scope.show_searchbar = true;
-  }
 
   // Setup configurable values for config directive, after objects are initialized
   $scope.opts = {

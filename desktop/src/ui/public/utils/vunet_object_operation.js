@@ -16,6 +16,10 @@ export function updateVunetObjectOperation(selectedItems, objType, $http, action
       const anomalyId = 'anomaly:' + item.id;
       url = '/vuSmartMaps/api/anomaly_status/';
       data = { 'detector_id': anomalyId, 'detector_title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
+    } else if (objType === 'report') {
+      const reportId = 'report:' + item.id;
+      url = '/vuSmartMaps/api/report_status/';
+      data = { 'report_id': reportId, 'report_title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
     }
 
     const httpResult = $http({

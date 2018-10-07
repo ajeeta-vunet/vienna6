@@ -258,8 +258,25 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
       });
 
       if (this.searchSource) {
+        // Find and remove any search string added as filter
+        // in dashboard / report before saving them.
+        const searchSourceJSON = _.omit(this.searchSource.toJSON(), ['sort', 'size']);
+        const searchString = chrome.getSearchString();
+        if (searchString) {
+          if (searchSourceJSON.hasOwnProperty('filter') &&
+            searchSourceJSON.filter.length) {
+            searchSourceJSON.filter.forEach(function (item, index) {
+              if ((item.hasOwnProperty('query') &&
+                  item.query.hasOwnProperty('query_string')) &&
+                  item.query.query_string.query === searchString) {
+                searchSourceJSON.filter.splice(index, 1);
+              }
+            });
+          }
+        }
+
         body.kibanaSavedObjectMeta = {
-          searchSourceJSON: angular.toJson(_.omit(this.searchSource.toJSON(), ['sort', 'size']))
+          searchSourceJSON: angular.toJson(searchSourceJSON)
         };
       }
 

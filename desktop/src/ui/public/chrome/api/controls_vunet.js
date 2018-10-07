@@ -146,4 +146,14 @@ export default function (chrome, internals) {
     const index = 'vunet-' + internals.tenantId + '-' + internals.buId + '-' + indexType + '-*';
     return index;
   };
+
+  // This function returns the search string configured
+  // for a given user role.
+  chrome.getSearchString = function () {
+    let searchString = '';
+    if(internals.searchString) {
+      searchString = internals.searchString;
+    }
+    return searchString;
+  };
 }

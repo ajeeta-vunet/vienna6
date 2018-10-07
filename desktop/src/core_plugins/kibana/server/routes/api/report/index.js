@@ -60,18 +60,25 @@ export function reportDownloadApi(server) {
       const time = Date.now();
       const childProcess = require('child_process');
 
+      // As there is time information as a query parameter, report-name is
+      // only till ?
+      const onlyReportName = req.payload.reportName.split('?')[0];
+
       const url = 'http://127.0.0.1:8080/app/kibana#/report/print/' + req.payload.reportName;
       const duration = req.payload.timeDuration;
       const userName = req.payload.username;
       const userRole = req.payload.userRole;
       const userPermissions = req.payload.permissions;
-      const fileName = req.payload.reportName + '.pdf';
-      const fileNameWithTime = req.payload.reportName + '-' + time + '.pdf';
+      const searchString = req.payload.searchString;
+      const fileName = onlyReportName + '.pdf';
+      const fileNameWithTime = onlyReportName + '-' + time + '.pdf';
       const filePath = '/tmp/' + fileNameWithTime;
       console.log('Request payload is ', req.payload);
       const tenantId = req.payload.tenantId;
       const buId = req.payload.buId;
       const shipperUrl = req.payload.shipperUrl;
+      server.log(['info'], 'Search string is ' + searchString);
+      server.log(['info'], 'Request payload is ' +  req.payload);
       const childArgs = [
         '/opt/kibana/report/report.js',
         url,
@@ -83,6 +90,7 @@ export function reportDownloadApi(server) {
         tenantId,
         buId,
         shipperUrl,
+        searchString
       ];
 
       // Debug output..

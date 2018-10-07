@@ -150,10 +150,33 @@ app.directive('dashboardApp', function ($injector, $http) {
         updateState();
       });
 
-      dashboardStateManager.applyFilters(
-        dashboardStateManager.getQuery() || { query: '', language: config.get('search:queryLanguage') },
-        filterBar.getFilters()
-      );
+      // Applying the filters to the dashboard. This filters include the filter query corresponds to
+      // the configured search_string and the filters available at the filterBar.
+      applyFilters(dashboardStateManager.getQuery() || { query: '', language: config.get('search:queryLanguage') });
+
+      // This function creates the filter query for the search_string configured at the user role level.
+      // This filter query is added to filters available for this dashboard.
+      function applyFilters(query) {
+
+        // Get the existing filters
+        let filters = filterBar.getFilters();
+
+        // If search_string is available, create the query and add it to the filters
+        const searchString = chrome.getSearchString();
+        if (searchString) {
+          filters = _.union(filters, [{
+            query: {
+              query_string: {
+                query: searchString,
+                analyze_wildcard: true
+              }
+            }
+          }]);
+        }
+
+        // Apply the filters
+        dashboardStateManager.applyFilters(query, filters);
+      }
 
       timefilter.enabled = true;
       dash.searchSource.highlightAll(true);
@@ -205,7 +228,9 @@ app.directive('dashboardApp', function ($injector, $http) {
           dashboardStateManager.getAppState().$newFilters = [];
         }
         $scope.model.query = migrateLegacyQuery(query);
-        dashboardStateManager.applyFilters($scope.model.query, filterBar.getFilters());
+        // Applying the filters to the dashboard. This filters include the filter query corresponds to
+        // the configured search_string and the filters available at the filterBar.
+        applyFilters($scope.model.query);
         $scope.refresh();
       };
 
@@ -374,7 +399,9 @@ app.directive('dashboardApp', function ($injector, $http) {
 
       // update root source when filters update
       $scope.$listen(filterBar, 'update', function () {
-        dashboardStateManager.applyFilters($scope.model.query, filterBar.getFilters());
+        // Applying the filters to the dashboard. This filters include the filter query corresponds to
+        // the configured search_string and the filters available at the filterBar.
+        applyFilters($scope.model.query);
       });
 
       // update data when filters fire fetch event

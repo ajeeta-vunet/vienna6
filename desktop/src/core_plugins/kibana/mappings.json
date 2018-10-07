@@ -60,6 +60,9 @@
       "execSummary": {
         "type": "text"
       },
+      "timeRestore": {
+        "type": "boolean"
+      },
       "timeTo": {
         "type": "text"
       },
@@ -73,6 +76,12 @@
         "type": "text"
       },
       "company_name": {
+        "type": "text"
+      },
+      "scheduleFrequency": {
+        "type": "text"
+      },
+      "recipientsList": {
         "type": "text"
       }
     }

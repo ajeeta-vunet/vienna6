@@ -20,6 +20,16 @@
         </div>
       </div>
 
+      <!-- Search. -->
+      <div ng-show="chrome.getVisible()" class="fullWidth" data-transclude-slot="bottomRow">
+        <query-bar
+          query="model.query"
+          app-name="'report'"
+          on-submit="updateQueryAndFetch($query)"
+        >
+        </query-bar>
+      </div>
+
     </div>
   </kbn-top-nav>
 
@@ -44,94 +54,10 @@
 
   <div class="container-fluid report-body-container" role="main" ng-if="!printReport">
     <form name="forms.reportcfgForm">
+
       <h4 class="step-title">
         <span class="step-indicator">
           1
-        </span>
-        Schedule your report
-      </h4>
-
-      <div class="report-section">
-        <div class="row">
-          <p class="report-component-label report-element-inline">
-            Add a schedule
-            <kbn-tooltip
-              text="Select the checkbox to enable scheduling of reports"
-              placement="bottom"
-              append-to-body="1">
-              <span>
-                <i class="fa fa-question-circle" aria-hidden="true">
-                </i>
-              </span>
-            </kbn-tooltip>
-          </p>
-          <div class="report-element-inline">
-            <input
-              type="checkbox"
-              ng-model="enable_scheduling"
-              ng-change="handleChangeInReportType(enable_scheduling)">
-          </div>
-
-          <div
-            ng-if="enable_scheduling"
-            class="report-element-inline">
-            <p class="report-component-label report-element-inline">
-              to generate this report
-            </p>
-            <div class=" report-element-inline">
-              <select
-                class="schedule-frequency"
-                ng-required="enable_scheduling"
-                name="scheduleFrequency"
-                ng-model="schedule.frequency"
-                ng-class="{error: forms.reportcfgForm.enable_scheduling.$error.required}"
-                ng-change="updateTimeFilter()">
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-              </select>
-              <kbn-tooltip
-                text="Schedule reports as per your needs. Please note all reports are generated at 00:00:00 hrs &#10; Daily - The report will be generated daily by considering the data from the last 24 hrs.&#10; Weekly - The report will be generated on every Monday by collecting the data from its previous week. (Monday to Sunday).&#10; Monthly - The report will be generated on first of every month by considering the data of previous month"
-                placement="bottom"
-                append-to-body="1">
-                <span>
-                  <i class="fa fa-question-circle" aria-hidden="true">
-                  </i>
-                </span>
-              </kbn-tooltip>
-            </div>
-            <p class="report-component-label report-element-inline">
-              and email it to
-            </p>
-            <div class="report-element-inline">
-              <input
-                multiple-emails
-                class="recipients"
-                ng-required="enable_scheduling"
-                type="text"
-                maxlength="250"
-                ng-model="schedule.recipients"
-                name="reportRecipients"
-                ng-class="{error: forms.reportcfgForm.reportRecipients.$invalid}">
-              <kbn-tooltip
-                text="Provide recipients email to receive the scheduled reports. Multiple emails can be added separated by ',' "
-                placement="bottom"
-                append-to-body="1">
-                <span>
-                  <i class="fa fa-question-circle" aria-hidden="true">
-                  </i>
-                </span>
-              </kbn-tooltip>
-              <p class="error-highlight" ng-show="forms.reportcfgForm.reportRecipients.$invalid">Please provide valid email address. You can enter multiple email address separated by a comma ','
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <h4 class="step-title">
-        <span class="step-indicator">
-          2
         </span>
         Manage report contents
       </h4>
@@ -298,7 +224,7 @@
         </div>
       </div>
 
-      <div>
+      <div ng-show="sections.length < 8">
         <span
           ng-click="addSection()"
           aria-label="Add Section"
@@ -308,6 +234,109 @@
           </i>
         </span>
       </div>
+
+      <h4 class="step-title">
+          <span class="step-indicator">2</span>
+          Schedule your report
+        </h4>
+        <div class="report-section">
+          <div class="row">
+            <p class="report-component-label report-element-inline">
+              Add a schedule
+              <kbn-tooltip
+                text="Select the checkbox to enable scheduling of reports. This configuration decides how often the schedule should run. To select multiple values in a select box, hold 'Ctrl' key and select values."
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i class="fa fa-question-circle" aria-hidden="true"></i>
+                </span>
+              </kbn-tooltip>
+            </p>
+            <div class="report-element-inline">
+              <input
+                type="checkbox"
+                ng-model="enable_scheduling"
+                ng-change="toggleEnableSchedule()">
+            </div>
+            <div
+             ng-if="enable_scheduling">
+              <cron-selection
+                ng-model="cronObj.value"
+                config="cronConfig">
+              </cron-selection>
+            </div>
+          </div>
+        </div>
+        <h4 class="step-title">
+          <span class="step-indicator">3</span>
+          Configure Recipients Email
+        </h4>
+        <div class="report-section">
+          <p class="row report-component-label" >
+            Recipients
+            <kbn-tooltip
+              text="Provide recipients email to receive the scheduled reports. Multiple emails can be added separated by ',' "
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </p>
+          <div
+            class="row recipient-item"
+            ng-repeat="item in recipientsList track by $index">
+            <ng-form name="recipientItemForm">
+              <select
+                class="recipient-role"
+                name="groupByField"
+                ng-options="role.name as role.name for role in userGroups | orderBy:'name'"
+                ng-model="item.role"
+                ng-disabled="disableInputElements"
+                required>
+                <option value=""> </option>
+              </select>
+              <input
+                multiple-emails
+                class="recipients"
+                ng-required="enable_scheduling"
+                type="text"
+                maxlength="1024"
+                ng-model="item.recipients"
+                ng-disabled="disableInputElements"
+                name="reportRecipients"
+                ng-class="{error: reportcfgForm.reportRecipients.$invalid}">
+                <p
+                  class="error-highlight"
+                  ng-show="recipientItemForm.reportRecipients.$invalid">
+                  Please provide valid email address. You can enter multiple email address separated by a comma ','
+                </p>
+              <button
+                ng-disabled="disableInputElements"
+                class="crud_buttons"
+                type="button"
+                class="remove"
+                ng-click="removeRecipients($index)">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+              </button>
+            </ng-form>
+          </div>
+          <div
+            class="row add-recipient-style"
+            >
+            <button
+              ng-show="recipientsList.length < 65 && userGroups.length > 1"
+              class="add-new-field"
+              type="button"
+              ng-click="addRecipients()">
+              <span>Add another field</span>
+              <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
     </form>
   </div>
 </report-app>

@@ -11,6 +11,7 @@
   <div class="agg-table-paginated"
        ng-class="{'show-less-chars':isMatrix && printReport && isCollapseTimeHeaders}">
     <table class="table table-condensed"
+           ng-class="{'table-condensed-print-report': printReport}"
            style="page-break-inside:auto">
       <thead data-test-subj="paginated-table-header"
              style="display:table-header-group;">

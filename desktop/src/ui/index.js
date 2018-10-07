@@ -69,6 +69,7 @@ export default async (kbnServer, server, config) => {
             'shipperUrl': req.headers.shipper_url,
             'tenantId': req.headers.tenant_id,
             'buId': req.headers.bu_id,
+            'searchString': req.headers.search_string
           };
 
           await reply.renderApp(app, vunetPayload);
@@ -102,6 +103,7 @@ export default async (kbnServer, server, config) => {
       shipperUrl: vunetPayload.shipperUrl,
       tenantId: vunetPayload.tenantId,
       buId: vunetPayload.buId,
+      searchString: vunetPayload.searchString,
       translations: translations,
       uiSettings: await props({
         defaults: uiSettings.getDefaults(),

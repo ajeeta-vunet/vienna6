@@ -22,6 +22,26 @@
     saved-object="opts.reportcfg"
   ></saved-object-save-as-check-box>
 
+  <div class="kuiVerticalRhythm">
+    <label class="kuiCheckBoxLabel kuiVerticalRhythmSmall">
+      <input
+        class="kuiCheckBox"
+        type="checkbox"
+        ng-model="opts.reportcfg.timeRestore"
+        ng-checked="opts.reportcfg.timeRestore"
+        data-test-subj="storeTimeWithReport"
+      >
+
+      <span class="kuiCheckBoxLabel__text">
+        Store time with report
+      </span>
+    </label>
+
+    <div class="kuiLocalDropdownFormNote kuiVerticalRhythmSmall">
+      This changes the time filter to the currently selected time each time this report is loaded.
+    </div>
+  </div>
+
   <rbac-user-role allowed-roles="opts.allowedRoles">
   </rbac-user-role>
 

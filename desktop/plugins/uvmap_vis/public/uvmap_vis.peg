@@ -7,12 +7,21 @@
  connected_list		
  = connected_list:connected* {return {connected_list}}
  
- connected
+connected
+ = connected_with_name / connected_wo_name
+ 
+ connected_with_name
+ = connected:connected_syntax_with_name newline {return {connected}}
+
+ connected_wo_name
  = connected:connected_syntax newline {return {connected}}
  
  connected_syntax
  = from:Variable whitespace "isconnectedto" whitespace to:Variable { return {from:from, to:to}}
 
+ connected_syntax_with_name
+ = from:Variable whitespace "isconnectedto" whitespace to:Variable whitespace "name" whitespace name:Variable { return {from:from, to:to, name:name}}
+ 
  node_type_with_dashboard
  = node_type:node_type_syntax_with_dashboard newline {return {node_type}}
  
@@ -26,13 +35,13 @@
  = node:Variable whitespace "name" whitespace name:Variable whitespace "type" whitespace type:Variable whitespace "x" whitespace x:Number whitespace "y" whitespace y:Number { return {type:type, name:name, node:node, x:x, y:y}}
  
  Number
- = v:([0-9-]*) {return {value:v.join("")}}
+ = v:([0-9-]+) {return {value:v.join("")}}
 
  Variable
- = v:([a-zA-Z0-9._-]*) {return {value:v.join("")}}
+ = v:([a-zA-Z0-9._-]+) {return {value:v.join("")}}
 
  ipaddress
- = v:([0-9.]*) {return {value:v.join("")}}
+ = v:([0-9.]+) {return {value:v.join("")}}
 
  whitespace
  = [ \t]*

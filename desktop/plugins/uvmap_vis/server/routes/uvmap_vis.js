@@ -13,12 +13,12 @@ export default function (server) {
    * This function is called to create a link with the passed information. It
    * also adds the created object into the passed allLinks list.
    */
-  function createLink(linkId, fromNodeId, toNodeId, allLinks) {
+  function createLink(linkId, fromNodeId, toNodeId, allLinks, edgeName) {
     const linkObj = {};
     linkObj.id = linkId;
     linkObj.from = fromNodeId;
     linkObj.to = toNodeId;
-    linkObj.label = '';
+    linkObj.label = edgeName;
     linkObj.color = '#0D8EFF';
     linkObj.font = {};
     linkObj.font.multi = 'html';
@@ -35,7 +35,7 @@ export default function (server) {
    * If the metric value is not in the configured range, black
    * color is used for the metric node label.
    */
-  function getColorCodedMetricLabel(colorSchemaDict, label, dataValue) {
+  function getColorCodedMetricLabel(colorSchemaDict, label, dataValue, unit) {
 
     let nodeLabel = '';
     let startTag = '<code>';
@@ -56,7 +56,7 @@ export default function (server) {
         // When the dataValue for a metric matches the
         // metric color schema configuration, We set the
         // node label and break the for loop.
-        nodeLabel = '\n' + startTag + label + ':' + dataValue + endTag;
+        nodeLabel = '\n' + startTag + label + ': ' + dataValue + unit + endTag;
         return false;
       }
     });
@@ -64,9 +64,170 @@ export default function (server) {
     // If the data value for the label is not in range
     // set black color for the node label.
     if (nodeLabel === '') {
-      nodeLabel = '\n' + startTag + label + ':' + dataValue + endTag;
+      nodeLabel = '\n' + startTag + label + ': ' + dataValue + unit + endTag;
     }
     return nodeLabel;
+  }
+
+  // This function returns the color based on the tags
+  function getColorForLink(linkLabel) {
+    let labelColor = '#0D8EFF';
+
+    if (_.includes(linkLabel, '<b>') && _.includes(linkLabel, '<i>')) {
+      labelColor = 'Red';
+    } else if (_.includes(linkLabel, '<i>')) {
+      labelColor = 'Green';
+    } else if (_.includes(linkLabel, '<b>')) {
+      labelColor = 'Orange';
+    }
+
+    return labelColor;
+  }
+
+  // Function returns list of duplicate items in an array.
+  function getDuplicate(labelList) {
+    const uniqueList = [];
+    const duplicateList = [];
+
+    _.forEach(labelList, function (item) {
+      if (!uniqueList.includes(item)) {
+        uniqueList.push(item);
+      } else {
+        duplicateList.push(item);
+      }
+    });
+
+    return duplicateList;
+  }
+
+  // Function to throw an error if name for node or link
+  // has occurred more than once.
+  function checkDuplicateName(allNodes, allLinks, reply) {
+    // If node name and link name is same
+    // then we need to throw an error
+    const nodeLabelList = [];
+    const linkLabellist = [];
+
+    // List of node labels.
+    _.forEach(allNodes, function (nodeObj) {
+      nodeLabelList.push(nodeObj.label);
+    });
+
+    // List of Link labels.
+    _.forEach(allLinks, function (linkObj) {
+      if (linkObj.label !== '') {
+        linkLabellist.push(linkObj.label);
+      }
+    });
+
+    const sameNodeLinkName = _.intersection(nodeLabelList, linkLabellist);
+
+    // Displaying error if node name and link name, Node-Node or Link-Link name is same.
+    if (sameNodeLinkName.length > 0) {
+      // For node and link names are same
+      replyWithError('Name: ' + sameNodeLinkName + ' used by both Node as well as Link. Please specify unique name', reply);
+    } else if (nodeLabelList.length !== _.uniq(nodeLabelList).length) {
+      // For duplicate node names.
+      const errorForNodeLabel = getDuplicate(nodeLabelList);
+      replyWithError('Node name/names ' + errorForNodeLabel + ' is/are already used for other node. Please use different node name',
+        reply);
+    } else if (linkLabellist.length !== _.uniq(linkLabellist).length) {
+      // For duplicate link names.
+      const errorForLinkLabel = getDuplicate(linkLabellist);
+      replyWithError('Link name/names ' + errorForLinkLabel + ' is/are already used for other link. Please use different link name',
+        reply);
+    }
+    return;
+  }
+
+  // Function to display the metrics on Links or Nodes.
+  function getResourceLabel(allresource, sheet, request, colorSchemaDict, isLinkObj) {
+    const resourceLabelList = [];
+
+    _.forEach(allresource, function (resourceObj) {
+      let dataValue;
+      let data = '';
+
+      // Here we are trying to map the received ES response of
+      // metrics to the nodes or Links. We check the node-label or link-label in the
+      // returned instance's label, if its available, we assume
+      // that the two are connected and use this metric to update
+      // the node label or link label.
+      _.map(sheet[0].list, function (instance) {
+        let resourceLabel = '';
+        let unit = '';
+        const splitInstanceLabel = instance.label.split('>');
+        const resourceName = splitInstanceLabel[0];
+        const label = splitInstanceLabel[1];
+        const hasUnitVal = splitInstanceLabel[2];
+
+        // to display metric for a perticular node or link
+        // checking label has configured and node or link label.
+        if (resourceName === resourceObj.label) {
+          let queryList = request.payload.sheet[0];
+          queryList = request.payload.sheet[0].split('),');
+
+          // Get the dataValue by iterating through queryList
+          _.each(queryList, function (query) {
+
+            // For metric count and sum we are addingup two buckets.
+            if ((_.includes(query, 'metric=count') || (_.includes(query, 'metric=sum')))
+            && _.includes(query, instance.label) && (instance.data.length === 2)) {
+              dataValue = instance.data[0][1] + instance.data[1][1];
+              return false;
+            } else {
+              dataValue = instance.data[0][1];
+            }
+          });
+
+          if (typeof dataValue === 'number') {
+            // If its a float, we use only two decimal points
+            if (Math.round(dataValue) !== dataValue) {
+              dataValue = parseFloat(dataValue).toFixed(2);
+            }
+          }
+
+          // Get the unit if it is specified in the configuration
+          if (hasUnitVal !== undefined) {
+            unit = hasUnitVal;
+          }
+
+          // Check if label exists as a metric in the
+          // metric dictionary look up. If exists
+          // call the function 'getColorCodedMetricLabel'
+          // to get the colored metric node label.
+          if (colorSchemaDict.hasOwnProperty(label)) {
+            resourceLabel = getColorCodedMetricLabel(colorSchemaDict[label], label, dataValue, unit);
+
+            // For link object get color for connected links.
+            if (isLinkObj === true) {
+              // color the link with first metric's color.
+              // If first metric has not colored then it will be default color.
+              if (!resourceLabelList.includes(resourceObj.label)) {
+                resourceObj.color = getColorForLink(resourceLabel);
+              }
+            }
+
+          } else {
+            // If color schema is not configured for a metric, we
+            // show the node labels for this metric in black.
+            resourceLabel = '\n<code>' + label + ':' + dataValue + '</code>';
+          }
+
+          data = data + resourceLabel;
+          // Pushing all resource objects label name to the list.
+          resourceLabelList.push(resourceObj.label);
+        }
+      });
+
+      // Now update the resourceObj label
+      // For linkObj don't display Link name.
+      if (isLinkObj === true) {
+        resourceObj.label = data;
+      } else {
+        resourceObj.label = '<code>' + resourceObj.label + '</code>' + '\n' + data;
+      }
+    });
   }
 
   /*
@@ -149,6 +310,7 @@ export default function (server) {
       let fromNodeId;
       let fromNode;
       let linkId = 1;
+      let edgeName = '';
 
       // pathvislist contains the list of objects created after grammar
       // parsing. It contains the nodes and their information..
@@ -156,7 +318,8 @@ export default function (server) {
       // For 'isconnectedto', it will provide following:
       // {"connected": {
       //       "from":{"value":"10.10.10.1"},
-      //       "to":{"value":"11.11.11.1"}
+      //       "to":{"value":"11.11.11.1"},
+      //       "name": {"value": "edge name"} // edge name is optional.
       //    }
       // },
       // For 'attributes', it will provide following:
@@ -181,6 +344,11 @@ export default function (server) {
           let fromNodeObj = {};
           toNode = connect.connected.to.value;
           fromNode = connect.connected.from.value;
+
+          // If connection has name then assign name to edgeName.
+          if (connect.connected.name) {
+            edgeName = connect.connected.name.value;
+          }
 
           // Check if the node is already seen or not...
           if(toNode in allNodesDict) {
@@ -209,7 +377,8 @@ export default function (server) {
           fromNodeId = fromNodeObj.id;
 
           // Create the link..
-          const linkObj = createLink(linkId, fromNodeId, toNodeId, allLinks);
+          const linkObj = createLink(linkId, fromNodeId, toNodeId, allLinks, edgeName);
+          edgeName = '';
           console.log('Adding node object');
           console.log(fromNodeObj);
           console.log(toNodeObj);
@@ -239,6 +408,9 @@ export default function (server) {
         }
       });
 
+      // Check node or link has duplicate name.
+      checkDuplicateName(allNodes, allLinks, reply);
+
       // For metric collection, we use ES queries similar to Timelion.. Let
       // us use that by invoking required functions.
       const timelionDefaults = require('../../../../src/core_plugins/timelion/server/lib/get_namespaced_settings')();
@@ -264,59 +436,11 @@ export default function (server) {
       }
 
       return Promise.all(sheet).then(function (sheet) {
-        _.forEach(allNodes, function (nodeObj) {
-          let data = '';
-          // Here we are trying to map the received ES response of
-          // metrics to the nodes. We check the node-label in the
-          // returned instance's label, if its available, we assume
-          // that the two are connected and use this metric to update
-          // the node label.
-          _.map(sheet[0].list, function (instance) {
-            let dataValue;
-            if (instance.label.split('>')[0] === nodeObj.label) {
-              let queryList = request.payload.sheet[0];
-              queryList = request.payload.sheet[0].split('),');
-              _.each(queryList, function (query) {
-                // For metric count and sum we are adding the 2 buckets.
-                // currently we not supporting for unique count
-                if ((_.includes(query, 'metric=count') ||
-                      (_.includes(query, 'metric=sum'))) &&
-                    _.includes(query, instance.label) &&
-                    (instance.data.length === 2)) {
-                  dataValue = instance.data[0][1] + instance.data[1][1];
-                  return false;
-                } else {
-                  dataValue = instance.data[0][1];
-                }
-              });
-              if (typeof dataValue === 'number') {
-                // If its a float, we use only two decimal points
-                if (Math.round(dataValue) !== dataValue) {
-                  dataValue = parseFloat(dataValue).toFixed(2);
-                }
-              }
-              const label = instance.label.split('>')[1];
-              let nodeLabel = '';
-              // Check if label exists as a metric in the
-              // metric dictionary look up. If exists
-              // call the function 'getColorCodedMetricLabel'
-              // to get the colored metric node label.
-              if (colorSchemaDict.hasOwnProperty(label)) {
-                nodeLabel = getColorCodedMetricLabel(colorSchemaDict[label], label, dataValue);
-              }
+        // Display the node with label and metrics.
+        getResourceLabel(allNodes, sheet, request, colorSchemaDict, false);
 
-              // If color schema is not configured for a metric, we
-              // show the node labels for this metric in black.
-              else {
-                nodeLabel = '\n<code>' + label + ':' + dataValue + '</code>';
-              }
-              data = data + nodeLabel;
-            }
-          });
-
-          // Now update the nodeObj label
-          nodeObj.label = '<code>' + nodeObj.label + '</code>' + '\n' + data;
-        });
+        // Display the metrics on a link.
+        getResourceLabel(allLinks, sheet, request, colorSchemaDict, true);
 
         // We have built all the required information in allNodes and
         // allLinks, create a data object and send it as repsonse

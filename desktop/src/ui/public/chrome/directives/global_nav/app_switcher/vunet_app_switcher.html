@@ -1,5 +1,5 @@
 <div class="flex-container">
-  <div class="tab-header">INSIGHTS</div>
+  <div class="tab-header">ANALYTICS</div>
   <div class="flex-container global-nav-link-container">
     <global-nav-link
       ng-repeat="link in switcher.links"
@@ -11,5 +11,8 @@
       icon="link.icon"
       label="link.title">
     </global-nav-link>
+    <div class="fullscreen-button" ng-click="toggleFullscreen()">
+      <i class="fa fa-arrows-alt"></i>
+    </div>
   </div>
 </div>

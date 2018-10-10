@@ -2,6 +2,7 @@ import { DomLocationProvider } from 'ui/dom_location';
 import { parse } from 'url';
 import { uiModules } from 'ui/modules';
 import appSwitcherTemplate from './vunet_app_switcher.html';
+import { toggleFullscreen } from 'ui/utils/vunet_fullscreen';
 
 uiModules
   .get('kibana')
@@ -54,6 +55,11 @@ uiModules
         if (!$scope.chrome || !$scope.chrome.getNavLinks) {
           throw new TypeError('appSwitcher directive requires the "chrome" config-object');
         }
+
+        // Function to toggle fullscreen
+        $scope.toggleFullscreen = function () {
+          toggleFullscreen();
+        };
 
         this.links = $scope.chrome.getNavLinks();
 

@@ -14,6 +14,7 @@ import { createTruncateFormat } from '../../common/field_formats/types/truncate'
 import { createBoolFormat } from '../../common/field_formats/types/boolean';
 import { createBitsFormat } from '../../common/field_formats/types/bits';
 import { createTimeFormat } from '../../common/field_formats/types/time';
+import { createCurrencyFormat } from '../../common/field_formats/types/currency';
 
 RegistryFieldFormatsProvider.register(createUrlFormat);
 RegistryFieldFormatsProvider.register(createBytesFormat);
@@ -30,3 +31,4 @@ RegistryFieldFormatsProvider.register(createTruncateFormat);
 RegistryFieldFormatsProvider.register(createBoolFormat);
 RegistryFieldFormatsProvider.register(createBitsFormat);
 RegistryFieldFormatsProvider.register(createTimeFormat);
+RegistryFieldFormatsProvider.register(createCurrencyFormat);

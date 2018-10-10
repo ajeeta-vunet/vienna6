@@ -12,6 +12,7 @@ import { createTruncateFormat } from '../../common/field_formats/types/truncate'
 import { createBoolFormat } from '../../common/field_formats/types/boolean';
 import { createBitsFormat } from '../../common/field_formats/types/bits';
 import { createTimeFormat } from '../../common/field_formats/types/time';
+import { createCurrencyFormat } from '../../common/field_formats/types/currency';
 
 export function registerFieldFormats(server) {
   server.registerFieldFormat(createUrlFormat);
@@ -28,4 +29,5 @@ export function registerFieldFormats(server) {
   server.registerFieldFormat(createBoolFormat);
   server.registerFieldFormat(createBitsFormat);
   server.registerFieldFormat(createTimeFormat);
+  server.registerFieldFormat(createCurrencyFormat);
 }

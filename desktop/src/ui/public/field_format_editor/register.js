@@ -10,6 +10,8 @@ import { truncateEditor } from 'ui/field_format_editor/editors/truncate/truncate
 import { urlEditor } from 'ui/field_format_editor/editors/url/url';
 import { bitsEditor } from 'ui/field_format_editor/editors/bits/bits';
 import { timeEditor } from 'ui/field_format_editor/editors/time/time';
+import { currencyEditor } from 'ui/field_format_editor/editors/currency/currency';
+
 RegistryFieldFormatEditorsProvider.register(bytesEditor);
 RegistryFieldFormatEditorsProvider.register(colorEditor);
 RegistryFieldFormatEditorsProvider.register(dateEditor);
@@ -21,3 +23,4 @@ RegistryFieldFormatEditorsProvider.register(truncateEditor);
 RegistryFieldFormatEditorsProvider.register(urlEditor);
 RegistryFieldFormatEditorsProvider.register(bitsEditor);
 RegistryFieldFormatEditorsProvider.register(timeEditor);
+RegistryFieldFormatEditorsProvider.register(currencyEditor);

@@ -307,6 +307,9 @@
       },
       "version": {
         "type": "integer"
+      },
+      "sampleSize": {
+        "type": "integer"
       }
     }
   },

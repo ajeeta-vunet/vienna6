@@ -3,6 +3,7 @@ export function searchLoader(savedSearches) { // Inject services here
     return savedSearches.get(panel.id)
       .then(function (savedSearch) {
         panel.columns = panel.columns || savedSearch.columns;
+        panel.sampleSize = panel.sampleSize || savedSearch.sampleSize;
         panel.sort = panel.sort || savedSearch.sort;
 
         $scope.$watchCollection('panel.columns', function () {

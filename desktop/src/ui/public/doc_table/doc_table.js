@@ -32,6 +32,7 @@ uiModules.get('kibana')
         onChangeSortOrder: '=?',
         onMoveColumn: '=?',
         onRemoveColumn: '=?',
+        sampleSize: '=',
       },
       link: function ($scope, $el) {
         const notify = new Notifier();
@@ -51,7 +52,7 @@ uiModules.get('kibana')
           $scope.pageOfItems = limitTo($scope.hits, $scope.pager.pageSize, $scope.pager.startIndex);
         };
 
-        $scope.limitedResultsWarning = getLimitedSearchResultsMessage(config.get('discover:sampleSize'));
+        $scope.limitedResultsWarning = getLimitedSearchResultsMessage($scope.sampleSize);
 
         $scope.addRows = function () {
           $scope.limit += 50;
@@ -86,7 +87,7 @@ uiModules.get('kibana')
 
           $scope.indexPattern = $scope.searchSource.get('index');
 
-          $scope.searchSource.size(config.get('discover:sampleSize'));
+          $scope.searchSource.size($scope.sampleSize);
           $scope.searchSource.sort(getSort($scope.sorting, $scope.indexPattern));
 
           // Set the watcher after initialization

@@ -1,4 +1,5 @@
 <form
+  name="myForm"
   role="form"
   ng-submit="opts.saveDataSource()"
 >
@@ -13,7 +14,21 @@
     input-focus="select"
     placeholder="Name this search..."
     aria-label="Name"
+    required
   >
+  <div>
+    <label>
+        Number of entries to display
+      <kbn-tooltip text="Give the size(number of documents to display)">
+        <i class="fa fa-question-circle table-vis-help-hover"></i>
+      </kbn-tooltip>
+      <input
+        type="number"
+        min="1"
+        max="10000"
+        ng-model="opts.sampleSize">
+    </label>
+  </div>
 
   <saved-object-save-as-check-box
     class="kuiVerticalRhythmSmall"
@@ -24,7 +39,7 @@
   </rbac-user-role>
 
   <button
-    ng-disabled="!opts.savedSearch.title"
+    ng-disabled="myForm.$invalid"
     data-test-subj="discoverSaveSearchButton"
     type="submit"
     class="kuiButton kuiButton--primary kuiVerticalRhythmSmall"

@@ -214,7 +214,6 @@ function discoverController(
   };
 
   const $state = $scope.state = new AppState(getStateDefaults());
-
   const getFieldCounts = async () => {
     // the field counts aren't set until we have the data back,
     // so we wait for the fetch to be done before proceeding
@@ -299,6 +298,7 @@ function discoverController(
       query: $scope.searchSource.get('query') || { query: '', language: config.get('search:queryLanguage') },
       sort: getSort.array(savedSearch.sort, $scope.indexPattern, config.get('discover:sort:defaultOrder')),
       columns: savedSearch.columns.length > 0 ? savedSearch.columns : defaultColumns,
+      sampleSize: savedSearch.sampleSize,
       index: $scope.indexPattern.id,
       interval: 'auto',
       filters: _.cloneDeep($scope.searchSource.getOwn('filter'))
@@ -312,9 +312,16 @@ function discoverController(
     $state.save();
   });
 
+  let sampleSize = config.get('discover:sampleSize');
+  if (savedSearch.sampleSize) {
+    sampleSize = savedSearch.sampleSize;
+  } else {
+    savedSearch.sampleSize = sampleSize;
+  }
+
   $scope.opts = {
     // number of records to fetch, then paginate through
-    sampleSize: config.get('discover:sampleSize'),
+    sampleSize: sampleSize,
     timefield: $scope.indexPattern.timeFieldName,
     savedSearch: savedSearch,
     indexPatternList: $route.current.locals.ip.list,
@@ -450,6 +457,7 @@ function discoverController(
         savedSearch.columns = $scope.state.columns;
         savedSearch.sort = $scope.state.sort;
         savedSearch.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
+        savedSearch.sampleSize = $scope.opts.sampleSize;
 
         return savedSearch.save()
           .then(function (id) {

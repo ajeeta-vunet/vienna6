@@ -24,7 +24,8 @@ module.factory('SavedSearch', function (courier) {
         allowedRolesJSON: '',
         hits: 0,
         sort: [],
-        version: 1
+        version: 1,
+        sampleSize: 0
       }
     });
   }
@@ -38,7 +39,8 @@ module.factory('SavedSearch', function (courier) {
     columns: 'keyword',
     allowedRolesJSON: 'text',
     sort: 'keyword',
-    version: 'integer'
+    version: 'integer',
+    sampleSize: 'integer'
   };
 
   // Order these fields to the top, the rest are alphabetical

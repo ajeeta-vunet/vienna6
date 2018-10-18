@@ -153,6 +153,7 @@ module.directive('metricColorSchema', function () {
           scope.min = colorRange.min;
           scope.max = colorRange.max;
           scope.color = colorRange.color;
+          scope.colorCodeOnPercentage = colorRange.colorCodeOnPercentage;
           scope.minError = '';
           scope.maxError = '';
           scope.colorError = '';
@@ -174,7 +175,7 @@ module.directive('metricColorSchema', function () {
         validate(colorSchema);
         if(scope.fieldSpecified) {
           if (!scope.minError && !scope.maxError && !scope.colorError && !scope.matchError) {
-            const { interval, customInterval, customIntervalType, field, match, min, max, color } = scope;
+            const { interval, customInterval, customIntervalType, field, match, min, max, color, colorCodeOnPercentage } = scope;
             const colorSchemaEntry = {
               interval,
               customInterval,
@@ -183,7 +184,8 @@ module.directive('metricColorSchema', function () {
               match,
               min,
               max,
-              color
+              color,
+              colorCodeOnPercentage
             };
             if(editIndex > -1) {
               params.colorSchema[editIndex] = colorSchemaEntry;
@@ -194,11 +196,12 @@ module.directive('metricColorSchema', function () {
           }
         } else {
           if (!scope.minError && !scope.maxError && !scope.colorError) {
-            const { min, max, color } = scope;
+            const { min, max, color, colorCodeOnPercentage } = scope;
             const colorSchemaEntry = {
               min,
               max,
-              color
+              color,
+              colorCodeOnPercentage
             };
             if(editIndex > -1) {
               params.colorSchema[editIndex] = colorSchemaEntry;
@@ -224,6 +227,7 @@ module.directive('metricColorSchema', function () {
         scope.interval = '';
         scope.customInterval = '';
         scope.customIntervalType = '';
+        scope.colorCodeOnPercentage = false;
       };
 
       // This is called when a colorSchema is deleted..

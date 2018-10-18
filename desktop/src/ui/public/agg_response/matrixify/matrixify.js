@@ -431,6 +431,29 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
       }
     });
 
+    // If we have MetricsInPercentage flag enabled, let us iterate on each
+    // row and calculate the sum for each row and update the aggConfigResult
+    if (write.opts.metricsInPercentage) {
+      rows.map(function (row) {
+        let sum = 0;
+
+        // To calculate sum for each row.
+        row.map(function (cell) {
+          if (cell.type === 'metric' && cell.value !== '') {
+            sum += cell.value;
+          }
+        });
+
+        // Assigning each row's sum to cell.sum.
+        row.map(function (cell) {
+          if (cell.type === 'metric' && cell.value !== '') {
+            cell.sum = sum;
+          }
+        });
+      });
+    }
+
+
     // Update the rows and columns in root
     write.root.tables[0].rows = rows;
     write.root.tables[0].columns = columns;

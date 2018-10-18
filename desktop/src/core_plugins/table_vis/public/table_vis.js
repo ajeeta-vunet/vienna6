@@ -1,4 +1,5 @@
 import 'plugins/table_vis/table_vis.less';
+import 'plugins/table_vis/vunet_vis_table.less';
 import 'plugins/table_vis/table_vis_controller';
 import 'plugins/table_vis/table_vis_params';
 import 'ui/agg_table';
@@ -50,7 +51,8 @@ function TableVisTypeProvider(Private) {
         colorSchema: [],
         addSrNumber: false,
         showCumulativeRow: false,
-        cumulativeRowOperation: 'sum'
+        cumulativeRowOperation: 'sum',
+        metricsInPercentage: false
       },
       template: tableVisTemplate,
     },

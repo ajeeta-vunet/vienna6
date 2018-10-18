@@ -7,15 +7,14 @@ const module = uiModules.get('kibana/matrix_vis', ['kibana']);
 
 module.controller('KbnMatrixVisController', function ($scope, Private, timefilter) {
 
-  $scope.interval = {
-    'interval': $scope.vis.params.interval,
-    'custom-interval': $scope.vis.params.customInterval,
-    'custom-interval-type': $scope.vis.params.customIntervalType
-  };
-
   const matrixifyAggResponse = Private(matrixifyAggResponseProvider);
 
   $scope.$watch('esResponse', function (resp) {
+    $scope.interval = {
+      'interval': $scope.vis.params.interval,
+      'custom-interval': $scope.vis.params.customInterval,
+      'custom-interval-type': $scope.vis.params.customIntervalType
+    };
 
     let tableGroups = $scope.tableGroups = null;
     let hasSomeRows = $scope.hasSomeRows = null;
@@ -53,6 +52,7 @@ module.controller('KbnMatrixVisController', function ($scope, Private, timefilte
 
       // If we have MetricsInPercentage flag enabled, let us iterate on each
       // row and calculate the sum for each row and update the aggConfigResult
+      tableGroups.rows = [];
       if (metricsInPercentage) {
         tableGroups.rows.forEach(function (row) {
           let sum = 0;

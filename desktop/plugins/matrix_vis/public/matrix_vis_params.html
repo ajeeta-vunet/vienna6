@@ -11,15 +11,18 @@
     "Show metrics in percentage" feature is disabled, as this is not working as
     expected even in the existing Vienna45. We need to finalize the requirements
     and then we can take it. -->
-  <!-- <div class="checkbox">
+  <div class="checkbox">
     <label>
-        <input type="checkbox" ng-model="vis.params.metricsInPercentage">
+        <input type="checkbox" ng-model="vis.params.metricsInPercentage" ng-required="colorCodeOnPercentageUsed">
         Show metrics in percentage
         <kbn-tooltip text="Enable this to show percentage along with the values in table. Works only for 'Count', 'Sum' or 'Unique Count' metric." placement="right" append-to-body="1">
-            <i class="fa fa-question-circle matrix-vis-metrics-in-percentage"></i>
-         </kbn-tooltip>
-     </label>
-    </div> -->
+            <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
+        </kbn-tooltip>
+    </label>
+  </div>
+  <div class="table-color-range-error" ng-show="colorCodeOnPercentageUsed">
+    Color schema is configured to use percentage values. Pl note that unchecking this field will make Color schema configuration invalid.
+  </div>
   <div class="checkbox">
     <label>
       <input

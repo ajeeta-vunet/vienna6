@@ -7,7 +7,6 @@ import { FilterBarClickHandlerProvider } from 'ui/filter_bar/filter_bar_click_ha
 import { uiModules } from 'ui/modules';
 import tableCellFilterHtml from './partials/table_cell_filter.html';
 import { createCellContents, applyColorSchemaForMatrixVis, applyColorSchemaForTableVis } from 'ui/utils/cell_utils.js';
-import { convertToSeconds } from 'ui/utils/interval_utils.js';
 const module = uiModules.get('kibana');
 
 module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private, timefilter) {
@@ -15,7 +14,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
   return {
     restrict: 'A',
     link: function ($scope, $el, attr) {
-      function addCell($tr, contents, multiplier, configObj) {
+      function addCell($tr, contents, interval, configObj) {
         function createCell() {
           return $(document.createElement('td'));
         }
@@ -61,7 +60,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
           visType = contents.aggConfig.vis.type.name;
           val = contents.value;
 
-          contents = createCellContents(contents, multiplier);
+          contents = createCellContents(contents);
         } else {
           $cell = $cellContent = createCell();
 
@@ -94,12 +93,15 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
           if (contents === '') {
             $cellContent.prepend('&nbsp;');
           } else {
+            let dontAddContent = false;
             if (visType === 'matrix') {
-              applyColorSchemaForMatrixVis(val, $cell, $scope.colorSchema);
+              applyColorSchemaForMatrixVis(val, interval, $cell, $scope.colorSchema, $scope.interval);
             } else if (visType === 'table') {
-              applyColorSchemaForTableVis(val, multiplier, $cell, configObj, $scope);
+              dontAddContent = applyColorSchemaForTableVis(val, interval, $cell, configObj, $scope, $cellContent);
             }
-            $cellContent.prepend(contents);
+            if (!dontAddContent) {
+              $cellContent.prepend(contents);
+            }
           }
         }
 
@@ -144,7 +146,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
 
           row.forEach(function (cell) {
             // Percentage display
-            let multiplier = 1;
+            let interval = 1;
             if (cell instanceof AggConfigResult) {
               // These are the operations supported only on Matrix and
               // Table visualizations.
@@ -187,9 +189,14 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                   if(_.has(bucketConfig, 'buckets'))
                   {
                     const valueInterval = bucketConfig.buckets.getInterval()._milliseconds / 1000;
-                    const customInterval = scope.interval.customInterval + scope.interval.customIntervalType;
-                    const targetInterval = convertToSeconds(scope.interval, customInterval);
-                    multiplier = targetInterval / valueInterval;
+                    interval = valueInterval;
+                  } else {
+                    // We are here means, we have NOT found any timestamp
+                    // field bucket. Hence, we will use the global time
+                    // picker value.
+                    const input = timefilter.getActiveBounds();
+                    const timeDiff = moment.duration(input.max - input.min);
+                    interval = timeDiff._milliseconds / 1000;
                   }
                 }
                 // If we need to show a row containing cumulative
@@ -221,7 +228,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                       && _.has(agg, 'buckets')) {
 
                       const valueInterval = agg.buckets.getInterval()._milliseconds / 1000;
-                      multiplier = valueInterval;
+                      interval =  valueInterval;
                       firstDateTimeBucket = agg;
                     }
                   });
@@ -232,12 +239,12 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                   // picker value.
                   const input = timefilter.getActiveBounds();
                   const timeDiff = moment.duration(input.max - input.min);
-                  multiplier = timeDiff._milliseconds / 1000;
+                  interval = timeDiff._milliseconds / 1000;
                 }
               }
               index += 1;
             }
-            addCell($tr, cell, multiplier, configObj);
+            addCell($tr, cell, interval, configObj);
           });
 
           // Print an additional cell if we are printing an additional serial

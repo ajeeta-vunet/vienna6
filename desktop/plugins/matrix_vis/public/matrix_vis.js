@@ -53,7 +53,8 @@ function MatrixVisTypeProvider(Private) {
         showCumulativeRow: false,
         cumulativeRowOperation: 'sum',
         showCumulativeColumn: false,
-        cumulativeColumnOperation: 'sum'
+        cumulativeColumnOperation: 'sum',
+        colorCodeOnPercentage: false
       },
       template: matrixVisTemplate,
     },

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { TabbedAggResponseWriterProvider } from 'ui/agg_response/tabify/_response_writer';
 import { AggResponseBucketsProvider } from 'ui/agg_response/tabify/_buckets';
+import { calculateSum } from 'ui/utils/vunet_calculate_sum_tabel';
 
 export function AggResponseTabifyProvider(Private, Notifier) {
   const TabbedAggResponseWriter = Private(TabbedAggResponseWriterProvider);
@@ -13,6 +14,13 @@ export function AggResponseTabifyProvider(Private, Notifier) {
     const topLevelBucket = _.assign({}, esResponse.aggregations, {
       doc_count: esResponse.hits.total
     });
+
+    // If metricsInPercentage is true, it means we need to show the metric
+    // along with percentage in brackets.
+
+    if (vis.params && vis.params.metricsInPercentage) {
+      calculateSum(write, topLevelBucket, Private);
+    }
 
     // metricList is used to keep track of metrics for a given row in the
     // table. It is used to create an expression metric

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import $ from 'jquery';
 import { doCumulativeOperation } from 'ui/utils/cumulative_ops.js';
 import { convertToSeconds } from 'ui/utils/interval_utils.js';
 
@@ -37,38 +38,49 @@ function changeBackgroundColor(cell, backgroundColor) {
   cell.css('color', textColor);
 }
 
+let percetangeVal = 0;
+
 // This function is used to find the content to be displayed in the cells.
 // For the "show metrics in %", this calculates the percentage value based on
 // the value and sum of the row / column. Otherwise, the value is returned.
-export function createCellContents(contents, multiplier) {
-  const visType = contents.aggConfig.vis.type.name;
-  let val = contents.value;
-  if (typeof (val) === 'number') {
-    if (visType === 'matrix') {
-      val = val * multiplier;
-    }
-  }
+export function createCellContents(contents) {
+  const val = contents.value;
 
   if (contents.sum !== -1) {
     if (contents.sum === 0) {
       contents = contents.toString('html') + '  (0%)';
     } else {
-      const percetangeVal = Math.abs(val * 100 / contents.sum);
+      percetangeVal = Math.abs(val * 100 / contents.sum);
       contents = contents.toString('html') + '  (' + percetangeVal.toFixed(2) + '%)';
     }
   } else {
     contents = contents.toString('html');
   }
-
   return contents;
 }
 
 // This function is used to apply background colour for the cells based on the
 // value and the color range configuration.
-export function applyColorSchemaForMatrixVis(val, cell, colorSchema) {
+export function applyColorSchemaForMatrixVis(val, interval, cell, colorSchema, scope) {
+  const customInterval = scope.interval.customInterval + scope.interval.customIntervalType;
+  const targetInterval = convertToSeconds(scope.interval.interval, customInterval);
+  const multiplier = targetInterval / interval;
+  const scaledValue = val * multiplier;
+  let bkColor = null;
   if (typeof (val) === 'number') {
     colorSchema.forEach(colorRange => {
-      if ((val >= colorRange.min) && (val <= colorRange.max)) {
+      if (colorRange.colorCodeOnPercentage) {
+
+        if ((percetangeVal >= colorRange.min) && (percetangeVal <= colorRange.max)) {
+          bkColor = colorRange.color;
+        }
+      }
+      else {
+        if ((scaledValue >= colorRange.min) && (scaledValue <= colorRange.max)) {
+          bkColor = colorRange.color;
+        }
+      }
+      if (bkColor) {
         changeBackgroundColor(cell, colorRange.color);
       }
     });
@@ -77,8 +89,9 @@ export function applyColorSchemaForMatrixVis(val, cell, colorSchema) {
 
 // This function is used to set the background color of the cell for the table
 // visualization based on the value and colour range confiuration.
-export function applyColorSchemaForTableVis(val, multiplier, cell, configObj, scope) {
+export function applyColorSchemaForTableVis(val, interval, cell, configObj, scope, $cellContent) {
   const colorSchema =  scope.colorSchema || [];
+  let dontAddContent = false;
   // Let us look for a colorSchema entry which matches the
   // value. If we find one, we will use it as the background
   // color
@@ -89,8 +102,8 @@ export function applyColorSchemaForTableVis(val, multiplier, cell, configObj, sc
     if (colorRange.interval && typeof (val) === 'number') {
       const customInterval = colorRange.customInterval + colorRange.customIntervalType;
       const targetInterval = convertToSeconds(colorRange.interval, customInterval);
-      const newMultiplier = targetInterval / multiplier;
-      scaledValue = (scaledValue * newMultiplier);
+      const multiplier = targetInterval / interval;
+      scaledValue = (scaledValue * multiplier);
     }
     let bkColor = null;
     let matchColorRange = false;
@@ -111,7 +124,7 @@ export function applyColorSchemaForTableVis(val, multiplier, cell, configObj, sc
             }
           }
         } else {
-          matchColorRange = true;
+          matchColorRange = false;
         }
       }
     } else {
@@ -130,14 +143,38 @@ export function applyColorSchemaForTableVis(val, multiplier, cell, configObj, sc
     // If we need to match the val to the colorRange min and
     // max.
     if (matchColorRange) {
-      if ((scaledValue >= colorRange.min) && (scaledValue <= colorRange.max)) {
-        bkColor = colorRange.color;
+      if (colorRange.colorCodeOnPercentage) {
+        if ((percetangeVal >= colorRange.min) && (percetangeVal <= colorRange.max)) {
+          bkColor = colorRange.color;
+        }
+      } else {
+        if ((scaledValue >= colorRange.min) && (scaledValue <= colorRange.max)) {
+          bkColor = colorRange.color;
+        }
       }
     }
     if (bkColor) {
-      changeBackgroundColor(cell, colorRange.color);
+
+      // Show cross and tick image
+      // if color matches #0f0f0f or #0e0e0e
+      if (bkColor === '#0f0f0f') {
+        dontAddContent = true;
+        $cellContent = $(document.createElement('img'));
+        $cellContent.attr('src', '/ui/vienna_images/red_cross.png');
+        $cellContent.addClass('vienna-table-cell-image-size');
+      } else if (bkColor === '#0e0e0e') {
+        dontAddContent = true;
+        $cellContent = $(document.createElement('img'));
+        $cellContent.attr('src', '/ui/vienna_images/green_tick.png');
+        $cellContent.addClass('vienna-table-cell-image-size');
+      } else {
+        changeBackgroundColor(cell, colorRange.color);
+      }
     }
+    $cellContent.appendTo(cell);
   });
+
+  return dontAddContent;
 }
 
 // This function is used to add the row / column cumulative result based on the

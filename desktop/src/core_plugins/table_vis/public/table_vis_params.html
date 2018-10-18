@@ -1,4 +1,4 @@
-<div class="kuiSideBarSection">
+<div class="kuiSideBarSection table-left-sidebar">
   <div class="form-group">
     <label for="datatableVisualizationPerPage">Per Page</label>
     <input
@@ -35,6 +35,22 @@
       >
     Calculate metrics for every bucket/level
     </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input
+        type="checkbox"
+        ng-model="vis.params.metricsInPercentage"
+        ng-required="colorCodeOnPercentageUsed">
+        Show metrics in percentage
+        <kbn-tooltip text="Enable this to show percentage along with the values in table. Works only for 'Count', 'Sum' or 'Unique Count' metric." placement="right" append-to-body="1">
+          <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
+        </kbn-tooltip>
+    </label>
+  </div>
+  <div class="table-color-range-error"
+    ng-show="colorCodeOnPercentageUsed">
+    Color schema is configured to use percentage values. Pl note that unchecking this field will make Color schema configuration invalid.
   </div>
   <div class="checkbox">
     <label>

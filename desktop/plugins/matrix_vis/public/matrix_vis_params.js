@@ -1,5 +1,6 @@
 import { uiModules } from 'ui/modules';
 import matrixVisParamsTemplate from 'plugins/matrix_vis/matrix_vis_params.html';
+import { updateColorCodeOnPercentage } from 'ui/utils/vunet_colorcode_on_percentage';
 
 uiModules.get('kibana/matrix_vis')
   .directive('matrixVisParams', function () {
@@ -16,6 +17,10 @@ uiModules.get('kibana/matrix_vis')
         $scope.$watch('vis.aggs[0].type.title', function () {
           $scope.metricTypeSelected = $scope.vis.aggs[0].type.title;
         });
+
+        // updates colorCodeOnPercentageUsed based on user
+        // configuration of metricsInPercentage
+        updateColorCodeOnPercentage($scope);
       }
     };
   });

@@ -92,6 +92,7 @@
     <label>Color</label>
     <input
       colorpicker
+      colorpicker-parent="true"
       type="text"
       ng-model="color"
       class="form-control"
@@ -131,6 +132,15 @@
       />
       <div class="table-color-range-error">{{maxError}}</div>
       <br/>
+    </div>
+    <div class="checkbox">
+      <label class="zero-padding-left">
+        <input type="checkbox" ng-model="colorCodeOnPercentage" >
+        Enable color coding for percentage value
+      <kbn-tooltip text="Enable this to change the background color of cells based on percentage value." placement="right" append-to-body="1">
+         <i class="fa fa-question-circle table-vis-help-hover"></i>
+      </kbn-tooltip>
+      </label>
     </div>
     <div
       class="table-color-range-error"
@@ -227,4 +237,4 @@
       </tbody>
     </table>
   </div>
-</div
+</div>

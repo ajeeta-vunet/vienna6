@@ -3,6 +3,7 @@ import AggConfigResult from 'ui/vis/agg_config_result';
 import { AggResponseTabifyTableProvider } from 'ui/agg_response/tabify/_table';
 import { AggResponseTabifyTableGroupProvider } from 'ui/agg_response/tabify/_table_group';
 import { AggResponseGetColumnsProvider } from 'ui/agg_response/tabify/_get_columns';
+import { updateSumForPercentage, calcSumForPercentage } from 'ui/agg_response/tabify/vunet_response_writer';
 
 export function TabbedAggResponseWriterProvider(Private) {
   const Table = Private(AggResponseTabifyTableProvider);
@@ -25,6 +26,15 @@ export function TabbedAggResponseWriterProvider(Private) {
     this.vis = vis;
     this.opts = opts || {};
     this.rowBuffer = [];
+
+    // This buffer is similar to rowBuffer and contain data for each row.
+    // This is used while we calculate sum for a given term
+    this.calcSumRowBuffer = [];
+
+    // This dictionary holds the sum for each term. It is populated when
+    // sum is calculated and it is later used to populate the sum in
+    // aggConfigResult which is later used to calculate and display %age
+    this.sumDict = {};
 
     const visIsHier = vis.isHierarchical();
 
@@ -218,6 +228,7 @@ export function TabbedAggResponseWriterProvider(Private) {
   TabbedAggResponseWriter.prototype.cell = function (agg, value, block) {
     if (this.asAggConfigResults) {
       value = new AggConfigResult(agg, this.acrStack[0], value, value);
+      updateSumForPercentage(this, agg, value);
     }
 
     const staskResult = this.asAggConfigResults && value.type === 'bucket';
@@ -233,6 +244,9 @@ export function TabbedAggResponseWriterProvider(Private) {
     return value;
   };
 
+  TabbedAggResponseWriter.prototype.calcSum = function (agg, value, block) {
+    calcSumForPercentage(this, agg, value, block);
+  };
   /**
    * Create a new row by reading the row buffer. This will do nothing if
    * the row is incomplete and the vis this data came from is NOT flagged as

@@ -44,6 +44,8 @@ export class SearchEmbeddableFactory extends EmbeddableFactory {
         searchScope.sort = searchScope.panel.sort || searchScope.savedObj.sort;
 
         searchScope.sampleSize = searchScope.panel.sampleSize || searchScope.savedObj.sampleSize;
+        const _customColumn = searchScope.panel.customColumns || searchScope.savedObj.customColumns;
+        searchScope.customColumns = (typeof _customColumn === 'string') ? JSON.parse(_customColumn) : _customColumn;
 
         const uiState = savedObject.uiStateJSON ? JSON.parse(savedObject.uiStateJSON) : {};
         searchScope.uiState = container.createChildUistate(getPersistedStateId(panel), uiState);

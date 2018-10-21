@@ -9,7 +9,10 @@
       class="table-header-name"
       data-test-subj="docTableHeader-{{name}}"
     >
-      {{name | shortDots}}
+    <span ng-hide="name === editField.name" ng-dblclick="showEdit(name)"> {{getColumnName(name) | shortDots}}</span>
+    <form ng-submit="doneEditing()" ng-show="name === editField.name">
+     <input class="editable" ng-model="editField.customName">
+    </form>
       <button
         data-test-subj="docTableHeaderFieldSort_{{name}}"
         id="docTableHeaderFieldSort{{name}}"

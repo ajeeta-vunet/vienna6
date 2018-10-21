@@ -1,3 +1,4 @@
+// Add the column name to list as it added to search table
 export function addColumn(columns, columnName) {
   if (columns.includes(columnName)) {
     return;
@@ -5,7 +6,7 @@ export function addColumn(columns, columnName) {
 
   columns.push(columnName);
 }
-
+// Remove the column name to list as it removed from search table
 export function removeColumn(columns, columnName) {
   if (!columns.includes(columnName)) {
     return;
@@ -14,6 +15,17 @@ export function removeColumn(columns, columnName) {
   columns.splice(columns.indexOf(columnName), 1);
 }
 
+// Remove the custom column name once the column removed from list
+export function removeCustomColumn(customColumns, columnName) {
+  const customColumnsIndex = customColumns.findIndex(function (customColumn) {
+    return Object.keys(customColumn)[0] === columnName;
+  });
+
+  if (customColumnsIndex >= 0) {
+    customColumns.splice(customColumnsIndex, 1);
+  }
+}
+// Move the column left or right in search table
 export function moveColumn(columns, columnName, newIndex) {
   if (newIndex < 0) {
     return;

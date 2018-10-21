@@ -4,6 +4,9 @@ export function searchLoader(savedSearches) { // Inject services here
       .then(function (savedSearch) {
         panel.columns = panel.columns || savedSearch.columns;
         panel.sampleSize = panel.sampleSize || savedSearch.sampleSize;
+        panel.customColumns = panel.customColumns || (typeof savedSearch.customColumns === 'string') ?
+          JSON.parse(savedSearch.customColumns) :
+          savedSearch.customColumns;
         panel.sort = panel.sort || savedSearch.sort;
 
         $scope.$watchCollection('panel.columns', function () {

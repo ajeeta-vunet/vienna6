@@ -19,6 +19,7 @@ uiModules.get('kibana')
       scope: {
         sorting: '=',
         columns: '=',
+        customColumns: '=',
         hits: '=?', // You really want either hits & indexPattern, OR searchSource
         indexPattern: '=?',
         searchSource: '=?',

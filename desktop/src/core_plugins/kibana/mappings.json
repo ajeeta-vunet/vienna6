@@ -283,6 +283,9 @@
       "columns": {
         "type": "keyword"
       },
+      "customColumns": {
+        "type": "keyword"
+      },
       "description": {
         "type": "text"
       },

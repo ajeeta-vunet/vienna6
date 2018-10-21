@@ -299,6 +299,7 @@ function discoverController(
       sort: getSort.array(savedSearch.sort, $scope.indexPattern, config.get('discover:sort:defaultOrder')),
       columns: savedSearch.columns.length > 0 ? savedSearch.columns : defaultColumns,
       sampleSize: savedSearch.sampleSize,
+      customColumns: (typeof savedSearch.customColumns === 'string') ? JSON.parse(savedSearch.customColumns) : savedSearch.customColumns,
       index: $scope.indexPattern.id,
       interval: 'auto',
       filters: _.cloneDeep($scope.searchSource.getOwn('filter'))
@@ -309,6 +310,12 @@ function discoverController(
   $state.sort = getSort.array($state.sort, $scope.indexPattern);
 
   $scope.$watchCollection('state.columns', function () {
+    $state.save();
+  });
+
+  // watch the custom column separetly
+  // as is not working with 'state.columns' as multiwatch
+  $scope.$watchCollection('state.customColumns', function () {
     $state.save();
   });
 
@@ -458,6 +465,7 @@ function discoverController(
         savedSearch.sort = $scope.state.sort;
         savedSearch.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
         savedSearch.sampleSize = $scope.opts.sampleSize;
+        savedSearch.customColumns = angular.toJson($scope.state.customColumns);
 
         return savedSearch.save()
           .then(function (id) {
@@ -669,6 +677,7 @@ function discoverController(
   $scope.removeColumn = function removeColumn(columnName) {
     $scope.indexPattern.popularizeField(columnName, 1);
     columnActions.removeColumn($scope.state.columns, columnName);
+    columnActions.removeCustomColumn($scope.state.customColumns, columnName);
   };
 
   $scope.moveColumn = function moveColumn(columnName, newIndex) {

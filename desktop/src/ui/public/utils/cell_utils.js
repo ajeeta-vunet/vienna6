@@ -39,6 +39,20 @@ function changeBackgroundColor(cell, backgroundColor) {
 }
 
 let percetangeVal = 0;
+// This function replace the content of cell with image
+// based on specif background color
+// #0f0f0f - red_cross.png
+// #0e0e0e - green_tick.png
+function applyBackgroundImage(backgroundColor) {
+
+  let _img = '';
+  if (backgroundColor === '#0f0f0f') {
+    _img = '<img src="/ui/vienna_images/red_cross.png" class="vienna-table-cell-image-size">';
+  } else if (backgroundColor === '#0e0e0e') {
+    _img = '<img src="/ui/vienna_images/green_tick.png" class="vienna-table-cell-image-size">';
+  }
+  return _img;
+}
 
 // This function is used to find the content to be displayed in the cells.
 // For the "show metrics in %", this calculates the percentage value based on
@@ -61,36 +75,63 @@ export function createCellContents(contents) {
 
 // This function is used to apply background colour for the cells based on the
 // value and the color range configuration.
-export function applyColorSchemaForMatrixVis(val, interval, cell, colorSchema, scope) {
-  const customInterval = scope.interval.customInterval + scope.interval.customIntervalType;
-  const targetInterval = convertToSeconds(scope.interval.interval, customInterval);
-  const multiplier = targetInterval / interval;
-  const scaledValue = val * multiplier;
-  let bkColor = null;
+// Also is used to replace the backgound color with images.
+export function applyColorSchemaForMatrixVis(val, cell, colorSchema, columnTitle, $cellContent, contents, interval, scope) {
   if (typeof (val) === 'number') {
     colorSchema.forEach(colorRange => {
-      if (colorRange.colorCodeOnPercentage) {
+      let isChangeBackgroundColor = false;
+      let scaledValue = val;
+      // If the value is numeric and a time interval is specified
+      // we need scale the value suitably.
+      if (colorRange.interval) {
+        const customInterval = scope.interval.customInterval + scope.interval.customIntervalType;
+        const targetInterval = convertToSeconds(scope.interval.interval, customInterval);
+        const multiplier = targetInterval / interval;
+        scaledValue = val * multiplier;
+      }
+      if ((val >= colorRange.min) && (val <= colorRange.max)) {
+        if (colorRange.column.managed) {
+          if (colorRange.column.action === 'include' && colorRange.column.selected.includes(columnTitle)) {
+            isChangeBackgroundColor = true;
+          } else if (colorRange.column.action === 'exclude' && !colorRange.column.selected.includes(columnTitle)) {
+            isChangeBackgroundColor = true;
+          }
+        } else {
+          isChangeBackgroundColor = true;
+        }
+      }
+      if (isChangeBackgroundColor) {
+        // If color is specific to either '#0f0f0f' or '#0e0e0e0'
+        // will be replced by imgae
+        // #0f0f0f - Red-Cross.png and
+        // #0e0e0e - green-tick.png
+        if (colorRange.color === '#0f0f0f' || colorRange.color === '#0e0e0e') {
+          contents = applyBackgroundImage(colorRange.color);
+        } else {
+          // If color code on percentage is checked
+          // apply color only for the cell which is in the range.
+          if (colorRange.colorCodeOnPercentage) {
+            if ((percetangeVal >= colorRange.min) && (percetangeVal <= colorRange.max)) {
+              changeBackgroundColor(cell, colorRange.color);
+            }
+          } else {
+            // Otherwise apply color on cell based on the value
+            if ((scaledValue >= colorRange.min) && (scaledValue <= colorRange.max)) {
+              changeBackgroundColor(cell, colorRange.color);
+            }
+          }
 
-        if ((percetangeVal >= colorRange.min) && (percetangeVal <= colorRange.max)) {
-          bkColor = colorRange.color;
         }
-      }
-      else {
-        if ((scaledValue >= colorRange.min) && (scaledValue <= colorRange.max)) {
-          bkColor = colorRange.color;
-        }
-      }
-      if (bkColor) {
-        changeBackgroundColor(cell, colorRange.color);
       }
     });
   }
+  $cellContent.prepend(contents);
 }
 
 // This function is used to set the background color of the cell for the table
 // visualization based on the value and colour range confiuration.
-export function applyColorSchemaForTableVis(val, interval, cell, configObj, scope, $cellContent) {
-  const colorSchema =  scope.colorSchema || [];
+export function applyColorSchemaForTableVis(val, interval, cell, configObj, scope, $cellContent, contents) {
+  const colorSchema = scope.colorSchema || [];
   let dontAddContent = false;
   // Let us look for a colorSchema entry which matches the
   // value. If we find one, we will use it as the background
@@ -157,16 +198,9 @@ export function applyColorSchemaForTableVis(val, interval, cell, configObj, scop
 
       // Show cross and tick image
       // if color matches #0f0f0f or #0e0e0e
-      if (bkColor === '#0f0f0f') {
+      if (bkColor === '#0f0f0f' || bkColor === '#0e0e0e') {
         dontAddContent = true;
-        $cellContent = $(document.createElement('img'));
-        $cellContent.attr('src', '/ui/vienna_images/red_cross.png');
-        $cellContent.addClass('vienna-table-cell-image-size');
-      } else if (bkColor === '#0e0e0e') {
-        dontAddContent = true;
-        $cellContent = $(document.createElement('img'));
-        $cellContent.attr('src', '/ui/vienna_images/green_tick.png');
-        $cellContent.addClass('vienna-table-cell-image-size');
+        $cellContent =  $(applyBackgroundImage(bkColor));// return a valid jQuery object
       } else {
         changeBackgroundColor(cell, colorRange.color);
       }
@@ -174,7 +208,9 @@ export function applyColorSchemaForTableVis(val, interval, cell, configObj, scop
     $cellContent.appendTo(cell);
   });
 
-  return dontAddContent;
+  if (!dontAddContent) {
+    $cellContent.prepend(contents);
+  }
 }
 
 // This function is used to add the row / column cumulative result based on the
@@ -184,7 +220,7 @@ export function addSrNumberAndTotalsRow(row, rowNumber, csvRows, cumulativeRowOp
   results.rowResult = -1;
 
   let rowAsCsv = row.join(csv.separator);
-  if(rowNumber === 0) {
+  if (rowNumber === 0) {
     results.columnResult = [];
   }
 

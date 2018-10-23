@@ -18,13 +18,14 @@
         <tr>
           <th ng-if="addSrNumber">
             <h6 class="zero-margin">Sr. No.</h6>
-          </th>
+          </th> 
           <th scope="col"
               ng-repeat="col in columns"
               ng-click="paginatedTable.sortColumn($index)"
               kbn-accessible-click
               tabindex="0"
-              class="{{ col.class }}">
+              class="{{ col.class }}"
+              ng-show="paginatedTable.checkMatrix(col.show)">
             <span ng-bind="::col.title"></span>
             <kbn-info ng-if="col.info"
                       info="{{ col.info }}"
@@ -44,6 +45,7 @@
         </tr>
       </thead>
       <tbody kbn-rows="page"
+             kbn-cols='columns'
              kbn-rows-min="perPage"></tbody>
       </tbody>
       <tfoot ng-if="showTotal">

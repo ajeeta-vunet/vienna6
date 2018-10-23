@@ -1,0 +1,48 @@
+<label>
+  <input class="enable-matrix-columns-checkbox" 
+         type="checkbox" 
+         name="columnManaged" 
+         ng-model="managed"> 
+  Manage columns
+  <kbn-tooltip 
+    text="Manage inclusion and exclusion of columns from color schema"
+    placement="right" 
+    append-to-body="1">
+    <i class="fa fa-question-circle"></i>
+  </kbn-tooltip>
+</label>	
+<div class="time-formatter" ng-show="managed">
+  <div>Action Type
+    <select ng-model="action" class="form-control">
+      <option value="include">Include</option>
+      <option value="exclude">Exclude</option>
+    </select>
+  </div>
+  <div> Add fields
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <div class="input-group">
+            <input 
+              class="form-control" 
+              type="text" 
+              name="column" 
+              ng-model="column">
+            <span class="input-group-addon" ng-click="add()">
+              <i class="glyphicon glyphicon-plus-sign"></i>
+            </span>
+          </div>
+        </div>
+      </div>	
+    </div>		
+  </div>
+</div>	
+<div class="selectedColumn" ng-show="managed">
+  <ul>
+    <li ng-repeat="_selected in selected">
+      <span>{{_selected}}</span>
+      <span class="fa fa-trash-o margin-left-7" ng-click="remove($index)"></span>
+      {{$last ? '' : ($index==_selected.length-2) ? '' : ', '}}
+    </li>
+  </ul>	
+</div>

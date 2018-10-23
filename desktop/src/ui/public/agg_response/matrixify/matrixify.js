@@ -431,29 +431,49 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
       }
     });
 
-    // If we have MetricsInPercentage flag enabled, let us iterate on each
-    // row and calculate the sum for each row and update the aggConfigResult
-    if (write.opts.metricsInPercentage) {
+    //stick to default
+    if(!vis.params.collapseManageColumn) {
+      vis.params.selectedColumnsActionType = 'exclude';
+      vis.params.selectedColumns = [];
+    }
+    
+    // If matrix is configured to include/exclude some specific columns
+    if(vis.params.selectedColumnsActionType && vis.params.selectedColumnsActionType !== '') {
+      //map include to true and exclude to false
+      const action = vis.params.selectedColumnsActionType === 'include' ? true : false;
+      //store all the column with action for rows mapping
+      const columnIndex = [];
+      //map column
+      columns.map(function (column, index) {
+        if(index === 0) {
+          //always show first column
+          column.show = true;
+        } else if(vis.params.selectedColumns.includes(column.title)) {
+          //if column is in selected list for action
+          column.show = action;
+          //push index , later will be used for column in rows
+          columnIndex.push(index);
+        } else {
+          //if column is not in selected list for action
+          column.show = !action;
+        }
+      });
+      //map each column inside row
       rows.map(function (row) {
-        let sum = 0;
-
-        // To calculate sum for each row.
-        row.map(function (cell) {
-          if (cell.type === 'metric' && cell.value !== '') {
-            sum += cell.value;
-          }
-        });
-
-        // Assigning each row's sum to cell.sum.
-        row.map(function (cell) {
-          if (cell.type === 'metric' && cell.value !== '') {
-            cell.sum = sum;
+        row.map(function (column, index) {
+          if(index === 0) {
+            //always show first column
+            column.show = true;
+          } else if(columnIndex.includes(index)) {
+            //if index of column in row is in selected list for action
+            column.show = action;
+          } else {
+            //if index of column in row is not in selected list for action
+            column.show = !action;
           }
         });
       });
     }
-
-
     // Update the rows and columns in root
     write.root.tables[0].rows = rows;
     write.root.tables[0].columns = columns;

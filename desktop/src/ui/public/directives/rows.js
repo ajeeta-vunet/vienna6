@@ -14,7 +14,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
   return {
     restrict: 'A',
     link: function ($scope, $el, attr) {
-      function addCell($tr, contents, interval, configObj) {
+      function addCell($tr, contents, interval, configObj, show, columnTitle) {
         function createCell() {
           return $(document.createElement('td'));
         }
@@ -41,6 +41,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
 
         let $cell;
         let $cellContent;
+
+        const _contents = _.clone(contents, true);
 
         let val;
         let visType;
@@ -70,6 +72,18 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             $cell.addClass('numeric-value');
           }
         }
+       
+        //hide the cell(td) if it's marked show:false
+        if (_contents && _contents.show !== undefined && !_contents.show) {
+          $cell.addClass('hide-cell');
+        }
+
+        //hide all the extra row
+        //will show only those row which has data
+        //like if number of rows configured more then the data row
+        if (_contents === '' || (show !== undefined && !show)) {
+          $cell.addClass('hide-cell');
+        }
 
         if (_.isObject(contents)) {
           if (contents.attr) {
@@ -90,21 +104,18 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             $cellContent.attr(contents.attr);
           }
         } else {
-          if (contents === '') {
+          if (contents === ' ') {
             $cellContent.prepend('&nbsp;');
           } else {
-            let dontAddContent = false;
             if (visType === 'matrix') {
-              applyColorSchemaForMatrixVis(val, interval, $cell, $scope.colorSchema, $scope.interval);
+              applyColorSchemaForMatrixVis(val, $cell, $scope.colorSchema, columnTitle,  $cellContent, contents, interval, $scope.interval);
             } else if (visType === 'table') {
-              dontAddContent = applyColorSchemaForTableVis(val, interval, $cell, configObj, $scope, $cellContent);
-            }
-            if (!dontAddContent) {
+              applyColorSchemaForTableVis(val, interval, $cell, configObj, $scope, $cellContent, contents);
+            } else{
               $cellContent.prepend(contents);
             }
           }
         }
-
         $tr.append($cell);
       }
 
@@ -112,7 +123,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         return Math.max(max, row.length);
       }
 
-      function processRows(vals, min, rows, el, scope, timefilter, origRowCount) {
+      function processRows(vals, min, rows, el, scope, timefilter, origRowCount, columns, visType) {
         // Let us calculate the starting serial number, using the current
         // page number and number of rows per page.
         // Current page number is given by vals[0].number
@@ -144,7 +155,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
           let rowFormatter = null;
           let index = 0;
 
-          row.forEach(function (cell) {
+          row.forEach(function (cell, cellIndex) {
             // Percentage display
             let interval = 1;
             if (cell instanceof AggConfigResult) {
@@ -156,7 +167,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                 if (!srNumberAdded) {
                   // Check if we need to add a serial number value.
                   if (cell.aggConfig.vis.params.addSrNumber) {
-                    addCell($tr, serialNumber, 1, null);
+                    addCell($tr, serialNumber, 1, null, undefined, undefined);
                     srAddConfig = true;
                   }
                   serialNumber += 1;
@@ -244,22 +255,22 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
               }
               index += 1;
             }
-            addCell($tr, cell, interval, configObj);
+            addCell($tr, cell, interval, configObj, undefined, columns[cellIndex].title);
           });
 
           // Print an additional cell if we are printing an additional serial
           // number column
           if (index === 0 && srAddConfig && (!showCumulativeRow || cumulativeRowAdded)) {
-            addCell($tr, '', 1, null);
+            addCell($tr, '', 1, null, undefined, undefined);
           }
 
           // If we are printing an additional column with
           // cumulative operation results, we display it here.
           if (showCumulativeColumn) {
             if (index > 0) {
-              addCell($tr, rowFormatter(rowResult), 1, null);
+              addCell($tr, rowFormatter(rowResult), 1, null, undefined, undefined);
             } else {
-              addCell($tr, '', 1, null);
+              addCell($tr, '', 1, null, undefined, undefined);
             }
           }
 
@@ -282,7 +293,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
               columnResult.push(-1);
               columnValueFormatter.push(null);
             }
-            addCumulativeResultRow(srAddConfig, cumulativeRowOperation, columnResult, columnValueFormatter, el);
+            addCumulativeResultRow(srAddConfig, cumulativeRowOperation, columnResult, columnValueFormatter, el, columns, visType, srAddConfig, showCumulativeColumn);
             cumulativeRowAdded = true;
           }
         });
@@ -290,7 +301,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
 
       // This function adds a row which is the result of cumulative operation
       // on rest of the rows.
-      function addCumulativeResultRow(addSrConfig, operation, resultArray, formatterArray, el) {
+      function addCumulativeResultRow(addSrConfig, operation, resultArray, formatterArray, el, columns, visType, srAddConfig, showCumulativeColumn) {
         const $tr = $(document.createElement('tr'));
         $tr.appendTo(el);
         // Add style to this element for phantomjs for reports
@@ -303,8 +314,24 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         // If there is only one value in the result, then
         // we display the header along with value separated by ':'
         if (resultArray.length === 1) {
-          addCell($tr, rowHdr + ' : ' + String(resultArray[0]), 1, null);
+          addCell($tr, rowHdr + ' : ' + String(resultArray[0]), 1, null, undefined, undefined);
           return;
+        }
+
+        //check if vis is matrix and serial number column is configured
+        //then add one object to column at index 0
+        if (visType === 'matrix' && srAddConfig) {
+          columns.splice(0, 0, {
+            show: true
+          });
+        }
+        
+        //check if vis is matrix and cumulative column is configured
+        //then push one object to column because now the result has one more item then columns
+        if (visType === 'matrix' && showCumulativeColumn) {
+          columns.push({
+            show: true
+          });
         }
 
         // resultArray contains value '-1' at all indices where we do NOT
@@ -324,13 +351,19 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             if (columnValue !== -1) {
               hdr += ' : ' + columnValue;
             }
-            addCell($tr, hdr, 1, null);
+            addCell($tr, hdr, 1, null, undefined, undefined);
             headerAdded = true;
           } else {
             if (column >= 0) {
-              addCell($tr, columnValue, 1, null);
+              addCell($tr, columnValue, 1, null, undefined, undefined);
             } else {
-              addCell($tr, '', 1, null);
+              if(visType === 'table') {
+                addCell($tr, ' ', 1, null, undefined, undefined);
+              } else if(visType === 'matrix' && columns[i].show) {
+                addCell($tr, '&nbsp;', 1, null, undefined, undefined);
+              } else {
+                addCell($tr, '', 1, null, undefined, undefined);
+              }
             }
           }
         });
@@ -338,14 +371,20 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
 
       $scope.$watchMulti([
         attr.kbnRows,
-        attr.kbnRowsMin
+        attr.kbnRowsMin,
+        attr.kbnCols
       ], function (vals) {
         let rows = vals[0];
         const min = vals[1];
+        const cols = _.clone(vals[2], true);
         let origRowCount = 0;
+        let visType = '';
 
         if (rows) {
           origRowCount = rows.length;
+          if(rows[0][0] instanceof AggConfigResult) {
+            visType = rows[0][0].aggConfig.vis.type.name;
+          }
         }
 
         $el.empty();
@@ -364,7 +403,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
           _.times(min - rows.length, function () { rows.push(emptyRow); });
         }
 
-        processRows(vals, min, rows, $el, $scope, timefilter, origRowCount);
+        processRows(vals, min, rows, $el, $scope, timefilter, origRowCount, cols, visType);
       });
     }
   };

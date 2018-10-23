@@ -39,6 +39,14 @@ uiModules
           direction: null
         };
 
+        // Show-Hide column only for Matrix
+        self.checkMatrix = function (flag) {
+          if($scope.isMatrix) {
+            return flag;
+          }
+          return true;
+        };
+
         self.sortColumn = function (colIndex, sortDirection = 'asc') {
           const col = $scope.columns[colIndex];
 

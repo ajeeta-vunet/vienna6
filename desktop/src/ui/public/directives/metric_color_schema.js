@@ -24,6 +24,7 @@ module.directive('metricColorSchema', function () {
     },
     link: function (scope) {
 
+      scope.selectedColorColumns = [];
       // This function is called to validate the user input. This validates the
       // ranges
       function validate(colorSchema) {
@@ -71,7 +72,6 @@ module.directive('metricColorSchema', function () {
             }
           }
         }
-
         // Validate Color
         scope.colorError = color ? '' : 'Color is required.';
         if (color) {
@@ -135,7 +135,6 @@ module.directive('metricColorSchema', function () {
       // This function is called when a user wants to edit an existing
       // colorSchema
       scope.editRange = function (index) {
-
         const params = scope.visObj.params;
 
         if (index !== -1) {
@@ -154,6 +153,12 @@ module.directive('metricColorSchema', function () {
           scope.max = colorRange.max;
           scope.color = colorRange.color;
           scope.colorCodeOnPercentage = colorRange.colorCodeOnPercentage;
+          //color column inclusion and exclusion for matrix only now
+          if(colorRange.column && colorRange.column.managed) {
+            scope.colorColumnManaged = colorRange.column.managed;
+            scope.colorColumnsActionType = colorRange.column.action;
+            scope.selectedColorColumns = colorRange.column.selected;
+          }
           scope.minError = '';
           scope.maxError = '';
           scope.colorError = '';
@@ -196,12 +201,17 @@ module.directive('metricColorSchema', function () {
           }
         } else {
           if (!scope.minError && !scope.maxError && !scope.colorError) {
-            const { min, max, color, colorCodeOnPercentage } = scope;
+            const { min, max, color, colorCodeOnPercentage, colorColumnManaged, colorColumnsActionType, selectedColorColumns  } = scope;
             const colorSchemaEntry = {
               min,
               max,
               color,
-              colorCodeOnPercentage
+              colorCodeOnPercentage,
+              column: {
+                managed: colorColumnManaged,
+                action: colorColumnsActionType,
+                selected: selectedColorColumns
+              }
             };
             if(editIndex > -1) {
               params.colorSchema[editIndex] = colorSchemaEntry;
@@ -211,6 +221,7 @@ module.directive('metricColorSchema', function () {
             }
           }
         }
+        scope.cancelEdit();
       };
 
       scope.cancelEdit = function () {
@@ -228,6 +239,9 @@ module.directive('metricColorSchema', function () {
         scope.customInterval = '';
         scope.customIntervalType = '';
         scope.colorCodeOnPercentage = false;
+        scope.colorColumnManaged = false;
+        scope.colorColumnsActionType = 'include';
+        scope.selectedColorColumns = [];
       };
 
       // This is called when a colorSchema is deleted..

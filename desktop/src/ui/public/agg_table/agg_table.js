@@ -128,7 +128,9 @@ uiModules
             const field = agg.getField();
             const formattedColumn = {
               title: col.title,
-              filterable: field && field.filterable && agg.schema.group === 'buckets'
+              filterable: field && field.filterable && agg.schema.group === 'buckets',
+              aggConfigResult: col.aggConfigResult,
+              show: col.show
             };
 
             const last = i === (table.columns.length - 1);

@@ -39,6 +39,7 @@ function MatrixVisTypeProvider(Private) {
         enableNoOfColumns: false,
         collapseTimeHeaders: false,
         enableTimeFormatter: false,
+        collapseManageColumn: false,
         inputTimeFormat: 'millisecond',
         outputTimeFormat: 'millisecond',
         NoOfColumns: 10,
@@ -54,7 +55,9 @@ function MatrixVisTypeProvider(Private) {
         cumulativeRowOperation: 'sum',
         showCumulativeColumn: false,
         cumulativeColumnOperation: 'sum',
-        colorCodeOnPercentage: false
+        colorCodeOnPercentage: false,
+        selectedColumns: [],
+        selectedColumnsActionType: 'exclude' // default exclude to none
       },
       template: matrixVisTemplate,
     },

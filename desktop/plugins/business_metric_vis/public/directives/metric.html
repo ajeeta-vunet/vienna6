@@ -55,7 +55,13 @@
       type="text"
       ng-model="metric.label"
       name="metricAlias"
+      ng-maxlength="40"
       required/>
+    <p
+      class="error-highlight"
+      ng-show="vudataMetricForm.metricAlias.$error.maxlength">
+      Custom label must be less than 40 characters
+    </p>
   </div>
   <div class="form-group bottom-space">
     <label>
@@ -76,13 +82,32 @@
       class="form-control"
       type="text"
       ng-model="metric.description"
+      ng-maxlength="220"
       name="metricDescription"/>
+    <p
+      class="error-highlight"
+      ng-show="vudataMetricForm.metricDescription.$error.maxlength">
+      Description must be less than 220 characters
+    </p>
   </div>
-  <div class="form-group bottom-space">
-    <label>
+  <div class="collapse-header-wrapper">
+    <button
+      aria-label="{{ opts.optionsEnabled ? 'Close' : 'Open' }}"
+      ng-click="opts.optionsEnabled = !opts.optionsEnabled"
+      type="button"
+      class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+        <i
+          aria-hidden="true"
+          ng-class="{ 'fa-caret-down': opts.optionsEnabled,
+          'fa-caret-right': !opts.optionsEnabled }"
+          class="fa">
+        </i>
+    </button>
+    <!-- title -->
+    <span class="collapse-header">
       Options
       <kbn-tooltip
-        text="Enable this to customize the visualization according to your requirements"
+        text="Use this to customize the visualization according to your requirements"
         placement="right"
         append-to-body="1">
         <span>
@@ -92,11 +117,7 @@
           </i>
         </span>
       </kbn-tooltip>
-    </label>
-    <input
-      type="checkbox"
-      class="vudata-checkbox"
-      ng-model="opts.optionsEnabled"/>
+    </span>
   </div>
   <div class="vudata-options"
     ng-show="opts.optionsEnabled">
@@ -121,24 +142,6 @@
         ng-model="metric.filter"
         name="metricFilter"/>
     </div>
-    <div class="form-group">
-      <label> Metric Font Size - {{ metric.fontSize }}pt</label>
-      <input
-        type="range"
-        ng-model="metric.fontSize"
-        class="form-control"
-        min="12"
-        max="120" />
-    </div>
-    <div class="form-group">
-      <label>Text Font Size - {{ metric.textFontSize }}pt</label>
-      <input
-        type="range"
-        ng-model="metric.textFontSize"
-        class="form-control"
-        min="7"
-        max="100" />
-    </div>
     <div class="form-group bottom-space">
       <label>
         Goal
@@ -158,8 +161,14 @@
         class="form-control"
         type="text"
         ng-model="metric.goalLabel"
+        ng-maxlength="40"
         name="metricgoalLabel"/>
-    </div
+      <p
+        class="error-highlight"
+        ng-show="vudataMetricForm.metricgoalLabel.$error.maxlength">
+        Goal label must be less than 40 characters
+      </p>
+    </div>
 
     <!-- Color schema config  starts-->
     <div class="collapse-header-wrapper">
@@ -167,7 +176,7 @@
         aria-label="{{ showColorSchemaOptions ? 'Close' : 'Open' }}"
         ng-click="showColorSchemaOptions = !showColorSchemaOptions"
         type="button"
-        class="btn btn-default btn-xs vis-editor-agg-header-toggle">
+        class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
           <i
             aria-hidden="true"
             ng-class="{ 'fa-caret-down': showColorSchemaOptions,
@@ -212,7 +221,8 @@
             field="opts.fieldObj">
           </vudata-metric-color-schema>
       </div>
-      <div class="form-group bottom-space">
+      <div
+        class="form-group bottom-space">
         <label>
           Enable background theme
           <kbn-tooltip text="Enable this to have background color as a severity indicator for the metric"
@@ -232,35 +242,43 @@
       </div>
     </div>
     <!-- Color schema config ends-->
-
-    <!-- time shift config starts -->
-    <div class="collapse-header-wrapper">
-      <button
-        aria-label="{{ showTimeShiftOptions ? 'Close' : 'Open' }}"
-        ng-click="showTimeShiftOptions = !showTimeShiftOptions"
-        type="button"
-        class="btn btn-default btn-xs vis-editor-agg-header-toggle">
-        <i
-          aria-hidden="true"
-          ng-class="{ 'fa-caret-down': showTimeShiftOptions,
-                      'fa-caret-right': !showTimeShiftOptions }"
-          class="fa">
-        </i>
-      </button>
-
-      <!-- title -->
-      <span class="collapse-header">
-        Time Shift
-      </span>
-    </div>
-
-    <div
-      ng-if="showTimeShiftOptions">
-      <div class="form-group bottom-space">
+  </div>
+  <div class="form-group bottom-space">
+    <label>
+      Indicate upward trend with
+      <kbn-tooltip
+        text="Select a color which should be used to indicate the metric performance"
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+    <select
+      class="form-control"
+      name="upTrendColor"
+      ng-model="metric.upTrendColor">
+      <option value="red">Red</option>
+      <option value="green">Green</option>
+    </select>
+  </div>
+  <div class="form-group bottom-space">
+    <vudata-reference-link
+      reference-link="metric.referenceLink">
+    </vudata-reference-link>
+  </div>
+  <div class="form-group bottom-space">
+    <div class="uvmap-vis-editor-expression">
+      <div>
         <label>
-          Enable time shift values
-          <kbn-tooltip text="Use this to display metric values or change in percentage with respect to business metric in different time periods"
-            placement="right"
+          Advanced Configuration
+          <kbn-tooltip
+            text="Provide advanced configuration for business metric"
+            placement="bottom"
             append-to-body="1">
             <span>
               <i
@@ -270,40 +288,12 @@
             </span>
           </kbn-tooltip>
         </label>
-        <input
-          type="checkbox"
-          class="vudata-checkbox"
-          ng-model="opts.timeShiftEnabled"
-          ng-change="opts.toggletimeShift()"/>
       </div>
-      <div
-        class="form-group bottom-space"
-        ng-show="opts.timeShiftEnabled">
-        <time-shift-metric
-        time-shift="metric.timeShift">
-        </time-shift-metric>
-        <div class="form-group bottom-space">
-          <label>
-            Display time shift values in percentage
-            <kbn-tooltip
-              text="Enable this checkbox to display time shift values in percentage"
-              placement="bottom"
-              append-to-body="1">
-              <span>
-                <i
-                  class="fa fa-question-circle"
-                  aria-hidden="true">
-                </i>
-              </span>
-            </kbn-tooltip>
-          </label>
-          <input
-          type="checkbox"
-          class="vudata-checkbox"
-          ng-model="metric.timeShiftPercentageEnabled"/>
-        </div>
-      </div>
+      <textarea
+        ng-model="metric.advancedConfig"
+        class="form-control"
+        rows="5">
+      </textarea>
     </div>
-    <!-- time shift config starts -->
   </div>
 </form>

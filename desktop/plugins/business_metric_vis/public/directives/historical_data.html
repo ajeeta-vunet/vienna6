@@ -1,0 +1,238 @@
+<div class="historical-data-config-container bottom-space">
+  <form name=historicalDataForm>
+    <table class="historical-data-table bottom-space">
+      <thead>
+        <tr>
+          <th class="historical-data-label">Label</th>
+          <th class="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          data-ng-repeat="item in historicalData track by $index">
+          <td>
+            {{ item.label }}
+          </td>
+          <td>
+            <kbn-tooltip
+              text="Edit this historical data value"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="editConfig(item, $index)"
+                class=""
+                aria-label="Edit">
+                <i
+                  aria-hidden="true"
+                 class="fa fa-pencil">
+                </i>
+              </a>
+            </kbn-tooltip>
+            <kbn-tooltip
+              text="Delete this historical data value"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="deleteConfig($index)"
+                class=""
+                aria-label="Delete">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-trash-o">
+                </i>
+              </a>
+            </kbn-tooltip>
+          </td>
+        </tr>
+        <tr ng-show="historicalData.length < 1">
+          <td colspan="4" class="historical-data-default-message">
+            No historical data has been configured.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      ng-show="addingHistoricalData || (editIndex >= 0)"
+      class="historical-data-form bottom-space">
+      <div class="row historical-data-element">
+        <label>
+          Historical data type
+          <kbn-tooltip
+            text="select a historical data type of your choice"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <select
+          class="form-control historical-data-input"
+          ng-options="option for option in historicalDataTypeOptions"
+          name="type"
+          ng-model="type"
+          ng-change="resetHistoricalDataType()"
+          required>
+        </select>
+      </div>
+      <div class="row historical-data-element">
+        <label>
+          Label
+          <kbn-tooltip
+            text="Provide a display name for the historical data metric"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <input
+          class="form-control historical-data-input"
+          type="text"
+          ng-model="label"
+          name="historicalDataLabel"
+          required/>
+        <p
+          class="error"
+          ng-show="historicalDataForm.historicalDataLabel.$error.required">
+          Please provide a label
+        </p>
+      </div>
+      <div
+        ng-show="type === 'Time shift'"
+        class="row historical-data-element">
+        <label>
+          Time shift
+          <kbn-tooltip
+            text="Select a time shift of your choice"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <select
+          class="form-control historical-data-input"
+          ng-options="option for option in timeshiftOptions"
+          name="timeshiftMetric"
+          ng-model="timeshiftMetric"
+          ng-required="type === 'Time shift'">
+        </select>
+        <p
+          class="error"
+          ng-show="historicalDataForm.timeshiftMetric.$error.required">
+          Please select a value.
+        </p>
+      </div>
+      <div
+        ng-show="type === 'Interval'"
+        class="row historical-data-element">
+        <label>
+           Interval
+          <kbn-tooltip
+            text="Select a interval of your choice"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <select
+          class="form-control historical-data-input"
+          ng-options="option for option in intervalOptions"
+          name="intervalMetric"
+          ng-model="intervalMetric"
+          ng-required="type === 'Interval'">
+        </select>
+        <p
+          class="error"
+          ng-show="historicalDataForm.intervalMetric.$error.required">
+          Please select a value.
+        </p>
+      </div>
+      <div
+        ng-show="type === 'Time shift' && timeshiftMetric === 'Custom configuration'"
+        class="row historical-data-element">
+        <label>
+          Same time shifted by
+          <kbn-tooltip text="Provide a duration value for the historical data metric." placement="right" append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <div class="row custom-shift-values">
+          <div class="col-md-6">
+            <input
+              class="form-control historical-data-input"
+              type="text"
+              ng-model="shiftValue"
+              name="shiftValue"
+              ng-required="timeshiftMetric === 'Custom configuration'" />
+          </div>
+          <div class="col-md-6">
+            <select
+              class="form-control"
+              name="shiftUnit"
+              ng-required="timeshiftMetric === 'Custom configuration'"
+              ng-model="shiftUnit">
+              <option value="s">Second</option>
+              <option value="m">Minute</option>
+              <option value="h">Hour</option>
+              <option value="d">Day</option>
+              <option value="w">Week</option>
+              <option value="M">Month</option>
+              <option value="y">Year</option>
+            </select>
+          </div>
+        </div>
+        <p
+          class="error"
+          ng-show="historicalDataForm.shiftValue.$error.required ||
+                   historicalDataForm.shiftUnit.$error.required">
+          Please provide a time duration.
+        </p>
+      </div>
+      <div
+        ng-hide="editIndex >= 0"
+        class="row">
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Add config"
+            ng-click="addConfig()"
+            class="form-control">
+        </div>
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Cancel"
+            ng-click="cancelEdit()"
+            class="form-control">
+        </div>
+      </div>
+      <div
+        ng-show="editIndex >= 0"
+        class="row">
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Update config"
+            ng-click="updateConfig()"
+            class="form-control">
+        </div>
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Cancel"
+            ng-click="cancelEdit()"
+            class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="vis-editor-agg-wide-btn">
+      <button
+        ng-if="historicalData.length < 3"
+        type="text"
+        ng-click="addhistoricalDataMetric()"
+        class="kuiButton kuiButton--secondary kuiButton--small">
+        Add a historical data metric
+      </button>
+    </div>
+  </form>
+</div>

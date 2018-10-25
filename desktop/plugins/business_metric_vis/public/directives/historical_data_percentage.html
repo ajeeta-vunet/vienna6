@@ -1,0 +1,25 @@
+<span>
+  <span
+    ng-show="vis.params.enableHistDataValueWithPercentage &&
+             obj.percentageChange != 'header' &&
+             obj.formattedValue != 'N.A.'">
+    (
+  </span>
+  <span>
+    <i
+      ng-show="displayIcon && !vis.params.enableHistDataValueWithPercentage"
+      class="historical-data-value fa"
+      ng-class="obj.icon"
+      aria-hidden="true">
+    </i>
+    <span>
+      {{ displayValue }}<span ng-show="displayIcon">%</span>
+    </span>
+  </span>
+  <span
+    ng-show="vis.params.enableHistDataValueWithPercentage &&
+             obj.percentageChange != 'header' &&
+             obj.formattedValue != 'N.A.'">
+    )
+  </span>
+</span>

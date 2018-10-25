@@ -85,7 +85,7 @@ function findTopLeftMostOpenSpace(width, height, currentPanels) {
  * @param {Array} currentPanels
  * @return {PanelState}
  */
-export function createPanelState(id, type, panelIndex, currentPanels) {
+export function createPanelState(id, type, panelIndex, currentPanels, visState) {
   const { x, y } = findTopLeftMostOpenSpace(DEFAULT_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT, currentPanels);
   return {
     gridData: {
@@ -98,7 +98,8 @@ export function createPanelState(id, type, panelIndex, currentPanels) {
     version: chrome.getKibanaVersion(),
     panelIndex: panelIndex.toString(),
     type: type,
-    id: id
+    id: id,
+    visState: visState ? visState : ''
   };
 }
 

@@ -13,8 +13,10 @@ module.directive('multipleEmails', function () {
       ctrl.$parsers.unshift(function (viewValue) {
         const emails = viewValue.split(',');
 
+        /* eslint-disable */
         // defining the individual email validator here
         const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        /* eslint-enable */
 
         // The validation operation is provided with the model value as an argument
         // and must return a true or false value depending on the response of that validation.

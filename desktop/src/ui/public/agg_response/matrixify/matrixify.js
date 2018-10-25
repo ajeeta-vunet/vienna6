@@ -436,7 +436,7 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
       vis.params.selectedColumnsActionType = 'exclude';
       vis.params.selectedColumns = [];
     }
-    
+
     // If matrix is configured to include/exclude some specific columns
     if(vis.params.selectedColumnsActionType && vis.params.selectedColumnsActionType !== '') {
       //map include to true and exclude to false

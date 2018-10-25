@@ -1,0 +1,49 @@
+<table width="100%">
+  <tr ng-repeat="bucket in data.buckets">
+    <td width="{{ columnWidth }}" class="bm-bucket-header">{{ bucket.key }}</td>
+    <td ng-show="bucket.buckets">
+      <table-directive
+        data="bucket"
+        metr="metr"
+        vis='vis'
+        column-width="columnWidth"
+        set-trend-color-for-tabular-bm="setTrendColorForTabularBm"
+        ideal-text-color="idealTextColor"
+        >
+      </table-directive>
+    </td>
+    <td
+      width="{{ columnWidth }}"
+      ng-style="metr.bgColorEnabled ? {'background': bucket.metric.color, color: idealTextColor(bucket.metric.color)}:
+      {'color': bucket.metric.color }"
+      class="bm-bucket-td"
+      ng-show="bucket.metric">
+        {{ bucket.metric.formattedValue }}
+    </td>
+    <td
+      width="{{ columnWidth }}"
+      class="bm-bucket-td"
+      ng-repeat="dataObj in bucket.metric.historicalData"
+      ng-class="setTrendColorForTabularBm(dataObj.icon, metr.upTrendColor, metr.bgColorEnabled)">
+      <span
+        ng-show="!vis.params.enableHistDataPercentage ||
+                  vis.params.enableHistDataValueWithPercentage"
+        class="historical-data-value">
+        <i
+          class="historical-data-value fa"
+          ng-class="dataObj.icon"
+          aria-hidden="true">
+        </i>
+        <span>{{ dataObj.formattedValue }}</span>
+      </span>
+      <!-- Display historical data values in percentage -->
+      <span ng-show="vis.params.enableHistDataPercentage ||
+                     vis.params.enableHistDataValueWithPercentage">
+        <historical-data-percentage
+          obj="dataObj"
+          vis="vis">
+        </historical-data-percentage>
+      </span>
+    </td>
+  </tr>
+</table>

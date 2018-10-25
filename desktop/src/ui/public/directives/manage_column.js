@@ -12,7 +12,7 @@ module.directive('manageColumn', function () {
     template: require('ui/directives/partials/manage_column.html'),
     link: function (scope) {
       scope.column = '';
-      
+
       //add the column to selected list
       scope.add = function () {
         if (scope.column && scope.column !== '' && !scope.selected.includes(scope.column)) {

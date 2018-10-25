@@ -1,121 +1,333 @@
-<div
-  ng-controller="BusinessMetricVisController"
-  class="business-metric-container-wrapper">
+<div vunet-refresh-hack
+  class="business-metric-container-wrapper"
+  ng-controller="BusinessMetricVisController">
+  <!-- Single business metric with block view -->
   <div
-    ng-if="!apiError"
-    class="business-metric-container"
-    ng-style="vis.params.metric.bgColorEnabled &&
-      {'background-color': metricData.color, 'color': '#fff' }">
+    ng-show="vis.params.metrics.length === 1 &&
+             !vis.params.enableTableFormat"
+    class="single-metric-wrapper"
+    ng-repeat="metric in metricDatas">
     <div
-      class="view-more-link flex-container"
-      ng-if="vis.params.referenceLink.enabled">
-      <div ng-click="viewDashboardForThisMetric()">
-        <kbn-tooltip
-          text="View More"
-          placement="left"
-          append-to-body="1">
-          <i
-            class="fa fa-arrow-circle-o-right"
-            ng-class="{'white': vis.params.metric.bgColorEnabled }"
-            aria-hidden="true">
-          </i>
-        </kbn-tooltip>
-      </div>
-    </div>
-    <div class="bs-metric-vis">
-      <div class="bs-metric-container">
+      ng-repeat="(metricName, metricObj) in metric"
+      class="business-metric-container"
+      ng-style="vis.params.metrics[0].bgColorEnabled &&
+                {'background-color': metricObj.color,
+                 'color': '#fff' }">
+      <div
+        class="view-more-link one-metric-link"
+        ng-if="vis.params.metrics[0].referenceLink">
         <div
-          class="bs-metric-label"
-          ng-style="{'font-size': txtFontSize+'pt'}">
-          {{ vis.params.metric.label }}
+          ng-click="viewDashboardForThisMetric(vis.params.metrics[0].referenceLink)">
           <kbn-tooltip
-            ng-if="vis.params.metric.description"
-            text="{{vis.params.metric.description}}"
-            placement="bottom"
+            text="View More"
+            placement="left"
             append-to-body="1">
             <i
-              class="fa fa-question-circle"
-              ng-class="{'white': vis.params.metric.bgColorEnabled }"
+              class="fa fa-arrow-circle-o-right"
+              ng-class="{'white': vis.params.metrics[0].bgColorEnabled }"
               aria-hidden="true">
             </i>
           </kbn-tooltip>
         </div>
-        <div
-          class="bs-metric-value"
-          ng-style="vis.params.metric.bgColorEnabled ?
-          {'font-size': vis.params.metric.fontSize+'pt', 'background': metricData.color }:
-          {'font-size': vis.params.metric.fontSize+'pt', 'color': metricData.color }">
-          {{ metricData.formattedValue }}
+      </div>
+      <div class="bs-metric-vis">
+        <div class="bs-metric-container">
+          <div
+            class="bs-metric-label"
+            ng-style="{'font-size': txtFontSize+'pt'}">
+            {{ vis.params.metrics[0].label }}
+            <kbn-tooltip
+              ng-show="vis.params.metrics[0].description"
+              text="{{vis.params.metrics[0].description}}"
+              placement="bottom"
+              append-to-body="1">
+              <i
+                class="fa fa-question-circle"
+                ng-class="{'white': vis.params.metrics[0].bgColorEnabled }"
+                aria-hidden="true">
+              </i>
+            </kbn-tooltip>
+          </div>
+          <div
+            ng-show="metricObj.success"
+            class="bs-metric-value"
+            ng-style="vis.params.metrics[0].bgColorEnabled ?
+                      {'font-size': vis.params.fontSize+'pt', 'background': metricObj.color }:
+                      {'font-size': vis.params.fontSize+'pt', 'color': metricObj.color }">
+            {{ metricObj.formattedValue }}
+          </div>
+          <div
+            ng-show="!metricObj.success"
+            ng-style="{'padding': (vis.params.fontSize * noDataContainerConstant) +'pt'}"
+            class="no-data-section">
+            <i
+              ng-style="{'font-size': (vis.params.fontSize * noDataIconConstant) +'pt'}"
+              aria-hidden="true"
+              class="fa fa-exclamation-triangle">
+            </i>
+            <div class="error-message">
+              No results found
+            </div>
+          </div>
+          <div
+            class="goal-label"
+            ng-style="{'font-size': txtFontSize+'pt'}">
+            {{ vis.params.metrics[0].goalLabel }}
+          </div>
         </div>
+      </div>
+      <div
+        class="flex-container more-info-container"
+        ng-if="metricObj.historicalData.length"
+        ng-style="vis.params.metrics[0].bgColorEnabled &&
+                  {'background-color': darkShade,'color': '#fff','border-color': darkShade}"
+        ng-class="{'align-historical-data-metric':metricObj.historicalData.length===1}">
         <div
-          class="goal-label"
-          ng-style="{'font-size': txtFontSize+'pt'}">
-          {{ vis.params.metric.goalLabel }}
+          class="historical-data-block"
+          ng-repeat="dataObj in metricObj.historicalData">
+          <div ng-class="setTrendColorForSingleBM(dataObj.icon,
+                         vis.params.metrics[0].upTrendColor,
+                         vis.params.metrics[0].bgColorEnabled)">
+            <div class="historical-data-label">
+              {{ dataObj.label }}
+            </div>
+            <div class="value-indicators">
+              <!-- Display formatted values -->
+              <span
+                ng-show="!vis.params.enableHistDataPercentage ||
+                          vis.params.enableHistDataValueWithPercentage"
+                class="historical-data-value">
+                <i
+                  class="historical-data-value fa"
+                  ng-class="dataObj.icon"
+                  aria-hidden="true">
+                </i>
+                <span>{{ dataObj.formattedValue }}</span>
+              </span>
+              <!-- Display historical data values in percentage -->
+              <span ng-show="vis.params.enableHistDataPercentage ||
+                             vis.params.enableHistDataValueWithPercentage">
+                <historical-data-percentage
+                  obj="dataObj"
+                  vis="vis">
+                </historical-data-percentage>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+  </div><!-- Single business metric with block view ends-->
+
+  <!-- Multiple metrics displayed inline -->
+  <div
+    ng-if="vis.params.metrics.length > 1 &&
+           !vis.params.enableTableFormat"
+    class="multiple-metric-container">
     <div
-      class="flex-container more-info-container"
-      ng-if="metricData.timeshift.length"
-      ng-style="vis.params.metric.bgColorEnabled &&
-      {'background-color': darkShade,
-       'color': '#fff',
-       'border-color': darkShade}"
-      ng-class="{'align-timeshift-metric':metricData.timeshift.length===1}">
+      ng-repeat="metric in metricDatas track by $index"
+      ng-init="outerIndex=$index"
+      class="">
       <div
-        class="timeshift-block"
-        ng-repeat="timeshiftObj in metricData.timeshift">
-        <div ng-class="{'red': timeshiftObj.icon==='fa-caret-down' && !vis.params.metric.bgColorEnabled,
-        'green': timeshiftObj.icon==='fa-caret-up' &&
-        !vis.params.metric.bgColorEnabled}">
-          <div
-            class="timeshift-label">
-            {{ timeshiftObj.label }}
-          </div>
-          <div class="value-indicators">
-            <i
-              class="timeshift-value fa"
-              ng-class="timeshiftObj.icon"
-              aria-hidden="true">
-            </i>
-            <!-- Display time shift values in percentage -->
-            <span ng-if="vis.params.metric.timeShiftPercentageEnabled">
-              <span ng-if="timeshiftObj.value">
-                <!-- Handle infinity case -->
+        ng-repeat="(metricName, metricObj) in metric track by $index"
+        ng-init="innerIndex=$index">
+        <div class="single-metric-container">
+          <div class="single-metric-content">
+            <div
+              class="single-metric-label"
+              ng-style="{'font-size': txtFontSize+'pt'}">
+              {{ metricName }}
+              <kbn-tooltip
+                ng-if="vis.params.metrics[outerIndex].description"
+                text="{{vis.params.metrics[outerIndex].description}}"
+                placement="bottom"
+                append-to-body="1">
+                <i
+                  ng-style="{'font-size': (txtFontSize * superScriptConstant) +'pt'}"
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </kbn-tooltip>
+              <span
+                class="view-more-link"
+                ng-if="vis.params.metrics[outerIndex].referenceLink">
                 <span
-                  ng-if="timeshiftObj.percentage === -1"
-                  class="timeshift-value">
-                  &#8734;
-                </span>
-                <!-- Display percentage values -->
-                <span
-                  ng-if="timeshiftObj.percentage !== -1"
-                  class="timeshift-value">
-                  {{ timeshiftObj.percentage }}%
+                  ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink)">
+                  <kbn-tooltip
+                    text="View More"
+                    placement="left"
+                    append-to-body="1">
+                    <i
+                      ng-style="{'font-size': (txtFontSize * superScriptConstant) +'pt'}"
+                      class="fa fa-arrow-circle-o-right"
+                      aria-hidden="true">
+                    </i>
+                  </kbn-tooltip>
                 </span>
               </span>
-            </span>
-            <!-- Display formatted values -->
-            <span ng-if="!vis.params.metric.timeShiftPercentageEnabled"
-              class="timeshift-value">
-              {{timeshiftObj.formattedValue}}
-            </span>
+            </div>
+            <div
+              ng-show="metricObj.success"
+              class="single-metric-value"
+              ng-style="{'font-size': vis.params.fontSize+'pt',
+                        'color': metricObj.color }">
+              {{ metricObj.formattedValue }}
+            </div>
+            <div
+              ng-show="!metricObj.success"
+              ng-style="{'padding': (vis.params.fontSize * noDataContainerConstant) +'pt'}"
+              class="no-data-section">
+              <i
+                ng-style="{'font-size': (vis.params.fontSize * noDataIconConstant) +'pt'}"
+                aria-hidden="true"
+                class="fa fa-exclamation-triangle">
+              </i>
+              <div class="error-message">
+                No results found
+              </div>
+            </div>
+            <div
+              ng-show="metricObj.success"
+              class="single-metric-goal"
+              ng-style="{'font-size': txtFontSize+'pt'}">
+              {{ vis.params.metrics[outerIndex].goalLabel }}
+            </div>
+            <div
+              ng-show="metricObj.success"
+              ng-repeat="dataObj in metricObj.historicalData"
+              class="single-metric-historical-data"
+              ng-class="setTrendColor(dataObj.icon,
+                        vis.params.metrics[outerIndex].upTrendColor)">
+              <!-- Display formatted values -->
+              <span
+                ng-show="!vis.params.enableHistDataPercentage ||
+                          vis.params.enableHistDataValueWithPercentage"
+                class="historical-data-value">
+                <i
+                  class="historical-data-value fa"
+                  ng-class="dataObj.icon"
+                  aria-hidden="true">
+                </i>
+                <span>{{ dataObj.formattedValue }}</span>
+              </span>
+              <span
+                ng-show="vis.params.enableHistDataPercentage ||
+                          vis.params.enableHistDataValueWithPercentage">
+                <!-- Display historical data values in percentage -->
+                <historical-data-percentage
+                  obj="dataObj"
+                  vis="vis">
+                </historical-data-percentage>
+              </span>
+              <span class="historical-data-label">{{ dataObj.label }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </div> <!-- Multiple metrics displayed inline -->
+
+  <!--Tabular format Display  -->
   <div
-    ng-if="apiError"
-    class="business-metric-container api-error-container">
-    <div class="api-error-inner-container">
-      <h2 aria-hidden="true">
-        <i
-          aria-hidden="true"
-          class="fa fa-meh-o">
-        </i>
-      </h2>
-      <h4>No results found</h4>
-    </div>
-  </div>
+    ng-if="vis.params.enableTableFormat">
+    <table class="bm-table-striped">
+      <tr
+        class="data-rows"
+        ng-repeat="items in metricDatas track by $index"
+        ng-init="outerIndex=$index-1">
+        <td>
+          <table class="bm-sub-table bm-page-break">
+            <tr ng-repeat="(metric,item) in items track by $index">
+              <td width="{{ columnWidth }}" class="bm-table-td-metric-names">
+                <div>
+                  <span class="metric-name">{{ metric }}</span>
+                  <kbn-tooltip
+                    ng-if="vis.params.metrics[outerIndex].description"
+                    text="{{vis.params.metrics[outerIndex].description}}"
+                    placement="right"
+                    append-to-body="1">
+                    <i
+                      class="fa fa-question-circle table-metric-icon"
+                      aria-hidden="true">
+                    </i>
+                  </kbn-tooltip>
+                  <span
+                    class="view-more-link"
+                    ng-if="vis.params.metrics[outerIndex].referenceLink">
+                    <span
+                      ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink)">
+                      <kbn-tooltip
+                        text="View More"
+                        placement="right"
+                        append-to-body="1">
+                        <i
+                          class="fa fa-arrow-circle-o-right table-metric-icon"
+                          aria-hidden="true">
+                        </i>
+                      </kbn-tooltip>
+                    </span>
+                  </span>
+                </div>
+                <div class="goal-info">
+                    {{ vis.params.metrics[outerIndex].goalLabel }}
+                </div>
+              </td>
+              <td
+                ng-if="vis.params.aggregations.length > 0"
+                class="bm-first-bucket-td">
+                <table-directive
+                  data="item"
+                  metr="vis.params.metrics[outerIndex]"
+                  vis='vis'
+                  column-width="columnWidth"
+                  set-trend-color-for-tabular-bm="setTrendColorForTabularBm"
+                  ideal-text-color="idealTextColor"
+                  >
+                </table-directive>
+              </td>
+              <td
+                ng-if="vis.params.aggregations.length === 0"
+                width="{{ columnWidth }}"
+                class="bm-table-td"
+                ng-style="vis.params.metrics[outerIndex].bgColorEnabled ?
+                          {'background': item.color, color: idealTextColor(item.color)}: 
+                          {'color': item.color }">
+                <span ng-show="item.success">{{ item.formattedValue }}</span>
+                <span ng-show="!item.success">N.A</span>
+              </td>
+              <td
+                width="{{ columnWidth }}"
+                class="bm-table-td"
+                ng-if="vis.params.aggregations.length === 0"
+                ng-repeat="dataObj in item.historicalData"
+                ng-class="setTrendColorForTabularBm(dataObj.icon,
+                            vis.params.metrics[outerIndex].upTrendColor,
+                            vis.params.metrics[outerIndex].bgColorEnabled)">
+                <!-- Display formatted values -->
+                <span
+                  ng-show="!vis.params.enableHistDataPercentage ||
+                            vis.params.enableHistDataValueWithPercentage"
+                  class="historical-data-value">
+                  <i
+                    class="historical-data-value fa"
+                    ng-class="dataObj.icon"
+                    aria-hidden="true">
+                  </i>
+                  <span>{{ dataObj.formattedValue }}</span>
+                </span>
+                <!-- Display historical data values in percentage -->
+                <span ng-show="vis.params.enableHistDataPercentage ||
+                                vis.params.enableHistDataValueWithPercentage">
+                  <historical-data-percentage
+                    obj="dataObj"
+                    vis="vis">
+                  </historical-data-percentage>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div><!--Tabular format Display ends-->
 </div>

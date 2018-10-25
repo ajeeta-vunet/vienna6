@@ -11,6 +11,7 @@ import { DashboardViewMode } from '../../dashboard_view_mode';
 import {
   maximizePanel,
   minimizePanel,
+  hideBmvTitle
 } from '../../actions';
 
 import {
@@ -30,7 +31,8 @@ const mapStateToProps = ({ dashboard }, { panelId }) => {
     title: panel.title === undefined ? embeddableTitle : panel.title,
     isExpanded: getMaximizedPanelId(dashboard) === panelId,
     isViewOnlyMode: getFullScreenMode(dashboard) || getViewMode(dashboard) === DashboardViewMode.VIEW,
-    hidePanelTitles: getHidePanelTitles(dashboard),
+    //don't show header if vis type is business metric
+    hidePanelTitles: getHidePanelTitles(dashboard) || hideBmvTitle(panel.visState),
   };
 };
 

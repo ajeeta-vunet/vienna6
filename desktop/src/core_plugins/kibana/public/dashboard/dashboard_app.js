@@ -236,7 +236,7 @@ app.directive('dashboardApp', function ($injector, $http) {
 
       // called by the saved-object-finder when a user clicks a vis
       $scope.addVis = function (hit, showToast = true) {
-        dashboardStateManager.addNewPanel(hit.id, 'visualization');
+        dashboardStateManager.addNewPanel(hit.id, 'visualization', hit.visState);
         if (showToast) {
           notify.info(`Visualization successfully added to your dashboard`);
         }

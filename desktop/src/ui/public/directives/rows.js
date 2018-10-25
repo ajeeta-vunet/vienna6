@@ -72,7 +72,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             $cell.addClass('numeric-value');
           }
         }
-       
+
         //hide the cell(td) if it's marked show:false
         if (_contents && _contents.show !== undefined && !_contents.show) {
           $cell.addClass('hide-cell');
@@ -293,7 +293,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
               columnResult.push(-1);
               columnValueFormatter.push(null);
             }
-            addCumulativeResultRow(srAddConfig, cumulativeRowOperation, columnResult, columnValueFormatter, el, columns, visType, srAddConfig, showCumulativeColumn);
+            addCumulativeResultRow(srAddConfig, cumulativeRowOperation, columnResult,
+              columnValueFormatter, el, columns, visType, srAddConfig, showCumulativeColumn);
             cumulativeRowAdded = true;
           }
         });
@@ -301,7 +302,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
 
       // This function adds a row which is the result of cumulative operation
       // on rest of the rows.
-      function addCumulativeResultRow(addSrConfig, operation, resultArray, formatterArray, el, columns, visType, srAddConfig, showCumulativeColumn) {
+      function addCumulativeResultRow(addSrConfig, operation, resultArray,
+        formatterArray, el, columns, visType, srAddConfig, showCumulativeColumn) {
         const $tr = $(document.createElement('tr'));
         $tr.appendTo(el);
         // Add style to this element for phantomjs for reports
@@ -325,7 +327,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             show: true
           });
         }
-        
+
         //check if vis is matrix and cumulative column is configured
         //then push one object to column because now the result has one more item then columns
         if (visType === 'matrix' && showCumulativeColumn) {

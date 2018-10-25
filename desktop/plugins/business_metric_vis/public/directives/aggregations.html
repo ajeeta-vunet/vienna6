@@ -1,0 +1,181 @@
+<div>
+  <div
+    class="form-group bm-bucket"
+    data-ng-repeat="aggregation in vis.params.aggregations track by $index">
+    <div class="vis-editor-agg-header">
+      <button
+        ng-click="operAggList[$index].expanded = !operAggList[$index].expanded"
+        aria-label="Toggle editor"
+        aria-controls="{{ bucket }}"
+        type="button"
+        data-test-subj="toggleEditor"
+        class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+        <i aria-hidden="true"
+          class="fa"
+          ng-class="{ 'fa-caret-right': !operAggList[$index].expanded,
+                      'fa-caret-down': operAggList[$index].expanded }">
+        </i>
+      </button>
+      <span class="vis-editor-agg-header-title">
+        Bucket
+      </span>
+      <span class="vis-editor-agg-header-description handle-overflow">
+        <span ng-show="aggregation.customLabel !== ''">
+           {{ aggregation.customLabel }}
+        </span>
+        <span ng-show="aggregation.customLabel === ''">
+          {{ aggregation.field }}
+        </span>
+      </span>
+      <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+        <!-- up button -->
+        <button
+          aria-label="Increase Priority"
+          ng-if="vis.params.aggregations.length > 1"
+          ng-class="{ disabled: $first }"
+          ng-click="!$first && moveUp($index)"
+          tooltip="Increase Priority"
+          tooltip-append-to-body="true"
+          type="button"
+          class="kuiButton kuiButton--primary kuiButton--small">
+          <i
+            aria-hidden="true"
+            class="fa fa-caret-up">
+          </i>
+        </button>
+
+        <!-- down button -->
+        <button
+          aria-label="Decrease Priority"
+          ng-if="vis.params.aggregations.length > 1"
+          ng-class="{ disabled: $last }"
+          ng-click="!$last && moveDown($index)"
+          tooltip="Decrease Priority"
+          tooltip-append-to-body="true"
+          type="button"
+          class="kuiButton kuiButton--primary kuiButton--small">
+          <i
+            aria-hidden="true"
+            class="fa fa-caret-down">
+          </i>
+        </button>
+
+        <!-- remove button -->
+        <button
+          aria-label="Remove Dimension"
+          ng-click="removeBucket($index)"
+          tooltip="Remove Aggregation"
+          tooltip-append-to-body="true"
+          type="button"
+          class="kuiButton kuiButton--danger kuiButton--small">
+          <i
+            aria-hidden="true"
+            class="fa fa-times">
+          </i>
+        </button>
+      </div>
+    </div>
+    <span
+      class="nest-indicator"
+      ng-style="">
+    </span>
+    <div
+      ng-show="operAggList[$index].expanded"
+      class="bm-bucket-form">
+      <ng-form name="aggregationForm">
+        <div class="form-group">
+          <label>
+            Field
+            <kbn-tooltip
+              text="Use this to display metric values in a table format"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <select
+            class="form-control"
+            name="bucketField"
+            ng-options="field.name as field.name group by field.type for field in intersectionList | orderBy:'name'"
+            ng-model="aggregation.field"
+            required>
+            <option value=""> </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>
+            Size
+            <kbn-tooltip
+              text="Use this to display metric values in a table format"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <input
+            type="number"
+            name="aggregationSize"
+            ng-model="aggregation.size"
+            min="1"
+            max="100"
+            class="form-control"
+            required />
+          <p
+            class="error-highlight"
+            ng-show="aggregationForm.aggregationSize.$error.max">
+            bucket size should be less than 100
+          </p>
+        </div>
+        <div class="form-group">
+          <label>
+            Custom label
+            <kbn-tooltip
+              text="Use this to provide a custom name to the aggregation fields selected"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <input
+            type="text"
+            name="customLabel"
+            ng-model="aggregation.customLabel"
+            ng-maxlength="70"
+            class="form-control"/>
+          <p
+            class="error-highlight"
+            ng-show="aggregationForm.customLabel.$error.maxlength">
+            Custom label should be less than 70 characters.
+          </p>
+        </div>
+      </ng-form>
+    </div>
+  </div>
+  <div class="vis-editor-agg-wide-btn">
+    <div
+      ng-show="vis.params.aggregations.length < 2"
+      class="kuiButton kuiButton--secondary kuiButton--small"
+      ng-click="addBucket()">
+      <i
+        aria-hidden="true"
+        class="fa fa-plus">
+      </i>
+      Add sub buckets
+    </div>
+  </div>
+</div>

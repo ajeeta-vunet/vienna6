@@ -1,48 +1,199 @@
 <div
   ng-controller="BusinessMetricVisParamsController"
   class="business-metric-sidebar-container">
-  <div class="form-group">
-    <label>
-      Index
-      <kbn-tooltip 
-        text="Select a data source to display business metric visualization"
-        placement="right"
-        append-to-body="1">
-        <span> 
-          <i
-            class="fa fa-question-circle" 
-            aria-hidden="true">
+  <div class="sidebar-item">
+    <div class="sidebar-item-title">
+      Metrics
+    </div>
+    <div ng-repeat="metric in vis.params.metrics track by $index">
+      <div class="vis-editor-agg-header">
+        <button
+          aria-label="Toggle editor"
+          ng-click="operMetricsList[$index].expanded = !operMetricsList[$index].expanded"
+          aria-expanded="{{ !!operMetricsList[$index].expanded }}"
+          aria-controls="{{ metric }}"
+          type="button"
+          data-test-subj="toggleEditor"
+          class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+          <i aria-hidden="true"
+            class="fa"
+            ng-class="{ 'fa-caret-right': !operMetricsList[$index].expanded,
+                            'fa-caret-down': operMetricsList[$index].expanded }">
           </i>
+        </button>
+        <span class="vis-editor-agg-header-title">
+          Metric
         </span>
-      </kbn-tooltip>
-    </label>
-    <select 
-      class="form-control"
-      name="index"
-      ng-options="option.title for option in indexPatternIds |orderBy"
-      ng-model="index"
-      ng-change="setIndexPattern()"
-      required>
-    </select>
+        <span class="vis-editor-agg-header-description handle-overflow">
+          {{ vis.params.metrics[$index].label }}
+        </span>
+        <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+          <!-- up button -->
+          <button
+            aria-label="Increase Priority"
+            ng-if="vis.params.metrics.length > 1"
+            ng-class="{ disabled: $first }"
+            ng-click="!$first && moveUp($index)"
+            tooltip="Increase Priority"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--primary kuiButton--small">
+            <i
+              aria-hidden="true"
+              class="fa fa-caret-up">
+            </i>
+          </button>
+    
+          <!-- down button -->
+          <button
+            aria-label="Decrease Priority"
+            ng-if="vis.params.metrics.length > 1"
+            ng-class="{ disabled: $last }"
+            ng-click="!$last && moveDown($index)"
+            tooltip="Decrease Priority"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--primary kuiButton--small">
+            <i aria-hidden="true" class="fa fa-caret-down">
+            </i>
+          </button>
+    
+          <!-- remove button -->
+          <button
+            ng-if="vis.params.metrics.length-1"
+            aria-label="Remove Dimension"
+            ng-click="removeMetric($index)"
+            tooltip="Remove Dimension"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--danger kuiButton--small">
+            <i aria-hidden="true" class="fa fa-times">
+            </i>
+          </button>
+        </div>
+      </div>
+    
+      <div ng-show="operMetricsList[$index].expanded">
+        <div class="form-group">
+          <label>
+            Index
+            <kbn-tooltip
+              text="Select a data source to display business metric visualization"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <select
+            class="form-control"
+            name="index"
+            ng-options="option as option.title for option in indexPatternIds track by option.id"
+            ng-model="metric.index"
+            ng-change="setIndexPattern($index)"
+            required>
+          </select>
+        </div>
+        <div class="form-group">
+          <vudata-metric
+            metric="vis.params.metrics[$index]"
+            metric-length="vis.params.metrics.length"
+            index-fields="operMetricsList[$index].indexFields">
+          </vudata-metric>
+        </div>
+      </div>
+    </div>
+    <div class="vis-editor-agg-wide-btn">
+      <div
+        ng-show="vis.params.metrics.length < 8"
+        class="kuiButton kuiButton--secondary kuiButton--small"
+        ng-click="addMetric()">
+        <i
+          aria-hidden="true"
+          class="fa fa-plus">
+        </i>
+        Add Metric
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <vudata-metric
-     metric="vis.params.metric"
-     index-fields="indexFields">
-    </vudata-metric>
+  <div
+    class="sidebar-item">
+    <div class="sidebar-item-title">
+      buckets
+    </div>
+    <aggregations vis="vis">
+    </aggregations>
   </div>
-  <div class="form-group">
-    <vudata-reference-link
-      reference-link="vis.params.referenceLink">
-    </vudata-reference-link>
-  </div>
-  <div class="form-group bottom-space">
-    <div class="uvmap-vis-editor-expression">
-      <div>
+  <div class="sidebar-item more-options">
+    <div class="sidebar-item-title">
+      More Options
+    </div>
+    <div
+      class="form-group bottom-space">
+      <label>
+        Display metrics in tabular format
+        <kbn-tooltip
+          text="Use this to display metric values in a table format"
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <input
+        type="checkbox"
+        class="vudata-checkbox"
+        ng-model="vis.params.enableTableFormat"
+        ng-disabled="displayOnlyTabularFormat()"
+      />
+    </div>
+    <!-- historical data config starts -->
+    <div class="collapse-header-wrapper">
+      <!-- title -->
+      <span class="collapse-header">
+        Historical Data
+      </span>
+    </div>
+
+    <div class="form-group bottom-space">
+      <label>
+        Enable historical data
+        <kbn-tooltip
+          text="Use this to display metric values or change in percentage with respect to business metric in different time periods"
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <input
+        type="checkbox"
+        class="vudata-checkbox"
+        ng-model="vis.params.historicalDataEnabled"
+        ng-change="togglehistoricalData()" />
+    </div>
+    <div
+      class="form-group bottom-space"
+      ng-show="vis.params.historicalDataEnabled">
+      <historical-data historical-data="vis.params.historicalData">
+      </historical-data>
+      <div class="form-group bottom-space">
         <label>
-          Advanced Configuration
+          Display historical data in percentage
           <kbn-tooltip
-            text="Provide advanced configuration for business metric"
+            text="Display historical data in percentage"
             placement="bottom"
             append-to-body="1">
             <span>
@@ -53,12 +204,52 @@
             </span>
           </kbn-tooltip>
         </label>
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="vis.params.enableHistDataPercentage" />
       </div>
-      <textarea
-        ng-model="vis.params.advancedConfig"
-        class="form-control"
-        rows="5">
-      </textarea>
+      <div class="form-group bottom-space">
+        <label>
+           Display historical data values and percentages
+          <kbn-tooltip
+            text="Enable this checkbox to display both values and percentage for historical data"
+            placement="bottom"
+            append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="vis.params.enableHistDataValueWithPercentage" />
+      </div>
+    </div>
+
+    <!-- historical data config ends -->
+    <div ng-show="!vis.params.enableTableFormat">
+      <div class="form-group">
+        <label>Metric Font Size - {{ vis.params.fontSize }}pt</label>
+        <input
+          type="range"
+          ng-model="vis.params.fontSize"
+          class="form-control"
+          min="12"
+          max="120" />
+      </div>
+      <div class="form-group">
+        <label>Text Font Size - {{ vis.params.textFontSize }}pt</label>
+        <input
+          type="range"
+          ng-model="vis.params.textFontSize"
+          class="form-control"
+          min="7"
+          max="100" />
+      </div>
     </div>
   </div>
-</div>

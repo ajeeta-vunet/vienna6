@@ -10,6 +10,9 @@ module.controller('HeartbeatVisController', function ($scope, Private, Notifier,
     location: 'HeartbeatVis'
   });
 
+  // To pass node placement type to the vis-map directive.
+  $scope.nodePlacementType = 'dragNDrop';
+
   $scope.search = function run() {
 
     /* If we are here, we reset full-path to true */

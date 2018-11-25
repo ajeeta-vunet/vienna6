@@ -11,6 +11,9 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
     location: 'UVMapVis'
   });
 
+  // To pass node placement type to the vis-map directive.
+  $scope.nodePlacementType = 'dragNDrop';
+
   // Function to update x and y values in visParamsConnection.
   $scope.onNodeDragEnd = function (positions, nodes) {
     let visParamsConnection = $scope.vis.params.connection;

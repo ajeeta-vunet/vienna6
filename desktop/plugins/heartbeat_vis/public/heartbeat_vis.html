@@ -22,11 +22,13 @@
     <vis-map map-data="data"
       ng-if="typeVal=='tracepath_beat'"
       class="network-map-vis"
-      on-link-select="onLinkSelect">
+      on-link-select="onLinkSelect"
+      node-placement-type="nodePlacementType">
     </vis-map>
     <vis-map map-data="data"
       ng-if="typeVal!='tracepath_beat'"
-      class="network-map-vis">
+      class="network-map-vis"
+      node-placement-type="nodePlacementType">
     </vis-map>
   </div>
 </div>

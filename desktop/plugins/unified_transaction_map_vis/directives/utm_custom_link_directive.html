@@ -1,0 +1,69 @@
+<div class=" form-group graph-container">
+  <form name="addLinkForm">
+    <div class="vis-editor-agg-header">
+      <div
+        class="form-group graph-container">
+        <div class="form-group">
+          <label>Link Label</label>
+          <kbn-tooltip
+            text="Label for the link. Maximum 24 characters are allowed."
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+          <input
+            class="form-control"
+            type="text"
+            name="link"
+            ng-model="visParams.linkLabel"
+            maxlength="24"
+            ng-change="validateLinkLabel(visParams.linkLabel)"
+            required/>
+          <div class="help-block" ng-show="duplicateLink">Link label already exists.</div>
+        </div>
+        <div class="form-group">
+          <label>From:</label>
+          <kbn-tooltip
+            text="Select source node for this link"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+          <select
+            ng-model="visParams.fromNode"
+            class="form-control"
+            ng-options="option for option in nodeLabelList"
+            required>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>To:</label>
+          <kbn-tooltip
+            text="Select destination node for this link"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+          <select
+            ng-model="visParams.toNode"
+            class="form-control"
+            ng-options="option for option in nodeLabelList"
+            required>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Metrics</label>
+          <kbn-tooltip
+            text="Add metrics for this link"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+          <utm-metric-list
+            vis-params="visParams">
+          </utm-metric-list>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

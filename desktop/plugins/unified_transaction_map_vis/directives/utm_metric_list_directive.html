@@ -1,0 +1,118 @@
+<div class="business-metric-list-config-container bottom-space">
+  <form
+    name="metricListForm">
+    <table class="metric-list-table color-schema-table bottom-space">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>On hover</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="metric in visParams.metrics">
+          <td style="text-align: center">{{metric.name.title}}</td>
+          <td style="text-align: center">{{metric.onHover}}</td>
+          <td>
+            <kbn-tooltip
+              text="Edit this metric"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="editMetric($index)"
+                class=""
+                aria-label="Edit">
+                <i
+                  aria-hidden="true"
+                 class="fa fa-pencil">
+                </i>
+              </a>
+            </kbn-tooltip>
+            <kbn-tooltip
+              text="Delete this metric"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="deleteMetric($index)"
+                class=""
+                aria-label="Delete">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-trash-o">
+                </i>
+              </a>
+            </kbn-tooltip>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="vis-editor-agg-wide-btn">
+      <div
+        class="kuiButton kuiButton--secondary kuiButton--small"
+        ng-click="openMetricForm()">
+        <i
+          aria-hidden="true"
+          class="fa fa-plus">
+        </i>
+        Add Metric
+      </div>
+    </div>
+    <div ng-if="addMetricFlag == true || editIndex >= 0"
+      class="metric-list-form bottom-space">
+      <div class="row metric-element">
+        <label>Use a Business Metric Visualization to add metric</label>
+        <kbn-tooltip
+          text="Select a Business Metric Visualization to add metric"
+          placement="right"
+          append-to-body="1">
+          <i class="fa fa-question-circle"></i>
+        </kbn-tooltip>
+        <select
+          ng-model="opts.name"
+          class="form-control"
+          ng-options="option as option.title for option in bmList track by option.id"
+          required>
+        </select>
+      </div>
+      <div class="row metric-element">
+        <label>Display on hover</label>
+        <kbn-tooltip
+          text="If Selected as True, metric is displayed on hover. Otherwise, metric is displayed on the graph always."
+          placement="right"
+          append-to-body="1">
+          <i class="fa fa-question-circle"></i>
+        </kbn-tooltip>
+        <select
+          ng-model="opts.onHover"
+          class="form-control"
+          required>
+          <option>True</option>
+          <option>False</option>
+        </select>
+      </div>
+      <div
+        class="row">
+        <div class="col-xs-6">
+          <input
+            ng-disabled="metricListForm.$invalid"
+            type="button"
+            value="Add"
+            ng-click="addMetric()"
+            class="form-control"
+          />
+        </div>
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Cancel"
+            ng-click="cancelEdit()"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

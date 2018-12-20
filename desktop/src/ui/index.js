@@ -86,6 +86,11 @@ export default async (kbnServer, server, config) => {
     const uiSettings = request.getUiSettingsService();
     const translations = await uiI18n.getTranslationsForRequest(request);
 
+    // We inject kbnIndex based on the tenant and bu id available in the vunet paylod. We are setting
+    // both kbnIndex and index as either of them are used at different places
+    uiExports.defaultInjectedVars.kbnIndex = '.kibana' + '-' + vunetPayload.tenantId + '-' + vunetPayload.buId;
+    uiExports.defaultInjectedVars.index = '.kibana' + '-' + vunetPayload.tenantId + '-' + vunetPayload.buId;
+
     return {
       app: app,
       nav: uiExports.navLinks.inOrder,

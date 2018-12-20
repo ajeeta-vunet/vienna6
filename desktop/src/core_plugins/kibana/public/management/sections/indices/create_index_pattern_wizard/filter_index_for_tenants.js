@@ -36,7 +36,7 @@ export function filterIndexBucketsForTenant(buckets, $http, chrome) {
     const filteredBuckets = _.filter(buckets, bucket => {
 
       // This is the tenant-bu derived from the index pattern entered (which is the value)
-      const tenantBuValueMatch = bucket.key.match('(.+)?(-)?([0-9]+)-([0-9]+)-?(.+)?');
+      const tenantBuValueMatch = bucket.key.match('([0-9a-zA-Z._]*?)(-)?([0-9]+)-([0-9]+)-?(.+)?');
 
       // If the logged-in user belongs to a tenant-bu which can see
       // data of other tenant-bu, we check if the tenant-bu derived

@@ -61,9 +61,14 @@ export function savedObjectsMixin(kbnServer, server) {
     }
   }
 
-  server.decorate('server', 'savedObjectsClientFactory', ({ callCluster }) => {
+  server.decorate('server', 'savedObjectsClientFactory', (tenantId, buId, { callCluster }) => {
+
+    // Create the kibana index using tenant and bu id
+    const kbnIndex = '.kibana' + '-' + tenantId + '-' + buId;
+
     return new SavedObjectsClient({
-      index: server.config().get('kibana.index'),
+      //index: server.config().get('kibana.index'),
+      index: kbnIndex,
       mappings: server.getKibanaIndexMappingsDsl(),
       callCluster,
       onBeforeWrite,
@@ -74,13 +79,19 @@ export function savedObjectsMixin(kbnServer, server) {
   server.decorate('request', 'getSavedObjectsClient', function () {
     const request = this;
 
+    // Get the tenant and bu id from the request header
+    const tenantId = request.headers.tenant_id;
+    const buId = request.headers.bu_id;
+
     if (savedObjectsClientCache.has(request)) {
       return savedObjectsClientCache.get(request);
     }
 
     const { callWithRequest } = server.plugins.elasticsearch.getCluster('admin');
     const callCluster = (...args) => callWithRequest(request, ...args);
-    const savedObjectsClient = server.savedObjectsClientFactory({ callCluster });
+    // We need to pass tenant/bu id to this factory which uses it internally to
+    // create tenant/bu specific kibana index and use that
+    const savedObjectsClient = server.savedObjectsClientFactory(tenantId, buId, { callCluster });
 
     savedObjectsClientCache.set(request, savedObjectsClient);
     return savedObjectsClient;

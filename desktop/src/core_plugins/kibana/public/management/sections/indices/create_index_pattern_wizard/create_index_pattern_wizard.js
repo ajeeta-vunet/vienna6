@@ -35,8 +35,8 @@ uiModules.get('apps/management')
   // then filtering out the majority of them because they are sysetm indices.
   // We'd like to filter system indices out in the query
   // so if we can accomplish that in the future, this logic can go away
-    const ESTIMATED_NUMBER_OF_SYSTEM_INDICES = 20;
-    const MAX_NUMBER_OF_MATCHING_INDICES = 20;
+    const ESTIMATED_NUMBER_OF_SYSTEM_INDICES = 50;
+    const MAX_NUMBER_OF_MATCHING_INDICES = 500;
     const MAX_SEARCH_SIZE = MAX_NUMBER_OF_MATCHING_INDICES + ESTIMATED_NUMBER_OF_SYSTEM_INDICES;
     const notify = new Notifier();
     const disabledDividerOption = {

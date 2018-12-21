@@ -137,6 +137,9 @@
       "alertEmailId": {
         "type": "text"
       },
+      "alertEmailGroup": {
+        "type": "text"
+      },
       "enable_runbook_automation": {
         "type": "boolean"
       },

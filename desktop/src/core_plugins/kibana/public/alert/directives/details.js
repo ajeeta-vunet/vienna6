@@ -3,6 +3,8 @@ const $ = require('jquery');
 require('ui/courier');
 require('bootstrap-timepicker');
 require('ui/directives/email_validator.js');
+require('ui/directives/searchable_multiselect.js');
+
 const moment = require('moment');
 import dateMath from '@elastic/datemath';
 const app = require('ui/modules').get('app/alert', [
@@ -234,6 +236,7 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter) {
       $scope.clearEmailField = function () {
         if(!$scope.alertByEmail) {
           $scope.alertEmailId = '';
+          $scope.selectEmailGroupList = [];
         }
       };
 

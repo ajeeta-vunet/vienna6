@@ -15,6 +15,8 @@ import { AlertConstants, createAlertEditUrl } from './alert_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
+import { getTenantEmailGroups, getEmailGroupNameForDisplay } from 'ui/utils/vunet_tenant_email_groups';
+
 const url = chrome.getUrlBase();
 
 uiRoutes
@@ -38,7 +40,11 @@ uiRoutes
       // created.
       isNewAlert: function () {
         return true;
-      }
+      },
+      // Fetch all the email groups for the tenants
+      email_groups: function ($http, chrome) {
+        return getTenantEmailGroups($http, chrome);
+      },
     }
   })
   .when(createAlertEditUrl(':id'), {
@@ -61,10 +67,13 @@ uiRoutes
       },
       isNewAlert: function () {
         return false;
-      }
+      },
+      // Fetch all the email groups for the tenants
+      email_groups: function ($http, chrome) {
+        return getTenantEmailGroups($http, chrome);
+      },
     }
   });
-
 uiModules
   .get('app/alert', [
     'kibana/notify',
@@ -90,7 +99,6 @@ function alertAppEditor($scope,
   $filter,
   $http,
   kbnUrl) {
-
   const notify = new Notifier({
     location: 'Alert'
   });
@@ -100,6 +108,7 @@ function alertAppEditor($scope,
   logUserOperation($http, 'GET', 'alert', alertcfg.title, alertcfg.id);
   const loadedAlertId = $route.current.locals.loadedAlertId;
 
+
   $scope.indexPatternList = $route.current.locals.indexPatternIds.map(pattern => {
     const id = pattern.id;
     return {
@@ -107,6 +116,10 @@ function alertAppEditor($scope,
       title: pattern.get('title'),
     };
   });
+
+  $scope.selectEmailGroupList = [];
+
+  $scope.allEmailGroups = $route.current.locals.email_groups.attributes;
 
   // Set the landing page for alerts section
   $scope.landingPageUrl = () => `#${AlertConstants.LANDING_PAGE_PATH}`;
@@ -301,6 +314,18 @@ function alertAppEditor($scope,
     $scope.alertByTicket = alertcfg.alertByTicket;
     $scope.alertByEmail = alertcfg.alertByEmail;
     $scope.alertEmailId = alertcfg.alertEmailId;
+    if (alertcfg.alertEmailGroup !== '')
+    {
+      // Here the alertEmailGroup field will contain only name as following.
+      // alertEmailGroup = admin, dba, network
+      // To populate in the multiselect directive the format should be as following
+      // [{"name":"admin", "name":"dba"}]
+      // So we need to build a dictionary from the input
+      const emailGroups = alertcfg.alertEmailGroup.split(',');
+      for (let index = 0; index < emailGroups.length; index++) {
+        $scope.selectEmailGroupList.push({ name: emailGroups[index] });
+      }
+    }
     $scope.enableRunBookAutomation = alertcfg.enable_runbook_automation;
     $scope.runBookScript = alertcfg.runbook_script;
     $scope.enableAnsiblePlaybook = alertcfg.enable_ansible_playbook;
@@ -516,6 +541,7 @@ function alertAppEditor($scope,
     alertcfg.alertByTicket = $scope.alertByTicket;
     alertcfg.alertByEmail = $scope.alertByEmail;
     alertcfg.alertEmailId = $scope.alertEmailId;
+    alertcfg.alertEmailGroup = getEmailGroupNameForDisplay($scope.selectEmailGroupList);
     alertcfg.enable_runbook_automation = $scope.enableRunBookAutomation;
     alertcfg.runbook_script = $scope.runBookScript;
     alertcfg.enable_ansible_playbook = $scope.enableAnsiblePlaybook;
@@ -601,6 +627,27 @@ function alertAppEditor($scope,
     allowedRoles: allowedRoles,
     userRoleCanModify: userRoleCanModify,
     doSave: $scope.save,
+  };
+
+  // Adds selected email group to the list
+  $scope.addEmailGroup = function (item) {
+    // Here The item dict will contain both recipientIndex and item as following.
+    // item = item {"recipientIndex":0,"name":"admin"}
+    // recipientIndex is being used in the report as there will be one or more recipients list
+    // In Alert the recipientIndex will be always 0 and not used.
+    // To populate in the multiselect directive the format should be as following
+    // item = {"name":"admin"}
+    $scope.selectEmailGroupList.push({ name: item.name });
+  };
+
+  // Removes the selected email group from the list
+  $scope.removeEmailGroup = function (item) {
+    // Here the item dict will contain both recipientIndex and index as following
+    // item = item {"recipientIndex":0,"index":1}
+    // recipientIndex is being used in the report as there will be one or more recipients list
+    // In Alert the recipientIndex will be always 0 and not used.
+    // index is the index of the selected item in the selectEmailGroupList
+    $scope.selectEmailGroupList.splice(item.index, 1);
   };
 
   init();

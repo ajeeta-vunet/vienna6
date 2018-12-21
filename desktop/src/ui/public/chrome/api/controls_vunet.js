@@ -156,4 +156,14 @@ export default function (chrome, internals) {
     }
     return searchString;
   };
+
+  // Prepare tenant url using the tenant id which can be used by
+  // different apis to prepare the complete urls.
+  // It has been created for email group. We can use this for
+  // other apis in the feature.
+  chrome.getTenantUrlBase = function () {
+    const url = '/' + BASE_URL + '/' + internals.tenantId;
+    return url;
+  };
+
 }

@@ -1,0 +1,29 @@
+<div class="dropdown searchable-multi-select" dropdown on-toggle="toggled(open)">
+  <a class="dropdown-toggle btn btn-default" data-toggle="dropdown" dropdown-toggle data-target="#" ng-class="{'disabled': readOnly}">
+    <span class="limit-ellipsis" ng-style="{ 'width' : width }">
+      <small ng-class="{'searchable-multi-select-blank': commaDelimitedSelected() === ''}" style="font-size:13px; color:#555;">
+        {{ commaDelimitedSelected() }}
+      </small>
+        <b class="caret" ng-if="!readOnly && allItems.length"></b>
+      </span>
+  </a>
+  <ul ng-if="!readOnly && allItems.length" class="dropdown-menu dropdown-menu-form form-control" role="menu">
+    <li>
+      <input type="text" class="form-control" ng-model="searchQuery" placeholder="Search">
+    </li>
+    <li ng-repeat="item in allItems  | orderBy:valueAttr track by $index" ng-hide="searchQuery.length && item[displayAttr].toLowerCase().indexOf(searchQuery.toLowerCase()) < 0">
+      <label class="checkbox clickable" ng-click="updateSelectedItems(item, $index)" ng-class="{'item-selected': isItemSelected(item[valueAttr]) }">
+        <div class="row">
+          <div class="col-sm-4">
+            <span class="fa fa-circle-thin clickable" ng-show="!isItemSelected(item[valueAttr])"></span>
+            <span class="fa fa-check-circle clickable" ng-show="isItemSelected(item[valueAttr])"></span>
+            {{ item[valueAttr] }}
+          </div>
+          <div ng-if="displayAttr != ''" class="col-sm-8">
+            {{ item[displayAttr] }}
+          </div>
+        </div>
+      </label>
+    </li>
+  </ul>
+</div>

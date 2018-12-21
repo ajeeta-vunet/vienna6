@@ -272,8 +272,25 @@
           Configure Recipients Email
         </h4>
         <div class="report-section">
-          <p class="row report-component-label" >
-            Recipients
+          <div
+            class="row recipient-item">
+            <label class="role_label">
+              Role
+            </label>
+            <kbn-tooltip
+              text="Select user role"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+            <label class="recipients_label">
+              Recipients List
+            </label>
             <kbn-tooltip
               text="Provide recipients email to receive the scheduled reports. Multiple emails can be added separated by ',' "
               placement="right"
@@ -285,11 +302,40 @@
                 </i>
               </span>
             </kbn-tooltip>
-          </p>
+            <label class="email_group_label">
+              Email Groups
+            </label>
+            <kbn-tooltip
+              text="Choose email group receipients to receive the scheduled reports"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+            <label class="action_label">
+              Action
+            </label>
+            <kbn-tooltip
+              text="Click this delete button to delete the corrosponding recipient list"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </div>
           <div
             class="row recipient-item"
             ng-repeat="item in recipientsList track by $index">
-            <ng-form name="recipientItemForm">
+            <ng-form name="recipientItemForm"
+              class ="recipient-form">
               <select
                 class="recipient-role"
                 name="groupByField"
@@ -302,31 +348,45 @@
               <input
                 multiple-emails
                 class="recipients"
-                ng-required="enable_scheduling"
+                ng-required="enable_scheduling && item.selectEmailGroupList.length == 0"
                 type="text"
                 maxlength="1024"
                 ng-model="item.recipients"
                 ng-disabled="disableInputElements"
                 name="reportRecipients"
-                ng-class="{error: reportcfgForm.reportRecipients.$invalid}">
-                <p
-                  class="error-highlight"
-                  ng-show="recipientItemForm.reportRecipients.$invalid">
-                  Please provide valid email address. You can enter multiple email address separated by a comma ','
-                </p>
+                ng-class="{error:item.selectEmailGroupList.length == 0 && enable_scheduling && recipientItemForm.reportRecipients.$invalid}">
+              <searchable-multiselect
+                display-attr="description"
+                recipient-index="$index"
+                value-attr="name"
+                name="reportEmailGroup"
+                ng-model="item.selectEmailGroupList"
+                selected-items="item.selectEmailGroupList"
+                all-items="allEmailGroups"
+                add-item="addEmailGroup"
+                remove-item="removeEmailGroup"
+                ng-required="item.recipients">
+              </searchable-multiselect>
               <button
                 ng-disabled="disableInputElements"
-                class="crud_buttons"
+                class="email_buttons"
                 type="button"
                 class="remove"
                 ng-click="removeRecipients($index)">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
               </button>
+              <p ng-if="(item.selectEmailGroupList.length == 0 && item.recipients === '')"
+                class="error-highlight">
+                Please provide either valid email address or choose email group from the list. You can enter multiple email address separated by a comma ','
+              </p>
+              <p ng-if="(recipientItemForm.reportRecipients.$invalid && item.recipients !== '')"
+                class="error-highlight">
+                Please provide valid email address with separated by a comma ','
+              </p>
             </ng-form>
           </div>
           <div
-            class="row add-recipient-style"
-            >
+            class="row add-recipient-style">
             <button
               ng-show="recipientsList.length < 65 && userGroups.length > 1"
               class="add-new-field"

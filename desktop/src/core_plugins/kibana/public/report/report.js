@@ -25,6 +25,9 @@ import { ReportConstants, createReportEditUrl, createReportPrintUrl } from './re
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
+import { getTenantEmailGroups, getEmailGroupNameForDisplay } from 'ui/utils/vunet_tenant_email_groups';
+
+require('ui/directives/searchable_multiselect.js');
 
 uiRoutes
   .when(ReportConstants.CREATE_PATH, {
@@ -36,6 +39,10 @@ uiRoutes
       },
       company_name: function ($http, chrome) {
         return getTenantData($http, chrome);
+      },
+      // Fetch all the email groups for the tenants
+      email_groups: function ($http, chrome) {
+        return getTenantEmailGroups($http, chrome);
       },
       // This flag indicates if new report is being
       // created.
@@ -60,7 +67,11 @@ uiRoutes
       },
       loadedReportId: function ($route) {
         return $route.current.params.id;
-      }
+      },
+      // Fetch all the email groups for the tenants
+      email_groups: function ($http, chrome) {
+        return getTenantEmailGroups($http, chrome);
+      },
     }
   })
   .when(createReportPrintUrl(':id'), {
@@ -84,6 +95,10 @@ uiRoutes
       },
       loadedReportId: function ($route) {
         return $route.current.params.id;
+      },
+      // Fetch all the email groups for the tenants
+      email_groups: function ($http, chrome) {
+        return getTenantEmailGroups($http, chrome);
       }
     },
   });
@@ -121,6 +136,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // Set the landing page for alerts section
   $scope.landingPageUrl = () => `#${ReportConstants.LANDING_PAGE_PATH}`;
   $scope.forms = {};
+
+  $scope.selectEmailGroupList = [];
+  $scope.allEmailGroups = $route.current.locals.email_groups.attributes;
 
   // Since vienna is in a iframe, we use the window.parent to
   // get the url in the browser.
@@ -162,10 +180,26 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   // Load the recipients information in the UI.
   $scope.recipientsData = [];
+
   if(reportcfg.recipientsList) {
     $scope.recipientsData = JSON.parse(reportcfg.recipientsList);
-  }
 
+    for (let index = 0; index < $scope.recipientsData.length; index++) {
+      if ($scope.recipientsData[index].selectEmailGroupList !== '') {
+        // Here the emailgroups will contain only name as following.
+        // emailgroups = admin, dba, network
+        // To populate in the multiselect directive the format should be as following
+        // emailgroup = [{"name":"admin", "name":"dba"}]
+        // So we need to build a dictionary from the input
+        const emailGroups = $scope.recipientsData[index].selectEmailGroupList.split(',');
+        const emailGroup = [];
+        for (let index = 0; index < emailGroups.length; index++) {
+          emailGroup.push({ name: emailGroups[index] });
+        }
+        $scope.recipientsData[index].selectEmailGroupList = emailGroup;
+      }
+    }
+  }
   // If data exists in the back end populate the UI
   // with it else create a new object.
   if ($scope.recipientsData.length &&
@@ -187,7 +221,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     }
   }
   else {
-    $scope.recipientsList = [{ role: '', recipients: '' }];
+    $scope.recipientsList = [{ role: '', recipients: '', selectEmailGroupList: [] }];
   }
 
   $scope.printReport = $route.current.locals.printReport;
@@ -233,7 +267,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // is called so that we can push the user selected object
   // into the list.
   $scope.addRecipients = function () {
-    const dataObj = { role: '', recipients: '' };
+    const dataObj = { role: '', recipients: '', selectEmailGroupList: [] };
     $scope.recipientsList.push(dataObj);
   };
 
@@ -673,6 +707,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   function saveReport(reportcfg) {
     $state.save();
+    let recipientsList = [];
     reportcfg.sectionJSON = angular.toJson($scope.sections);
     reportcfg.panelsJSON = angular.toJson($state.panels);
     reportcfg.uiStateJSON = angular.toJson($uiState.getChanges());
@@ -685,15 +720,21 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     reportcfg.schedule = angular.toJson($scope.schedule);
     reportcfg.company_name = $scope.company_name;
     reportcfg.scheduleFrequency = $scope.cronObj.value;
-
-    if ($scope.recipientsList.length && $scope.recipientsList[0].role === '') {
+    // Take a copy of recipientslist and assign to a new variable.
+    // In the report object, save only the name of the email groups
+    // with comma separated string not in dictionary format.
+    recipientsList = JSON.parse(JSON.stringify($scope.recipientsList));
+    _.each(recipientsList, function (recipient) {
+      const selectEmailGroupList = recipient.selectEmailGroupList;
+      recipient.selectEmailGroupList = getEmailGroupNameForDisplay(selectEmailGroupList);
+    });
+    if (recipientsList.length && recipientsList[0].role === '') {
       // Use only the configured recipients. If the role of first
       // recipient is empty then skip the first 'recipient' object.
-      reportcfg.recipientsList = angular.toJson($scope.recipientsList.slice(0, 1));
+      reportcfg.recipientsList = angular.toJson(recipientsList.slice(0, 1));
     } else {
-      reportcfg.recipientsList = angular.toJson($scope.recipientsList);
+      reportcfg.recipientsList = angular.toJson(recipientsList);
     }
-
     // collect the report owner details, his role and permissions.
     // If owners name is not populated. It is a new report.
     // Collect owner details.
@@ -782,6 +823,25 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     save: $scope.save,
     addVis: $scope.addVis,
     addSearch: $scope.addSearch,
+  };
+
+  // Adds selected email group to the list
+  $scope.addEmailGroup = function (item) {
+    // Here The item dict will contain both recipientIndex and item as following.
+    // item = item {"recipientIndex":0, "name":"admin"}
+    // recipientIndex is the index of the recipients list
+    // To populate in the multiselect directive the format should be as following
+    // item = {"name":"admin"}
+    $scope.recipientsList[item.recipientIndex].selectEmailGroupList.push({ name: item.name });
+  };
+
+  // Removes the selected email group from the list
+  $scope.removeEmailGroup = function (item) {
+    // Here the item dict will contain both recipientIndex and index as following
+    // item = item {"recipientIndex":0,"index":1}
+    // recipientIndex is the index of the recipients list
+    // index is the index of the selected item in the selectEmailGroupList
+    $scope.recipientsList[item.recipientIndex].selectEmailGroupList.splice(item.index, 1);
   };
 
   init();

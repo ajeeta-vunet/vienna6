@@ -863,6 +863,21 @@
                   </kbn-tooltip>
                 </span>
               </div>
+            </div>
+            <div class="row no-padding channel">
+              <div class="col-md-3 channel-title-wrapper">
+                <span
+                  class="alert-component-recipients"
+                  ng-show="alertByEmail">
+                    Recipients List
+                  <kbn-tooltip
+                    text="Choose email groups for this alert"
+                    placement="bottom"
+                    append-to-body="1">
+                    <i class="fa fa-question-circle"></i>
+                  </kbn-tooltip>
+                </span>
+              </div>
               <div class="col-md-9 channel-component-wrapper">
                 <span class="alert-email">
                   <input
@@ -871,13 +886,48 @@
                     maxlength="512"
                     multiple-emails
                     ng-model="alertEmailId"
-                    ng-required="alertByEmail"
+                    ng-required="alertByEmail && selectEmailGroupList.length == 0"
                     name="alertEmailId"
-                    ng-class="{error: alertcfgForm.alertEmailId.$invalid}">
-                  <p
-                    class="error-highlight"
-                    ng-show="alertcfgForm.alertEmailId.$invalid">
-                    Please provide valid email address. You can enter multiple email address separated by a comma ','
+                    ng-class="{error:alertcfgForm.alertEmailId.$invalid && selectEmailGroupList.length == 0}">
+                </spsan>
+              </div>
+            </div>
+            <div class="row no-padding channel">
+              <div class="col-md-3 channel-title-wrapper">
+                <span
+                  class="alert-component-email"
+                  ng-show="alertByEmail">
+                    Email Group
+                  <kbn-tooltip
+                    text="Choose email groups for this alert"
+                    placement="bottom"
+                    append-to-body="1">
+                    <i class="fa fa-question-circle"></i>
+                  </kbn-tooltip>
+                </span>
+              </div>
+              <div class="col-md-9 channel-component-wrapper">
+                <span class="alert-email"
+                  ng-show="alertByEmail">
+                  <searchable-multiselect
+                    display-attr="description"
+                    recipient-index="0"
+                    value-attr="name"
+                    name="alertEmailGroup"
+                    ng-model = "selectEmailGroupList"
+                    selected-items="selectEmailGroupList"
+                    all-items="allEmailGroups"
+                    add-item="addEmailGroup"
+                    remove-item="removeEmailGroup"
+                    ng-required="alertEmailId == undefined">
+                  </searchable-multiselect>
+                  <p ng-if="(selectEmailGroupList.length == 0 && alertEmailId === undefined)"
+                    class="error-highlight">
+                    Please provide either valid email address or choose email group from the list. You can enter multiple email address separated by a comma ','
+                  </p>
+                  <p ng-if="(alertcfgForm.alertEmailId.$invalid && alertEmailId !== undefined)"
+                    class="error-highlight">
+                    Please provide valid email address with separated by a comma ','
                   </p>
                 </span>
               </div>

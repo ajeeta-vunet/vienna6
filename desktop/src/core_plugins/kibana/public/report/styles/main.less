@@ -1,5 +1,6 @@
 @import (reference) "~ui/styles/variables";
 @import (reference) "~ui/styles/mixins";
+@import (reference) "~ui/styles/searchable_multiselect";
 
 @report-bg:     #fff;
 
@@ -183,6 +184,13 @@ ol ol > li:before {
   margin-bottom: 10px;
 }
 
+.report-header {
+  border:1px solid #bac5ce;
+  background-color: #f7f9fb;
+  padding: 13px 30px;
+  width: 1500px;
+}
+
 // for the section header icon
 .step-indicator {
   background-color: @text-color;
@@ -204,8 +212,19 @@ ol ol > li:before {
 
 // add and remove buttons
 .crud_buttons {
+  position: absolute;
+  right: 100px;
   background-color: #F7F9FB;
-  padding:0px;
+  &:hover,
+  &.active {
+    color:@text-color;
+  }
+}
+
+.email_buttons {
+  position: absolute;
+  right: 38%;
+  background-color: #F7F9FB;
   &:hover,
   &.active {
     color:@text-color;
@@ -274,14 +293,60 @@ ol ol > li:before {
   height: 22px !important;
 }
 
+.recipient-item {
+  border:1px solid #F7F9FB;
+}
+
+.recipient-form {
+  border:1px solid #F7F9FB;
+  width: 2000px;
+}
+
 .recipients {
   width: 400px;
   padding-left: 3px;
-  height: 22px !important;
+  height: 30px !important;
+}
+
+.recipient-role {
+  padding-left: 3px;
+  height: 30px !important;
+}
+
+.role_label {
+  padding-left: 0px;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.recipients_label {
+  padding-left: 60px;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.email_group_label {
+  padding-left: 315px;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.action_label {
+  padding-left: 410px;
+  font-size: 13px;
+  font-weight: normal;
 }
 
 .add-recipient-style {
   padding-top: 6px;
+}
+
+span.limit-ellipsis {
+  text-overflow: ellipsis;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 16px;
 }
 
 .shipper-address-url {
@@ -294,4 +359,3 @@ ol ol > li:before {
     color:#1a0dab !important;
   }
 }
-

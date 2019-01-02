@@ -28,6 +28,34 @@
           {{ vis.params.metrics[$index].label }}
         </span>
         <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+
+          <!-- hide metric -->
+          <button
+            ng-if="metric.hideMetric && vis.params.metrics.length-1"
+            ng-model="metric.hideMetric"
+            ng-click="metric.hideMetric = false"
+            aria-label="Show metric"
+            tooltip="Show metric"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--basic kuiButton--small">
+            <i aria-hidden="true" class="fa fa-toggle-on"></i>
+          </button>
+
+          <!-- show metric -->
+          <button
+            ng-if="!metric.hideMetric && vis.params.metrics.length-1"
+            ng-model="metric.hideMetric"
+            ng-click="metric.hideMetric = true"
+            aria-label="Hide metric"
+            tooltip="Hide metric"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--basic kuiButton--small">
+            <i aria-hidden="true" class="fa fa-toggle-off"></i>
+          </button>
+         
+
           <!-- up button -->
           <button
             aria-label="Increase Priority"
@@ -253,3 +281,4 @@
       </div>
     </div>
   </div>
+</div>

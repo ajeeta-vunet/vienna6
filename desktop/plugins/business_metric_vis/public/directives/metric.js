@@ -65,10 +65,17 @@ app.directive('vudataMetric', function () {
 
           // display metric field when metric type is
           // not count.
-          if (scope.metric.type !== 'count') {
+          if ((scope.metric.type !== 'count') && (scope.metric.type !== 'expression')) {
             scope.opts.showFields = true;
-          }
-          else {
+          } else if (scope.metric.type === 'expression') {
+            scope.opts.showFields = false;
+
+            // In case of expression, we show the format as 'Number' by
+            // default
+            if (!scope.metric.format) {
+              scope.metric.format = 'number';
+            }
+          } else {
             scope.opts.showFields = false;
             scope.metric.field = '';
           }

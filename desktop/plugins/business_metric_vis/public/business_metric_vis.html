@@ -10,6 +10,7 @@
     <div
       ng-repeat="(metricName, metricObj) in metric"
       class="business-metric-container"
+      ng-show="!vis.params.metrics[0].hideMetric"
       ng-style="vis.params.metrics[0].bgColorEnabled &&
                 {'background-color': metricObj.color,
                  'color': '#fff' }">
@@ -127,6 +128,7 @@
     <div
       ng-repeat="metric in metricDatas track by $index"
       ng-init="outerIndex=$index"
+      ng-show="!vis.params.metrics[outerIndex].hideMetric"
       class="">
       <div
         ng-repeat="(metricName, metricObj) in metric track by $index"
@@ -237,7 +239,7 @@
         ng-init="outerIndex=$index-1">
         <td>
           <table class="bm-sub-table bm-page-break">
-            <tr ng-repeat="(metric,item) in items track by $index">
+            <tr ng-show="!vis.params.metrics[outerIndex].hideMetric" ng-repeat="(metric,item) in items track by $index">
               <td width="{{ columnWidth }}" class="bm-table-td-metric-names">
                 <div>
                   <span class="metric-name">{{ metric }}</span>

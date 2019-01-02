@@ -147,6 +147,7 @@ app.directive('vudataMetricColorSchema', function () {
       scope.isMetricValueNumber = function () {
         if (scope.metricType === 'cardinality' ||
             scope.metricType === 'count' ||
+            scope.metricType === 'expression' ||
             scope.isNumberField()) {
           return true;
         }

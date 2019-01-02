@@ -337,7 +337,8 @@ module.controller('BusinessMetricVisController', function ($scope, Private, Noti
           field: metric.field || '',
           fieldType: fieldType || '',
           filter: metric.filter || '*',
-          colorSchema: finalColorSchema
+          colorSchema: finalColorSchema,
+          format: metric.format || ''
         });
 
       });

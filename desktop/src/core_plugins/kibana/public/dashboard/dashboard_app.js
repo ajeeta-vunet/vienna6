@@ -448,6 +448,9 @@ app.directive('dashboardApp', function ($injector, $http) {
         $scope.subMenuTree = data;
       });
 
+      const currentUser = chrome.getCurrentUser();
+      const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+
       $scope.opts = {
         displayName: dash.getDisplayName(),
         dashboard: dash,
@@ -459,6 +462,7 @@ app.directive('dashboardApp', function ($injector, $http) {
         addSearch: $scope.addSearch,
         timefilter: $scope.timefilter,
         allowedRoles: allowedRoles,
+        owner: owner
       };
     }
   };

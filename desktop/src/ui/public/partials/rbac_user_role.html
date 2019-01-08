@@ -36,7 +36,9 @@
                 type="radio"
                 ng-model="role.permission"
                 value="modify"
-                ng-dblclick="role.permission=''">
+                ng-dblclick="role.permission=''"
+                ng-disabled="role.name == owner.role"
+                ng-checked="role.name == owner.role">
                 Modify
             </label>
           </td>
@@ -46,7 +48,8 @@
                 type="radio"
                 ng-model="role.permission"
                 value="view"
-                ng-dblclick="role.permission=''">
+                ng-dblclick="role.permission=''"
+                ng-disabled="role.name == owner.role">
                 View
             </label>
           </td>

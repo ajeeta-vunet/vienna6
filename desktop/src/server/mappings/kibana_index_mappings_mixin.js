@@ -8,7 +8,7 @@ import { IndexMappings } from './index_mappings';
  */
 const BASE_KIBANA_INDEX_MAPPINGS_DSL = {
   doc: {
-    dynamic: 'strict',
+    dynamic: 'true',
     properties: {
       type: {
         type: 'keyword'

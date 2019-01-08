@@ -96,10 +96,6 @@ uiRoutes
       loadedReportId: function ($route) {
         return $route.current.params.id;
       },
-      // Fetch all the email groups for the tenants
-      email_groups: function ($http, chrome) {
-        return getTenantEmailGroups($http, chrome);
-      }
     },
   });
 
@@ -138,7 +134,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   $scope.forms = {};
 
   $scope.selectEmailGroupList = [];
-  $scope.allEmailGroups = $route.current.locals.email_groups.attributes;
 
   // Since vienna is in a iframe, we use the window.parent to
   // get the url in the browser.
@@ -151,10 +146,15 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   const allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
 
+  let isScheduleInvalid =  false;
+  let isEmailButtonDisabled = true;
+
+
   // Object to store the user selected values
   // in report scheduling
   $scope.cronObj = {};
   $scope.enable_scheduling = false;
+  $scope.recipientsList = [];
 
   // Is scheduling enabled... Used by time restore during report save
   $scope.isScheduleEnabled = function () {
@@ -185,7 +185,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.recipientsData = JSON.parse(reportcfg.recipientsList);
 
     for (let index = 0; index < $scope.recipientsData.length; index++) {
-      if ($scope.recipientsData[index].selectEmailGroupList !== '') {
+      if ($scope.recipientsData[index].selectEmailGroupList !== '' && $scope.recipientsData[index].selectEmailGroupList !== undefined) {
         // Here the emailgroups will contain only name as following.
         // emailgroups = admin, dba, network
         // To populate in the multiselect directive the format should be as following
@@ -198,6 +198,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         }
         $scope.recipientsData[index].selectEmailGroupList = emailGroup;
       }
+      else{
+        $scope.recipientsData[index].selectEmailGroupList = [];
+      }
     }
   }
   // If data exists in the back end populate the UI
@@ -205,14 +208,13 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   if ($scope.recipientsData.length &&
     $scope.recipientsData[0].role !== '') {
     const currentUser = chrome.getCurrentUser();
-
+    // Enable email button since recipients exists
+    isEmailButtonDisabled = false;
     // Display all the
     if (chrome.isCurrentUserAdmin()) {
       $scope.recipientsList = $scope.recipientsData;
     }
     else {
-      $scope.recipientsList = [];
-
       // Display only those recipient configuration
       // which belongs to logged in user's role
       $scope.recipientsList = _.filter($scope.recipientsData, function (recipient) {
@@ -220,13 +222,16 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       });
     }
   }
-  else {
-    $scope.recipientsList = [{ role: '', recipients: '', selectEmailGroupList: [] }];
+  //disable email button since recipients doesnot exists
+  else{
+    isEmailButtonDisabled = true;
   }
 
   $scope.printReport = $route.current.locals.printReport;
 
   if($scope.printReport !== true) {
+
+    $scope.allEmailGroups = $route.current.locals.email_groups.attributes;
 
     // Get all the user groups configured
     const postCall = $http({
@@ -269,18 +274,33 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   $scope.addRecipients = function () {
     const dataObj = { role: '', recipients: '', selectEmailGroupList: [] };
     $scope.recipientsList.push(dataObj);
+    isScheduleInvalid = false;
   };
 
   // To delete a recipient
   $scope.removeRecipients = function (index) {
     $scope.recipientsList.splice(index, 1);
+    // When no recipient is added but check box is checked
+    // make isScheduleInvalid = true so that save button is disabled
+    if(!$scope.recipientsList.length && $scope.enable_scheduling) {
+      isScheduleInvalid = true;
+    }
   };
 
   // Reset the schedule frequency when enable scheduling
   // is unchecked.
   $scope.toggleEnableSchedule = function () {
+    $scope.enable_scheduling = !$scope.enable_scheduling;
     if (!$scope.enable_scheduling) {
       $scope.cronObj.value = '';
+      isScheduleInvalid = false;
+    }
+    else{
+      if($scope.recipientsList.length === 0) {
+        $scope.addRecipients();
+      }
+      // The default value to be shown to the user
+      $scope.cronObj.value = '* * * * *';
     }
   };
 
@@ -303,6 +323,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
   }
 
+
   // If user can modify the existing object or is allowed to create an object
   if(userRoleCanModify && chrome.canCurrentUserCreateObject()) {
     $scope.topNavMenu = [{
@@ -311,7 +332,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       template: require('plugins/kibana/report/panels/save.html'),
       testId: 'reportSaveButton',
       disableButton() {
-        return Boolean(!$scope.forms.reportcfgForm.$valid);
+        return Boolean(isScheduleInvalid || !$scope.forms.reportcfgForm.$valid);
       },
     },
     {
@@ -325,6 +346,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       description: 'Email Report',
       testId: 'reportEmailButton',
       run: function () { $scope.emailReport(); },
+      disableButton() {
+        return Boolean(isEmailButtonDisabled);
+      }
     }];
   } else {
     $scope.topNavMenu = [{
@@ -338,6 +362,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       description: 'Email Report',
       testId: 'reportEmailButton',
       run: function () { $scope.emailReport(); },
+      disableButton() {
+        return Boolean(isEmailButtonDisabled);
+      },
     }];
   }
 
@@ -369,9 +396,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   // Let us set the global time selector based on the time we had saved in
   // the report
-  if (!$scope.printReport && reportcfg.timeRestore && reportcfg.timeTo
-      && reportcfg.timeFrom) {
-
+  if (!$scope.printReport && reportcfg.timeTo && reportcfg.timeFrom) {
     // If the report is saved with 'absolute' mode prepare a moment object
     // for 'from' and 'to' time values and save it in timefilter.
     if (reportcfg.timeTo.startsWith('now')) {
@@ -385,7 +410,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     }
 
   }
-
   $scope.$on('$destroy', reportcfg.destroy);
 
   const matchQueryFilter = function (filter) {
@@ -611,16 +635,17 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
     // If 'absoulute' mode is selected in time filter
     // we prepare the 'from' and 'to' time in the format:
-    // 'DD-MMM-YYYY hh:mm:ss'
+    // 'DD-MMM-YYYY HH:mm:ss'
     if (timefilter.time.mode === 'absolute') {
       mode = 'quick';
-      fromTime = moment.unix(timefilter.time.from / 1000).format('DD-MMM-YYYY hh:mm:ss');
-      toTime = moment.unix(timefilter.time.to / 1000).format('DD-MMM-YYYY hh:mm:ss');
+      fromTime = moment.unix(timefilter.time.from / 1000).format('DD-MMM-YYYY HH:mm:ss');
+      toTime = moment.unix(timefilter.time.to / 1000).format('DD-MMM-YYYY HH:mm:ss');
     } else {
       mode = timefilter.time.mode;
       fromTime = timefilter.time.from;
       toTime = timefilter.time.to;
     }
+
 
     const queryParams = '?_g=(time:(from:\'' + fromTime + '\',mode:' + mode + ',to:\'' + toTime + '\'))';
     return queryParams;
@@ -631,6 +656,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
     // To notify user that things will happen, we throw a confirm modal
     const option = confirm('Report will be generated and sent to the configured email ids. Press Ok to continue?');
+
 
     // If user pressed ok, we send a request to backend
     if (option) {
@@ -706,16 +732,38 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   };
 
   function saveReport(reportcfg) {
+    const permissionsDict = {};
+    let permissionsFlag = true;
+
     $state.save();
     let recipientsList = [];
+
+    // If there exists a user group in recipient list, then it should have atleast
+    // view permissions for the report
+    angular.forEach($scope.opts.allowedRoles, function (roleObj) {
+      permissionsDict[roleObj.name] = roleObj.permission;
+    });
+
+    angular.forEach($scope.recipientsList, function (recipient) {
+      if(permissionsDict[recipient.role] === undefined || permissionsDict[recipient.role] === '') {
+        permissionsFlag = false;
+      }
+    });
+
+    if(!permissionsFlag) {
+      alert('All the roles in the recipent list must have atleast view permission of the report');
+      return;
+    }
+
     reportcfg.sectionJSON = angular.toJson($scope.sections);
     reportcfg.panelsJSON = angular.toJson($state.panels);
     reportcfg.uiStateJSON = angular.toJson($uiState.getChanges());
 
     // We will enable this with RBAC support: Bharat
     reportcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
-    reportcfg.timeFrom = reportcfg.timeRestore ? timefilter.time.from : undefined;
-    reportcfg.timeTo = reportcfg.timeRestore ? timefilter.time.to : undefined;
+
+    reportcfg.timeFrom = timefilter.time.from;
+    reportcfg.timeTo = timefilter.time.to;
     reportcfg.optionsJSON = angular.toJson($state.options);
     reportcfg.schedule = angular.toJson($scope.schedule);
     reportcfg.company_name = $scope.company_name;
@@ -753,8 +801,17 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         $scope.kbnTopNav.close('save');
         if (id) {
 
-          // Update the backend for this object's operation
+        // Update the backend for this object's operation
           updateVunetObjectOperation([reportcfg], 'report', $http, 'modify', chrome);
+
+          // After saving check if recipients are present
+          // or not in order to enable or disable email button
+          if($scope.recipientsList.length) {
+            isEmailButtonDisabled = false;
+          }
+          else{
+            isEmailButtonDisabled = true;
+          }
 
           if (reportcfg.id !== $routeParams.id) {
             kbnUrl.change('/report/{{id}}', { id: reportcfg.id });
@@ -798,6 +855,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $state.save();
   });
 
+
   // called by the saved-object-finder when a user clicks a vis
   $scope.addVis = function (hit) {
     $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: hit.type.name, type: 'visualization' });
@@ -823,6 +881,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     save: $scope.save,
     addVis: $scope.addVis,
     addSearch: $scope.addSearch,
+    owner: $scope.owner
   };
 
   // Adds selected email group to the list

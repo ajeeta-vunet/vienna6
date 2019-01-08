@@ -86,9 +86,9 @@ export function reportDownloadApi(server) {
         userName,
         userRole,
         userPermissions,
-        duration,
         tenantId,
         buId,
+        duration,
         shipperUrl,
         searchString
       ];

@@ -326,6 +326,9 @@ function discoverController(
     savedSearch.sampleSize = sampleSize;
   }
 
+  const currentUser = chrome.getCurrentUser();
+  const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+
   $scope.opts = {
     // number of records to fetch, then paginate through
     sampleSize: sampleSize,
@@ -333,7 +336,8 @@ function discoverController(
     savedSearch: savedSearch,
     indexPatternList: $route.current.locals.ip.list,
     timefilter: $scope.timefilter,
-    allowedRoles: allowedRoles
+    allowedRoles: allowedRoles,
+    owner: owner
   };
 
   const init = _.once(function () {

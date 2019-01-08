@@ -32,7 +32,7 @@ module.factory('SavedReport', function (courier) {
         schedule: '{}',
         owner: '{}',
         company_name: '',
-        timeRestore: false,
+        timeRestore: true,
         scheduleFrequency: '',
         recipientsList: '[]'
       },

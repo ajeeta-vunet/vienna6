@@ -196,9 +196,11 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
     // map-specific information (e.g. mapZoom, mapCenter).
     vis.setUiState($scope.uiState);
 
+    const currentUser = chrome.getCurrentUser();
+    $scope.owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
 
     $scope.timefilter = timefilter;
-    $scope.opts = _.pick($scope, 'doSave', 'savedVis', 'shareData', 'timefilter', 'isAddToDashMode', 'allowedRoles');
+    $scope.opts = _.pick($scope, 'doSave', 'savedVis', 'shareData', 'timefilter', 'isAddToDashMode', 'allowedRoles', 'owner');
 
     stateMonitor = stateMonitorFactory.create($state, stateDefaults);
     stateMonitor.ignoreProps([ 'vis.listeners' ]).onChange((status) => {

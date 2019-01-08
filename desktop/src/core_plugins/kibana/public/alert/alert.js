@@ -621,12 +621,16 @@ function alertAppEditor($scope,
     return alertcfg.title;
   };
 
+  const currentUser = chrome.getCurrentUser();
+  const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+
   // Setup configurable values for config directive, after objects are initialized
   $scope.opts = {
     alertcfg: alertcfg,
     allowedRoles: allowedRoles,
     userRoleCanModify: userRoleCanModify,
     doSave: $scope.save,
+    owner: owner
   };
 
   // Adds selected email group to the list

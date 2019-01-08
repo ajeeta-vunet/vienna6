@@ -348,7 +348,7 @@
               <input
                 multiple-emails
                 class="recipients"
-                ng-required="enable_scheduling && item.selectEmailGroupList.length == 0"
+                ng-required="(enable_scheduling && item.selectEmailGroupList.length == 0) || !item.selectEmailGroupList.length"
                 type="text"
                 maxlength="1024"
                 ng-model="item.recipients"
@@ -365,7 +365,7 @@
                 all-items="allEmailGroups"
                 add-item="addEmailGroup"
                 remove-item="removeEmailGroup"
-                ng-required="item.recipients">
+                ng-required="(enable_scheduling && item.recipients == '') || item.recipients == ''">
               </searchable-multiselect>
               <button
                 ng-disabled="disableInputElements"
@@ -375,15 +375,11 @@
                 ng-click="removeRecipients($index)">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
               </button>
-              <p ng-if="(item.selectEmailGroupList.length == 0 && item.recipients === '')"
+              <p ng-if="item.recipients !== '' && ((item.selectEmailGroupList.length == 0 && recipientItemForm.reportRecipients.$invalid) || recipientItemForm.reportRecipients.$invalid)"
                 class="error-highlight">
-                Please provide either valid email address or choose email group from the list. You can enter multiple email address separated by a comma ','
+                Please provide either valid email address or choose email group from the list. You can enter multiple email addresses separated by a comma ','
               </p>
-              <p ng-if="(recipientItemForm.reportRecipients.$invalid && item.recipients !== '')"
-                class="error-highlight">
-                Please provide valid email address with separated by a comma ','
-              </p>
-            </ng-form>
+          </ng-form>
           </div>
           <div
             class="row add-recipient-style">
@@ -392,7 +388,7 @@
               class="add-new-field"
               type="button"
               ng-click="addRecipients()">
-              <span>Add another field</span>
+              <span>Add field</span>
               <i class="fa fa-plus-circle" aria-hidden="true"></i>
             </button>
           </div>

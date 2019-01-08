@@ -8,7 +8,8 @@ module.directive('rbacUserRole', function ($http) {
   return {
     restrict: 'EA',
     scope: {
-      allowedRoles: '='
+      allowedRoles: '=',
+      owner: '<'
     },
     template: require('ui/partials/rbac_user_role.html'),
     link: function ($scope) {

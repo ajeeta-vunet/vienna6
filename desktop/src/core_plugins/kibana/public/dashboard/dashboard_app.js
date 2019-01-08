@@ -7,6 +7,8 @@ import 'ui/query_bar';
 import 'ui/directives/sub_menu_tree';
 import 'ui/directives/sub_menu_leaf';
 
+import 'ui/vunet_components/index_angular';
+
 import { getDashboardTitle, getUnsavedChangesWarningMessage } from './dashboard_strings';
 import { DashboardViewMode } from './dashboard_view_mode';
 import { TopNavIds } from './top_nav/top_nav_ids';
@@ -235,13 +237,16 @@ app.directive('dashboardApp', function ($injector, $http) {
       };
 
       // called by the saved-object-finder when a user clicks a vis
+      // and passing visState and description to the panel.
       $scope.addVis = function (hit, showToast = true) {
-        dashboardStateManager.addNewPanel(hit.id, 'visualization', hit.visState);
+        dashboardStateManager.addNewPanel(hit.id, 'visualization');
         if (showToast) {
           notify.info(`Visualization successfully added to your dashboard`);
         }
       };
 
+      // called by the saved-object-finder when a user clicks a search
+      // and passing visState as empty and description to the panel.
       $scope.addSearch = function (hit) {
         dashboardStateManager.addNewPanel(hit.id, 'search');
         notify.info(`Search successfully added to your dashboard`);
@@ -372,6 +377,13 @@ app.directive('dashboardApp', function ($injector, $http) {
         window.location = `#/${chrome.getUserHomeDashboard()}`;
         onChangeViewMode(DashboardViewMode.VIEW);
       };
+
+      // Action for REFRESH button in nav bar
+      // When ever REFRESH button clicked.
+      navActions[TopNavIds.REFRESH] = () =>{
+        $scope.refresh();
+      };
+
       navActions[TopNavIds.FULL_SCREEN] = () =>
         dashboardStateManager.setFullScreenMode(true);
       navActions[TopNavIds.EXIT_EDIT_MODE] = () => onChangeViewMode(DashboardViewMode.VIEW);

@@ -78,7 +78,8 @@ export class VisualizeEmbeddableFactory extends EmbeddableFactory {
 
         return new Embeddable({
           title: savedObject.title,
-          editUrl: visualizeScope.editUrl
+          editUrl: visualizeScope.editUrl,
+          visState: savedObject.visState
         });
       });
   }

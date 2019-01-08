@@ -19,16 +19,18 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
           ]
           : [
             getHomeConfig(actions[TopNavIds.HOME]),
+            getRefreshConfig(actions[TopNavIds.REFRESH]),
             // Hiding the 'Full Screen' and 'Share' options
             //getFullScreenConfig(actions[TopNavIds.FULL_SCREEN]),
             //getShareConfig(),
             //getCloneConfig(actions[TopNavIds.CLONE]),
-            getEditConfig(actions[TopNavIds.ENTER_EDIT_MODE])
+            getEditConfig(actions[TopNavIds.ENTER_EDIT_MODE]),
           ]
       );
     case DashboardViewMode.EDIT:
       return [
         getHomeConfig(actions[TopNavIds.HOME]),
+        getRefreshConfig(actions[TopNavIds.REFRESH]),
         getSaveConfig(),
         getViewConfig(actions[TopNavIds.EXIT_EDIT_MODE]),
         getAddConfig(),
@@ -142,6 +144,18 @@ function getHomeConfig(action) {
     key: 'home',
     description: 'Home',
     testId: 'dashboardHome',
+    run: action
+  };
+}
+
+/**
+ * @returns {kbnTopNavConfig}
+ */
+function getRefreshConfig(action) {
+  return {
+    key: 'refresh',
+    description: 'REFRESH',
+    testId: 'dashboardRefresh',
     run: action
   };
 }

@@ -28,6 +28,7 @@ function MatrixVisTypeProvider(Private) {
 
   // Create the Angular visualization
   return VisFactory.createAngularVisualization({
+    type: 'matrix',
     name: 'matrix',
     title: 'Matrix',
     icon: 'fa-th-list',
@@ -44,6 +45,7 @@ function MatrixVisTypeProvider(Private) {
         outputTimeFormat: 'millisecond',
         NoOfColumns: 10,
         perPage: 10,
+        colorCodeValues: false,
         colorSchema: [],
         interval: {
           interval: 'h',
@@ -68,6 +70,7 @@ function MatrixVisTypeProvider(Private) {
           group: 'metrics',
           name: 'metric',
           title: 'Metric',
+          aggFilter: ['!geo_centroid', '!geo_bounds'],
           min: 1,
           max: 1,
           // maximum of 1 metric is allowed.

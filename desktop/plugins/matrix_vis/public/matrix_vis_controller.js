@@ -20,12 +20,15 @@ module.controller('KbnMatrixVisController', function ($scope, Private, timefilte
     let hasSomeRows = $scope.hasSomeRows = null;
 
     const input = timefilter.getActiveBounds();
-    $scope.startDate = moment(input.min._d).format('ddd MMM DD YYYY HH:mm:ss');
-    $scope.noOfDays = moment(input.max._d).diff(moment(input.min._d), 'days', true);
-    $scope.outputTimeFormat = $scope.vis.params.outputTimeFormat;
-    $scope.exceededNoOfDaysErrorMessage = 'No of Days cannot exceed 31! Please use the ' +
-                                          'global time picker at the top right corner of ' +
-                                          'the screen to update the time';
+    if (input !== undefined) {
+      // This is applicable only for time series indices
+      $scope.startDate = moment(input.min._d).format('ddd MMM DD YYYY HH:mm:ss');
+      $scope.noOfDays = moment(input.max._d).diff(moment(input.min._d), 'days', true);
+      $scope.outputTimeFormat = $scope.vis.params.outputTimeFormat;
+      $scope.exceededNoOfDaysErrorMessage = 'No of Days cannot exceed 31! Please use the ' +
+                                            'global time picker at the top right corner of ' +
+                                            'the screen to update the time';
+    }
 
     if (resp) {
       const vis = $scope.vis;
@@ -52,9 +55,8 @@ module.controller('KbnMatrixVisController', function ($scope, Private, timefilte
 
       // If we have MetricsInPercentage flag enabled, let us iterate on each
       // row and calculate the sum for each row and update the aggConfigResult
-      tableGroups.rows = [];
       if (metricsInPercentage) {
-        tableGroups.rows.forEach(function (row) {
+        tableGroups.tables[0].rows.forEach(function (row) {
           let sum = 0;
 
           row.forEach(function (cell) {

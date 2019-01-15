@@ -7,8 +7,6 @@ import 'ui/query_bar';
 import 'ui/directives/sub_menu_tree';
 import 'ui/directives/sub_menu_leaf';
 
-import 'ui/vunet_components/index_angular';
-
 import { getDashboardTitle, getUnsavedChangesWarningMessage } from './dashboard_strings';
 import { DashboardViewMode } from './dashboard_view_mode';
 import { TopNavIds } from './top_nav/top_nav_ids';

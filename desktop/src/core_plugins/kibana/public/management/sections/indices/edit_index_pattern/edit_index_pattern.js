@@ -4,6 +4,7 @@ import './indexed_fields_table';
 import './scripted_fields_table';
 import './scripted_field_editor';
 import './source_filters_table';
+import chrome from 'ui/chrome';
 import { KbnUrlProvider } from 'ui/url';
 import { IndicesEditSectionsProvider } from './edit_sections';
 import uiRoutes from 'ui/routes';
@@ -40,9 +41,10 @@ uiRoutes
 
 uiModules.get('apps/management')
   .controller('managementIndicesEdit', function (
-    $scope, $location, $route, config, courier, Notifier, Private, AppState, docTitle, confirmModal) {
+    $scope, $location, $route, config, courier, Notifier, Private, AppState, docTitle, confirmModal, $http) {
     const notify = new Notifier();
     const $state = $scope.state = new AppState();
+    const updateOperation = require('ui/utils/vunet_object_operation');
 
     $scope.kbnUrl = Private(KbnUrlProvider);
     $scope.indexPattern = $route.current.locals.indexPattern;
@@ -111,8 +113,13 @@ uiModules.get('apps/management')
           }
         }
 
+        const indexPattern = $scope.indexPattern;
         courier.indexPatterns.delete($scope.indexPattern)
           .then(function () {
+            // We need to indicate this operation to the backend that a kibana
+            // index has been deleted.. This is mainly to remove cache at the
+            // backend
+            updateOperation.updateVunetObjectOperation([indexPattern], 'index_pattern', $http, 'delete', chrome);
             $location.url('/management/kibana/index');
           })
           .catch(notify.fatal);

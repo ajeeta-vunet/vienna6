@@ -447,7 +447,7 @@ function alertAppEditor($scope,
       $scope.successexecuteLogs =  true;
     }).catch(function () {
       $scope.failureexecuteLogs = true;
-      $scope.errmessage = 'Fail to process test execution of alert ruleState Change alert';
+      $scope.errmessage = 'Fail to process test execution of alert rule';
     });
   };
 

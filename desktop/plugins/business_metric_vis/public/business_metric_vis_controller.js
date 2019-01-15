@@ -142,6 +142,19 @@ module.controller('BusinessMetricVisController', function ($scope, Private, Noti
       historicalDataLength = $scope.vis.params.historicalData.length;
     }
 
+    if (aggregationsLength === 0) {
+      // Check whether, more than one metrics are to te displayed.
+      // If it is only one metric, we would be displaying them
+      // with CSS class used for single metric
+      let displayedMetrics = 0;
+      _.each($scope.vis.params.metrics, function (metric) {
+        if (!metric.hideMetric) {
+          displayedMetrics += 1;
+        }
+      });
+      $scope.displayedMetrics = displayedMetrics;
+    }
+
     // calculate the no of columns to set the width of each column
     // we are adding 2 at the end to include the column headers 'Metric' and
     // 'For selected time'.

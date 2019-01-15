@@ -73,20 +73,27 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
   function processAggregations(vis, write, aggregations) {
 
     const input = timefilter.getActiveBounds();
-    let bounds = [];
-    if (_.isPlainObject(input)) {
-      bounds = [input.min, input.max];
-    } else {
-      bounds = _.isArray(input) ? input : [];
-    }
-    const moments = _(bounds).map(_.ary(moment, 1)).sortBy(Number);
+    let startDate;
+    let noOfDays = 0;
 
-    // moments.pop() gives the end time
-    // moments.shift() gives the start time
-    // calculate the time duration using them.
-    const duration = moment.duration(moments.pop() - moments.shift(), 'ms');
-    const startDate = moments.shift()._d;
-    const noOfDays = duration._data.days;
+    if (input !== undefined) {
+      // This is applicable only for time series data
+      let bounds = [];
+      if (_.isPlainObject(input)) {
+        bounds = [input.min, input.max];
+      } else {
+        bounds = _.isArray(input) ? input : [];
+      }
+      const moments = _(bounds).map(_.ary(moment, 1)).sortBy(Number);
+
+      // moments.pop() gives the end time
+      // moments.shift() gives the start time
+      // calculate the time duration using them.
+      const duration = moment.duration(moments.pop() - moments.shift(), 'ms');
+      startDate = moments.shift()._d;
+      noOfDays = duration._data.days;
+    }
+
     // Get the configured aggregations from the stack..
     const firstAgg = write.aggStack[0];
     const keyAgg = write.aggStack[1];

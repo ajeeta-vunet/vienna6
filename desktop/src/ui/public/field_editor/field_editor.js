@@ -9,6 +9,7 @@ import { uiModules } from 'ui/modules';
 import fieldEditorTemplate from 'ui/field_editor/field_editor.html';
 import '../directives/documentation_href';
 import './field_editor.less';
+import chrome from 'ui/chrome';
 import {
   GetEnabledScriptingLanguagesProvider,
   getSupportedScriptingLanguages,
@@ -18,7 +19,7 @@ import { getKbnTypeNames } from '../../../utils';
 
 uiModules
   .get('kibana', ['colorpicker.module'])
-  .directive('fieldEditor', function (Private, $sce, confirmModal, config) {
+  .directive('fieldEditor', function (Private, $sce, confirmModal, config, $http) {
     const getConfig = (...args) => config.get(...args);
     const fieldFormats = Private(RegistryFieldFormatsProvider);
     const Field = Private(IndexPatternsFieldProvider);
@@ -65,6 +66,7 @@ uiModules
           const indexPattern = self.indexPattern;
           const fields = indexPattern.fields;
           const field = self.field.toActualField();
+          const updateOperation = require('ui/utils/vunet_object_operation');
 
           const index = fields.findIndex(f => f.name === field.name);
           if (index > -1) {
@@ -82,6 +84,7 @@ uiModules
           return indexPattern.save()
             .then(function () {
               notify.info('Saved Field "' + self.field.name + '"');
+              updateOperation.updateVunetObjectOperation([indexPattern], 'index_pattern', $http, 'modify', chrome);
               redirectAway();
             });
         };

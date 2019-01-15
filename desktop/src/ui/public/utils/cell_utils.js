@@ -73,61 +73,6 @@ export function createCellContents(contents) {
   return contents;
 }
 
-// This function is used to apply background colour for the cells based on the
-// value and the color range configuration.
-// Also is used to replace the backgound color with images.
-export function applyColorSchemaForMatrixVis(val, cell, colorSchema, columnTitle, $cellContent, contents, interval, scope) {
-  if (typeof (val) === 'number') {
-    colorSchema.forEach(colorRange => {
-      let isChangeBackgroundColor = false;
-      let scaledValue = val;
-      // If the value is numeric and a time interval is specified
-      // we need scale the value suitably.
-      if (colorRange.interval) {
-        const customInterval = scope.interval.customInterval + scope.interval.customIntervalType;
-        const targetInterval = convertToSeconds(scope.interval.interval, customInterval);
-        const multiplier = targetInterval / interval;
-        scaledValue = val * multiplier;
-      }
-      if ((val >= colorRange.min) && (val <= colorRange.max)) {
-        if (colorRange.column.managed) {
-          if (colorRange.column.action === 'include' && colorRange.column.selected.includes(columnTitle)) {
-            isChangeBackgroundColor = true;
-          } else if (colorRange.column.action === 'exclude' && !colorRange.column.selected.includes(columnTitle)) {
-            isChangeBackgroundColor = true;
-          }
-        } else {
-          isChangeBackgroundColor = true;
-        }
-      }
-      if (isChangeBackgroundColor) {
-        // If color is specific to either '#0f0f0f' or '#0e0e0e0'
-        // will be replced by imgae
-        // #0f0f0f - Red-Cross.png and
-        // #0e0e0e - green-tick.png
-        if (colorRange.color === '#0f0f0f' || colorRange.color === '#0e0e0e') {
-          contents = applyBackgroundImage(colorRange.color);
-        } else {
-          // If color code on percentage is checked
-          // apply color only for the cell which is in the range.
-          if (colorRange.colorCodeOnPercentage) {
-            if ((percetangeVal >= colorRange.min) && (percetangeVal <= colorRange.max)) {
-              changeBackgroundColor(cell, colorRange.color);
-            }
-          } else {
-            // Otherwise apply color on cell based on the value
-            if ((scaledValue >= colorRange.min) && (scaledValue <= colorRange.max)) {
-              changeBackgroundColor(cell, colorRange.color);
-            }
-          }
-
-        }
-      }
-    });
-  }
-  $cellContent.prepend(contents);
-}
-
 // This function is used to set the background color of the cell for the table
 // visualization based on the value and colour range confiuration.
 export function applyColorSchemaForTableVis(val, interval, cell, configObj, scope, $cellContent, contents) {

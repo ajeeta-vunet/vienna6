@@ -20,6 +20,11 @@ export function updateVunetObjectOperation(selectedItems, objType, $http, action
       const reportId = 'report:' + item.id;
       url = '/vuSmartMaps/api/report_status/';
       data = { 'report_id': reportId, 'report_title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
+    }  else if (objType === 'index_pattern') {
+      const indexId = 'index-pattern:' + item.id;
+      url = '/vuSmartMaps/api/index_pattern_status/';
+      data = {
+        'id': indexId, 'title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
     }
 
     const httpResult = $http({

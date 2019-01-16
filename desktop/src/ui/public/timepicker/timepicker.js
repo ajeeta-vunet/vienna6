@@ -1,6 +1,7 @@
 import html from 'ui/timepicker/timepicker.html';
 import './quick_panel';
 import './relative_panel';
+import './recent_panel';
 import './absolute_panel';
 import _ from 'lodash';
 import { relativeOptions } from './relative_options';
@@ -15,6 +16,7 @@ import 'ui/timepicker/quick_ranges';
 import 'ui/timepicker/refresh_intervals';
 import 'ui/timepicker/time_units';
 import 'ui/timepicker/kbn_global_timepicker';
+import { setRecentAbsoluteTimeList } from 'ui/utils/vunet_set_recent_absolute_list';
 import { uiModules } from 'ui/modules';
 const module = uiModules.get('ui/timepicker');
 const notify = new Notifier({
@@ -126,6 +128,8 @@ module.directive('kbnTimepicker', function (timeUnits, refreshIntervals) {
 
       $scope.setMode = function (thisMode) {
         switch (thisMode) {
+          case 'recent':
+            break;
           case 'quick':
             break;
           case 'relative':
@@ -143,6 +147,11 @@ module.directive('kbnTimepicker', function (timeUnits, refreshIntervals) {
       };
 
       $scope.setQuick = function (from, to) {
+        $scope.onFilterSelect({ from, to });
+      };
+
+      $scope.setRecent = function (from, to) {
+        setRecentAbsoluteTimeList(moment(from), moment(to));
         $scope.onFilterSelect({ from, to });
       };
 

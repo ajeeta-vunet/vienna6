@@ -75,6 +75,7 @@
       class="kuiButton kuiButton--primary kbn-timepicker-submit-button"
       ng-disabled="absolute.from > absolute.to || !absolute.from || !absolute.to"
       data-test-subj="timepickerGoButton"
+      ng-click="storeRecentAbsoluteTimeList(absolute.from, absolute.to)"
     >
       Go
     </button>

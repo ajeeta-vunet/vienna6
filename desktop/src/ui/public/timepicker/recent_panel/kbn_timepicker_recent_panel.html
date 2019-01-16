@@ -1,0 +1,29 @@
+<div class="kbn-timepicker-body">
+  <ul class="list-unstyled">
+    <p>Most recently selected absolute time</p>
+    <div class="row">
+      <div class="col-sm-6">
+        <label>From</label>
+      </div>
+      <div class="col-sm-6">
+        <label>To</label>
+      </div>
+    </div>
+    <li ng-repeat="timeObj in recentAbsoluteTimeList track by $index">
+      <a
+        class="kuiLink"
+        ng-click="setRecent({from: timeObj.from, to: timeObj.to})"
+        kbn-accessible-click
+      >
+        <div class="row">
+          <div class="col-sm-6">
+            {{ timeObj.from }}
+          </div>
+          <div class="col-sm-6">
+            {{ timeObj.to }}
+          </div>
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>

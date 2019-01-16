@@ -13,6 +13,17 @@
           class="kbn-timepicker-modes kbn-timepicker-title__section"
         >
           <a
+            id="timepickerRecent"
+            role="tab"
+            class="kbn-timerpicker-nav-button"
+            ng-class="{active: mode === 'recent' }"
+            ng-click="setMode('recent')"
+            aria-selected="{{mode === 'recent'}}"
+            kbn-accessible-click
+          >
+            Recent
+          </a>
+          <a
             id="timepickerQuick"
             role="tab"
             class="kbn-timerpicker-nav-button"
@@ -55,6 +66,13 @@
         ng-switch
         on="mode"
       >
+        <kbn-timepicker-recent-panel
+          ng-switch-when="recent"
+          set-recent="setRecent(from, to)"
+          role="tabpanel"
+          aria-labelledby="timepickerRecent"
+        ></kbn-timepicker-recent-panel>
+
         <kbn-timepicker-quick-panel
           ng-switch-when="quick"
           set-quick="setQuick(from, to)"

@@ -12,10 +12,11 @@ import { uiModules } from 'ui/modules';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { idealTextColor, colorLuminance } from 'ui/utils/color_filter';
+import { fixBMVHeightForPrintReport } from 'ui/utils/print_report_utils';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisController', function ($scope, Private, Notifier, $http, $rootScope,
-  timefilter, courier, $filter, kbnUrl) {
+  timefilter, courier, $filter, kbnUrl, $element) {
 
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
@@ -467,6 +468,13 @@ module.controller('BusinessMetricVisController', function ($scope, Private, Noti
         // view of BM.
         if ($scope.vis.params.enableTableFormat) {
           $scope.metricDatas.splice(0, 0, headersData);
+        }
+
+        // If we are printing the report and we have multiple aggregation,
+        // set the height of the table based on the number of rows
+        if ($scope.printReport && $scope.vis.params.aggregations.length &&
+            $scope.vis.params.enableTableFormat) {
+          fixBMVHeightForPrintReport($scope, metricRowCount, $element);
         }
       })
         .catch(function (resp) {

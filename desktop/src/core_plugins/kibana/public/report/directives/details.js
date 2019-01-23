@@ -59,7 +59,7 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
             }
 
             let $rowdiv;
-            _.forEach(section.visuals, function (vis) {
+            _.forEach(section.visuals, function (vis, index) {
 
               // Create a new scope and populate it
               vis.$scope = $scope.$new();
@@ -70,25 +70,40 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
 
               let metricVisLength = 0;
               let aggregationLength = 0;
-              if (vis.visType === 'business_metric') {
 
+              let visObj = undefined;
+              if (vis.visType === 'business_metric' || vis.visType === 'metric') {
                 // Get the savedObj of BM vis in the current iteration.
-                const visObj = results[0].find(function (obj) {
+                visObj = results[0].find(function (obj) {
                   return obj.id === vis.id;
                 });
 
-                // If BM vis does not exist, we jump to the
-                // next iteration.
+                // If vis does not exist, we jump to the next iteration.
                 if (visObj === undefined) {
                   return;
                 }
+              }
+
+              if (vis.visType === 'business_metric') {
+
                 metricVisLength = visObj.visState.params.metrics.length;
                 if (visObj.visState.params.aggregations) {
                   aggregationLength = visObj.visState.params.aggregations.length;
                 }
+              } else if (vis.visType === 'metric' && visObj) {
+                // We use aggrgeaton length to figure out if we should put
+                // metric in // single page or part of the page
+                visObj.visState.aggs.map(function (agg) {
+                  if (agg.schema === 'metric') {
+                    metricVisLength += 1;
+                  } else if (agg.schema === 'group') {
+                    aggregationLength += 1;
+                  }
+                });
+
               }
 
-              if (vis.visType === 'metric' ||
+              if ((vis.visType === 'metric' && aggregationLength === 0) ||
                   vis.visType === 'health_metric' ||
                   (vis.visType === 'business_metric' &&
                     metricVisLength === 1 &&
@@ -135,7 +150,6 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
                          vis.visType === 'bar' ||
                          vis.visType === 'horizontal_bar' ||
                          vis.visType === 'histogram' ||
-                         vis.visType === 'gauge' ||
                          vis.visType === 'heatmap' ||
                          (vis.visType === 'business_metric' &&
                             metricVisLength > 1 &&
@@ -150,7 +164,7 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
                 }
 
                 if (vis.visType === 'pie') {
-                  vis.$scope.width = '650px';
+                  vis.$scope.width = '950px';
                 } else {
                   vis.$scope.width = '1150px';
                 }
@@ -165,13 +179,16 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
                 metricVisCount = 0;
 
                 // We always start any other chart (UVMap, HBMap, Table,
-                // Matrix, Search etc.) in a new page
-                addPageBreak($el);
+                // Matrix, Search etc.) in a new page if it is
+                // not first one in the report.
+                if (index !== 0) {
+                  addPageBreak($el);
+                }
                 height = 0;
                 metricVisCount = 0;
 
                 // We can start it from the earlier ending page
-                if (vis.visType === 'table') {
+                if (vis.visType === 'table' || vis.visType === 'business_metric') {
                   // Set width to 100% for table visulaization.
                   vis.$scope.height = '100%';
                 } else {

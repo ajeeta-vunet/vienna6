@@ -2,6 +2,10 @@ import Boom from 'boom';
 import { open, unlinkSync, createReadStream, close } from 'fs';
 import { fromNode as fcb } from 'bluebird';
 import { replacePlaceholder } from '../../../../../../optimize/public_path_placeholder.js';
+const Request = require('request').defaults({
+  strictSSL: false
+});
+
 
 async function getResponse(req, filePath, fileName) {
 
@@ -49,6 +53,7 @@ async function getResponse(req, filePath, fileName) {
 }
 
 export function reportDownloadApi(server) {
+
   server.route({
     path: '/vienna_print_report/',
     config: {
@@ -73,7 +78,6 @@ export function reportDownloadApi(server) {
       const fileName = onlyReportName + '.pdf';
       const fileNameWithTime = onlyReportName + '-' + time + '.pdf';
       const filePath = '/tmp/' + fileNameWithTime;
-      console.log('Request payload is ', req.payload);
       const tenantId = req.payload.tenantId;
       const buId = req.payload.buId;
       const shipperUrl = req.payload.shipperUrl;
@@ -107,4 +111,44 @@ export function reportDownloadApi(server) {
       });
     }
   });
+
+  server.route({
+    method: 'POST',
+    path: '/vuSmartMaps/api/{tenant_id}/bu/{bu_id}/metric/',
+    handler: (request, reply) => {
+      const tenantId = request.params.tenant_id;
+      const buId = request.params.bu_id;
+      Request.post({
+        url: 'https://127.0.0.1/vuSmartMaps/api/' + tenantId + '/bu/' + buId + '/_metricReport_/',
+        body: JSON.stringify(request.payload),
+      }, function (error, response, body) {
+        if (response.statusCode !== 200) {
+          reply(body).code(response.statusCode);
+        } else {
+          reply(body);
+        }
+      });
+    }
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/vuSmartMaps/api/{tenant_id}/bu/{bu_id}/utMap/',
+    handler: (request, reply) => {
+      const tenantId = request.params.tenant_id;
+      const buId = request.params.bu_id;
+      Request.post({
+        url: 'https://127.0.0.1/vuSmartMaps/api/' + tenantId + '/bu/' + buId + '/_utMapReport_/',
+        body: JSON.stringify(request.payload),
+        headers: { 'user': 'testadmin' }
+      }, function (error, response, body) {
+        if (response.statusCode !== 200) {
+          reply(body).code(response.statusCode);
+        } else {
+          reply(body);
+        }
+      });
+    }
+  });
+
 }

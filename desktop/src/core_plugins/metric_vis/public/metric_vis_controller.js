@@ -11,6 +11,10 @@ module.controller('KbnMetricVisController', function ($scope, $element) {
   let labels = [];
   let colors = [];
 
+  if ($scope.printReport) {
+    $scope.vis.params.metric.style.fontSize = 32;
+  }
+
   const getLabels = () => {
     const config = $scope.vis.params.metric;
     const isPercentageMode = config.percentageMode;

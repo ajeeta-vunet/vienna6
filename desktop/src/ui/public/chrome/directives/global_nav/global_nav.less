@@ -11,7 +11,7 @@
   top: 0;
   bottom: 0;
   z-index: 0;
-  background-color: #005571;
+  background-color: #2e3458;
   overflow: hidden;
 
   &.is-global-nav-open {
@@ -21,8 +21,14 @@
       display: inline-block;
     }
 
-    + .app-wrapper {
-      left: @global-nav-open-width;
+     .app-wrapper {
+      left: 225px;
+    }
+    .sidebar-open-width{
+      left: 225px !important;
+    }
+    .sidebar-closed-width{
+      left: 70px !important;
     }
   }
 
@@ -36,7 +42,7 @@
       background-position: 10px 10px;
       background-size: 120px 50px;
       background-repeat: no-repeat;
-      background-color: #005571;
+      background-color: #2e3458;
     }
   }
 }
@@ -61,7 +67,7 @@
     }
 
     &::-webkit-scrollbar-thumb { /* 4 */
-      background-color: #2f99c1;
+      background-color: #0A0F34;
       border: 6px solid transparent;
       background-clip: content-box;
     }

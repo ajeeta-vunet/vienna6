@@ -1,0 +1,59 @@
+<div class="fixed-left widescreen" id="body">
+  <div id="wrapper" class="forced">
+    <div class="topbar">
+
+      <!-- LOGO -->
+      <div class="topbar-left">
+        <a href="javascript:void(0);" class="logo">
+          <div class="row" ng-if="$root.isSideBarOpen">
+            <div class="col-sm-4 zero-padding">
+                <img src="/ui/vienna_images/vunet_logo.png">
+            </div>
+            <div class="col-sm-8 zero-padding">
+                <span>VuSmartMaps</span>
+            </div>              
+          </div>
+          <div ng-if="!$root.isSideBarOpen">
+              <img src="/ui/vienna_images/vunet_logo.png">
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="left side-menu">
+      <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;">
+        <div class="sidebar-inner slimscrollleft" style="overflow: hidden; width: auto;">
+
+
+          <!--- Sidemenu -->
+          <div id="sidebar-menu">
+            <ul>
+              <li class="has_sub active" ng-repeat="firstLevel in data"  ng-if="firstLevel.isModifyAllowed">
+                <a class="waves-effect" ng-click="menuItemClick($event)" ng-class="{'active-page-firstlevel':firstLevel.active}">
+                  <i class="{{firstLevel.icon}}"></i>
+                  <span>{{firstLevel.id}} </span>
+                </a>
+
+                <ul class="list-unstyled">
+                  <li ng-repeat="sublevel in firstLevel.subgroups" ng-class="{'active-page':sublevel.active}">
+                    <a ng-show="sublevel.isModifyAllowed"  href="{{sublevel.pageurl}}">{{sublevel.id}}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <!-- Sidemenu -->
+
+        </div>
+        <!-- <div>
+          <button class="button-menu-mobile open-left waves-effect pull-right" ng-click="$root.openLeftBar()">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div> -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- jQuery  -->
+</div>

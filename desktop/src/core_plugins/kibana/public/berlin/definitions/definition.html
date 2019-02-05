@@ -1,0 +1,66 @@
+<vunet-definations>
+  <vunet-tab
+    class="vunetTabs"
+    tabs="tabs"
+    landing-tab="landingTab"
+    switch-tab="onTabChange">
+  </vunet-tab>
+  <div ng-show="id==='credentials'" class="user-container">
+
+    <vunet-credentials class="vunet-credentials-directive">
+      <div class="vunet-credentials-container">
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8">
+            <span class="credential-table-header">SSH</span>
+            <vunet-data-table fetch-items="fetchDetails" delete-selected-items="deleteSelectedCredentials" meta-item="sshMeta" table-type='sshRestKey'
+              on-submit="onSubmit">
+            </vunet-data-table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8">
+            <span class="credential-table-header">TELNET</span>
+            <vunet-data-table fetch-items="fetchDetails" delete-selected-items="deleteSelectedCredentials" meta-item="telnetMeta" table-type='telnetRestKey'
+              on-submit="onSubmit">
+            </vunet-data-table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8 ">
+            <span class="credential-table-header">SNMP</span>
+            <vunet-data-table fetch-items="fetchDetails" delete-selected-items="deleteSelectedCredentials" meta-item="snmpMeta" table-type='snmpRestKey'
+              on-submit="onSubmit">
+            </vunet-data-table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8 ">
+            <span class="credential-table-header">USER CREDENTIALS</span>
+            <vunet-data-table fetch-items="fetchDetails" delete-selected-items="deleteSelectedCredentials" meta-item="userCredentialMeta"
+              table-type='userCredentialRestKey' on-submit="onSubmit">
+            </vunet-data-table>
+          </div>
+        </div>
+      </div>
+    </vunet-credentials>
+  </div>
+
+
+  <div ng-show="id==='email'" class="user-container">
+  
+    <vunet-emailgroups class="vunet-emailgroups-directive">
+      <div class="row export-row">
+        <div class="col-sm-offset-11 col-sm-1 export-column">
+          <a href="" class="" data-tip="Export email-groups into xls/xlsx">
+            <button class="btn vunet-btn-export" ng-click='exportEmailGroupsData()'>
+              <span class="">Export</span>
+            </button>
+          </a>
+        </div>
+      </div>
+      <vunet-data-table fetch-items="fetchEmailgroups" delete-selected-items="deleteSelectedEmailgroups" meta-item="emailgroupsMeta"
+          on-submit="onEmailGroupsSubmit">
+      </vunet-data-table>
+    </vunet-emailgroups>
+  </div>
+</vunet-definations>

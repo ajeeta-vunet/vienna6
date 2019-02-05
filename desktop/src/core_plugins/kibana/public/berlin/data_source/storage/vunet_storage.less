@@ -1,0 +1,79 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.vunetTabs{
+  padding: 2rem 0rem 0rem 6rem;
+  display:block;
+  min-height: 40px;
+  background-color: @action_bar_background;
+    .kuiTabs{ 
+      border-bottom:0px;
+      .kuiTab{
+        padding:1rem 3rem;
+      }
+  }
+}
+
+.storage-conatiner{
+  // background-color: #f6f7fb;
+  padding:2.7rem 7rem 0rem 7rem;
+  .live-indices-summary , .archived-indices-summary{
+    box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color:@white;
+    border-radius: 2rem;
+    .indices-summary{
+      padding-left: 10rem;
+      .indices-summary-content-container{
+        vertical-align:top;
+        display:inline-block;
+        margin-left: 5rem;
+        .index-count {
+          font-family: @barlow-semibold;
+          margin-left: 5rem;
+          font-size: 4rem;
+        }
+        .index-title {
+          color:@black;
+          font-family: @barlow-semibold;
+          font-size: 2rem;
+          margin:0rem;
+        }
+      }
+      .index-icon{
+        display: inline-block;
+        font-size: 6rem;
+        padding-left:2rem;
+        padding-right:2rem;
+        background-color:@view_background;
+        border-radius: 50%;
+      }
+    }
+    .open-indices-summary , .close-indices-summary , .success-indices-summary , .fail-indices-summary{ 
+      border-right: .1rem solid @accent_color;
+    } 
+    .open-indices-summary {
+      .index-count ,.index-icon{
+        color:@green;
+      } 
+    } 
+    .close-indices-summary{
+      .index-count ,.index-icon{
+        color:@red;
+      } 
+    } 
+    .archieve-indices-summary{
+      .index-count ,.index-icon{
+        color:@orange;
+      } 
+    }
+  }
+  .row {
+    margin:0rem;
+  }
+  .live-indices-table , .archieved-indices-table{
+    padding:2.5rem 0rem 2.5rem 0rem;
+  }
+}
+
+

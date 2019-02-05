@@ -1,0 +1,99 @@
+<div class="modal-header">
+  <h3 class="modal-title">Import Data Sets From a File</h3>
+</div>
+
+<div ng-if="successfulUpload" class="import-data-success">
+  <div class="fa fa-check import-success">
+    File has been imported successfully .
+  </div>
+  <h4 class="import-data-message">Please check the data in index : {{index_name}}</h4>
+</div>
+<form class="form-horizontal" ng-show="!successfulUpload" name="importXlsForm" novalidate>
+  <div class="modal-body">
+    <!-- Import XLS  -->
+    <div class="form-group importXls-form-group" ng-class="{'has-error': moreThanOneSheetsInFile || isEmptyHeaderPresent || isFileSizeMore || isFileTypeWrong , 'has-warning' : importXlsForm.timeField.$touched && importXlsForm.file.$invalid } ">
+      <label class="col-sm-3 control-label">Import a XLS File</label>
+      <div class="col-sm-9">
+        <input class="btn btn-default btn-file btn-browse-vunet" ngf-select type="file" ng-model="File" name="file" id="file"
+          ngf-multiple="false" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required onChange="angular.element(this).scope().exportExcel(event)">
+        <div id="reading-file" ng-if="readingFile"> Reading File ...</div>
+        <span class="help-block" ng-if="isEmptyHeaderPresent">One or more merged or empty headers are present.</span>
+        <span class="help-block" ng-if="moreThanOneSheetsInFile">More than 1 sheet in uploaded excel file.</span>
+        <span class="help-block" ng-if="isFileSizeMore">File size is more than 5 MB</span>
+        <span class="help-block" ng-if="isFileTypeWrong">Only file types with *.xlsx and *.xls are supported.</span>
+      </div>
+    </div>
+
+    <!-- FEED DATA INTO -->
+    <div ng-show='File'>
+      <div class="form-group importXls-form-group" ng-class="{'
+      has-error': importXlsForm.indexName.$invalid && importXlsForm.indexName.$touched}">
+        <label class="col-sm-3 control-label">Load data into
+          <a href="" uib-tooltip="This is the index name of elasticsearch wherer data will be stored" tooltip-placement="bottom">
+            <i class="fa fa-question-circle"></i>
+          </a>
+        </label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" ng-model="index_name" name="indexName" required>
+          <p ng-if="index_name" class="index-helper">The Index name will be saved as vunet-{{$root.tenant_id}}-{{$root.bu_id}}-{{index_name}}</p>
+        </div>
+      </div>
+
+      <!-- TIME FIELD -->
+      <div class="form-group importXls-form-group" ng-class="{'has-error': importXlsForm.timeField.$invalid &&  importXlsForm.timeField.$touched }">
+        <label class="col-sm-3 control-label">Time Field
+          <a href="" uib-tooltip="Time fields generated from xls file. Please select the timestamp field"
+            tooltip-placement="bottom">
+            <i class="fa fa-question-circle"></i>
+          </a>
+        </label>
+        <div class="col-sm-9">
+          <select class="form-control" ng-model="time_field" name="timeField" ng-options="header for header in uniqueHeaders"
+            required>
+          </select>
+        </div>
+      </div>
+
+
+
+      <!-- ADD EXTRA COLUMN ON HOLD FOR NOW -->
+      <!-- <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#addColumn">Specify additional Columns to be added
+                            <i class="fa fa-question-circle">
+                                <a href="" tooltip="Specify column to add" tooltip-placement="bottom">
+                            </i>
+                        </a>
+                    </h4>
+                </div>
+                <div id="addColumn" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="form-group importXls-form-group">
+                            <label class="col-sm-3 control-label">Column Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="column_name" name="columnName" required>
+                            </div>
+                        </div>
+                        <div class="form-group importXls-form-group">
+                            <label class="col-sm-3 control-label">Value</label>lue
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="value" name="value" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="button" class="btn btn-link"> Add another column </button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-inverse" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" ng-disabled="importXlsForm.$invalid || moreThanOneSheetsInFile || isEmptyHeaderPresent || isFileSizeMore || isFileTypeWrong"
+        ng-click="importExcelData()">DONE</button>
+    </div>
+</form>

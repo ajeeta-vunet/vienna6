@@ -1,0 +1,87 @@
+<div class="modal-header">
+  <div ng-if="editDataEnrichment==true">
+    <h3 class="modal-title">Edit Entry</h3>
+  </div>
+  <div ng-if="editDataEnrichment==false">
+    <h3 class="modal-title">Add Entry</h3>
+  </div>
+</div>
+<form class="form-horizontal" name="addDataEnrichmentForm" novalidate ng-submit="saveDataEnrichment(addDataEnrichmentForm.$valid)">
+  <div class="modal-body">
+    <div class="form-group" ng-class="{'has-error': addDataEnrichmentForm.key1.$invalid && !addDataEnrichmentForm.key1.$pristine}">
+      <div class="row">
+        <div class="col-sm-2 col-md-2">
+          <label class="col-sm-12 col-md-12 control-label">{{key1_label }}</label>
+        </div>
+        <div class="col-sm-7 col-md-7 align-down">
+          <input type="text" ng-if="key1_field.type!='enum'" class="form-control" ng-model="params.key1" required name="key1"
+            ng-disabled="editDataEnrichment==true" enrichment-key-validator ng-pattern="key1_pattern">
+          <select class="form-control" ng-if="key1_field.type=='enum' " ng-model="params.key1" required name="key1"
+            ng-disabled="editDataEnrichment==true" enrichment-key-validator ng-options="option for option in key1_field.options"
+            ng-disabled="editDataEnrichment==true">
+          </select>
+          <div class="help-block" ng-show="addDataEnrichmentForm.key1.$error.keyInput">Value already exists</div>
+          <div class="help-block" ng-show="addDataEnrichmentForm.key1.$error.pattern">{{key1_field.pattern_help}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{'has-error':addDataEnrichmentForm.key2value2.$invalid && !addDataEnrichmentForm.key2value2.$pristine}">
+      <div class="row">
+        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-9 col-md-9">
+          <table class="table table-striped table-hover table-bordered set-table">
+            <thead>
+              <tr>
+                <th>{{key2_label }}</th>
+                <th ng-if="value2Fields" ng-repeat="key in value2Fields">
+                  {{key}}
+                </th>
+                <th ng-if="!value2Fields">{{value2_label }}</th>
+                <th class="col-sm-1 col-md-1"><a href=""><i class="fa fa-plus-square fa-lg" ng-click="addRow()" title="Add Row"></i></a></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="row in params.key2value2" ng-init="key2value2Index = $index">
+                <td>
+                  <div ng-class="{'has-error':addDataEnrichmentForm.key2_{{key2value2Index}}.$invalid && !addDataEnrichmentForm.key2_{{key2value2Index}}.$pristine}">
+                    <input type="text" class="form-control" ng-if="key2_field.type!='enum'" ng-model="row[key2_label]"
+                      required name="key2_{{key2value2Index}}" ng-pattern="key2_pattern">
+                    <select class="form-control" ng-if="key2_field.type=='enum'" ng-model="row[key2_label]" ng-options="option for option in key2_field.options"
+                      required></select>
+                    <div class="help-block" ng-show="addDataEnrichmentForm.key2_{{key2value2Index}}.$error.pattern">{{key2_field.pattern_help}}</div>
+                  </div>
+                </td>
+                <td ng-if="!value2Fields">
+                  <div ng-class="{'has-error':addDataEnrichmentForm.value2_{{key2value2Index}}.$invalid && !addDataEnrichmentForm.value2_{{key2value2Index}}.$pristine}">
+                    <input type="text" class="form-control" ng-if="value2_field.type!='enum'" ng-model="row[value2_label]"
+                      required name="value2_{{key2value2Index}}" ng-pattern="value2_pattern">
+                    <select class="form-control" ng-if="value2_field.type=='enum'" ng-model="row[value2_label]"
+                      ng-options="option for option in value2_field.options" required></select>
+                    <div class="help-block" ng-show="addDataEnrichmentForm.value2_{{key2value2Index}}.$error.pattern">{{value2_field.pattern_help}}</div>
+                  </div>
+                </td>
+                <td ng-if="value2Fields" ng-repeat="field in value2Fields" ng-init="value2FieldIndex = $index">
+                  <div ng-class="{'has-error':addDataEnrichmentForm.value2_{{key2value2Index}}_{{value2FieldIndex}}.$invalid && !addDataEnrichmentForm.value2_{{key2value2Index}}{{value2FieldIndex}}.$pristine}">
+                    <input type="text" class="form-control" ng-if="value2FieldsTypes[field] !='enum'" ng-model="row[value2_label][field]"
+                      required name="value2_{{key2value2Index}}_{{value2FieldIndex}}" ng-pattern="value2FieldsPattern[field]['frontend_pattern']">
+                    <select class="form-control" ng-if="value2FieldsTypes[field] =='enum'" ng-model="row[value2_label][field]"
+                      ng-options="option for option in value2FieldsOptions[field]" required name="value2_{{key2value2Index}}_{{value2FieldIndex}}"></select>
+                    <div class="help-block" ng-show="addDataEnrichmentForm.value2_{{key2value2Index}}_{{value2FieldIndex}}.$error.pattern">{{value2FieldsPattern[field]['pattern_help']}}</div>
+                  </div>
+                </td>
+                <td>
+                  <i class="fa fa-trash-o" title="Delete Row" ng-click="deleteRow(row)"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-vunet-cancel" ng-click="cancel()">Cancel</button>
+    <button id="dataEnrichment_submit" class="btn btn-vunet-submit" ng-disabled="addDataEnrichmentForm.$invalid || submitDisable()">Submit</button>
+  </div>
+</form>

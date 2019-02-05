@@ -1,0 +1,26 @@
+<div ng-if='!successfulUpload'>
+  <p class="import-modal-header">Import Data into Data Enrichmnet</p>
+  <form name="importEnrichmentForm">
+    <input class="btn vunet-btn-import" type="file" ngf-select ng-model="File" name="file" ngf-multiple="false"
+      required>
+    <div class="help-block help-text">Only file types with *.xlsx and *.xls are supported. Download sample xlsx file
+      from
+      <a href="" ng-click="get_sample_data()">
+        <i class="data-source-import-template-link">here</i>
+      </a>
+    </div>
+    <div class='row'>
+      <div class='col-sm-offset-7 col-sm-2'>
+        <button class="btn btn-vunet-cancel" ng-click="closeModal()">Cancel</button>
+      </div>
+      <div class='col-sm-2'>
+        <button type="submit" class="btn btn-vunet-submit" ng-disabled="!importEnrichmentForm.$valid" ng-click="upload_data_source_enrichment_file(File)">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="import-enrichment-success " ng-if="successfulUpload">
+  <i class="fa fa-check"></i>
+  File successfully imported
+</div>

@@ -1,0 +1,62 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.details-container {
+	.user-onboard-container{
+    .user-onboard-title {
+      font-family:@barlow-semibold;
+      color: @accent_color;
+      padding: 1.2rem 0rem 1.2rem 1.5rem;
+      margin:0rem;
+      font-size:2rem;
+      border-bottom: .2rem solid @border_color;
+      .userOnboardStep{
+        background-color: @accent_color;
+        color:@white;
+        border-radius:2rem;
+        height:4rem;    
+        width:4rem;
+        span{
+          padding-left: 1.4rem;
+          font-size: 2.7rem;
+        }
+      }
+      .license-modal-header{
+        margin-top:.5rem;
+      }
+    }
+    .user-onboard-form {
+      padding: 0rem 0rem 2rem 2rem;
+      font-size:1.5rem;
+      .details-header {
+        padding: 2rem 0rem 2rem 0rem;
+      }
+      form{
+        .form-group{
+          label{
+            font-size: 1.6rem;
+            font-family:@barlow-semibold;
+          }
+          .user-onboard-input {
+            width: 90%;
+            border-radius: 1rem;
+            border:.1rem solid @border_color;
+          }
+          .upload-license{
+            width: 90%;
+            border-radius: 1rem;
+            border:.1rem solid @border_color!important;
+            color:@black;
+          }
+        }
+        .user-onboard-submit-wrapper {
+          height: 4.5rem;
+        }
+      }
+      .server-info-headers {
+        font-size: 1.8rem;
+        padding: 1.5rem 0rem;
+      }
+    }
+  }
+}
+

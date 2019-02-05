@@ -11,5 +11,6 @@ export default class UiNavLink {
     this.hidden = spec.hidden || false;
     this.disabled = spec.disabled || false;
     this.tooltip = spec.tooltip || '';
+    this.group = spec.group || '';
   }
 }

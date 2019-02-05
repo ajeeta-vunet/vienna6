@@ -1,0 +1,88 @@
+<vunet-storage>
+  <vunet-tab class="vunetTabs" tabs="tabs" landing-tab="landingTab" switch-tab="onTabChange">
+  </vunet-tab>
+  <div ng-if="id==='live'" class="storage-conatiner">
+    <live-indices>
+      <div class="row live-indices-summary">
+        <div class="col-md-4 col-sm-4 col-xs-4 indices-summary open-indices-summary">
+          <div class="indices-summary-content index-icon">
+            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+          </div>
+          <div class="indices-summary-content-container">
+            <p class="indices-summary-content index-title"> Open Indices</p>
+            <p class="indices-summary-content index-count"> {{open_indices}} </p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4 indices-summary close-indices-summary">
+          <div class="indices-summary-content index-icon">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+          </div>
+          <div class="indices-summary-content-container">
+            <p class="indices-summary-content index-title"> Close Indices</p>
+            <p class="indices-summary-content index-count"> {{closed_indices}} </p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4 indices-summary archieve-indices-summary">
+          <div class="indices-summary-content index-icon">
+            <i class="fa fa-spinner" aria-hidden="true"></i>
+          </div>
+          <div class="indices-summary-content-container">
+            <p class="indices-summary-content index-title"> Loading Indices</p>
+            <p class="indices-summary-content index-count"> {{loading_indices}} </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="live-indices-table" data-test-subj="LiveIndices">
+
+        <vunet-data-table fetch-items="fetchItems" delete-selected-items="deleteSelectedItems" row-action="onRowAction"
+          table-action="onTableAction" meta-item="liveIndicesMeta">
+        </vunet-data-table>
+        <vunet-modal show-modal="showModal" on-close="onModalClose" data="modalData" on-submit="onModalSubmit">
+        </vunet-modal>
+      </div>
+    </live-indices>
+  </div>
+  <div ng-if="id==='archived'" class="storage-conatiner">
+    <archived-indices>
+      <div class="row archived-indices-summary">
+        <div class="col-md-4 col-sm-4 col-xs-4 indices-summary success-indices-summary">
+          <div class="indices-summary-content index-icon">
+            <i class="fa fa-archive" aria-hidden="true"></i>
+          </div>
+          <div class="indices-summary-content-container">
+            <p class="indices-summary-content index-title"> Success </p>
+            <p class="indices-summary-content index-count"> {{successCount}} </p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4 indices-summary fail-indices-summary">
+          <div class="indices-summary-content index-icon">
+            <i class="fa fa-archive failed-archive-icon" aria-hidden="true"></i>
+          </div>
+          <div class="indices-summary-content-container">
+            <p class="indices-summary-content index-title"> Failure </p>
+            <p class="indices-summary-content index-count"> {{failureCount}} </p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4 indices-summary progress-indices-sumary">
+          <div class="indices-summary-content index-icon">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+          </div>
+          <div class="indices-summary-content-container">
+            <p class="indices-summary-content index-title"> In Progress </p>
+            <p class="indices-summary-content index-count"> {{inProgressCount}} </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="archieved-indices-table" data-test-subj="ArchivedIndices">
+
+        <vunet-data-table fetch-items="fetchItems" delete-selected-items="deleteSelectedItems" row-action="onRowAction"
+          table-action="onTableAction" meta-item="archivedIndicesMeta">
+        </vunet-data-table>
+        <vunet-modal show-modal="showModal" on-close="onModalClose" data="modalData" on-submit="onModalSubmit">
+        </vunet-modal>
+      </div>
+    </archived-indices>
+  </div>
+</vunet-storage>

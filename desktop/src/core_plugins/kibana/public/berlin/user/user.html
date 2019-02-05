@@ -1,0 +1,40 @@
+<user>
+  <vunet-tab
+    class="vunetTabs"
+    tabs="tabs"
+    landing-tab="landingTab"
+    switch-tab="onTabChange">
+  </vunet-tab>
+  <div ng-show="id==='user'" class="user-container">
+    <manage-users class="">
+      <div
+        class=""
+        data-test-subj="userLandingPage">
+      
+        <vunet-data-table
+          fetch-items="fetchItems" 
+          delete-selected-items="deleteSelectedItems"
+          meta-item="userMeta"
+          table-action="onTableAction"
+          row-action="onRowAction"
+          on-submit="onSubmit">
+        </vunet-data-table>
+      </div>
+    </manage-users>        
+  </div>
+  <div ng-show="id==='roles'" class="user-container">
+    <manage-roles>
+      <div
+        class=""
+        data-test-subj="userLandingPage">
+    
+        <vunet-data-table
+          fetch-items="fetchItems" 
+          delete-selected-items="deleteSelectedItems"
+          meta-item="roleMeta"
+          on-submit="onSubmit">
+        </vunet-data-table>
+      </div>
+    </manage-roles>
+  </div>
+</user>

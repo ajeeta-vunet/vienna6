@@ -1,0 +1,114 @@
+<div class="vunetLocalNav1">
+  <div class="kuiLocalNavRowVunet">
+    <div class="row">
+      <div class="col-sm-2  button-menu-mobile open-left waves-effect ">
+        <i class="icon-Menu-Collapse" ng-click="$root.openLeftBar()"></i>
+        <!-- <i class="icon-vuNet_Logo_Final-06"></i> -->
+        <!-- <span class="icon-Logo-Image-Color"></span> -->
+      </div>
+      <div class="col-sm-7 vunet-notifications" ng-class="{'vunet-notifications-borders':$root.notifList.length>0}">
+        <kbn-notifications list=$root.notifList></kbn-notifications>
+        <!-- <i class="icon-vuNet_Logo_Final-06"></i> -->
+      </div>
+      <div class="col-sm-3 vunet-topbar-actions">
+        <ul class="nav navbar-nav navbar-right">
+          <li uib-dropdown is-open>
+            <div class="logout-button" uib-dropdown-toggle aria-expanded='false'>
+              <i class='icon-user bg-color' title="Logout"></i>
+              <span class="user-name">{{userName}}</span>
+              <i class="icon-down-arrow" aria-hidden="true"></i>
+            </div>
+            <div class="logout-dropdown" uib-dropdown-menu>
+              <div class="row">
+                <div class="col-sm-4">
+                  <i class="fa fa-user user-icon" aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-6 tenant-info-container">
+                  <div class="user-name-indropdown">{{userName}}</div>
+                  <div class="tenant-id-container">
+                    <span class="tenant-id-label">Tenant Id:</span>
+                    <span class="tenant-id-value">{{tenantId}}</span>
+                  </div>
+                </div>
+                <!-- Will be used in future -->
+                <!-- <div class="col-sm-2 zero-padding-column">
+                  <a href="/app/vienna#/berlin/user">
+                    <i class="fa fa-cog" aria-hidden="true" ng-click="open_user_settings()"></i>
+                  </a>
+                </div> -->
+              </div>
+              <div class="btn logout-button-container" ng-click="buttonLogout()">
+                Logout
+              </div>
+            </div>
+          </li>
+          <li>
+            <i class="fa fa-arrows-alt" ng-click='toggleFullscreen()'></i>
+          </li>
+          <li ng-if="isSuperTenantAdmin">
+            <button class="diagnostic-button" ng-disabled="diagnostic_display_on" href='' aria-expanded='false'
+              ng-click='run_diagnostic()'>
+              <i class='icon-Diagnostics bg-color' title="Run Diagnostics"></i>
+            </button>
+          </li>
+          <li id="notification-icon" class="uib-dropdown alert-notification" uib-dropdown is-open="dropdownIsOpen"
+            on-toggle="handleDropdownclose()">
+            <div class='uib-dropdown-toggle' data-toggle="dropdown" ng-click='showNotificationDropdown()'
+              uib-dropdown-toggle>
+              <i class="icon-Notification" title="Notifications">
+              </i>
+              <div ng-show="notificationLength" ng-click='return'>
+                <div class="notificationlength">{{ notificationLength }}</div>
+              </div>
+            </div>
+            <ul class="dropdown-menu-right uib-dropdown-menu" uib-dropdown-menu>
+              <div ng-if="data.length > 0" ng-repeat="(header, data) in notificationResponse" class="notification-section">
+                <div class="notification-header">
+                  <span>
+                    <i class="fa" ng-class="{'fa-bell': header=='Alerts',
+                                              'fa-database': header=='Storage'}">
+                    </i>
+                  </span> {{header}}
+                  <i class='fa fa-times close-dropdown' ng-click="closeNotificationDropdown()" title="Close"></i>
+                </div>
+                <div ng-repeat="notification in data track by $index">
+                  <div ng-click="showNotificationInformation(header, notification)" class="notification-content"
+                    ng-class="{'new-notification': $index < newNotificationLength}">
+                    <div class="notification-subject alert-wrapper">
+                      <span>
+                        <i class="fa" aria-hidden="true" ng-class="{'fa-warning': notification.type=='warning',
+                                                 'fa-exclamation-circle': notification.type=='error',
+                                                 'fa-info-circle': notification.type=='information',
+                                                 'fa-minus-circle': notification.type=='critical',
+                                                 'fa-archive': notification.type=='archive_success' || notification.type=='archive_failure',
+                                                 'fa-undo': notification.type=='restore_success' || notification.type=='restore_failure'
+                                                 }">
+                        </i>
+                      </span>
+                      <span class="notification-name">{{notification.name}}</span>
+                    </div>
+                    <div class="notification-desc">
+                      {{notification.summary}}
+                    </div>
+                    <div class="notification-time">
+                      {{ notification.timestamp | amUtc | amTimeAgo }}
+                    </div>
+                  </div>
+                </div>
+                <!-- This is needed when we fix redirection to alert dashboards
+                                 commenting this section till then -->
+                <!-- <div class="see-all-wrapper">
+                              <a class="see-all" href="">See all</a>
+                            </div> -->
+              </div>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <vunet-modal show-modal="showModal" on-close="onModalClose" data="modalData" on-submit="onModalSubmit">
+    </vunet-modal>
+  </div>
+</div>

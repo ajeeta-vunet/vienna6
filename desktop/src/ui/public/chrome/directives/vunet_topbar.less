@@ -1,0 +1,254 @@
+
+@import '~ui/styles/vunet_variable_theme.less';
+
+.kuiLocalNavRowVunet {
+  height:8rem;
+  min-height: 50px; 
+  box-shadow:0px -.6rem .3rem -.4rem @accent_color;
+  li{
+    padding:0rem 1.75rem;
+    .dropdown-menu {
+      min-width:22vw !important;
+      padding:0px !important;
+      box-shadow: 0rem 0rem 1rem 0.4rem @box_shadow_color;
+      border-radius: 1rem!important; 
+      margin-top: 1rem!important;
+      margin-right: 1rem;
+      .notification-header {
+        padding: 1.2rem;
+        color: @accent_color;
+        height: 5rem;
+        font-size: 1.7rem;
+        min-height: 20px!important;
+        border-bottom: .2rem solid @border_color;
+        font-family: @barlow-medium;
+        .fa {
+          padding: 0rem 1rem;
+        }
+        .close-dropdown {
+          float: right;
+        }
+      }
+      .new-notification {
+        background:@action_bar_background;
+      }
+      .notification-content {
+        padding: 0.5rem 0rem 0.5rem 0.5rem;
+        border-bottom: .1rem solid @border_color;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+        .notification-subject {
+          height: 3.2rem;
+          padding: 0rem 0rem 0rem 1rem;
+          font-family: @barlow-semibold;
+          .fa {
+            font-size: 2.2rem;
+            padding: 1rem 2rem 1rem 0rem;
+          }
+          .fa-warning {
+            color:@orange;
+          }
+          .fa-exclamation-circle {
+             color: @red;
+          }
+          .fa-archive {
+            color: @green;
+          }
+          .fa-undo {
+            color: @green;
+          }
+          .fa-info-circle {
+            color: @accent_color;
+          }
+          .fa-minus-circle {
+            color: @red;
+          }
+        }
+        .notification-desc {
+          padding: 0rem 5.5rem;
+          color: @text_color1;
+          font-size: 1.3rem;
+          word-wrap: break-word;
+          word-break: break-all;
+        }
+        .notification-name {
+          word-wrap: break-word;
+          word-break: break-all;
+          font-size:1.6rem;
+          vertical-align: super;
+          color: @text_color1;
+        }
+        .notification-time {
+          color: @text_colr_grey;
+          font-size: 1.3rem;
+          padding-left: 29rem;
+        }
+      }
+    }
+    .diagnostic-button , .logout-button , .uib-dropdown-toggle{
+      padding: 2.55rem 0rem;
+    }
+    .diagnostic-button {
+      background-color: @white;
+      border: none;
+    }
+    .logout-button{
+      &:hover{
+        background-color: @white;
+      }
+      .user-name{
+        vertical-align: super;
+        font-size: 1.6rem;
+        padding: 0rem 1rem 0rem 1.5rem;
+        &:hover{
+          color:@accent_color;
+          font-family:@barlow-bold;
+        }
+      }
+      .icon-down-arrow{
+        vertical-align: super;
+      }
+    }
+    .logout-dropdown{
+      min-width: 17vw!important;
+      box-shadow: 0rem 0rem 1rem 0.4rem @box_shadow_color;
+      border-radius: 1rem!important;
+      margin-top: 1rem!important;
+      margin-right: 1rem;
+      .user-icon{
+        font-size: 7rem;
+        padding: 1.5rem 3rem 1.5rem 3rem;
+      }
+      .tenant-info-container{
+        padding: 2.6rem 0rem 2rem 0rem;
+        font-size: 1.6rem;
+        font-family: @barlow-medium;
+        .tenant-id-container , .user-name-indropdown{
+          text-align: center;
+        }
+      }
+      .logout-button-container{
+        padding-top: .8rem;
+        width: 16.9vw;
+        background-color: @accent_color;
+        height: 5rem;
+        font-family: @barlow-semibold;
+        color: @white;
+        font-size: 2rem;
+        border-bottom-right-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+      }
+      .zero-padding-column{
+        padding:0rem;
+        .fa-cog{
+          font-size:2rem;
+          padding:1.2rem 0rem 0rem 0.5rem;
+        }
+      }
+    }
+    .notificationlength{
+      top: 1.8rem;
+      position: absolute;
+      left: 3.2rem;
+      font-size: 1.1rem;
+      color: @white;
+      border-radius: 1rem;
+      background:@red;
+      padding: .1rem .5rem .1rem .5rem;
+      font-family: @barlow-semibold;
+    }
+  }
+  .icon-user , .icon-Diagnostics , .icon-Notification {
+    font-size:2.7rem;
+    color:@accent_color;
+    &:hover{
+      font-weight:bold;
+    }
+  }
+  .icon-Notification{
+    padding-right:1.5rem;
+  }
+  .vunet-notifications-borders{
+    border-left: .1rem solid @border_color;
+    border-right: .1rem solid @border_color; 
+  }
+  .vunet-notifications{
+    text-align: center;
+    margin-top: 1.9rem;
+    margin-bottom: 1.9rem;
+    .toaster-container{
+      display: inline-block;
+      width:auto;
+      max-height: 10rem;
+      overflow-y: auto;
+      border-radius:2rem;
+      .toaster{
+        li{
+          padding:0rem;
+        }
+        .toast{
+          // background-color: @white;
+          // color:@red;
+          .toast-controls{
+            button{
+              border-radius: 2rem;
+              // background-color: @red;
+              // color: @white;
+              border: none;
+              padding: .5rem 2rem;
+            }
+          }
+          kbn-truncated{
+            padding-right:3rem;
+          }
+        }
+        .badge{
+          background-color: @white;
+          color:@text_colr_grey ;
+        }
+      }
+    }
+  }
+  .vunet-topbar-actions{
+    padding-left:0rem;
+    padding-right:1.5rem;
+  }
+  .icon-Menu-Collapse , .fa-arrows-alt{
+    color: @accent_color;
+    font-size: 3rem;
+    padding: 0rem 0rem 0rem 2.5rem;
+    &:hover{
+      font-weight:600;
+    }
+  }
+  .fa-arrows-alt{
+    padding:2.5rem 0rem 2.5rem 0rem;
+  }
+  //this has been done for the run diagnostic modal
+  .kuiModalOverlay{
+    .kuiModal{
+      max-height:90vh;
+      overflow:auto;
+      margin-top:10rem;
+      .kuiModalBody{
+        padding-right:3rem!important;
+      }
+    }
+  }
+}
+
+
+
+
+// SEE ALL COMPONENET COMMENTED IN HTML (Can be used in future)
+// .see-all-wrapper {
+//   text-align: center;
+//   padding: 5px 0px;
+//   .see-all {
+//     font-weight: bold;
+//   }
+// }
+
+
+
+

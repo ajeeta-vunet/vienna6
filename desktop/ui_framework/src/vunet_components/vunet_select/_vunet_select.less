@@ -1,0 +1,104 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.select {
+  position: relative;
+  display: inline-block;
+  width: 95%;
+  &:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+  .selection {
+    position: relative;
+    padding: .5rem;
+    border: .1rem solid @border_color;
+    background: @white;
+    .placeholder {
+      padding: .5rem 1rem;
+      color: @text_colr_grey;
+    }
+    .arrow {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      display: block;
+      padding: 1rem;
+      font-size: 1rem;
+      color: @text_colr_grey;
+      svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentColor;
+      }
+    }
+    .value {
+      position: relative;
+      display: inline-block;
+      padding: .5rem 1rem;
+    }
+    .multiple {
+      padding-right: 3rem;
+      margin-right: .5rem;
+      background: @view_background;
+      color: @black;
+      .delete {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: block;
+        padding: 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+        svg {
+          display: block;
+          width: 1em;
+          height: 1em;
+          fill: currentColor;
+        }
+      }
+    }
+    
+    
+  }
+  .options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: solid @border_color;
+    border-width: 0 .1rem;
+    background: @white;
+    .option {
+      padding: 1rem 1.5rem;
+      border-bottom: .1rem solid @border_color;
+      cursor: pointer;
+      .selected {
+        border: .1rem solid @black;
+        margin: -.1rem -.1rem 0;
+        background:@white;
+        .checkbox {
+          border-color: @border_color;
+          background: @black;
+        }
+      }
+      .focused {
+        background: @action_bar_background;
+      }
+    }
+    .checkbox {
+      content: '';
+      vertical-align: top;
+      display: inline-block;
+      width: 1.6rem;
+      height: 1.6rem;
+      padding: .2rem;
+      border: .1rem solid @border_color;
+      border-radius: 2px;
+      margin: .2rem 1.2rem 0 0;
+      color: @white;
+      font-size: 1rem;
+    }
+  }
+}
+

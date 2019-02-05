@@ -1,0 +1,59 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+  .kuiModalOverlay{
+    .kuiModal{
+      border-radius: 1rem;
+      // width: 50vw!important;
+      box-shadow: 0rem 0rem 1rem 1rem @box_shadow_color;
+      .kuiModalHeader{
+        font-family:@barlow-semibold;
+        border:none;
+        color:@accent_color;
+        padding:2rem 0rem 0rem 2.5rem;
+        .kuiModalHeader__title{
+          font-size:2rem;
+        }
+      }
+      .kuiModalBody{
+        padding: 1rem 0rem 1rem 3rem;
+        .vunet-dynamic-form {
+          .form-components-wrapper{
+            .form-group{
+              margin-top: 1.5rem;
+              .row{
+                .form-group-radio{
+                  label{
+                    font-family:@barlow-regular;
+                    font-size:1.6rem;
+                    font-weight:100;
+                  }
+                 
+                }
+              }
+              input , select , textarea{
+                border-radius:1rem !important;
+              }
+              .selection{
+                border-radius:1rem !important;
+              }
+              .form-label{
+                font-size:1.6rem;
+                font-family:@barlow-semibold;
+              }
+            }
+          }
+          .form-actions{
+            padding:0rem 3.7em;
+            position: relative;
+            top: 2rem;
+            text-align: right;
+          }
+        }
+      }
+      .noform-padding{
+        display: flex !important;
+        justify-content: flex-end;
+        display:block;
+      }
+    }
+  }

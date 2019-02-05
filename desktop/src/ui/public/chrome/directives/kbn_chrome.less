@@ -14,15 +14,17 @@ body { overflow-x: hidden; }
 }
 
 .app-wrapper {
+  background-color:  #f6f7fb;
   .real-flex-parent();
-  left: @global-nav-closed-width;
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  // this has been used due to z-index issue of sidebar
+  // z-index: 1;
   margin: 0 auto;
   background-color: #fff;
-
+  // this is done so that scoll-bar only comes in view section
+  overflow:hidden;
   /**
    * 1. Dirty, but we need to override the .is-global-nav-open state
    *    when we're looking at the log-in screen.
@@ -39,3 +41,10 @@ body { overflow-x: hidden; }
   .app-wrapper-panel {
     .flex-parent(@shrink: 0);
   }
+
+.sidebar-open-width{
+  left: 26.5rem !important;
+}
+.sidebar-closed-width{
+  left: 8rem !important;
+}

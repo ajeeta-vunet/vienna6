@@ -1,22 +1,23 @@
 <div id="globalChromeContent" class="content content-normal" chrome-context data-test-subj="kibanaChrome">
-  <global-nav
+  <!-- global-nav is the sidebar which was used by kibana and we have 
+  introduced our sidebar so global-nav is commented -->
+  <!-- <global-nav
     chrome="chrome"
     data-test-subj="globalNav"
     is-visible="chrome.getVisible()"
     logo-brand="chrome.getBrand('logo')"
     small-logo-brand="chrome.getBrand('smallLogo')"
     app-title="chrome.getAppTitle()"
-  ></global-nav>
-
-  <div id="globalAppWrapper" class="app-wrapper app-wrapper-normal" ng-class="{ 'hidden-chrome': !chrome.getVisible() }">
+  ></global-nav> -->
+  <sidebar-navigation></sidebar-navigation>
+  <div id="globalAppWrapper" class="app-wrapper app-wrapper-normal" ng-class="{ 'hidden-chrome': !chrome.getVisible() 
+     ,'sidebar-open-width' : $root.isSideBarOpen ,  'sidebar-closed-width' : !$root.isSideBarOpen }">
     <div class="app-wrapper-panel">
-      <kbn-notifications list="notifList"></kbn-notifications>
+      <!-- <kbn-notifications list="$root.notifList"></kbn-notifications> -->
       <kbn-loading-indicator></kbn-loading-indicator>
-      <div
-        class="application"
-        ng-class="'tab-' + chrome.getFirstPathSegment() + ' ' + chrome.getApplicationClasses()"
-        ng-view
-      ></div>
+      <vunet-topbar></vunet-topbar>
+      <div class="application vunet-application" ng-class="'tab-' + chrome.getFirstPathSegment() + ' ' + chrome.getApplicationClasses()"
+        ng-view></div>
     </div>
   </div>
 </div>

@@ -1,0 +1,80 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.vunet-dynamic-form-div {
+  .row{
+    margin-left: 0rem;
+    margin-right: 0rem;
+  }
+  .form-components-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    // padding-bottom: 1.2rem;
+    .form-group{
+      .form-input {
+        width: 95%;
+        display: block;
+        height: 3.5rem;
+        padding: .3rem .5rem ;
+        font-size: 1.6rem;
+        line-height: 1.5;
+        color:@text_color1;
+        border: .1rem solid @border_color;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+      }
+      .textarea-height {
+        height: 15rem;
+      }
+      /* Tooltip container */
+      .dynamic-form-tooltip{
+        margin-left: 1%;
+        position: relative;
+        display: inline-block;
+        .tooltiptext {
+          visibility: hidden;
+          width: 12rem;
+          background-color:@black;
+          color: @white;
+          text-align: center;
+          padding: .5rem 0;
+          border-radius: .6rem;
+          position: absolute;
+          top: 100%;
+          left: 50%; 
+          margin-left: -5rem;
+          z-index: 1;
+          &:before{
+            content:'';
+            display:block;
+            width:0;
+            height:0;
+            position:absolute;
+            border-top: .8rem solid transparent;
+            border-bottom: .8rem solid @black;
+            border-right: .8rem solid transparent;
+            border-left: .8rem solid transparent;
+            left:5.2rem;
+            top:-1.3rem;
+          }
+        }
+        &:hover{
+          .tooltiptext {
+            visibility: visible;
+          }
+        }
+      }
+      .error-row{
+        .invalid {
+          color:@red;
+          margin: .5rem 0rem;
+          width: 95%;
+        }
+      }
+    }
+  }
+}
+.was-validated .form-control:valid ~ .invalid-feedback {
+  display: block;
+}
+
+
+

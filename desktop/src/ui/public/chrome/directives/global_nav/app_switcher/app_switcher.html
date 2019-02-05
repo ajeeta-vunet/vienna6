@@ -1,11 +1,22 @@
-<global-nav-link
-  ng-repeat="link in switcher.links"
-  ng-if="!link.hidden"
-  is-active="link.active"
-  is-disabled="link.disabled"
-  tooltip-content="switcher.getTooltip(link)"
-  on-click="switcher.ensureNavigation($event, link)"
-  url="link.active ? link.url : (link.lastSubUrl || link.url)"
-  icon="link.icon"
-  label="link.title"
-></global-nav-link>
+<div class="group_link" ng-repeat="link in switcher.linksToFilter() | filter:switcher.filterLinks">
+    <p>
+      {{ link.group }}
+      <button type="button" class="kuiCollapseButton" aria-label="Toggle panel"
+      aria-expanded="false" aria-controls="lnk_{{$index}}_collapsible"  ng-click="switcher.toggleLink('lnk_'+$index+'_collapsible')">
+        <span class="kuiIcon fa-chevron-circle-up"></span>
+      </button>
+    </p>
+    <div id="lnk_{{$index}}_collapsible" style="display:none;">
+    <global-nav-link
+      ng-repeat="link in switcher.links | filter:{group: link.group}"
+      ng-if="!link.hidden"
+      is-active="link.active"
+      is-disabled="link.disabled"
+      tooltip-content="switcher.getTooltip(link)"
+      on-click="switcher.ensureNavigation($event, link)"
+      url="link.active ? link.url : (link.lastSubUrl || link.url)"
+      icon="link.icon"
+      label="link.title"
+    ></global-nav-link>
+    </div>
+</div>

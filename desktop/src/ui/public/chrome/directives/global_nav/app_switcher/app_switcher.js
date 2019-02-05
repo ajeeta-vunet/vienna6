@@ -1,8 +1,9 @@
 import { DomLocationProvider } from 'ui/dom_location';
 import { parse } from 'url';
 import { uiModules } from 'ui/modules';
-import appSwitcherTemplate from './vunet_app_switcher.html';
+import appSwitcherTemplate from './app_switcher.html';
 import { toggleFullscreen } from 'ui/utils/vunet_fullscreen';
+import angular from 'angular';
 
 uiModules
   .get('kibana')
@@ -62,7 +63,24 @@ uiModules
         };
 
         this.links = $scope.chrome.getNavLinks();
+        this.groupedLinks = [];
 
+        this.linksToFilter = () => {
+          this.groupedLinks = [];
+          return this.links;
+        };
+
+        this.filterLinks = (link) => {
+          const isNewGroup = this.groupedLinks.indexOf(link.group) === -1;
+          if(isNewGroup) {
+            this.groupedLinks.push(link.group);
+          }
+          return isNewGroup;
+        };
+
+        this.toggleLink = (id) => {
+          angular.element('#' + id).toggle();
+        };
         // links don't cause full-navigation events in certain scenarios
         // so we force them when needed
         this.ensureNavigation = appSwitcherEnsureNavigation;

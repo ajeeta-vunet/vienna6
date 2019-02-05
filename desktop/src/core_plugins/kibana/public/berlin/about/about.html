@@ -1,0 +1,44 @@
+<manage-about class="vunet-about-directive">
+  <kbn-top-nav name="user">
+    <div>
+      Uplaod license
+    </div>
+    <!-- Transcluded elements. -->
+    <div data-transclude-slots>
+      <!-- Title. -->
+      <div data-transclude-slot="topLeftCorner" class="kuiLocalTitle" role="heading" aria-level="1">
+        <div class='col-sm-3'>About</div>
+        <div class='col-sm-offset-6 col-sm-3 pull-right upload-license-column'>
+          <div ng-show="isCurrentUserAdmin()" class="uploadLicense" ng-click="openLicenseModal()">
+            Upload Licence
+            <a  href='' class="uploadLicenseButton">
+              <i class="fa fa-upload fa-lg" title="Upload Licence" >
+              </i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </kbn-top-nav>
+  <div class="vunet-about-container" data-test-subj="userLandingPage">
+    <div class="row">
+      <div class="col-sm-6 table-right-padding">
+        <vunet-data-table fetch-items="fetchSwReleaseItems" meta-item="aboutSwReleaseMeta">
+        </vunet-data-table>
+      </div>
+      <div class="col-sm-6">
+        <vunet-data-table fetch-items="fetchTenantItems" meta-item="aboutTenantMeta" table-action="onTableAction"
+          on-submit="tenantDataSubmit">
+        </vunet-data-table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 table-right-padding">
+        <vunet-data-table fetch-items="fetchLicenseItems" meta-item="aboutLicenseMeta" table-action="uploadLicense">
+        </vunet-data-table>
+      </div>
+    </div>
+  </div>
+</manage-about>
+

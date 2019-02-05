@@ -19,6 +19,27 @@ export default function (chrome, internals) {
     return (internals.tenantId === '1' && internals.buId === '1');
   };
 
+  // Function to check super tenant admin
+  chrome.isUserFromSuperTenantAdmin = function () {
+    return (internals.tenantId === '1' && internals.userPermission === 'admin');
+  };
+
+  // FUnction to check if admin and modify are allowed
+  chrome.isModifyAllowed = function () {
+    if (internals.userPermission === 'admin') {
+      return true;
+    } else if (internals.userPermission === 'modify') {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // Defining the value of session timeout but later it needs to come in req.headers (internals)
+  chrome.getSessionIdleTimeout =  function () {
+    return 900000;
+  };
+
   /*
    * This function is called to fetch the Tenant and BU id for the logged in
    * user
@@ -26,6 +47,7 @@ export default function (chrome, internals) {
   chrome.getTenantBu = function () {
     return [internals.tenantId, internals.buId];
   };
+
 
   // Our Base URL
   const BASE_URL = 'vuSmartMaps/api';

@@ -1,0 +1,169 @@
+<div ng-controller="DetailsCtrl" class="component-details">
+  <div class="details-container">
+    <div class="user-onboard-container" ng-show="showTenantInfo">
+      <div class="user-onboard-title row">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="userOnboardStep"><span>1</span></div>
+            </div>
+            <div class="col-md-7 license-modal-header">
+              YOUR DETAILS
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="user-onboard-form">
+        <div class="details-header"> Please verify or update your details before you get smarter insights from your infrastructure </div>
+        <form class="form-horizontal" name="addDetailsForm" novalidate ng-submit="saveDetails(addDetailsForm.$valid)">
+          <div class="form-group" ng-class="{'has-error': addDetailsForm.enterpriseName.$invalid && !addDetailsForm.enterpriseName.$pristine}">
+            <label class="col-md-3">Company Name</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control user-onboard-input" ng-model="tenantData.enterprise_name" required ng-maxlength="50" name="enterpriseName" ng-pattern="enterpriseNamePattern" >
+              <div class="help-block" ng-show="addDetailsForm.enterpriseName.$error.pattern">Company name should contain minimum of 3 characters and maximum of 100 characters.
+              </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error': addDetailsForm.email.$invalid && !addDetailsForm.email.$pristine}">
+            <label class="col-md-3">Email</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control user-onboard-input" ng-model="tenantData.email" required ng-maxlength="64" ng-pattern="emailPattern" name="email">
+              <div class="help-block" ng-show="addDetailsForm.email.$error.pattern">Invalid email.</div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error': addDetailsForm.phoneNo.$invalid && !addDetailsForm.phoneNo.$pristine}">
+            <label class="col-md-3">Phone number</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control user-onboard-input" ng-model="tenantData.phone_no" required ng-maxlength="10" name="phoneNo" 
+                ng-pattern=phonePattern>
+              <div class="help-block" ng-show="addDetailsForm.phoneNo.$error.pattern || addDetailsForm.phoneNo.$error.maxlength">Phone no should contain 10 digits.</div>
+            </div>
+          </div>
+          <div class="user-onboard-submit-wrapper">
+            <button id="detailsSubmit" class="btn btn-vunet-next pull-right" ng-disabled="addDetailsForm.$invalid" ng-click="showLicencePage()">Next</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="user-onboard-container" ng-show="showLicenceTab">
+      <div class="user-onboard-title row">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="userOnboardStep"><span>2</span></div>
+            </div>
+            <div class="col-md-7 license-modal-header">
+              UPLOAD LICENSE
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="user-onboard-form">
+        <div class="details-header">Please upload the license file provided to you.</div>
+        <form class="form-horizontal" name="addLicenceDetailsForm" novalidate ng-submit="saveDetails(addLicenceDetailsForm.$valid)">
+          <div class="form-group" ng-class="{'has-error': addLicenceDetailsForm.phoneNo.$invalid && !addLicenceDetailsForm.phoneNo.$pristine}">
+           <label class="col-md-3">License File</label>
+            <div class="col-md-9">
+              <input class="btn upload-license" type="file"
+              ngf-select ng-model="File" name="file" ngf-multiple="false" required>
+            </div>
+          </div>
+          <div class="user-onboard-submit-wrapper">
+            <button id="detailsPrevious" class="btn btn-vunet-previous pull-left" ng-click="showTenantInfoPage()">Previous</button>
+            <button id="detailsSubmit" class="btn btn-vunet-submit pull-right" ng-disabled="addLicenceDetailsForm.$invalid" ng-click="upload(File)">Save and Continue</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="user-onboard-container" ng-show="showServerInfoTab">
+      <div class="user-onboard-title row">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="userOnboardStep"><span>3</span></div>
+            </div>
+            <div class="col-md-10 license-modal-header">
+              ADD SERVER INFORMATION
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="user-onboard-form">
+        <form class="form-horizontal" name="addServerInfoForm" novalidate>
+          <div class="server-info-headers">Shipper</div>
+          <div class="form-group" ng-class="{'has-error': addServerInfoForm.shipperIpAddress.$invalid && !addServerInfoForm.shipperIpAddress.$pristine}">
+            <label class="col-md-3 control-label"> IP Address
+              <a href=""
+                tooltip="Set the hostname for analyser"
+                tooltip-placement="bottom">
+                <i class="fa fa-question-circle"></i>
+              </a>
+            </label>
+            <div class="col-md-9">
+              <select class="form-control user-onboard-input"
+                ng-model="serverInformation['shipper'][0]['IP Address']" 
+                name="shipperIpAddress" 
+                ng-pattern="/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/"
+                ng-options="addr for addr in serverInformation['options']"
+                required>
+              </select>
+              <div class="help-block"
+                ng-show="addServerInfoForm.shipperIpAddress.$error.pattern">
+                Please enter a valid IP Address
+              </div>
+            </div>
+          </div>
+          <div class="server-info-headers">Analyser</div>
+          <div class="form-group" ng-class="{'has-error': addServerInfoForm.analyserHostname.$invalid && !addServerInfoForm.analyserHostname.$pristine}">
+            <label class="col-md-3 control-label"> Hostname
+              <a href=""
+                tooltip="Set the hostname for analyser"
+                tooltip-placement="bottom">
+                <i class="fa fa-question-circle"></i>
+              </a>
+            </label>
+            <div class="col-md-9">
+              <input type="text"
+                class="form-control user-onboard-input"
+                ng-model="serverInformation['analyser'][0]['Hostname']"
+                name="analyserHostname"
+                ng-pattern="/.*/"
+                required>
+              <div class="help-block"
+                ng-show="addServerInfoForm.analyserHostname.$touched && addServerInfoForm.analyserHostname.$error.required">
+                Please enter a valid hostname
+              </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error': addServerInfoForm.analyserIpAddress.$invalid && !addServerInfoForm.analyserIpAddress.$pristine}">
+            <label class="col-md-3 control-label"> IP Address
+              <a href=""
+                tooltip="Set the IP address for analyser"
+                tooltip-placement="bottom">
+                <i class="fa fa-question-circle"></i>
+              </a>
+            </label>
+            <div class="col-md-9">
+              <input type="text"
+                class="form-control user-onboard-input"
+                ng-model="serverInformation['analyser'][1]['IP Address']"
+                name="analyserIpAddress"
+                ng-pattern="/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/"
+                required>
+              <div class="help-block"
+                ng-show="addServerInfoForm.analyserIpAddress.$error.pattern">
+                Please enter a valid IP Address
+              </div>
+            </div>
+          </div>
+          <div class="user-onboard-submit-wrapper">
+            <button id="detailsSubmit" class="btn btn-vunet-submit pull-right" ng-disabled="addServerInfoForm.$invalid" ng-click="saveServerInfo(serverInformation)">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

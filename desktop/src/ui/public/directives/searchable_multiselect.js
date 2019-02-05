@@ -47,7 +47,7 @@ module.directive('searchableMultiselect', function () {
 
       //Check if item is selected , used to apply styles
       scope.isItemSelected = function (item) {
-        if (scope.selectedItems.findIndex(obj => obj.name.toUpperCase() === item.toUpperCase()) != -1) {
+        if (scope.selectedItems.findIndex(obj => obj.name.toUpperCase() === item.toUpperCase()) !== -1) {
           return true;
         }
         return false;

@@ -4,10 +4,10 @@
   position: relative;
   // This is done to set the vunet top nav items
   // width
-  //width: @global-nav-closed-width;
+  width: @global-nav-open-width;
   height: @app-icon-height;
   line-height: @app-line-height;
-
+   
   &.is-global-nav-link-disabled {
     opacity: 0.5;
 
@@ -96,5 +96,15 @@
    */
   .global-nav-link__icon {
     transform: translateX(1px) scaleX(-1); /* 1 */
+  }
+}
+
+.group_link {
+  p, span {
+    color: #ffffff;
+    margin-left: 8px;
+  }
+  button {
+    float: right;
   }
 }

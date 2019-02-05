@@ -4,6 +4,7 @@ import $ from 'jquery';
 import { metadata } from 'ui/metadata';
 import { formatMsg } from 'ui/notify/lib/_format_msg';
 import fatalSplashScreen from 'ui/notify/partials/fatal_splash_screen.html';
+import detailsTemplate from 'plugins/kibana/berlin/details/details.html';
 import 'ui/render_directive';
 /* eslint no-console: 0 */
 
@@ -261,6 +262,41 @@ Notifier.pullMessageFromUrl = ($location) => {
 
   const notifier = new Notifier(config);
   notifier[level](message);
+};
+
+/**
+ * Will show licence update page
+ */
+Notifier.showLicence = (rootScope) => {
+
+  // If we have already added the details page, we should not do it again
+  if (rootScope.license) {
+    return;
+  }
+
+  // angualr is not ready
+  if (!Notifier.$compile) {
+    throw new Error('Unable to use the directive notification until Angular has initialized.');
+  }
+
+  // Attache the licence page to body so get the element for document body
+  const $target = $(document.body);
+
+  // Hide vienna content for now
+  $('#globalChromeContent').hide();
+
+  // We are going to add license page now.. mention that..
+  rootScope.license = true;
+
+  // Get the $compile
+  window.$compile = angular.element(document.body).injector().get('$compile');
+
+  // This does following:
+  // 1. create an element from detailsTemplate
+  // 2. compile it with $compile with a new scope
+  // 3. Append this to document body element
+  $target.append(window.$compile(angular.element(detailsTemplate))(rootScope.$new()));
+
 };
 
 // simply a pointer to the global notif list

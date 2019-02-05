@@ -18,8 +18,9 @@ require('plugins/kibana/event/directives/event_summary');
 require('plugins/kibana/event/directives/event_detailed_info');
 require('plugins/kibana/event/directives/additional_info');
 require('plugins/kibana/event/directives/severity_widget');
+require('angular-ui-bootstrap');
 
-document.title = 'Events - Kibana';
+document.title = 'Events - Vienna';
 
 const app = uiModules.get('app/event', [
   'elasticsearch',
@@ -28,7 +29,8 @@ const app = uiModules.get('app/event', [
   'kibana/config',
   'kibana/notify',
   'smart-table',
-  'angularMoment'
+  'angularMoment',
+  'ui.bootstrap'
 ]);
 
 // Setting a custom pagination template.

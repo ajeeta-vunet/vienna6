@@ -1,0 +1,51 @@
+<div class="modal-header">
+    <div ng-if="editDataEnrichment==true">
+        <h3 class="modal-title">Edit Entry</h3>
+    </div>
+    <div ng-if="editDataEnrichment==false">
+        <h3 class="modal-title">Add Entry</h3>
+    </div>
+</div>
+<form class="form-horizontal" name="addDataEnrichmentForm" novalidate ng-submit="saveDataEnrichment(addDataEnrichmentForm.$valid)">
+    <div class="modal-body">
+        <div ng-class="{'has-error': addDataEnrichmentForm.key1.$invalid && !addDataEnrichmentForm.key1.$pristine}">
+            <div class="row">
+                <div class="col-sm-3 col-md-3">
+                    <label class="col-sm-12 col-md-12 control-label">{{key1_label }}</label>
+                </div>
+                <div class="col-sm-7 col-md-7 align-down">
+                    <input type="text" ng-if="key1_field.type!='enum'" class="form-control" ng-model="params.key1" required name="key1" ng-disabled="editDataEnrichment==true" enrichment-key-validator ng-pattern="key1_pattern">
+                    <select class="form-control" ng-if="key1_field.type=='enum'" ng-model="params.key1" name="key1" ng-options="option for option in key1_field.options" ng-if="key1_field.type=='enum' " required enrichment-key-validator ng-disabled="editDataEnrichment==true"></select>
+                    <div class="help-block" ng-show="addDataEnrichmentForm.key1.$error.keyInput">Value already exists.</div>
+                    <div class="help-block" ng-show="addDataEnrichmentForm.key1.$error.pattern">{{key1_field.pattern_help}}. </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 col-md-3">
+                <label class="col-sm-12 col-md-12 control-label">{{value1_label }}</label>
+            </div>
+            <div class="col-sm-7 col-md-7">
+                <table class="table table-hover table-bordered set-table">
+                    <tr ng-repeat="key in value1Fields">
+                        <td>
+                            <div class="col-md-4 display-center-keys"><b>{{key}}</b>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-class="{'has-error': addDataEnrichmentForm.{{key}}.$invalid && !addDataEnrichmentForm.{{key}}.$pristine}">
+                                <input type="text" class="form-control" ng-if="value1FieldsTypes[key] !='enum'" ng-model="params.value1[key]" name="{{key}}" ng-pattern="value1FieldsPattern[key]['frontend_pattern']">
+                                <select class="form-control" ng-if="value1FieldsTypes[key] =='enum'" ng-model="params.value1[key]" ng-options="option for option in value1FieldsOptions[key]"> </select>
+                                <div class="help-block" ng-show="addDataEnrichmentForm.{{key}}.$error.pattern">{{value1FieldsPattern[key]['pattern_help']}}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-vunet-cancel" ng-click="cancel()">Cancel</button>
+            <button id="dataEnrichment_submit" class="btn btn-vunet-submit" ng-disabled="addDataEnrichmentForm.$invalid || submitDisable()">Submit</button>
+        </div>
+    </div>
+</form>

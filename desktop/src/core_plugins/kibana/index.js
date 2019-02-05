@@ -42,7 +42,7 @@ import {
 const mkdirp = Promise.promisify(mkdirpNode);
 
 export default function (kibana) {
-  const kbnBaseUrl = '/app/kibana';
+  const kbnBaseUrl = '/app/vienna';
   return new kibana.Plugin({
     id: 'kibana',
     config: function (Joi) {
@@ -65,8 +65,8 @@ export default function (kibana) {
         'plugins/kibana/report/saved_report/saved_report_register',
       ],
       app: {
-        id: 'kibana',
-        title: 'Kibana',
+        id: 'vienna',
+        title: 'Vienna',
         listed: false,
         description: 'the kibana you know and love',
         main: 'plugins/kibana/kibana',
@@ -96,7 +96,16 @@ export default function (kibana) {
         url: `${kbnBaseUrl}#/management`,
         description: 'define index patterns, change config, and more',
         icon: 'plugins/kibana/assets/settings.svg',
-        linkToLastSubUrl: false
+        linkToLastSubUrl: false,
+        group: 'Settings'
+      }, {
+        id: 'berlin:about',
+        title: 'About',
+        description: 'About',
+        order: 9003,
+        url: `${kbnBaseUrl}#/berlin/about`,
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'Settings'
       }, {
         id: 'kibana:anomaly',
         title: 'Anomaly Detection',
@@ -104,6 +113,7 @@ export default function (kibana) {
         url: `${kbnBaseUrl}#/anomalys`,
         description: 'Anomaly Detection',
         subUrlBase: `${kbnBaseUrl}#/anomaly`,
+        group: 'Monitors'
       }, {
         id: 'kibana:report',
         title: 'Report',
@@ -112,6 +122,7 @@ export default function (kibana) {
         description: 'create highly customized reports',
         icon: 'plugins/kibana/assets/report.svg',
         subUrlBase: `${kbnBaseUrl}#/report`,
+        group: 'Monitors'
       }, {
         id: 'kibana:alert',
         title: 'Manage Alerts',
@@ -120,6 +131,7 @@ export default function (kibana) {
         description: 'Smart and intelligent alerts',
         subUrlBase: `${kbnBaseUrl}#/alert`,
         icon: 'plugins/kibana/assets/alert.svg',
+        group: 'Monitors'
       }, {
         id: 'kibana:visualize',
         title: 'Visualizations',
@@ -127,6 +139,7 @@ export default function (kibana) {
         url: `${kbnBaseUrl}#/visualize`,
         description: 'design data visualizations',
         icon: 'plugins/kibana/assets/visualize.svg',
+        group: 'Insights'
       }, {
         id: 'kibana:discover',
         title: 'Search',
@@ -134,6 +147,7 @@ export default function (kibana) {
         url: `${kbnBaseUrl}#/discover`,
         description: 'interactively explore your data',
         icon: 'plugins/kibana/assets/discover.svg',
+        group: 'Insights'
       }, {
         id: 'kibana:event',
         title: 'Event',
@@ -146,6 +160,7 @@ export default function (kibana) {
         subUrlBase: `${kbnBaseUrl}#/event`,
         description: 'compose visualizations for much win',
         icon: 'plugins/kibana/assets/event.svg',
+        group: 'Insights'
       }, {
         id: 'kibana:dashboard',
         title: 'Insights',
@@ -159,6 +174,79 @@ export default function (kibana) {
         subUrlBase: `${kbnBaseUrl}#/dashboard`,
         description: 'compose visualizations for much win',
         icon: 'plugins/kibana/assets/dashboard.svg',
+        group: 'Insights'
+      },
+      {
+        id: 'kibana:users',
+        title: 'User',
+        order: 9002,
+        url: `${kbnBaseUrl}#/berlin/user/users`,
+        description: 'Manage User',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'User',
+      },
+      {
+        id: 'kibana:roles',
+        title: 'Roles',
+        order: 9003,
+        url: `${kbnBaseUrl}#/berlin/user/roles`,
+        description: 'Manage Roles',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'User',
+      },
+      {
+        id: 'kibana:preferences',
+        title: 'Preferences',
+        order: 9004,
+        url: `${kbnBaseUrl}#/berlin/preferences`,
+        description: 'Manage User preferences',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'User',
+      },
+      {
+        id: 'kibana:configuration',
+        title: 'Configuration',
+        order: 9005,
+        url: `${kbnBaseUrl}#/berlin/data_source/configuration/`,
+        description: 'Live Indices',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'Data Source',
+      },
+      {
+        id: 'kibana:live_indices',
+        title: 'Live Indices',
+        order: 9005,
+        url: `${kbnBaseUrl}#/berlin/data_source/storage/live_indices`,
+        description: 'Live Indices',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'Data Source',
+      },
+      {
+        id: 'kibana:archived_indices',
+        title: 'Archived Indices',
+        order: 9006,
+        url: `${kbnBaseUrl}#/berlin/data_source/storage/archived_indices`,
+        description: 'Archive indices',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'Data Source',
+      },
+      {
+        id: 'kibana:enrichment',
+        title: 'Enrichment',
+        order: 9007,
+        url: `${kbnBaseUrl}#/berlin/data_source/enrichment`,
+        description: 'Enrichment',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'Data Source',
+      },
+      {
+        id: 'kibana:credentials',
+        title: 'Credentials',
+        order: 9008,
+        url: `${kbnBaseUrl}#/berlin/credentials`,
+        description: 'Credentials',
+        icon: 'plugins/kibana/assets/app_advanced_settings.svg',
+        group: 'Settings',
       },
         // Hide dev tools section in top navbar.
         // {

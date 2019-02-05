@@ -1,0 +1,27 @@
+<vunet-preferences class="vunet-preference-directive">
+
+  <!-- Local nav. -->
+  <kbn-top-nav name="user">
+    <!-- Transcluded elements. -->
+    <div data-transclude-slots>
+      <!-- Title. -->
+      <div data-transclude-slot="topLeftCorner" class="kuiLocalTitle" role="heading" aria-level="1">
+        Preferences
+      </div>
+    </div>
+  </kbn-top-nav>
+
+  <div class="vunet-preferences-container" data-test-subj="userLandingPage">
+    <div class="row">
+      <div class="col-sm-6" ng-repeat="prefMetaObj in allPreferenceMeta">
+        <div ng-repeat="(key, prefObj) in prefMetaObj">
+          <vunet-data-table fetch-items="fetchPreferenceItems" delete-selected-items="delete" meta-item="prefObj"
+            table-type="key" on-submit="onPreferenceSubmit">
+          </vunet-data-table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</vunet-preferences>

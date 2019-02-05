@@ -1,5 +1,243 @@
 @import (reference) "~ui/styles/variables";
 
+@media only screen and (max-width: 1600px) {
+  html{
+    font-size:9px !important;
+  }
+}
+
+@media only screen and (max-width: 1450px) {
+  html{
+    font-size:8px !important;
+  }
+}
+
+@media only screen and (max-width: 1305px) {
+  html{
+    font-size:7px !important;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  html{
+    font-size:6px !important;
+  }
+}
+
+// CUSTOM SCROLLBAR 
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 .5rem grey; 
+  border-radius: 1rem;
+}
+::-webkit-scrollbar{
+  width: .4rem;
+  height: .4rem;
+  border-radius: 1rem;
+  // display: none;
+  // &:hover{
+  //   display:block;
+  // }
+}
+::-webkit-scrollbar-thumb{
+  background-color: #5a4fef;	
+  border-radius: 1rem;
+}
+// ::-webkit-scrollbar:vertical {
+//   display: none;
+// }
+// ::-webkit-scrollbar-thumb:hover{
+// 	display:block;	
+// }
+// ::-webkit-scrollbar:active{
+//   display:inline;
+// }
+
+/* Chrome, Safari and Opera syntax */
+:-webkit-full-screen {
+  width:100%;
+  height:100%;
+}
+
+/* Firefox syntax */
+:-moz-full-screen {
+  width:100%;
+  height:100%;
+}
+
+/* IE/Edge syntax */
+:-ms-fullscreen {
+  width:100%;
+  height:100%;
+}
+
+/* Standard syntax */
+:fullscreen {
+  width:100%;
+  height:100%;
+}
+
+
+body{
+  font-family:'Barlow-Regular';
+}
+html{
+  font-size:10px;
+}
+//Bacground color for all views
+.vunet-application{
+  height:80vh;
+  overflow-y:auto;
+  .app-container{
+    kbn-top-nav{
+      z-index:0 !important;
+    }
+  }
+  // .vis-col-wrapper{
+  //   // margin-left:5rem!important;
+  // }
+  background-color:#f6f7fb;
+    .kuiLocalNav{
+      background-color:#f1f2f7;
+      // height:6.5rem !important;
+      border:none;
+      min-height:40px;
+      .kuiLocalNavRow{
+        .kuiLocalTitle{
+          font-family: 'Barlow-Semibold';
+          color: #5a4fef;
+          position: relative;
+          top: .9rem;
+          padding: 0.9rem 0rem 0rem 3rem;
+          font-size: 1.9rem;   
+          width:100%;   
+        }
+      }
+      .kuiLocalDropdown{
+        padding: 2.5rem 1rem 1.5rem 0rem;
+        .kbn-timepicker-content {
+          width: 70rem;
+          max-width: unset;
+          .kuiVerticalRhythmSmall{
+            .kbn-timepicker-body{
+              .btn-default{
+                background-color:#f6f7fb;
+                border:none;
+                color:black;
+                &:hover{
+                  color: #F5F5F5;
+                  background-color: #292F4F;
+                }
+              }
+              .btn[disabled]{
+                &:hover{
+                  background-color:#f6f7fb;
+                  color:black; 
+                }
+              }
+              .active{
+                background-color:#5a4fef ;
+                span{
+                  color:white;
+                }
+              }
+            }
+          } 
+          .kbn-timepicker-actions{
+            padding-top:1rem;
+          }
+      }
+    }
+  }
+}
+//vunet-white-buttons 
+.vunet-btn-collect , .vunet-btn-download ,.vunet-btn-export ,.vunet-btn-import{
+  background-color:#fff;
+  font-size: 1.75rem;
+  border-radius: 2rem;
+  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06) ;
+  color:black!important;
+  &:hover{
+    color: #5a4fef!important;
+    font-family: 'Barlow-Bold';
+    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06) ;
+  }
+}
+
+///vunet Simple Buttons for angular code
+.btn-vunet-submit , .btn-vunet-cancel , .btn-vunet-next , .btn-vunet-previous ,.btn-vunet-others , .btn-vunet-import ,  .btn-vunet-export{
+  background-color: #5a4fef;
+  font-size: 1.6rem;
+  border-radius: 2rem;
+  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+  margin-right: 3rem;
+  margin-top: 1rem;
+  color: #fff;
+  &:hover{
+    // color: #fff;
+    font-family: 'Barlow-Semibold';
+    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06);
+  }
+}
+
+//Disabled button  for angular code
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  cursor: not-allowed;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  background-color: #e8e7ee!important;
+  color:#ababb1!important;
+  &:hover{
+    box-shadow:none;
+    font-family:'Barlow-Regular'!important;
+    // color:#ababb1!important;
+  }
+}
+
+// this has been done to disable the run diagnostics button
+button[disabled], {
+  cursor: not-allowed;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  // background-color: #e8e7ee!important;
+  // color:#ababb1!important;
+  .icon-Diagnostics {
+    color:#ababb1!important;
+    &:hover{
+      font-weight: normal;
+    }  
+  }
+  &:hover{
+    box-shadow:none;
+    font-family:'Barlow-Regular'!important;
+    // color:#ababb1!important;
+  }
+}
+
+// vunet-buttons for react components form etc
+.vunet-button{
+  margin-left:1rem;
+  display: inline-block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding:.6rem 3rem .6rem 3rem !important; 
+  font-size: 1.6rem!important;
+  height: 3.5rem!important;
+  text-decoration: none;
+  border: none;
+  border-radius: 2rem;
+  background-color: #5a4fef;
+  color:#ffffff !important;
+  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+  &:hover{
+    color: #fff!important;
+    text-decoration: none!important;
+    font-family: 'Barlow-Semibold';
+    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06);
+  }
+}
+
 // These classes use for reports
 .report-print-non-table {
   height: 575px;
@@ -185,5 +423,52 @@
       }
     }
   }
+}
+
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'vunetIcons' !important;
+  // speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-Settings:before {
+  content: "\e900";
+}
+.icon-Network:before {
+  content: "\e901";
+}
+.icon-Data-Source:before {
+  content: "\e902";
+}
+.icon-Analytics:before {
+  content: "\e903";
+}
+.icon-Data:before {
+  content: "\e909";
+}
+.icon-down-arrow:before {
+  content: "\e904";
+}
+.icon-Menu-Collapse:before {
+  content: "\e905";
+}
+.icon-user:before {
+  content: "\e906";
+}
+.icon-Notification:before {
+  content: "\e907";
+}
+.icon-Diagnostics:before {
+  content: "\e908";
 }
 

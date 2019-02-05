@@ -2,9 +2,13 @@
 // Function to toggle full screen in main panel.
 export function toggleFullscreen() {
 
-  // this code will excute inside iframe so select parent docuemt
+  // this code will excute inside view so select parent docuemt
   const _document = parent.document;
-  const iframe = _document.querySelector('.vienna-container iframe');
+  let view = _document.querySelector('.app-container');
+
+  if (!view) {
+    view = _document.querySelector('.vunet-application');
+  }
 
   // check if fullscreen mode is available
   if (_document.fullscreenEnabled ||
@@ -28,14 +32,14 @@ export function toggleFullscreen() {
     } else {
 
       // check browser specific function
-      if (iframe.requestFullscreen) {
-        iframe.requestFullscreen();
-      } else if (iframe.webkitRequestFullscreen) {
-        iframe.webkitRequestFullscreen();
-      } else if (iframe.mozRequestFullScreen) {
+      if (view.requestFullscreen) {
+        view.requestFullscreen();
+      } else if (view.webkitRequestFullscreen) {
+        view.webkitRequestFullscreen();
+      } else if (view.mozRequestFullScreen) {
         _document.documentElement.mozRequestFullScreen();
-      } else if (iframe.msRequestFullscreen) {
-        iframe.msRequestFullscreen();
+      } else if (view.msRequestFullscreen) {
+        view.msRequestFullscreen();
       }
     }
   }

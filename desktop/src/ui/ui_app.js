@@ -19,6 +19,7 @@ export default class UiApp {
     this.linkToLastSubUrl = this.spec.linkToLastSubUrl;
     this.listed = this.spec.listed == null ? !this.hidden : this.spec.listed;
     this.templateName = this.spec.templateName || 'ui_app';
+    this.group = spec.group || '';
 
     if (!this.hidden) {
       // any non-hidden app has a url, so it gets a "navLink"
@@ -29,7 +30,8 @@ export default class UiApp {
         description: this.description,
         icon: this.icon,
         url: this.spec.url || `/app/${this.id}`,
-        linkToLastSubUrl: this.linkToLastSubUrl
+        linkToLastSubUrl: this.linkToLastSubUrl,
+        group: this.group
       });
 
       if (!this.listed) {
@@ -64,6 +66,6 @@ export default class UiApp {
   }
 
   toJSON() {
-    return pick(this, ['id', 'title', 'description', 'icon', 'main', 'navLink', 'linkToLastSubUrl']);
+    return pick(this, ['id', 'title', 'description', 'icon', 'main', 'navLink', 'linkToLastSubUrl', 'group']);
   }
 }

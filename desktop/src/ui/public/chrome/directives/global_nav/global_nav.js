@@ -2,7 +2,7 @@
 import './app_switcher';
 import './global_nav_link';
 
-import globalNavTemplate from './vunet_global_nav.html';
+import globalNavTemplate from './global_nav.html';
 import './global_nav.less';
 import { uiModules } from 'ui/modules';
 

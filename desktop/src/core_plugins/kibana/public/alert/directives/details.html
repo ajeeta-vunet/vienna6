@@ -1110,7 +1110,7 @@
             <div
               ng-show ="successexecuteSpecificLogs && specificcheck"
               class="fa fa-check alert-condition status-message success-highlight">
-              Successfully triggered the alert execution for the specified time
+              Successfully triggered alert execution for the specified time
             </div>
             <div
               ng-show="failureexecuteSpecificLogs && specificcheck"
@@ -1156,12 +1156,12 @@
           <div
             class="fa fa-check alert-condition alert-component-label status-message success-highlight"
             ng-if="successfullyset && debugVal != 'Disable'">
-            Successfully set the debug level to {{debugVal}} and this debug will be active for next 3 excution
+            Diagnostics level set to {{debugVal}}. This will be active for next few executions.
           </div>
           <div
             class="fa fa-check alert-condition alert-component-label status-message success-highlight"
             ng-if="successfullyset && debugVal == 'Disable'">
-            Debugging level has been disabled
+            Debugs are disabled
           </div>
           <div
             class="fa fa-close alert-condition alert-component-label status-message error-highlight"

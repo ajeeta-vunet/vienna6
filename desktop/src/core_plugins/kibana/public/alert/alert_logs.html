@@ -1,0 +1,78 @@
+<div class="modal-header">
+  <h3 class="modal-title text-center">Alert Output</h3>
+</div>
+<div class="modal-body">
+  <tabset>
+    <tab heading="Results">
+      <div class="row alert-results-container">
+        <p ng-show="!alertLogs.subrules.length">No Results found</p>
+        <div ng-if="alertLogs.subrules.length" class="col-sm-offset-1 col-sm-10">
+          <table class="table table-bordered">
+            <caption>Alert successfully generated for</caption>
+            <tr ng-show="!atleastOneAlertWasGenerated">
+              <td>No alerts were generated</td>
+            </tr>
+            <tr ng-show="atleastOneAlertWasGenerated" ng-repeat="(key, value) in alertGeneratedFor">
+              <td ng-if="value.evaluationResult">{{key | formatAlertValue}}</td>
+            </tr>
+          </table>
+          <table class="table table-bordered">
+            <caption>Subrule Information</caption>
+            <th>Attributes</th>
+            <th ng-repeat="subrule in alertLogs.subrules">
+              {{subrule.name}}
+            </th>
+            <tr ng-repeat="attr in dataAttributes">
+              <td>{{attr}}</td>
+              <td ng-repeat="subrule in alertLogs.subrules">{{subrule.data[attr] | formatAlertValue}}</td>
+            </tr>
+          </table>
+          <div ng-repeat="evaluation_obj in alertLogs.evaluation_result" class="evaluation-container">
+            <div ng-repeat="(key, value) in evaluation_obj">
+              <table class="table table-bordered">
+                <caption>Evaluation Criteria for {{key | formatAlertValue}}</caption>
+                <tr ng-repeat="obj in value">
+                  <td>{{obj.name}}</td>
+                  <td>{{obj.value | formatAlertValue}}</td>
+                </tr>
+
+              </table>
+              <table class="table table-bordered">
+                <caption>Alert generation for {{key | formatAlertValue}}</caption>
+                <tr ng-repeat="channel in alertChannels">
+                  <td>{{channel.name}}</td>
+                  <td>{{alertGeneratedFor[key].alertChannels[channel.channel_key] | formatAlertValue}}</td>
+                </tr>
+              </table>
+
+            </div>
+          </div>
+          <div ng-repeat="subrule in alertLogs.subrules">
+            <table class="table table-bordered" ng-init="initFn(subrule)">
+              <caption>Results for {{subrule.name}} of transactions</caption>
+              <th ng-repeat="group in subrule.modifiedResult.groups">{{group}}</th>
+              <tr ng-if="!subrule.result.length">
+                <td ng-repeat="group in subrule.modifiedResult.groups">No data available</td>
+              </tr>
+              <tr ng-repeat="subrule_result in subrule.modifiedResult">
+                <td ng-repeat="group in subrule.modifiedResult.groups" rowspan="{{subrule_result[group].rowspan}}"
+                  ng-if="subrule_result[group]">
+                  {{subrule_result[group].value | formatAlertValue}}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </tab>
+    <tab heading="Logs">
+      <div class="alert-logs-container">
+        <textarea class="log-text" readonly type="text" rows="10" cols="50" ng-model="displayDebug">
+          </textarea>
+      </div>
+    </tab>
+  </tabset>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="close_alert_modal()">Close</button>
+</div>

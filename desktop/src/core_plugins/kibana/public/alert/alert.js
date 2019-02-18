@@ -4,6 +4,8 @@ import 'ui/vis/editors/default/sidebar';
 import 'ui/collapsible_sidebar';
 import 'ui/share';
 import 'ui/query_bar';
+import 'plugins/kibana/alert/filters/alert_filters.js';
+import 'plugins/kibana/alert/styles/main.less';
 import chrome from 'ui/chrome';
 import angular from 'angular';
 import { Notifier } from 'ui/notify/notifier';
@@ -11,6 +13,8 @@ import { DocTitleProvider } from 'ui/doc_title';
 import uiRoutes from 'ui/routes';
 import { uiModules } from 'ui/modules';
 import alertTemplate from 'plugins/kibana/alert/alert.html';
+import alertLogsTemplate from 'plugins/kibana/alert/alert_logs.html';
+import AlertLogsCtrl from 'plugins/kibana/alert/alert_logs.controller.js';
 import { AlertConstants, createAlertEditUrl } from './alert_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
@@ -89,6 +93,7 @@ uiModules
 
 function alertAppEditor($scope,
   $rootScope,
+  $timeout,
   courier,
   $route,
   $routeParams,
@@ -98,7 +103,8 @@ function alertAppEditor($scope,
   savedAlerts,
   $filter,
   $http,
-  kbnUrl) {
+  kbnUrl,
+  $modal) {
   const notify = new Notifier({
     location: 'Alert'
   });
@@ -139,7 +145,7 @@ function alertAppEditor($scope,
   }
 
   // If user can modify the existing object or is allowed to create an object
-  if(userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+  if (userRoleCanModify && chrome.canCurrentUserCreateObject()) {
     $scope.topNavMenu = [{
       key: 'save',
       description: 'Save Alert',
@@ -160,7 +166,7 @@ function alertAppEditor($scope,
     ruleList = JSON.parse(alertcfg.ruleList);
   }
 
-  if(ruleList.length) {
+  if (ruleList.length) {
     // prepare $scope.ruleList and $scope.operRuleList iterating over the object
     // created from backend and populate these fields in the front end.
     $scope.ruleList = [];
@@ -205,20 +211,20 @@ function alertAppEditor($scope,
 
       // These conditions are added here so as to handle load operations of
       // alert. Any changes added here needs to be added under details.js too
-      if(alertcfgRule.ruleType === 'count') {
+      if (alertcfgRule.ruleType === 'count') {
         newOperRuleObj.metricIsSelected = true;
         newOperRuleObj.targetFieldInvisibility = true;
         newOperRuleObj.countIsSelected = true;
         alertcfgRule.selectedField = '';
       } else if (alertcfgRule.ruleType === 'sum' ||
-                 alertcfgRule.ruleType === 'average' ||
-                 alertcfgRule.ruleType === 'min' ||
-                 alertcfgRule.ruleType === 'max') {
+        alertcfgRule.ruleType === 'average' ||
+        alertcfgRule.ruleType === 'min' ||
+        alertcfgRule.ruleType === 'max') {
         newOperRuleObj.metricIsSelected = true;
         newOperRuleObj.sumOrAverageIsSelected = true;
-      } else if(alertcfgRule.ruleType === 'unique_values') {
+      } else if (alertcfgRule.ruleType === 'unique_values') {
         newOperRuleObj.metricIsSelected = true;
-      } else if(alertcfgRule.ruleType === 'state_change' || alertcfgRule.ruleType === 'latest_value') {
+      } else if (alertcfgRule.ruleType === 'state_change' || alertcfgRule.ruleType === 'latest_value') {
         newOperRuleObj.allowStringInCompareValue = true;
         newOperRuleObj.metricIsSelected = true;
         alertcfgRule.ruleTypeDuration = 5;
@@ -231,7 +237,7 @@ function alertAppEditor($scope,
       // Populate the selectedIndex object reference based on what is stored
       // in alertcfg
       _.each($scope.indexPatternList, function (indexPattern) {
-        if(indexPattern.id === alertcfgRule.selectedIndex.id) {
+        if (indexPattern.id === alertcfgRule.selectedIndex.id) {
           newRuleObj.selectedIndex = indexPattern;
           return false;
         }
@@ -253,7 +259,7 @@ function alertAppEditor($scope,
           fields = $filter('filter')(fields, { aggregatable: true });
           newOperRuleObj.indexFields = fields.slice(0);
           _.each(newOperRuleObj.indexFields, function (field) {
-            if(alertcfgRule.selectedField) {
+            if (alertcfgRule.selectedField) {
               if (alertcfgRule.selectedField === field.name) {
                 newOperRuleObj.selectedField = field;
               }
@@ -262,10 +268,10 @@ function alertAppEditor($scope,
 
           // The indexfields is moved as a inner loop to maintain
           // the order of the fields under groupByField list.
-          if(alertcfgRule.groupByField.length) {
+          if (alertcfgRule.groupByField.length) {
             _.each(alertcfgRule.groupByField, function (grpByField) {
               _.each(newOperRuleObj.indexFields, function (field) {
-                if(grpByField === field.name) {
+                if (grpByField === field.name) {
                   const dataObj = { data: field };
                   newOperRuleObj.groupByField.push(dataObj);
                 }
@@ -281,10 +287,10 @@ function alertAppEditor($scope,
 
           // The indexfields is moved as a inner loop to maintain
           // the order of the fields under additional field list.
-          if(alertcfgRule.additionalField && alertcfgRule.additionalField.length) {
+          if (alertcfgRule.additionalField && alertcfgRule.additionalField.length) {
             _.each(alertcfgRule.additionalField, function (additionalField) {
               _.each(newOperRuleObj.indexFields, function (field) {
-                if(additionalField === field.name) {
+                if (additionalField === field.name) {
                   const dataObj = { data: field };
                   newOperRuleObj.additionalField.push(dataObj);
                 }
@@ -314,8 +320,7 @@ function alertAppEditor($scope,
     $scope.alertByTicket = alertcfg.alertByTicket;
     $scope.alertByEmail = alertcfg.alertByEmail;
     $scope.alertEmailId = alertcfg.alertEmailId;
-    if (alertcfg.alertEmailGroup !== '')
-    {
+    if (alertcfg.alertEmailGroup !== '') {
       // Here the alertEmailGroup field will contain only name as following.
       // alertEmailGroup = admin, dba, network
       // To populate in the multiselect directive the format should be as following
@@ -343,7 +348,7 @@ function alertAppEditor($scope,
 
     $scope.$on('$destroy', alertcfg.destroy);
   } else {
-    $scope.ruleList = [ {
+    $scope.ruleList = [{
       'selectedIndex': '',
       'ruleType': '',
       'ruleNameAlias': '',
@@ -360,7 +365,8 @@ function alertAppEditor($scope,
       'alertFilter': '',
       'enableComparisionFields': false,
     }];
-    $scope.operRuleList = [ { 'indexFields': [],
+    $scope.operRuleList = [{
+      'indexFields': [],
       'metricIsSelected': true,
       'sumOrAverageIsSelected': false,
       'countIsSelected': false,
@@ -398,11 +404,10 @@ function alertAppEditor($scope,
     let infoCollectorRuleExists = false;
     for (let index = 0; index < $scope.ruleList.length; index = index + 1) {
       const rule = $scope.ruleList[index];
-      if(rule.informationCollector === true)
-      {
+      if (rule.informationCollector === true) {
         infoCollectorRuleExists = true;
       }
-      else if(infoCollectorRuleExists === true) {
+      else if (infoCollectorRuleExists === true) {
         return true;
       }
     }
@@ -437,6 +442,12 @@ function alertAppEditor($scope,
       $scope.successfullyset = false;
       $scope.failedtoset = true;
     });
+    // Hide the message that comes on setting debug level
+    // after 3 seconds
+    $timeout(function () {
+      $scope.successfullyset = false;
+      $scope.failedtoset = false;
+    }, 3000);
   };
 
   // API call to execute alert
@@ -444,11 +455,17 @@ function alertAppEditor($scope,
     $http.post(url + '/alertrule/' + alertcfg.title + '/?execute_now=True&from=time&to=time', {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     }).then(function () {
-      $scope.successexecuteLogs =  true;
+      $scope.successexecuteLogs = true;
     }).catch(function () {
       $scope.failureexecuteLogs = true;
-      $scope.errmessage = 'Fail to process test execution of alert rule';
+      $scope.errmessage = 'Failed to initiate test execution of alert rule';
     });
+    // Hide the message that comes on clicking execute
+    // button after 3 seconds
+    $timeout(() => {
+      $scope.successexecuteLogs = false;
+      $scope.failureexecuteLogs = false;
+    }, 3000);
   };
 
   // API call to execute alert for a specific time
@@ -468,10 +485,16 @@ function alertAppEditor($scope,
       if (response.data['error-string']) {
         $scope.errmessagespecificlogs = response.data['error-string'];
       } else {
-        $scope.errmessagespecificlogs = ' Fail to execute alert rule';
+        $scope.errmessagespecificlogs = ' Failed to execute alert rule';
       }
 
     });
+    // Hide the message that comes on clicking execute
+    // button after 3 seconds
+    $timeout(() => {
+      $scope.successexecuteSpecificLogs = false;
+      $scope.failureexecuteSpecificLogs = false;
+    }, 3000);
   };
 
   // setting the default value for showDebug .
@@ -482,33 +505,40 @@ function alertAppEditor($scope,
     $scope.showDebug = !$scope.showDebug;
   };
 
-  // Function to change the name of button after click.
-  $scope.changetext = function () {
-    const elem = document.getElementById('showhide');
-    if (elem.value === 'Show Debugs') elem.value = 'Hide debugs';
-    else elem.value = 'Show Debugs';
-  };
-
   // API call to show debug level
   $scope.showDebugLogs = function () {
-    $scope.showDebugs();
-    $http.get(url + '/alertrule/' + alertcfg.title + '/?get_evaluation_logs=True', {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    }).then(function (data) {
-      $scope.failedShowData = false;
-      $scope.displayDebug = data.data;
-      if (data.data.length <= 0) {
-        $scope.displayDebug = 'No logs found';
+    const modalInstance = $modal.open({
+      animation: true,
+      template: alertLogsTemplate,
+      controller: AlertLogsCtrl,
+      windowClass: 'log-modal',
+      resolve: {
+        alertLogData: function ($http) {
+          return $http.get(url + '/alertrule/' + alertcfg.title + '/?get_evaluation_logs=True', {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          }).then(function (data) {
+            return data.data;
+          }).catch(function () {
+            return 'Error fetching log data';
+          });
+        }
       }
-      $scope.changetext();
-    }).catch(function () {
-      $scope.displayDebug = 'No logs found, set the debug level failed';
     });
+    modalInstance.result.then(function () {
+    }, function () {
+      // Written this so that unhandled rejection error doesn't appear.
+    });
+
+
   };
 
   //calling the save function to save the alert details filled in the alert cfg form
   $scope.save = function () {
     $state.title = alertcfg.title;
+
+    // On click of save button clear set debug level drop down
+    $scope.setDebug = '';
+
     const infoCollectorFlag = isInformationCollectorNotAtTheEnd();
     if (infoCollectorFlag === true) {
       alert('Please configure the information collection rules at the end.');
@@ -551,7 +581,7 @@ function alertAppEditor($scope,
     alertcfg.evalCriteria = angular.toJson($scope.evalCriteria);
     alertcfg.evalCriteriaAlias = $scope.evalCriteriaAlias;
     _.each($scope.operRuleList, function (operRule, index) {
-      if(operRule.selectedField) {
+      if (operRule.selectedField) {
         $scope.ruleList[index].selectedField = operRule.selectedField.displayName;
       } else {
         $scope.ruleList[index].selectedField = '';
@@ -560,9 +590,9 @@ function alertAppEditor($scope,
       // and fetching the group by fields set in the operRuleList
       $scope.ruleList[index].groupByField = [];
       _.each(operRule.groupByField, function (field) {
-        if(operRule.groupByField.length === 1 && field.data === null) {
+        if (operRule.groupByField.length === 1 && field.data === null) {
           operRule.groupByField = [{ data: '' }];
-        } else if(field.data !== '' && field.data !== null) {
+        } else if (field.data !== '' && field.data !== null) {
           $scope.ruleList[index].groupByField.push(field.data.displayName);
         }
       });
@@ -571,9 +601,9 @@ function alertAppEditor($scope,
       // and fetching the additional fields set in the operRuleList
       $scope.ruleList[index].additionalField = [];
       _.each(operRule.additionalField, function (field) {
-        if(operRule.additionalField.length === 1 && field.data === null) {
+        if (operRule.additionalField.length === 1 && field.data === null) {
           operRule.additionalField = [{ data: '' }];
-        } else if(field.data !== '' && field.data !== null) {
+        } else if (field.data !== '' && field.data !== null) {
           $scope.ruleList[index].additionalField.push(field.data.displayName);
         }
       });
@@ -589,8 +619,7 @@ function alertAppEditor($scope,
     // if an alert is loaded and saved as another
     // alert, It is a new alert. Hence set the flag to true.
     isNewAlert = false;
-    if(loadedAlertId !== alertcfg.id)
-    {
+    if (loadedAlertId !== alertcfg.id) {
       isNewAlert = true;
     }
 

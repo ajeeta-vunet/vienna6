@@ -61,7 +61,7 @@ kibana.factory('responseInterceptor', ($rootScope) => {
         const notify = new Notifier();
         notify.error(config.statusText);
       }
-      return config;
+      return Promise.reject(config);
     }
   };
   return responseInterceptor;

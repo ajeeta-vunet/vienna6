@@ -888,6 +888,38 @@ class DataService {
     const url = this.urlBase + '/dashboard/' + dashboard + '/?start_time=' + startTime + '&end_time=' + endTime + '&mobile_kpi=true';
     return this._getRequest(url, 'getting details of mobile dashboards');
   }
+
+  // Uploads the file information.
+  uploadFgwFiles(fileName, upload) {
+    const url = this.urlBase + '/fgw/';
+    return this.$q((resolve, reject) => {
+      upload.upload({ url: url, file: fileName }).then((response) => {
+        resolve(response);
+      }, (errorResponse) => {
+        this._handleErrorResponse(errorResponse, 'updating file.');
+        reject(errorResponse);
+      });
+    });
+  }
+
+  // Gets the list of Uploaded file gate way files.
+  getFgwFiles() {
+    const url = this.urlBase + '/fgw/';
+    return this._getRequest(url, 'getting list of file information');
+  }
+
+  // Downloads file gate way files.
+  downloadFgwFile(rowId) {
+    const url = this.urlBase + '/fgw/' + rowId;
+    return this._getFileRequest(url, 'downloading a file', { responseType: 'blob' });
+  }
+
+  // Deletes file gate way file.
+  deleteFgwFiles(rowId) {
+    const url = this.urlBase + '/fgw/' + rowId;
+    return this._deleteRequest(url, 'Deleting a File ' + rowId);
+  }
+
 }
 
 DataService.$inject = ['$log',

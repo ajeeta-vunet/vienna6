@@ -1,0 +1,22 @@
+<div ng-if='!successfulUpload'>
+  <p class="import-modal-header">Upload file</p>
+  <form name="uploadFileForm">
+    <input
+      class="btn vunet-btn-import"
+      type="file"
+      ng-model="File"
+      ngf-select="checkFileSize($file)"
+      name="file"
+      ngf-multiple="false"
+      required>
+      <div class="size-limit-error-message" ng-show="fileUploadError">{{fileUploadErrorMessage}}</div>
+    <div class='row'>
+      <div class='col-sm-offset-7 col-sm-2'>
+        <button class="btn btn-vunet-cancel" ng-click="closeModal()">Cancel</button>
+      </div>
+      <div class='col-sm-2'>
+        <button type="submit" class="btn btn-vunet-submit" ng-disabled="!uploadFileForm.$valid || fileUploadError" ng-click="uploadFiles(File)">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

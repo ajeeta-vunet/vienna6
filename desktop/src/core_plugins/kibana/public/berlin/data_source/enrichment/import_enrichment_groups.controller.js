@@ -1,4 +1,4 @@
-import './import_enrichment_groups.less';
+import '../../styles/vunet_import_form.less';
 
 class ImportEnrichmentGroupsCtrl {
   constructor($scope, HTTP_SUCCESS_CODE, StateService, Upload, $modalInstance) {

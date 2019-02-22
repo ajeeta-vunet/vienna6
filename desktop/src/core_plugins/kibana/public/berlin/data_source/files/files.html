@@ -1,0 +1,49 @@
+<vunet-files class="vunet-preference-directive">
+
+  <!-- Local nav. -->
+  <kbn-top-nav name="files">
+    <!-- Transcluded elements. -->
+    <div data-transclude-slots>
+      <!-- Title. -->
+      <div
+        data-transclude-slot="topLeftCorner"
+        class="kuiLocalTitle"
+        role="heading"
+        aria-level="1"
+      >
+      Files
+      </div>
+    </div>
+  </kbn-top-nav>
+  <div class="kuiViewContent kuiViewContent--constrainedWidth" data-test-subj="userLandingPage">
+    <div class="row import-row">
+      <div class=" col-sm-offset-11 col-sm-1 import-column">
+        <a href="" class="" uib-tooltip="Upload file" tooltip-placement="bottom">
+          <button class="btn vunet-btn-import " ng-click="openUploadModal()">
+            <span class="">Upload</span>
+          </button>
+        </a>
+      </div>
+    </div>
+    <div
+      class="kuiViewContent kuiViewContent--constrainedWidth"
+      data-test-subj="file">
+      <div>
+        <vunet-data-table
+          fetch-items="fetchFilesItems" 
+          meta-item="filesMeta"
+          table-action="onTableAction"
+          row-action="onRowAction"
+        >
+        </vunet-data-table>
+        <vunet-modal
+          show-modal="showModal"
+          on-close="onModalClose"
+          data="filesDeleteMeta"
+          on-submit="onModalSubmit"
+        >
+        </vunet-modal>
+      </div>
+    </div>
+  </div>
+</vunet-files>

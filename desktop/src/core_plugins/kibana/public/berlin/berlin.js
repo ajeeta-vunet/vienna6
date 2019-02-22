@@ -17,6 +17,7 @@ app
   .constant('EMAIL_PREF_CONST', '1')
   .constant('BASE_URL', '/vuSmartMaps/api')
   .constant('VUINSITE_BASE_URL', '/vuInsite/api/default/')
+  .constant('MAXIMUM_FILE_SIZE', 209715200)
   .constant('USER_BASE_URL', '/api/default/');
 
 app.service('DataService', DataService);

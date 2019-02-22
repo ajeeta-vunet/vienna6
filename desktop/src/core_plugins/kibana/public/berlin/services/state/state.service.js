@@ -458,6 +458,26 @@ class StateService {
     return this._DataService.getMobileDashboardsDetails(dashboard, startTime, endTime);
   }
 
+  // Uploads the file information.
+  uploadFgwFiles(fileName, upload) {
+    return this._DataService.uploadFgwFiles(fileName, upload);
+  }
+
+  // Gets the list of Uploaded files.
+  getFgwFiles() {
+    return this._DataService.getFgwFiles();
+  }
+
+  // Downloads the file (File Management Interface).
+  downloadFgwFile(rowId) {
+    return this._DataService.downloadFgwFile(rowId);
+  }
+
+  // Deletes a file.
+  deleteFgwFiles(rowId) {
+    return this._DataService.deleteFgwFiles(rowId);
+  }
+
 }
 
 StateService.$inject = ['$log', '$q', 'DataService', '$rootScope'];

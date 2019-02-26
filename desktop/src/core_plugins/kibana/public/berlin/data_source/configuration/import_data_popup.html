@@ -1,20 +1,17 @@
-<div class="modal-header">
-  <h3 class="modal-title">Import Data Sets From a File</h3>
-</div>
-
-<div ng-if="successfulUpload" class="import-data-success">
-  <div class="fa fa-check import-success">
-    File has been imported successfully .
-  </div>
+<div class="import-enrichment-success " ng-if="successfulUpload">
+  <i class="fa fa-check"></i>
+  File has been imported successfully .
   <h4 class="import-data-message">Please check the data in index : {{index_name}}</h4>
 </div>
-<form class="form-horizontal" ng-show="!successfulUpload" name="importXlsForm" novalidate>
-  <div class="modal-body">
+
+<div ng-show='!successfulUpload'>
+  <p class="import-modal-header">Import Data Sets From a File</p>
+  <form class="form-horizontal importXlsForm" name="importXlsForm" novalidate>
     <!-- Import XLS  -->
     <div class="form-group importXls-form-group" ng-class="{'has-error': moreThanOneSheetsInFile || isEmptyHeaderPresent || isFileSizeMore || isFileTypeWrong , 'has-warning' : importXlsForm.timeField.$touched && importXlsForm.file.$invalid } ">
-      <label class="col-sm-3 control-label">Import a XLS File</label>
+      <label class="col-sm-3 control-label zero-padding">Import a XLS File</label>
       <div class="col-sm-9">
-        <input class="btn btn-default btn-file btn-browse-vunet" ngf-select type="file" ng-model="File" name="file" id="file"
+        <input class="btn vunet-btn-file-import btn-file" ngf-select type="file" ng-model="File" name="file" id="file"
           ngf-multiple="false" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required onChange="angular.element(this).scope().exportExcel(event)">
         <div id="reading-file" ng-if="readingFile"> Reading File ...</div>
         <span class="help-block" ng-if="isEmptyHeaderPresent">One or more merged or empty headers are present.</span>
@@ -28,20 +25,21 @@
     <div ng-show='File'>
       <div class="form-group importXls-form-group" ng-class="{'
       has-error': importXlsForm.indexName.$invalid && importXlsForm.indexName.$touched}">
-        <label class="col-sm-3 control-label">Load data into
+        <label class="col-sm-3 control-label zero-padding">Load data into
           <a href="" uib-tooltip="This is the index name of elasticsearch wherer data will be stored" tooltip-placement="bottom">
             <i class="fa fa-question-circle"></i>
           </a>
         </label>
         <div class="col-sm-9">
           <input type="text" class="form-control" ng-model="index_name" name="indexName" required>
-          <p ng-if="index_name" class="index-helper">The Index name will be saved as vunet-{{$root.tenant_id}}-{{$root.bu_id}}-{{index_name}}</p>
+          <p ng-if="index_name" class="index-helper">The Index name will be saved as
+            vunet-{{$root.tenant_id}}-{{$root.bu_id}}-{{index_name}}</p>
         </div>
       </div>
 
       <!-- TIME FIELD -->
       <div class="form-group importXls-form-group" ng-class="{'has-error': importXlsForm.timeField.$invalid &&  importXlsForm.timeField.$touched }">
-        <label class="col-sm-3 control-label">Time Field
+        <label class="col-sm-3 control-label zero-padding">Time Field
           <a href="" uib-tooltip="Time fields generated from xls file. Please select the timestamp field"
             tooltip-placement="bottom">
             <i class="fa fa-question-circle"></i>
@@ -53,8 +51,6 @@
           </select>
         </div>
       </div>
-
-
 
       <!-- ADD EXTRA COLUMN ON HOLD FOR NOW -->
       <!-- <div class="panel-group">
@@ -91,9 +87,13 @@
         </div> -->
 
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-inverse" ng-click="cancel()">Cancel</button>
-      <button class="btn btn-primary" ng-disabled="importXlsForm.$invalid || moreThanOneSheetsInFile || isEmptyHeaderPresent || isFileSizeMore || isFileTypeWrong"
-        ng-click="importExcelData()">DONE</button>
-    </div>
-</form>
+    <div class='row modal-footer-buttons'>
+      <div class='col-sm-offset-8 col-sm-2'>
+        <button class="btn btn-vunet-cancel" ng-click="cancel()">Cancel</button>
+      </div>
+      <div class='col-sm-2'>
+        <button class="btn btn-vunet-submit" ng-disabled="importXlsForm.$invalid || moreThanOneSheetsInFile || isEmptyHeaderPresent || isFileSizeMore || isFileTypeWrong"
+          ng-click="importExcelData()">Submit</button>
+      </div>
+  </form>
+</div>

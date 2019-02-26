@@ -1,5 +1,17 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
+.vunet-enrichment-types-directive{
+  .kuiLocalNav{
+    .kuiLocalNavRow{
+      .kuiLocalNavRow__section{
+        display:none;
+      }
+    }
+  }
+  .vunet-enrichment-types-container{
+    padding: 1.2rem 7rem 0rem 7rem;
+  }
+}
 .vunet-enrichment-directive{
   .kuiLocalNav{
     .kuiLocalNavRow{
@@ -8,7 +20,8 @@
       }
     }
   }
-  .kuiViewContent{
+  .vunet-enrichment-container{
+    padding: 2.7rem 7rem 0rem 7rem;
     .import-row{
       margin-bottom:3rem;
       margin-top:1rem;
@@ -41,6 +54,7 @@
 }
 
 .enrichment-container {
+  padding:2.7rem 7rem 0rem 7rem;
   .grey-block{
     padding: 2rem 0rem;
     .increase-height-key-label {
@@ -68,8 +82,7 @@
       }
     }
   }
-  .zero-padding{
-    padding:0rem;
+  .table-container{
     background:@white;
     box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color ;
     border-radius:1rem;
@@ -137,7 +150,7 @@
           vertical-align: top;
           font-size: 1.5rem!important;
           color:@text_color1;
-          padding: 0.5rem 2rem 0.5rem 2rem!important;
+          padding: 0.5rem 2rem 0.5rem 1rem!important;
         }
         .no-padding {
           padding: 0rem !important;

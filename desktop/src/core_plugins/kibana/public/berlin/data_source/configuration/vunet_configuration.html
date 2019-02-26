@@ -1,36 +1,36 @@
 <div ng-if="isModifyAllowed" class="container zero-padding">
   <div class="row grey-block">
-      <div class="row" ng-hide="list_data_source_types">
-          <div class="col-sm-6 col-md-6 data-source-name"> {{current_data_source}} </div>
-          <!-- <a href="/app/vienna#/berlin/data_source" title="Go Back" class="fa fa-arrow-circle-o-left fa-lg display-right-groupname"></a>  -->
-          <button class="btn btn-primary pull-right data-source-add-button sm-button" ng-click="addDataSourceConfig()">Add {{current_data_source}}</button>
-      </div>
-      <div class="row" ng-show="list_data_source_types">
-          <a href="" class="data-source-import-button" uib-tooltip="Import data sources using xls file" tooltip-placement="bottom">
-          <button class="btn btn-primary data-source-import-button sm-button" ng-click="toggle_import_file()">
-                  <span class="data-source-import-button-text">
-                      Import </span>
-          </button></a>
-            <button class="btn btn-danger sm-button pull-right import-data-to-es" ng-click="importDataPopup()">
-                <span class="data-source-import-button-text"> Import Data </span>
-            </button>
-      </div>
+    <div class="row" ng-hide="list_data_source_types">
+      <div class="col-sm-6 col-md-6 data-source-name"> {{current_data_source}} </div>
+      <!-- <a href="/app/vienna#/berlin/data_source" title="Go Back" class="fa fa-arrow-circle-o-left fa-lg display-right-groupname"></a>  -->
+      <button class="btn btn-primary pull-right data-source-add-button sm-button" ng-click="addDataSourceConfig()">Add
+        {{current_data_source}}</button>
+    </div>
+    <div class="row" ng-show="list_data_source_types">
+      <a href="" class="data-source-import-button" uib-tooltip="Import data sources using xls file" tooltip-placement="bottom">
+        <button class="btn vunet-btn-import" ng-click="toggle_import_file()">
+            Import
+        </button></a>
+      <button class="btn vunet-btn-import pull-right" data-tip="Import xls data to ES" ng-click="importDataPopup()">
+        Import Data
+      </button>
+    </div>
   </div>
   <div ng-show="open_import">
-      <form name="myForm">
-         <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select ng-model="File" name="file" ngf-multiple="false" required>
-         <div class="help-block help-text">Only file types with *.xlsx and *.xls are supported. Download template xlsx file from 
-             <a href="../../../assets/templates/data_source.xlsx"
-                 target="_blank"><i class="data-source-import-template-link">here</i></a></div>
-         <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid" ng-click="upload_data_source_file(File)">Submit</button>
-     </form>
-     <div class="data-source-import-close-button"
-         ng-click="close_import_file()"><i class="fa fa-angle-up data-source-import-close-font-awesome"></i></div>
-     <hr>
+    <form name="myForm">
+      <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select ng-model="File" name="file"
+        ngf-multiple="false" required>
+      <div class="help-block help-text">Only file types with *.xlsx and *.xls are supported. Download template xlsx
+        file from
+        <a href="../../../assets/templates/data_source.xlsx" target="_blank"><i class="data-source-import-template-link">here</i></a></div>
+      <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid" ng-click="upload_data_source_file(File)">Submit</button>
+    </form>
+    <div class="data-source-import-close-button" ng-click="close_import_file()"><i class="fa fa-angle-up data-source-import-close-font-awesome"></i></div>
+    <hr>
   </div>
   <div ng-show="list_data_source_types" id="data_source_list" class="data_source_list_types">
   </div>
   <div ng-hide="list_data_source_types">
-      <div id="data_source_details"> </div>
+    <div id="data_source_details"> </div>
   </div>
 </div>

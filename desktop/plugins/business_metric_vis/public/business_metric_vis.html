@@ -22,16 +22,17 @@
           ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
           <div
             ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink)">
-            <kbn-tooltip
+            <!-- <kbn-tooltip
               text="View More"
               placement="left"
-              append-to-body="1">
+              append-to-body="0"> -->
               <i
+                uib-tooltip='View More'
                 class="fa fa-arrow-circle-o-right"
                 ng-class="{'white': vis.params.metrics[outerIndex].bgColorEnabled }"
                 aria-hidden="true">
               </i>
-            </kbn-tooltip>
+            <!-- </kbn-tooltip> -->
           </div>
         </div>
         <div class="bs-metric-vis">

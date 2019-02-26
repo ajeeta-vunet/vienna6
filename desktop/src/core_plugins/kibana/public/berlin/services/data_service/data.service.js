@@ -677,7 +677,7 @@ class DataService {
   // Get the diff contents of a router configuration at a particular time.
   getRouterConfigDiffContent(configurationCollectorName, configurationId1, configurationId2) {
     const url = this.configurationCollectionUrl + configurationCollectorName + '/' +
-                configurationId1 + '/' + '?datatype=diff&id=' + configurationId2;
+      configurationId1 + '/' + '?datatype=diff&id=' + configurationId2;
     return this._getRequest(url, 'getting the diff contents of a router configuration');
   }
 
@@ -775,18 +775,39 @@ class DataService {
     });
   }
 
+  //Import data to elasticsearch
+  importData(file, indexName, isTimeseries, timeField, upload) {
+    const url = this.urlBase + '/data/';
+    return this.$q((resolve, reject) => {
+      upload.upload({
+        url: url,
+        file: file,
+        data: {
+          'index_name': indexName,
+          'is_time_series_data': isTimeseries,
+          'timestamp_field': timeField
+        }
+      }).then((response) => {
+        resolve(response);
+      }, (errorResponse) => {
+        this._handleErrorResponse(errorResponse, 'Importing data. Please check the file.');
+        reject(errorResponse);
+      });
+    });
+  }
+
   downloadDataSourceAgentConfiguration(sourceType, dataSourceInstance, environment, data) {
     const convertedName = dataSourceInstance.replace(/ /g, '-');
     const url = this.urlBase + '/data_source/' + sourceType + '/' + convertedName + '/environment/' + environment + '/agent_config/';
     return this._postFileRequest(url, data, 'fetching agent configuration for ' +
-           sourceType, { responseType: 'blob' }, sourceType + '.yml');
+      sourceType, { responseType: 'blob' }, sourceType + '.yml');
   }
 
   // function to download the data source agent package and install script
   downloadDataSourceAgent(sourceType, dataSourceInstance, environment, data) {
     const convertedName = dataSourceInstance.replace(/ /g, '-');
     const url = this.urlBase + '/data_source/' + sourceType + '/' + convertedName +
-                '/environment/' + environment + '/agent_install_script/';
+      '/environment/' + environment + '/agent_install_script/';
     return this._postFileRequest(url, data, 'fetching agent for ' + sourceType, { responseType: 'blob' }, '');
   }
 

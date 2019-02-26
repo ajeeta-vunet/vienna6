@@ -6,10 +6,10 @@ const  angular = require('angular');
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 import vunetConfigurationTemplate from './vunet_configuration.html';
-import importDataPopup from './importDataPopup.html';
+import importDataPopupTemplate from './import_data_popup.html';
 import './configuration.less';
 
-import importDataPopupCtrl from './importDataPopup.controller';
+import importDataPopupCtrl from './import_data_popup.controller';
 app.controller('importDataPopupCtrl', importDataPopupCtrl);
 
 import deviceheartbeatAddDataSourceCtrl from './deviceheartbeatAddDataSource.controller';
@@ -72,7 +72,7 @@ function configuration($scope, StateService, Upload, $compile, HTTP_SUCCESS_CODE
   $scope.importDataPopup = () => {
     $uibModal.open({
       animation: true,
-      template: importDataPopup,
+      template: importDataPopupTemplate,
       controller: 'importDataPopupCtrl'
     });
   };

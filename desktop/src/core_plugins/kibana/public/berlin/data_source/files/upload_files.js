@@ -1,6 +1,5 @@
 import '../../styles/vunet_import_form.less';
-import './files.css';
-import 'ui/chrome/directives/check_file_size.js';
+import './files.less';
 
 class UploadFilesCtrl {
   constructor($scope, HTTP_SUCCESS_CODE, StateService, Upload, $modalInstance, MAXIMUM_FILE_SIZE) {

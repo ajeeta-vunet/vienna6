@@ -1,3 +1,5 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
 .data-source-type-box {
   /* these styles will let the divs line up next to each other
      while accepting dimensions */
@@ -35,13 +37,6 @@
 
 .grey-block{
   padding-top:2rem;
-}
-// .data-source-import-button {
-//   float:right;
-// }
-
-.data-source-import-button-text {
-  color:white;
 }
 
 .data-source-import-close-button {
@@ -213,24 +208,44 @@ div {
 }
 }
 
-//popup css
-.importXls-form-group {
-padding-bottom: 2%;
-}
+//Import DATA POPUP CSS
 
-.import-data-to-es{
-margin-right: 10px;
-}
 
-.import-data-success{
-margin:25px 0px 30px 20px; 
+.importXlsForm{
+  .importXls-form-group{
+    padding-bottom: 1rem;
+    .control-label{
+      font-size:1.6rem;
+      font-family:@barlow-semibold;
+    }
+    .zero-padding{
+      padding:0px;
+    }
+    .form-control{
+      margin-left: 2rem;
+      width:90%;
+      border-radius: 1rem;
+    }
+  }
+  .modal-footer-buttons{
+    margin-right: 2rem;
+  }
+  .help-block {
+    margin: 0px 0px 0px 2rem;
+  }
+  .index-helper{
+    margin-left :2rem!important;
+  } 
+}
+.importXlsForm{
+  padding: 3rem 2rem 2rem 2rem;
+  border-top: .1rem solid @box_shadow_color;
 }
 
 .import-data-message{
-margin-top: 15px;
-margin-left: 35px;
+  margin-top: 1.5rem;
 }
 
 .index-helper{
-margin: 10px 0px 0px 0px !important;
+margin: 1rem 0px 0px 0px !important;
 }

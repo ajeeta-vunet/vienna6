@@ -1,5 +1,5 @@
 <div >
-  <div class="container zero-padding enrichment-container">
+  <div class=" enrichment-container">
     <div class="row">
       <div class="row grey-block">
         <div class="pull-left increase-height-key-label">
@@ -9,8 +9,8 @@
         <button class="btn btn-add-entry pull-right" ng-click="updateRowDataEnrichment('',groupName, groupTypeInfo)">Add Entry</button>
       </div>
 
-      <div class="container zero-padding">
-        <div class="col-md-12 col-xs-12 col-sm-12" st-table="dataEnrichment_data_display" st-safe-src="dataEnrichment_data">
+      <div>
+        <div class="col-md-12 col-xs-12 col-sm-12 table-container" st-table="dataEnrichment_data_display" st-safe-src="dataEnrichment_data">
           <div class="row enrichment-operational-toolbar">
             <div class="col-sm-5 col-xs-6 smart-search-container">
               <input st-search="" class="form-control smart-search" placeholder="search here" type="text"/>

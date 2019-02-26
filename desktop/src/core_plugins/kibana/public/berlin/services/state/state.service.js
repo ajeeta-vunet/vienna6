@@ -408,6 +408,11 @@ class StateService {
     return this._DataService.importDataEnrichment(fileData, upload);
   }
 
+  //Import data to elastic search
+  importData(file, indexName, isTimeseries, timeField, upload) {
+    return this._DataService.importData(file, indexName, isTimeseries, timeField, upload);
+  }
+
   // This function is called to refresh data receive flag for a given instance
   // of a specifc data-source-types
   refreshDataSouce(sourceType, index, esIndexName, interval) {

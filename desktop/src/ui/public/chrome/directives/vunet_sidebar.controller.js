@@ -45,10 +45,10 @@ class sidebarController {
         {
           id: 'Analytics', description: 'tooltip ', icon: 'icon-Analytics', pageurl: 'URL', active: false,
           subgroups: [
-            { id: 'Story Boards', description: ' ', icon: '', pageurl: baseUrl + '/dashboard', isModifyAllowed: true, active: false },
+            { id: 'Story Boards', description: ' ', icon: '', pageurl: baseUrl + '/dashboards', isModifyAllowed: true, active: false },
             { id: 'Search', description: ' ', icon: '', pageurl: baseUrl + '/discover', isModifyAllowed: true, active: false },
             { id: 'Events', description: ' ', icon: '', pageurl: baseUrl + '/event', isModifyAllowed: true, active: false },
-            { id: 'Reports', description: ' ', icon: '', pageurl: baseUrl + '/report', isModifyAllowed: true, active: false }
+            { id: 'Reports', description: ' ', icon: '', pageurl: baseUrl + '/reports', isModifyAllowed: true, active: false },
           ],
           isModifyAllowed: true
         },
@@ -56,9 +56,9 @@ class sidebarController {
           id: 'Analytics Configurations', description: ' ', icon: 'icon-Network', pageurl: '', active: false,
           subgroups: [
             { id: 'Visualizations', description: ' ', icon: '', pageurl: baseUrl + '/visualize', isModifyAllowed: true, active: false },
-            { id: 'Manage Alert rules', description: ' ', icon: '', pageurl: baseUrl + '/alert', isModifyAllowed: true, active: false },
+            { id: 'Manage Alert rules', description: ' ', icon: '', pageurl: baseUrl + '/alerts', isModifyAllowed: true, active: false },
             {
-              id: 'Manage Anomaly detection rules', description: ' ', icon: '', pageurl: baseUrl + '/anomaly',
+              id: 'Manage Anomaly detection rules', description: ' ', icon: '', pageurl: baseUrl + '/anomalys',
               isModifyAllowed: true, active: false
             },
             // { id: 'Manage ML Rules', description: ' ', icon: '', pageurl: '' },

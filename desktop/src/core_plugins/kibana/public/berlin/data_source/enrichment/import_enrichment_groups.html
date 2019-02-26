@@ -1,7 +1,7 @@
 <div ng-if='!successfulUpload'>
   <p class="import-modal-header">Import Data into Data Enrichmnet</p>
-  <form name="importEnrichmentForm">
-    <input class="btn vunet-btn-import" type="file" ngf-select ng-model="File" name="file" ngf-multiple="false"
+  <form name="importEnrichmentForm" class="importEnrichmentForm">
+    <input class="btn vunet-btn-file-import" type="file" ngf-select ng-model="File" name="file" ngf-multiple="false"
       required>
     <div class="help-block help-text">Only file types with *.xlsx and *.xls are supported. Download sample xlsx file
       from

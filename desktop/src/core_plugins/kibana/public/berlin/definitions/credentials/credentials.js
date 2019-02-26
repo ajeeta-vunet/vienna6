@@ -171,7 +171,7 @@ function vunetCredentials($scope,
     rows: ['name', 'version', 'port', 'auth_protocol', 'priv_protocol'],
     id: 'name',
     add: true,
-    default: { port: 161, version: 'v1', security_level: 'no-auth-no-priv' },
+    default: { port: 161, version: 'v1', security_level: 'no-auth-no-priv', auth_protocol: 'MD5', priv_protocol: 'AES128bit' },
     title: 'a SNMP Credential',
     table: [
       {

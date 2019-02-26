@@ -10,19 +10,20 @@
     </div>
   </kbn-top-nav>
 
-  <div class="kuiViewContent kuiViewContent--constrainedWidth" data-test-subj="userLandingPage">
+  <div class="vunet-enrichment-container" data-test-subj="userLandingPage">
     <div class="row import-row" ng-if="isModifyAllowed">
-      <div class=" col-sm-offset-11 col-sm-1 import-column">
-      <a href="" class="" uib-tooltip="Import data into data enrichment" tooltip-placement="right">
-        <button class="btn vunet-btn-import " ng-click="open_import_modal()">
-          <span class="">Import</span>
-        </button>
-      </a>
+      <div class=" col-sm-offset-11 col-sm-1 import-column" uib-tooltip="Import data into data enrichment"
+        tooltip-placement="bottom">
+        <a href="" class="">
+          <button class="btn vunet-btn-import " ng-click="open_import_modal()">
+            <span class="">Import</span>
+          </button>
+        </a>
+      </div>
     </div>
-  </div>
 
-  <vunet-data-table fetch-items="fetchEnrichmentGroupItems" delete-selected-items="deleteSelectedItems" row-action="onRowAction"
-    meta-item="enrichmentGroupsMeta" table-action="exportEnrichment">
-  </vunet-data-table>
+    <vunet-data-table fetch-items="fetchEnrichmentGroupItems" delete-selected-items="deleteSelectedItems" row-action="onRowAction"
+      meta-item="enrichmentGroupsMeta" table-action="exportEnrichment">
+    </vunet-data-table>
   </div>
 </enrichment-groups>

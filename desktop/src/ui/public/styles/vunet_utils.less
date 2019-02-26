@@ -56,24 +56,29 @@
 :-webkit-full-screen {
   width:100%;
   height:100%;
+  // background-color:#f6f7fb; 
+
 }
 
 /* Firefox syntax */
 :-moz-full-screen {
   width:100%;
   height:100%;
+  // background-color:#f6f7fb; 
 }
 
 /* IE/Edge syntax */
 :-ms-fullscreen {
   width:100%;
   height:100%;
+  // background-color:#f6f7fb; 
 }
 
 /* Standard syntax */
 :fullscreen {
   width:100%;
   height:100%;
+  // background-color:#f6f7fb; 
 }
 
 
@@ -83,13 +88,117 @@ body{
 html{
   font-size:10px;
 }
+
+//This has been done to disable the outline on focus
+select, input, a {
+  &:focus{
+    box-shadow:none!important;
+  }
+}
+// , input[type="radio"], input[type="checkobx"]
+input[type="file"]{
+  &:focus{
+    border:.2rem solid #fdf1f1;
+  }
+}
+
 //Bacground color for all views
 .vunet-application{
   height:80vh;
   overflow-y:auto;
   .app-container{
-    kbn-top-nav{
-      z-index:0 !important;
+    // this has been done as scroll was not appreaing for dashboards  in fullscreen mode
+    overflow-y: auto;
+    // this has been added to give this color in fullscreen mode for visualization
+    background-color:#f6f7fb; 
+    //this has been added to display cut off label of y-axis on right for visualizations
+    .vis-editor-content{
+      .vis-editor-canvas{
+        .vis-container {
+          .visualize-chart{
+            .vis-wrapper{
+              .y-axis-col-wrapper{
+                .axis-wrapper-right{
+                  .y-axis-div-wrapper{
+                    padding-right:.3rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    // why this was done 
+    // this code has been removed as after selecting a dashboard, 
+    // the whole category list is not visible by clicking on the 'menu button'
+    // kbn-top-nav{
+    //   z-index:0 !important;
+    // }
+    // IN a business matrix dashboard, margin-top has been given to maximize option alignment
+    .react-grid-layout{
+      .react-grid-item{
+        .dashboard-panel{
+          .panel-default{
+            .panel-heading-floater{
+              margin-top: .4rem;
+            }
+          }
+        }
+      }
+    }
+    // this has been done to give overflow to matrix visualization with more rows
+    .dashboard-viewport-with-margins{
+      .react-grid-layout {
+        .react-grid-item{
+          .dashboard-panel{
+            .panel-default{
+              .panel-content{
+                overflow: auto;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  // In Data table Visualization and matrix Visualization --> options, when we enable the color coding,
+  // after adding the range, the action field is coming out of the border line. 
+  // And when we point a cursor on the help icon, the help message is coming out of the border line and due to this the screen is oscillating.
+  // below is the fix for this
+  .collapsible-sidebar{
+    .vis-editor-sidebar{
+      .sidebar-container{
+        .sidebar-list{
+          .vis-editor-config{
+            .visualization-options{
+              .matrix-params{
+                .vis-color-schema{
+                  .table-color-schema-table{
+                    width:100%;
+                    thead{
+                      tr{
+                        th{
+                          text-align: center;
+                          font-size:1.4rem;
+                          font-family:'Barlow-Semibold';
+                        }
+                      }
+                    }
+                    tbody{
+                      margin: 1rem 0px 1rem 0px;
+                      tr{
+                        font-size: 1.25rem;
+                        height: 3rem;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
   // .vis-col-wrapper{
@@ -149,6 +258,25 @@ html{
     }
   }
 }
+
+// all btn-file are defined here
+.vunet-btn-file-import{
+  background-color:#fff;
+  font-size: 1.75rem;
+  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06) ;
+  border-radius:0rem;
+  margin-bottom: 2rem;
+  width: 90%;
+  margin-left: 2rem;
+  color:black!important;
+  &:hover{
+    color: #5a4fef!important;
+    font-family: 'Barlow-Bold';
+    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06) ;
+  }
+}
+
+
 //vunet-white-buttons 
 .vunet-btn-collect , .vunet-btn-download ,.vunet-btn-export ,.vunet-btn-import{
   background-color:#fff;

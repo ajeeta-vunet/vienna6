@@ -3,6 +3,7 @@ import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 
 import './vunet_storage.less';
+import '../../styles/vunet_summary_container.less';
 
 app.directive('vunetStorage', function () {
   return {

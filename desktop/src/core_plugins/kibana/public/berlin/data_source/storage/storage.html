@@ -4,31 +4,46 @@
   <div ng-if="id==='live'" class="storage-conatiner">
     <live-indices>
       <div class="row live-indices-summary">
+
         <div class="col-md-4 col-sm-4 col-xs-4 indices-summary open-indices-summary">
-          <div class="indices-summary-content index-icon">
-            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+          <div class="col-sm-offset-2 col-md-3 col-sm-3 col-xs-3">
+            <div class="indices-summary-content index-icon">
+              <i class="icon-Open-Indices-02"></i>
+            </div>
           </div>
-          <div class="indices-summary-content-container">
-            <p class="indices-summary-content index-title"> Open Indices</p>
-            <p class="indices-summary-content index-count"> {{open_indices}} </p>
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="indices-summary-content-container">
+              <p class="indices-summary-content index-title"> Open Indices</p>
+              <p class="indices-summary-content index-count"> {{open_indices}} </p>
+            </div>
           </div>
         </div>
+
         <div class="col-md-4 col-sm-4 col-xs-4 indices-summary close-indices-summary">
-          <div class="indices-summary-content index-icon">
-            <i class="fa fa-lock" aria-hidden="true"></i>
+          <div class="col-sm-offset-2 col-md-3 col-sm-3 col-xs-3">
+            <div class="indices-summary-content index-icon">
+              <i class="icon-Closed-Indices-01" aria-hidden="true"></i>
+            </div>
           </div>
-          <div class="indices-summary-content-container">
-            <p class="indices-summary-content index-title"> Close Indices</p>
-            <p class="indices-summary-content index-count"> {{closed_indices}} </p>
+          <div class="col-md-6 col-sm-6 col-xs-6 ">
+            <div class="indices-summary-content-container">
+              <p class="indices-summary-content index-title"> Closed Indices</p>
+              <p class="indices-summary-content index-count"> {{closed_indices}} </p>
+            </div>
           </div>
         </div>
+
         <div class="col-md-4 col-sm-4 col-xs-4 indices-summary archieve-indices-summary">
-          <div class="indices-summary-content index-icon">
-            <i class="fa fa-spinner" aria-hidden="true"></i>
+          <div class="col-sm-offset-2 col-md-3 col-sm-3 col-xs-3">
+            <div class="indices-summary-content index-icon">
+              <i class="icon-Loading-Indices-11" aria-hidden="true"></i>
+            </div>
           </div>
-          <div class="indices-summary-content-container">
-            <p class="indices-summary-content index-title"> Loading Indices</p>
-            <p class="indices-summary-content index-count"> {{loading_indices}} </p>
+          <div class="col-md-6 col-sm-6 col-xs-6 ">
+            <div class="indices-summary-content-container">
+              <p class="indices-summary-content index-title"> Loading Indices</p>
+              <p class="indices-summary-content index-count"> {{loading_indices}} </p>
+            </div>
           </div>
         </div>
       </div>
@@ -46,33 +61,49 @@
   <div ng-if="id==='archived'" class="storage-conatiner">
     <archived-indices>
       <div class="row archived-indices-summary">
+
         <div class="col-md-4 col-sm-4 col-xs-4 indices-summary success-indices-summary">
-          <div class="indices-summary-content index-icon">
-            <i class="fa fa-archive" aria-hidden="true"></i>
+          <div class="col-sm-offset-2 col-md-3 col-sm-3 col-xs-3">
+            <div class="indices-summary-content index-icon">
+                <span class="icon-Archive_Success"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span><span class="path16"></span><span class="path17"></span><span class="path18"></span><span class="path19"></span><span class="path20"></span><span class="path21"></span><span class="path22"></span><span class="path23"></span><span class="path24"></span><span class="path25"></span><span class="path26"></span><span class="path27"></span><span class="path28"></span><span class="path29"></span><span class="path30"></span></span>
+            </div>
           </div>
-          <div class="indices-summary-content-container">
-            <p class="indices-summary-content index-title"> Success </p>
-            <p class="indices-summary-content index-count"> {{successCount}} </p>
+          <div class="col-md-6 col-sm-6 col-xs-6 ">
+            <div class="indices-summary-content-container">
+              <p class="indices-summary-content index-title"> Success </p>
+              <p class="indices-summary-content index-count"> {{successCount}} </p>
+            </div>
           </div>
         </div>
+
         <div class="col-md-4 col-sm-4 col-xs-4 indices-summary fail-indices-summary">
-          <div class="indices-summary-content index-icon">
-            <i class="fa fa-archive failed-archive-icon" aria-hidden="true"></i>
+          <div class="col-sm-offset-2 col-md-3 col-sm-3 col-xs-3">
+            <div class="indices-summary-content index-icon">
+                <span class="icon-Archive_failure"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span><span class="path16"></span><span class="path17"></span><span class="path18"></span><span class="path19"></span><span class="path20"></span><span class="path21"></span><span class="path22"></span><span class="path23"></span><span class="path24"></span><span class="path25"></span><span class="path26"></span><span class="path27"></span><span class="path28"></span><span class="path29"></span><span class="path30"></span><span class="path31"></span></span>
+            </div>
           </div>
-          <div class="indices-summary-content-container">
-            <p class="indices-summary-content index-title"> Failure </p>
-            <p class="indices-summary-content index-count"> {{failureCount}} </p>
+          <div class="col-md-6 col-sm-6 col-xs-6 ">
+            <div class="indices-summary-content-container">
+              <p class="indices-summary-content index-title"> Failure </p>
+              <p class="indices-summary-content index-count"> {{failureCount}} </p>
+            </div>
           </div>
         </div>
+
         <div class="col-md-4 col-sm-4 col-xs-4 indices-summary progress-indices-sumary">
-          <div class="indices-summary-content index-icon">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
+          <div class="col-sm-offset-2 col-md-3 col-sm-3 col-xs-3">
+            <div class="indices-summary-content index-icon">
+              <i class="fa icon-Archive" aria-hidden="true"></i>
+            </div>
           </div>
-          <div class="indices-summary-content-container">
-            <p class="indices-summary-content index-title"> In Progress </p>
-            <p class="indices-summary-content index-count"> {{inProgressCount}} </p>
+          <div class="col-md-6 col-sm-6 col-xs-6 ">
+            <div class="indices-summary-content-container">
+              <p class="indices-summary-content index-title"> In Progress </p>
+              <p class="indices-summary-content index-count"> {{inProgressCount}} </p>
+            </div>
           </div>
         </div>
+
       </div>
 
       <div class="archieved-indices-table" data-test-subj="ArchivedIndices">

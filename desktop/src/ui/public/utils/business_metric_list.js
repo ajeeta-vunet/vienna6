@@ -1,6 +1,6 @@
 // This function returns a promise with business metric list.
 export function getBusinessMetricList(savedObjectsClient) {
-  const bmList = [];
+  const bmvList = [];
   return savedObjectsClient.find({
     type: 'visualization',
     fields: [],
@@ -12,9 +12,9 @@ export function getBusinessMetricList(savedObjectsClient) {
           id: obj.id,
           title: obj.get('title'),
         };
-        bmList.push(bmIdTitle);
+        bmvList.push(bmIdTitle);
       }
     });
-    return bmList;
+    return bmvList;
   });
 }

@@ -1,0 +1,99 @@
+<div class="subgraph-container">
+  <form
+    name="subgraphForm">
+    <table class="color-schema-table bottom-space">
+      <thead>
+        <tr>
+          <th>Business Metric</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="subgraph in visParams.subGraphVisList track by $index">
+          <td style="text-align: center">{{subgraph.title}}</td>
+          <td>
+            <kbn-tooltip
+              text="Edit this sub graph"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="editSubGraph($index)"
+                aria-label="Edit">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-pencil">
+                </i>
+              </a>
+            </kbn-tooltip>
+            <kbn-tooltip
+              text="Delete this sub graph"
+              placement="bottom"
+              append-to-body="1">
+              <a
+                href=""
+                ng-click="deleteSubGraph($index)"
+                aria-label="Delete">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-trash-o">
+                </i>
+              </a>
+            </kbn-tooltip>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      ng-if="addSubGraphFlag == true || opts.editIndex >= 0"
+      class="color-range-form"
+    >
+      <div class="row metric-element form-group subgraph-container">
+        <label>Select Business Metric</label>
+        <kbn-tooltip
+          text="Select Business Metric Visualization To Create a Subgraph"
+          placement="right"
+          append-to-body="1">
+          <i class="fa fa-question-circle"></i>
+        </kbn-tooltip>
+        <select
+          ng-model="opts.subgraphName"
+          class="form-control"
+          ng-options="option as option.title for option in bmvList track by option.id"
+          required>
+        </select>
+      </div>
+      <div
+        class="row">
+        <div class="col-xs-6">
+          <input
+            ng-disabled="subgraphForm.$invalid"
+            type="button"
+            value="Add"
+            ng-click="addSubgraphToGraph()"
+            class="form-control"
+          />
+        </div>
+        <div class="col-xs-6">
+          <input
+            type="button"
+            value="Cancel"
+            ng-click="cancelEdit()"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="vis-editor-agg-wide-btn">
+      <div
+        class="kuiButton kuiButton--secondary kuiButton--small"
+        ng-click="addSubgraph()">
+        <i
+          aria-hidden="true"
+          class="fa fa-plus">
+        </i>
+        Add Subgraph
+      </div>
+    </div>
+  </form>
+</div>

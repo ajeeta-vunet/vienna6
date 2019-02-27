@@ -1,6 +1,4 @@
 import { uiModules } from 'ui/modules';
-import { SavedObjectsClientProvider } from 'ui/saved_objects';
-import { getBusinessMetricList } from 'ui/utils/business_metric_list.js';
 const module = uiModules.get('kibana');
 
 // This directive is used to perform operation
@@ -9,13 +7,13 @@ const module = uiModules.get('kibana');
 // As of now we are not supporting this option in the front end.
 // This option will support in next phase to display metric below
 // or above of the node or link.
-module.directive('utmMetricList', function (Private) {
-  const savedObjectsClient = Private(SavedObjectsClientProvider);
+module.directive('utmMetricList', function () {
   return {
     restrict: 'E',
     replace: true,
     scope: {
       visParams: '=',
+      bmvList: '=',
     },
     template: require('./utm_metric_list_directive.html'),
     link: function (scope) {
@@ -33,13 +31,6 @@ module.directive('utmMetricList', function (Private) {
       scope.openMetricForm = function () {
         scope.addMetricFlag = true;
       };
-
-      scope.bmList = [];
-
-      // Gets the list of all business metric visualization configured.
-      getBusinessMetricList(savedObjectsClient).then (function (data) {
-        scope.bmList = data;
-      });
 
       // Delete one of the metric configured.
       scope.deleteMetric = function (index) {

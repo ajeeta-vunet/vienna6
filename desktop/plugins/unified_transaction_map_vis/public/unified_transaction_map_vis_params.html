@@ -1,6 +1,109 @@
 <div
   ng-controller="UnifiedTransactionVisParamsController"
   class="utm-metric-sidebar-container">
+
+  <!-- For graphs -->
+  <div class="sidebar-item">
+    <div class="sidebar-item-title">
+      Graphs
+    </div>
+    <div class="form-group bottom-space add-metric-wrapper">
+      <div class="graph-container"
+        ng-repeat= "graph in vis.params.graphs track by $index">
+        <div class="vis-editor-agg-header">
+          <button
+            aria-label="Toggle editor"
+            ng-click="operGraphList.expanded[$index] = !operGraphList.expanded[$index]"
+            aria-expanded="{{ !!operGraphList.expanded[$index] }}"
+            aria-controls="{{ graph }}"
+            type="button"
+            data-test-subj="toggleEditor"
+            class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+            <i aria-hidden="true"
+              class="fa"
+              ng-class="{ 'fa-caret-right': !operGraphList.expanded[$index],
+                    'fa-caret-down': operGraphList.expanded[$index] }">
+            </i>
+          </button>
+          <span ng-show="!vis.params.graphs[$index].nodeLabel"class="vis-editor-agg-header-title text-display">
+            Graph
+          </span>
+          <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+            <div class="vis-editor-agg-header-controls">
+
+              <!-- up button -->
+              <button
+                aria-label="Move Up"
+                ng-if="vis.params.graphs.length > 1"
+                ng-class="{ disabled: $first }"
+                class="kuiButton kuiButton--primary kuiButton--small"
+                ng-click="!$first && moveUp($index, 'graphs')"
+                tooltip="Move Up"
+                tooltip-append-to-body="true"
+                type="button"
+                class="btn btn-xs btn-default">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-caret-up">
+                </i>
+              </button>
+
+              <!-- down button -->
+              <button
+                aria-label="Move Down"
+                ng-if="vis.params.graphs.length > 1"
+                ng-class="{ disabled: $last }"
+                class="kuiButton kuiButton--primary kuiButton--small"
+                ng-click="!$last && moveDown($index, 'graphs')"
+                tooltip="Move Down"
+                tooltip-append-to-body="true"
+                type="button"
+                class="btn btn-xs btn-default">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-caret-down">
+                </i>
+              </button>
+
+              <!-- remove button -->
+              <button
+                aria-label="Remove Graph"
+                ng-click="removeGraph($index)"
+                tooltip="Remove Graph"
+                tooltip-append-to-body="true"
+                type="button"
+                class="kuiButton kuiButton--danger kuiButton--small">
+                <i
+                  aria-hidden="true"
+                  class="fa fa-times">
+                </i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="vis-editor-agg-header-controls"
+          ng-show="operGraphList.expanded[$index]">
+          <utm-graph
+            vis-params="vis.params.graphs[$index]"
+            bmv-list="bmvList">
+         </utm-graph>
+        </div>
+      </div>
+      <div ng-show="vis.params.graphs.length<5"class="vis-editor-agg-wide-btn add-button-placement">
+        <div
+          class="kuiButton kuiButton--secondary kuiButton--small"
+          ng-click="addGraph()">
+          <i
+            aria-hidden="true"
+            class="fa fa-plus">
+          </i>
+            Add Graph
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- For nodes -->
   <div class="sidebar-item">
     <div class="sidebar-item-title">
       Nodes
@@ -11,16 +114,16 @@
         <div class="vis-editor-agg-header">
           <button
             aria-label="Toggle editor"
-            ng-click="operNodeList.expanded = !operNodeList.expanded"
-            aria-expanded="{{ !!operNodeList.expanded }}"
+            ng-click="operNodeList.expanded[$index] = !operNodeList.expanded[$index]"
+            aria-expanded="{{ !!operNodeList.expanded[$index] }}"
             aria-controls="{{ node }}"
             type="button"
             data-test-subj="toggleEditor"
             class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
             <i aria-hidden="true"
               class="fa"
-              ng-class="{ 'fa-caret-right': !operNodeList.expanded,
-                    'fa-caret-down': operNodeList.expanded }">
+              ng-class="{ 'fa-caret-right': !operNodeList.expanded[$index],
+                    'fa-caret-down': operNodeList.expanded[$index] }">
             </i>
           </button>
           <!-- Display when node is already configured-->
@@ -40,7 +143,7 @@
                 ng-if="vis.params.customNodes.length > 1"
                 ng-class="{ disabled: $first }"
                 class="kuiButton kuiButton--primary kuiButton--small"
-                ng-click="!$first && moveUp($index)"
+                ng-click="!$first && moveUp($index, 'customNodes')"
                 tooltip="Move Up"
                 tooltip-append-to-body="true"
                 type="button"
@@ -57,7 +160,7 @@
                 ng-if="vis.params.customNodes.length > 1"
                 ng-class="{ disabled: $last }"
                 class="kuiButton kuiButton--primary kuiButton--small"
-                ng-click="!$last && moveDown($index)"
+                ng-click="!$last && moveDown($index, 'customNodes')"
                 tooltip="Move Down"
                 tooltip-append-to-body="true"
                 type="button"
@@ -85,10 +188,11 @@
           </div>
         </div>
         <div class="vis-editor-agg-header-controls"
-          ng-show="operNodeList.expanded">
+          ng-show="operNodeList.expanded[$index]">
           <custom-node
             vis-params="vis.params.customNodes[$index]"
-            node-label-list="nodeLabelList">
+            node-label-list="nodeLabelList"
+            bmv-list="bmvList">
           </custom-node>
         </div>
       </div>
@@ -105,6 +209,8 @@
       </div>
     </div>
   </div>
+
+  <!-- For links -->
   <div class="sidebar-item">
     <div class="sidebar-item-title">
       Links
@@ -115,16 +221,16 @@
         <div class="vis-editor-agg-header">
           <button
             aria-label="Toggle editor"
-            ng-click="operLinkList.expanded = !operLinkList.expanded"
-            aria-expanded="{{ !!operLinkList.expanded }}"
+            ng-click="operLinkList.expanded[$index] = !operLinkList.expanded[$index]"
+            aria-expanded="{{ !!operLinkList.expanded[$index] }}"
             aria-controls="{{ link }}"
             type="button"
             data-test-subj="toggleEditor"
             class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
             <i aria-hidden="true"
               class="fa"
-              ng-class="{ 'fa-caret-right': !operLinkList.expanded,
-                    'fa-caret-down': operLinkList.expanded }">
+              ng-class="{ 'fa-caret-right': !operLinkList.expanded[$index],
+                    'fa-caret-down': operLinkList.expanded[$index] }">
             </i>
           </button>
           <!-- Display when link is already configured -->
@@ -143,7 +249,7 @@
             ng-if="vis.params.customLinks.length > 1"
             ng-class="{ disabled: $first }"
             class="kuiButton kuiButton--primary kuiButton--small"
-            ng-click="!$first && moveUp($index)"
+            ng-click="!$first && moveUp($index, 'customLinks')"
             tooltip="Move Up"
             tooltip-append-to-body="true"
             type="button"
@@ -160,7 +266,7 @@
             ng-if="vis.params.customLinks.length > 1"
             ng-class="{ disabled: $last }"
             class="kuiButton kuiButton--primary kuiButton--small"
-            ng-click="!$last && moveDown($index)"
+            ng-click="!$last && moveDown($index, 'customLinks')"
             tooltip="Move Down"
             tooltip-append-to-body="true"
             type="button"
@@ -188,11 +294,12 @@
           </div>
         </div>
         <div class="form-group bottom-space add-metric-wrapper"
-          ng-show="operLinkList.expanded">
+          ng-show="operLinkList.expanded[$index]">
           <custom-link
             vis-params="vis.params.customLinks[$index]"
             node-label-list="nodeLabelList"
-            link-label-list="listLabelList">
+            link-label-list="listLabelList"
+            bmv-list="bmvList">
           </custom-link>
         </div>
       </div>

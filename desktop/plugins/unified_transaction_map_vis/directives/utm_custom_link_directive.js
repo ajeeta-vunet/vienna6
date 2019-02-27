@@ -16,6 +16,7 @@ module.directive('customLink', function () {
       visParams: '=',
       nodeLabelList: '=',
       linkLabelList: '=',
+      bmvList: '=',
     },
     template: require('./utm_custom_link_directive.html'),
     link: function (scope) {

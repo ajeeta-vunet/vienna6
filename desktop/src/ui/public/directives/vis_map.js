@@ -180,6 +180,15 @@ module.directive('visMap', function () {
             color: '#2E3458',
             size: 17
           }
+        },
+        other: {
+          image: '/ui/vienna_images/other.svg',
+          shape: 'image',
+          size: 20,
+          font: {
+            color: '#2E3458',
+            size: 17
+          }
         }
       };
 
@@ -188,22 +197,22 @@ module.directive('visMap', function () {
         align: 'left',
         ital: {
           color: 'green',
-          size: 13,
+          size: 12,
           face: '"Open Sans", Helvetica, Arial, sans-serif',
         },
         bold: {
           color: 'orange',
-          size: 13,
+          size: 12,
           face: '"Open Sans", Helvetica, Arial, sans-serif',
         },
         boldital: {
           color: 'red',
-          size: 13,
+          size: 12,
           face: '"Open Sans", Helvetica, Arial, sans-serif',
         },
         mono: {
           color: 'black',
-          size: 13,
+          size: 12,
           face: '"Open Sans", Helvetica, Arial, sans-serif',
         }
       };
@@ -218,12 +227,12 @@ module.directive('visMap', function () {
         },
         bold: {
           color: 'orange',
-          size: 13,
+          size: 12,
           face: '"Open Sans", Helvetica, Arial, sans-serif',
         },
         boldital: {
           color: 'red',
-          size: 14,
+          size: 12,
           face: '"Open Sans", Helvetica, Arial, sans-serif',
         }
       };
@@ -258,6 +267,7 @@ module.directive('visMap', function () {
             },
             physics: false,
             font: edgeFont,
+            length: 500,
             smooth: {
               enabled: false
             }
@@ -281,7 +291,7 @@ module.directive('visMap', function () {
 
         // Option to enable physics.
         const physicsEnableOption = {
-          groups,
+          groups: groups,
           edges: {
             arrows: {
               middle: {
@@ -291,6 +301,7 @@ module.directive('visMap', function () {
             },
             physics: true,
             font: edgeFont,
+            length: 500,
             smooth: {
               enabled: false
             }
@@ -304,7 +315,7 @@ module.directive('visMap', function () {
                 background: 'red',
               }
             },
-            font: nodeFont
+            font: edgeFont
           },
           interaction: {
             selectConnectedEdges: false,

@@ -13,10 +13,10 @@ module.directive('customNode', function () {
     scope: {
       visParams: '=',
       nodeLabelList: '=',
+      bmvList: '=',
     },
     template: require('./utm_custom_node_directive.html'),
     link: function (scope) {
-
       const { nodeX, nodeY } = scope.visParams;
 
       // List of node types
@@ -54,6 +54,11 @@ module.directive('customNode', function () {
       scope.nodeLabelList = scope.nodeLabelList.filter(function (element) {
         return element !== undefined;
       });
+
+      // Function to reset NodeConfigType.
+      scope.resetNodeConfigType = function (nodeType) {
+        nodeType === 'bmv' ?  scope.visParams.bmv = '' : scope.visParams.nodeType = '';
+      };
 
       // Function to invalidate form if more than
       // 1 node configured with same name.

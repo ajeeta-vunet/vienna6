@@ -27,6 +27,7 @@ function UnifiedTransactionVisProvider(Private) {
       defaults: {
         customNodes: [],
         customLinks: [],
+        graphs: [],
       },
       template: unifiedTransactionVisTemplate,
     },

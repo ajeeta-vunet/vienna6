@@ -31,6 +31,7 @@
       <select ng-model="visParams.nodeConfigType"
         name="visParams.nodeConfigType"
         class="form-control"
+        ng-change="resetNodeConfigType(visParams.nodeConfigType)"
         required>
         <option value="bmv">Using Business Metric</option>
         <option value="customnode">Custom</option>
@@ -48,7 +49,25 @@
         <select
           class="form-control"
           ng-model="visParams.nodeType"
-          ng-options="option for option in nodeType">
+          ng-options="option for option in nodeType"
+          ng-required="visParams.nodeConfigType === 'customnode'">
+        </select>
+      </div>
+    </div>
+    <div ng-show="visParams.nodeConfigType === 'bmv'" class="form-group">
+      <label>Select Business Metric</label>
+      <kbn-tooltip
+        text="Select Business Metric Visualization"
+        placement="right"
+        append-to-body="1">
+        <i class="fa fa-question-circle"></i>
+      </kbn-tooltip>
+      <div>
+        <select
+          ng-model="visParams.bmv"
+          class="form-control"
+          ng-options="option as option.title for option in bmvList track by option.id"
+          ng-required="visParams.nodeConfigType === 'bmv'">
         </select>
       </div>    
     </div>
@@ -61,7 +80,8 @@
         <i class="fa fa-question-circle"></i>
       </kbn-tooltip>
       <utm-metric-list
-        vis-params="visParams">
+        vis-params="visParams"
+        bmv-list="bmvList">
       </utm-metric-list>
     </div>
   </div>

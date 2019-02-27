@@ -14,8 +14,6 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
 
-  // To pass node placement type to the vis-map directive.
-  $scope.nodePlacementType = 'physicsAndDragNDrop';
 
   // Get the first part of the url containing the tenant
   // and bu id to prepare urls for api calls.
@@ -52,6 +50,13 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
   // color coming from nearest color.
   $scope.createLabel = function (labelname, metric, color) {
     let label = '';
+
+    // For physicsAndDragNDrop nodePlacementType(graph) always return label with <code>
+    if ($scope.nodePlacementType === 'physicsAndDragNDrop') {
+      return ('\n<code>' +  labelname + ': ' + metric + '</code>');
+    }
+
+    // For custom nodes and links label will be displayed with color code.
     if (color.name === 'black') {
       label = '\n<code>' +  labelname + ': ' + metric + '</code>';
     } else if (color.name === 'green') {
@@ -59,7 +64,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
     } else if (color.name === 'orange') {
       label = '\n<i>' + labelname + ': ' + metric + '</i>';
     } else if (color.name === 'red') {
-      label = '\n<i><b>' + labelname + ': ' + metric + '</b></i>';
+      label = '\n<b><i>' + labelname + ': ' + metric + '</i></b>';
     }
     return label;
   };
@@ -77,7 +82,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
 
     _.each(metricList, function (metric) {
       const color =  getNearestColor(metric.color);
-      metricLabel =  $scope.createLabel(metric.label, metric.metric, color);
+      metricLabel =  $scope.createLabel(metric.label, metric.formattedValue, color);
 
       // If onHover selects true then add metric with labelListForHover.
       if (metric.onHover === 'True') {
@@ -102,11 +107,23 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
   // back end to get the response data.
   $scope.search = function run() {
 
+    /* To pass node placement type to the vis-map directive.
+     * For custom nodes and links pass dragNDrop and for
+     * graph pass physicsAndDragNDrop.
+     */
+    if ($scope.vis.params.customNodes.length > 0) {
+      $scope.nodePlacementType = 'dragNDrop';
+    } else if ($scope.vis.params.graphs.length > 0) {
+      $scope.nodePlacementType = 'physicsAndDragNDrop';
+    }
+
     const customNodes = $scope.vis.params.customNodes;
     const customLinks = $scope.vis.params.customLinks;
+    const graphs = $scope.vis.params.graphs;
     const body = {
       customNodes: customNodes || '',
       customLinks: customLinks || '',
+      graphs: graphs || '',
       time: {},
       esFilter: dashboardContext(),
     };
@@ -156,11 +173,22 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
           let label = '';
           let isNode = false;
 
+          // If color is other than black or blue then link is colored based on color coming
+          // from the  back end.
+          if(resource.color && resource.color !== '#0D8EFF' && resource.color !== 'black') {
+            resource.color = getNearestColor(resource.color).name;
+          }
+
+          // display dashed lines for link_type is local.
+          if (resource.link_type === 'local') {
+            resource.dashes = true;
+          }
+
           // Check resource is node or label
           // if it is node then set isNode to true.
           // This is to display resource label for node.
           // For link resource label won't be displayed.
-          if(resource.x && resource.y) {
+          if((resource.x && resource.y) || (resource.x === 0 && resource.y === 0)) {
             isNode = true;
           }
 
@@ -169,7 +197,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
 
             // Check metric value is coming or not.
             // And create a label for that node or link.
-            if (resource.label[1][0].metric) {
+            if (resource.label[1][0].formattedValue) {
               label = $scope.getMetricLabel(resource.label[1]);
 
               // Show metrics On Hover
@@ -205,7 +233,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
 
   // This is bad, there should be a single event that triggers a refresh of data.
   // When there is a change in business metric vis configuration
-  $scope.$watchMulti(['vis.params.customNodes', 'vis.params.customLinks'], $scope.search);
+  $scope.$watchMulti(['vis.params.customNodes', 'vis.params.customLinks', 'vis.params.graphs'], $scope.search);
 
   // When the time filter changes
   $scope.$listen(timefilter, 'fetch', $scope.search);

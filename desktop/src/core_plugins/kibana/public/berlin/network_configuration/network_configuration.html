@@ -21,15 +21,14 @@
         <span>{{noOfRouters}}</span>
       </div>
     </div>
-    <div class="col-sm-offset-6 col-sm-1 ">
-      <button ng-show="chrome.isModifyAllowed()" class="btn vunet-btn-download" title="Collect configuration of all devices"
-        ng-click="collectConfiguration()">
+    <div class="col-sm-offset-6 col-sm-1" uib-tooltip="Collect configuration of all devices"> 
+      <button ng-show="chrome.isModifyAllowed()" class="btn vunet-btn-download" ng-click="collectConfiguration()">
         Collect
       </button>
     </div>
-    <div class="col-sm-1">
-      <button class="btn vunet-btn-download" title="Download the most recent configuration of all devices"
-        ng-click="downloadMostRecentConfigurationOfAllDevices()" ng-disabled="disbleDownloadAllDevicesConfButton()">
+    <div class="col-sm-1" uib-tooltip="Download the most recent configuration of all devices">
+      <button class="btn vunet-btn-download" ng-click="downloadMostRecentConfigurationOfAllDevices()" 
+          ng-disabled="disbleDownloadAllDevicesConfButton()">
         Download
       </button>
     </div>

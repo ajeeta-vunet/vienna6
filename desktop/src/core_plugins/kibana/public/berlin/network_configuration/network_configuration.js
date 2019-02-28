@@ -28,6 +28,7 @@ function networkConfigurationController($scope,
     headers: ['Name', 'Ip Address', 'Vendor', 'Device'],
     rows: ['name', 'configuration_collector_target', 'configuration_collector_vendor', 'configuration_collector_device'],
     id: 'configuration_collector_target',
+    selection: false,
     rowAction: [
       { name: 'SSH router', icon: 'fa-terminal', toolTip: 'SSH to this router' },
       { name: 'Ping router', icon: 'fa-exchange', toolTip: 'Ping this router' },

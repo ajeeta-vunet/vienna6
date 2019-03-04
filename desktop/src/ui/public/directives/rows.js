@@ -270,8 +270,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                   }
                 }
               }
-              index += 1;
             }
+            index += 1;
             addCell($tr, cell, interval, configObj, undefined);
           });
 

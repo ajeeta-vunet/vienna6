@@ -25,7 +25,7 @@ import { ReportConstants, createReportEditUrl, createReportPrintUrl } from './re
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
-import { getTenantEmailGroups, getEmailGroupNameForDisplay } from 'ui/utils/vunet_tenant_email_groups';
+import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
 
 require('ui/directives/searchable_multiselect.js');
 
@@ -185,7 +185,10 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.recipientsData = JSON.parse(reportcfg.recipientsList);
 
     for (let index = 0; index < $scope.recipientsData.length; index++) {
-      if ($scope.recipientsData[index].selectEmailGroupList !== '' && $scope.recipientsData[index].selectEmailGroupList !== undefined) {
+      if ($scope.recipientsData[index].selectEmailGroupList === undefined || $scope.recipientsData[index].selectEmailGroupList === '') {
+        $scope.recipientsData[index].selectEmailGroupList = [];
+      }
+      else {
         // Here the emailgroups will contain only name as following.
         // emailgroups = admin, dba, network
         // To populate in the multiselect directive the format should be as following
@@ -197,9 +200,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
           emailGroup.push({ name: emailGroups[index] });
         }
         $scope.recipientsData[index].selectEmailGroupList = emailGroup;
-      }
-      else{
-        $scope.recipientsData[index].selectEmailGroupList = [];
       }
     }
   }
@@ -347,7 +347,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       testId: 'reportEmailButton',
       run: function () { $scope.emailReport(); },
       disableButton() {
-        return Boolean(isEmailButtonDisabled);
+        return Boolean(!$scope.forms.reportcfgForm.$valid);
       }
     }];
   } else {
@@ -363,7 +363,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       testId: 'reportEmailButton',
       run: function () { $scope.emailReport(); },
       disableButton() {
-        return Boolean(isEmailButtonDisabled);
+        return Boolean(!$scope.forms.reportcfgForm.$valid);
       },
     }];
   }
@@ -774,7 +774,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     recipientsList = JSON.parse(JSON.stringify($scope.recipientsList));
     _.each(recipientsList, function (recipient) {
       const selectEmailGroupList = recipient.selectEmailGroupList;
-      recipient.selectEmailGroupList = getEmailGroupNameForDisplay(selectEmailGroupList);
+      recipient.selectEmailGroupList = chrome.getValueForDisplay(selectEmailGroupList);
     });
     if (recipientsList.length && recipientsList[0].role === '') {
       // Use only the configured recipients. If the role of first
@@ -810,7 +810,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
             isEmailButtonDisabled = false;
           }
           else{
-            isEmailButtonDisabled = true;
+            isEmailButtonDisabled = false;
           }
 
           if (reportcfg.id !== $routeParams.id) {

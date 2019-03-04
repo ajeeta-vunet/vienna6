@@ -59,10 +59,18 @@ export class DashboardPanel extends React.Component {
   }
 
   render() {
-    const { viewOnlyMode, error, panel, embeddableFactory } = this.props;
-    const classes = classNames('panel panel-default', this.props.className, {
-      'panel--edit-mode': !viewOnlyMode
-    });
+    let classes;
+    const { visState, viewOnlyMode, error, panel, embeddableFactory } = this.props;
+    if (visState && visState.type === 'markdown' && visState.params.useForHeading) {
+      classes = classNames('markdown-panel panel-default', this.props.className, {
+        'panel--edit-mode': !viewOnlyMode
+      });
+    }
+    else {
+      classes = classNames('panel panel-default', this.props.className, {
+        'panel--edit-mode': !viewOnlyMode
+      });
+    }
     return (
       <div
         className="dashboard-panel"
@@ -100,4 +108,5 @@ DashboardPanel.propTypes = {
     PropTypes.object
   ]),
   embeddableFactory: PropTypes.object.isRequired,
+  visState: PropTypes.object.isRequired,
 };

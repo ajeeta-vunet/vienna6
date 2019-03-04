@@ -1,7 +1,7 @@
 <div ng-controller="KbnMarkdownVisController" class="markdown-vis">
     <div
       ng-bind-html="html"
-      class="markdown-body"
+      ng-class="{'markdown-vis-for-heading': vis.params.useForHeading}"
       ng-style="{'font-size': vis.params.fontSize + 'pt'}"
       data-test-subj="markdownBody"
     ></div>

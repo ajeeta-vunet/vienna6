@@ -32,7 +32,10 @@ function MarkdownVisProvider(Private) {
       }
     },
     editorConfig: {
-      optionsTemplate: markdownVisParamsTemplate
+      optionsTemplate: markdownVisParamsTemplate,
+      defaults: {
+        useForHeading: true
+      }
     },
     options: {
       showTimePicker: false,

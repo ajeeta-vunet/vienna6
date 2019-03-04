@@ -23,6 +23,7 @@ import {
 const mapStateToProps = ({ dashboard }, { panelId }) => {
   const embeddable = getEmbeddable(dashboard, panelId);
   return {
+    visState: embeddable ? embeddable.visState : '',
     title: embeddable ? getEmbeddableTitle(dashboard, panelId) : '',
     editUrl: embeddable ? getEmbeddableEditUrl(dashboard, panelId) : '',
     error: embeddable ? getEmbeddableError(dashboard, panelId) : '',

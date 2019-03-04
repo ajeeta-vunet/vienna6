@@ -7,6 +7,7 @@ import { PanelMaximizeIcon } from './panel_maximize_icon';
 import { PanelMinimizeIcon } from './panel_minimize_icon';
 import { DashboardViewMode } from '../../dashboard_view_mode';
 import { hideBmvTitle } from 'ui/utils/vunet_bmv_utils.js';
+import { hideMarkdownTitle } from 'ui/utils/vunet_markdown_utils.js';
 
 import {
   maximizePanel,
@@ -25,23 +26,21 @@ import {
 const mapStateToProps = ({ dashboard }, { panelId }) => {
   const embeddable = getEmbeddable(dashboard, panelId);
   const panel = getPanel(dashboard, panelId);
-  let hideSingleMetricBmvTitle = '';
+  let visState = '';
 
   const embeddableTitle = embeddable ? embeddable.title : '';
-
   // Gets the visState from visualization through embeddable
   if (embeddable) {
-    hideSingleMetricBmvTitle = embeddable.visState;
+    visState = embeddable.visState;
   }
-
   return {
     title: panel.title === undefined ? embeddableTitle : panel.title,
     isExpanded: getMaximizedPanelId(dashboard) === panelId,
     isViewOnlyMode: getFullScreenMode(dashboard) || getViewMode(dashboard) === DashboardViewMode.VIEW,
     //don't show header if vis type is business metric
-    hidePanelTitles: getHidePanelTitles(dashboard) || (hideSingleMetricBmvTitle.type &&
-      (hideSingleMetricBmvTitle.type === 'business_metric')
-      && hideBmvTitle(hideSingleMetricBmvTitle)),
+    hidePanelTitles: getHidePanelTitles(dashboard) || (visState.type &&
+      (visState.type === 'business_metric') && hideBmvTitle(visState)) ||
+      (visState.type && (visState.type === 'markdown') && hideMarkdownTitle(visState)),
   };
 };
 

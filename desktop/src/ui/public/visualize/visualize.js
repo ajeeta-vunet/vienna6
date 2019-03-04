@@ -211,9 +211,22 @@ uiModules
           resizeChecker.destroy();
         });
 
+        // This function checks if given visualisation is
+        // a markdown and the content needs to be used as header
+        $scope.isMarkdownVisForHeading = function (savedObj) {
+          if (savedObj && savedObj.vis &&
+            savedObj.vis.type.name === 'markdown' &&
+            savedObj.visState.params.useForHeading) {
+            return true;
+          } else {
+            return false;
+          }
+        };
+
         $scope.$watch('vis.initialized', $scope.fetch);
 
         $scope.fetch();
+
       }
     };
   });

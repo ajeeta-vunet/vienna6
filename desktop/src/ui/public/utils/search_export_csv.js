@@ -43,38 +43,52 @@ function _escape(csv, row, column, indexPattern) {
   const startSearchTagStr = '<mark>';
   const endSearchTagStr = '</mark>';
 
+  // Get the value... and check if its an object or a list of objects
+  // If yes, we don't format the field. This is because formatField tries
+  // to format it for html and because of that '"' is put as :quote&
+  // in the string
+  var isObject = false;
+  if (column in row._source) {
+    val = String(row._source[column]);
+    if (val.startsWith('{') || val.startsWith('[')) {
+      isObject = true;
+    }
+  }
   // Checks field name is formatted with other
   // than the default formatter
-  if (column in indexPattern.fieldFormatMap) {
-    const value = indexPattern.formatField(row, column);
-    val = value.split(/[<>]/g);
-    val = String(val[2]);
-    if (typeof (val) === 'undefined') {
-      val = '-';
+  // If its not an object, we will format the field..
+  if (!isObject) {
+    if (column in indexPattern.fieldFormatMap) {
+      const value = indexPattern.formatField(row, column);
+      val = value.split(/[<>]/g);
+      val = String(val[2]);
+      if (typeof (val) === 'undefined') {
+        val = '-';
+      }
     }
-  }
-  // If field formatter is of default.
-  else {
-    val = column === '_source' ? row._source : indexPattern.flattenHit(row)[column];
+    // If field formatter is of default.
+    else {
+      val = column === '_source' ? row._source : indexPattern.flattenHit(row)[column];
 
-    if (_.isObject(val)) {
-      val = val.valueOf();
-      val = JSON.stringify(val);
+      if (_.isObject(val)) {
+        val = val.valueOf();
+        val = JSON.stringify(val);
+      }
+
+      if (typeof (val) === 'undefined') {
+        val = '-';
+      }
+      val = String(val);
     }
 
-    if (typeof (val) === 'undefined') {
-      val = '-';
+    if (startSearchTag.test(val)) {
+      val = val.replace(startSearchTagStr, '');
+      val = val.replace(endSearchTagStr, '');
     }
-    val = String(val);
-  }
 
-  if (startSearchTag.test(val)) {
-    val = val.replace(startSearchTagStr, '');
-    val = val.replace(endSearchTagStr, '');
-  }
-
-  if (csv.quoteValues && nonAlphaNumRE.test(val)) {
-    val = '"' + val.replace(allDoubleQuoteRE, '""') + '"';
+    if (csv.quoteValues && nonAlphaNumRE.test(val)) {
+      val = '"' + val.replace(allDoubleQuoteRE, '""') + '"';
+    }
   }
 
   return val;

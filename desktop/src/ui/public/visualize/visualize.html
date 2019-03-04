@@ -20,6 +20,7 @@
   id = "vis_visualization"
   print-report="printReport"
   ng-style="{'height': elementHeight, 'width': elementWidth}"
-  ng-class="{'bs-metric-panel':vis.type.name === 'business_metric'}"
+  ng-class="{'bs-metric-panel':vis.type.name === 'business_metric',
+             'markdown-panel-heading': isMarkdownVisForHeading(savedObj)}"
 
 />

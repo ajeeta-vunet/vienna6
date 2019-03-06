@@ -40,7 +40,7 @@ import 'plugins/kibana/berlin/data_source/configuration/syslogDataSource.directi
 import 'plugins/kibana/berlin/data_source/configuration/tracepathbeatDataSource.directive';
 import 'plugins/kibana/berlin/data_source/configuration/urlheartbeatDataSource.directive';
 import 'plugins/kibana/berlin/data_source/files/files';
-
+import 'plugins/kibana/berlin/data_source/settings/settings';
 
 import { BerlinConstants } from './berlin_constants';
 import { EnrichmentConstants } from './data_source/enrichment/enrichment_constants';
@@ -53,6 +53,7 @@ import { NetworkConfigurationConstants } from './network_configuration/network_c
 import { DetailsConstants } from './details/details_constants';
 import { UserConstants } from './user/user_constants';
 import { FilesConstants } from './data_source/files/files_constants';
+import { DataRetentionSettingsConstants } from './data_source/settings/settings_constants';
 
 import enrichmentGroupsTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment_groups.html';
 import enrichmentTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment.html';
@@ -65,6 +66,7 @@ import networkConfiguartionTemplate from 'plugins/kibana/berlin/network_configur
 import detailsTemplate from 'plugins/kibana/berlin/details/details.html';
 import userTemplate from './user/user.html';
 import filesTemplate from 'plugins/kibana/berlin/data_source/files/files.html';
+import settingsTemplate from 'plugins/kibana/berlin/data_source/settings/settings.html';
 
 uiRoutes
   .defaults(/berlin/, {
@@ -103,6 +105,9 @@ uiRoutes
   })
   .when(BerlinConstants.BERLIN_PATH + FilesConstants.FILES_PATH, {
     template: filesTemplate,
+  })
+  .when(BerlinConstants.BERLIN_PATH + DataRetentionSettingsConstants.DATA_RETENTION_SETTINGS_PATH, {
+    template: settingsTemplate,
   });
 
 

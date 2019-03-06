@@ -99,9 +99,11 @@ class sidebarController {
             {
               id: 'Files', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'data_source/files',
               isModifyAllowed: chrome.isModifyAllowed(), active: false
-            }
-            // { id: 'Data Retentation Settings', description: ' ', icon: '', pageurl: '' },
-            // { id: 'Indices Settings', description: ' ', icon: '', pageurl: '' }
+            },
+            {
+              id: 'Data Retention Settings', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'data_source/settings',
+              isModifyAllowed: chrome.isModifyAllowed(), active: false
+            },
           ],
           isModifyAllowed: chrome.isModifyAllowed()
         },
@@ -265,6 +267,10 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[3].subgroups[1].active = true;
+      } else if (currentRoute.includes('/berlin/data_source/settings')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[3].subgroups[2].active = true;
       } else if (currentRoute.includes('/berlin/preferences')) {
         $scope.clearActive();
         $scope.clearParentActive();

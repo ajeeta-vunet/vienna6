@@ -941,6 +941,18 @@ class DataService {
     return this._deleteRequest(url, 'Deleting a File ' + rowId);
   }
 
+  // Function to fetch data retention settings.
+  getDataRetentionDuration() {
+    const url = this.tenantUrl + '/preferences/RetentionPreference/';
+    return this._getRequest(url, 'getting data retention duration');
+  }
+
+  // Update the data retention settings.
+  updateDataRetentionSettings(dataretention) {
+    const url = this.tenantUrl + '/preferences/RetentionPreference/';
+    return this._putRequest(url, dataretention, 'updating data enrichment entry');
+  }
+
 }
 
 DataService.$inject = ['$log',

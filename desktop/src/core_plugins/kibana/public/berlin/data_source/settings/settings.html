@@ -1,0 +1,30 @@
+<vunet-data-retention-settings class="vunet-preference-directive">
+
+  <!-- Local nav. -->
+  <kbn-top-nav name="dataRetentionSettings">
+    <!-- Transcluded elements. -->
+    <div data-transclude-slots>
+      <!-- Title. -->
+      <div
+        data-transclude-slot="topLeftCorner"
+        class="kuiLocalTitle"
+        role="heading"
+        aria-level="1"
+      >
+      Data Retention Settings
+      </div>
+    </div>
+  </kbn-top-nav>
+  <div
+    class="kuiViewContent kuiViewContent--constrainedWidth"
+    data-test-subj="dataRetentionPage">
+    <div>
+      <vunet-data-table
+        fetch-items=" fetchDataRetentionItems" 
+        delete-selected-items="delete"
+        meta-item="settingsMeta"
+        on-submit="updateDataRetentionSettings">
+      </vunet-data-table>
+    </div>
+  </div>
+</vunet-data-retention-settings>

@@ -483,6 +483,16 @@ class StateService {
     return this._DataService.deleteFgwFiles(rowId);
   }
 
+  // Function to fetch data retention settings.
+  getDataRetentionDuration() {
+    return this._DataService.getDataRetentionDuration();
+  }
+
+  // Update the data retention settings.
+  updateDataRetentionSettings(dataretention) {
+    return this._DataService.updateDataRetentionSettings(dataretention);
+  }
+
 }
 
 StateService.$inject = ['$log', '$q', 'DataService', '$rootScope'];

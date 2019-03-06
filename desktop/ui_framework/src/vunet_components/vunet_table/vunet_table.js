@@ -267,7 +267,17 @@ export class VunetDataTable extends Component {
       !this.props.metaItem.headers.includes('Action')) {
       this.props.metaItem.headers.push('Action');
     }
-    return this.props.metaItem.headers.map(header => { return { content: header }; });
+    return this.props.metaItem.headers && this.props.metaItem.headers.map((header, index) => {
+      // If metaItem has help then returns header with help icon else returns only header.
+      return ({ content: (this.props.metaItem.help && this.props.metaItem.help[index] !== '') ?
+        <span>
+          {header}
+          <i className="fa fa-question-circle header-style" data-tip={this.props.metaItem.help[index]} data-for={`tooltip-${index}`}>
+            <ReactTooltip id={`tooltip-${index}`} className="tool-tip-style"/>
+          </i>
+        </span> : header
+      });
+    });
   }
 
   /**

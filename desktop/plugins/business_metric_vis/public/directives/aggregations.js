@@ -1,4 +1,3 @@
-require('ui/courier');
 
 const app = require('ui/modules').get('kibana/business_metric_vis', ['kibana', 'kibana/courier']);
 const _ = require('lodash');
@@ -123,9 +122,27 @@ app.directive('aggregations', function (courier, $filter, Promise) {
       // Add a bucket.
       scope.addBucket = function () {
         // Set the bucket size to 3 by default.
-        const dataObj = { field: '', size: 3, customLabel: '' };
+        const dataObj = { field: '', fieldType: '', size: 3, customLabel: '' };
         scope.vis.params.aggregations.push(dataObj);
         scope.operAggList.push({ expanded: false });
+
+      };
+
+      // This will be called when the aggregation field
+      // shown in the select box is changed.
+      scope.updateBucketFieldName = function (index) {
+        // Get the field object using the field name
+        _.each(scope.intersectionList, function (field) {
+          if (scope.vis.params.aggregations[index].field === field.name) {
+            scope.vis.params.aggregations[index].fieldType = field.type;
+            if (field.type === 'date') {
+              // Set default values
+              scope.vis.params.aggregations[index].interval = 'hourly';
+              scope.vis.params.aggregations[index].customInterval = '2h';
+            }
+            return;
+          }
+        });
       };
 
       // Delete a bucket configured.

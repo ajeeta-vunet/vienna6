@@ -13,9 +13,11 @@ import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_con
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { idealTextColor, colorLuminance } from 'ui/utils/color_filter';
 import { fixBMVHeightForPrintReport } from 'ui/utils/print_report_utils';
+import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
-module.controller('BusinessMetricVisController', function ($scope, Private, Notifier, $http, $rootScope,
+module.controller('BusinessMetricVisController', function ($scope, Private,
+  Notifier, $http, $rootScope, getAppState,
   timefilter, courier, $filter, kbnUrl, $element) {
 
   const queryFilter = Private(FilterBarQueryFilterProvider);
@@ -36,13 +38,53 @@ module.controller('BusinessMetricVisController', function ($scope, Private, Noti
   // in the metric visualization is clicked. This will
   // handle the redirection to a dashboard or events of
   // interest page based on users input to reference page.
-  $scope.viewDashboardForThisMetric = function (referLink) {
+  $scope.viewDashboardForThisMetric = function (refLink, metricFilter) {
     let referencePage = '';
-    if (referLink.type === 'dashboard') {
-      referencePage = 'dashboard/' + referLink.dashboard.id;
+    let searchString = '';
+
+    if (refLink.useMetricFilter) {
+      // We need to use the filter applied for this metric
+      searchString = metricFilter;
     }
-    else if (referLink.type === 'event') {
-      referencePage = referLink.type;
+
+    if (refLink.searchString !== '') {
+      // If additional search string is given combine it with search string
+      // from metric
+      if (searchString !== '') {
+        searchString = '(' + searchString + ') AND (' + refLink.searchString + ')';
+      } else {
+        searchString = refLink.searchString;
+      }
+    }
+    if (refLink.type === 'dashboard') {
+      referencePage = prepareLinkInfo(
+        'dashboard/',
+        refLink.dashboard.id,
+        searchString,
+        refLink.retainFilters,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        getAppState,
+        Private,
+        timefilter);
+    }
+    else if (refLink.type === 'event') {
+      referencePage = prepareLinkInfo(
+        'event/',
+        '',
+        searchString,
+        refLink.retainFilters,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        getAppState,
+        Private,
+        timefilter);
     }
     kbnUrl.redirect('/' + referencePage);
   };

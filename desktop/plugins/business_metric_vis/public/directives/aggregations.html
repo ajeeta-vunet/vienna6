@@ -103,38 +103,91 @@
             name="bucketField"
             ng-options="field.name as field.name group by field.type for field in intersectionList | orderBy:'name'"
             ng-model="aggregation.field"
+            ng-change="updateBucketFieldName($index)"
             required>
             <option value=""> </option>
           </select>
         </div>
-        <div class="form-group">
-          <label>
-            Size
-            <kbn-tooltip
-              text="Use this to display metric values in a table format"
-              placement="right"
-              append-to-body="1">
-              <span>
-                <i
-                  class="fa fa-question-circle"
-                  aria-hidden="true">
-                </i>
-              </span>
-            </kbn-tooltip>
-          </label>
-          <input
-            type="number"
-            name="aggregationSize"
-            ng-model="aggregation.size"
-            min="1"
-            max="100"
-            class="form-control"
-            required />
-          <p
-            class="error-highlight"
-            ng-show="aggregationForm.aggregationSize.$error.max">
-            bucket size should be less than 100
-          </p>
+        <div ng-show="aggregation.fieldType !== 'date'">
+          <div class="form-group">
+            <label>
+              Size
+              <kbn-tooltip
+                text="Use this to display metric values in a table format"
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </label>
+            <input
+              type="number"
+              name="aggregationSize"
+              ng-model="aggregation.size"
+              ng-required="aggregation.fieldType !== 'date'"
+              min="1"
+              max="100"
+              class="form-control"/>
+            <p
+              class="error-highlight"
+              ng-show="aggregationForm.aggregationSize.$error.max">
+              bucket size should be less than 100
+            </p>
+          </div>
+        </div>
+        <div ng-show="aggregation.fieldType === 'date'">
+          <div class="form-group">
+            <label>
+              Interval
+              <kbn-tooltip
+                text="Use this to select the date histogram interval. If custom interval is selected, interval can be specified as number of milli seconds, seconds, minutes, hours, days, weeks, months and years using ms, s, m, h, d, w, M and y respectively. Examples: 2s 5h 14d"
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </label>
+            <select
+              class="form-control"
+              name="histInterval"
+              ng-model="aggregation.interval"
+              ng-required="aggregation.fieldType === 'date'">
+              <option value="millisecond">Millisecond</option>
+              <option value="second">Second</option>
+              <option value="minute">Minute</option>
+              <option value="hourly">Hourly</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+              <option value="custom">Custom</option>
+            </select>
+            <div ng-show="aggregation.interval === 'custom'">
+              <div class="form-group">
+                <input
+                  type="text"
+                  name="customInterval"
+                  ng-model="aggregation.customInterval"
+                  ng-required="aggregation.fieldType === 'date' && aggregation.interval === 'custom'"
+                  ng-maxlength="8"
+		  ng-pattern="/^[0-9]+(ms|[smhdwMy])$/"
+                  class="form-control"/>
+                <p
+                  class="error-highlight"
+                  ng-show="aggregationForm.customInterval.$error.maxlength">
+                  Custom interval should be less than 8 characters.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label>

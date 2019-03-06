@@ -1,4 +1,5 @@
-<div class="category-vis-options form-group">
+<div ng-controller="CategoryVisParamsController"
+  class="category-vis-options form-group">
   <div>
     <label>Category</label>
   </div>
@@ -11,6 +12,138 @@
       <option ng-repeat="option in vis.params.images" value="{{option}}">{{option}}</option>
   </select>
 
-  <span class="category-param-label">Dashboards</span>
-  <textarea readonly type="text" rows="6" cols="97" name="categoryDashboards" ng-model="vis.params.dashboards"> </textarea>
+  <div>
+    <span class="sidebar-item-title">Dashboards</span>
+  </div>
+  <div class="sidebar-item">
+    <div ng-repeat="dashboard in vis.params.dashboards track by $index">
+      <div class="vis-editor-agg-header">
+        <button
+          aria-label="Toggle editor"
+          ng-click="operDashboardsList[$index].expanded = !operDashboardsList[$index].expanded"
+          aria-expanded="{{ !!operDashboardsList[$index].expanded }}"
+          aria-controls="{{ dashboard }}"
+          type="button"
+          data-test-subj="toggleEditor"
+          class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+          <i aria-hidden="true"
+            class="fa"
+            ng-class="{ 'fa-caret-right': !operDashboardsList[$index].expanded,
+                        'fa-caret-down': operDashboardsList[$index].expanded }">
+          </i>
+        </button>
+        <span class="vis-editor-agg-header-title">
+          {{ vis.params.dashboards[$index].dashboard.title }}
+        </span>
+        <span class="vis-editor-agg-header-description handle-overflow">
+          {{ vis.params.dashboards[$index].label }}
+        </span>
+        <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+          <!-- up button -->
+          <button
+            aria-label="Move up"
+            ng-if="vis.params.dashboards.length > 1"
+            ng-class="{ disabled: $first }"
+            ng-click="!$first && moveUp($index)"
+            tooltip="Move up in order"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--primary kuiButton--small">
+            <i
+              aria-hidden="true"
+              class="fa fa-caret-up">
+            </i>
+          </button>
+
+          <!-- down button -->
+          <button
+            aria-label="Move down"
+            ng-if="vis.params.dashboards.length > 1"
+            ng-class="{ disabled: $last }"
+            ng-click="!$last && moveDown($index)"
+            tooltip="Move down in order"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--primary kuiButton--small">
+            <i aria-hidden="true" class="fa fa-caret-down">
+            </i>
+          </button>
+
+          <!-- remove button -->
+          <button
+            aria-label="Remove Dimension"
+            ng-click="removeDashboard($index)"
+            tooltip="Remove Dimension"
+            tooltip-append-to-body="true"
+            type="button"
+            class="kuiButton kuiButton--danger kuiButton--small">
+            <i aria-hidden="true" class="fa fa-times">
+            </i>
+          </button>
+        </div>
+      </div>
+
+      <div ng-show="operDashboardsList[$index].expanded">
+        <div class="form-group">
+          Select Dashboard
+          <select
+            class="form-control"
+            name="referenceLinkDashboard"
+            ng-options="option as option.title for option in dashboardList track by option.id"
+            ng-model="vis.params.dashboards[$index].dashboard"
+            required>
+          </select>
+        </div>
+        <div class="form-group bottom-space">
+          <label>
+            Custom Label
+          </label>
+          <input
+            class="form-control"
+            type="text"
+            ng-model="vis.params.dashboards[$index].label"
+            name="Label"
+            ng-maxlength="40"
+            required/>
+          <label>Search String</label>
+          <kbn-tooltip
+            text="Apply this additional search string when moving to the dashboard"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle table-vis-help-hover"></i>
+          </kbn-tooltip>
+          <input
+            type="text"
+            ng-model="vis.params.dashboards[$index].searchString"
+            class="form-control"
+          />
+          <label>
+            <input
+              type="checkbox"
+              ng-model="vis.params.dashboards[$index].useCurrentTime"
+            />
+            Use currently selected time
+            <kbn-tooltip
+              text="Enable this to ensure that currently selected time duration is applied when using this reference link."
+              placement="right"
+              append-to-body="1">
+              <i class="fa fa-question-circle table-vis-help-hover"></i>
+            </kbn-tooltip>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="vis-editor-agg-wide-btn">
+      <div
+        ng-show="vis.params.dashboards.length < 24"
+        class="kuiButton kuiButton--secondary kuiButton--small"
+        ng-click="addDashboard()">
+        <i
+          aria-hidden="true"
+          class="fa fa-plus">
+        </i>
+        Add Dashboard
+      </div>
+    </div>
+  </div>
 </div>

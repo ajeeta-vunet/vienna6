@@ -1,8 +1,9 @@
 import { uiModules } from 'ui/modules';
+import { getDashboardsForCategory } from 'ui/utils/link_info_eval.js';
 
 const module = uiModules.get('kibana/category_vis', ['kibana']);
 
-module.controller('KbnCategoryVisController', function ($scope) {
+module.controller('KbnCategoryVisController', function ($scope, Private, timefilter) {
   $scope.show_dashboards = false;
   $scope.dashboards = [];
 
@@ -22,16 +23,7 @@ module.controller('KbnCategoryVisController', function ($scope) {
 
       // Initializing a list to store dashboard objects containing
       // id, title and url.
-      $scope.dashboards = [];
-
-      // prepare the dashboard object with id, title and url.
-      dashboardList.forEach(function (dashboard) {
-        $scope.dashboards.push({
-          id: dashboard.id,
-          title: dashboard.title,
-          url: `#/dashboard/${dashboard.id}`
-        });
-      });
+      $scope.dashboards = getDashboardsForCategory(Private, timefilter, dashboardList);
     }
   });
 });

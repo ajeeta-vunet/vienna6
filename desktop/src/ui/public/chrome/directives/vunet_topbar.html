@@ -87,14 +87,27 @@
                       </span>
                       <span class="notification-name">{{notification.name}}</span>
                     </div>
-                    <div class="notification-desc">
+                    <div class="notification-desc" ng-click="viewNotificaiotnDetails(notification.summary)">
                       {{notification.summary}}
+                      <kbn-tooltip
+                        text="Go to Details"
+                        placement="left"
+                        append-to-body="1">
+                        <i
+                          class="fa fa-arrow-circle-o-right"
+                          aria-hidden="true">
+                        </i>
+                      </kbn-tooltip>
                     </div>
                     <div class="notification-time">
                       {{ notification.timestamp | amUtc | amTimeAgo }}
                     </div>
                   </div>
                 </div>
+                  <div align="center"
+                    ng-click="viewNotificaiotnDetails('')">
+                    <p style="color:#5a4fef;font-weight:bold"> View All Notifications</p>
+                  </div>
                 <!-- This is needed when we fix redirection to alert dashboards
                                  commenting this section till then -->
                 <!-- <div class="see-all-wrapper">

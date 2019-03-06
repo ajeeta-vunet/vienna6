@@ -1,5 +1,6 @@
 import 'plugins/category_vis/category_vis.less';
 import 'plugins/category_vis/category_vis_controller';
+import 'plugins/category_vis/category_vis_params_controller';
 import { VisFactoryProvider } from 'ui/vis/vis_factory';
 import { CATEGORY } from 'ui/vis/vis_category';
 import categoryVisTemplate from 'plugins/category_vis/category_vis.html';

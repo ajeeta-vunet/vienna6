@@ -37,6 +37,46 @@
           ng-required='referenceLink.type=="dashboard"'>
         </select>
       </div>
+      <label>Search String</label>
+      <kbn-tooltip
+        text="Apply this additional search string when moving to the reference link"
+        placement="right"
+        append-to-body="1">
+        <i class="fa fa-question-circle table-vis-help-hover"></i>
+      </kbn-tooltip>
+      <input
+        type="text"
+        ng-model="referenceLink.searchString"
+        class="form-control"
+      />
+      <div class="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            ng-model="referenceLink.retainFilters"
+          />
+          Retain currently applied filters
+          <kbn-tooltip
+            text="Enable this to ensure that currently present filters are maintained when using this reference link."
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle table-vis-help-hover"></i>
+          </kbn-tooltip>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            ng-model="referenceLink.useMetricFilter"
+          />
+          Apply metric filter
+          <kbn-tooltip
+            text="Apply the filter specified for this metric when moving to the reference link"
+            placement="right"
+            append-to-body="1">
+            <i class="fa fa-question-circle table-vis-help-hover"></i>
+          </kbn-tooltip>
+        </label>
+      </div>
     </div>
   </div>
 </form>

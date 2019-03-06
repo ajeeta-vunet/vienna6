@@ -3,7 +3,6 @@ import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { DashboardConstants } from 'plugins/kibana/dashboard/dashboard_constants';
 import { Notifier } from 'ui/notify';
 const Promise = require('bluebird');
-import angular from 'angular';
 import {  logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 const notify = new Notifier();
 
@@ -47,23 +46,34 @@ export function addToCategory(dash, categoryObj, savedVisualizations) {
     // Find if this dashboard already in category... this happens when we save
     // some other dashboard and overwrite it with this name...
     let dashboardAdded = false;
-    _.each(newVisual.visState.params.dashboards, function (dashboardData) {
-      if((dashboardData.id === dashboardObj.id) && (dashboardData.title === dashboardObj.title)) {
+    let index = newVisual.visState.params.dashboards.length;
+    while (index--) {
+      const entry = newVisual.visState.params.dashboards[index];
+
+      if (entry.searchString !== '' || entry.useCurrentTime) {
+        // This is a specific entry added by user. We do not consider this.
+        continue;
+      }
+      if((entry.dashboard.id === dashboardObj.id) && (entry.dashboard.title === dashboardObj.title)) {
         dashboardAdded = true;
       }
       // If dashboard id is same and title is different with existing dashboard object
       // it removes dashboard object from category and saves with new dashboard object
       // having same id and updated title.
-      else if ((dashboardData.id === dashboardObj.id) && (dashboardData.title !== dashboardObj.title)) {
-        newVisual.visState.params.dashboards = _.without(
-          newVisual.visState.params.dashboards, _.findWhere(
-            newVisual.visState.params.dashboards, { id: dashboardObj.id }));
+      else if ((entry.id === dashboardObj.id) && (entry.title !== dashboardObj.title)) {
+        newVisual.visState.params.dashboards.splice(index, 1);
       }
-    });
+    }
 
     // Add the dashboard object to the list if its not already exist..
     if (!dashboardAdded) {
-      newVisual.visState.params.dashboards.push(dashboardObj);
+      const dashboardEntry = {
+        label: dashboardObj.title,
+        searchString: '',
+        useCurrentTime: false,
+        dashboard: dashboardObj
+      };
+      newVisual.visState.params.dashboards.push(dashboardEntry);
       newVisual.save().then(function () {
         // Nothing needs to be done..
       }).catch(error => {
@@ -76,23 +86,35 @@ export function addToCategory(dash, categoryObj, savedVisualizations) {
 }
 
 
-// This function is called to removed the passed dashboard from the
+// This function is called to remove the passed dashboard from the
 // passed category
 export function removeFromCategory(dash, categoryObj, savedVisualizations) {
   savedVisualizations.get(categoryObj.id).then(function (newVisual) {
     // Check if the visState is available, if not, it means it does
     // not exist
     if (newVisual.visState) {
-      const dashboardId = dash.id;
-      // Removed the dashboard object from the list
-      newVisual.visState.params.dashboards = _.without(
-        newVisual.visState.params.dashboards, _.findWhere(
-          newVisual.visState.params.dashboards, { id: dashboardId }));
-      newVisual.save().then(function () {
-      // Nothing needs to be done..
-      }).catch(error => {
-        notify.error(error);
-      });
+      let index = newVisual.visState.params.dashboards.length;
+      let changed = false;
+      while (index--) {
+        const entry = newVisual.visState.params.dashboards[index];
+
+        if (entry.searchString !== '' || entry.useCurrentTime) {
+          // This is an specific entry added by user. We do not consider this.
+          continue;
+        }
+        if(entry.dashboard.id === dash.id) {
+          newVisual.visState.params.dashboards.splice(index, 1);
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        newVisual.save().then(function () {
+        // Nothing needs to be done..
+        }).catch(error => {
+          notify.error(error);
+        });
+      }
     }
   }).catch(error => {
     notify.error(error);
@@ -101,6 +123,7 @@ export function removeFromCategory(dash, categoryObj, savedVisualizations) {
 
 //This function is to delete the dashboard id in category object
 export function deleteDash(
+  Private,
   selectedIds,
   savedVisualizations,
   savedDashboards,
@@ -109,12 +132,9 @@ export function deleteDash(
   deselectAll,
   notify,
   $http) {
-  const categoryList = [];
   // deletes all selected dashboards
   Promise.map(selectedIds, function (id) {
-    return savedDashboards.get(id).then(function (dashboard) {
-      const optionsJSONObj = angular.fromJson(dashboard.optionsJSON);
-      categoryList.push([optionsJSONObj, id]);
+    return savedDashboards.get(id).then(function () {
       return dashboardService.delete(id).then(fetchItems)
         .then(() => {
           deselectAll();
@@ -126,35 +146,45 @@ export function deleteDash(
         notify.error('Failed in delete dashboard');
       });
   }).then(function () {
-    /* Creates a dictionary having unique category id and list of
-     * dashboards which belongs to the categoryObj
-     * { c1 : [d1,d2],
-     *   c2 : [d3,d4],
-     *  ..
-        } */
-    const parentResultCategory = {};
-    _.each(categoryList, function (category) {
-      const key = category[0].category.id;
-      if(!(key in parentResultCategory)) {
-        parentResultCategory[key] = [];
-      }
-      parentResultCategory[key].push(category[1]);
-    });
 
-    // Iterate on dict and deletes all dashboards belongs
-    // to each category
-    for (const resultCategory in parentResultCategory) {
-      if(parentResultCategory.hasOwnProperty(resultCategory)) {
-        savedVisualizations.get(resultCategory).then(function (visual) {
-          _.each(parentResultCategory[resultCategory], function (dashboardId) {
-            visual.visState.params.dashboards = _.without(
-              visual.visState.params.dashboards, _.findWhere(
-                visual.visState.params.dashboards, { id: dashboardId }));
-          });
-          return visual.save();
-        });
-      }
-    }
+    const savedObjectsClient = Private(SavedObjectsClientProvider);
+    return savedObjectsClient.find({
+      type: 'visualization',
+      fields: [],
+      search: 'category',
+      perPage: 1000
+    }).then(results => {
+
+      _.each(results.savedObjects, function (obj) {
+
+        let changed = false;
+
+        if(obj.attributes.visState) {
+          const visual = JSON.parse(obj.attributes.visState);
+          if (visual.type === 'category') {
+
+            let index = visual.params.dashboards.length;
+            while (index--) {
+              let idIndex = 0;
+              let dashboardId = 0;
+              const entry = visual.params.dashboards[index];
+              for (idIndex = 0; idIndex < selectedIds.length; idIndex++) {
+                dashboardId = selectedIds[idIndex];
+                if (dashboardId === entry.dashboard.id) {
+                  visual.params.dashboards.splice(index, 1);
+                  changed = true;
+                }
+              }
+            }
+
+            if (changed) {
+              obj.attributes.visState = JSON.stringify(visual);
+              return obj.save();
+            }
+          }
+        }
+      });
+    });
   });
 }
 

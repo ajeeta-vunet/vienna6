@@ -21,7 +21,7 @@
           class="view-more-link one-metric-link"
           ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
           <div
-            ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink)">
+            ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
             <!-- <kbn-tooltip
               text="View More"
               placement="left"
@@ -159,7 +159,7 @@
                 class="view-more-link"
                 ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
                 <span
-                  ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink)">
+                  ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
                   <kbn-tooltip
                     text="View More"
                     placement="left"
@@ -262,7 +262,7 @@
                     class="view-more-link"
                     ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
                     <span
-                      ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink)">
+                      ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
                       <kbn-tooltip
                         text="View More"
                         placement="right"

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
+import { getDashboardsForCategory } from 'ui/utils/link_info_eval.js';
 
 // This function is used to create the multi level
 // drop down having the categories and the dashboards
@@ -37,7 +38,7 @@ import { SavedObjectsClientProvider } from 'ui/saved_objects';
 //   }]
 // }];
 
-export function prepareMultilevelCategoryDropdown(Private, Promise, categories) {
+export function prepareMultilevelCategoryDropdown(Private, timefilter, Promise, categories) {
   const savedObjectsClient = Private(SavedObjectsClientProvider);
 
   // Prepare a list of category objects having the following properties
@@ -59,7 +60,7 @@ export function prepareMultilevelCategoryDropdown(Private, Promise, categories) 
             categoryDict.url = '#';
 
             // For each category, We get the dashboards if they exist.
-            const categoryDashboards = getDashboardsForCategory(Private, visStateObj);
+            const categoryDashboards = getDashboardsForCategory(Private, timefilter, visStateObj.params.dashboards);
 
             // Attach the property 'subtree' only if there
             // are dashboards for this category
@@ -72,19 +73,4 @@ export function prepareMultilevelCategoryDropdown(Private, Promise, categories) 
       })
       .catch(() => '');
   });
-}
-
-// This is a helper function for prepareMultilevelCategoryDropdown()
-// We prepare the submenu showing the dashboards for each category.
-function getDashboardsForCategory(Private, visStateObj) {
-  const dashboardList = visStateObj.params.dashboards;
-  const dashboardObjList = [];
-  _.each(dashboardList, function (dashboard) {
-    const dashObj = {};
-    dashObj.id = dashboard.id;
-    dashObj.title = dashboard.title;
-    dashObj.url = `#/dashboard/${dashboard.id}`;
-    dashboardObjList.push(dashObj);
-  });
-  return dashboardObjList;
 }

@@ -1,4 +1,5 @@
 import { toggleFullscreen } from 'ui/utils/vunet_fullscreen';
+import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 /* globals $, window */
 
 // THE FOLLOWING THINGS WILL BE TAKEN CARE LATER OR NOT BEING USED FOR NOW:
@@ -11,7 +12,7 @@ import { toggleFullscreen } from 'ui/utils/vunet_fullscreen';
 // });
 
 class TopbarCtrl {
-  constructor($scope, StateService, $rootScope, $interval, POLLING_TIME, $timeout, chrome, $window) {
+  constructor($scope, StateService, $rootScope, Private, timefilter, $interval, POLLING_TIME, $timeout, chrome, $window, kbnUrl) {
     // Getting the Idle session Timeout from chrome_vunet.js and starting timeout function
 
     //Fullscreen function
@@ -351,6 +352,25 @@ class TopbarCtrl {
       }
     };
 
+    $scope.viewNotificaiotnDetails = (notificationSummary) => {
+      // If notification summary present, that will be used as search string
+      // Also, we do not want any current applied filters/search to
+      // to be preserved
+      const referencePage = prepareLinkInfo(
+        'event/',
+        '',
+        '',
+        false,
+        'summary',
+        notificationSummary,
+        'vunet-*-*-notification-*',
+        'now/d',
+        'now/d',
+        undefined,
+        Private,
+        timefilter);
+      kbnUrl.redirect(referencePage);
+    };
     // This function keeps polling to the backend with to check if
     // the snapshot is created or not.
     // $scope.getCurrentScanNotification = () => {
@@ -367,7 +387,9 @@ class TopbarCtrl {
   }
 }
 
-TopbarCtrl.$inject = ['$scope', 'StateService', '$rootScope', '$interval', 'POLLING_TIME', '$timeout', 'chrome', '$window'];
+TopbarCtrl.$inject = ['$scope', 'StateService', '$rootScope', 'Private',
+  'timefilter', '$interval', 'POLLING_TIME', '$timeout',
+  'chrome', '$window', 'kbnUrl'];
 /*eslint-disable*/
 export default TopbarCtrl;
 /*eslint-enable*/

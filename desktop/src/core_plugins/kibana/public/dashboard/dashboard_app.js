@@ -454,7 +454,7 @@ app.directive('dashboardApp', function ($injector, $http) {
       };
 
       // Get the data required to display the multilevel dropdown menu
-      prepareMultilevelCategoryDropdown(Private, Promise, categories).then(function (data) {
+      prepareMultilevelCategoryDropdown(Private, timefilter, Promise, categories).then(function (data) {
         $scope.subMenuTree = data;
       });
 

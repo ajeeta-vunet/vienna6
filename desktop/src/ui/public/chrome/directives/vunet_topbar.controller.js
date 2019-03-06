@@ -20,11 +20,10 @@ class TopbarCtrl {
       toggleFullscreen();
     };
 
-    //To fetch the username
-    StateService.getCurrentUserInfo().then(function (data) {
-      $scope.userName =  data.user.name;
-      $scope.tenantId = data.user.tenant_id;
-    });
+    // Get user and tenentId from chrome.
+    $scope.userName = chrome.getCurrentUser()[0];
+    $scope.tenantId = chrome.getTenantBu()[0];
+
     $scope.session_idle_timeout = chrome.getSessionIdleTimeout();
     $scope.myTimeOut = $timeout(function () { $scope.idleTimeout(); }, $scope.session_idle_timeout);
 
@@ -224,60 +223,64 @@ class TopbarCtrl {
       //   Storage: []
       // };
 
-      StateService.getNotifications().then(function (data) {
+      // Don't call getNotifications for print report.
+      if (!$rootScope.printReport) {
 
-      // Declaring the alert notifications count variable.
-        let alertCount = 0;
+        StateService.getNotifications().then(function (data) {
 
-        // If few alerts already exists, Get the latest alert
-        // object and compare it with incoming alert notification
-        // response and update the unified notification count.
-        if ($scope.notificationResponse) {
+        // Declaring the alert notifications count variable.
+          let alertCount = 0;
 
-        //getting the latest alert object
-          const latestAlertObj = $scope.notificationResponse.Alerts[0];
+          // If few alerts already exists, Get the latest alert
+          // object and compare it with incoming alert notification
+          // response and update the unified notification count.
+          if ($scope.notificationResponse) {
 
-          // Iterate over the new alert notification response
-          for (let item = 0; item < data.Alerts.length; item++) {
+          //getting the latest alert object
+            const latestAlertObj = $scope.notificationResponse.Alerts[0];
 
-          // Compare the latest alert object and the objects in the
-          // new alert notification response
-          // We use angular.equals to compare two objects which ignores
-          // $$hash_key present in the object
-          /*eslint-disable*/
-            if (angular.equals(data.Alerts[item], latestAlertObj)) {
-              /*eslint-enable*/
-            // When there is a match update the alert notification
-            // count and come out of the loop
-              break;
+            // Iterate over the new alert notification response
+            for (let item = 0; item < data.Alerts.length; item++) {
+
+            // Compare the latest alert object and the objects in the
+            // new alert notification response
+            // We use angular.equals to compare two objects which ignores
+            // $$hash_key present in the object
+            /*eslint-disable*/
+              if (angular.equals(data.Alerts[item], latestAlertObj)) {
+                /*eslint-enable*/
+              // When there is a match update the alert notification
+              // count and come out of the loop
+                break;
+              }
+
+              // If match is not found keep increamenting the
+              // alert notification count
+              alertCount = alertCount + 1;
             }
-
-            // If match is not found keep increamenting the
-            // alert notification count
-            alertCount = alertCount + 1;
           }
-        }
-        else {
+          else {
 
-        // When alerts are generated for the first time,
-        // The alert notification count is equal to no of alert
-        // notifications received.
-          alertCount = data.Alerts.length;
-        }
+          // When alerts are generated for the first time,
+          // The alert notification count is equal to no of alert
+          // notifications received.
+            alertCount = data.Alerts.length;
+          }
 
-        // Updating the UI with new alert notifications received
-        $scope.notificationResponse = data;
+          // Updating the UI with new alert notifications received
+          $scope.notificationResponse = data;
 
-        // Calculating the  count of unified notifications
-        $scope.notificationLength = $scope.notificationLength + alertCount + data.Storage.length;
-        // notificationLength is stored in newNotificationLength to reset
-        // the newNotificationLength value after read the alerts.
-        $scope.newNotificationLength = $scope.notificationLength;
-        // Notifications count should not exceed 5.
-        if ($scope.notificationLength > 5) {
-          $scope.notificationLength = 5;
-        }
-      });
+          // Calculating the  count of unified notifications
+          $scope.notificationLength = $scope.notificationLength + alertCount + data.Storage.length;
+          // notificationLength is stored in newNotificationLength to reset
+          // the newNotificationLength value after read the alerts.
+          $scope.newNotificationLength = $scope.notificationLength;
+          // Notifications count should not exceed 5.
+          if ($scope.notificationLength > 5) {
+            $scope.notificationLength = 5;
+          }
+        });
+      }
     };
 
     // This function is called when a user successfully logs

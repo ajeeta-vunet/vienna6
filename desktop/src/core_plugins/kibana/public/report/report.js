@@ -115,7 +115,8 @@ uiModules
     };
   });
 
-function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Private, $http, AppState, courier, timefilter, kbnUrl, config) {
+function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Private, $http, AppState, courier,
+  timefilter, kbnUrl, config, $rootScope) {
 
   const filterBar = Private(FilterBarQueryFilterProvider);
 
@@ -228,6 +229,10 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   }
 
   $scope.printReport = $route.current.locals.printReport;
+
+  // Store $route.current.locals.printReport value in rootScope
+  // to access in outside of controller.
+  $rootScope.printReport = $route.current.locals.printReport;
 
   if($scope.printReport !== true) {
 
@@ -624,6 +629,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $('#globalChromeContent').addClass('content-report');
     $('#globalAppWrapper').removeClass('app-wrapper-normal');
     $('#globalAppWrapper').addClass('app-wrapper-report');
+    $('#ngViewAppDiv').removeClass('vunet-application-normal');
   }
 
   // This function is used to prepare the query parameters

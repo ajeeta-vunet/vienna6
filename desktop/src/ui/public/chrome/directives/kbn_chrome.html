@@ -16,8 +16,8 @@
       <!-- <kbn-notifications list="$root.notifList"></kbn-notifications> -->
       <kbn-loading-indicator></kbn-loading-indicator>
       <vunet-topbar></vunet-topbar>
-      <div class="application vunet-application" ng-class="'tab-' + chrome.getFirstPathSegment() + ' ' + chrome.getApplicationClasses()"
-        ng-view></div>
+      <div id="ngViewAppDiv" class="application vunet-application vunet-application-normal" ng-class="'tab-' + chrome.getFirstPathSegment() + ' ' + chrome.getApplicationClasses()"
+       ng-view></div>
     </div>
   </div>
 </div>

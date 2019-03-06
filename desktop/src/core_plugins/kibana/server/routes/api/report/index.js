@@ -69,7 +69,7 @@ export function reportDownloadApi(server) {
       // only till ?
       const onlyReportName = req.payload.reportName.split('?')[0];
 
-      const url = 'http://127.0.0.1:8080/app/kibana#/report/print/' + req.payload.reportName;
+      const url = 'http://127.0.0.1:8080/app/vienna#/report/print/' + req.payload.reportName;
       const duration = req.payload.timeDuration;
       const userName = req.payload.username;
       const userRole = req.payload.userRole;

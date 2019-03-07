@@ -287,11 +287,15 @@ function manageUsers($scope,
       const indexOf = title.indexOf('{');
       if (indexOf < 0) {
         const selectedHomePage = homePage.options.find(option => option.value === title);
-        if (selectedHomePage) {
+
+        // Check selectedHomePage doesn't have key as empty_home_page_val.
+        if (selectedHomePage && selectedHomePage.key !== 'empty_home_page_val') {
           return JSON.stringify({
             id: selectedHomePage.key,
             title: selectedHomePage.value
           });
+        } else {
+          return '';
         }
       } else {
         return title;

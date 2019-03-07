@@ -16,6 +16,7 @@ app.directive('manageAbout', function () {
 });
 
 function manageAbout($scope,
+  $rootScope,
   $http,
   $modal,
   chrome,
@@ -158,6 +159,7 @@ function manageAbout($scope,
       }];
     });
   };
+
 
   // Fetch licnese information
   $scope.fetchLicenseItems = () => {

@@ -33,7 +33,7 @@ uiRoutes
   .when(ReportConstants.CREATE_PATH, {
     template: require('plugins/kibana/report/report.html'),
     resolve: {
-      printReport: function () {return false;},
+      printReport: function () { return false; },
       reportcfg: function (savedReports) {
         return savedReports.get();
       },
@@ -54,14 +54,14 @@ uiRoutes
   .when(createReportEditUrl(':id'), {
     template: require('plugins/kibana/report/report.html'),
     resolve: {
-      printReport: function () {return false;},
+      printReport: function () { return false; },
       reportcfg: function (savedReports, $route, courier) {
         return savedReports.get($route.current.params.id)
           .catch(courier.redirectWhenMissing({
             'report': ReportConstants.LANDING_PAGE_PATH
           }));
       },
-      company_name: function () {return '';},
+      company_name: function () { return ''; },
       isNewReport: function () {
         return false;
       },
@@ -77,7 +77,7 @@ uiRoutes
   .when(createReportPrintUrl(':id'), {
     template: require('plugins/kibana/report/report.html'),
     resolve: {
-      printReport: function () {chrome.setVisible(false); return true;},
+      printReport: function () { chrome.setVisible(false); return true; },
       reportcfg: function (savedReports, $route, courier) {
         return savedReports.get($route.current.params.id)
           .then(function (report) {
@@ -89,7 +89,7 @@ uiRoutes
         // Please note that we are not catching Not-Allowed here as print
         // button won't be available to those who can't access the report
       },
-      company_name: function () {return '';},
+      company_name: function () { return ''; },
       isNewReport: function () {
         return false;
       },
@@ -147,9 +147,10 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   const allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
 
-  let isScheduleInvalid =  false;
+  let isScheduleInvalid = false;
+  /*eslint-disable*/
   let isEmailButtonDisabled = true;
-
+  /*eslint-enable*/
 
   // Object to store the user selected values
   // in report scheduling
@@ -182,7 +183,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // Load the recipients information in the UI.
   $scope.recipientsData = [];
 
-  if(reportcfg.recipientsList) {
+  if (reportcfg.recipientsList) {
     $scope.recipientsData = JSON.parse(reportcfg.recipientsList);
 
     for (let index = 0; index < $scope.recipientsData.length; index++) {
@@ -224,7 +225,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     }
   }
   //disable email button since recipients doesnot exists
-  else{
+  else {
     isEmailButtonDisabled = true;
   }
 
@@ -234,7 +235,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // to access in outside of controller.
   $rootScope.printReport = $route.current.locals.printReport;
 
-  if($scope.printReport !== true) {
+  if ($scope.printReport !== true) {
 
     $scope.allEmailGroups = $route.current.locals.email_groups.attributes;
 
@@ -287,7 +288,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.recipientsList.splice(index, 1);
     // When no recipient is added but check box is checked
     // make isScheduleInvalid = true so that save button is disabled
-    if(!$scope.recipientsList.length && $scope.enable_scheduling) {
+    if (!$scope.recipientsList.length && $scope.enable_scheduling) {
       isScheduleInvalid = true;
     }
   };
@@ -300,8 +301,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       $scope.cronObj.value = '';
       isScheduleInvalid = false;
     }
-    else{
-      if($scope.recipientsList.length === 0) {
+    else {
+      if ($scope.recipientsList.length === 0) {
         $scope.addRecipients();
       }
       // The default value to be shown to the user
@@ -330,7 +331,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
 
   // If user can modify the existing object or is allowed to create an object
-  if(userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+  if (userRoleCanModify && chrome.canCurrentUserCreateObject()) {
     $scope.topNavMenu = [{
       key: 'save',
       description: 'Save Report',
@@ -378,7 +379,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // is fetched from the api '/vuSmartMaps/api/1/'
   // else company name is fetched from the reportcfg
   // object stored.
-  if($route.current.locals.company_name !== '') {
+  if ($route.current.locals.company_name !== '') {
     $scope.company_name = $route.current.locals.company_name.enterprise_name;
   } else {
     $scope.company_name = $route.current.locals.reportcfg.company_name || '';
@@ -444,8 +445,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
 
 
-  if($scope.sections.length === 0)
-  {
+  if ($scope.sections.length === 0) {
     $scope.sections.push({ id: '', description: '', visuals: [] });
   }
   $scope.$watchCollection('state.options', function (newVal, oldVal) {
@@ -468,7 +468,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   function init() {
 
     // update model.query to $scope
-    if($state.query) {
+    if ($state.query) {
       $scope.model = {
         query: $state.query
       };
@@ -617,7 +617,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   };
 
   // This will be used to populate the shipper url in the report
-  if($scope.printReport === true) {
+  if ($scope.printReport === true) {
 
     // We get shipperUrl
     $scope.shipperAddress = chrome.getShipperUrl();
@@ -712,7 +712,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     const httpResult = $http({
       method: 'POST',
       url: '/vienna_print_report/',
-      data: { reportName: url,
+      data: {
+        reportName: url,
         timeDuration: timeDurationHours,
         username: currentUser[0],
         userRole: currentUser[1],
@@ -751,12 +752,12 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     });
 
     angular.forEach($scope.recipientsList, function (recipient) {
-      if(permissionsDict[recipient.role] === undefined || permissionsDict[recipient.role] === '') {
+      if (permissionsDict[recipient.role] === undefined || permissionsDict[recipient.role] === '') {
         permissionsFlag = false;
       }
     });
 
-    if(!permissionsFlag) {
+    if (!permissionsFlag) {
       alert('All the roles in the recipent list must have atleast view permission of the report');
       return;
     }
@@ -797,7 +798,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     }
     // if a report is loaded and saved as another
     // report, It is a new report. Hence set the flag to true.
-    if(loadedReportId !== reportcfg.id) {
+    if (loadedReportId !== reportcfg.id) {
       isNewReport = true;
     }
 
@@ -807,15 +808,15 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         $scope.kbnTopNav.close('save');
         if (id) {
 
-        // Update the backend for this object's operation
+          // Update the backend for this object's operation
           updateVunetObjectOperation([reportcfg], 'report', $http, 'modify', chrome);
 
           // After saving check if recipients are present
           // or not in order to enable or disable email button
-          if($scope.recipientsList.length) {
+          if ($scope.recipientsList.length) {
             isEmailButtonDisabled = false;
           }
-          else{
+          else {
             isEmailButtonDisabled = false;
           }
 

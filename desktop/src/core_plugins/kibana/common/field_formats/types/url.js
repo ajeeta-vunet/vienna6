@@ -139,8 +139,6 @@ export function createUrlFormat(FieldFormat) {
             linkLabel = label;
           }
 
-          const linkTarget = this.param('openLinkInCurrentTab') ? '_self' : '_blank';
-
           return `<a href="${prefix}${url}" rel="noopener noreferrer">${linkLabel}</a>`;
       }
     }

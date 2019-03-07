@@ -30,7 +30,7 @@ module.controller('KbnDropdownVisController', function ($scope, $rootScope, Priv
     // I am not fully sure what we are doing.. But it seems we are getting
     // the fieldParam and then comparing it with the filters to find the
     // matchingFilter
-    const fieldParam = $scope.vis.aggs.bySchemaName['dropdownfield'][0].params.field;
+    const fieldParam = $scope.vis.aggs.bySchemaName.dropdownfield[0].params.field;
     const matchingFilter = filters.find(function (f) {
       return f.meta.key === fieldParam.$$spec.name;
     });
@@ -55,7 +55,7 @@ module.controller('KbnDropdownVisController', function ($scope, $rootScope, Priv
   $scope.filter = function (val) {
     if (val) {
       // get the field param..
-      const fieldParam = $scope.vis.aggs.bySchemaName['dropdownfield'][0].params.field;
+      const fieldParam = $scope.vis.aggs.bySchemaName.dropdownfield[0].params.field;
       // Add it as a filter
       filterManager.add(
         fieldParam,

@@ -12,17 +12,131 @@ import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 // });
 
 class TopbarCtrl {
-  constructor($scope, StateService, $rootScope, Private, timefilter, $interval, POLLING_TIME, $timeout, chrome, $window, kbnUrl) {
+  constructor($scope, StateService, $rootScope, $route, Private, timefilter, $interval, POLLING_TIME, $timeout, chrome, $window, kbnUrl) {
     // Getting the Idle session Timeout from chrome_vunet.js and starting timeout function
+
+    const currentRouteWhileGeneralSettings = window.location.href;
+    $scope.showUserSettingsModal = false;
+    $scope.allow_console_access = false;
+
+    //To fetch the username
+    StateService.getCurrentUserInfo().then(function (data) {
+      $scope.userData = data;
+      $scope.userName = data.name;
+      // We are creating the data for general settings user form.
+      $scope.modifiedUserData = {
+        'name': data.name,
+        'email': data.email,
+        'newPassword': '',
+        'confirmPassword': ''
+      };
+      $scope.userSettingsModalData.editData = $scope.modifiedUserData;
+      if (data.allow_console_access === 'Yes') {
+        $scope.allow_console_access = true;
+      }
+    });
+
+    $scope.openAdminConsole = () => {
+      const adminConsoleUrl = 'https://' + window.location.hostname + '/admin-console/';
+      $window.open(adminConsoleUrl);
+    };
+
+    $scope.openUserSettings = () => {
+      $scope.showUserSettingsModal = true;
+    };
+
+    $scope.onUserSettingsModalClose = () => {
+      $scope.showUserSettingsModal = false;
+    };
+
+    //Function to store new password so that it can be compared
+    $scope.storeEnteredPassword = (key, data) => {
+      $scope.newPasswordToCompare = data;
+    };
+
+    //Callback to check if both the entered passwords are the same
+    $scope.checkIfPasswordsMatch = (key, data) => {
+      if ($scope.newPasswordToCompare === data) {
+        return false;
+      }
+      else {
+        return true;
+      }
+
+    };
+    $scope.userSettingsModalData = {
+      isForm: true,
+      title: 'General Settings ',
+      editData: $scope.modifiedUserData,
+      item: [{
+        key: 'name',
+        label: 'Username',
+        id: true,
+        type: 'text',
+        name: 'username',
+        props: {
+          required: true,
+        },
+      },
+      {
+        key: 'email',
+        label: 'Email',
+        type: 'email',
+        name: 'email',
+        props: {
+          required: true,
+          pattern: '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,5})+$'
+        },
+        errorText: 'Please enter a valid email address.'
+      },
+      {
+        key: 'newPassword',
+        label: 'New Password',
+        type: 'password',
+        helpText: 'Enter a strong password',
+        name: 'newPassword',
+        validationCallback: $scope.storeEnteredPassword,
+        props: {
+          required: true,
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#-])[A-Za-z\\d@$!%*?&#-]{8,24}$'
+        },
+        errorText: `Your password must be a single word between 8-24 characters with atleast 
+                    one uppercase letter, one lowercase letter, one number and one special character
+                    ( @$!%*?&amp;#- ).`
+      },
+      {
+        key: 'confirmPassword',
+        label: 'Confirm New Password',
+        type: 'password',
+        name: 'confirmNewPassword',
+        validationCallback: $scope.checkIfPasswordsMatch,
+        props: {
+          required: true,
+        },
+        errorText: 'The new passwords do not match with each other.'
+      }]
+    };
+
+    // SUbmit call of user-setting modal
+    $scope.onUserSettingsModalSubmit = (data) => {
+      $scope.userData.password = data.newPassword;
+      $scope.userData.email = data.email;
+      const user = { user: $scope.userData };
+      const dataToSend = user;
+      StateService.editUser(data.name, dataToSend).then(() => {
+        //This is done to update email id in user table if user is on manage users tab
+        if (currentRouteWhileGeneralSettings.includes('/berlin/user')) {
+          $route.reload();
+        }
+        $scope.modifiedUserData.email = dataToSend.user.email;
+      });
+      $scope.showUserSettingsModal = false;
+    };
 
     //Fullscreen function
     $scope.toggleFullscreen = function () {
       toggleFullscreen();
     };
-
-    // Get user and tenentId from chrome.
-    $scope.userName = chrome.getCurrentUser()[0];
-    $scope.tenantId = chrome.getTenantBu()[0];
 
     $scope.session_idle_timeout = chrome.getSessionIdleTimeout();
     $scope.myTimeOut = $timeout(function () { $scope.idleTimeout(); }, $scope.session_idle_timeout);
@@ -355,7 +469,7 @@ class TopbarCtrl {
       }
     };
 
-    $scope.viewNotificaiotnDetails = (notificationSummary) => {
+    $scope.viewNotificationDetails = (notificationSummary) => {
       // If notification summary present, that will be used as search string
       // Also, we do not want any current applied filters/search to
       // to be preserved
@@ -390,7 +504,7 @@ class TopbarCtrl {
   }
 }
 
-TopbarCtrl.$inject = ['$scope', 'StateService', '$rootScope', 'Private',
+TopbarCtrl.$inject = ['$scope', 'StateService', '$rootScope', '$route', 'Private',
   'timefilter', '$interval', 'POLLING_TIME', '$timeout',
   'chrome', '$window', 'kbnUrl'];
 /*eslint-disable*/

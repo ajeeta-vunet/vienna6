@@ -47,7 +47,7 @@ function _escape(csv, row, column, indexPattern) {
   // If yes, we don't format the field. This is because formatField tries
   // to format it for html and because of that '"' is put as :quote&
   // in the string
-  var isObject = false;
+  let isObject = false;
   if (column in row._source) {
     val = String(row._source[column]);
     if (val.startsWith('{') || val.startsWith('[')) {

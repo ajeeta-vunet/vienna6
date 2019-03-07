@@ -139,8 +139,8 @@ function manageUsers($scope,
           required: true,
           pattern: '^[a-zA-Z][a-zA-Z0-9_.@-]{2,31}$'
         },
-        errorText: 'Username should be unique and a single word between 3-32 characters. Username may only contain alphanumeric' +
-                   ' characters with special characters ( _@.- ) and cannot begin with a hyphen or underscore. NOTE: On submit of' +
+        errorText: 'Username should be unique and a single word between 3-30 characters. Username may only contain alphanumeric' +
+                   ' characters with special characters ( _@.- ) and can only begin with an alphabet . NOTE: On submit of' +
                    ' the form this field cannot be edited.'
       }, {
         key: 'email',

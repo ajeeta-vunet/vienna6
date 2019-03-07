@@ -56,15 +56,15 @@ class sidebarController {
           id: 'Analytics Configurations', description: ' ', icon: 'icon-Network', pageurl: '', active: false,
           subgroups: [
             { id: 'Visualizations', description: ' ', icon: '', pageurl: baseUrl + '/visualize', isModifyAllowed: true, active: false },
-            { id: 'Manage Alert rules', description: ' ', icon: '', pageurl: baseUrl + '/alerts', isModifyAllowed: true, active: false },
+            { id: 'Alert Rules', description: ' ', icon: '', pageurl: baseUrl + '/alerts', isModifyAllowed: true, active: false },
             {
-              id: 'Manage Anomaly detection rules', description: ' ', icon: '', pageurl: baseUrl + '/anomalys',
+              id: 'Anomaly Detection ', description: ' ', icon: '', pageurl: baseUrl + '/anomalys',
               isModifyAllowed: true, active: false
             },
             // { id: 'Manage ML Rules', description: ' ', icon: '', pageurl: '' },
             // { id: 'Manage Automated insights Rules', description: ' ', icon: '', pageurl: '' },
             {
-              id: 'Manage Configuration Objects', description: ' ', icon: '', pageurl: baseUrl + '/management',
+              id: 'Manage Resources', description: ' ', icon: '', pageurl: baseUrl + '/management',
               isModifyAllowed: chrome.isModifyAllowed(), active: false
             },
             {

@@ -1,12 +1,14 @@
 import _ from 'lodash';
 import AggConfigResult from 'ui/vis/agg_config_result';
+import { FilterBarClickHandlerProvider } from 'ui/filter_bar/filter_bar_click_handler';
 
 import { uiModules } from 'ui/modules';
 import paginatedTableTemplate from 'ui/paginated_table/paginated_table.html';
 uiModules
   .get('kibana')
-  .directive('paginatedTable', function ($filter) {
+  .directive('paginatedTable', function ($filter, Private, getAppState) {
     const orderBy = $filter('orderBy');
+    const filterBarClickHandler = Private(FilterBarClickHandlerProvider);
     return {
       restrict: 'E',
       template: paginatedTableTemplate,
@@ -45,6 +47,13 @@ uiModules
             return flag;
           }
           return true;
+        };
+
+        self.filterColumn = function (colIndex) {
+          const col = $scope.columns[colIndex];
+          const $state = getAppState();
+          const clickHandler = filterBarClickHandler($state);
+          clickHandler({ point: { aggConfigResult: col.aggConfigResult } });
         };
 
         self.sortColumn = function (colIndex, sortDirection = 'asc') {

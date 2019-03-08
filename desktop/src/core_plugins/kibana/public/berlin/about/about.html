@@ -9,10 +9,10 @@
       <div data-transclude-slot="topLeftCorner" class="kuiLocalTitle" role="heading" aria-level="1">
         <div class='col-sm-3'>About</div>
         <div class='col-sm-offset-6 col-sm-3 pull-right upload-license-column'>
-          <div ng-show="isCurrentUserAdmin()" class="uploadLicense" ng-click="openLicenseModal()">
+          <div ng-show="isCurrentUserAdmin()" class="uploadLicense" ng-click="openLicenseModal()" uib-tooltip="Upload Licence" >
             Upload Licence
             <a  href='' class="uploadLicenseButton">
-              <i class="fa fa-upload fa-lg" title="Upload Licence" >
+              <i class="fa fa-upload fa-lg" >
               </i>
             </a>
           </div>
@@ -21,7 +21,7 @@
 
     </div>
   </kbn-top-nav>
-  <div class="vunet-about-container" data-test-subj="userLandingPage">
+  <div class="vunet-about-container menubar-fixed-top" data-test-subj="userLandingPage">
     <div class="row">
       <div class="col-sm-6 table-right-padding">
         <vunet-data-table fetch-items="fetchSwReleaseItems" meta-item="aboutSwReleaseMeta">

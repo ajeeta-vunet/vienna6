@@ -1,4 +1,5 @@
 @import (reference) "~ui/styles/variables";
+@import '~ui/styles/vunet_variable_theme.less';
 
 @media only screen and (max-width: 1600px) {
   html{
@@ -39,7 +40,7 @@
   // }
 }
 ::-webkit-scrollbar-thumb{
-  background-color: #5a4fef;	
+  background-color: @accent_color;	
   border-radius: 1rem;
 }
 // ::-webkit-scrollbar:vertical {
@@ -56,7 +57,7 @@
 :-webkit-full-screen {
   width:100%;
   height:100%;
-  // background-color:#f6f7fb; 
+  // background-color:@view_background; 
 
 }
 
@@ -64,26 +65,26 @@
 :-moz-full-screen {
   width:100%;
   height:100%;
-  // background-color:#f6f7fb; 
+  // background-color:@view_background; 
 }
 
 /* IE/Edge syntax */
 :-ms-fullscreen {
   width:100%;
   height:100%;
-  // background-color:#f6f7fb; 
+  // background-color:@view_background; 
 }
 
 /* Standard syntax */
 :fullscreen {
   width:100%;
   height:100%;
-  // background-color:#f6f7fb; 
+  // background-color:@view_background; 
 }
 
 
 body{
-  font-family:'Barlow-Regular';
+  font-family:@barlow-regular;
 }
 html{
   font-size:10px;
@@ -98,22 +99,15 @@ select, input, a {
 // , input[type="radio"], input[type="checkobx"]
 input[type="file"]{
   &:focus{
-    border:.2rem solid #fdf1f1;
+    border:.2rem solid @border_color;
   }
-}
-
-.vunet-application-normal {
-  height:80vh;
 }
 
 //Bacground color for all views
 .vunet-application{
-  overflow-y:auto;
   .app-container{
-    // this has been done as scroll was not appreaing for dashboards  in fullscreen mode
-    overflow-y: auto;
     // this has been added to give this color in fullscreen mode for visualization
-    background-color:#f6f7fb; 
+    background-color:@view_background; 
     //this has been added to display cut off label of y-axis on right for visualizations
     .vis-editor-content{
       .vis-editor-canvas{
@@ -164,6 +158,16 @@ input[type="file"]{
         }
       }
     }
+    //This has been done to fix menubar  in alerts page
+    .alert-body-container{
+      overflow-y: auto;
+      height: @view-content-height; 
+    }
+    // This has been added to fix menubar on top for dashboards page
+    .report-body-container{
+      overflow-y: auto;
+      height: @view-content-height; 
+    }
   }
   // In Data table Visualization and matrix Visualization --> options, when we enable the color coding,
   // after adding the range, the action field is coming out of the border line. 
@@ -184,7 +188,7 @@ input[type="file"]{
                         th{
                           text-align: center;
                           font-size:1.4rem;
-                          font-family:'Barlow-Semibold';
+                          font-family:@barlow-semibold;
                         }
                       }
                     }
@@ -204,10 +208,30 @@ input[type="file"]{
       }
     }
   }
-  // .vis-col-wrapper{
-  //   // margin-left:5rem!important;
-  // }
-  background-color:#f6f7fb;
+  // This is done for the dashboard page
+  dashboard-app{
+    dashboard-viewport-provider{
+      overflow-y: auto;
+      height: @view-content-height;
+    }
+  }
+
+  // This has been added to fix menubar on top for manage configuration objects page
+  .management-container{
+    overflow-y: auto;
+    height: @view-content-height;
+  }
+  // This has been added to fix menubar on top for listing pages like dashboards, visualizations etc
+  .kuiViewContent--constrainedWidth{
+    overflow-y: auto;
+    height: @view-content-height;
+    padding-left: 15%;
+    padding-right: 15%;
+    margin: 0;
+    max-width: none;
+  } 
+
+  background-color:@view_background;
     .kuiLocalNav{
       background-color:#f1f2f7;
       // height:6.5rem !important;
@@ -215,8 +239,8 @@ input[type="file"]{
       min-height:40px;
       .kuiLocalNavRow{
         .kuiLocalTitle{
-          font-family: 'Barlow-Semibold';
-          color: #5a4fef;
+          font-family: @barlow-semibold;
+          color: @accent_color;
           position: relative;
           top: .9rem;
           padding: 0.9rem 0rem 0rem 3rem;
@@ -227,14 +251,12 @@ input[type="file"]{
       .kuiLocalDropdown{
         padding: 2.5rem 1rem 1.5rem 0rem;
         .kbn-timepicker-content {
-          width: 70rem;
-          max-width: unset;
           .kuiVerticalRhythmSmall{
             .kbn-timepicker-body{
               .btn-default{
-                background-color:#f6f7fb;
+                background-color:@view_background;
                 border:none;
-                color:black;
+                color:@black;
                 &:hover{
                   color: #F5F5F5;
                   background-color: #292F4F;
@@ -242,14 +264,14 @@ input[type="file"]{
               }
               .btn[disabled]{
                 &:hover{
-                  background-color:#f6f7fb;
-                  color:black; 
+                  background-color:@view_background;
+                  color:@black; 
                 }
               }
               .active{
-                background-color:#5a4fef ;
+                background-color:@accent_color ;
                 span{
-                  color:white;
+                  color:@white;
                 }
               }
             }
@@ -264,49 +286,49 @@ input[type="file"]{
 
 // all btn-file are defined here
 .vunet-btn-file-import{
-  background-color:#fff;
+  background-color:@white;
   font-size: 1.75rem;
-  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06) ;
+  box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color ;
   border-radius:0rem;
   margin-bottom: 2rem;
   width: 90%;
   margin-left: 2rem;
-  color:black!important;
+  color:@black!important;
   &:hover{
-    color: #5a4fef!important;
-    font-family: 'Barlow-Bold';
-    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06) ;
+    color: @accent_color!important;
+    font-family: @barlow-bold;
+    box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
   }
 }
 
 
-//vunet-white-buttons 
+//vunet-@white-buttons 
 .vunet-btn-collect , .vunet-btn-download ,.vunet-btn-export ,.vunet-btn-import{
-  background-color:#fff;
+  background-color:@white;
   font-size: 1.75rem;
   border-radius: 2rem;
-  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06) ;
-  color:black!important;
+  box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color ;
+  color:@black!important;
   &:hover{
-    color: #5a4fef!important;
-    font-family: 'Barlow-Bold';
-    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06) ;
+    color: @accent_color!important;
+    font-family: @barlow-bold;
+    box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
   }
 }
 
 ///vunet Simple Buttons for angular code
 .btn-vunet-submit , .btn-vunet-cancel , .btn-vunet-next , .btn-vunet-previous ,.btn-vunet-others , .btn-vunet-import ,  .btn-vunet-export{
-  background-color: #5a4fef;
+  background-color: @accent_color;
   font-size: 1.6rem;
   border-radius: 2rem;
-  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+  box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color;
   margin-right: 3rem;
   margin-top: 1rem;
-  color: #fff;
+  color: @white;
   &:hover{
-    // color: #fff;
-    font-family: 'Barlow-Semibold';
-    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06);
+    // color: @white;
+    font-family: @barlow-semibold;
+    box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
   }
 }
 
@@ -315,12 +337,14 @@ input[type="file"]{
   cursor: not-allowed;
   opacity: 0.65;
   filter: alpha(opacity=65);
-  background-color: #e8e7ee!important;
-  color:#ababb1!important;
+  background-color: @disable_button_color!important;
+  color:@disable_button_text_color!important;
   &:hover{
     box-shadow:none;
-    font-family:'Barlow-Regular'!important;
-    // color:#ababb1!important;
+    font-family:@barlow-regular!important;
+    background-color: @disable_button_color!important;
+    color:@disable_button_text_color!important;
+    // color:@disable_button_text_color!important;
   }
 }
 
@@ -329,18 +353,18 @@ button[disabled], {
   cursor: not-allowed;
   opacity: 0.65;
   filter: alpha(opacity=65);
-  background-color: #e8e7ee!important;
-  color:#ababb1!important;
+  background-color: @disable_button_color!important;
+  color:@disable_button_text_color!important;
   .icon-Diagnostics {
-    color:#ababb1!important;
+    color:@disable_button_text_color!important;
     &:hover{
       font-weight: normal;
     }  
   }
   &:hover{
     box-shadow:none;
-    font-family:'Barlow-Regular'!important;
-    // color:#ababb1!important;
+    font-family:@barlow-regular!important;
+    // color:@disable_button_text_color!important;
   }
 }
 
@@ -358,16 +382,27 @@ button[disabled], {
   text-decoration: none;
   border: none;
   border-radius: 2rem;
-  background-color: #5a4fef;
-  color:#ffffff !important;
-  box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+  background-color: @accent_color;
+  color:@white !important;
+  box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color;
   &:hover{
-    color: #fff!important;
+    color: @white!important;
     text-decoration: none!important;
-    font-family: 'Barlow-Semibold';
-    box-shadow: 0rem 0rem 1rem .7rem rgba(0, 0, 0, 0.06);
+    font-family: @barlow-semibold;
+    box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
   }
 }
+
+//COMMON CLASSES
+.display-inline-block{
+  display: inline-block;
+}
+// This has been added to fix menubar on top
+.menubar-fixed-top{
+  overflow-y: auto;
+  height: @view-content-height;
+}
+
 
 // These classes use for reports
 .report-print-non-table {
@@ -455,12 +490,12 @@ button[disabled], {
   }
 }
 
-// Remove white spaces for business metric panels
+// Remove @white spaces for business metric panels
 .bs-metric-panel {
   padding: 0px !important;
 }
 
-// Get rid of extra white spaces in visualisations
+// Get rid of extra @white spaces in visualisations
 // added under a dashboard.
 .dashboard-panel {
   .panel-content {
@@ -538,7 +573,7 @@ button[disabled], {
       height: 22px;
       padding-left: 5px;
       color: #444444;
-      background: #fff !important;
+      background: @white !important;
     }
     .usercomment-buttons-container {
       padding-top: 8px;
@@ -570,378 +605,395 @@ button[disabled], {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-Expand:before {
-  content: "\e94e";
-  color: #5a4fef;
+.icon-Verify-Data-01:before {
+  content: "\e94f";
+  color: #dfdeeb;
 }
-.icon-Settings:before {
+.icon-Remote-Side-Configuration:before {
+  content: "\e950";
+  color: @white;
+}
+.icon-Data-Source-Configuration:before {
+  content: "\e951";
+  color: @white;
+}
+.icon-Analyse-01:before {
+  content: "\e952";
+  color: #dfdeeb;
+}
+.icon-maximize:before {
   content: "\e900";
-  color: #5a4fef;
-}
-.icon-Network:before {
-  content: "\e901";
-  color: #5a4fef;
-}
-.icon-Data-Source:before {
-  content: "\e902";
-  color: #5a4fef;
-}
-.icon-Analytics:before {
-  content: "\e903";
-  color: #5a4fef;
-}
-.icon-down-arrow:before {
-  content: "\e904";
-}
-.icon-Menu-Collapse:before {
-  content: "\e905";
-  color: #6459f0;
-}
-.icon-user:before {
-  content: "\e906";
-  color: #5a4fef;
-}
-.icon-Notification:before {
-  content: "\e907";
-  color: #5a4fef;
-}
-.icon-Diagnostics:before {
-  content: "\e908";
-}
-.icon-Data:before {
-  content: "\e909";
-}
-.icon-Archive_failure .path1:before {
-  content: "\e90a";
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path2:before {
-  content: "\e90b";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path3:before {
-  content: "\e90c";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path4:before {
-  content: "\e90d";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path5:before {
-  content: "\e90e";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path6:before {
-  content: "\e90f";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path7:before {
-  content: "\e910";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path8:before {
-  content: "\e911";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path9:before {
-  content: "\e912";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path10:before {
-  content: "\e913";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path11:before {
-  content: "\e914";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path12:before {
-  content: "\e915";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path13:before {
-  content: "\e916";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path14:before {
-  content: "\e917";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path15:before {
-  content: "\e918";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path16:before {
-  content: "\e919";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path17:before {
-  content: "\e91a";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path18:before {
-  content: "\e91b";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path19:before {
-  content: "\e91c";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path20:before {
-  content: "\e91d";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path21:before {
-  content: "\e91e";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path22:before {
-  content: "\e91f";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path23:before {
-  content: "\e920";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path24:before {
-  content: "\e921";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path25:before {
-  content: "\e922";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path26:before {
-  content: "\e923";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path27:before {
-  content: "\e924";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path28:before {
-  content: "\e925";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path29:before {
-  content: "\e926";
-  margin-left: -1.0078125em;
-  color: rgb(226, 76, 75);
-}
-.icon-Archive_failure .path30:before {
-  content: "\e927";
-  margin-left: -1.0078125em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path31:before {
-  content: "\e928";
-  margin-left: -1.0078125em;
-  color: rgb(255, 255, 255);
-}
-.icon-Archive:before {
-  content: "\e929";
-  color: #ff8e00;
-}
-.icon-Types-Configured-09:before {
-  content: "\e92a";
-  color: #5a4fef;
-}
-.icon-Open-Indices-02:before {
-  content: "\e92b";
-  color: #9e9e9e;
-}
-.icon-Loading-Indices-11:before {
-  content: "\e92c";
-  color: #ff8e00;
-}
-.icon-Closed-Indices-01:before {
-  content: "\e92d";
-  color: #f33434;
-}
-.icon-Instances-Configured-07:before {
-  content: "\e92e";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Instances-Receiving-08:before {
-  content: "\e92f";
-  color: #5a4fef;
+  content: "\e901";
+  color: @accent_color;
 }
 .icon-Archive_Success .path1:before {
-  content: "\e930";
+  content: "\e902";
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path2:before {
-  content: "\e931";
+  content: "\e903";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path3:before {
-  content: "\e932";
+  content: "\e904";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path4:before {
-  content: "\e933";
+  content: "\e905";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path5:before {
-  content: "\e934";
+  content: "\e906";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path6:before {
-  content: "\e935";
+  content: "\e907";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path7:before {
-  content: "\e936";
+  content: "\e908";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path8:before {
-  content: "\e937";
+  content: "\e909";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path9:before {
-  content: "\e938";
+  content: "\e90a";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path10:before {
-  content: "\e939";
+  content: "\e90b";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path11:before {
-  content: "\e93a";
+  content: "\e90c";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path12:before {
-  content: "\e93b";
+  content: "\e90d";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path13:before {
-  content: "\e93c";
+  content: "\e90e";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path14:before {
-  content: "\e93d";
+  content: "\e90f";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path15:before {
-  content: "\e93e";
+  content: "\e910";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path16:before {
-  content: "\e93f";
+  content: "\e911";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path17:before {
-  content: "\e940";
+  content: "\e912";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path18:before {
-  content: "\e941";
+  content: "\e913";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path19:before {
-  content: "\e942";
+  content: "\e914";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path20:before {
-  content: "\e943";
+  content: "\e915";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path21:before {
-  content: "\e944";
+  content: "\e916";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path22:before {
-  content: "\e945";
+  content: "\e917";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path23:before {
-  content: "\e946";
+  content: "\e918";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path24:before {
-  content: "\e947";
+  content: "\e919";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path25:before {
-  content: "\e948";
+  content: "\e91a";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path26:before {
-  content: "\e949";
+  content: "\e91b";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path27:before {
-  content: "\e94a";
+  content: "\e91c";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path28:before {
-  content: "\e94b";
+  content: "\e91d";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path29:before {
-  content: "\e94c";
+  content: "\e91e";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path30:before {
-  content: "\e94d";
+  content: "\e91f";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
+.icon-Types-Configured-09:before {
+  content: "\e920";
+  color: @accent_color;
+}
+.icon-Open-Indices-02:before {
+  content: "\e921";
+  color: #9e9e9e;
+}
+.icon-Loading-Indices-11:before {
+  content: "\e922";
+  color: #ff8e00;
+}
+.icon-Instances-Configured-07:before {
+  content: "\e923";
+  color: @accent_color;
+}
+.icon-Closed-Indices-01:before {
+  content: "\e924";
+  color: #f33434;
+}
+.icon-Archive:before {
+  content: "\e925";
+  color: #ff8e00;
+}
+.icon-Archive_failure .path1:before {
+  content: "\e926";
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path2:before {
+  content: "\e927";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path3:before {
+  content: "\e928";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path4:before {
+  content: "\e929";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path5:before {
+  content: "\e92a";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path6:before {
+  content: "\e92b";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path7:before {
+  content: "\e92c";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path8:before {
+  content: "\e92d";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path9:before {
+  content: "\e92e";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path10:before {
+  content: "\e92f";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path11:before {
+  content: "\e930";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path12:before {
+  content: "\e931";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path13:before {
+  content: "\e932";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path14:before {
+  content: "\e933";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path15:before {
+  content: "\e934";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path16:before {
+  content: "\e935";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path17:before {
+  content: "\e936";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path18:before {
+  content: "\e937";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path19:before {
+  content: "\e938";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path20:before {
+  content: "\e939";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path21:before {
+  content: "\e93a";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path22:before {
+  content: "\e93b";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path23:before {
+  content: "\e93c";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path24:before {
+  content: "\e93d";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path25:before {
+  content: "\e93e";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path26:before {
+  content: "\e93f";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path27:before {
+  content: "\e940";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path28:before {
+  content: "\e941";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path29:before {
+  content: "\e942";
+  margin-left: -1em;
+  color: rgb(226, 76, 75);
+}
+.icon-Archive_failure .path30:before {
+  content: "\e943";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path31:before {
+  content: "\e944";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.icon-Data:before {
+  content: "\e945";
+}
+.icon-Diagnostics:before {
+  content: "\e946";
+}
+.icon-Notification:before {
+  content: "\e947";
+  color: @accent_color;
+}
+.icon-user:before {
+  content: "\e948";
+  color: @accent_color;
+}
+.icon-Menu-Collapse:before {
+  content: "\e949";
+  color: #6459f0;
+}
+.icon-down-arrow:before {
+  content: "\e94a";
+}
+.icon-Analytics:before {
+  content: "\e94b";
+  color: @accent_color;
+}
+.icon-Data-Source:before {
+  content: "\e94c";
+  color: @accent_color;
+}
+.icon-Network:before {
+  content: "\e94d";
+  color: @accent_color;
+}
+.icon-Settings:before {
+  content: "\e94e";
+  color: @accent_color;
+}
+
 
 
 

@@ -6,7 +6,9 @@
           <a href="/app/vienna#/berlin/data_source/enrichment" title="Go Back" class="fa fa-arrow-circle-o-left fa-lg display-right-groupname"></a>
           <span>{{groupName}}</span>
         </div>
-        <button class="btn btn-add-entry pull-right" ng-click="updateRowDataEnrichment('',groupName, groupTypeInfo)">Add Entry</button>
+        <button class="btn btn-add-entry pull-right" ng-click="updateRowDataEnrichment('',groupName, groupTypeInfo)"> 
+          <i class="fa fa-plus"></i>
+        </button>
       </div>
 
       <div>
@@ -18,7 +20,7 @@
             
             <div class="col-sm-offset-3 col-sm-4 col-xs-6 row-count-select-box-container">
               <div class="row">
-                <div class="col-md-offset-4 col-md-5 row-count-select-box-text"> Number of entries</div>
+                <div class="col-md-10 row-count-select-box-text"> Number of entries</div>
                 <div class="col-md-2">
                   <select ng-model="paginationConfig.noOfRowsInPage" 
                           class ="row-count-select-box" 

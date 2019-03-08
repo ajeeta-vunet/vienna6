@@ -6,7 +6,7 @@
   min-height: 50px; 
   box-shadow:0px -.6rem .3rem -.4rem @accent_color;
   li{
-    padding:0rem 1.4rem;
+    padding:0rem 1.7rem;
     .dropdown-menu {
       min-width:22vw !important;
       padding:0px !important;
@@ -207,38 +207,75 @@
     border-right: .1rem solid @seperator_color; 
   }
   .vunet-notifications{
-    text-align: center;
+    padding-left: 5rem;
     margin-top: 1.9rem;
     margin-bottom: 1.9rem;
     .toaster-container{
       display: inline-block;
       width:auto;
-      max-height: 10rem;
       overflow-y: auto;
-      border-radius:2rem;
+      max-height: 7.5rem;
+      max-width: 47vw;
       .toaster{
         li{
           padding:0rem;
-        }
-        .toast{
-          // background-color: @white;
-          // color:@red;
-          .toast-controls{
-            button{
-              border-radius: 2rem;
-              // background-color: @red;
-              // color: @white;
-              border: none;
-              padding: .5rem 2rem;
+          margin-bottom: .5rem;
+          div{
+            i{
+              padding-right: 2rem;
+              font-size:1.75rem;
+            }
+            kbn-truncated{
+              padding-right: 2rem;
+              padding-top: 0;
+              span{
+                p{
+                  margin-bottom:0;
+                  font-size:1.4rem;
+                }
+              }
+            }
+            .toast-controls{
+              button{
+                border-radius:2rem;
+                color:@white;
+                padding: 0rem 1.5rem;
+                font-size: 1.4rem;
+                &:hover{
+                  color:@white!important;
+                  font-family: @barlow-semibold;
+                }
+              }
+              .kuiButton--danger{
+                background-color:@error_red;
+              }   
+            }
+            .toaster-countdown {
+              // padding-left: 1rem;
+              span{
+                background-color: @white;
+                color: @text_colr_grey ;
+                width: 4rem;
+                border:none;
+                // font-size:1.5rem;
+              }
             }
           }
-          kbn-truncated{
-            padding-right:3rem;
-          }
         }
+      }
+      .toast{
         .badge{
-          background-color: @white;
-          color:@text_colr_grey ;
+          margin-right: 1rem;
+          padding: .3rem .6rem .4rem .6rem;
+          color: @text_color1;
+          background:@white;
+          border: .1rem solid @border_color;
+        }
+      }
+      .toast-stack{
+        pre{
+          font-size:1.4rem;
+          padding:1rem;
         }
       }
     }
@@ -247,7 +284,7 @@
     padding-left:0rem;
     padding-right:1.5rem;
   }
-  .icon-Menu-Collapse , .icon-Expand{
+  .icon-Menu-Collapse , .icon-maximize{
     color: @accent_color;
     font-size: 3rem;
     &:hover{
@@ -257,8 +294,9 @@
   .icon-Menu-Collapse {
     padding-left: 2rem;
   }
-  .icon-Expand{
-    padding:2.5rem 0rem 2.5rem 0rem;
+  .icon-maximize{
+    padding: 2.7rem 0rem 2.7rem 0rem;
+    font-size: 2.5rem;
   }
   //this has been done for the run diagnostic modal
   .kuiModalOverlay{
@@ -274,19 +312,38 @@
 }
 
 .topbar-container{
-  .kuiButton:hover,  .kuiButton--primary, .kuiButton--hollow {
-    &:hover{
-      background-color: #5a4fef!important;
-      color:#fff!important;
-      border: none;
-      text-decoration: none!important;
-      font-family: 'Barlow-Bold';
-      box-shadow: 0rem 0rem 1rem 0.7rem rgba(0, 0, 0, 0.06);
+  .kuiButton--hollow {
+    &:enabled{
+      &:hover{
+        background-color:@accent_color!important;
+        color:@white!important;
+        border: none;
+        text-decoration: none!important;
+        font-family: @barlow-bold;
+        box-shadow: 0rem 0rem 1rem 0.7rem rgba(0, 0, 0, 0.06);
+      }
     }
   }
+  .kuiButton--primary{
+    box-shadow:none;
+    &:hover{
+      background-color: #e8e7ee;
+      color: #ababb1;
+    }
+  }
+ 
 }
 
-
+.alert-notification{
+  padding-right: 0!important;
+  .no-notifications{
+    color:@sidebar_text_color;
+    font-size: 2rem;
+    font-family: @barlow-semibold;
+    margin: 1.5rem 0rem 1.5rem 0rem;
+    text-align: center;
+  }
+}
 
 
 // SEE ALL COMPONENET COMMENTED IN HTML (Can be used in future)

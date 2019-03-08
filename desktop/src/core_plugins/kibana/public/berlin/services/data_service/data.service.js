@@ -1,6 +1,7 @@
 /* globals window, setTimeout, Blob */
 import _ from 'lodash';
 import chrome from 'ui/chrome';
+import { Notifier } from 'ui/notify';
 
 /**
  * This will act as the actual component that will talk to the API.
@@ -199,10 +200,8 @@ class DataService {
     } else {
       errorString = 'Error in ' + moduleString;
     }
-    this.Notification.error({
-      message: errorString,
-      delay: this.Notification_timeout,
-    });
+    const notify = new Notifier();
+    notify.error(errorString);
     this.$log.error(errorResponse);
 
     // If user session times out, refresh and take him back to login page.

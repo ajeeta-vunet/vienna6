@@ -10,15 +10,16 @@
     </div>
   </kbn-top-nav>
 
-  <div class="vunet-enrichment-container" data-test-subj="userLandingPage">
+  <div class="vunet-enrichment-container menubar-fixed-top" data-test-subj="userLandingPage">
     <div class="row import-row" ng-if="isModifyAllowed">
-      <div class=" col-sm-offset-11 col-sm-1 import-column" uib-tooltip="Import data into data enrichment"
-        tooltip-placement="bottom">
-        <a href="" class="">
-          <button class="btn vunet-btn-import " ng-click="open_import_modal()">
-            <span class="">Import</span>
-          </button>
-        </a>
+      <div class=" col-sm-offset-11 col-sm-1 import-column">
+        <div uib-tooltip="Import data into data enrichment" tooltip-placement="bottom" class="display-inline-block">
+          <a href="" class="">
+            <button class="btn vunet-btn-import " ng-click="open_import_modal()">
+              <span class="">Import</span>
+            </button>
+          </a>
+        </div>
       </div>
     </div>
 

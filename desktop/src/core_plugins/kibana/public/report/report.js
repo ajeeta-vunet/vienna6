@@ -629,7 +629,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $('#globalChromeContent').addClass('content-report');
     $('#globalAppWrapper').removeClass('app-wrapper-normal');
     $('#globalAppWrapper').addClass('app-wrapper-report');
-    $('#ngViewAppDiv').removeClass('vunet-application-normal');
   }
 
   // This function is used to prepare the query parameters

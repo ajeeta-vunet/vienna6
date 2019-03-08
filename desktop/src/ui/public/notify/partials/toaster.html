@@ -3,9 +3,9 @@
     <li ng-repeat="notif in list" kbn-toast notif="notif">
       <div ng-class="notif.getAlertClass()">
 
-        <span ng-show="notif.count > 1" class="badge">{{ notif.count }}</span>
-
         <i ng-class="notif.getIconClass()" tooltip="{{notif.title}}"></i>
+        
+        <span ng-show="notif.count > 1" class="badge">{{ notif.count }}</span>
 
         <kbn-truncated
           ng-if="notif.content"

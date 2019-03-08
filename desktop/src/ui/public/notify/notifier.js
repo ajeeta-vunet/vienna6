@@ -228,7 +228,8 @@ export function Notifier(opts) {
 
 Notifier.config = {
   bannerLifetime: 3000000,
-  errorLifetime: 300000,
+  //this has been added to change the error lifetime to 10secs
+  errorLifetime: 10000,
   warningLifetime: 10000,
   infoLifetime: 5000,
   setInterval: window.setInterval,

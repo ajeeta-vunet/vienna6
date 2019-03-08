@@ -5,43 +5,38 @@
     <!-- Transcluded elements. -->
     <div data-transclude-slots>
       <!-- Title. -->
-      <div
-        data-transclude-slot="topLeftCorner"
-        class="kuiLocalTitle"
-        role="heading"
-        aria-level="1"
-      >
-      Files
+      <div data-transclude-slot="topLeftCorner" class="kuiLocalTitle" role="heading" aria-level="1">
+        Files
       </div>
     </div>
   </kbn-top-nav>
-  <div class="vunet-files-container" data-test-subj="userLandingPage">
+  <div class="vunet-files-container menubar-fixed-top" data-test-subj="userLandingPage">
     <div class="row import-row">
-      <div class=" col-sm-offset-11 col-sm-1 import-column" uib-tooltip="Upload a file" tooltip-placement="bottom">
-        <a href="" class="" >
-          <button class="btn vunet-btn-import " ng-click="openUploadModal()">
-            <span class="">Upload</span>
-          </button>
-        </a>
+      <div class=" col-sm-offset-11 col-sm-1 import-column">
+        <div uib-tooltip="Upload a file" tooltip-placement="bottom" class="display-inline-block">
+          <a href="" class="">
+            <button class="btn vunet-btn-import " ng-click="openUploadModal()">
+              <span class="">Upload</span>
+            </button>
+          </a>
+        </div>
       </div>
     </div>
-    <div
-      class=""
-      data-test-subj="file">
+    <div data-test-subj="file">
       <div>
-        <vunet-data-table
+        <vunet-data-table 
           fetch-items="fetchFilesItems" 
-          meta-item="filesMeta"
-          table-action="onTableAction"
+          meta-item="filesMeta" 
+          table-action="onTableAction" 
           row-action="onRowAction"
-        >
+          >
         </vunet-data-table>
-        <vunet-modal
-          show-modal="showModal"
-          on-close="onModalClose"
-          data="filesDeleteMeta"
+        <vunet-modal 
+          show-modal="showModal" 
+          on-close="onModalClose" 
+          data="filesDeleteMeta" 
           on-submit="onModalSubmit"
-        >
+          >
         </vunet-modal>
       </div>
     </div>

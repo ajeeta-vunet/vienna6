@@ -9,31 +9,36 @@
       </div>
     </div>
   </kbn-top-nav>
-  <div class="row upperNetworkbar">
-    <div class="col-sm-3 router-number-container">
-      <div class="col-sm-4">
-        <i class="fa fa-bullseye"></i>
+  <div class="menubar-fixed-top">
+    <div class="row upperNetworkbar">
+      <div class="col-sm-3 router-number-container">
+        <div class="col-sm-4">
+          <i class="fa fa-bullseye"></i>
+        </div>
+        <div class="col-sm-5">
+          <span>Routers</span>
+        </div>
+        <div class="col-sm-3">
+          <span>{{noOfRouters}}</span>
+        </div>
       </div>
-      <div class="col-sm-5">
-        <span>Routers</span>
+      <div class="col-sm-offset-6 col-sm-1">
+        <div uib-tooltip="Collect configuration of all devices">
+          <button ng-show="chrome.isModifyAllowed()" class="btn vunet-btn-download" ng-click="collectConfiguration()">
+            Collect
+          </button>
+        </div>
       </div>
-      <div class="col-sm-3">
-        <span>{{noOfRouters}}</span>
+      <div class="col-sm-1">
+        <div uib-tooltip="Download the most recent configuration of all devices">
+          <button class="btn vunet-btn-download" ng-click="downloadMostRecentConfigurationOfAllDevices()" ng-disabled="disbleDownloadAllDevicesConfButton()">
+            Download
+          </button>
+        </div>
       </div>
     </div>
-    <div class="col-sm-offset-6 col-sm-1" uib-tooltip="Collect configuration of all devices"> 
-      <button ng-show="chrome.isModifyAllowed()" class="btn vunet-btn-download" ng-click="collectConfiguration()">
-        Collect
-      </button>
-    </div>
-    <div class="col-sm-1" uib-tooltip="Download the most recent configuration of all devices">
-      <button class="btn vunet-btn-download" ng-click="downloadMostRecentConfigurationOfAllDevices()" 
-          ng-disabled="disbleDownloadAllDevicesConfButton()">
-        Download
-      </button>
-    </div>
-  </div>
 
-  <vunet-data-table fetch-items="fetchNetworkConfiguration" meta-item="networkConfiguration" row-action="onNetworkConfigurationRowAction">
-  </vunet-data-table>
+    <vunet-data-table fetch-items="fetchNetworkConfiguration" meta-item="networkConfiguration" row-action="onNetworkConfigurationRowAction">
+    </vunet-data-table>
+  </div>
 </vunet-network-configuration>

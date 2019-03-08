@@ -68,16 +68,21 @@
       }
     }
     .btn-add-entry{
-      background-color:@white;
-      font-size: 1.75rem;
+      top: 10rem;
+      right: 22.5vmax;
+      z-index: 2;
+      position: relative;
+      padding: 0.4rem 1.2rem 0.5rem;
+      height: 3rem;
+      font-size: 1.4rem;
+      box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
       border-radius: 2rem;
       box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color ;
-      margin-right: 3rem;
-      margin-top: 1rem;
-      color: @black;
+      color: @white;
+      background-color:@accent_color;
       &:hover{
-        color:@accent_color;
-        font-family: @barlow-medium;
+        color:@white;
+        font-family: @barlow-bold;
         box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
       }
     }
@@ -101,6 +106,9 @@
         select{
           border-radius: 2rem
         }
+        .row-count-select-box-text{
+          text-align: right;
+        }
       }
     }
     .table-type3 {
@@ -108,8 +116,8 @@
       thead{
         tr{
           height:4.5rem;
-          border-top: .1rem solid @border_color ;
-          border-bottom: .1rem solid @border_color;
+          border-top: .1rem solid @seperator_color ;
+          border-bottom: .1rem solid @seperator_color;
           th{
             border-bottom:none;
             font-family:@barlow-semibold;
@@ -123,7 +131,7 @@
         tr{
           height:4rem;
           td{
-            border-top: .1rem solid @border_color;
+            border-top: .1rem solid @seperator_color;
           }
         }
       }
@@ -135,7 +143,7 @@
       thead{
         tr{
           height:4.5rem;
-          border-top: .1rem solid @border_color ;
+          border-top: .1rem solid @seperator_color ;
           th{
             // background: #C4D3DC;
             font-family:@barlow-semibold;
@@ -170,18 +178,21 @@
             tr{
               td{
                 padding: .6rem 1.2rem !important;
-                border-bottom: .1rem solid @border_color !important;
-                border-left: .1rem solid @border_color !important;
-                border-right: .1rem solid @border_color !important;
+                // border-bottom: .1rem solid @seperator_color !important;
+                border-left: .1rem solid @seperator_color !important;
+                border-right: .1rem solid @seperator_color !important;
                 height: 4rem;
               }
             }
           }
-          &:nth-child(odd) {
-            border-top: .1rem solid @border_color;
+          &:nth-child(last){
+            border-bottom: .1rem solid @seperator_color !important;
           }
-          &:nth-child(even) {
-            border-top: .1rem solid @border_color;
+          &:nth-child(odd) {
+            border-top: .1rem solid @seperator_color;
+          }
+          &:nth-last-child(1) {
+            border-top: .1rem solid @seperator_color;
           }
         }   
       }

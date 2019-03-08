@@ -1,9 +1,11 @@
 // Alerts
 
 .alert-variant(@background; @border; @text-color) {
-  background-color: @background;
+  //This has been done to modify the kibana notifier according to our design
+  // background-color: @background;
+  color : @background;
   border-color: @border;
-  color: @text-color;
+  // color: @text-color;
 
   hr {
     border-top-color: darken(@border, 5%);

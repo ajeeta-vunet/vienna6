@@ -21,7 +21,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ReactTooltip from 'react-tooltip';
-// import $ from 'jquery';
+import $ from 'jquery';
 
 import { Pager } from 'ui/pager';
 
@@ -391,6 +391,11 @@ export class VunetDataTable extends Component {
 
   // set selected rows
   onItemSelectionChanged = (newSelectedIds) => {
+    // This has been done to highlight the selected row
+    const rowsToRemoveHighlight = $('.kuiCheckBox').parent().parent().parent();
+    rowsToRemoveHighlight.removeClass('row-highlight');
+    const rowsToAddHighlight = $('.kuiCheckBox:checked').parent().parent().parent();
+    rowsToAddHighlight.addClass('row-highlight');
     this.setState({ selectedRowIds: newSelectedIds });
   };
 

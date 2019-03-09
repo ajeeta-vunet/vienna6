@@ -15,16 +15,3 @@ export function getTenantEmailGroups($http, chrome) {
       return resp;
     });
 }
-
-// This function returns only email group's name from the input
-// input - preferredEmailGroup [{"name":"admin"},{"name":"dba"},
-// {"name":"network team"},{"name":"Support L1"}]
-// Output - admin,dba,network team,Support L1
-export function getEmailGroupNameForDisplay(selectEmailGroupList) {
-  let emailGroupName = '';
-  _.each(selectEmailGroupList, function (emailgroup) {
-    emailGroupName = emailGroupName + emailgroup.name + ',';
-  });
-  emailGroupName = emailGroupName.replace(/,\s*$/, '');
-  return emailGroupName;
-}

@@ -465,6 +465,7 @@ function discoverController(
   $scope.opts.saveDataSource = function () {
     return $scope.updateDataSource()
       .then(function () {
+        const updateOperation = require('ui/utils/vunet_object_operation');
         savedSearch.columns = $scope.state.columns;
         savedSearch.sort = $scope.state.sort;
         savedSearch.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
@@ -475,7 +476,6 @@ function discoverController(
           .then(function (id) {
             stateMonitor.setInitialState($state.toJSON());
             $scope.kbnTopNav.close('save');
-
             if (id) {
               notify.info('Saved Data Source "' + savedSearch.title + '"');
               if (savedSearch.id !== $route.current.params.id) {
@@ -486,6 +486,10 @@ function discoverController(
                 docTitle.change(savedSearch.lastSavedTitle);
               }
               logUserOperation($http, 'POST', 'search', savedSearch.title, savedSearch.id);
+            }
+            // If it's a new saved search then we don't need to notify DAQ to update the alert rule.
+            if ($route.current.params.id) {
+              updateOperation.updateVunetObjectOperation([savedSearch], 'search', $http, 'modify', chrome);
             }
           });
       })

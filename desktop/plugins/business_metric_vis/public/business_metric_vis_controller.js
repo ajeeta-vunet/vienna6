@@ -14,11 +14,16 @@ import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { idealTextColor, colorLuminance } from 'ui/utils/color_filter';
 import { fixBMVHeightForPrintReport } from 'ui/utils/print_report_utils';
 import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
+import { SavedObjectNotFound } from 'ui/errors';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisController', function ($scope, Private,
   Notifier, $http, $rootScope, getAppState,
-  timefilter, courier, $filter, kbnUrl, $element) {
+  timefilter, courier, $filter, kbnUrl, $element, savedSearches) {
+
+  const notify = new Notifier({
+    location: 'Alert'
+  });
 
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
@@ -365,169 +370,212 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         esFilter: dashboardContext()
       };
 
-      $scope.vis.params.metrics.forEach(metric => {
-
-        // get the index selected by the user
+      // Add the metrics along with the threshold to the payload request which
+      // will be sent out to back-end in the next step.
+      var createPayload = function (metric,  metricListIndex, savedSearchQuery) {
         const index = metric.index;
-
-        // get the field type
         const fieldType = metric.fieldType;
 
-        // prepare data sets to make POST call to the back end
-        // to configure color schema for metric.
-        const finalColorSchema = [];
-        _.each(metric.colorSchema, function (row) {
+        // Build threshold from the configured interval, min, max fields.
+        const finalThreshold = [];
+        _.each(metric.threshold, function (row) {
           const newRow = {};
           newRow.interval = row.interval + row.intervalUnit;
           newRow.max = row.max;
           newRow.min = row.min;
           newRow.match = row.match;
           newRow.color = row.color;
-          finalColorSchema.push(newRow);
+          finalThreshold.push(newRow);
         });
 
         payload.metrics.push({
+          metricListIndex:  metricListIndex,
           index: index,
           label: metric.label,
+          // Add the metric along with the threshold to the payload request.
           metricType: metric.type || '',
           field: metric.field || '',
           fieldType: fieldType || '',
           filter: metric.filter || '*',
-          colorSchema: finalColorSchema,
+          savedSearchFilter: savedSearchQuery,
+          additionalFields: metric.additionalFields,
+          threshold: finalThreshold,
           format: metric.format || ''
-        });
+        })
+      };
 
+      // Go through each metric and add threshold to the payload request.
+      // Some of the metrics might be using saved search and some of them
+      // might be using index. If saved search is used then we should get the
+      // search filter from that saved search and add to request. If index is
+      // used then send "*" as a default search filter to the back-end.
+      const getMetrics = $scope.vis.params.metrics.map(function (metric, metricListIndex) {
+        let savedSearchQuery = '*';
+        // if the saved search for the metric is undefined (old BMV)
+        // empty (configured based on the index not saved search)
+        // create the payload directly. No need to search in the saved searches.
+        if (!metric.savedSearch || metric.savedSearch.id === '') {
+          createPayload(metric, metricListIndex, savedSearchQuery);
+          return Promise.resolve(false);
+        }
+        // else if a metric is configured based on the saved search then
+        // get the search filter of the saved search and create the payload.
+        else {
+          return (savedSearches.get(metric.savedSearch.id))
+          .then(function (savedSearch) {
+            // get the filter query from the saved search
+            savedSearchQuery = savedSearch.searchSource.get('query').query;
+            createPayload(metric, metricListIndex, savedSearchQuery);
+            return false;
+          })
+          .catch((error) => {
+            if (error instanceof SavedObjectNotFound) {
+              notify.error(
+                'Problem in loading this BMV... The saved search associated with metric "' + metric.label +
+                '" no longer exists. Please re-configure this metric');
+            } else {
+              // Display the error message to the user.
+              notify.error(error);
+              throw error;
+            }
+          });
+        }
       });
 
       // prepare data sets to make POST call to the back end
       // to get the time shift values.
-      _.each($scope.vis.params.historicalData, function (obj) {
-        const newObj = {};
-        newObj.label = obj.label;
-        if (obj.timeshiftMetric !== '') {
-          newObj.type = 'timeshift';
-          if (obj.timeshiftMetric !== 'Custom configuration') {
-            newObj.value = obj.timeshiftMetric;
-          } else {
-            newObj.value = obj.shiftValue + obj.shiftUnit;
-          }
-        } else {
-          newObj.type = 'interval';
-          newObj.value = obj.intervalMetric;
-        }
-        payload.historicalData.push(newObj);
-      });
-
-      // get the aggregations configured.
-      payload.aggregations = $scope.vis.params.aggregations || [];
-
-      // get the selected time duration from time filter
-      const timeDuration = timefilter.getBounds();
-      const timeDurationStart = timeDuration.min.valueOf();
-      const timeDurationEnd = timeDuration.max.valueOf();
-
-      $scope.metricData = undefined;
-      $scope.apiError = false;
-
-      payload.time = {
-        'gte': timeDurationStart,
-        'lte': timeDurationEnd
-      };
-
-      // POST call to the backend to get necessary information and
-      // prepare the business metric vis.
-      const httpResult = $http.post(urlBase + '/metric/', payload)
-        .then(resp => resp.data)
-        .catch(resp => { throw resp.data; });
-
-      // process the result
-      httpResult.then(function (resp) {
-
-        $scope.metricDatas = resp;
-        $scope.darkShade = '';
-        let metricRowCount = 0;
-
-        // Prepare historical datasets with 'N.A.' as values when the metrics
-        // do not have any data in the selected time range.
-        angular.forEach($scope.metricDatas, function (metricData, index) {
-          for (const key in metricData) {
-            if (metricData.hasOwnProperty(key)) {
-              // Case when there are aggregations configured.
-              if ($scope.vis.params.aggregations &&
-                $scope.vis.params.aggregations.length > 0) {
-
-                metricRowCount = getRowsCount(metricData[key].buckets, metricRowCount);
-
-                if (!metricData[key].hasOwnProperty('buckets')) {
-                  metricData[key].buckets = [];
-                }
-
-                // If there are no buckets for this metric in
-                // the response recieved or if there is no data for
-                // this metric, create a row with 'N.A.'
-                // values.
-                if ((metricData[key].buckets &&
-                  metricData[key].buckets.length === 0) ||
-                  metricData[key].success === false) {
-
-                  prepareBuckets(metricData[key].buckets,
-                    metricsetWithNoData,
-                    'N.A.',
-                    0,
-                    $scope.vis.params.aggregations.length);
-
-                  // If latest value metric is selected , Fill historical data
-                  // with 'N.A.'. This is done as we do not support historical
-                  // data for 'latest value'.
-                } else if ($scope.vis.params.metrics[index].type === 'latest') {
-
-                  addEmptyHistoricalDataForAggregations(metricData[key].buckets);
-                }
-
-                // Case when there are no aggregations configured.
-              } else {
-
-                // Prepare historical datasets with 'N.A.' as values when
-                // the metrics do not have any data in the selected time range or
-                // when 'latest value' metric is selected.
-                if (metricData[key].success === false ||
-                  $scope.vis.params.metrics[index].type === 'latest') {
-                  metricData[key].historicalData = [];
-                  populateEmptyHistoricalDataValues(metricData[key].historicalData);
-                }
-              }
-              // Using the colorLuminance function to make the time shift
-              // section background 15% more darker than the metric background color.
-              $scope.darkShade = colorLuminance(metricData[key].color, -0.15);
+      Promise.all(getMetrics).then(function() {
+        // The order of the metrics might be changed due to saved search.
+        // So we need to sort out the metrics based on the
+        // metricListIndex field before sending out the request to back-end.
+        // So that order in the response will be as same as configuration.
+        payload.metrics = $filter('orderBy')(payload.metrics, ' metricListIndex');
+        _.each($scope.vis.params.historicalData, function (obj) {
+          const newObj = {};
+          newObj.label = obj.label;
+          if (obj.timeshiftMetric !== '') {
+            newObj.type = 'timeshift';
+            if (obj.timeshiftMetric !== 'Custom configuration') {
+              newObj.value = obj.timeshiftMetric;
+            } else {
+              newObj.value = obj.shiftValue + obj.shiftUnit;
             }
+          } else {
+            newObj.type = 'interval';
+            newObj.value = obj.intervalMetric;
           }
+          payload.historicalData.push(newObj);
         });
 
-        // Populate the total number of rows in $scope.vis.params.
-        $scope.vis.params.rowsCount = metricRowCount;
+        // get the aggregations configured.
+        payload.aggregations = $scope.vis.params.aggregations || [];
 
-        // prepend the table headers for the tabular
-        // view of BM.
-        if ($scope.vis.params.enableTableFormat) {
-          $scope.metricDatas.splice(0, 0, headersData);
-        }
+        // get the selected time duration from time filter
+        const timeDuration = timefilter.getBounds();
+        const timeDurationStart = timeDuration.min.valueOf();
+        const timeDurationEnd = timeDuration.max.valueOf();
 
-        // If we are printing the report and we have multiple aggregation,
-        // set the height of the table based on the number of rows
-        if ($scope.printReport && $scope.vis.params.aggregations.length &&
-            $scope.vis.params.enableTableFormat) {
-          fixBMVHeightForPrintReport($scope, metricRowCount, $element);
-        }
-      })
-        .catch(function (resp) {
-          $scope.data = [];
-          const err = new Error(resp.message);
-          err.stack = resp.stack;
-          $scope.metricDatas = undefined;
-          $scope.apiError = true;
+        $scope.metricData = undefined;
+        $scope.apiError = false;
+
+        payload.time = {
+          'gte': timeDurationStart,
+          'lte': timeDurationEnd
+        };
+
+        // POST call to the backend to get necessary information and
+        // prepare the business metric vis.
+        const httpResult = $http.post(urlBase + '/metric/', payload)
+          .then(resp => resp.data)
+          .catch(resp => { throw resp.data; });
+
+        // process the result
+        httpResult.then(function (resp) {
+          $scope.metricDatas = resp;
+          $scope.darkShade = '';
+          let metricRowCount = 0;
+
+          // Prepare historical datasets with 'N.A.' as values when the metrics
+          // do not have any data in the selected time range.
+          angular.forEach($scope.metricDatas, function (metricData, index) {
+            for (const key in metricData) {
+              if (metricData.hasOwnProperty(key)) {
+                // Case when there are aggregations configured.
+                if ($scope.vis.params.aggregations &&
+                  $scope.vis.params.aggregations.length > 0) {
+
+                  metricRowCount = getRowsCount(metricData[key].buckets, metricRowCount);
+
+                  if (!metricData[key].hasOwnProperty('buckets')) {
+                    metricData[key].buckets = [];
+                  }
+
+                  // If there are no buckets for this metric in
+                  // the response recieved or if there is no data for
+                  // this metric, create a row with 'N.A.'
+                  // values.
+                  if ((metricData[key].buckets &&
+                    metricData[key].buckets.length === 0) ||
+                    metricData[key].success === false) {
+
+                    prepareBuckets(metricData[key].buckets,
+                      metricsetWithNoData,
+                      'N.A.',
+                      0,
+                      $scope.vis.params.aggregations.length);
+
+                    // If latest value metric is selected , Fill historical data
+                    // with 'N.A.'. This is done as we do not support historical
+                    // data for 'latest value'.
+                  } else if ($scope.vis.params.metrics[index].type === 'latest') {
+
+                    addEmptyHistoricalDataForAggregations(metricData[key].buckets);
+                  }
+
+                  // Case when there are no aggregations configured.
+                } else {
+
+                  // Prepare historical datasets with 'N.A.' as values when
+                  // the metrics do not have any data in the selected time range or
+                  // when 'latest value' metric is selected.
+                  if (metricData[key].success === false ||
+                    $scope.vis.params.metrics[index].type === 'latest') {
+                    metricData[key].historicalData = [];
+                    populateEmptyHistoricalDataValues(metricData[key].historicalData);
+                  }
+                }
+                // Using the colorLuminance function to make the time shift
+                // section background 15% more darker than the metric background color.
+                $scope.darkShade = colorLuminance(metricData[key].color, -0.15);
+              }
+            }
+          });
+
+          // Populate the total number of rows in $scope.vis.params.
+          $scope.vis.params.rowsCount = metricRowCount;
+
+          // prepend the table headers for the tabular
+          // view of BM.
+          if ($scope.vis.params.enableTableFormat) {
+            $scope.metricDatas.splice(0, 0, headersData);
+          }
+
+          // If we are printing the report and we have multiple aggregation,
+          // set the height of the table based on the number of rows
+          if ($scope.printReport && $scope.vis.params.aggregations.length &&
+              $scope.vis.params.enableTableFormat) {
+            fixBMVHeightForPrintReport($scope, metricRowCount, $element);
+          }
+        })
+          .catch(function (resp) {
+            $scope.data = [];
+            const err = new Error(resp.message);
+            err.stack = resp.stack;
+            $scope.metricDatas = undefined;
+            $scope.apiError = true;
+          });
         });
-    };
-
+      };
     // Once the payload is ready make the POST call to back end.
     makePostCall();
 

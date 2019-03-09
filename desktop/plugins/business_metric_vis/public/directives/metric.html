@@ -170,6 +170,31 @@ Time (input is assumed to be number of seconds):
       Description must be less than 220 characters
     </p>
   </div>
+  <div class="form-group bottom-space">
+    <label>
+      Add additional fields
+      <kbn-tooltip
+        text="Additional fields added here will be used in the alert configuration and not in this visualization"
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+    <searchable-multiselect
+      value-attr="name"
+      recipient-index="0"
+      ng-model = "metric.additionalFields"
+      selected-items="selectedFields"
+      all-items="allFields"
+      add-item="addAdditionalFields"
+      remove-item="removeAdditionalFields">
+    </searchable-multiselect>
+  </div>
   <div class="collapse-header-wrapper">
     <button
       aria-label="{{ opts.optionsEnabled ? 'Close' : 'Open' }}"
@@ -250,32 +275,32 @@ Time (input is assumed to be number of seconds):
       </p>
     </div>
 
-    <!-- Color schema config  starts-->
+    <!-- Threshold config  starts-->
     <div class="collapse-header-wrapper">
       <button
-        aria-label="{{ showColorSchemaOptions ? 'Close' : 'Open' }}"
-        ng-click="showColorSchemaOptions = !showColorSchemaOptions"
+        aria-label="{{ showThresholdOptions ? 'Close' : 'Open' }}"
+        ng-click="showThresholdOptions = !showThresholdOptions"
         type="button"
         class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
           <i
             aria-hidden="true"
-            ng-class="{ 'fa-caret-down': showColorSchemaOptions,
-            'fa-caret-right': !showColorSchemaOptions }"
+            ng-class="{ 'fa-caret-down': showThresholdOptions,
+            'fa-caret-right': !showThresholdOptions }"
             class="fa">
           </i>
       </button>
 
       <!-- title -->
       <span class="collapse-header">
-        Color Schema
+        Threshold
       </span>
     </div>
 
     <div
-      ng-if="showColorSchemaOptions">
+      ng-if="showThresholdOptions">
       <div class="form-group bottom-space">
         <label>
-          Enable color schema
+          Enable Threshold
           <kbn-tooltip text="Configure color indicators for this metric. It allows you to specify colors to be used. If metric doesn't fall under any range, it will use the default color." placement="right" append-to-body="1">
             <span>
               <i
@@ -288,18 +313,18 @@ Time (input is assumed to be number of seconds):
         <input
           type="checkbox"
           class="vudata-checkbox"
-          ng-model="opts.colorSchemaEnabled"
-          ng-change="opts.toggleColorSchema()"/>
+          ng-model="opts.thresholdEnabled"
+          ng-change="opts.toggleThreshold()"/>
       </div>
       <div
         class="form-group bottom-space"
-        ng-show="opts.colorSchemaEnabled">
-          <vudata-metric-color-schema
+        ng-show="opts.thresholdEnabled">
+          <vudata-metric-threshold
             metric-type="metric.type"
-            color-schema="metric.colorSchema"
+            Threshold="metric.threshold"
             index-fields="indexFields"
             field="opts.fieldObj">
-          </vudata-metric-color-schema>
+          </vudata-metric-Threshold>
       </div>
       <div
         class="form-group bottom-space">
@@ -321,7 +346,7 @@ Time (input is assumed to be number of seconds):
           ng-model="metric.bgColorEnabled"/>
       </div>
     </div>
-    <!-- Color schema config ends-->
+    <!-- Threshold config ends-->
   </div>
   <div class="form-group bottom-space">
     <label>

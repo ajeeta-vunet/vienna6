@@ -19,23 +19,30 @@ import { AlertConstants, createAlertEditUrl } from './alert_constants';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
-import { getTenantEmailGroups, getEmailGroupNameForDisplay } from 'ui/utils/vunet_tenant_email_groups';
+import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
+import { SavedObjectNotFound } from 'ui/errors';
+import previewMetricTemplate from './preview_metric.html';
+import previewMetricCtrl from './preview_metric.controller.js';
+import utils from '../../../console/public/src/utils';
+
+const Promise = require('bluebird');
 
 const url = chrome.getUrlBase();
+
+const defaultValue = {
+  id: '',
+  title: '',
+};
 
 uiRoutes
   .when(AlertConstants.CREATE_PATH, {
     template: alertTemplate,
     resolve: {
       indexPatternIds: function (Private) {
-        const savedObjectsClient = Private(SavedObjectsClientProvider);
-
-        return savedObjectsClient.find({
-          type: 'index-pattern',
-          fields: ['title'],
-          perPage: 10000
-        }).then(response => response.savedObjects);
-
+        return Promise.resolve(utils.getSavedObject('index-pattern',['title'],10000, Private))
+      },
+      vuMetricList: function (Private) {
+        return Promise.resolve(utils.getVisualizationObjectByType('visualization',[],10000, 'business_metric', Private))
       },
       alertcfg: function (savedAlerts) {
         return savedAlerts.get();
@@ -55,13 +62,10 @@ uiRoutes
     template: alertTemplate,
     resolve: {
       indexPatternIds: function (Private) {
-        const savedObjectsClient = Private(SavedObjectsClientProvider);
-
-        return savedObjectsClient.find({
-          type: 'index-pattern',
-          fields: ['title'],
-          perPage: 10000
-        }).then(response => response.savedObjects);
+        return Promise.resolve(utils.getSavedObject('index-pattern',['title'],10000, Private))
+      },
+      vuMetricList: function (Private) {
+        return Promise.resolve(utils.getVisualizationObjectByType('visualization',[],10000, 'business_metric', Private))
       },
       alertcfg: function (savedAlerts, $route, courier) {
         return savedAlerts.get($route.current.params.id)
@@ -104,24 +108,36 @@ function alertAppEditor($scope,
   $filter,
   $http,
   kbnUrl,
+  savedVisualizations,
   $modal) {
   const notify = new Notifier({
     location: 'Alert'
   });
 
+  // When the preview button is clicked, this will
+  // show all the metrics for the corresponding BMV
+  // in a modal pop-up.
+  // metrics - All the metrics for the selected BMV.
+  $scope.previewMetric = function (metrics) {
+    $modal.open({
+      animation: true,
+      template: previewMetricTemplate,
+      controller: previewMetricCtrl,
+      resolve: {
+        metricData : function () {
+          return metrics;
+        }
+      }
+    });
+  };
+
+  $scope.vuMetricList = $route.current.locals.vuMetricList;
   const alertcfg = $scope.alertcfg = $route.current.locals.alertcfg;
   let isNewAlert = $route.current.locals.isNewAlert;
   logUserOperation($http, 'GET', 'alert', alertcfg.title, alertcfg.id);
   const loadedAlertId = $route.current.locals.loadedAlertId;
 
-
-  $scope.indexPatternList = $route.current.locals.indexPatternIds.map(pattern => {
-    const id = pattern.id;
-    return {
-      id: id,
-      title: pattern.get('title'),
-    };
-  });
+  $scope.indexPatternList = $route.current.locals.indexPatternIds;
 
   $scope.selectEmailGroupList = [];
 
@@ -190,6 +206,9 @@ function alertAppEditor($scope,
     };
 
     const defaultOperRuleObj = {
+      'outerRuleIndex': 1,
+      'innerRuleIndex': 1,
+      'metrics': [],
       'indexFields': [],
       'metricIsSelected': false,
       'sumOrAverageIsSelected': false,
@@ -200,8 +219,8 @@ function alertAppEditor($scope,
       'groupByField': [],
       'additionalField': [],
     };
-
-    _.each(ruleList, function (alertcfgRule) {
+    // Iterate on rule list and for each rule populate the operRuleList..
+    Promise.map(ruleList, function (alertcfgRule) {
       //The following code takes care of populating the 'groupByField'
       // and 'selectedField' form when any alert is loaded
       // we are using _.clonedeep so that the groupbyField under
@@ -230,6 +249,7 @@ function alertAppEditor($scope,
         alertcfgRule.ruleTypeDuration = 5;
         alertcfgRule.ruleTypeDurationType = 'minute';
       }
+
       newRuleObj.ruleType = alertcfgRule.ruleType;
       newRuleObj.ruleNameAlias = alertcfgRule.ruleNameAlias;
       newRuleObj.informationCollector = alertcfgRule.informationCollector;
@@ -252,9 +272,16 @@ function alertAppEditor($scope,
       newRuleObj.ruleTypeDurationType = alertcfgRule.ruleTypeDurationType;
       newRuleObj.alertFilter = alertcfgRule.alertFilter;
 
+      // Insert this into the ruleList.. We do this here so that rules are inserted
+      // into the rule and operRule list in order..
+      $scope.ruleList.push(newRuleObj);
+      $scope.operRuleList.push(newOperRuleObj);
 
-      if (alertcfgRule.selectedIndex !== '') {
-        courier.indexPatterns.get(alertcfgRule.selectedIndex.id).then(function (currentIndex) {
+      // We need to wait for indexPattern if we use normal rule..
+      if (alertcfgRule.selectedIndex.id !== '') {
+
+        // We return a promise here..
+        return courier.indexPatterns.get(alertcfgRule.selectedIndex.id).then(function (currentIndex) {
           let fields = currentIndex.fields.raw;
           fields = $filter('filter')(fields, { aggregatable: true });
           newOperRuleObj.indexFields = fields.slice(0);
@@ -262,6 +289,9 @@ function alertAppEditor($scope,
             if (alertcfgRule.selectedField) {
               if (alertcfgRule.selectedField === field.name) {
                 newOperRuleObj.selectedField = field;
+                newRuleObj.selectedMetric = defaultValue;
+                newOperRuleObj.metrics = [];
+                newRuleObj.vuMetricsBased = alertcfgRule.vuMetricsBased;
               }
             }
           });
@@ -305,12 +335,53 @@ function alertAppEditor($scope,
           }
           // Using return will not help here ,
           // As _each will continue to execute without breaking at any point
-          $scope.ruleList.push(newRuleObj);
-          $scope.operRuleList.push(newOperRuleObj);
         });
-      }
-    });
+      } else {
+        // We need to wait for Business metric if alert subrule uses a BM Vis..
+        // Check whether BMV exists. This check needs for existing alerts to
+        // ensure that backward compatibility is working fine.
+        if (alertcfgRule.selectedMetric !== undefined &&
+            alertcfgRule.selectedMetric.id !== '') {
+          newRuleObj.selectedIndex = defaultValue;
+          newRuleObj.vuMetricsBased = alertcfgRule.vuMetricsBased;
+          newRuleObj.selectedMetric = alertcfgRule.selectedMetric;
 
+          // We return a promise here..
+          return savedVisualizations.get(
+            alertcfgRule.selectedMetric.id).then(function (savedVisualization) {
+            // Go thourgh each BMV and find the BMV which is configured in the alert.
+            _.each($scope.vuMetricList, function (vuMetric) {
+              if (vuMetric.id === alertcfgRule.selectedMetric.id) {
+                newRuleObj.selectedMetric = vuMetric;
+              }
+            });
+            // Find the BMV used in the alert which will be used for preview.
+            newOperRuleObj.vis = savedVisualization;
+            // After finding the BMV, get all the metrics for that BMV which
+            // will be used for tooltip.
+            newOperRuleObj.metrics = savedVisualization.visState.params.metrics;
+          })
+          .catch((error) => {
+            if (error instanceof SavedObjectNotFound) {
+              notify.error(
+                'Problem in loading this alert... The BMV ' + alertcfgRule.selectedMetric.title +
+                ' used in the alert rule "' + newRuleObj.ruleNameAlias + '" has been already deleted.' +
+                'Please re-configure this alert');
+            } else {
+              // Display the error message to the user.
+              notify.error(error);
+              throw error;
+            }
+          });
+        } else {
+          // Not sure what kind of configuration this is..
+          return Promise.resolve(false);
+        }
+      }
+    }).then(function() {
+        // Once all promises are resolved.. we resolve the rule numbers..
+        updateVisMetricForAlertRule();
+    });
     $scope.severity = alertcfg.severity;
     $scope.summary = alertcfg.summary;
     $scope.description = alertcfg.description;
@@ -331,6 +402,7 @@ function alertAppEditor($scope,
         $scope.selectEmailGroupList.push({ name: emailGroups[index] });
       }
     }
+    $scope.advancedConfig = alertcfg.advancedConfiguration;
     $scope.enableRunBookAutomation = alertcfg.enable_runbook_automation;
     $scope.runBookScript = alertcfg.runbook_script;
     $scope.enableAnsiblePlaybook = alertcfg.enable_ansible_playbook;
@@ -347,6 +419,9 @@ function alertAppEditor($scope,
     $scope.advancedConfig = alertcfg.advancedConfiguration;
 
     $scope.$on('$destroy', alertcfg.destroy);
+
+    updateVisMetricForAlertRule();
+
   } else {
     $scope.ruleList = [{
       'selectedIndex': '',
@@ -364,8 +439,13 @@ function alertAppEditor($scope,
       'additionalField': [],
       'alertFilter': '',
       'enableComparisionFields': false,
+      'vuMetricsBased': false,
+      'selectedMetric': defaultValue,
     }];
     $scope.operRuleList = [{
+      'outerRuleIndex': 1,
+      'innerRuleIndex': 1,
+      'metrics': [],
       'indexFields': [],
       'metricIsSelected': true,
       'sumOrAverageIsSelected': false,
@@ -376,7 +456,6 @@ function alertAppEditor($scope,
       'groupByField': [{ data: '' }],
       'additionalField': [{ data: '' }],
     }];
-
     // set the enable alert checkbox to true by default
     $scope.enableAlert = true;
 
@@ -398,6 +477,36 @@ function alertAppEditor($scope,
     $scope.evalCriteria = {};
   }
 
+  // Before this step, both ruleList and operruleList are already available.
+  // Go through each alert rule and update the visualization, metrics,
+  // inner rule and outer rule index in the operRuleList.
+  function updateVisMetricForAlertRule () {
+    let innerRuleIndex = 1;
+    for (let index = 0; index < $scope.operRuleList.length; index++) {
+      if ($scope.operRuleList[index].metrics.length > 0) {
+        // If the previous BMV based alert rule contains 4 metrics then it
+        // should be R1-R4. The current BMV based alert should start from R5.
+        // If the current rule contains 3 metrics then it should be R5-R7. If
+        // we don't reduce by 1 then it will become R15-R8(R5+3=-R8) which is
+        // wrong.
+        $scope.operRuleList[index].innerRuleIndex = innerRuleIndex;
+        $scope.operRuleList[index].outerRuleIndex =
+          innerRuleIndex + $scope.operRuleList[index].metrics.length - 1;
+        innerRuleIndex = $scope.operRuleList[index].outerRuleIndex + 1;
+      } else {
+        $scope.operRuleList[index].innerRuleIndex = innerRuleIndex;
+        $scope.operRuleList[index].outerRuleIndex = innerRuleIndex;
+        innerRuleIndex = $scope.operRuleList[index].innerRuleIndex + 1;
+      }
+    }
+    // For some reasons, updating the scope variables are not rendering the
+    // view.. so we are using this to force a re-render
+    $scope.$evalAsync();
+  }
+
+
+
+
   // This function is to validate if all the information collector
   // rules are placed at the end.
   function isInformationCollectorNotAtTheEnd() {
@@ -416,6 +525,7 @@ function alertAppEditor($scope,
 
   const stateDefaults = {
     title: alertcfg.title,
+    query: {'query':'*', language: 'lucene'}
   };
 
   const $state = $scope.state = new AppState(stateDefaults);
@@ -571,7 +681,7 @@ function alertAppEditor($scope,
     alertcfg.alertByTicket = $scope.alertByTicket;
     alertcfg.alertByEmail = $scope.alertByEmail;
     alertcfg.alertEmailId = $scope.alertEmailId;
-    alertcfg.alertEmailGroup = getEmailGroupNameForDisplay($scope.selectEmailGroupList);
+    alertcfg.alertEmailGroup = utils.getValueForDisplay($scope.selectEmailGroupList);
     alertcfg.enable_runbook_automation = $scope.enableRunBookAutomation;
     alertcfg.runbook_script = $scope.runBookScript;
     alertcfg.enable_ansible_playbook = $scope.enableAnsiblePlaybook;
@@ -616,6 +726,7 @@ function alertAppEditor($scope,
     alertcfg.activeAlertCheck = $scope.activeAlertCheck;
     alertcfg.weekdays = angular.toJson($scope.weekdays);
     alertcfg.advancedConfiguration = $scope.advancedConfig;
+
     // if an alert is loaded and saved as another
     // alert, It is a new alert. Hence set the flag to true.
     isNewAlert = false;

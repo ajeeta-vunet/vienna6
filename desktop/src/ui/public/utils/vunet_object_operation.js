@@ -26,6 +26,16 @@ export function updateVunetObjectOperation(selectedItems, objType, $http, action
       data = {
         'id': indexId, 'title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
     }
+    else if (objType === 'search') {
+      url = '/vuSmartMaps/api/search_status/';
+      data = {
+        'id': item.id, 'title': item.title, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
+    }
+    else if (objType === 'visualization') {
+      url = '/vuSmartMaps/api/visualization_status/';
+    data = {
+        'id': item.id, 'title': item.title, 'type': item.visState.type, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
+    }
 
     const httpResult = $http({
       method: 'POST',

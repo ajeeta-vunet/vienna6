@@ -1,5 +1,5 @@
 <div class="container-fluid alert-body-container" role="main">
-  <form name ="alertcfgForm" >
+  <form name ="alertcfgForm">
     <h4 class="step-title">
       <span class="step-indicator">1</span>
       What's the alert about ?
@@ -126,8 +126,11 @@
         <div class="alert-section">
           <div class="row bottom-space">
             <div class="rule-number-wrapper col-md-6">
-              <div class="alert-condition rule-number">
-                R{{$index + 1}}
+              <div class="alert-condition rule-number" ng-if="(operRuleList[$index].metrics && operRuleList[$index].metrics.length===1) || !operRuleList[$index].metrics || operRuleList[$index].metrics.length === 0">
+                R{{operRuleList[$index].innerRuleIndex}}
+              </div>
+              <div class="alert-condition rule-number" ng-if="operRuleList[$index].metrics && operRuleList[$index].metrics.length>1">
+                R{{operRuleList[$index].innerRuleIndex}} - R {{operRuleList[$index].outerRuleIndex}}
               </div>
               <p class="alert-component-label alert-condition">
                 Label
@@ -167,8 +170,30 @@
               </div>
             </div>
           </div> <!-- row botoom-space -->
-          <div class="alert-component-wrapper">
-            <div class="row bottom-space">
+          <div class="alert-component-wrapper"  ng-init="parentIndex = $index">
+            <div class="form-group bottom-space">
+              <label>
+                Based on Business Metric
+                <kbn-tooltip
+                  text="Create alert condition based on Business Metric"
+                  placement="bottom"
+                  append-to-body="1">
+                  <span>
+                    <i
+                      class="fa fa-question-circle"
+                      aria-hidden="true">
+                    </i>
+                  </span>
+                </kbn-tooltip>
+              </label>
+              <input
+                type="checkbox"
+                class="vudata-checkbox"
+                ng-model="rule.vuMetricsBased"
+                ng-checked="rule.vuMetricsBased"
+                ng-change="showVUMetric($index)"/>
+            </div>
+            <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
               <p class="alert-component-label alert-condition">
                 Check data source
               </p>
@@ -178,10 +203,39 @@
                 ng-options="option.title for option in indexPatternList"
                 ng-model="rule.selectedIndex"
                 ng-class="{error: alertcfgForm.rule.selectedIndex.$error.required}"
-                ng-change="setIndexPattern(rule, $index)" required>
+                ng-change="setIndexPattern(rule.selectedIndex.id, $index)" required>
               </select>
             </div>
-            <div class="row bottom-space">
+            <div class="row bottom-space" ng-if="rule.vuMetricsBased">
+              <p class="alert-component-label alert-condition">
+                Check Business Metric
+              </p>
+              <select
+                class="alert-select alert-condition"
+                name="selectedMetric"
+                ng-options="option.title for option in vuMetricList"
+                ng-model="rule.selectedMetric"
+                ng-class="{error: alertcfgForm.rule.selectedMetric.$error.required}"
+                ng-change="setVuMetric(rule, $index)" required>
+              </select>
+              <a data-ng-click="previewMetric(operRuleList[$index].vis)" href="" ng-class="{'alert-disable-preview': !operRuleList[$index].vis}"><span class="fa fa-eye"></span>Preview</a>
+            </div>
+            <div class="row bottom-space" data-ng-repeat="metric in operRuleList[$index].metrics track by $index" ng-if="(rule.selectedMetric && rule.vuMetricsBased)">
+              <label>
+                R{{operRuleList[parentIndex].innerRuleIndex + $index}} - {{ metric.label }}
+                <kbn-tooltip
+                  text=" Index name - {{ metric.index.title }} , Saved Search - {{ metric.savedSearch.title }} , Metric type - {{ metric.type }} ,Metric field - {{ metric.field }}"
+                  placement="right">
+                  <span>
+                    <i
+                      class="fa fa-question-circle"
+                      aria-hidden="true">
+                    </i>
+                  </span>
+                </kbn-tooltip>
+              </label>
+            </div>
+            <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
               <div class="alert-condition metric-content">
                 <div class="alert-condition alert-component-label">
                   Metric:
@@ -261,7 +315,7 @@
                 </div>
               </div>
             </div>
-            <div class="row bottom-space">
+            <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
               <div class="alert-component-label alert-condition">
                 Add a threshold
                 <kbn-tooltip
@@ -279,8 +333,8 @@
               </div>
             </div>
             <div class="row bottom-space">
-              <div ng-if="operRuleList[$index].metricIsSelected">
-                <div ng-if="rule.enableComparisionFields">
+              <div ng-if="rule.enableComparisionFields">
+                <div ng-if="rule.enableComparisionFields && !rule.vuMetricsBased">
                   <p class="alert-condition alert-component-label">
                     Alert when metric is
                   </p>
@@ -323,14 +377,14 @@
                     ng-class="{error: alertcfgForm.rule.compareValue.$error.required}"
                     ng-required="rule.enableComparisionFields">
                 </div>
-                <div ng-if="!rule.enableComparisionFields">
-                  <div ng-if="!operRuleList[$index].allowStringInCompareValue">
+                <div ng-if="!rule.enableComparisionFields || rule.vuMetricsBased">
+                  <div ng-if="!operRuleList[$index].allowStringInCompareValue || rule.vuMetricsBased">
                     <div class="alert-condition alert-component-label">
                       Get metric
                     </div>
                   </div>
                 </div>
-                <div ng-if="!operRuleList[$index].allowStringInCompareValue">
+                <div ng-if="!operRuleList[$index].allowStringInCompareValue || rule.vuMetricsBased">
                   <div class="alert-condition alert-component-label">
                     in last
                   </div>
@@ -370,7 +424,7 @@
                 </div>
               </div>
             </div>
-            <div class="row bottom-space">
+            <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
               <div class="col-md-5 zero-padding">
                 <p class="alert-condition alert-component-label">
                   Alert separately for each
@@ -474,7 +528,7 @@
                 </div>
               </div>
             </div> <!-- row bottom-space -->
-            <div class="row bottom-space">
+            <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
               <p class="alert-component-label alert-condition">
                 Filter
                 <kbn-tooltip

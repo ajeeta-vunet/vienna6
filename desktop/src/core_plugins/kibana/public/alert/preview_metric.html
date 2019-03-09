@@ -1,0 +1,22 @@
+<!-- BMV modal poppup. This is will be shown in the modal when the prview button is clicked -->
+<div class="metric-modal-content">
+  <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">{{ savedObj.vis.title }}</h3>
+  </div>
+  <div class="modal-body" id="modal-body">
+    <visualize
+      vis="savedObj.vis"
+      saved-obj="savedObj"
+      search-source="savedObj.searchSource"
+      show-spy-panel="chrome.getVisible()"
+      element="$el"
+      ui-state=""
+      print-report=""
+      element-height="500"
+      element-width="1200">
+    </visualize>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Close</button>
+  </div>
+</div>

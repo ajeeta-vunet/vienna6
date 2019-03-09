@@ -259,11 +259,17 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
     savedVis.visState = $state.vis;
     savedVis.uiStateJSON = angular.toJson($scope.uiState.getChanges());
     savedVis.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
+    const updateOperation = require('ui/utils/vunet_object_operation');
 
     savedVis.save()
       .then(function (id) {
         stateMonitor.setInitialState($state.toJSON());
         $scope.kbnTopNav.close('save');
+
+        // If it's a new BMV then we don't need to notify DAQ to update the alert rule.
+        if (savedVis.visState.type === 'business_metric' && $route.current.params.id) {
+          updateOperation.updateVunetObjectOperation([savedVis], 'visualization', $http, 'modify', chrome);
+        }
 
         if (id) {
           logUserOperation($http, 'POST', 'visualization', savedVis.title, savedVis.id);

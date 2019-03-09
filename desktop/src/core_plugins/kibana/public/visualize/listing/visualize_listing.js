@@ -10,7 +10,7 @@ app.directive('visualizeListingTable', function (reactDirective) {
   return reactDirective(VisualizeListingTable);
 });
 
-export function VisualizeListingController($injector) {
+export function VisualizeListingController($injector, $http, chrome) {
   const Notifier = $injector.get('Notifier');
   const Private = $injector.get('Private');
   const timefilter = $injector.get('timefilter');
@@ -34,8 +34,16 @@ export function VisualizeListingController($injector) {
       });
   };
 
-  this.deleteSelectedItems = function deleteSelectedItems(selectedIds) {
-    return visualizationService.delete(selectedIds)
+  this.deleteSelectedItems = function deleteSelectedItems(selectedVisualizaions) {
+    return visualizationService.delete(selectedVisualizaions)
+      .then(function () {
+        _.each(selectedVisualizaions, function (selectedVis) {
+          if (selectedVis.visState.type === 'business_metric') {
+            const updateOperation = require('ui/utils/vunet_object_operation');
+            updateOperation.updateVunetObjectOperation([selectedId], 'visualization', $http, 'delete', chrome);
+          }
+        })
+      })
       .catch(error => notify.error(error));
   };
 }

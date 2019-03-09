@@ -26,6 +26,7 @@ import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
+import utils from '../../../console/public/src/utils';
 
 require('ui/directives/searchable_multiselect.js');
 
@@ -780,7 +781,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     recipientsList = JSON.parse(JSON.stringify($scope.recipientsList));
     _.each(recipientsList, function (recipient) {
       const selectEmailGroupList = recipient.selectEmailGroupList;
-      recipient.selectEmailGroupList = chrome.getValueForDisplay(selectEmailGroupList);
+      recipient.selectEmailGroupList = utils.getValueForDisplay(selectEmailGroupList);
     });
     if (recipientsList.length && recipientsList[0].role === '') {
       // Use only the configured recipients. If the role of first

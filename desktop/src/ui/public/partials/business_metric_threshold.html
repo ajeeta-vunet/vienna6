@@ -1,0 +1,264 @@
+<div>
+  <form class="vudata">
+    <div>
+       <label>
+        Thresholds
+        <kbn-tooltip
+          text="Configure font color or background color for this metric. If metric doesn't fall under any range specified, it will use the default color."
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+       </label>
+    </div>
+    <div class="vudata-color-schema">
+      <table class="color-schema-table">
+        <thead>
+          <tr>
+            <th ng-show="showMinMax">Interval</th>
+            <th ng-show="showMatch">Match</th>
+            <th ng-show="showMinMax">Min</th>
+            <th ng-show="showMinMax">Max</th>
+            <th ng-show="showMinMax">Alert</th>
+            <th>Color</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="colorRange in threshold">
+            <td
+              class="vudata-color-values"
+              ng-show="showMinMax">
+              {{colorRange.interval}}{{colorRange.intervalUnit}}
+            </td>
+            <td
+              ng-show="showMatch"
+              class="vudata-color-values">
+              {{colorRange.match}}
+            </td>
+            <td
+              class="vudata-color-values"
+              ng-show="showMinMax">
+              {{colorRange.min}}</td>
+            <td
+              class="vudata-color-values"
+              ng-show="showMinMax">
+              {{colorRange.max}}
+            </td>
+            <td
+              class="vudata-alert-state"
+              ng-show="showMinMax">
+              {{colorRange.severity}}
+            </td>
+            <td class="vudata-color-values">
+              {{colorRange.color}}
+            </td>
+            <td>
+              <kbn-tooltip
+                text="Edit this threshold"
+                placement="bottom"
+                append-to-body="1">
+                <a
+                  href=""
+                  ng-click="editRange(colorRange, $index)"
+                  class="vudata-color-edit"
+                  aria-label="Edit">
+                  <i
+                    aria-hidden="true"
+                   class="fa fa-pencil">
+                  </i>
+                </a>
+              </kbn-tooltip>
+              <kbn-tooltip
+                text="Delete this threshold"
+                placement="bottom"
+                append-to-body="1">
+                <a
+                  href=""
+                  ng-click="deleteRange($index)"
+                  class="vudata-color-delete"
+                  aria-label="Delete">
+                  <i
+                    aria-hidden="true"
+                    class="fa fa-trash-o">
+                  </i>
+                </a>
+              </kbn-tooltip>
+            </td>
+          </tr>
+          <tr ng-show="threshold.length === 0">
+            <td colspan="4">
+              There are no color ranges to show
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+
+      <div
+        class="color-range-form"
+        ng-show="addingThreshold || (editIndex >= 0)">
+        <div>
+          <label>Interval
+            <kbn-tooltip
+              text="Select the time interval based on which you want to decide the range for color indicators. If metric selected is not 'Average', varying this time interval or global time selector will result in scaling the range for color indicators linearly. &#10; For example : for 'Count' metric, if range for color green is 0-100 with interval selected as 1 hour and if each row in the output is for 2 hour interval, color for a cell will be green if the value is between 0-200."
+              placement="right"
+              append-to-body="1">
+              <i class="fa fa-question-circle"></i>
+            </kbn-tooltip>
+          </label>
+          <input
+            type="checkbox"
+            class="vudata-checkbox"
+            ng-model="intervalEnabled"
+            ng-change="toggleInterval()"/>
+          <div
+            ng-show="intervalEnabled"
+            class="flex-container">
+            <input
+            type="number"
+            ng-model="interval"
+            ng-required="intervalEnabled"
+            class="form-control"/>
+            <select
+              ng-model="intervalUnit"
+              ng-required="intervalEnabled"
+              class="form-control">
+              <option value=""></option>
+              <option value="s">Second</option>
+              <option value="m">Minute</option>
+              <option value="h">Hour</option>
+              <option value="d">Day</option>
+              <option value="w">Week</option>
+              <option value="M">Month</option>
+              <option value="y">Year</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+        </div>
+        <br/>
+        <div>
+          <label>Color</label>
+          <input
+            colorpicker
+            colorpicker-parent="true"
+            type="text"
+            ng-model="color"
+            class="form-control"/>
+          <div class="error">{{colorError}}</div>
+          <br/>
+        </div>
+        <br/>
+        <div
+          class="string-match"
+          ng-show="showMatch">
+          <label>Match</label>
+          <input
+            type="string"
+            ng-model="match"
+            class="form-control"/>
+          <div
+            class="table-color-range-error">
+            {{matchError}}
+          </div>
+          <br/>
+        </div>
+        <div
+          class="range-compare"
+          ng-show="showMinMax">
+          <label class="vudata-color-label">Min</label>
+          <input
+            type="number"
+            ng-model="min"
+            class="form-control"/>
+          <div class="error">{{minError}}</div>
+          <br/>
+          <label class="vudat-color-label">Max</label>
+          <input
+            type="number"
+            ng-model="max"
+            class="form-control"/>
+          <div class="error">{{maxError}}</div>
+          <br/>
+        </div>
+        <div>
+          <label class="vudata-color-label">Alert</label>
+          <select
+            class="alert-select"
+            ng-model="severity"
+            name="severity"
+            ng-class="{error:alertcfgForm.severity.$error.required}"
+            required>
+            <option value="None">
+              None
+            </option>
+            <option value="information">
+              Information
+            </option>
+            <option value="warning">
+              Warning
+            </option>
+            <option value="error">
+              Error
+            </option>
+            <option value="critical">
+              Critical
+            </option>
+          </select>
+        </div>
+        <div
+          class="table-color-range-error"
+          ng-show="field && !isNumberField() && !isStringField()">
+          Unsupported type {{field.type}}
+        </div>
+        <div
+          ng-hide="editIndex >= 0"
+          class="row">
+          <div class="col-xs-6">
+            <input
+              type="button"
+              value="Add range"
+              ng-click="addRange()"
+              class="form-control vudata-color-add"/>
+          </div>
+          <div class="col-xs-6">
+            <input
+              type="button"
+              value="Cancel"
+              ng-click="cancelEdit()"
+              class="form-control"/>
+          </div>
+        </div>
+        <div
+          ng-show="editIndex >= 0"
+          class="row">
+          <div class="col-xs-6">
+            <input
+              type="button"
+              value="Update range"
+              ng-click="updateRange()"
+              class="form-control"/>
+          </div>
+          <div class="col-xs-6">
+            <input
+              type="button"
+              value="Cancel"
+              ng-click="cancelEdit()"
+              class="form-control"/>
+          </div>
+        </div>
+      </div>
+      <div class="vis-editor-agg-wide-btn">
+        <button
+          class="kuiButton kuiButton--secondary kuiButton--small"
+          ng-click="addThreshold()">
+          Add Threshold
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

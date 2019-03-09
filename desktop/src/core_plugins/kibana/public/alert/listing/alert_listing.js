@@ -18,7 +18,7 @@ export function AlertListingController($injector, $scope, $location, $http) {
   const config = $injector.get('config');
   //const alertConfig = $injector.get('alertConfig');
 
-  timefilter.enabled = false;
+  timefilter.enabled = true;
 
   // Check with chrome if the creation is allowed for this user or not
   // Set whether the current logged in user be allowed to create a new

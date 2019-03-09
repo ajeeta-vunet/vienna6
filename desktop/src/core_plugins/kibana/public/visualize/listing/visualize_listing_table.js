@@ -202,7 +202,18 @@ export class VisualizeListingTable extends Component {
   };
 
   deleteSelectedItems = () => {
-    this.props.deleteSelectedItems(this.state.selectedRowIds)
+    const items = this.items;
+    let selectedVis;
+    let deletedObjs = [];
+
+    _.each(this.state.selectedRowIds, function (selectedRowId) {
+      selectedVis = items.filter(function (item) {
+        return item.id === selectedRowId;
+      });
+      deletedObjs.push({id: selectedRowId, title: selectedVis[0].title, visState:{type: selectedVis[0].type.name}});
+    });
+
+    this.props.deleteSelectedItems(deletedObjs)
       .then(() => this.fetchItems(this.state.filter))
       .catch(() => {})
       .then(() => this.deselectAll())

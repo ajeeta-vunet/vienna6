@@ -14,12 +14,12 @@
     <li ng-repeat="item in allItems  | orderBy:valueAttr track by $index" ng-hide="searchQuery.length && item[displayAttr].toLowerCase().indexOf(searchQuery.toLowerCase()) < 0">
       <label class="checkbox clickable" ng-click="updateSelectedItems(item, $index)" ng-class="{'item-selected': isItemSelected(item[valueAttr]) }">
         <div class="row">
-          <div class="col-sm-4">
+          <div ng-class="{'col-sm-12': displayAttr === undefined, 'col-sm-4': displayAttr !== undefined}">
             <span class="fa fa-circle-thin clickable" ng-show="!isItemSelected(item[valueAttr])"></span>
             <span class="fa fa-check-circle clickable" ng-show="isItemSelected(item[valueAttr])"></span>
             {{ item[valueAttr] }}
           </div>
-          <div ng-if="displayAttr != ''" class="col-sm-8">
+          <div ng-if="item[displayAttr] != ''" ng-class="{'col-sm-8': item[displayAttr] !== 'undefined'}">
             {{ item[displayAttr] }}
           </div>
         </div>

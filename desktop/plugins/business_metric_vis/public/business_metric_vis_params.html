@@ -102,7 +102,53 @@
       </div>
     
       <div ng-show="operMetricsList[$index].expanded">
-        <div class="form-group">
+        <div class="form-group bottom-space">
+          <label>
+            Build Business Metric based on saved search
+            <kbn-tooltip
+              text="Build Business Metric using your saved search"
+              placement="bottom"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <input
+            type="checkbox"
+            class="vudata-checkbox"
+            ng-model="metric.showSavedSearch"
+            ng-checked="metric.showSavedSearch"
+            ng-change="setDefaultSavedSearch($index)" />
+        </div>
+        <div class="form-group" ng-if='metric.showSavedSearch'>
+          <label>
+            Saved search
+            <kbn-tooltip
+              text="Select a saved search to display business metric visualization"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <select
+            class="form-control"
+            name="search"
+            ng-options="option as option.title for option in savedSearchIds track by option.id"
+            ng-model="metric.savedSearch"
+            ng-change="setSavedSearch($index)"
+            required>
+          </select>
+        </div>
+        <div class="form-group" ng-if='!metric.showSavedSearch'>
           <label>
             Index
             <kbn-tooltip
@@ -130,7 +176,10 @@
           <vudata-metric
             metric="vis.params.metrics[$index]"
             metric-length="vis.params.metrics.length"
-            index-fields="operMetricsList[$index].indexFields">
+            index-fields="operMetricsList[$index].indexFields"
+            all-fields="operMetricsList[$index].allFields"
+            additional-fields="operMetricsList[$index].additionalFields"
+            selected-fields="operMetricsList[$index].selectedFields">
           </vudata-metric>
         </div>
       </div>

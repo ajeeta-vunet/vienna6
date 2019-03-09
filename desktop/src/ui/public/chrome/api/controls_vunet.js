@@ -187,5 +187,4 @@ export default function (chrome, internals) {
     const url = '/' + BASE_URL + '/' + internals.tenantId;
     return url;
   };
-
 }

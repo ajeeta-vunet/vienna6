@@ -1,5 +1,7 @@
+import utils from '../../../../src/core_plugins/console/public/src/utils';
 const _ = require('lodash');
 require('ui/courier');
+require('ui/directives/searchable_multiselect');
 const app = require('ui/modules').get('kibana/business_metric_vis', ['kibana', 'kibana/courier']);
 
 app.directive('vudataMetric', function () {
@@ -8,17 +10,32 @@ app.directive('vudataMetric', function () {
     scope: {
       metric: '=',
       metricLength: '=',
-      indexFields: '='
+      indexFields: '=',
+      allFields: '=',
+      additionalFields: '=',
+      addAdditionalFields: '&',
+      removeAdditionalFields: '&'
     },
     template: require('plugins/business_metric_vis/directives/metric.html'),
     link: function (scope) {
 
+      scope.selectedFields = [];
+
+      // The selected fields in the "Additional Fields" should be in dict format like {"name" : "host"}
+      // But we are storing the selected fields as "host" in saved object. So we need to build the dict format
+      // using the value fetched from the saved object.
+      if (scope.metric.additionalFields !== '' && scope.metric.additionalFields !== undefined) {
+      const additionalFields = scope.metric.additionalFields.split(',');
+        for (let index = 0; index < additionalFields.length; index++) {
+          scope.selectedFields.push({ name: additionalFields[index] });
+        }
+      }
       // Add all the flags and functions required
       // to hide / show input components when user interacts
       // with the side bar for business metric visualization.
       scope.opts = {
         optionsEnabled: false,
-        colorSchemaEnabled: false,
+        thresholdEnabled: false,
         showFields: false,
         showStringFields: false,
 
@@ -36,33 +53,32 @@ app.directive('vudataMetric', function () {
           });
 
           // If the metric field of a particular field type is changed to
-          // another field type, We reset the color schema. This is done to store
+          // another field type, We reset the threshold. This is done to store
           // color configurations only for a particular field type.
           // A configuration for a 'number' field has (interval, min, max, color).
           // A configuration for a 'string' field has (match, color).
-          if (scope.metric.colorSchema && scope.metric.colorSchema.length > 0) {
+          if (scope.metric.threshold && scope.metric.threshold.length > 0) {
             if (scope.opts.fieldObj.type === 'string' &&
                   scope.metric.type !== 'cardinality' &&
-                  scope.metric.colorSchema[0].max !== '') {
-              scope.opts.colorSchemaEnabled = false;
+                  scope.metric.threshold[0].max !== '') {
+              scope.opts.thresholdEnabled = false;
             }
             if (scope.opts.fieldObj.type === 'number' &&
-                  scope.metric.colorSchema[0].match !== '') {
-              scope.opts.colorSchemaEnabled = false;
+                  scope.metric.threshold[0].match !== '') {
+              scope.opts.thresholdEnabled = false;
             }
           }
         },
 
         // This function is used to enable or
-        // disable color schema configurations.
-        toggleColorSchema: function () {
-          scope.metric.colorSchema = [];
+        // disable threshold configurations.
+        toggleThreshold: function () {
+          scope.metric.threshold = [];
         },
 
         // This function is used to hide or show field
         // and field types based on metric type selected.
         updateMetricType: function () {
-
           // display metric field when metric type is
           // not count.
           if ((scope.metric.type !== 'count') && (scope.metric.type !== 'expression')) {
@@ -80,19 +96,38 @@ app.directive('vudataMetric', function () {
             scope.metric.field = '';
           }
 
-          // Reset the color schema fields if 'match'
+          // selectedFields : Only the selected fields in dict format from the add additional fields
+          // additionalFields : Only the selected fields with comma separated values
+          // like [system.memory.used,system.memory.total] from the add additional fields
+          scope.addAdditionalFields = function (item) {
+            scope.selectedFields.push({ name: item.name });
+            scope.metric.additionalFields = utils.getValueForDisplay(scope.selectedFields);
+          };
+
+          // Removes the selected field from selectedFields and additionalFields.
+          scope.removeAdditionalFields = function (item) {
+            scope.selectedFields.splice(item.index, 1);
+            scope.metric.additionalFields = utils.getValueForDisplay(scope.selectedFields);
+          };
+
+          // Reset the threshold fields if 'match'
           // property exists when metric type is changed
           // to cardinality or count.
           if (scope.metric.type === 'cardinality' ||
             scope.metric.type === 'count') {
 
-            // reset the color schema if 'match' field is
+            // reset the threshold if 'match' field is
             // configured. Unique count always needs 'min'
             // and 'max' fields.
-            if (scope.metric.colorSchema &&
-                scope.metric.colorSchema[0].match !== '') {
-              scope.opts.colorSchemaEnabled = false;
+            if (scope.metric.threshold &&
+                scope.metric.threshold[0].match !== '') {
+              scope.opts.thresholdEnabled = false;
             }
+          }
+
+          if ((scope.metric.filter && scope.metric.filter.length !== 0) ||
+            (scope.metric.goalLabel && scope.metric.goalLabel.length !== 0)) {
+            scope.opts.optionsEnabled = true;
           }
 
           // Display string fields and number fields for
@@ -140,10 +175,10 @@ app.directive('vudataMetric', function () {
         scope.opts.optionsEnabled = true;
       }
 
-      // If colorSchema is configured, Enable the checkbox and show the
+      // If threshold is configured, Enable the checkbox and show the
       // section.
-      if (scope.metric.colorSchema && scope.metric.colorSchema.length !== 0) {
-        scope.opts.colorSchemaEnabled = true;
+      if (scope.metric.threshold && scope.metric.threshold.length !== 0) {
+        scope.opts.thresholdEnabled = true;
         scope.opts.optionsEnabled = true;
       }
     }

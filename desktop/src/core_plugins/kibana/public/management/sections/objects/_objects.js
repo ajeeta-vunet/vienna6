@@ -34,7 +34,7 @@ uiRoutes
   });
 
 uiModules.get('apps/management')
-  .directive('kbnManagementObjects', function ($route, kbnIndex, Notifier, Private, kbnUrl, Promise, confirmModal) {
+  .directive('kbnManagementObjects', function ($route, kbnIndex, Notifier, Private, kbnUrl, Promise, confirmModal, $http, chrome) {
     const savedObjectsClient = Private(SavedObjectsClientProvider);
 
     return {
@@ -124,6 +124,10 @@ uiModules.get('apps/management')
             $scope.currentTab.service.delete(pluck($scope.selectedItems, 'id'))
               .then(refreshData)
               .then(function () {
+                const updateOperation = require('ui/utils/vunet_object_operation');
+                _.each($scope.selectedItems, function (selectedItem) {
+                  updateOperation.updateVunetObjectOperation([selectedItem], 'search', $http, 'delete', chrome);
+                });
                 $scope.selectedItems.length = 0;
               })
               .catch(error => notify.error(error));

@@ -6,6 +6,7 @@
           interval="interval"
           print-report="printReport"
           add-sr-number="addSrNumber"
+          sr-number-title="srNumberTitle"
           cumulative-row-operation="cumulativeRowOperation"
           cumulative-column-operation="cumulativeColumnOperation">
   <div class="agg-table-paginated"
@@ -17,7 +18,7 @@
              style="display:table-header-group;">
         <tr>
           <th ng-if="addSrNumber">
-            <h6 class="zero-margin">Sr. No.</h6>
+            <h6 class="zero-margin">{{srNumberTitle}}</h6>
           </th> 
           <th scope="col"
               ng-if="!isMatrix"

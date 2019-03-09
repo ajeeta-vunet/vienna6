@@ -36,7 +36,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
   // Constants used in calculation of css properties
   // in metric display.
   $scope.superScriptConstant = 0.6;
-  $scope.noDataContainerConstant = 0.45;
+  $scope.noDataContainerConstant = 0.30;
   $scope.noDataIconConstant = 0.55;
 
   // This function is called when the 'View More' link

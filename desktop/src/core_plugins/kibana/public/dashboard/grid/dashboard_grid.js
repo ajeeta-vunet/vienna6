@@ -67,7 +67,7 @@ function ResponsiveGrid({
       isResizable={true}
       margin={[MARGINS, MARGINS]}
       cols={DASHBOARD_GRID_COLUMN_COUNT}
-      rowHeight={100}
+      rowHeight={50}
       draggableHandle={isViewMode ? '.doesnt-exist' : '.panel-title'}
       layout={layout}
       onLayoutChange={onLayoutChange}

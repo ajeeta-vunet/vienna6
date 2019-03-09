@@ -53,6 +53,9 @@ function MatrixVisTypeProvider(Private) {
           customIntervalType: 'm'
         },
         addSrNumber: false,
+        srNumberBase: 1,
+        srNumberPrefix: '',
+        srNumberTitle: 'Sr. No.',
         showCumulativeRow: false,
         cumulativeRowOperation: 'sum',
         showCumulativeColumn: false,

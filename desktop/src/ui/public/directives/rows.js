@@ -125,7 +125,15 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         // Let us calculate the starting serial number, using the current
         // page number and number of rows per page.
         // Current page number is given by vals[0].number
-        let serialNumber = vals[0] ? ((vals[0].number - 1) * min) + 1 : 0;
+        let base = 1
+        if(rows[0][0] instanceof AggConfigResult){
+          if (rows[0][0].aggConfig.vis.params.addSrNumber) {
+            if (rows[0][0].aggConfig.vis.params.srNumberBase != undefined) {
+              base = rows[0][0].aggConfig.vis.params.srNumberBase;
+            }
+          }
+        }
+        var serialNumber = vals[0] ? ((vals[0].number - 1) * min) + 1 + base  + -1 : 0;
 
         const columnResult = [];
         for (let i = 0; i < rows[0].length; i++) columnResult[i] = -1;
@@ -156,6 +164,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
           row.forEach(function (cell) {
             // Percentage display
             let interval = 1;
+            let serial;
+
             if (cell instanceof AggConfigResult) {
               // These are the operations supported only on Matrix and
               // Table visualizations.
@@ -165,7 +175,14 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                 if (!srNumberAdded) {
                   // Check if we need to add a serial number value.
                   if (cell.aggConfig.vis.params.addSrNumber) {
-                    addCell($tr, serialNumber, 1, null, undefined);
+                    // Check whether we need to add any prefix to serial number
+                    if (cell.aggConfig.vis.params.srNumberPrefix !== undefined && cell.aggConfig.vis.params.srNumberPrefix !== '') {
+                      serial = cell.aggConfig.vis.params.srNumberPrefix + serialNumber;
+                    }
+                    else {
+                      serial = serialNumber;
+                    }
+                    addCell($tr, serial, 1, null, undefined);
                     srAddConfig = true;
                   }
                   serialNumber += 1;

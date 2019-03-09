@@ -47,6 +47,30 @@
       </kbn-tooltip>
     </label>
   </div>
+  <div ng-show="vis.params.addSrNumber" class="row">
+    <div class="col-xs-1"> </div>
+    <div class="col-xs-3">
+      Base
+        <kbn-tooltip text="Starting number to be used when showing serial numbers" placement="right" append-to-body="1">
+	      <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+      <input type="number" ng-model="vis.params.srNumberBase" class="form-control">
+    </div>
+    <div class="col-xs-3">
+      Prefix
+	    <kbn-tooltip text="Prefix to be attached to serial numbers" placement="right" append-to-body="1">
+	      <i class="fa fa-question-circle table-vis-help-hover"></i>
+	    </kbn-tooltip>
+      <input type="text" ng-model="vis.params.srNumberPrefix" class="form-control">
+    </div>
+    <div class="col-xs-4">
+      Column Title
+	    <kbn-tooltip text="Title for serial number column" placement="right" append-to-body="1">
+        <i class="fa fa-question-circle table-vis-help-hover"></i>
+	    </kbn-tooltip>
+      <input type="text" ng-model="vis.params.srNumberTitle" class="form-control">
+    </div>
+  </div>
   <show-cumulative-row vis-obj="vis"></show-cumulative-row>
   <div class="checkbox">
     <label>

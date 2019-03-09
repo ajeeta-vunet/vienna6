@@ -27,6 +27,7 @@ uiModules
         printReport: '=?',
         isCollapseTimeHeaders: '=?',
         addSrNumber: '=?',
+        srNumberTitle: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?',
         printReport: '=?'
@@ -64,7 +65,7 @@ uiModules
           let srNumber = -1;
 
           if ($scope.addSrNumber && !self.srHeaderAdded) {
-            columns.unshift({ title: 'Sr. No.' });
+            columns.unshift({title:$scope.srNumberTitle});
             self.srHeaderAdded = true;
           }
 

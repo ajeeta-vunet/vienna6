@@ -30,6 +30,7 @@ uiModules
         printReport: '=?',
         isCollapseTimeHeaders: '=?',
         addSrNumber: '=?',
+        srNumberTitle: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?'
       },

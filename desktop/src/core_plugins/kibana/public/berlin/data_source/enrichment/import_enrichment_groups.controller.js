@@ -1,7 +1,9 @@
 import '../../styles/vunet_import_form.less';
 
 class ImportEnrichmentGroupsCtrl {
-  constructor($scope, HTTP_SUCCESS_CODE, StateService, Upload, $modalInstance) {
+  constructor($scope, HTTP_SUCCESS_CODE, StateService, Upload, $modalInstance, Notifier) {
+
+    const notify = new Notifier();
 
     $scope.successfulUpload = false;
 
@@ -11,10 +13,10 @@ class ImportEnrichmentGroupsCtrl {
         if (response.status === HTTP_SUCCESS_CODE) {
           $scope.successfulUpload = true;
           $scope.File = null;
-          // We remove the succes message after 4 sec
-          setTimeout(function () {
-            $scope.closeModal();
-          }, 4000);
+          $scope.closeModal();
+
+          // Notify  success message for successful import.
+          notify.info(` File successfully imported`);
         }
       });
       // This is to reset the variable after the upload is done
@@ -33,7 +35,7 @@ class ImportEnrichmentGroupsCtrl {
   }
 }
 
-ImportEnrichmentGroupsCtrl.$inject = ['$scope', 'HTTP_SUCCESS_CODE', 'StateService', 'Upload', '$modalInstance'];
+ImportEnrichmentGroupsCtrl.$inject = ['$scope', 'HTTP_SUCCESS_CODE', 'StateService', 'Upload', '$modalInstance', 'Notifier'];
 /*eslint-disable*/
 export default ImportEnrichmentGroupsCtrl;
 /*eslint-enable*/

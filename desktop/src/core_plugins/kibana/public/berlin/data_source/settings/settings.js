@@ -50,9 +50,10 @@ function vunetDataRetentionSettings($scope, StateService) {
           required: true,
           maxLength: '24',
           minLength: '3',
-          pattern: '^[^\*][a-zA-Z0-9\-\*]*[a-zA-Z]+[\-\*]?[a-zA-Z0-9\-\*]*$',
+          pattern: '^(?!\\*)[\\w\\-\\*]*[a-zA-Z][\\w\\-\\*]*$',
         },
-        errorText: 'Value can have numbers, at least 1 alphabet, - and * special characters with the length of 3 to 24'
+        errorText: 'Value can have numbers, alphabets, - (hyphen) and * (star) characters with the' +
+        ' length of 3 to 24. There must be at least 1 alphabet. Also it should not start with a *(star)'
       },
       {
         key: 'active_data',
@@ -72,7 +73,7 @@ function vunetDataRetentionSettings($scope, StateService) {
         name: 'inactive_data',
         props: {
           required: true,
-          pattern: '^([1-8][0-9]?|[9][0]?)$'
+          pattern: '^([0-8][0-9]?|[9][0]?)$'
         },
         errorText: 'Value should be a number and less than or equal to 90.'
       },
@@ -83,7 +84,7 @@ function vunetDataRetentionSettings($scope, StateService) {
         name: 'archived_data',
         props: {
           required: true,
-          pattern: '^([1-9][0-9]{0,2}|1000)$'
+          pattern: '^([0-9][0-9]{0,2}|1000)$'
         },
         errorText: 'Value should be a number and less than or equal to 1000.'
       }]

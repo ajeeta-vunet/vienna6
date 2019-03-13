@@ -94,6 +94,7 @@ uiModules.get('apps/management')
 
     $scope.refreshFields = function () {
       const confirmModalOptions = {
+        title: 'Warning',
         confirmButtonText: 'Refresh fields',
         onConfirm: () => { $scope.indexPattern.refreshFields(); }
       };

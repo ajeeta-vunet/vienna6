@@ -104,7 +104,7 @@
       padding: 2.55rem 0rem;
     }
     .diagnostic-button {
-      background-color: @white;
+      background-color: @white!important;
       border: none;
     }
     .logout-button{
@@ -123,6 +123,7 @@
         }
       }
       .user-name{
+        color:@black;
         vertical-align: super;
         font-size: 1.6rem;
         padding: 0rem .5rem 0rem 1rem;
@@ -223,7 +224,7 @@
           div{
             i{
               padding-right: 2rem;
-              font-size:1.75rem;
+              font-size:1.9rem;
             }
             kbn-truncated{
               padding-right: 2rem;
@@ -231,7 +232,7 @@
               span{
                 p{
                   margin-bottom:0;
-                  font-size:1.4rem;
+                  font-size:1.5rem;
                 }
               }
             }
@@ -247,7 +248,7 @@
                 }
               }
               .kuiButton--danger{
-                background-color:@error_red;
+                background-color:@notifier_red;
               }   
             }
             .toaster-countdown {
@@ -259,6 +260,20 @@
                 border:none;
                 // font-size:1.5rem;
               }
+            }
+          }
+          //This has been added to give color to notifier-info
+          .alert-info{
+            kbn-truncated{
+              color:@notifier_green;
+            }
+            .toast-controls{
+              .kuiButton--primary{
+                background-color:@notifier_green;
+              }
+            }
+            .fa-info-circle{
+              color:@notifier_green;
             }
           }
         }
@@ -295,7 +310,6 @@
     padding-left: 2rem;
   }
   .icon-maximize{
-    padding: 2.7rem 0rem 2.7rem 0rem;
     font-size: 2.5rem;
   }
   //this has been done for the run diagnostic modal
@@ -308,6 +322,9 @@
         padding-right:3rem!important;
       }
     }
+  }
+  .icon-fullscreen-container{
+    padding: 2.7rem 0rem 2.7rem 0rem;
   }
 }
 

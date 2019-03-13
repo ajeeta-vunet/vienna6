@@ -372,7 +372,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
       // Add the metrics along with the threshold to the payload request which
       // will be sent out to back-end in the next step.
-      var createPayload = function (metric,  metricListIndex, savedSearchQuery) {
+      const createPayload = function (metric,  metricListIndex, savedSearchQuery) {
         const index = metric.index;
         const fieldType = metric.fieldType;
 
@@ -389,7 +389,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         });
 
         payload.metrics.push({
-          metricListIndex:  metricListIndex,
+          metricListIndex: metricListIndex,
           index: index,
           label: metric.label,
           // Add the metric along with the threshold to the payload request.
@@ -401,7 +401,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           additionalFields: metric.additionalFields,
           threshold: finalThreshold,
           format: metric.format || ''
-        })
+        });
       };
 
       // Go through each metric and add threshold to the payload request.
@@ -422,29 +422,29 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         // get the search filter of the saved search and create the payload.
         else {
           return (savedSearches.get(metric.savedSearch.id))
-          .then(function (savedSearch) {
+            .then(function (savedSearch) {
             // get the filter query from the saved search
-            savedSearchQuery = savedSearch.searchSource.get('query').query;
-            createPayload(metric, metricListIndex, savedSearchQuery);
-            return false;
-          })
-          .catch((error) => {
-            if (error instanceof SavedObjectNotFound) {
-              notify.error(
-                'Problem in loading this BMV... The saved search associated with metric "' + metric.label +
+              savedSearchQuery = savedSearch.searchSource.get('query').query;
+              createPayload(metric, metricListIndex, savedSearchQuery);
+              return false;
+            })
+            .catch((error) => {
+              if (error instanceof SavedObjectNotFound) {
+                notify.error(
+                  'Problem in loading this BMV... The saved search associated with metric "' + metric.label +
                 '" no longer exists. Please re-configure this metric');
-            } else {
+              } else {
               // Display the error message to the user.
-              notify.error(error);
-              throw error;
-            }
-          });
+                notify.error(error);
+                throw error;
+              }
+            });
         }
       });
 
       // prepare data sets to make POST call to the back end
       // to get the time shift values.
-      Promise.all(getMetrics).then(function() {
+      Promise.all(getMetrics).then(function () {
         // The order of the metrics might be changed due to saved search.
         // So we need to sort out the metrics based on the
         // metricListIndex field before sending out the request to back-end.
@@ -574,8 +574,8 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             $scope.metricDatas = undefined;
             $scope.apiError = true;
           });
-        });
-      };
+      });
+    };
     // Once the payload is ready make the POST call to back end.
     makePostCall();
 

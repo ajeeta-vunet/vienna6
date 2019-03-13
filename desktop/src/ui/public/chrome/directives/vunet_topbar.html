@@ -14,13 +14,15 @@
         <div class="col-sm-4 vunet-topbar-actions">
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <i class="fa icon-maximize" ng-click='toggleFullscreen()'></i>
+              <div class="icon-fullscreen-container">
+                <i class="fa icon-maximize" ng-click='toggleFullscreen()' uib-tooltip="View Fullscreen"></i>
+              </div>
             </li>
             <li id="notification-icon" class="uib-dropdown alert-notification" uib-dropdown is-open="dropdownIsOpen"
               on-toggle="handleDropdownclose()">
               <div class='uib-dropdown-toggle' data-toggle="dropdown" ng-click='showNotificationDropdown()'
                 uib-dropdown-toggle>
-                <i class="icon-Notification" title="Notifications">
+                <i class="icon-Notification" uib-tooltip="Notifications">
                 </i>
                 <div ng-show="notificationLength" ng-click='return'>
                   <div class="notificationlength">{{ notificationLength }}</div>
@@ -39,7 +41,7 @@
                                               'fa-database': header=='Storage'}">
                       </i>
                     </span> {{header}}
-                    <i class='fa fa-times close-dropdown' ng-click="closeNotificationDropdown()" title="Close"></i>
+                    <i class='fa fa-times close-dropdown' ng-click="closeNotificationDropdown()" uib-tooltip="Close"></i>
                   </div>
                   <div ng-repeat="notification in data track by $index">
                     <div ng-click="showNotificationInformation(header, notification)" class="notification-content"
@@ -61,7 +63,7 @@
                           </i>
                         </span>
                       </div>
-                      <div class="notification-desc" >
+                      <div class="notification-desc">
                         {{notification.summary}}
                       </div>
                       <div class="notification-time">
@@ -83,14 +85,16 @@
             <li ng-if="isSuperTenantAdmin">
               <button class="diagnostic-button" ng-disabled="diagnostic_display_on" href='' aria-expanded='false'
                 ng-click='run_diagnostic()'>
-                <i class='icon-Diagnostics bg-color' title="Run Diagnostics"></i>
+                <i class='icon-Diagnostics bg-color' uib-tooltip="Run Diagnostics"></i>
               </button>
             </li>
             <li uib-dropdown is-open>
               <div class="logout-button" uib-dropdown-toggle aria-expanded='false'>
-                <i class='icon-user bg-color' title="Logout"></i>
-                <span class="user-name">{{userName}}</span>
-                <i class="icon-down-arrow" aria-hidden="true"></i>
+                <div uib-tooltip="Logout">
+                  <i class='icon-user bg-color'></i>
+                  <span class="user-name">{{userName}}</span>
+                  <i class="icon-down-arrow" aria-hidden="true"></i>
+                </div>
               </div>
               <div class="logout-dropdown" uib-dropdown-menu>
                 <div class="row">

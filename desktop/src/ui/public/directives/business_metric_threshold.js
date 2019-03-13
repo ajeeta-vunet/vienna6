@@ -51,7 +51,7 @@ app.directive('vudataMetricThreshold', function () {
       // This function is called to validate the user input. This validates the
       // ranges
       function validate(threshold) {
-        const { interval, intervalUnit, match, min, max, color, severity } = scope;
+        const { interval, intervalUnit, match, min, max, color } = scope;
         // Display 'min' and 'max' if metric type selected is 'Unique count', 'count'
         // or if field type is 'number'.
         if (scope.isMetricValueNumber()) {

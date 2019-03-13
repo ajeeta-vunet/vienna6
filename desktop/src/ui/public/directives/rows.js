@@ -125,15 +125,15 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         // Let us calculate the starting serial number, using the current
         // page number and number of rows per page.
         // Current page number is given by vals[0].number
-        let base = 1
-        if(rows[0][0] instanceof AggConfigResult){
+        let base = 1;
+        if(rows[0][0] instanceof AggConfigResult) {
           if (rows[0][0].aggConfig.vis.params.addSrNumber) {
-            if (rows[0][0].aggConfig.vis.params.srNumberBase != undefined) {
+            if (rows[0][0].aggConfig.vis.params.srNumberBase !== undefined) {
               base = rows[0][0].aggConfig.vis.params.srNumberBase;
             }
           }
         }
-        var serialNumber = vals[0] ? ((vals[0].number - 1) * min) + 1 + base  + -1 : 0;
+        let serialNumber = vals[0] ? ((vals[0].number - 1) * min) + 1 + base  + -1 : 0;
 
         const columnResult = [];
         for (let i = 0; i < rows[0].length; i++) columnResult[i] = -1;

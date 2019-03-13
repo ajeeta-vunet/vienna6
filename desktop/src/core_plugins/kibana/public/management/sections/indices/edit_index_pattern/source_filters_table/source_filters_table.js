@@ -102,6 +102,7 @@ uiModules.get('kibana')
           };
 
           const confirmModalOptions = {
+            title: 'Warning',
             confirmButtonText: 'Delete filter',
             onConfirm: doDelete
           };

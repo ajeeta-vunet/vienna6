@@ -113,6 +113,7 @@ app.controller('timelion', function (
       }
 
       const confirmModalOptions = {
+        title: 'Warning',
         onConfirm: doDelete,
         confirmButtonText: 'Delete sheet'
       };

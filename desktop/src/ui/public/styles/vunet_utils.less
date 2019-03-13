@@ -103,6 +103,48 @@ input[type="file"]{
   }
 }
 
+.vunet-select-input{
+  &:after{
+    border-radius: 2rem;
+  }
+}
+
+// Confirmation modal for deleting visualization alerts etc.
+.kuiModal--confirmation{
+  width:800px;
+  .kuiModalBody{
+    padding: 2rem 0rem 2rem 3rem!important;
+    .kuiText{
+      font-size:1.8rem;
+    } 
+  }
+  .kuiModalFooter{
+    .kuiButton{
+      margin-left:1rem;
+      display: inline-block;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      padding:.6rem 3rem .6rem 3rem !important; 
+      font-size: 1.6rem!important;
+      height: 3.5rem!important;
+      text-decoration: none;
+      border: none;
+      border-radius: 2rem;
+      background-color: @accent_color;
+      color:@white !important;
+      box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color;
+      &:hover{
+        color: @white!important;
+        text-decoration: none!important;
+        font-family: @barlow-semibold;
+        box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
+      }
+    }
+  }
+}
+
 //Bacground color for all views
 .vunet-application{
   .app-container{
@@ -145,7 +187,7 @@ input[type="file"]{
       }
     }
     // this has been done to give overflow to matrix visualization with more rows
-    .dashboard-viewport-with-margins{
+    .dashboard-viewport-with-margins , .dashboard-viewport{
       .react-grid-layout {
         .react-grid-item{
           .dashboard-panel{
@@ -208,11 +250,16 @@ input[type="file"]{
       }
     }
   }
+  //This has been added for events page
+  .event-container{
+    overflow-y: auto;
+    height: @view-content-height;
+  }
   // This is done for the dashboard page
   dashboard-app{
     dashboard-viewport-provider{
       overflow-y: auto;
-      height: @view-content-height;
+      height: 0;
     }
   }
 
@@ -232,6 +279,7 @@ input[type="file"]{
   } 
 
   background-color:@view_background;
+
     .kuiLocalNav{
       background-color:#f1f2f7;
       // height:6.5rem !important;
@@ -279,6 +327,13 @@ input[type="file"]{
           .kbn-timepicker-actions{
             padding-top:1rem;
           }
+      }
+      // This has been added to give scroll to visualization adding page of dashboard.
+      .list-group-item{
+        paginate{
+          overflow-y:auto;
+          height: 22.5rem;
+        }
       }
     }
   }
@@ -401,6 +456,28 @@ button[disabled], {
 .menubar-fixed-top{
   overflow-y: auto;
   height: @view-content-height;
+}
+.menubar-fixed-top-containing-filterbar{
+  overflow-y: auto;
+  height: @view-content-height81;
+  // This has been added to fix the following 
+  // In Analytics -> search --> if we have selected an Index pattern which has more length, the name is crossing the box.
+  .sidebar-container{
+    .sidebar-list{
+      .ui-select-container{
+        .ui-select-match{
+          .ui-select-toggle{
+            .ui-select-match-text{
+              font-size:1.4rem;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 

@@ -65,7 +65,7 @@ uiModules
           let srNumber = -1;
 
           if ($scope.addSrNumber && !self.srHeaderAdded) {
-            columns.unshift({title:$scope.srNumberTitle});
+            columns.unshift({ title: $scope.srNumberTitle });
             self.srHeaderAdded = true;
           }
 

@@ -137,6 +137,7 @@ export function DashboardListingController($injector, $scope, $location, savedDa
     confirmModal(
       'Are you sure you want to delete the selected dashboards? This action is irreversible!',
       {
+        title: 'Warning',
         confirmButtonText: 'Delete',
         onConfirm: doDelete,
         defaultFocusedButton: ConfirmationButtonTypes.CANCEL

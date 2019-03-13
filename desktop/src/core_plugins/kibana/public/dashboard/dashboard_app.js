@@ -311,6 +311,7 @@ app.directive('dashboardApp', function ($injector, $http) {
         confirmModal(
           getUnsavedChangesWarningMessage(dashboardStateManager.getChangedFilterTypes(timefilter)),
           {
+            title: 'Warning',
             onConfirm: revertChangesAndExitEditMode,
             onCancel: _.noop,
             confirmButtonText: 'Yes, lose changes',

@@ -33,7 +33,7 @@ export function updateVunetObjectOperation(selectedItems, objType, $http, action
     }
     else if (objType === 'visualization') {
       url = '/vuSmartMaps/api/visualization_status/';
-    data = {
+      data = {
         'id': item.id, 'title': item.title, 'type': item.visState.type, 'action': action, 'tenant_id': tenantBu[0], 'bu_id': tenantBu[1] };
     }
 

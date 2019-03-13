@@ -113,7 +113,7 @@ class TopbarCtrl {
         props: {
           required: true,
         },
-        errorText: 'The new passwords do not match with each other.'
+        errorText: `The Passwords don't match.`
       }]
     };
 

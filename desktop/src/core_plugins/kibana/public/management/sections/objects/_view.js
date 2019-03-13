@@ -176,6 +176,7 @@ uiModules.get('apps/management')
               .catch(notify.fatal);
           }
           const confirmModalOptions = {
+            title: 'Warning',
             onConfirm: doDelete,
             confirmButtonText: 'Delete object'
           };

@@ -16,7 +16,6 @@ import alertTemplate from 'plugins/kibana/alert/alert.html';
 import alertLogsTemplate from 'plugins/kibana/alert/alert_logs.html';
 import AlertLogsCtrl from 'plugins/kibana/alert/alert_logs.controller.js';
 import { AlertConstants, createAlertEditUrl } from './alert_constants';
-import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
@@ -39,10 +38,10 @@ uiRoutes
     template: alertTemplate,
     resolve: {
       indexPatternIds: function (Private) {
-        return Promise.resolve(utils.getSavedObject('index-pattern',['title'],10000, Private))
+        return Promise.resolve(utils.getSavedObject('index-pattern', ['title'], 10000, Private));
       },
       vuMetricList: function (Private) {
-        return Promise.resolve(utils.getVisualizationObjectByType('visualization',[],10000, 'business_metric', Private))
+        return Promise.resolve(utils.getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
       },
       alertcfg: function (savedAlerts) {
         return savedAlerts.get();
@@ -62,10 +61,10 @@ uiRoutes
     template: alertTemplate,
     resolve: {
       indexPatternIds: function (Private) {
-        return Promise.resolve(utils.getSavedObject('index-pattern',['title'],10000, Private))
+        return Promise.resolve(utils.getSavedObject('index-pattern', ['title'], 10000, Private));
       },
       vuMetricList: function (Private) {
-        return Promise.resolve(utils.getVisualizationObjectByType('visualization',[],10000, 'business_metric', Private))
+        return Promise.resolve(utils.getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
       },
       alertcfg: function (savedAlerts, $route, courier) {
         return savedAlerts.get($route.current.params.id)
@@ -123,8 +122,9 @@ function alertAppEditor($scope,
       animation: true,
       template: previewMetricTemplate,
       controller: previewMetricCtrl,
+      windowClass: 'alertBmvPreviewModal',
       resolve: {
-        metricData : function () {
+        metricData: function () {
           return metrics;
         }
       }
@@ -361,26 +361,26 @@ function alertAppEditor($scope,
             // will be used for tooltip.
             newOperRuleObj.metrics = savedVisualization.visState.params.metrics;
           })
-          .catch((error) => {
-            if (error instanceof SavedObjectNotFound) {
-              notify.error(
-                'Problem in loading this alert... The BMV ' + alertcfgRule.selectedMetric.title +
+            .catch((error) => {
+              if (error instanceof SavedObjectNotFound) {
+                notify.error(
+                  'Problem in loading this alert... The BMV ' + alertcfgRule.selectedMetric.title +
                 ' used in the alert rule "' + newRuleObj.ruleNameAlias + '" has been already deleted.' +
                 'Please re-configure this alert');
-            } else {
+              } else {
               // Display the error message to the user.
-              notify.error(error);
-              throw error;
-            }
-          });
+                notify.error(error);
+                throw error;
+              }
+            });
         } else {
           // Not sure what kind of configuration this is..
           return Promise.resolve(false);
         }
       }
-    }).then(function() {
-        // Once all promises are resolved.. we resolve the rule numbers..
-        updateVisMetricForAlertRule();
+    }).then(function () {
+      // Once all promises are resolved.. we resolve the rule numbers..
+      updateVisMetricForAlertRule();
     });
     $scope.severity = alertcfg.severity;
     $scope.summary = alertcfg.summary;
@@ -480,7 +480,7 @@ function alertAppEditor($scope,
   // Before this step, both ruleList and operruleList are already available.
   // Go through each alert rule and update the visualization, metrics,
   // inner rule and outer rule index in the operRuleList.
-  function updateVisMetricForAlertRule () {
+  function updateVisMetricForAlertRule() {
     let innerRuleIndex = 1;
     for (let index = 0; index < $scope.operRuleList.length; index++) {
       if ($scope.operRuleList[index].metrics.length > 0) {
@@ -525,7 +525,7 @@ function alertAppEditor($scope,
 
   const stateDefaults = {
     title: alertcfg.title,
-    query: {'query':'*', language: 'lucene'}
+    query: { 'query': '*', language: 'lucene' }
   };
 
   const $state = $scope.state = new AppState(stateDefaults);

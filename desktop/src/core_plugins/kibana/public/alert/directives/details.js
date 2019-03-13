@@ -55,13 +55,13 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
         // BMV might have just 2 metrics. So we need adjust the inner and outer
         // rule idex. The rules before this will not get changed. But the rules
         // below this needs to get adjusted.
-        var prev_length = 1;
-        var curr_length = 1;
+        let prevLength = 1;
+        let currLength = 1;
         if ($scope.operRuleList[$index].metrics.length > 0) {
-          prev_length = $scope.operRuleList[$index].metrics.length;
-	}
+          prevLength = $scope.operRuleList[$index].metrics.length;
+        }
 
-        savedVisualizations.get(rule.selectedMetric.id).then(function (savedVisualization){
+        savedVisualizations.get(rule.selectedMetric.id).then(function (savedVisualization) {
           $scope.ruleList[$index].selectedIndex = defaultValue;
           $scope.operRuleList[$index].metrics = savedVisualization.visState.params.metrics;
           $scope.operRuleList[$index].vis = savedVisualization;
@@ -69,10 +69,10 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
 
           // Get the metrics length for the selected BMV.
           if ($scope.operRuleList[$index].metrics.length > 0) {
-            curr_length = $scope.operRuleList[$index].metrics.length;
+            currLength = $scope.operRuleList[$index].metrics.length;
           }
 
-          updateIndexForMetricsAndRules($index,prev_length, curr_length);
+          updateIndexForMetricsAndRules($index, prevLength, currLength);
         });
       };
 
@@ -80,17 +80,18 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
       // So we need to set the alert rule fields to empty.
       // When an alert is configured using the data source, the selected bmv will be empty and
       // the alert rule fields will be configured manually.
-      $scope.showVUMetric = function($index) {
-        var prev_length, curr_length = 1;
+      $scope.showVUMetric = function ($index) {
+        let prevLength = 1;
+        let currLength = 1;
         if ($scope.operRuleList[$index].metrics.length > 0) {
-          prev_length = $scope.operRuleList[$index].metrics.length;
+          prevLength = $scope.operRuleList[$index].metrics.length;
         }
-        if ($scope.ruleList[$index].vuMetricsBased === false ) {
+        if ($scope.ruleList[$index].vuMetricsBased === false) {
           $scope.ruleList[$index].selectedMetric = defaultValue;
           $scope.operRuleList[$index].metrics = [];
           // Get the metrics length for the selected BMV.
           if ($scope.operRuleList[$index].metrics.length > 0) {
-            curr_length = $scope.operRuleList[$index].metrics.length;
+            currLength = $scope.operRuleList[$index].metrics.length;
           }
         }
         else {
@@ -99,39 +100,39 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
           $scope.ruleList[$index].compareType = '';
           $scope.ruleList[$index].compareValue = '';
           $scope.ruleList[$index].compareValueStr = '';
-          $scope.ruleList[$index].additionalField ='';
-          $scope.ruleList[$index].groupByField ='';
-          $scope.ruleList[$index].alertFilter ='';
-          $scope.ruleList[$index].metricAlias ='';
-        };
-        updateIndexForMetricsAndRules($index, prev_length, curr_length);
+          $scope.ruleList[$index].additionalField = '';
+          $scope.ruleList[$index].groupByField = '';
+          $scope.ruleList[$index].alertFilter = '';
+          $scope.ruleList[$index].metricAlias = '';
+        }
+        updateIndexForMetricsAndRules($index, prevLength, currLength);
       };
 
-      function updateIndexForMetricsAndRules(metricIndex, prev_length, curr_length) {
+      function updateIndexForMetricsAndRules(metricIndex, prevLength, currLength) {
         // If this is the only alert rule then
         if (metricIndex === 0) {
-          $scope.operRuleList[metricIndex].outerRuleIndex = curr_length;
+          $scope.operRuleList[metricIndex].outerRuleIndex = currLength;
         }
         // else adjust the rule index based on the previous rule.
         else {
-          $scope.operRuleList[metricIndex].outerRuleIndex = $scope.operRuleList[metricIndex-1].outerRuleIndex + curr_length;
+          $scope.operRuleList[metricIndex].outerRuleIndex = $scope.operRuleList[metricIndex - 1].outerRuleIndex + currLength;
         }
 
         // Go though each rule which are below the current rule and update the rule index.
         for (let index = metricIndex + 1; index < $scope.ruleList.length; index++) {
           // If the previous length is greater than current length then
-          if (prev_length > curr_length) {
+          if (prevLength > currLength) {
             // The rule index should be decreased by previous 2 length (4) - current length (2)
-            $scope.operRuleList[index].innerRuleIndex = $scope.operRuleList[index].innerRuleIndex - (prev_length - curr_length);
-            $scope.operRuleList[index].outerRuleIndex = $scope.operRuleList[index].outerRuleIndex - (prev_length - curr_length);;
+            $scope.operRuleList[index].innerRuleIndex = $scope.operRuleList[index].innerRuleIndex - (prevLength - currLength);
+            $scope.operRuleList[index].outerRuleIndex = $scope.operRuleList[index].outerRuleIndex - (prevLength - currLength);
           }
           // else the rule index should be increased by 2 current length (4) - previous length (2)
-          else if (prev_length < curr_length) {
-            $scope.operRuleList[index].innerRuleIndex = $scope.operRuleList[index].innerRuleIndex + (curr_length - prev_length);
-            $scope.operRuleList[index].outerRuleIndex = $scope.operRuleList[index].outerRuleIndex + (curr_length - prev_length);
+          else if (prevLength < currLength) {
+            $scope.operRuleList[index].innerRuleIndex = $scope.operRuleList[index].innerRuleIndex + (currLength - prevLength);
+            $scope.operRuleList[index].outerRuleIndex = $scope.operRuleList[index].outerRuleIndex + (currLength - prevLength);
           }
-        };
-      };
+        }
+      }
       // Takes care of showing the ruleType related fields when ruleType is selected.
       // Example hide the target field when count is selected.
       // metricIsSelected : To show / hide the threshold conditions
@@ -263,7 +264,7 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
       // innerRuleIndex : This is the rule index used for the metrics.
       // outerRuleIndex : This is the rule index used for the alert rule condition.
       // To add a rule
-      $scope.addNewRule = function (index) {
+      $scope.addNewRule = function () {
         // When a new rule is added, we need to calculate the
         // inner and outer rule index for the new rule.
         let innerRuleIndex = 1;
@@ -312,7 +313,7 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
       $scope.removeRule = function ($index) {
         // When an existing rule is deleted adjust
         // both inner and outer rule index.
-        var noOfMetrics;
+        let noOfMetrics;
         // If rule is based on BMV then get the metrics length
         if ($scope.operRuleList[$index].metrics.length > 0) {
           noOfMetrics = $scope.operRuleList[$index].metrics.length;
@@ -325,7 +326,7 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
         for (let index = $index + 1; index < $scope.ruleList.length; index++) {
           $scope.operRuleList[index].innerRuleIndex = $scope.operRuleList[index].innerRuleIndex - noOfMetrics;
           $scope.operRuleList[index].outerRuleIndex = $scope.operRuleList[index].outerRuleIndex - noOfMetrics;
-        };
+        }
 
         $scope.ruleList.splice($index, 1);
         $scope.operRuleList.splice($index, 1);

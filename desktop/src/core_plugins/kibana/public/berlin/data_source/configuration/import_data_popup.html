@@ -11,8 +11,8 @@
     <div class="form-group importXls-form-group" ng-class="{'has-error': moreThanOneSheetsInFile || isEmptyHeaderPresent || isFileSizeMore || isFileTypeWrong , 'has-warning' : importXlsForm.timeField.$touched && importXlsForm.file.$invalid } ">
       <label class="col-sm-3 control-label zero-padding">Import a XLS File</label>
       <div class="col-sm-9">
-        <input class="btn vunet-btn-file-import btn-file" ngf-select type="file" ng-model="File" name="file" id="file"
-          ngf-multiple="false" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required onChange="angular.element(this).scope().exportExcel(event)">
+        <input class="btn vunet-btn-file-import btn-file"  type="file" ng-model="File" name="file" id="file"
+          ngf-multiple="false" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required ngf-select="exportExcel($event)">
         <div id="reading-file" ng-if="readingFile"> Reading File ...</div>
         <span class="help-block" ng-if="isEmptyHeaderPresent">One or more merged or empty headers are present.</span>
         <span class="help-block" ng-if="moreThanOneSheetsInFile">More than 1 sheet in uploaded excel file.</span>
@@ -33,7 +33,7 @@
         <div class="col-sm-9">
           <input type="text" class="form-control" ng-model="index_name" name="indexName" required>
           <p ng-if="index_name" class="index-helper">The Index name will be saved as
-            vunet-{{$root.tenant_id}}-{{$root.bu_id}}-{{index_name}}</p>
+            vunet-{{indexStringInfo}}-{{index_name}}</p>
         </div>
       </div>
 

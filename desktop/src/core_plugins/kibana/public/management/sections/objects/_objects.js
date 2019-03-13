@@ -1,5 +1,5 @@
 import { saveAs } from '@elastic/filesaver';
-import { find, flattenDeep, pluck, sortBy } from 'lodash';
+import { find, flattenDeep, pluck, sortBy, _ } from 'lodash';
 import angular from 'angular';
 import { savedObjectManagementRegistry } from 'plugins/kibana/management/saved_object_registry';
 import objectIndexHTML from 'plugins/kibana/management/sections/objects/_objects.html';
@@ -134,6 +134,7 @@ uiModules.get('apps/management')
           }
 
           const confirmModalOptions = {
+            title: 'Warning',
             confirmButtonText: `Delete ${$scope.currentTab.title}`,
             onConfirm: doBulkDelete
           };
@@ -200,6 +201,7 @@ uiModules.get('apps/management')
           return new Promise((resolve) => {
             confirmModal(
               `If any of the objects already exist, do you want to automatically overwrite them?`, {
+                title: 'Warning',
                 confirmButtonText: `Yes, overwrite all`,
                 cancelButtonText: `No, prompt me for each one`,
                 onConfirm: () => resolve(true),

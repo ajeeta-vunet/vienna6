@@ -25,7 +25,7 @@ app.directive('vudataMetric', function () {
       // But we are storing the selected fields as "host" in saved object. So we need to build the dict format
       // using the value fetched from the saved object.
       if (scope.metric.additionalFields !== '' && scope.metric.additionalFields !== undefined) {
-      const additionalFields = scope.metric.additionalFields.split(',');
+        const additionalFields = scope.metric.additionalFields.split(',');
         for (let index = 0; index < additionalFields.length; index++) {
           scope.selectedFields.push({ name: additionalFields[index] });
         }

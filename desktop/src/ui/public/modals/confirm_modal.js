@@ -22,7 +22,7 @@ export const ConfirmationButtonTypes = {
  * @property {String=} cancelButtonText
  * @property {function} onConfirm
  * @property {function=} onCancel
- * @property {String=} title - If given, shows a title on the confirm modal.
+ * @property {String=} titleText - If given, shows a title on the confirm modal.
  */
 
 module.factory('confirmModal', function ($rootScope, $compile) {
@@ -56,7 +56,7 @@ module.factory('confirmModal', function ($rootScope, $compile) {
     confirmScope.defaultFocusedButton = options.defaultFocusedButton;
     confirmScope.confirmButtonText = options.confirmButtonText;
     confirmScope.cancelButtonText = options.cancelButtonText;
-    confirmScope.title = options.title;
+    confirmScope.titleText = options.title;
     confirmScope.onConfirm = () => {
       destroy();
       options.onConfirm();

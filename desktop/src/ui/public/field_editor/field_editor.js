@@ -102,6 +102,7 @@ uiModules
               });
           }
           const confirmModalOptions = {
+            title: 'Warning',
             confirmButtonText: 'Delete field',
             onConfirm: doDelete
           };

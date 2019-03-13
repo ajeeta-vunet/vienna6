@@ -187,7 +187,7 @@ export class VisualizeListingTable extends Component {
       <KuiModalOverlay>
         <KuiConfirmModal
           children="Are you sure you want to delete the selected visualizations? This action is irreversible!"
-          title="Warning"
+          titleText="Warning"
           onCancel={this.closeModal}
           onConfirm={this.deleteSelectedItems}
           cancelButtonText="Cancel"
@@ -204,13 +204,13 @@ export class VisualizeListingTable extends Component {
   deleteSelectedItems = () => {
     const items = this.items;
     let selectedVis;
-    let deletedObjs = [];
+    const deletedObjs = [];
 
     _.each(this.state.selectedRowIds, function (selectedRowId) {
       selectedVis = items.filter(function (item) {
         return item.id === selectedRowId;
       });
-      deletedObjs.push({id: selectedRowId, title: selectedVis[0].title, visState:{type: selectedVis[0].type.name}});
+      deletedObjs.push({ id: selectedRowId, title: selectedVis[0].title, visState: { type: selectedVis[0].type.name } });
     });
 
     this.props.deleteSelectedItems(deletedObjs)

@@ -109,6 +109,7 @@ uiModules.get('apps/management')
 
         $scope.remove = function (field) {
           const confirmModalOptions = {
+            title: 'Warning',
             confirmButtonText: 'Delete field',
             onConfirm: () => { $scope.indexPattern.removeScriptedField(field.name); }
           };

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { SavedObjectRegistryProvider } from 'ui/saved_objects/saved_object_registry';
 import 'ui/pager_control';
 import 'ui/pager';
@@ -40,9 +41,9 @@ export function VisualizeListingController($injector, $http, chrome) {
         _.each(selectedVisualizaions, function (selectedVis) {
           if (selectedVis.visState.type === 'business_metric') {
             const updateOperation = require('ui/utils/vunet_object_operation');
-            updateOperation.updateVunetObjectOperation([selectedId], 'visualization', $http, 'delete', chrome);
+            updateOperation.updateVunetObjectOperation([selectedVis], 'visualization', $http, 'delete', chrome);
           }
-        })
+        });
       })
       .catch(error => notify.error(error));
   };

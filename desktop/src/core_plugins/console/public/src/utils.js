@@ -104,7 +104,7 @@ utils.splitOnUnquotedCommaSpace = function (s) {
 // input - [{"name":"admin"},{"name":"dba"},
 // {"name":"network team"},{"name":"Support L1"}]
 // Output - admin,dba,network team,Support L1
-utils.getValueForDisplay = function(nameList) {
+utils.getValueForDisplay = function (nameList) {
   let value = '';
   _.each(nameList, function (name) {
     value = value + name.name + ',';
@@ -116,9 +116,9 @@ utils.getValueForDisplay = function(nameList) {
 // It returns the saved object like search, index-pattern...from the .kibana
 // object based on the param doc_type. For ex; To get title of all the saved
 // searched we need to pass 'search' for doc_type and ['title'] for the list.
-utils.getSavedObject = async function(doc_tpye, fieldList, page_size, Private) {
+utils.getSavedObject = async function (doc_tpye, fieldList, page_size, Private) {
   let savedObject = [];
-  let savedObjectsClient = Private(SavedObjectsClientProvider);;
+  let savedObjectsClient = Private(SavedObjectsClientProvider);
   await savedObjectsClient.find({
     type: doc_tpye,
     fields: fieldList,
@@ -139,9 +139,9 @@ utils.getSavedObject = async function(doc_tpye, fieldList, page_size, Private) {
 // It returns a specific visualization object based on the param vis_type.
 // For ex; To get all the business metrics, we need to pass 'business_metric'
 // for the vis_type param
-utils.getVisualizationObjectByType = async function(doc_tpye, fieldList, page_size, vis_type, Private) {
+utils.getVisualizationObjectByType = async function (doc_tpye, fieldList, page_size, vis_type, Private) {
   let visualizationObject = [];
-  let savedObjectsClient = Private(SavedObjectsClientProvider);;
+  let savedObjectsClient = Private(SavedObjectsClientProvider);
   await savedObjectsClient.find({
     type: doc_tpye,
     fields: fieldList,

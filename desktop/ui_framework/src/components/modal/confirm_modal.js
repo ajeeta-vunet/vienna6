@@ -21,7 +21,7 @@ const CONFIRM_MODAL_BUTTONS = [
 
 export function KuiConfirmModal({
   children,
-  title,
+  titleText,
   onCancel,
   onConfirm,
   cancelButtonText,
@@ -34,11 +34,11 @@ export function KuiConfirmModal({
 
   let modalTitle;
 
-  if (title) {
+  if (titleText) {
     modalTitle = (
       <KuiModalHeader>
         <KuiModalHeaderTitle data-test-subj="confirmModalTitleText">
-          {title}
+          {titleText}
         </KuiModalHeaderTitle>
       </KuiModalHeader>
     );
@@ -91,7 +91,7 @@ export function KuiConfirmModal({
 
 KuiConfirmModal.propTypes = {
   children: PropTypes.node,
-  title: PropTypes.string,
+  titleText: PropTypes.string,
   cancelButtonText: PropTypes.string,
   confirmButtonText: PropTypes.string,
   onCancel: PropTypes.func.isRequired,

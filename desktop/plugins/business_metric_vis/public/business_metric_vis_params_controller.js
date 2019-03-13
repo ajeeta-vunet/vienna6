@@ -5,13 +5,10 @@ require('ui/directives/business_metric_threshold');
 require('plugins/business_metric_vis/directives/historical_data.js');
 require('plugins/business_metric_vis/directives/aggregations.js');
 
-import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { uiModules } from 'ui/modules';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisParamsController', function ($scope, $rootScope, courier, savedSearches, $filter, Private) {
-
-  let savedObjectsClient = Private(SavedObjectsClientProvider);;
 
   $scope.operMetricsList = [];
   $scope.historicalDataEnabled = false;
@@ -92,7 +89,7 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
       // like [{name: system.memory.used.pct}, {name: system.mmory.total}...]
       $scope.operMetricsList[curIndex].allFields = [];
       // Populate the addtional field also with the same list
-      let additionalFields = fields.slice(0);
+      const additionalFields = fields.slice(0);
       for (let index = 0; index < additionalFields.length; index++) {
         $scope.operMetricsList[curIndex].allFields.push({ name: additionalFields[index].name });
       }
@@ -110,13 +107,13 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
   // Get the id for the selected saved search
   // curIndex - Index position of the selected metric
   $scope.setSavedSearch = function (curIndex) {
-    const savedSearchID = $scope.vis.params.metrics[curIndex].savedSearch.id
+    const savedSearchID = $scope.vis.params.metrics[curIndex].savedSearch.id;
     // Get the saved search details by passing the id
-    savedSearches.get(savedSearchID).then(function (savedSearchobj){
+    savedSearches.get(savedSearchID).then(function (savedSearchobj) {
       // Get the saved search source
       $scope.searchSource = savedSearchobj.searchSource;
       // Get the underlying index, title
-      let id = $scope.searchSource.get('index').id;
+      const id = $scope.searchSource.get('index').id;
       // Get the correspoding index for the selected saved search
       // and set it to the index dropdown list
       const indexPattern = {
@@ -125,7 +122,7 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
       };
       $scope.vis.params.metrics[curIndex].index = indexPattern;
       $scope.setIndexPattern(curIndex);
-    })
+    });
   };
 
   // Set the default item in the index and saved search
@@ -143,7 +140,7 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
       $scope.vis.params.metrics[curIndex].savedSearch = $scope.savedSearchIds[0];
       $scope.setSavedSearch(curIndex);
     }
-  }
+  };
 
   $scope.togglehistoricalData = function () {
     $scope.vis.params.historicalData = [];
@@ -160,47 +157,47 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
 
   // This will execute once. Get all the available saved search.
   // We are also passing "allowedRolesJSON" to get only the saved search the user is having access.
-  Promise.resolve(utils.getSavedObject('search',['title','allowedRolesJSON'],10000, Private))
-  .then(function (response) {
-    $scope.savedSearchIds = response;
-  });
+  Promise.resolve(utils.getSavedObject('search', ['title', 'allowedRolesJSON'], 10000, Private))
+    .then(function (response) {
+      $scope.savedSearchIds = response;
+    });
 
   // This will execute once get all the available index patterns
-  Promise.resolve(utils.getSavedObject('index-pattern',['title'],10000, Private))
-  .then(function (response) {
-    $scope.indexPatternIds = response;
+  Promise.resolve(utils.getSavedObject('index-pattern', ['title'], 10000, Private))
+    .then(function (response) {
+      $scope.indexPatternIds = response;
 
-    // for edit
-    // check if metrics exists loop through to populate
-    if ($scope.vis.params.metrics) {
-      const bmLength = $scope.vis.params.metrics.length;
+      // for edit
+      // check if metrics exists loop through to populate
+      if ($scope.vis.params.metrics) {
+        const bmLength = $scope.vis.params.metrics.length;
 
-      //if historicalData has values
-      if ($scope.vis.params.historicalData && $scope. vis.params.historicalData.length) {
-        $scope.historicalDataEnabled = true;
-      }
-
-      if (!$scope.vis.params.textFontSize) {
-        if ($scope.vis.params.fontSize <= 24) {
-          $scope.vis.params.textFontSize = $scope.vis.params.fontSize * 70 / 100;
-        } else {
-          $scope.vis.params.textFontSize = 16;
+        //if historicalData has values
+        if ($scope.vis.params.historicalData && $scope. vis.params.historicalData.length) {
+          $scope.historicalDataEnabled = true;
         }
-      }
 
-      for (let metricLength = 0; metricLength < bmLength; metricLength++) {
-        initMetric(metricLength);
+        if (!$scope.vis.params.textFontSize) {
+          if ($scope.vis.params.fontSize <= 24) {
+            $scope.vis.params.textFontSize = $scope.vis.params.fontSize * 70 / 100;
+          } else {
+            $scope.vis.params.textFontSize = 16;
+          }
+        }
+
+        for (let metricLength = 0; metricLength < bmLength; metricLength++) {
+          initMetric(metricLength);
+        }
+      } else {
+        $scope.operMetricsList.push({ expanded: false, indexFields: undefined });
+        $scope.vis.params = {
+          metrics: [{}],
+          aggregations: []
+        };
+        //set default font size
+        $scope.vis.params.fontSize = 40;
+        $scope.vis.params.textFontSize = 16;
+        initMetric(0);
       }
-    } else {
-      $scope.operMetricsList.push({ expanded: false, indexFields: undefined });
-      $scope.vis.params = {
-        metrics: [{}],
-        aggregations: []
-      };
-      //set default font size
-      $scope.vis.params.fontSize = 40;
-      $scope.vis.params.textFontSize = 16;
-      initMetric(0);
-    }
-  });
+    });
 });

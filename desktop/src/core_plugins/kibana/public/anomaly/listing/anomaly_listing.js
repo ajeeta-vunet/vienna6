@@ -147,6 +147,7 @@ export function AnomalyListingController($injector, $scope, $location, $http) {
     confirmModal(
       'Are you sure you want to delete the selected anomalies? This action is irreversible!',
       {
+        title: 'Warning',
         confirmButtonText: 'Delete',
         onConfirm: doDelete,
         defaultFocusedButton: ConfirmationButtonTypes.CANCEL

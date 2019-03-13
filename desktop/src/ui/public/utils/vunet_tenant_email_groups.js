@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 // This function returns all the email groups for the tenants
 export function getTenantEmailGroups($http, chrome) {
   const url = chrome.getTenantUrlBase() + '/' + '/attributes/email-group/?summary=true';

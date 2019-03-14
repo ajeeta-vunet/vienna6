@@ -16,15 +16,13 @@
     </div>
   </kbn-top-nav>
   <div
-    class="kuiViewContent kuiViewContent--constrainedWidth"
+    class="data-retention-container"
     data-test-subj="dataRetentionPage">
-    <div>
-      <vunet-data-table
-        fetch-items=" fetchDataRetentionItems" 
-        delete-selected-items="delete"
-        meta-item="settingsMeta"
-        on-submit="updateDataRetentionSettings">
-      </vunet-data-table>
-    </div>
+    <vunet-data-table
+      fetch-items=" fetchDataRetentionItems" 
+      delete-selected-items="delete"
+      meta-item="settingsMeta"
+      on-submit="updateDataRetentionSettings">
+    </vunet-data-table>
   </div>
 </vunet-data-retention-settings>

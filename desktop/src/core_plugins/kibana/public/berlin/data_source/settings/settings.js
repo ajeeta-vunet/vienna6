@@ -1,5 +1,6 @@
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
+import './settings.less';
 
 app.directive('vunetDataRetentionSettings', function () {
   return {
@@ -19,6 +20,13 @@ function vunetDataRetentionSettings($scope, StateService) {
   // Init function
   function init() {
   }
+
+  // This callback is called to check if a particular index_prefix already exists
+  // or not.. If this returns true, an error is displayed to the user
+  $scope.validateValue =  (key, value) => {
+    return $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting
+      .find(typeOneData => typeOneData[key] === value) ? true : false;
+  };
 
   $scope.settingsMeta = {
     headers: ['Index Prefix', 'Active Data', 'Inactive Data', 'Archived'],
@@ -46,6 +54,7 @@ function vunetDataRetentionSettings($scope, StateService) {
         label: 'Index Prefix',
         type: 'text',
         name: 'index_prefix',
+        validationCallback: $scope.validateValue,
         props: {
           required: true,
           maxLength: '24',
@@ -53,38 +62,42 @@ function vunetDataRetentionSettings($scope, StateService) {
           pattern: '^(?!\\*)[\\w\\-\\*]*[a-zA-Z][\\w\\-\\*]*$',
         },
         errorText: 'Value can have numbers, alphabets, - (hyphen) and * (star) characters with the' +
-        ' length of 3 to 24. There must be at least 1 alphabet. Also it should not start with a *(star)'
+        ' length of 3 to 24. There must be at least 1 alphabet. Also it should not start with a *(star).' +
+        ' Or Value already exist.'
       },
       {
         key: 'active_data',
         label: 'Active data',
-        type: 'text',
+        type: 'number',
         name: 'active_data',
         props: {
           required: true,
-          pattern: '^([1-8][0-9]?|[9][0]?)$'
+          min: '1',
+          max: '90'
         },
         errorText: 'Value should be a number. It cannot be zero and must be less than or equal to 90'
       },
       {
         key: 'inactive_data',
         label: 'Inactive data',
-        type: 'text',
+        type: 'number',
         name: 'inactive_data',
         props: {
           required: true,
-          pattern: '^([0-8][0-9]?|[9][0]?)$'
+          min: '0',
+          max: '90'
         },
         errorText: 'Value should be a number and less than or equal to 90.'
       },
       {
         key: 'archived_data',
         label: 'Archived data',
-        type: 'text',
+        type: 'number',
         name: 'archived_data',
         props: {
           required: true,
-          pattern: '^([0-9][0-9]{0,2}|1000)$'
+          min: '0',
+          max: '1000'
         },
         errorText: 'Value should be a number and less than or equal to 1000.'
       }]
@@ -149,10 +162,19 @@ function vunetDataRetentionSettings($scope, StateService) {
       if (event === 'add') {
         $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting.push(addOreditVal);
       } else {
-        // For edit replace the item in a list.
+        // For edit replace the item in a list except root index row.
         $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting.map((dataval, index) => {
           if (dataval.index_prefix === dataId) {
             $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting[index] = addOreditVal;
+          } else {
+            // When root index row is updating.
+            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].index_prefix = dataRetention.index_prefix;
+            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].searchable_data_in_days =
+             dataRetention.active_data;
+            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].non_searchable_data_in_days =
+             dataRetention.inactive_data;
+            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].archive_data_after_days =
+             dataRetention.archived_data;
           }
         });
       }

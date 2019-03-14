@@ -24,6 +24,7 @@ import ReactTooltip from 'react-tooltip';
 import $ from 'jquery';
 
 import { Pager } from 'ui/pager';
+import { SortableProperties } from 'ui_framework/services';
 
 import {
   KuiPager,
@@ -61,7 +62,8 @@ export class VunetDataTable extends Component {
       deleteSource: 'table', // To indicate row level or table level action.
       showAddEditModal: false, // Flag to display edit / add modal.
       filter: '', // Holds the input of search box in vunet table.
-      sortedColumn: 'title', //
+      sortedColumn: this.props.metaItem.rows[0] ? this.props.metaItem.rows[0] : '',
+      // sets first row by default to show sorting icon.
       pageStartNumber: 1, // Holds the pagination start page.
       isFetchingItems: false, // A Loading icon is displayed when this
       // flag is set to 'true'.
@@ -74,21 +76,24 @@ export class VunetDataTable extends Component {
       showSubTable: 0 // Flag to display sub table for a row.
     };
 
-    /* this.sortableProperties = new SortableProperties(
-      [
-        {
-          name: 'title',
-          getValue: item => item.title.toLowerCase(),
-          isAscending: true,
-        },
-        {
-          name: 'type',
-          getValue: item => item.type.title.toLowerCase(),
-          isAscending: true,
-        }
-      ],
-      this.state.sortedColumn
-    );*/
+    // Create instance of SortableProperties to sort the table.
+    // SortableProperties class takes 2 arguments:
+    // 1: List of column object EX: {
+    //                                name: 'title',
+    //                                getValue: item => item.title.toLowerCase(),
+    //                                isAscending: true,
+    //                               },
+    //                               {
+    //                                 name: 'description',
+    //                                 getValue: item => item.description.toLowerCase(),
+    //                                 isAscending: true
+    //                                }
+    // 2: initialSortablePropertyName which takes header title.
+
+    this.sortableProperties = new SortableProperties(
+      this.createSortablePropertiesList(),
+      this.props.metaItem.rows[0]
+    );
 
     // Run the function inside _.debounce after 200 milli seconds
     this.rows = [];
@@ -153,6 +158,8 @@ export class VunetDataTable extends Component {
    * Calculate item per page for pagination
    */
   calculateItemsOnPage = () => {
+    // Sort the items.
+    this.rows = this.sortableProperties.sortItems(this.rows);
     this.pager.setTotalItems(this.rows.length);
     const pageOfItems = this.rows.slice(this.pager.startIndex, this.pager.startIndex + this.pager.pageSize);
     this.setState({ pageOfItems, pageStartNumber: this.pager.startItem });
@@ -161,15 +168,42 @@ export class VunetDataTable extends Component {
     }
   };
 
+  // Create a list of objects with name, getValue and isAscending
+  // to pass in to SortableProperties class.
+  // Here we have used this.props.metaItem.row instead of this.props.metaItem.headers,
+  // because this.props.metaItem.rows has header variable name and this.props.metaItem.headers has header title,
+  // this requires to get the value of header.
+  //
+  // EX:In User this.props.metaItem.headers has headers: ['Name', 'Email', 'Group', 'Active', 'Home Page', 'Tenant Id', 'BU Id', 'Action']
+  // this.props.metaItem.rows has rows: ['name', 'email', 'user_group', 'active', 'home_page', 'tenant_id',  'bu_id']
+  // We need user_group to get the value not with the Group.
+  createSortablePropertiesList() {
+
+    const sortablePropertiesList = [];
+
+    this.props.metaItem.rows && this.props.metaItem.rows.map((header) => {
+      sortablePropertiesList.push({
+        name: header,
+        getValue: (item) => {
+          if (typeof (item[header]) === 'string') {
+            return item[header].toLowerCase();
+          } else {
+            return item[header];
+          }
+        },
+        isAscending: true,
+      }, header);
+    });
+
+    return sortablePropertiesList;
+  }
+
   /**
    * Deselect all at once by clicking on header selction checkbox
    */
   deselectAll = () => {
     this.setState({ selectedRowIds: [] });
   };
-
-  //isAscending = (name) => this.sortableProperties.isAscendingByName(name);
-  //getSortedProperty = () => this.sortableProperties.getSortedProperty();
 
   /**
    * fetch item
@@ -254,8 +288,22 @@ export class VunetDataTable extends Component {
     });
   }
 
-  //sortByTitle = () => this.sortOn('title');
-  //sortByType = () => this.sortOn('type');
+
+  // Sort based on column header type, sets sortedColumn state to
+  // propertyName and sorts the table values.
+  sortOn = (propertyName) => {
+
+    this.sortableProperties.sortOn(propertyName);
+
+    // Storing the propertyName to a sortedColumn state variable
+    // to sort based on this propertyName(Which will be header title).
+    this.setState({
+      selectedRowIds: [],
+      sortedColumn: propertyName,
+    });
+    this.deselectAll();
+    this.calculateItemsOnPage();
+  };
 
   /**
   * This function is used to create table headers for the vunet table.
@@ -267,17 +315,36 @@ export class VunetDataTable extends Component {
       !this.props.metaItem.headers.includes('Action')) {
       this.props.metaItem.headers.push('Action');
     }
-    return this.props.metaItem.headers && this.props.metaItem.headers.map((header, index) => {
+
+    const renderHeader =  this.props.metaItem.headers && this.props.metaItem.headers.map((header, index) => {
+
       // If metaItem has help then returns header with help icon else returns only header.
-      return ({ content: (this.props.metaItem.help && this.props.metaItem.help[index] !== '') ?
-        <span>
-          {header}
-          <i className="fa fa-question-circle header-style" data-tip={this.props.metaItem.help[index]} data-for={`tooltip-${index}`}>
-            <ReactTooltip id={`tooltip-${index}`} className="tool-tip-style"/>
-          </i>
-        </span> : header
-      });
+      // If header is Action then it returns only content else returns content,
+      // onSort, isSorted, isSortAscending to sort the table based on header.
+      // For sorting we have used this.props.metaItem.rows instead of header, because
+      // this.props.metaItem.rows gets the header variable name, this requires to sort the value,
+      // header has header title.
+      return (
+        (header !== 'Action') ?
+
+          { content: (this.props.metaItem.help && this.props.metaItem.help[index] !== '') ?
+
+            <span>
+              {header}
+              <i className="fa fa-question-circle header-style" data-tip={this.props.metaItem.help[index]} data-for={`tooltip-${index}`}>
+                <ReactTooltip id={`tooltip-${index}`} className="tool-tip-style"/>
+              </i>
+            </span> : header,
+          onSort: () => this.sortOn(this.props.metaItem.rows[index]),
+          isSorted: this.state.sortedColumn === this.props.metaItem.rows[index],
+          isSortAscending: this.sortableProperties.isAscendingByName(this.props.metaItem.rows[index]),
+          } :
+          {
+            content: header
+          });
     });
+
+    return renderHeader;
   }
 
   /**

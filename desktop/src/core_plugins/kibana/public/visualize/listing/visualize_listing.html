@@ -13,23 +13,26 @@
     </div>
   </div>
 </kbn-top-nav>
-
-<div class="kuiViewContent kuiViewContent--constrainedWidth"
-     data-test-subj="visualizeLandingPage"
->
-  <div class="kuiViewContentItem kuiVerticalRhythm" ng-if="listingController.showLimitError">
-    <div class="kuiInfoPanel kuiInfoPanel--warning">
-      <div class="kuiInfoPanelBody">
-        <div class="kuiInfoPanelBody__message">
-          You have {{ listingController.totalItems }} visualizations, but your "listingLimit" setting prevents the table below from displaying more than {{ listingController.listingLimit }}. You can change this setting under <a kbn-href="#/management/kibana/settings" class="kuiLink">Advanced Settings</a>.
+<div class="visualize-listing-container">
+  <div class="vunet-table">
+    <div class="kuiViewContent kuiViewContent--constrainedWidth"
+        data-test-subj="visualizeLandingPage"
+    >
+      <div class="kuiViewContentItem kuiVerticalRhythm" ng-if="listingController.showLimitError">
+        <div class="kuiInfoPanel kuiInfoPanel--warning">
+          <div class="kuiInfoPanelBody">
+            <div class="kuiInfoPanelBody__message">
+              You have {{ listingController.totalItems }} visualizations, but your "listingLimit" setting prevents the table below from displaying more than {{ listingController.listingLimit }}. You can change this setting under <a kbn-href="#/management/kibana/settings" class="kuiLink">Advanced Settings</a>.
+            </div>
+          </div>
         </div>
       </div>
+  
+      <visualize-listing-table
+        fetch-items="listingController.fetchItems"
+        delete-selected-items="listingController.deleteSelectedItems"
+      ></visualize-listing-table>
+  
     </div>
-  </div>
-
-  <visualize-listing-table
-    fetch-items="listingController.fetchItems"
-    delete-selected-items="listingController.deleteSelectedItems"
-  ></visualize-listing-table>
-
+  </div>  
 </div>

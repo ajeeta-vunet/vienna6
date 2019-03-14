@@ -137,7 +137,6 @@ export class VunetDynamicFormBuilder extends Component {
   * And also apply rule if applicabale
   */
   onChange = (e, key, type = 'single') => {
-
     // Find the element from props..
     const elm =  this.props.formData.item.find(_item => _item.key === key);
 
@@ -174,10 +173,15 @@ export class VunetDynamicFormBuilder extends Component {
       // Refresh the fields if the value for a single drop-down has
       // changed.. Its used to reset mobile-kpi/home-page for user
       this.resetFields(elm);
-
       this.setState({
         [key]: e.target.value
       }, () => this.init(false));
+    } else if (type === 'number') {
+      // Typecast the value to a Number if type is number.
+      this.setState({
+        [key]: Number(e.target.value)
+      }, () => this.init(false));
+
     } else if(type === 'multi') {
       this.setState({
         [key]: e.values
@@ -318,7 +322,6 @@ export class VunetDynamicFormBuilder extends Component {
       if (this.isHidden(key)) {
         return null;
       }
-
       const id = (!isAddOrEdit && m.id) ? true : false;
       const type = m.type || 'text';
       const props = m.props || {};
@@ -346,6 +349,26 @@ export class VunetDynamicFormBuilder extends Component {
 
       // We have different form element used for different type of
       // inputs..
+      if (type === 'number') {
+
+        // Re assigne the value for type number 0 if it is coming in value
+        if (this.state[target] === 0) {
+          value = 0;
+        }
+
+        input =  (<input
+          {...props}
+          className="form-input"
+          type={type}
+          key={key}
+          name={name}
+          value={value}
+          disabled={id}
+          onChange={(e)=>{this.onChange(e, target, 'number');}}
+          data-error-text={errorText}
+        />);
+      }
+
       if (type === 'radio') {
         input = m.options.map((o) => {
           const checked = o.value === value;

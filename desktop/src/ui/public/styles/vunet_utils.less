@@ -270,10 +270,6 @@ input[type="file"]{
   }
   // This has been added to fix menubar on top for listing pages like dashboards, visualizations etc
   .kuiViewContent--constrainedWidth{
-    overflow-y: auto;
-    height: @view-content-height;
-    padding-left: 15%;
-    padding-right: 15%;
     margin: 0;
     max-width: none;
   } 
@@ -1071,7 +1067,55 @@ button[disabled], {
   color: @accent_color;
 }
 
+// Table look and feel for dashboards listing page
+.dashboard-listing-container {
+  padding: 2.7rem 7rem 0 7rem;
+  overflow-y: auto;
+  height: @view-content-height;
+  .kuiViewContentItem {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+}
 
+// Table look and feel for visualizations listing page
+.visualize-listing-container {
+  padding: 2.7rem 7rem 0 7rem;
+  overflow-y: auto;
+  height: @view-content-height;
+}
 
+// Table look and feel for reports listing page
+.report-listing-container {
+  padding: 2.7rem 7rem 0 7rem;
+  overflow-y: auto;
+  height: @view-content-height;
+  .kuiViewContentItem {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+}
+
+// Table look and feel for anomaly listing page
+.anomaly-listing-container {
+  padding: 2.7rem 7rem 0 7rem;
+  overflow-y: auto;
+  height: @view-content-height;
+  .kuiViewContentItem {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+}
+
+// Table look and feel for alert listing page
+.alert-listing-container {
+  padding: 2.7rem 7rem 0 7rem;
+  overflow-y: auto;
+  height: @view-content-height;
+  .kuiViewContentItem {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+}
 
 

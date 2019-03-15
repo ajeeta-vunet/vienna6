@@ -7,11 +7,11 @@
         {{current_data_source}}</button>
     </div>
     <div class="row" ng-show="list_data_source_types">
-      <a href="" class="data-source-import-button" uib-tooltip="Import data sources using xls file" tooltip-placement="bottom">
+      <a href="" class="data-source-import-button" uib-tooltip="Import data source configuration using xls file" tooltip-placement="bottom">
         <button class="btn vunet-btn-import" ng-click="toggle_import_file()">
             Import
         </button></a>
-      <button class="btn vunet-btn-import pull-right" data-tip="Import xls data to ES" ng-click="importDataPopup()">
+      <button class="btn vunet-btn-import pull-right" uib-tooltip="Import Data to vuSmartmaps" ng-click="importDataPopup()">
         Import Data
       </button>
     </div>

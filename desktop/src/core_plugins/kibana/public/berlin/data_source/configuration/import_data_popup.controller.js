@@ -142,6 +142,8 @@ class importPopupCtrl {
           }, 3000);
         }
       });
+
+      $scope.cancel();
     };
 
     $scope.cancel = () => {

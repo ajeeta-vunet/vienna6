@@ -11,7 +11,7 @@
     <div class="form-group importXls-form-group" ng-class="{'has-error': moreThanOneSheetsInFile || isEmptyHeaderPresent || isFileSizeMore || isFileTypeWrong , 'has-warning' : importXlsForm.timeField.$touched && importXlsForm.file.$invalid } ">
       <label class="col-sm-3 control-label zero-padding">Import a XLS File</label>
       <div class="col-sm-9">
-        <input class="btn vunet-btn-file-import btn-file"  type="file" ng-model="File" name="file" id="file"
+        <input class="btn vunet-btn-file-import btn-file" type="file" ng-model="File" name="file" id="file"
           ngf-multiple="false" ngf-pattern="'.xls,.xlsx'" accept=".xls,.xlsx" required ngf-select="exportExcel($event)">
         <div id="reading-file" ng-if="readingFile"> Reading File ...</div>
         <span class="help-block" ng-if="isEmptyHeaderPresent">One or more merged or empty headers are present.</span>
@@ -26,24 +26,25 @@
       <div class="form-group importXls-form-group" ng-class="{'
       has-error': importXlsForm.indexName.$invalid && importXlsForm.indexName.$touched}">
         <label class="col-sm-3 control-label zero-padding">Load data into
-          <a href="" uib-tooltip="This is the index name of elasticsearch wherer data will be stored" tooltip-placement="bottom">
+          <div class="display-inline" uib-tooltip="Index name where data will be stored." tooltip-placement="bottom">
             <i class="fa fa-question-circle"></i>
-          </a>
+          </div>
         </label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" ng-model="index_name" name="indexName" required>
+          <input type="text" class="form-control" ng-model="index_name" name="indexName" required ng-maxlength='32'>
           <p ng-if="index_name" class="index-helper">The Index name will be saved as
             vunet-{{indexStringInfo}}-{{index_name}}</p>
+          <span class="help-block" ng-if="importXlsForm.indexName.$error.maxlength">Index name should not exceed 32
+            characters.</span>
         </div>
       </div>
 
       <!-- TIME FIELD -->
       <div class="form-group importXls-form-group" ng-class="{'has-error': importXlsForm.timeField.$invalid &&  importXlsForm.timeField.$touched }">
         <label class="col-sm-3 control-label zero-padding">Time Field
-          <a href="" uib-tooltip="Time fields generated from xls file. Please select the timestamp field"
-            tooltip-placement="bottom">
+          <div class="display-inline" uib-tooltip="Time fields generated from xls file. Please select the timestamp field." tooltip-placement="bottom">
             <i class="fa fa-question-circle"></i>
-          </a>
+          </div>
         </label>
         <div class="col-sm-9">
           <select class="form-control" ng-model="time_field" name="timeField" ng-options="header for header in uniqueHeaders"

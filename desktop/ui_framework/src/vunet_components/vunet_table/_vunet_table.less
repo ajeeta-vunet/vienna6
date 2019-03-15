@@ -23,7 +23,7 @@
 .vunet-table{
   border-radius: 1rem;
   padding-bottom:4rem;
-
+  
   // Normal Tbale CSS
   .kuiControlledTable{
     box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color;
@@ -45,6 +45,11 @@
       .kuiToolBarSection{
         .kuiPager{
           display:none;
+        }
+        // This has been added to move table action buttons on extreme right
+        &:not(:first-child):not(:last-child):not(:only-child) {
+          -webkit-justify-content: flex-end;
+          justify-content: flex-end;
         }
       }
       .kuiToolBarSearch{

@@ -14,8 +14,12 @@ app.directive('manageUsers', function () {
 
 function manageUsers($scope,
   $http,
-  StateService
+  StateService,
+  $rootScope
 ) {
+
+  const userInfo = chrome.getCurrentUser();
+  const logginInUserName = userInfo[0];
 
   // This accessor function is called to get the value to be shown for a
   // given column.. Here we do return title from the home_page and mobile_kpi
@@ -213,6 +217,19 @@ function manageUsers($scope,
         }
       },
       {
+        key: 'allow_console_login',
+        label: 'Admin Console',
+        type: 'radio',
+        name: 'adminConsole',
+        options: [
+          { key: 'yes', label: 'Yes', name: 'allow_console_login', value: 'Yes' },
+          { key: 'no', label: 'No', name: 'allow_console_login', value: 'No' },
+        ],
+        props: {
+          required: true
+        },
+      },
+      {
         key: 'mobile_kpi',
         label: 'Mobile KPI',
         type: 'multiSelect',
@@ -348,7 +365,8 @@ function manageUsers($scope,
         'mobile_kpi': mobileKpi(userData.mobile_kpi),
         'email': userData.email,
         'password': userData.password,
-        'user_group': userData.user_group
+        'user_group': userData.user_group,
+        'allow_console_login': userData.allow_console_login
       } };
       return StateService.addUser(user).then(function () {
         return Promise.resolve(true);
@@ -366,10 +384,14 @@ function manageUsers($scope,
           'mobile_kpi': mobileKpi(userData.mobile_kpi),
           'email': userData.email,
           'password': userData.password,
-          'user_group': userData.user_group
+          'user_group': userData.user_group,
+          'allow_console_login': userData.allow_console_login
         }
       };
-
+      // If the edited user is the logged in user we emit an event to show admin console icon in topbar's logout dropdown
+      if(userData.name === logginInUserName) {
+        $rootScope.$emit('adminConsole', userData.allow_console_login);
+      }
       return StateService.editUser(userId, user).then(function () {
         return Promise.resolve(true);
       }, function () {

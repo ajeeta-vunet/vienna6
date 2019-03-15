@@ -15,6 +15,16 @@ class TopbarCtrl {
   constructor($scope, StateService, $rootScope, $route, Private, timefilter, $interval, POLLING_TIME, $timeout, chrome, $window, kbnUrl) {
     // Getting the Idle session Timeout from chrome_vunet.js and starting timeout function
 
+    // here we are capture the emit send by manage_users.js for change in admin console access
+    $rootScope.$on('adminConsole', function (event, adminConsole) {
+      if(adminConsole === 'Yes') {
+        $scope.allow_console_access = true;
+      }
+      else {
+        $scope.allow_console_access = false;
+      }
+    });
+
     const currentRouteWhileGeneralSettings = window.location.href;
     $scope.showUserSettingsModal = false;
     $scope.allow_console_access = false;
@@ -31,7 +41,7 @@ class TopbarCtrl {
         'confirmPassword': ''
       };
       $scope.userSettingsModalData.editData = $scope.modifiedUserData;
-      if (data.allow_console_access === 'Yes') {
+      if (data.allow_console_login === 'Yes') {
         $scope.allow_console_access = true;
       }
     });

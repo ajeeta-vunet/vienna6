@@ -197,7 +197,17 @@ function networkConfigurationController($scope,
         template: ViewNetworkConfigTemplate,
         controller: ViewNetworkConfigCtrl,
         windowClass: 'network-configuration-modal'
-      });
+      }.result.then(function () {
+
+      // Nothing to do once the network configuration modal
+      // modal has been submitted.
+      }, function () {
+
+      // This callback is added to avoid the following
+      // warning in console:Possibly unhandled rejection: cancel
+
+      // 'Possibly unhandled rejection: cancel'
+      }));
       modalInstance.data = data;
       modalInstance.selectedConfigInstanceList = $scope.selectedConfigInstanceList;
     } else if (event === 'Collect configuration of device') {

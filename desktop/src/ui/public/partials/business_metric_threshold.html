@@ -188,7 +188,7 @@
         <div>
           <label class="vudata-color-label">Alert</label>
           <select
-            class="alert-select"
+            class="form-control"
             ng-model="severity"
             name="severity"
             ng-class="{error:alertcfgForm.severity.$error.required}"
@@ -215,6 +215,7 @@
           ng-show="field && !isNumberField() && !isStringField()">
           Unsupported type {{field.type}}
         </div>
+        <br/>
         <div
           ng-hide="editIndex >= 0"
           class="row">
@@ -223,14 +224,14 @@
               type="button"
               value="Add range"
               ng-click="addRange()"
-              class="form-control vudata-color-add"/>
+              class="form-control vudata-button"/>
           </div>
           <div class="col-xs-6">
             <input
               type="button"
               value="Cancel"
               ng-click="cancelEdit()"
-              class="form-control"/>
+              class="form-control vudata-button"/>
           </div>
         </div>
         <div
@@ -241,14 +242,14 @@
               type="button"
               value="Update range"
               ng-click="updateRange()"
-              class="form-control"/>
+              class="form-control vudata-button"/>
           </div>
           <div class="col-xs-6">
             <input
               type="button"
               value="Cancel"
               ng-click="cancelEdit()"
-              class="form-control"/>
+              class="form-control vudata-button"/>
           </div>
         </div>
       </div>

@@ -92,6 +92,15 @@ function manageAbout($scope,
       template: UploadLicenseTemplate,
       controller: UploadLicenseCtrl,
       windowClass: 'upload-license-modal'
+    }).result.then(function () {
+
+      // Nothing to do once the license upload modal is submitted.
+    }, function () {
+
+      // This callback is added to avoid the following
+      // warning in console:Possibly unhandled rejection: cancel
+
+      // 'Possibly unhandled rejection: cancel'
     });
   };
 

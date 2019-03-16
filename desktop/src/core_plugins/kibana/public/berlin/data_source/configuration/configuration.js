@@ -74,6 +74,16 @@ function configuration($scope, StateService, Upload, $compile, HTTP_SUCCESS_CODE
       animation: true,
       template: importDataPopupTemplate,
       controller: 'importDataPopupCtrl'
+    }).result.then(function () {
+
+      // Nothing to do once the import data pop up
+      // is submitted.
+    }, function () {
+
+      // This callback is added to avoid the following
+      // warning in console:Possibly unhandled rejection: cancel
+
+      // 'Possibly unhandled rejection: cancel'
     });
   };
 

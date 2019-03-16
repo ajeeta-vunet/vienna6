@@ -1,102 +1,126 @@
 <div class="kuiSideBarSection table-left-sidebar">
-  <div class="form-group">
-    <label for="datatableVisualizationPerPage">Per Page</label>
-    <input
-      type="number"
-      ng-model="vis.params.perPage"
-      class="form-control"
-      id="datatableVisualizationPerPage"
-      >
-  </div>
-  <div class="checkbox">
-    <label>
-    <input
-      type="checkbox"
-      ng-model="vis.params.showMeticsAtAllLevels"
-      >
-    Show metrics for every bucket/level
-    </label>
-  </div>
-  <div class="checkbox">
-    <label>
-    <input
-      type="checkbox"
-      ng-model="vis.params.showPartialRows"
-      >
-    Show partial rows
-    </label>
-  </div>
-  <div class="checkbox">
-    <label>
-    <input
-      type="checkbox"
-      ng-model="metricsAtAllLevels"
-      disabled
-      >
-    Calculate metrics for every bucket/level
-    </label>
-  </div>
-  <div class="checkbox">
-    <label>
+  <form name="tableOptionsForm">
+    <div class="form-group">
+      <label for="datatableVisualizationPerPage">Per Page</label>
       <input
-        type="checkbox"
-        ng-model="vis.params.metricsInPercentage"
-        ng-required="colorCodeOnPercentageUsed">
+        type="number"
+        name="perPage"
+        ng-model="vis.params.perPage"
+        max="3000"
+        class="form-control"
+        id="datatableVisualizationPerPage"
+      />
+      <div
+        ng-show="tableOptionsForm.perPage.$error.max"
+        class="error"
+        >
+        Per Page should be less than 3000
+      </div>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="vis.params.showMeticsAtAllLevels" />
+        Show metrics for every bucket/level
+      </label>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="vis.params.showPartialRows" />
+        Show partial rows
+      </label>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="metricsAtAllLevels" disabled />
+        Calculate metrics for every bucket/level
+      </label>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input
+          type="checkbox"
+          ng-model="vis.params.metricsInPercentage"
+          ng-required="colorCodeOnPercentageUsed"
+        />
         Show metrics in percentage
-        <kbn-tooltip text="Enable this to show percentage along with the values in table. Works only for 'Count', 'Sum' or 'Unique Count' metric." placement="right" append-to-body="1">
+        <kbn-tooltip
+          text="Enable this to show percentage along with the values in table. Works only for 'Count', 'Sum' or 'Unique Count' metric."
+          placement="right"
+          append-to-body="1"
+        >
           <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
         </kbn-tooltip>
-    </label>
-  </div>
-  <div class="table-color-range-error"
-    ng-show="colorCodeOnPercentageUsed">
-    Color schema is configured to use percentage values. Pl note that unchecking this field will make Color schema configuration invalid.
-  </div>
-  <div class="checkbox">
-    <label>
-      <input
-        type="checkbox"
-        ng-model="vis.params.addSrNumber"
+      </label>
+    </div>
+    <div class="table-color-range-error" ng-show="colorCodeOnPercentageUsed">
+      Color schema is configured to use percentage values. Pl note that
+      unchecking this field will make Color schema configuration invalid.
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="vis.params.addSrNumber" />
+        Add a serial number column
+        <kbn-tooltip
+          text="Enable this to show an additional column of serial number for each row"
+          placement="right"
+          append-to-body="1"
         >
-      Add a serial number column
-      <kbn-tooltip
-        text="Enable this to show an additional column of serial number for each row"
-        placement="right"
-        append-to-body="1"
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+      </label>
+    </div>
+    <div ng-show="vis.params.addSrNumber" class="row">
+      <div class="col-xs-1"></div>
+      <div class="col-xs-3">
+        Base
+        <kbn-tooltip
+          text="Starting number to be used when showing serial numbers"
+          placement="right"
+          append-to-body="1"
         >
-        <i class="fa fa-question-circle table-vis-help-hover"></i>
-      </kbn-tooltip>
-    </label>
-  </div>
-  <div ng-show="vis.params.addSrNumber" class="row">
-    <div class="col-xs-1"> </div>
-    <div class="col-xs-3">
-      Base
-      <kbn-tooltip text="Starting number to be used when showing serial numbers" placement="right" append-to-body="1">
-        <i class="fa fa-question-circle table-vis-help-hover"></i>
-      </kbn-tooltip>
-      <input type="number" ng-model="vis.params.srNumberBase" class="form-control">
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+        <input
+          type="number"
+          ng-model="vis.params.srNumberBase"
+          class="form-control"
+        />
+      </div>
+      <div class="col-xs-3">
+        Prefix
+        <kbn-tooltip
+          text="Prefix to be attached to serial numbers"
+          placement="right"
+          append-to-body="1"
+        >
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+        <input
+          type="text"
+          ng-model="vis.params.srNumberPrefix"
+          class="form-control"
+        />
+      </div>
+      <div class="col-xs-4">
+        Column Title
+        <kbn-tooltip
+          text="Title for serial number column"
+          placement="right"
+          append-to-body="1"
+        >
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+        <input
+          type="text"
+          ng-model="vis.params.srNumberTitle"
+          class="form-control"
+        />
+      </div>
     </div>
-    <div class="col-xs-3">
-      Prefix
-      <kbn-tooltip text="Prefix to be attached to serial numbers" placement="right" append-to-body="1">
-        <i class="fa fa-question-circle table-vis-help-hover"></i>
-      </kbn-tooltip>
-      <input type="text" ng-model="vis.params.srNumberPrefix" class="form-control">
-    </div>
-    <div class="col-xs-4">
-      Column Title
-      <kbn-tooltip text="Title for serial number column" placement="right" append-to-body="1">
-        <i class="fa fa-question-circle table-vis-help-hover"></i>
-      </kbn-tooltip>
-      <input type="text" ng-model="vis.params.srNumberTitle" class="form-control">
-    </div>
-  </div>
-  <show-cumulative-row
-    vis-obj="vis"
-  ></show-cumulative-row>
-  <metric-color-schema
-    vis-obj="vis"
-    field-specified="true"
-  ></metric-color-schema>
+    <show-cumulative-row vis-obj="vis"></show-cumulative-row>
+    <metric-color-schema
+      vis-obj="vis"
+      field-specified="true"
+    ></metric-color-schema>
+  </form>
 </div>

@@ -32,6 +32,16 @@ function enrichmentGroups($scope,
       template: ImportEnrichmentGroupsTemplate,
       controller: ImportEnrichmentGroupsCtrl,
       windowClass: 'import-enrichment-groups-modal'
+    }).result.then(function () {
+
+      // Nothing to do once the import enrichment groups
+      // modal has been submitted.
+    }, function () {
+
+      // This callback is added to avoid the following
+      // warning in console:Possibly unhandled rejection: cancel
+
+      // 'Possibly unhandled rejection: cancel'
     });
   };
 

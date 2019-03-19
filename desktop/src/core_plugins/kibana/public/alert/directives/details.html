@@ -171,27 +171,29 @@
             </div>
           </div> <!-- row botoom-space -->
           <div class="alert-component-wrapper"  ng-init="parentIndex = $index">
-            <div class="form-group bottom-space">
-              <label>
-                Based on Business Metric
-                <kbn-tooltip
-                  text="Create alert condition based on Business Metric"
-                  placement="bottom"
-                  append-to-body="1">
-                  <span>
-                    <i
-                      class="fa fa-question-circle"
-                      aria-hidden="true">
-                    </i>
-                  </span>
-                </kbn-tooltip>
-              </label>
-              <input
-                type="checkbox"
-                class="vudata-checkbox"
-                ng-model="rule.vuMetricsBased"
-                ng-checked="rule.vuMetricsBased"
-                ng-change="showVUMetric($index)"/>
+            <div class="row">
+              <div class="col-md-2">
+                <p class="alert-condition alert-component-label">
+                  Based on Business Metric
+                  <kbn-tooltip
+                    text="Create alert condition based on Business Metric"
+                    placement="right"
+                    append-to-body="1">
+                    <span>
+                      <i
+                        class="fa fa-question-circle"
+                        aria-hidden="true">
+                      </i>
+                    </span>
+                  </kbn-tooltip>
+                </p>
+                <input
+                  type="checkbox"
+                  class="vudata-checkbox"
+                  ng-model="rule.vuMetricsBased"
+                  ng-checked="rule.vuMetricsBased"
+                  ng-change="showVUMetric($index)"/>
+                </div>
             </div>
             <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
               <p class="alert-component-label alert-condition">
@@ -221,19 +223,23 @@
               <a data-ng-click="previewMetric(operRuleList[$index].vis)" href="" ng-class="{'alert-disable-preview': !operRuleList[$index].vis}"><span class="fa fa-eye"></span>Preview</a>
             </div>
             <div class="row bottom-space" data-ng-repeat="metric in operRuleList[$index].metrics track by $index" ng-if="(rule.selectedMetric && rule.vuMetricsBased)">
-              <label>
-                R{{operRuleList[parentIndex].innerRuleIndex + $index}} - {{ metric.label }}
-                <kbn-tooltip
-                  text=" Index name - {{ metric.index.title }} , Saved Search - {{ metric.savedSearch.title }} , Metric type - {{ metric.type }} ,Metric field - {{ metric.field }}"
-                  placement="right">
-                  <span>
-                    <i
-                      class="fa fa-question-circle"
-                      aria-hidden="true">
-                    </i>
-                  </span>
-                </kbn-tooltip>
-              </label>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row bottom-space">
+                    R{{operRuleList[parentIndex].innerRuleIndex + $index}} - {{ metric.label }}
+                    <kbn-tooltip
+                      text=" Index name - {{ metric.index.title }} , Saved Search - {{ metric.savedSearch.title }} , Metric type - {{ metric.type }} ,Metric field - {{ metric.field }}"
+                      placement="right">
+                      <span>
+                        <i
+                          class="fa fa-question-circle"
+                          aria-hidden="true">
+                        </i>
+                      </span>
+                    </kbn-tooltip>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
               <div class="alert-condition metric-content">
@@ -316,24 +322,33 @@
               </div>
             </div>
             <div class="row bottom-space" ng-if="!rule.vuMetricsBased">
-              <div class="alert-component-label alert-condition">
-                Add a threshold
-                <kbn-tooltip
-                  text="Enabling this checkbox will allow sub rules to add a threshold value"
-                  placement="right" append-to-body="1">
-                  <i class="fa fa-question-circle">
-                  </i>
-                </kbn-tooltip>
-                <input
-                  type="checkbox"
-                  name="enableComparisionFields"
-                  class="alert-checkbox"
-                  ng-change="resetComparisionFields(rule)"
-                  ng-model="rule.enableComparisionFields">
+              <div class="row">
+                <div class="col-md-2">
+                  <p class="alert-condition alert-component-label">
+                    Add a threshold
+                    <kbn-tooltip
+                      text="Enabling this checkbox will allow sub rules to add a threshold value"
+                      placement="right"
+                      append-to-body="1">
+                      <span>
+                        <i
+                          class="fa fa-question-circle"
+                          aria-hidden="true">
+                        </i>
+                      </span>
+                    </kbn-tooltip>
+                  </p>
+                  <input
+                    type="checkbox"
+                    name="enableComparisionFields"
+                    class="alert-checkbox"
+                    ng-change="resetComparisionFields(rule)"
+                    ng-model="rule.enableComparisionFields">
+                </div>
               </div>
             </div>
             <div class="row bottom-space">
-              <div ng-if="rule.enableComparisionFields">
+              <div ng-if="operRuleList[$index].metricIsSelected">
                 <div ng-if="rule.enableComparisionFields && !rule.vuMetricsBased">
                   <p class="alert-condition alert-component-label">
                     Alert when metric is
@@ -1182,45 +1197,49 @@
     </h4>
     <div class="alert-section">
       <div class="alert-component-wrapper">
-        <div class="row bottom-space">
-          <p class="alert-component-label alert-condition">
-            Set Debug Level
-            <kbn-tooltip 
-              text="Set the debug level to <Error, Warning, Information or Debug>"
-              placement="right"
-              append-to-body="1">
-              <i class="fa fa-question-circle"></i>
-            </kbn-tooltip>
-          </p>
-          <div class="alert-condition">
-            <select
-              class="alert-select alert-condition"
-              ng-model="setDebug"
-              name="setDebugLevel"
-              ng-class="{error: alertcfgForm.setDebugLevel.$error.required}"
-              ng-required="setDebug"
-              ng-change="setDebugLevel()">
-              <option value="0">Error</option>
-              <option value="1">Warning</option>
-              <option value="2">Information</option>
-              <option value="3">Debug</option>
-              <option value="-1">Disable</option>
-            </select>
-          </div>
-          <div
-            class="fa fa-check alert-condition alert-component-label status-message success-highlight"
-            ng-if="successfullyset && debugVal != 'Disable'">
-            Diagnostics level set to {{debugVal}}. This will be active for next few executions.
-          </div>
-          <div
-            class="fa fa-check alert-condition alert-component-label status-message success-highlight"
-            ng-if="successfullyset && debugVal == 'Disable'">
-            Debugs are disabled
-          </div>
-          <div
-            class="fa fa-close alert-condition alert-component-label status-message error-highlight"
-            ng-if="failedtoset">
-            {{failedmsg}}
+      <div class="row">
+          <div class="col-md-8">
+            <div class="row bottom-space">
+              <p class="alert-component-label alert-condition">
+                Set Debug Level
+                <kbn-tooltip
+                  text="Set the debug level to <Error, Warning, Information or Debug>"
+                  placement="right"
+                  append-to-body="1">
+                  <i class="fa fa-question-circle"></i>
+                </kbn-tooltip>
+              </p>
+              <div class="alert-condition">
+                <select
+                  class="alert-select alert-condition"
+                  ng-model="setDebug"
+                  name="setDebugLevel"
+                  ng-class="{error: alertcfgForm.setDebugLevel.$error.required}"
+                  ng-required="setDebug"
+                  ng-change="setDebugLevel()">
+                  <option value="0">Error</option>
+                  <option value="1">Warning</option>
+                  <option value="2">Information</option>
+                  <option value="3">Debug</option>
+                  <option value="-1">Disable</option>
+                </select>
+              </div>
+              <div
+                class="fa fa-check alert-condition alert-component-label status-message success-highlight"
+                ng-if="successfullyset && debugVal != 'Disable'">
+                Diagnostics level set to {{debugVal}}. This will be active for next few executions.
+              </div>
+              <div
+                class="fa fa-check alert-condition alert-component-label status-message success-highlight"
+                ng-if="successfullyset && debugVal == 'Disable'">
+                Debugs are disabled
+              </div>
+              <div
+                class="fa fa-close alert-condition alert-component-label status-message error-highlight"
+                ng-if="failedtoset">
+                {{failedmsg}}
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">

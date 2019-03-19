@@ -249,6 +249,9 @@ function alertAppEditor($scope,
         alertcfgRule.ruleTypeDuration = 5;
         alertcfgRule.ruleTypeDurationType = 'minute';
       }
+      else if (alertcfgRule.vuMetricsBased === true) {
+        newOperRuleObj.metricIsSelected = true;
+      }
 
       newRuleObj.ruleType = alertcfgRule.ruleType;
       newRuleObj.ruleNameAlias = alertcfgRule.ruleNameAlias;

@@ -104,6 +104,7 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
           $scope.ruleList[$index].groupByField = '';
           $scope.ruleList[$index].alertFilter = '';
           $scope.ruleList[$index].metricAlias = '';
+          $scope.operRuleList[$index].metricIsSelected  = true;
         }
         updateIndexForMetricsAndRules($index, prevLength, currLength);
       };

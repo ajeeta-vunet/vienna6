@@ -149,10 +149,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   const allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
 
   let isScheduleInvalid = false;
-  /*eslint-disable*/
-  let isEmailButtonDisabled = true;
-  /*eslint-enable*/
-
   // Object to store the user selected values
   // in report scheduling
   $scope.cronObj = {};
@@ -211,8 +207,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   if ($scope.recipientsData.length &&
     $scope.recipientsData[0].role !== '') {
     const currentUser = chrome.getCurrentUser();
-    // Enable email button since recipients exists
-    isEmailButtonDisabled = false;
     // Display all the
     if (chrome.isCurrentUserAdmin()) {
       $scope.recipientsList = $scope.recipientsData;
@@ -224,10 +218,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         return recipient.role === currentUser[1];
       });
     }
-  }
-  //disable email button since recipients doesnot exists
-  else {
-    isEmailButtonDisabled = true;
   }
 
   $scope.printReport = $route.current.locals.printReport;
@@ -810,15 +800,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
           // Update the backend for this object's operation
           updateVunetObjectOperation([reportcfg], 'report', $http, 'modify', chrome);
-
-          // After saving check if recipients are present
-          // or not in order to enable or disable email button
-          if ($scope.recipientsList.length) {
-            isEmailButtonDisabled = false;
-          }
-          else {
-            isEmailButtonDisabled = false;
-          }
 
           if (reportcfg.id !== $routeParams.id) {
             kbnUrl.change('/report/{{id}}', { id: reportcfg.id });

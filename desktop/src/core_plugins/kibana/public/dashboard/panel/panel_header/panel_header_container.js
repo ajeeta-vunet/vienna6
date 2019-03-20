@@ -26,7 +26,7 @@ import {
 const mapStateToProps = ({ dashboard }, { panelId }) => {
   const embeddable = getEmbeddable(dashboard, panelId);
   const panel = getPanel(dashboard, panelId);
-  let visState = '';
+  let visState = {};
 
   const embeddableTitle = embeddable ? embeddable.title : '';
   // Gets the visState from visualization through embeddable

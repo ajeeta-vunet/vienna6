@@ -419,7 +419,59 @@ function vunetCredentials($scope,
 
   // Function to submit items of table
   $scope.onSubmit = (event, userId, data, restKey) => {
-    return StateService.createCredentials(restKey, data).then(function () {
+    // Store data in to local variable.
+    let credentialsData = data;
+
+    // Prepare data for snmp.
+    if (restKey === 'snmp') {
+      // Prepare data for version v1 and v2c.
+      if (credentialsData.version === 'v1' || credentialsData.version === 'v2c') {
+        credentialsData = {
+          name: credentialsData.name,
+          port: credentialsData.port,
+          version: credentialsData.version,
+          community_string: credentialsData.community_string
+        };
+      } else if (credentialsData.version === 'v3') {
+
+        // Prepare data for v3 having auth-priv.
+        if (credentialsData.security_level === 'auth-priv') {
+          credentialsData = {
+            name: credentialsData.name,
+            port: credentialsData.port,
+            version: credentialsData.version,
+            username: credentialsData.username,
+            security_level: credentialsData.security_level,
+            priv_protocol: credentialsData.priv_protocol,
+            privacy_key: credentialsData.privacy_key,
+            auth_protocol: credentialsData.auth_protocol,
+            auth_key: credentialsData.auth_key,
+          };
+        } else if (credentialsData.security_level === 'no-auth-no-priv') {
+          // Prepare data for v3 having no-auth-no-priv.
+          credentialsData = {
+            name: credentialsData.name,
+            port: credentialsData.port,
+            version: credentialsData.version,
+            username: credentialsData.username,
+            security_level: credentialsData.security_level,
+          };
+        } else if (credentialsData.security_level === 'auth-no-priv') {
+          // Prepare data for v3 having auth-no-priv.
+          credentialsData = {
+            name: credentialsData.name,
+            port: credentialsData.port,
+            version: credentialsData.version,
+            username: credentialsData.username,
+            security_level: credentialsData.security_level,
+            auth_protocol: credentialsData.auth_protocol,
+            auth_key: credentialsData.auth_key,
+          };
+        }
+      }
+    }
+
+    return StateService.createCredentials(restKey, credentialsData).then(function () {
       return Promise.resolve(true);
     }, function () {
       return Promise.resolve(false);

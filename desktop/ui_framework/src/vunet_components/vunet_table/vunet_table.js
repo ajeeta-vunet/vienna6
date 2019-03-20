@@ -188,7 +188,8 @@ export class VunetDataTable extends Component {
           if (typeof (item[header]) === 'string') {
             return item[header].toLowerCase();
           } else {
-            return item[header];
+            // To replace value null with empty string.
+            return item[header] !== null ? item[header] : '';
           }
         },
         isAscending: true,
@@ -324,8 +325,12 @@ export class VunetDataTable extends Component {
       // For sorting we have used this.props.metaItem.rows instead of header, because
       // this.props.metaItem.rows gets the header variable name, this requires to sort the value,
       // header has header title.
+
+      // If header is in this.props.metaItem.noSortColumns list then return only the content.
+      // This check has done for column having value type Object, sorting on Object
+      // is not implementes as of now.
       return (
-        (header !== 'Action') ?
+        (header !== 'Action' &&  (!this.props.metaItem.noSortColumns || !this.props.metaItem.noSortColumns.includes(header))) ?
 
           { content: (this.props.metaItem.help && this.props.metaItem.help[index] !== '') ?
 

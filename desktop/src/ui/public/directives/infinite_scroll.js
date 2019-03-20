@@ -35,11 +35,18 @@ module.directive('kbnInfiniteScroll', function () {
         }, 50);
       }
 
-      $window.on('scroll', scheduleCheck);
+      // Register scroll event for the element having id discover-data
+      $('#discover-data').on('scroll', scheduleCheck);
+
+      // $window.on('scroll', scheduleCheck);
       $scope.$on('$destroy', function () {
         clearTimeout(checkTimer);
-        $window.off('scroll', scheduleCheck);
+
+        // Unregister scroll event when destroy event fiered for
+        // the element having id discover-data.
+        $('#discover-data').off('scroll', scheduleCheck);
       });
+
       scheduleCheck();
     }
   };

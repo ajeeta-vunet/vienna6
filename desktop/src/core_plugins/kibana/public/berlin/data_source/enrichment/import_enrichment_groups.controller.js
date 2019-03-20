@@ -18,7 +18,10 @@ class ImportEnrichmentGroupsCtrl {
           // Notify  success message for successful import.
           notify.info(` File successfully imported`);
         }
+      }).catch(() => {
+        $scope.closeModal();
       });
+
       // This is to reset the variable after the upload is done
       $scope.successfulUpload = false;
     };

@@ -293,6 +293,7 @@ function anomalyAppEditor($scope,
     anomaly.save(isNewAnomaly).then(function (id) {
       $scope.kbnTopNav.close('save');
       if (id) {
+        notify.info(`Saved Anomaly as "${anomaly.title}"`);
         anomaly.id = id;
         updateVunetObjectOperation([anomaly], 'anomaly', $http, 'modify', chrome);
         if (anomaly.id !== $routeParams.id) {

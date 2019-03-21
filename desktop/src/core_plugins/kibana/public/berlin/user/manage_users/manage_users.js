@@ -128,7 +128,7 @@ function manageUsers($scope,
     title: 'User',
     selection: true,
     search: true,
-    default: { },
+    default: { active: 'Yes', allow_console_login: 'No' },
     deleteIconCheckCallback: $scope.deleteIconCheckCallback,
     editIconCheckCallback: $scope.editIconCheckCallback,
     table:

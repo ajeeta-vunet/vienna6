@@ -740,7 +740,7 @@ function alertAppEditor($scope,
     alertcfg.save(isNewAlert).then(function (id) {
       $scope.kbnTopNav.close('save');
       if (id) {
-
+        notify.info(`Saved Alert as "${alertcfg.title}"`);
         alertcfg.id = id;
         updateVunetObjectOperation([alertcfg], 'alert', $http, 'modify', chrome);
         if (alertcfg.id !== $routeParams.id) {

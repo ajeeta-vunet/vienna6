@@ -6,10 +6,30 @@
   <h2 class="kuiLocalDropdownTitle">
     Save Search
   </h2>
+  <div class="kuiLocalDropdownHeader">
+    <label
+      class="kuiLocalDropdownHeader__label"
+      for="saveSearchTitle"
+    >
+      Title
+      <kbn-tooltip
+        text="Title should not be more than 64 characters"
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+  </div>
 
   <input
     class="kuiLocalDropdownInput"
     id="SaveSearch"
+    maxlength="64"
     ng-model="opts.savedSearch.title"
     input-focus="select"
     placeholder="Name this search..."

@@ -89,12 +89,16 @@
           class="form-control historical-data-input"
           type="text"
           ng-model="label"
+          ng-maxlength="64"
           name="historicalDataLabel"
           required/>
         <p
           class="error"
           ng-show="historicalDataForm.historicalDataLabel.$error.required">
           Please provide a label
+        </p>
+        <p class="error" ng-show="historicalDataForm.historicalDataLabel.$error.maxlength">
+          'Label' should not be more than 64 characters
         </p>
       </div>
       <div

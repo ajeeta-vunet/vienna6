@@ -149,6 +149,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   const allowedRoles = reportcfg.allowedRolesJSON ? JSON.parse(reportcfg.allowedRolesJSON) : [];
 
   let isScheduleInvalid = false;
+
   // Object to store the user selected values
   // in report scheduling
   $scope.cronObj = {};
@@ -284,6 +285,11 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     }
   };
 
+  // By default add an empty recipient for the new report
+  if ($scope.recipientsList.length === 0) {
+    $scope.addRecipients();
+  }
+
   // Reset the schedule frequency when enable scheduling
   // is unchecked.
   $scope.toggleEnableSchedule = function () {
@@ -293,9 +299,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       isScheduleInvalid = false;
     }
     else {
-      if ($scope.recipientsList.length === 0) {
-        $scope.addRecipients();
-      }
       // The default value to be shown to the user
       $scope.cronObj.value = '* * * * *';
     }
@@ -797,7 +800,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         reportcfg.id = id;
         $scope.kbnTopNav.close('save');
         if (id) {
-
+          notify.info(`Saved Report as "${reportcfg.title}"`);
           // Update the backend for this object's operation
           updateVunetObjectOperation([reportcfg], 'report', $http, 'modify', chrome);
 

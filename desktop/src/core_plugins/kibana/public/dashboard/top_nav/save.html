@@ -13,13 +13,26 @@
         for="saveDashboardTitle"
       >
         Title
+        <kbn-tooltip
+          text="Title should not be more than 64 characters"
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
       </label>
     </div>
+
 
     <input
       id="saveDashboardTitle"
       class="kuiLocalDropdownInput"
       data-test-subj="dashboardTitle"
+      maxlength="64"
       type="text"
       ng-model="model.title"
       placeholder="Dashboard title"
@@ -34,6 +47,17 @@
         for="saveDashboardDescription"
       >
         Description
+        <kbn-tooltip
+          text="Description should not be more than 100 characters"
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
       </label>
     </div>
 
@@ -43,6 +67,7 @@
       data-test-subj="dashboardDescription"
       type="text"
       ng-model="model.description"
+      maxlength="100"
       placeholder="Dashboard description"
     >
   </div>

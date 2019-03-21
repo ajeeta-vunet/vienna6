@@ -4,6 +4,26 @@
 >
   <h2 class="kuiLocalDropdownTitle">
     Save Anomaly
+  </h2>
+  <div class="kuiLocalDropdownHeader">
+    <label
+      class="kuiLocalDropdownHeader__label"
+      for="saveAnomayTitle"
+    >
+      Title
+      <kbn-tooltip
+        text="Title should not be more than 64 characters"
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+    </label>
+  </div>
 
   <input
     class="kuiLocalDropdownInput"
@@ -11,6 +31,7 @@
     type="text"
     data-test-subj="anomalyTitleInput"
     name="anomalyTitle"
+    maxlength="64"
     ng-model="opts.anomaly.title"
     aria-label="Name"
     required

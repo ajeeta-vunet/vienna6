@@ -357,7 +357,7 @@
                 ng-class="{error:item.selectEmailGroupList.length == 0 && enable_scheduling && recipientItemForm.reportRecipients.$invalid}">
               <searchable-multiselect
                 display-attr="description"
-                recipient-index="$index"
+                item-index="$index"
                 value-attr="name"
                 name="reportEmailGroup"
                 ng-model="item.selectEmailGroupList"
@@ -379,7 +379,7 @@
                 class="error-highlight">
                 Please provide either valid email address or choose email group from the list. You can enter multiple email addresses separated by a comma ','
               </p>
-          </ng-form>
+            </ng-form>
           </div>
           <div
             class="row add-recipient-style">
@@ -391,6 +391,29 @@
               <span>Add field</span>
               <i class="fa fa-plus-circle" aria-hidden="true"></i>
             </button>
+          </div>
+          <div
+            class="row add-recipient-email-body">
+            <p> Email Body
+              <kbn-tooltip
+                text="Use this to provide email body content which will be used in the alert email"
+                placement="right" append-to-body="1">
+                <i class="fa fa-question-circle"></i>
+              </kbn-tooltip>
+            </p>
+            <textarea
+              type="text"
+              rows="6"
+              cols="150"
+              name="reportEmailBody"
+              ng-model="opts.reportEmailBody"
+              ng-maxlength="5000">
+            </textarea>
+            <p
+              class="error-highlight"
+              ng-show="reportcfgForm.reportEmailBody.$error.maxlength">
+              'Email body' content must be less than 5000 characters
+            </p>
           </div>
         </div>
     </form>

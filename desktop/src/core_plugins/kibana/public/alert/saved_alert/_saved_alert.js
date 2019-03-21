@@ -47,6 +47,9 @@ module.factory('SavedAlert', function (courier) {
         weekdays: '',
         evalCriteriaAlias: '',
         advancedConfiguration: '',
+        alertEmailBody: '',
+        alertByReport: false,
+        alertReportList: '',
       },
 
       // if an indexPattern was saved with the searchsource of a SavedAlert
@@ -90,6 +93,9 @@ module.factory('SavedAlert', function (courier) {
     weekdays: 'text',
     evalCriteriaAlias: 'text',
     advancedConfiguration: 'text',
+    alertEmailBody: 'text',
+    alertByReport: 'boolean',
+    alertReportList: 'text',
   };
 
   SavedAlert.searchsource = true;

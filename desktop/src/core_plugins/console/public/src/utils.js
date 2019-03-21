@@ -100,14 +100,15 @@ utils.splitOnUnquotedCommaSpace = function (s) {
   return arr;
 }
 
-// This function returns only the value part from the dict input
-// input - [{"name":"admin"},{"name":"dba"},
-// {"name":"network team"},{"name":"Support L1"}]
-// Output - admin,dba,network team,Support L1
-utils.getValueForDisplay = function (nameList) {
+// This function returns only the value part with comma delimitted
+// for the specified field
+// List - [{"id":"1", "name":"admin"},{"id":"2", "name":"dba"}
+// fieldToFetch - name output = admin,dba
+// fieldToFetch - id, output = 1,2
+utils.getValueToStoreInKibana = function (objectList, fieldToFetch) {
   let value = '';
-  _.each(nameList, function (name) {
-    value = value + name.name + ',';
+  _.each(objectList, function (obj) {
+    value = value + obj[fieldToFetch] + ',';
   });
   value = value.replace(/,\s*$/, '');
   return value;

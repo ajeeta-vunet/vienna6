@@ -373,6 +373,14 @@ app.directive('alertDetails', function ($compile, courier, Notifier, $filter, sa
         }
       };
 
+      // Clear report field if the alert by report
+      // channel is not checked.
+      $scope.clearReportField = function () {
+        if(!$scope.enableReports) {
+          $scope.selectReportList = [];
+        }
+      };
+
       // Clear advanced config text area if the checkbox for
       // advanced config is changed.
       $scope.clearAdvancedConfigTextArea = function () {

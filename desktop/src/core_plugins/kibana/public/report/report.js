@@ -178,6 +178,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.disableInputElements = true;
   }
 
+  const reportEmailBody = reportcfg.reportEmailBody;
+  $scope.opts = { reportEmailBody: reportEmailBody };
   // Load the recipients information in the UI.
   $scope.recipientsData = [];
 
@@ -768,13 +770,14 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     reportcfg.schedule = angular.toJson($scope.schedule);
     reportcfg.company_name = $scope.company_name;
     reportcfg.scheduleFrequency = $scope.cronObj.value;
+    reportcfg.reportEmailBody = $scope.opts.reportEmailBody;
     // Take a copy of recipientslist and assign to a new variable.
     // In the report object, save only the name of the email groups
     // with comma separated string not in dictionary format.
     recipientsList = JSON.parse(JSON.stringify($scope.recipientsList));
     _.each(recipientsList, function (recipient) {
       const selectEmailGroupList = recipient.selectEmailGroupList;
-      recipient.selectEmailGroupList = utils.getValueForDisplay(selectEmailGroupList);
+      recipient.selectEmailGroupList = utils.getValueToStoreInKibana(selectEmailGroupList, 'name');
     });
     if (recipientsList.length && recipientsList[0].role === '') {
       // Use only the configured recipients. If the role of first
@@ -872,26 +875,24 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     save: $scope.save,
     addVis: $scope.addVis,
     addSearch: $scope.addSearch,
-    owner: $scope.owner
+    owner: $scope.owner,
+    reportEmailBody: reportEmailBody
   };
 
   // Adds selected email group to the list
-  $scope.addEmailGroup = function (item) {
-    // Here The item dict will contain both recipientIndex and item as following.
-    // item = item {"recipientIndex":0, "name":"admin"}
-    // recipientIndex is the index of the recipients list
+  $scope.addEmailGroup = function (item, itemIndex) {
+    // item = item {"name":"admin"}
+    // itemIndex is the index of the recipients list
     // To populate in the multiselect directive the format should be as following
     // item = {"name":"admin"}
-    $scope.recipientsList[item.recipientIndex].selectEmailGroupList.push({ name: item.name });
+    $scope.recipientsList[itemIndex].selectEmailGroupList.push({ name: item.name });
   };
 
   // Removes the selected email group from the list
-  $scope.removeEmailGroup = function (item) {
-    // Here the item dict will contain both recipientIndex and index as following
-    // item = item {"recipientIndex":0,"index":1}
-    // recipientIndex is the index of the recipients list
+  $scope.removeEmailGroup = function (index, itemIndex) {
+    // itemIndex is the index of the recipients list
     // index is the index of the selected item in the selectEmailGroupList
-    $scope.recipientsList[item.recipientIndex].selectEmailGroupList.splice(item.index, 1);
+    $scope.recipientsList[itemIndex].selectEmailGroupList.splice(index, 1);
   };
 
   init();

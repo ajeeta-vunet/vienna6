@@ -7,7 +7,7 @@ module.directive('searchableMultiselect', function () {
     restrict: 'AE',
     scope: {
       displayAttr: '@',
-      recipientIndex: '=',
+      itemIndex: '=',
       valueAttr: '@',
       selectedItems: '=',
       allItems: '=',
@@ -33,15 +33,9 @@ module.directive('searchableMultiselect', function () {
           }
         }
         if (typeof selectedObj === 'undefined') {
-          scope.addItem({
-            recipientIndex: scope.recipientIndex,
-            name: obj.name
-          });
+          scope.addItem(obj, scope.itemIndex);
         } else {
-          scope.removeItem({
-            recipientIndex: scope.recipientIndex,
-            index: selectedIndex
-          });
+          scope.removeItem(selectedIndex, scope.itemIndex);
         }
       };
 

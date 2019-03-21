@@ -34,7 +34,8 @@ module.factory('SavedReport', function (courier) {
         company_name: '',
         timeRestore: true,
         scheduleFrequency: '',
-        recipientsList: '[]'
+        recipientsList: '[]',
+        reportEmailBody: ''
       },
 
       // if an indexPattern was saved with the searchsource of a SavedReport
@@ -65,7 +66,8 @@ module.factory('SavedReport', function (courier) {
     company_name: 'text',
     timeRestore: 'boolean',
     scheduleFrequency: 'string',
-    recipientsList: 'string'
+    recipientsList: 'string',
+    reportEmailBody: 'text',
   };
 
   SavedReport.searchsource = true;

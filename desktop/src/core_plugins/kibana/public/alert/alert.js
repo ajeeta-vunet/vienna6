@@ -43,6 +43,9 @@ uiRoutes
       vuMetricList: function (Private) {
         return Promise.resolve(utils.getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
       },
+      reports: function (Private) {
+        return Promise.resolve(utils.getSavedObject('report', ['title', 'allowedRolesJSON'], 10000, Private));
+      },
       alertcfg: function (savedAlerts) {
         return savedAlerts.get();
       },
@@ -65,6 +68,9 @@ uiRoutes
       },
       vuMetricList: function (Private) {
         return Promise.resolve(utils.getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
+      },
+      reports: function (Private) {
+        return Promise.resolve(utils.getSavedObject('report', ['title', 'allowedRolesJSON'], 10000, Private));
       },
       alertcfg: function (savedAlerts, $route, courier) {
         return savedAlerts.get($route.current.params.id)
@@ -138,6 +144,16 @@ function alertAppEditor($scope,
   const loadedAlertId = $route.current.locals.loadedAlertId;
 
   $scope.indexPatternList = $route.current.locals.indexPatternIds;
+
+  $scope.allReportTitles = $route.current.locals.reports;
+  // The reusable searchable multiselection supports the following
+  // format [{"id":"report-1","name":"report 1"},{"id":"report-2", "name":"report 2"}] with key "name".
+  // So we need to rename the key from "title" to "name".
+  $scope.allReportTitles = $scope.allReportTitles.map(function (report) {
+    return { "id":report.id, "name": report.title };
+  });
+
+  $scope.selectReportList = [];
 
   $scope.selectEmailGroupList = [];
 
@@ -405,12 +421,51 @@ function alertAppEditor($scope,
         $scope.selectEmailGroupList.push({ name: emailGroups[index] });
       }
     }
+    $scope.alertEmailBody = alertcfg.alertEmailBody;
     $scope.advancedConfig = alertcfg.advancedConfiguration;
     $scope.enableRunBookAutomation = alertcfg.enable_runbook_automation;
     $scope.runBookScript = alertcfg.runbook_script;
     $scope.enableAnsiblePlaybook = alertcfg.enable_ansible_playbook;
     $scope.ansiblePlaybookName = alertcfg.ansible_playbook_name;
     $scope.ansiblePlaybookOptions = alertcfg.ansible_playbook_options;
+    $scope.alertByReport = alertcfg.alertByReport;
+    if (alertcfg.alertReportList !== '')
+    {
+      // Here the alertReportList field will contain only name as following.
+      // alertReportList = report1. report2...
+      // To populate in the multiselect directive the format should be as following
+      // [{"name":"report1", "name":"report2"}]
+      // So we need to build a dictionary from the input
+      const reportList = JSON.parse(alertcfg.alertReportList);
+      // This will decide whether the report used in this alert is still
+      // available or not. Because the same can be already deleted or
+      // somebody might have changed the permission of the report.
+      let reportExist;
+      // Go though each report configured in this alert
+      for (let index = 0; index < reportList.length; index++) {
+        // First set the flag to false for every report we fetch
+        reportExist = false;
+        let reportIndex = 0;
+        // $scope.allReportTitles will have all the reports available
+        // Check whether the report still exists in the system
+        for (reportIndex; reportIndex < $scope.allReportTitles.length; reportIndex++) {
+          // If report exists
+          if (angular.toJson($scope.allReportTitles[reportIndex]) === angular.toJson(reportList[index])) {
+            reportExist = true;
+            break;
+          }
+        }
+        // if exists, add this to the selected report list.
+        if (reportExist) {
+          $scope.selectReportList.push($scope.allReportTitles[reportIndex]);
+        }
+        // else show the not available message to the user.
+        else {
+          notify.error('Problem in loading this alert. The report "' + reportList[index] +
+          '" used in this alert is not available anymore, please reconfigure this alert');
+        }
+      }
+    }
     $scope.activeStartTime = alertcfg.activeStartTime;
     $scope.activeEndTime = alertcfg.activeEndTime;
     $scope.enableAlert = alertcfg.enableAlert;
@@ -684,12 +739,15 @@ function alertAppEditor($scope,
     alertcfg.alertByTicket = $scope.alertByTicket;
     alertcfg.alertByEmail = $scope.alertByEmail;
     alertcfg.alertEmailId = $scope.alertEmailId;
-    alertcfg.alertEmailGroup = utils.getValueForDisplay($scope.selectEmailGroupList);
+    alertcfg.alertEmailGroup = utils.getValueToStoreInKibana($scope.selectEmailGroupList, 'name');
+    alertcfg.alertEmailBody = $scope.alertEmailBody;
     alertcfg.enable_runbook_automation = $scope.enableRunBookAutomation;
     alertcfg.runbook_script = $scope.runBookScript;
     alertcfg.enable_ansible_playbook = $scope.enableAnsiblePlaybook;
     alertcfg.ansible_playbook_name = $scope.ansiblePlaybookName;
     alertcfg.ansible_playbook_options = $scope.ansiblePlaybookOptions;
+    alertcfg.alertByReport = $scope.alertByReport;
+    alertcfg.alertReportList = angular.toJson($scope.selectReportList);
     alertcfg.ruleLevelThreshold = $scope.ruleLevelThreshold;
     alertcfg.evalCriteria = angular.toJson($scope.evalCriteria);
     alertcfg.evalCriteriaAlias = $scope.evalCriteriaAlias;
@@ -778,23 +836,30 @@ function alertAppEditor($scope,
 
   // Adds selected email group to the list
   $scope.addEmailGroup = function (item) {
-    // Here The item dict will contain both recipientIndex and item as following.
-    // item = item {"recipientIndex":0,"name":"admin"}
-    // recipientIndex is being used in the report as there will be one or more recipients list
-    // In Alert the recipientIndex will be always 0 and not used.
+    // item = item {"name":"admin"}
     // To populate in the multiselect directive the format should be as following
     // item = {"name":"admin"}
     $scope.selectEmailGroupList.push({ name: item.name });
   };
 
   // Removes the selected email group from the list
-  $scope.removeEmailGroup = function (item) {
-    // Here the item dict will contain both recipientIndex and index as following
-    // item = item {"recipientIndex":0,"index":1}
-    // recipientIndex is being used in the report as there will be one or more recipients list
-    // In Alert the recipientIndex will be always 0 and not used.
+  $scope.removeEmailGroup = function (index) {
     // index is the index of the selected item in the selectEmailGroupList
-    $scope.selectEmailGroupList.splice(item.index, 1);
+    $scope.selectEmailGroupList.splice(index, 1);
+  };
+
+  // Adds selected report to the list
+  $scope.addReport = function (item) {
+    // item = item {"id":"report-1","name":"report 1"}
+    // To populate in the multiselect directive the format should be as following
+    // item = [{"id":"Report-1","name":"Report1"}, {"id":"Report-2","name":"Report2"}]
+    $scope.selectReportList.push({ id: item.id, name: item.name });
+  };
+
+  // Removes the selected report from the list
+  $scope.removeReport = function (index) {
+    // index is the index of the selected item in the selectEmailGroupList
+    $scope.selectReportList.splice(index, 1);
   };
 
   init();

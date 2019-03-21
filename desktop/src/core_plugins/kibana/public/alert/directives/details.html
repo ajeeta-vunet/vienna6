@@ -1002,6 +1002,38 @@
               </div>
             </div>
             <div class="row no-padding channel">
+              <div class="col-md-3 channel-title-wrapper">
+                <span
+                  class="alert-component-email-body"
+                  ng-show="alertByEmail">
+                  Email Body
+                  <kbn-tooltip
+                    text="Use this to provide email body content which will be used in the alert email"
+                    placement="right"
+                    append-to-body="1">
+                    <i class="fa fa-question-circle"></i>
+                  </kbn-tooltip>
+                </span>
+              </div>
+              <div class="col-md-9 channel-component-wrapper"
+                ng-show="alertByEmail">
+                <textarea
+                  type="text"
+                  rows="6"
+                  cols="56"
+                  class="alert-email-body"
+                  name="alertEmailBody"
+                  ng-model="alertEmailBody"
+                  ng-maxlength="5000">
+                </textarea>
+                <p
+                  class="error-highlight"
+                  ng-show="alertcfgForm.alertEmailBody.$error.maxlength">
+                  'Email body' content must be less than 5000 characters
+                </p>
+              </div>
+            </div>
+            <div class="row no-padding channel">
               <div class="row">
                 <input
                   type="checkbox"
@@ -1083,6 +1115,46 @@
                               ng-model="ansiblePlaybookOptions"
                               name="ansiblePlaybookOptions"
                               ng-class="{error: alertcfgForm.ansiblePlaybookOptions.$invalid}">
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row no-padding channel">
+              <div class="row">
+                <input type="checkbox" class="alert-checkbox"
+                  ng-model="alertByReport"
+                  ng-change="clearReportField()"
+                  name="alertByReport">
+                <span class="alert-component-label">
+                  Reports
+                  <kbn-tooltip
+                    text="Notify with reports for this alert"
+                    placement="bottom"
+                    append-to-body="1">
+                    <i class="fa fa-question-circle"></i>
+                  </kbn-tooltip>
+                </span>
+              </div>
+              <div ng-show="alertByReport">
+                <div class="row channel-property-container">
+                  <div class="col-md-3 channel-label">
+                    Name
+                  </div>
+                  <div class="col-md-9 channel-component-wrapper">
+                    <span class="alert-email">
+                      <searchable-multiselect
+                        display-attr=""
+                        item-index="0"
+                        value-attr="name"
+                        name="alertReports"
+                        ng-model = "selectReportList"
+                        selected-items="selectReportList"
+                        all-items="allReportTitles"
+                        add-item="addReport"
+                        remove-item="removeReport"
+                        ng-required="alertByReport">
+                      </searchable-multiselect>
                     </span>
                   </div>
                 </div>

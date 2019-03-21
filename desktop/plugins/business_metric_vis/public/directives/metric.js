@@ -101,13 +101,13 @@ app.directive('vudataMetric', function () {
           // like [system.memory.used,system.memory.total] from the add additional fields
           scope.addAdditionalFields = function (item) {
             scope.selectedFields.push({ name: item.name });
-            scope.metric.additionalFields = utils.getValueForDisplay(scope.selectedFields);
+            scope.metric.additionalFields = utils.getValueToStoreInKibana(scope.selectedFields, 'name');
           };
 
           // Removes the selected field from selectedFields and additionalFields.
-          scope.removeAdditionalFields = function (item) {
-            scope.selectedFields.splice(item.index, 1);
-            scope.metric.additionalFields = utils.getValueForDisplay(scope.selectedFields);
+          scope.removeAdditionalFields = function (index) {
+            scope.selectedFields.splice(index, 1);
+            scope.metric.additionalFields = utils.getValueToStoreInKibana(scope.selectedFields, 'name');
           };
 
           // Reset the threshold fields if 'match'

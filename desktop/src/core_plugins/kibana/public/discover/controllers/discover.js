@@ -32,6 +32,7 @@ import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { FilterManagerProvider } from 'ui/filter_manager';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
+import $ from 'jquery';
 
 const app = uiModules.get('apps/discover', [
   'kibana/notify',
@@ -693,7 +694,8 @@ function discoverController(
   };
 
   $scope.scrollToTop = function () {
-    $window.scrollTo(0, 0);
+    // Fire scrollTop event for the element having id discover-data.
+    $('#discover-data').scrollTop(0, 0);
   };
 
   $scope.scrollToBottom = function () {

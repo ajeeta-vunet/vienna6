@@ -36,7 +36,6 @@ export default function (server) {
    * color is used for the metric node label.
    */
   function getColorCodedMetricLabel(colorSchemaDict, label, dataValue, unit) {
-
     let nodeLabel = '';
     let startTag = '<code>';
     let endTag = '</code>';
@@ -210,8 +209,8 @@ export default function (server) {
 
           } else {
             // If color schema is not configured for a metric, we
-            // show the node labels for this metric in black.
-            resourceLabel = '\n<code>' + label + ':' + dataValue + '</code>';
+            // show the node or link labels for this metric in black.
+            resourceLabel = '\n<code>' + label + ':' + dataValue +  unit + '</code>';
           }
 
           data = data + resourceLabel;

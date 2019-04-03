@@ -5,8 +5,9 @@ export default function ViewNetworkConfigCtrl($scope, StateService, $uibModalIns
   $scope.viewConfig = false;
   $scope.viewConfigDiff = false;
   $scope.viewRouterConfig = false;
-  $scope.configuration_collector_name = $uibModalInstance.data.name;
+  $scope.configuration_collector_name = $uibModalInstance.data;
   $scope.selectedConfigInstanceList = $uibModalInstance.selectedConfigInstanceList;
+  $scope.configInstanceList = $uibModalInstance.configInstanceList;
 
   // This function will help to collapase the instance list and
   // clearing the list used to store the instances selected to
@@ -16,27 +17,6 @@ export default function ViewNetworkConfigCtrl($scope, StateService, $uibModalIns
     $scope.selectedConfigInstanceList = [];
     $scope.configInstanceList = [];
   };
-
-  // This function is called when the config icon for any of
-  // the router is clicked.
-  $scope.getRouterConfigList = function () {
-    // This code will run when the config button is clicked to close the
-    // div showing the router config instances.
-    if ($scope.routerconfigList && $scope.routerconfigList[0] === $scope.configuration_collector_name) {
-      $scope.clearRouterConfigList();
-      return;
-    }
-    $scope.clearRouterConfigList();
-    $scope.routerconfigList.push($scope.configuration_collector_name);
-    // This will make a backend call to fetch all the router config
-    // instance for a particular router.
-    StateService.getRouterConfigInstances($scope.configuration_collector_name).then(function (data) {
-      $scope.configInstanceList = data.configurations;
-    });
-  };
-
-  // Get router specific configuration
-  $scope.getRouterConfigList();
 
   // This will update the selectedConfigInstanceList when any
   // operations are made on checkboxes.

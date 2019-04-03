@@ -81,7 +81,7 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   this.pageOfItems = [];
   this.filter = ($location.search()).filter || '';
 
-  this.pager = pagerFactory.create(this.items.length, 20, 1);
+  this.pager = pagerFactory.create(this.items.length, 10, 1);
 
   this.hideWriteControls = dashboardConfig.getHideWriteControls();
 

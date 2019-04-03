@@ -48,7 +48,7 @@ export class VisualizeListingTable extends Component {
       this.state.sortedColumn
     );
     this.items = [];
-    this.pager = new Pager(this.items.length, 20, 1);
+    this.pager = new Pager(this.items.length, 10, 1);
 
     this.debouncedFetch = _.debounce(filter => {
       this.props.fetchItems(filter)

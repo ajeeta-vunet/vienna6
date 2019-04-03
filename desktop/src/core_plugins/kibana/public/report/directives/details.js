@@ -86,7 +86,13 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
 
               if (vis.visType === 'business_metric') {
 
-                metricVisLength = visObj.visState.params.metrics.length;
+                // Count the number of metrics to display.
+                visObj.visState.params.metrics.map((metric) => {
+                  if (!metric.hideMetric) {
+                    metricVisLength += 1;
+                  }
+                });
+
                 if (visObj.visState.params.aggregations) {
                   aggregationLength = visObj.visState.params.aggregations.length;
                 }

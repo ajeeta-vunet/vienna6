@@ -153,7 +153,15 @@ function networkConfigurationController($scope,
     // This will make a backend call to fetch all the router config
     // instance for a particular router.
     StateService.getRouterConfigInstances(configurationCollectorName).then(function (data) {
-      $scope.configInstanceList = data.configurations;
+      const modalInstance = $modal.open({
+        animation: true,
+        template: ViewNetworkConfigTemplate,
+        controller: ViewNetworkConfigCtrl,
+        windowClass: 'network-configuration-modal',
+      });
+      modalInstance.data = configurationCollectorName;
+      modalInstance.selectedConfigInstanceList = $scope.selectedConfigInstanceList;
+      modalInstance.configInstanceList = data.configurations;
     });
   };
 
@@ -191,25 +199,7 @@ function networkConfigurationController($scope,
     } else if (event === 'Traceroute router') {
       $scope.handleWebSocketInNewWindow(routerAddress, 'traceroute');
     } else if (event === 'View configuration for router') {
-      $scope.getRouterConfigList();
-      const modalInstance = $modal.open({
-        animation: true,
-        template: ViewNetworkConfigTemplate,
-        controller: ViewNetworkConfigCtrl,
-        windowClass: 'network-configuration-modal'
-      }.result.then(function () {
-
-      // Nothing to do once the network configuration modal
-      // modal has been submitted.
-      }, function () {
-
-      // This callback is added to avoid the following
-      // warning in console:Possibly unhandled rejection: cancel
-
-      // 'Possibly unhandled rejection: cancel'
-      }));
-      modalInstance.data = data;
-      modalInstance.selectedConfigInstanceList = $scope.selectedConfigInstanceList;
+      $scope.getRouterConfigList(data.name);
     } else if (event === 'Collect configuration of device') {
       // Take input from user to add details about configuration collection
       const ccreturnVal = prompt('configuration collector message : ', 'Daily commit message');

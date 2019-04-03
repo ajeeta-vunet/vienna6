@@ -82,7 +82,7 @@ export function AnomalyListingController($injector, $scope, $location, $http) {
   this.pageOfItems = [];
   this.filter = ($location.search()).filter || '';
 
-  this.pager = pagerFactory.create(this.items.length, 20, 1);
+  this.pager = pagerFactory.create(this.items.length, 10, 1);
 
   //this.hideWriteControls = anomalyConfig.getHideWriteControls();
   this.hideWriteControls = false;

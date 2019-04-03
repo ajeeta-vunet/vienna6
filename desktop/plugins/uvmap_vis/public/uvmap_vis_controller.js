@@ -92,6 +92,11 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
     if (params.nodes[0] in $scope.data.node_dashboard_dict) {
       const dashboard = '/dashboard/' + $scope.data.node_dashboard_dict[params.nodes[0]];
       kbnUrl.redirect(dashboard);
+
+      // We are forcing angular digest cycle to run to redirect to the
+      // dashboard URL.
+      // We could not able to figure out how to avoid forcing angular digest cycle..
+      $scope.$apply();
     }
   };
 

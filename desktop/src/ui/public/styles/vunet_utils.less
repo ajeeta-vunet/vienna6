@@ -210,12 +210,35 @@ input[type="file"]{
     //This has been done to fix menubar  in alerts page
     .alert-body-container{
       overflow-y: auto;
-      height: @view-content-height; 
+      height: @view-content-height-menubaronly ; 
     }
-    // This has been added to fix menubar on top for dashboards page
+    // This has been added to fix menubar on top for reports page
     .report-body-container{
       overflow-y: auto;
-      height: @view-content-height; 
+      height: @view-content-height-menubaronly-bigger; 
+    }
+  }
+  // this has been done to add scroll to the analytics-> seacrh-> open
+  .kuiLocalNav{
+    // this has been done as we have moved filter bar to kbn-top-nav
+    // filter-bar{
+    //   section{
+    //     width: 60%;
+    //     .filter-bar{
+    //       background-color:@action_bar_background;
+    //       border-bottom: none;
+    //     }   
+    //   }
+    // }
+    .kuiLocalDropdown{
+      saved-object-finder{
+        .kuiVerticalRhythm{
+          .li-striped {
+            overflow-y: auto;
+            height:@view-content-height-menubar-bigger-withsearch-inbottomtoo;
+          }
+        }
+      }
     }
   }
   // In Data table Visualization and matrix Visualization --> options, when we enable the color coding,
@@ -260,7 +283,7 @@ input[type="file"]{
   //This has been added for events page
   .event-container{
     overflow-y: auto;
-    height: @view-content-height;
+    height: @view-content-height-menubaronly ;
   }
   // This is done for the dashboard page
   dashboard-app{
@@ -273,12 +296,24 @@ input[type="file"]{
   // This has been added to fix menubar on top for manage configuration objects page
   .management-container{
     overflow-y: auto;
-    height: @view-content-height;
+    height: @view-content-height-menubaronly-bigger ;
   }
   // This has been added to fix menubar on top for listing pages like dashboards, visualizations etc
   .kuiViewContent--constrainedWidth{
     margin: 0;
     max-width: none;
+    .kuiViewContentItem{
+      .wizard-column{
+        paginated-selectable-list, saved-object-finder{
+          .kuiVerticalRhythm{
+            .list-group{
+              overflow-y: auto;
+              height: @view-content-height-menubar-bigger-withsearch;
+            }
+          }
+        }
+      }
+    }
   } 
 
   background-color:@view_background;
@@ -293,8 +328,8 @@ input[type="file"]{
           font-family: @barlow-semibold;
           color: @accent_color;
           position: relative;
-          top: .9rem;
-          padding: 0.9rem 0rem 0rem 3rem;
+          top: 1.25rem;
+          padding: 0rem 0rem 0rem 3rem;
           font-size: 1.9rem;   
           width:100%;   
         }
@@ -340,6 +375,34 @@ input[type="file"]{
       }
     }
   }
+  //This has been done to add scroll to surrounding documents
+  context-app{
+    .kuiViewContentItem{
+      .kuiPanel{
+        .discover-table{
+          overflow-y: auto;
+          height: @view-content-height-menubar-bigger-withsearch;
+        }
+      }  
+    }
+  }
+  //This has been done to add scroll to single document
+  .kuiViewContent{
+    .kuiViewContentItem{
+      .doc-viewer{
+        .doc-viewer-content{
+          overflow: auto;
+          height: @view-content-height-surrounding-single-doc;
+        }
+      }
+    }
+  }
+  // This has been done to modify the kbn-top-nav and make search smaller
+  // .kuiLocalSearch{
+  //   width: 40%;
+  //   float: right;
+  //   margin-bottom: 0px;
+  // }
 }
 
 // all btn-file are defined here
@@ -458,11 +521,12 @@ button[disabled], {
 // This has been added to fix menubar on top
 .menubar-fixed-top{
   overflow-y: auto;
-  height: @view-content-height;
+  height: @view-content-height-menubaronly ;
 }
+// This is given for anylytics seacrh page
 .menubar-fixed-top-containing-filterbar{
   overflow-y: auto;
-  height: @view-content-height81;
+  height: @view-content-height-with-filter;
   // This has been added to fix the following 
   // In Analytics -> search --> if we have selected an Index pattern which has more length, the name is crossing the box.
   .sidebar-container{
@@ -1078,7 +1142,7 @@ button[disabled], {
 .dashboard-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
-  height: @view-content-height;
+  height: @view-content-height-menubaronly ;
   .kuiViewContentItem {
     padding-left: 0rem;
     padding-right: 0rem;
@@ -1089,14 +1153,14 @@ button[disabled], {
 .visualize-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
-  height: @view-content-height;
+  height: @view-content-height-menubaronly ;
 }
 
 // Table look and feel for reports listing page
 .report-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
-  height: @view-content-height;
+  height: @view-content-height-menubaronly ;
   .kuiViewContentItem {
     padding-left: 0rem;
     padding-right: 0rem;
@@ -1107,7 +1171,7 @@ button[disabled], {
 .anomaly-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
-  height: @view-content-height;
+  height: @view-content-height-menubaronly ;
   .kuiViewContentItem {
     padding-left: 0rem;
     padding-right: 0rem;
@@ -1118,7 +1182,7 @@ button[disabled], {
 .alert-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
-  height: @view-content-height;
+  height: @view-content-height-menubaronly ;
   .kuiViewContentItem {
     padding-left: 0rem;
     padding-right: 0rem;

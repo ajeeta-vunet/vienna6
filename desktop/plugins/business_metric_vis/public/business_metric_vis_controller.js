@@ -370,7 +370,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         // Just add the query string to the must list. We are just pushing this
         // as there might be an existing query if the BMV is called
         // from the dashboard.
-        esFilter['bool']['must'].push({ "query_string": { "query": searchString, "analyze_wildcard": true, "default_field": "*" } });
+        esFilter.bool.must.push({ 'query_string': { 'query': searchString, 'analyze_wildcard': true, 'default_field': '*' } });
       }
 
       const payload = {

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { uiModules } from 'ui/modules';
 import paginateControlsTemplate from 'ui/partials/paginate_controls.html';
+import $ from 'jquery';
 
 uiModules.get('kibana')
   .directive('paginate', function ($parse, $compile) {
@@ -39,7 +40,7 @@ uiModules.get('kibana')
         }
       },
       controllerAs: 'paginate',
-      controller: function ($scope, $document) {
+      controller: function ($scope) {
         const self = this;
         const ALL = 0;
 
@@ -96,7 +97,8 @@ uiModules.get('kibana')
         };
 
         self.goToTop = function goToTop() {
-          $document.scrollTop(0);
+          // Fire scrollTop event with animation for the element having class management container
+          $('.management-container').animate({ scrollTop: 0 }, 'fast');
         };
 
         self.renderList = function () {

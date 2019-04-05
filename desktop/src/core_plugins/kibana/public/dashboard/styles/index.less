@@ -558,3 +558,28 @@ dashboard-viewport-provider {
     display: block;
   }
 }
+
+// This has been done for mutli-level-dropdown of dashboards page
+.firstlevel-dropdown-overriding{
+  a{
+    color: black!important;
+    background-color: white!important;
+    &:hover{
+      background-color:#f6f7fb!important;
+    }
+  }
+}
+// disabling the click of 1st level dropdown which dont have subtree
+.not-active {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: black;
+}
+ 
+// disabling the click of 1st level dropdown which have a subtree
+.dropdown-submenu:hover > a:active {
+  pointer-events: none;
+  text-decoration: none;
+  color: black;
+}

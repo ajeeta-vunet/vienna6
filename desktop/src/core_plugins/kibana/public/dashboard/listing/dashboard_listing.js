@@ -6,6 +6,7 @@ import { DashboardConstants, createDashboardEditUrl } from '../dashboard_constan
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
 import { deleteDash } from '../dashboard_category';
+import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
 
 export function DashboardListingController($injector, $scope, $location, savedDashboards, savedVisualizations, $http) {
   const $filter = $injector.get('$filter');
@@ -101,8 +102,10 @@ export function DashboardListingController($injector, $scope, $location, savedDa
 
   this.toggleAll = function toggleAll() {
     if (this.areAllItemsChecked()) {
+      deHighlightRow();
       deselectAll();
     } else {
+      highlightSelectedRow();
       selectAll();
     }
   };
@@ -114,6 +117,8 @@ export function DashboardListingController($injector, $scope, $location, savedDa
     } else {
       selectedItems.push(item);
     }
+    deHighlightRow();
+    highlightSelectedRow();
   };
 
   this.isItemChecked = function isItemChecked(item) {

@@ -456,7 +456,12 @@ app.directive('dashboardApp', function ($injector, $http) {
 
       // Get the data required to display the multilevel dropdown menu
       prepareMultilevelCategoryDropdown(Private, timefilter, Promise, categories).then(function (data) {
-        $scope.subMenuTree = data;
+        $scope.subMenuTree = [];
+        for(let index = 0; index < data.length; index++) {
+          if(data[index].hasOwnProperty('subtree')) {
+            $scope.subMenuTree.push(data[index]);
+          }
+        }
       });
 
       const currentUser = chrome.getCurrentUser();

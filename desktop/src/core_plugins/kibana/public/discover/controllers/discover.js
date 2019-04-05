@@ -694,8 +694,9 @@ function discoverController(
   };
 
   $scope.scrollToTop = function () {
-    // Fire scrollTop event for the element having id discover-data.
-    $('#discover-data').scrollTop(0, 0);
+
+    // Fire scrollTop event with animation for the element having class menubar-fixed-top-containing-filterbar
+    $('.menubar-fixed-top-containing-filterbar').animate({ scrollTop: 0 }, 'fast');
   };
 
   $scope.scrollToBottom = function () {

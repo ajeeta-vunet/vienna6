@@ -6,6 +6,7 @@ import chrome from 'ui/chrome';
 import { SortableProperties } from 'ui_framework/services';
 import { Pager } from 'ui/pager';
 import { NoVisualizationsPrompt } from './no_visualizations_prompt';
+import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
 
 import {
   KuiPager,
@@ -101,12 +102,14 @@ export class VisualizeListingTable extends Component {
   }
 
   onNextPage = () => {
+    deHighlightRow();
     this.deselectAll();
     this.pager.nextPage();
     this.calculateItemsOnPage();
   };
 
   onPreviousPage = () => {
+    deHighlightRow();
     this.deselectAll();
     this.pager.previousPage();
     this.calculateItemsOnPage();
@@ -153,7 +156,7 @@ export class VisualizeListingTable extends Component {
     let flaskHolder;
     if (item.type.shouldMarkAsExperimentalInUI()) {
       flaskHolder = <span className="kuiIcon fa-flask ng-scope">&nbsp;</span>;
-    }else{
+    } else {
       flaskHolder = <span />;
     }
 
@@ -215,12 +218,14 @@ export class VisualizeListingTable extends Component {
 
     this.props.deleteSelectedItems(deletedObjs)
       .then(() => this.fetchItems(this.state.filter))
-      .catch(() => {})
+      .catch(() => { })
       .then(() => this.deselectAll())
       .then(() => this.closeModal());
   };
 
   onItemSelectionChanged = (newSelectedIds) => {
+    deHighlightRow();
+    highlightSelectedRow();
     this.setState({ selectedRowIds: newSelectedIds });
   };
 
@@ -234,8 +239,8 @@ export class VisualizeListingTable extends Component {
     // object or not
     if (chrome.canCurrentUserCreateObject()) {
       return this.state.selectedRowIds.length > 0 ?
-        <KuiListingTableDeleteButton onDelete={this.onDelete} aria-label="Delete selected visualizations"/> :
-        <KuiListingTableCreateButton onCreate={this.onCreate} aria-label="Create new visualization"/>;
+        <KuiListingTableDeleteButton onDelete={this.onDelete} aria-label="Delete selected visualizations" /> :
+        <KuiListingTableCreateButton onCreate={this.onCreate} aria-label="Create new visualization" />;
     } else {
       return;
     }

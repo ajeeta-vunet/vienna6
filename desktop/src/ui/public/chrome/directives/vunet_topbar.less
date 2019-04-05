@@ -2,8 +2,8 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
 .kuiLocalNavRowVunet {
-  height:8rem;
-  min-height: 50px; 
+  // height:8rem;
+  min-height: 30px; 
   box-shadow:0px -.6rem .3rem -.4rem @accent_color;
   li{
     padding:0rem 1.7rem;
@@ -100,8 +100,11 @@
         font-size: 1.4rem;
       }
     }
-    .diagnostic-button , .logout-button , .uib-dropdown-toggle{
-      padding: 2.55rem 0rem;
+    .diagnostic-button , .uib-dropdown-toggle{
+      padding: 2rem 0rem;
+    }
+    .logout-button {
+      padding: 2rem 0rem;
     }
     .diagnostic-button {
       background-color: @white!important;
@@ -124,12 +127,12 @@
       }
       .user-name{
         color:@black;
-        vertical-align: super;
         font-size: 1.6rem;
         padding: 0rem .5rem 0rem 1rem;
+        vertical-align: baseline;
       }
       .icon-down-arrow{
-        vertical-align: super;
+        vertical-align: initial;
       }
     }
     .logout-dropdown{
@@ -194,7 +197,7 @@
     }
   }
   .icon-user , .icon-Diagnostics , .icon-Notification {
-    font-size:2.7rem;
+    font-size:2rem;
     color:@accent_color;
     &:hover{
       font-weight:bold;
@@ -209,13 +212,13 @@
   }
   .vunet-notifications{
     padding-left: 5rem;
-    margin-top: 1.9rem;
-    margin-bottom: 1.9rem;
+    margin-top: 1.15rem;
+    margin-bottom: 1.15rem;
     .toaster-container{
       display: inline-block;
       width:auto;
       overflow-y: auto;
-      max-height: 7.5rem;
+      max-height: 7rem;
       max-width: 47vw;
       .toaster{
         li{
@@ -301,16 +304,13 @@
   }
   .icon-Menu-Collapse , .icon-maximize{
     color: @accent_color;
-    font-size: 3rem;
+    font-size: 2rem;
     &:hover{
       font-weight:600;
     }
   }
   .icon-Menu-Collapse {
     padding-left: 2rem;
-  }
-  .icon-maximize{
-    font-size: 2.5rem;
   }
   //this has been done for the run diagnostic modal
   .kuiModalOverlay{
@@ -324,7 +324,10 @@
     }
   }
   .icon-fullscreen-container{
-    padding: 2.7rem 0rem 2.7rem 0rem;
+    padding: 2rem 0rem 2rem 0rem;
+  }
+  .padding-top-for-collapse{
+    padding-top: 2rem;
   }
 }
 

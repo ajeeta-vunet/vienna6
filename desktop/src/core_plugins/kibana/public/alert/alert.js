@@ -150,7 +150,7 @@ function alertAppEditor($scope,
   // format [{"id":"report-1","name":"report 1"},{"id":"report-2", "name":"report 2"}] with key "name".
   // So we need to rename the key from "title" to "name".
   $scope.allReportTitles = $scope.allReportTitles.map(function (report) {
-    return { "id":report.id, "name": report.title };
+    return { 'id': report.id, 'name': report.title };
   });
 
   $scope.selectReportList = [];

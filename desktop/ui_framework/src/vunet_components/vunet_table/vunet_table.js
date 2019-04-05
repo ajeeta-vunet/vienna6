@@ -21,10 +21,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ReactTooltip from 'react-tooltip';
-import $ from 'jquery';
 
 import { Pager } from 'ui/pager';
 import { SortableProperties } from 'ui_framework/services';
+import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
 
 import {
   KuiPager,
@@ -135,7 +135,7 @@ export class VunetDataTable extends Component {
   componentWillReceiveProps(newProps) {
 
     if (!_.isUndefined(_.difference(newProps.metaItem.headers, this.props.metaItem.headers)[0]) ||
-       (!_.isUndefined(newProps.metaItem.forceUpdate) && newProps.metaItem.forceUpdate)) {
+      (!_.isUndefined(newProps.metaItem.forceUpdate) && newProps.metaItem.forceUpdate)) {
       this.setState({ isFetchingItems: true });
       this.debouncedFetch();
     }
@@ -143,12 +143,12 @@ export class VunetDataTable extends Component {
     let classname = 'vunet-table';
 
     // Hide the checkboxes in vunet table rows
-    if(this.props.metaItem.selection !== undefined && !this.props.metaItem.selection) {
+    if (this.props.metaItem.selection !== undefined && !this.props.metaItem.selection) {
       classname += ' vunetHideSelector';
     }
 
     // Hide the search bar of vunet table
-    if(this.props.metaItem.search !== undefined && !this.props.metaItem.search) {
+    if (this.props.metaItem.search !== undefined && !this.props.metaItem.search) {
       classname += ' vunetHideSearch';
     }
     this.setState({ containerClassName: classname });
@@ -163,7 +163,7 @@ export class VunetDataTable extends Component {
     this.pager.setTotalItems(this.rows.length);
     const pageOfItems = this.rows.slice(this.pager.startIndex, this.pager.startIndex + this.pager.pageSize);
     this.setState({ pageOfItems, pageStartNumber: this.pager.startItem });
-    if(this.state.filter) {
+    if (this.state.filter) {
       this.filterItems(this.state.filter);
     }
   };
@@ -218,9 +218,9 @@ export class VunetDataTable extends Component {
    * Filter item based on search text
    */
   filterItems = (filter) => {
-    if(filter === '') {
+    if (filter === '') {
       // If filter is being removed, just set the state and calculate Items on page
-      this.setState({ filter }, () =>  this.calculateItemsOnPage());
+      this.setState({ filter }, () => this.calculateItemsOnPage());
     } else {
       this.setState({ filter });
       const pageOfItems = this.rows.filter(item => {
@@ -234,7 +234,7 @@ export class VunetDataTable extends Component {
         });
       });
       this.pager.setTotalItems(pageOfItems.length);
-      const _pageOfItems =  pageOfItems.slice(this.pager.startIndex, this.pager.startIndex + this.pager.pageSize);
+      const _pageOfItems = pageOfItems.slice(this.pager.startIndex, this.pager.startIndex + this.pager.pageSize);
       this.setState({ pageOfItems: _pageOfItems });
     }
   };
@@ -248,6 +248,7 @@ export class VunetDataTable extends Component {
    * next page rows.
    */
   onNextPage = () => {
+    deHighlightRow();
     this.deselectAll();
     this.pager.nextPage();
     this.calculateItemsOnPage();
@@ -258,6 +259,7 @@ export class VunetDataTable extends Component {
    * previous page rows.
    */
   onPreviousPage = () => {
+    deHighlightRow();
     this.deselectAll();
     this.pager.previousPage();
     this.calculateItemsOnPage();
@@ -284,7 +286,7 @@ export class VunetDataTable extends Component {
             data-tip={`${item.toolTip}`}
             onClick={() => this.onRowActionClick(`${item.name}`, id)}
           />
-          <ReactTooltip/>
+          <ReactTooltip />
         </div>);
     });
   }
@@ -317,7 +319,7 @@ export class VunetDataTable extends Component {
       this.props.metaItem.headers.push('Action');
     }
 
-    const renderHeader =  this.props.metaItem.headers && this.props.metaItem.headers.map((header, index) => {
+    const renderHeader = this.props.metaItem.headers && this.props.metaItem.headers.map((header, index) => {
 
       // If metaItem has help then returns header with help icon else returns only header.
       // If header is Action then it returns only content else returns content,
@@ -332,17 +334,18 @@ export class VunetDataTable extends Component {
       return (
         (header !== 'Action' &&  (!this.props.metaItem.noSortColumns || !this.props.metaItem.noSortColumns.includes(header))) ?
 
-          { content: (this.props.metaItem.help && this.props.metaItem.help[index] !== '') ?
+          {
+            content: (this.props.metaItem.help && this.props.metaItem.help[index] !== '') ?
 
-            <span>
-              {header}
-              <i className="fa fa-question-circle header-style" data-tip={this.props.metaItem.help[index]} data-for={`tooltip-${index}`}>
-                <ReactTooltip id={`tooltip-${index}`} className="tool-tip-style"/>
-              </i>
-            </span> : header,
-          onSort: () => this.sortOn(this.props.metaItem.rows[index]),
-          isSorted: this.state.sortedColumn === this.props.metaItem.rows[index],
-          isSortAscending: this.sortableProperties.isAscendingByName(this.props.metaItem.rows[index]),
+              <span>
+                {header}
+                <i className="fa fa-question-circle header-style" data-tip={this.props.metaItem.help[index]} data-for={`tooltip-${index}`}>
+                  <ReactTooltip id={`tooltip-${index}`} className="tool-tip-style" />
+                </i>
+              </span> : header,
+            onSort: () => this.sortOn(this.props.metaItem.rows[index]),
+            isSorted: this.state.sortedColumn === this.props.metaItem.rows[index],
+            isSortAscending: this.sortableProperties.isAscendingByName(this.props.metaItem.rows[index]),
           } :
           {
             content: header
@@ -359,9 +362,9 @@ export class VunetDataTable extends Component {
   renderRowCells(item) {
     const cells = [];
     this.props.metaItem.rows.forEach(row => {
-      if(this.props.metaItem.columnData) {
+      if (this.props.metaItem.columnData) {
         const columnData = this.props.metaItem.columnData.find(cd => cd.columnName === row);
-        if(columnData) {
+        if (columnData) {
           cells.push({ value: columnData.func(row, item[row]) });
         } else {
           cells.push({ value: item[row] });
@@ -463,11 +466,8 @@ export class VunetDataTable extends Component {
 
   // set selected rows
   onItemSelectionChanged = (newSelectedIds) => {
-    // This has been done to highlight the selected row
-    const rowsToRemoveHighlight = $('.kuiCheckBox').parent().parent().parent();
-    rowsToRemoveHighlight.removeClass('row-highlight');
-    const rowsToAddHighlight = $('.kuiCheckBox:checked').parent().parent().parent();
-    rowsToAddHighlight.addClass('row-highlight');
+    deHighlightRow();
+    highlightSelectedRow();
     this.setState({ selectedRowIds: newSelectedIds });
   };
 
@@ -502,7 +502,7 @@ export class VunetDataTable extends Component {
   *  the inner table for a row.
   */
   onSubTableToggle(id) {
-    if(this.state.showSubTable === id) {
+    if (this.state.showSubTable === id) {
       this.setState({ showSubTable: 0 });
     } else {
       this.setState({ showSubTable: id });
@@ -747,7 +747,7 @@ export class VunetDataTable extends Component {
       // Add one to handle additional column for 'expand' / 'collapase' icon
       const colSpan = row.cells.length + 1;
 
-      return  (
+      return (
         <KuiTableBody>
           <KuiTableRow key={rows.id}>
             <KuiTableRowCell>
@@ -759,7 +759,7 @@ export class VunetDataTable extends Component {
             </KuiTableRowCell>
             {row.cells.map(cell => <KuiTableRowCell>{cell} </KuiTableRowCell>)}
           </KuiTableRow>
-          {hasSubTable && this.state.showSubTable === row.id && this.subTable(hasSubTable, colSpan) }
+          {hasSubTable && this.state.showSubTable === row.id && this.subTable(hasSubTable, colSpan)}
         </KuiTableBody>
       );
     });

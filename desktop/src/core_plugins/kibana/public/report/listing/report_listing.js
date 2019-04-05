@@ -7,6 +7,7 @@ import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
 import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
+import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
 
 export function ReportListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
@@ -106,8 +107,10 @@ export function ReportListingController($injector, $scope, $location, $http) {
   // select all of them
   this.toggleAll = function toggleAll() {
     if (this.areAllItemsChecked()) {
+      deHighlightRow();
       deselectAll();
     } else {
+      highlightSelectedRow();
       selectAll();
     }
   };
@@ -120,6 +123,8 @@ export function ReportListingController($injector, $scope, $location, $http) {
     } else {
       selectedItems.push(item);
     }
+    deHighlightRow();
+    highlightSelectedRow();
   };
 
   // Function to check if the passed item is checked (selected)

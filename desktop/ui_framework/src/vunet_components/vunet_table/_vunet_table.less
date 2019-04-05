@@ -57,19 +57,20 @@
         .kuiToolBarSearchBox{
           width:25rem;
           transition:width 2s;
-          &:hover{
-            width:40rem;
-            .kuiToolBarSearchBox__icon{
-              color:@accent_color;
-              font-size:2rem;
-              top:0.5rem;
-            }
-            .kuiToolBarSearchBox__input{
-              font-size: 1.75rem;
-              font-family:@barlow-semibold;
-              border-radius: 1rem;
-            }
-          }
+          // Scrollbar animation has been removed
+          // &:hover{
+            // width:40rem;
+            // .kuiToolBarSearchBox__icon{
+            //   color:@accent_color;
+            //   font-size:2rem;
+            //   top:0.5rem;
+            // }
+            // .kuiToolBarSearchBox__input{
+            //   font-size: 1.75rem;
+            //   font-family:@barlow-semibold;
+            //   border-radius: 1rem;
+            // }
+          // }
           .kuiToolBarSearchBox__icon{
             top: 0.7rem;
             left: 1.3rem;
@@ -101,6 +102,14 @@
           .kuiTableRowCell{
             color:@accent_color;
             font-family: @barlow-semibold;
+            // This has been added for visualization table
+            a{
+              color:@accent_color;
+              font-family: @barlow-semibold;
+            }
+            .kuiStatusText__icon{
+              color:@black;
+            }
           }  
         }
       }

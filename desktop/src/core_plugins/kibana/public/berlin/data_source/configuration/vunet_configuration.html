@@ -1,12 +1,12 @@
-<div ng-if="isModifyAllowed" class="container zero-padding">
-  <div class="row grey-block">
-    <div class="row" ng-hide="list_data_source_types">
+<div ng-if="isModifyAllowed" class="zero-padding">
+  <div class="grey-block">
+    <div ng-hide="list_data_source_types">
       <div class="col-sm-6 col-md-6 data-source-name"> {{current_data_source}} </div>
       <!-- <a href="/app/vienna#/berlin/data_source" title="Go Back" class="fa fa-arrow-circle-o-left fa-lg display-right-groupname"></a>  -->
       <button class="btn btn-primary pull-right data-source-add-button sm-button" ng-click="addDataSourceConfig()">Add
         {{current_data_source}}</button>
     </div>
-    <div class="row" ng-show="list_data_source_types">
+    <div ng-show="list_data_source_types">
       <a href="" class="data-source-import-button" uib-tooltip="Import data source configuration using xls file" tooltip-placement="bottom">
         <button class="btn vunet-btn-import" ng-click="toggle_import_file()">
             Import

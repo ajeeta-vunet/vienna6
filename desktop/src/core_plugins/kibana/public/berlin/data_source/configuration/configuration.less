@@ -1,5 +1,12 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
+//This has been addedd to fix the alignment and scroll issue in data sources page
+.data-sources-container{
+  padding: 2.7rem 7rem 0rem 7rem;
+  overflow-y: auto;
+  height: calc(~"100vh - 8rem");
+}
+
 .data-source-type-box {
   /* these styles will let the divs line up next to each other
      while accepting dimensions */
@@ -36,7 +43,7 @@
 }
 
 .grey-block{
-  padding-top:2rem;
+  padding:2rem 0rem 1rem 0rem;
 }
 
 .data-source-import-close-button {

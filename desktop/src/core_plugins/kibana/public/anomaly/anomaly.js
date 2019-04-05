@@ -15,6 +15,8 @@ import { Notifier } from 'ui/notify/notifier';
 import { DocTitleProvider } from 'ui/doc_title';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+
 const angular = require('angular');
 
 uiRoutes
@@ -307,9 +309,10 @@ function anomalyAppEditor($scope,
 
   function init() {
     const docTitle = Private(DocTitleProvider);
-    if (anomaly.id) {
-      docTitle.change(anomaly.title);
-    }
+
+    // Always display doc title as 'Anomaly Detection'
+    docTitle.change(VunetSidebarConstants.ANOMALY_DETECTION);
+
     $scope.$emit('application.load');
   }
 

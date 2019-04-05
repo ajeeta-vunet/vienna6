@@ -22,6 +22,7 @@ import { KibanaParsedUrl } from 'ui/url/kibana_parsed_url';
 import { absoluteToParsedUrl } from 'ui/url/absolute_to_parsed_url';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 uiRoutes
   .when(VisualizeConstants.CREATE_PATH, {
@@ -140,9 +141,9 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
     dirty: !savedVis.id
   };
 
-  if (savedVis.id) {
-    docTitle.change(savedVis.title);
-  }
+  // if (savedVis.id) {
+  //   docTitle.change(savedVis.title);
+  // }
 
   // Extract visualization state with filtered aggs. You can see these filtered aggs in the URL.
   // Consists of things like aggs, params, listeners, title, type, etc.
@@ -181,6 +182,9 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
     $scope.indexPattern = vis.indexPattern;
     $scope.searchSource = searchSource;
     $scope.state = $state;
+
+    // Always display doc title as 'Visualizations'
+    docTitle.change(VunetSidebarConstants.VISUALIZATIONS);
 
     // Create a PersistedState instance.
     $scope.uiState = $state.makeStateful('uiState');
@@ -292,7 +296,7 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
             dashboardParsedUrl.addQueryParameter(DashboardConstants.NEW_VISUALIZATION_ID_PARAM, savedVis.id);
             kbnUrl.change(dashboardParsedUrl.appPath);
           } else if (savedVis.id === $route.current.params.id) {
-            docTitle.change(savedVis.lastSavedTitle);
+            //docTitle.change(savedVis.lastSavedTitle);
           } else {
             kbnUrl.change(`${VisualizeConstants.EDIT_PATH}/{{id}}`, { id: savedVis.id });
           }

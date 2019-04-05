@@ -3,6 +3,8 @@ import { uiModules } from 'ui/modules';
 import { EnrichmentConstants } from './enrichment_constants';
 import ImportEnrichmentGroupsTemplate from './import_enrichment_groups.html';
 import ImportEnrichmentGroupsCtrl from  './import_enrichment_groups.controller';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 const app = uiModules.get('app/berlin');
 
@@ -14,13 +16,19 @@ app.directive('enrichmentGroups', function () {
   };
 });
 
-function enrichmentGroups($scope,
+function enrichmentGroups($injector,
+  $scope,
   $http,
   chrome,
   $window,
   $modal,
   StateService
 ) {
+
+  // Always display doc title as 'Enrich'
+  const Private = $injector.get('Private');
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.ENRICH);
 
   $scope.file_type = 'xlsx';
   $scope.isModifyAllowed = chrome.isModifyAllowed();

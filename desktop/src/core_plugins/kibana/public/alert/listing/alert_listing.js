@@ -8,6 +8,8 @@ import { ConfirmationButtonTypes } from 'ui/modals';
 import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 export function AlertListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
@@ -18,7 +20,8 @@ export function AlertListingController($injector, $scope, $location, $http) {
   const timefilter = $injector.get('timefilter');
   const config = $injector.get('config');
   //const alertConfig = $injector.get('alertConfig');
-
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.ALERT_RULES);
   timefilter.enabled = true;
 
   // Check with chrome if the creation is allowed for this user or not

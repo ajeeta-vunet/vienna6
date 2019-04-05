@@ -9,6 +9,8 @@ import appTemplate from 'plugins/kibana/management/app.html';
 import { management } from 'ui/management';
 import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/registry/feature_catalogue';
 import 'ui/kbn_top_nav';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 uiRoutes
   .when('/management', {
@@ -42,6 +44,10 @@ uiModules
         timefilter.enabled = false;
         $scope.sections = management.items.inOrder;
         $scope.section = management.getSection($scope.sectionName) || management;
+
+        // Always display doc title as 'Manage Resources'
+        const docTitle = Private(DocTitleProvider);
+        docTitle.change(VunetSidebarConstants.MANAGE_RESOURCES);
 
         if ($scope.section) {
           $scope.section.items.forEach(item => {

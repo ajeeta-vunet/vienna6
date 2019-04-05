@@ -13,7 +13,8 @@ app.directive('manageRoles', function () {
 
 function manageRoles($scope,
   $http,
-  StateService
+  StateService,
+  Promise
 ) {
 
   // This callback is called to check if a particular row should be allowed
@@ -119,11 +120,26 @@ function manageRoles($scope,
   function init() {
   }
 
-  // Delete a role - Only one role can be deleted at a time..
-  $scope.deleteSelectedItems = (row) => {
-    return StateService.deleteRole(row[0].name, row[0].tenant_id, row[0].bu_id).then(function () {
-      return new Promise((resolve) => resolve(''));
+  // Delete user roles
+  $scope.deleteSelectedItems = (rows) => {
+
+    // Iterate over list of users to be deleted and delete
+    // one by one. We return a list of promises which contains both
+    // success and failure cases.
+    const deletePromises = Promise.map(rows, function (row) {
+
+      return StateService.deleteRole(row.name, row.tenant_id, row.bu_id)
+        .then(function () {
+          return '';
+        })
+        .catch(function () {
+          return '';
+        });
     });
+
+    // Wait till all Promises(deletePromises) are resolved and
+    // return single Promise
+    return Promise.all(deletePromises);
   };
 
   // This function is called to fetch all the roles from backend..

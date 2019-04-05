@@ -23,6 +23,7 @@ import { SavedObjectNotFound } from 'ui/errors';
 import previewMetricTemplate from './preview_metric.html';
 import previewMetricCtrl from './preview_metric.controller.js';
 import utils from '../../../console/public/src/utils';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 const Promise = require('bluebird');
 
@@ -812,9 +813,7 @@ function alertAppEditor($scope,
 
   function init() {
     const docTitle = Private(DocTitleProvider);
-    if (alertcfg.id) {
-      docTitle.change(alertcfg.title);
-    }
+    docTitle.change(VunetSidebarConstants.ALERT_RULES);
     $scope.$emit('application.load');
   }
 

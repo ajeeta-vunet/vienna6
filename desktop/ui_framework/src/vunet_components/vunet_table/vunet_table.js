@@ -62,8 +62,6 @@ export class VunetDataTable extends Component {
       deleteSource: 'table', // To indicate row level or table level action.
       showAddEditModal: false, // Flag to display edit / add modal.
       filter: '', // Holds the input of search box in vunet table.
-      sortedColumn: this.props.metaItem.rows[0] ? this.props.metaItem.rows[0] : '',
-      // sets first row by default to show sorting icon.
       pageStartNumber: 1, // Holds the pagination start page.
       isFetchingItems: false, // A Loading icon is displayed when this
       // flag is set to 'true'.
@@ -75,25 +73,6 @@ export class VunetDataTable extends Component {
       // holding the table
       showSubTable: 0 // Flag to display sub table for a row.
     };
-
-    // Create instance of SortableProperties to sort the table.
-    // SortableProperties class takes 2 arguments:
-    // 1: List of column object EX: {
-    //                                name: 'title',
-    //                                getValue: item => item.title.toLowerCase(),
-    //                                isAscending: true,
-    //                               },
-    //                               {
-    //                                 name: 'description',
-    //                                 getValue: item => item.description.toLowerCase(),
-    //                                 isAscending: true
-    //                                }
-    // 2: initialSortablePropertyName which takes header title.
-
-    this.sortableProperties = new SortableProperties(
-      this.createSortablePropertiesList(),
-      this.props.metaItem.rows[0]
-    );
 
     // Run the function inside _.debounce after 200 milli seconds
     this.rows = [];
@@ -134,6 +113,25 @@ export class VunetDataTable extends Component {
   */
   componentWillReceiveProps(newProps) {
 
+    // Create instance of SortableProperties to sort the table.
+    // SortableProperties class takes 2 arguments:
+    // 1: List of column object EX: {
+    //                                name: 'title',
+    //                                getValue: item => item.title.toLowerCase(),
+    //                                isAscending: true,
+    //                               },
+    //                               {
+    //                                 name: 'description',
+    //                                 getValue: item => item.description.toLowerCase(),
+    //                                 isAscending: true
+    //                                }
+    // 2: initialSortablePropertyName which takes header title.
+
+    this.sortableProperties = new SortableProperties(
+      this.createSortablePropertiesList(),
+      this.props.metaItem.rows[0]
+    );
+
     if (!_.isUndefined(_.difference(newProps.metaItem.headers, this.props.metaItem.headers)[0]) ||
       (!_.isUndefined(newProps.metaItem.forceUpdate) && newProps.metaItem.forceUpdate)) {
       this.setState({ isFetchingItems: true });
@@ -159,7 +157,7 @@ export class VunetDataTable extends Component {
    */
   calculateItemsOnPage = () => {
     // Sort the items.
-    this.rows = this.sortableProperties.sortItems(this.rows);
+    this.rows = this.sortableProperties ? this.sortableProperties.sortItems(this.rows) : this.rows;
     this.pager.setTotalItems(this.rows.length);
     const pageOfItems = this.rows.slice(this.pager.startIndex, this.pager.startIndex + this.pager.pageSize);
     this.setState({ pageOfItems, pageStartNumber: this.pager.startItem });
@@ -225,11 +223,16 @@ export class VunetDataTable extends Component {
       this.setState({ filter });
       const pageOfItems = this.rows.filter(item => {
         return this.props.metaItem.rows.some(row => {
-          if (!_.isArray(item[row]) && !_.isObject(item[row]) && !_.isEmpty(item[row]) && !_.isUndefined(item[row])) {
+
+          // _.isEmpty() returns true for [null, true, 1]
+          // for these cases check  value with _.isEmpty() _.isNumber() _.isBoolean()
+          if (!_.isArray(item[row]) && !_.isObject(item[row]) && (!_.isEmpty(item[row]) || _.isNumber(item[row]) || _.isBoolean(item[row]))
+          && !_.isUndefined(item[row])) {
             if (_.isNumber(item[row])) {
               return item[row].toString().indexOf(filter) > -1 ? true : false;
             }
-            return item[row].indexOf(filter) > -1 ? true : false;
+            // Convert value to lowercase for case insensitive filter search.
+            return item[row].toLowerCase().indexOf(filter.toLowerCase()) > -1 ? true : false;
           }
         });
       });
@@ -332,7 +335,8 @@ export class VunetDataTable extends Component {
       // This check has done for column having value type Object, sorting on Object
       // is not implementes as of now.
       return (
-        (header !== 'Action' &&  (!this.props.metaItem.noSortColumns || !this.props.metaItem.noSortColumns.includes(header))) ?
+        (header !== 'Action' && this.sortableProperties &&  (!this.props.metaItem.noSortColumns ||
+          !this.props.metaItem.noSortColumns.includes(header))) ?
 
           {
             content: (this.props.metaItem.help && this.props.metaItem.help[index] !== '') ?
@@ -581,11 +585,6 @@ export class VunetDataTable extends Component {
     if (isRowsSelected && this.props.metaItem.deleteIconCheckCallback) {
       hideDeleteButton = this.props.metaItem.deleteIconCheckCallback(
         this.state.selectedRowIds);
-    }
-
-    // Hide delete button for more than 1 rows selected.
-    if (this.state.selectedRowIds.length > 1) {
-      hideDeleteButton = true;
     }
 
     if (this.props.metaItem.add) {

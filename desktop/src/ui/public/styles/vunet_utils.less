@@ -1189,4 +1189,26 @@ button[disabled], {
   }
 }
 
-
+// Pagination hover and active selection style
+// for index patterns, data table and matrix visualizations.
+.pagination-other-pages-list {
+  li {
+    margin: 0px .8rem;
+    .kuiLink {
+      width: 3rem;
+      outline: none;
+      box-shadow: none;
+    }
+    &:focus {
+      box-shadow: none;
+    }
+    &.active {
+      text-decoration: none !important;
+      font-weight: bold;
+      border: 1px solid @paginate-page-link-active-color;
+      border-radius: 50% !important;
+      cursor: default;
+      box-shadow: none;
+    }
+  }
+}

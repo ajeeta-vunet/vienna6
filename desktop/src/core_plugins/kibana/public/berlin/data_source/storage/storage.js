@@ -1,4 +1,6 @@
 import { uiModules } from 'ui/modules';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 const app = uiModules.get('app/berlin');
 
@@ -13,7 +15,12 @@ app.directive('vunetStorage', function () {
   };
 });
 
-function storageController($scope) {
+function storageController($injector, $scope) {
+
+  // Always display doc title as 'Storage'
+  const Private = $injector.get('Private');
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.STORAGE);
 
   function init() {
 

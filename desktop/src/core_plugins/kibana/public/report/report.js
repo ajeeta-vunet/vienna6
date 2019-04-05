@@ -27,6 +27,7 @@ import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
 import utils from '../../../console/public/src/utils';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 require('ui/directives/searchable_multiselect.js');
 
@@ -478,9 +479,12 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     updateQueryOnRootSource();
 
     const docTitle = Private(DocTitleProvider);
-    if (reportcfg.id) {
-      docTitle.change(reportcfg.title);
-    }
+
+    // Always display doc title as 'Reports'
+    // if (reportcfg.id) {
+    //   docTitle.change(reportcfg.title);
+    // }
+    docTitle.change(VunetSidebarConstants.REPORTS);
 
     initPanelIndices();
     $scope.$emit('application.load');

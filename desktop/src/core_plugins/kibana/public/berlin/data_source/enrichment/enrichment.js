@@ -6,6 +6,10 @@ app.controller('AddDataEnrichmentType2Ctrl', AddDataEnrichmentType2Ctrl);
 import AddDataEnrichmentType3Ctrl from './add_data_enrichment_type3.controller';
 app.controller('AddDataEnrichmentType3Ctrl', AddDataEnrichmentType3Ctrl);
 
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+
+
 app.directive('vunetEnrichment', function () {
   return {
     restrict: 'E',
@@ -14,7 +18,9 @@ app.directive('vunetEnrichment', function () {
   };
 });
 
-function enrichmentGroups($scope,
+function enrichmentGroups($injector,
+  Promise,
+  $scope,
   $http,
   $window,
   StateService,
@@ -22,6 +28,11 @@ function enrichmentGroups($scope,
 ) {
 
   const groupName = $route.current.params.groupName;
+
+  // Always display doc title as 'Enrich'
+  const Private = $injector.get('Private');
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.ENRICH);
 
   $scope.enrichmentMeta = {
     headers: [],
@@ -34,12 +45,23 @@ function enrichmentGroups($scope,
 
   // This function is called delete the selected enrichment Data
   $scope.deleteEnrichmentData = (deletedEnrichmentData) => {
-    return StateService.deleteDataEnrichmentContent(groupName, deletedEnrichmentData[0][$scope.enrichmentMeta.id])
-      .then(function () {
-        return Promise.resolve(true);
-      }, function () {
-        return Promise.resolve(false);
-      });
+
+    // Iterate over list of users to be deleted and delete
+    // one by one. We return a list of promises which contains both
+    // success and failure cases.
+    const deletePromises = Promise.map(deletedEnrichmentData, function (row) {
+      return StateService.deleteDataEnrichmentContent(groupName, row[$scope.enrichmentMeta.id])
+        .then(function () {
+          return '';
+        })
+        .catch(function () {
+          return '';
+        });
+    });
+
+    // Wait till all Promises(deletePromises) are resolved
+    // and return single Promise
+    return Promise.all(deletePromises);
   };
 
   // This is called to add a new entry in enrichment data

@@ -1,11 +1,13 @@
 import { uiModules } from 'ui/modules';
 import 'ng-file-upload';
 import './about.less';
+import { DocTitleProvider } from 'ui/doc_title';
 
 const app = uiModules.get('app/berlin', ['ngFileUpload']);
 
 import UploadLicenseTemplate from'./upload_license.html';
 import UploadLicenseCtrl from './upload_license.controller.js';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 app.directive('manageAbout', function () {
   return {
@@ -15,7 +17,8 @@ app.directive('manageAbout', function () {
   };
 });
 
-function manageAbout($scope,
+function manageAbout($injector,
+  $scope,
   $rootScope,
   $http,
   $modal,
@@ -115,14 +118,46 @@ function manageAbout($scope,
 
   // Meta data for license
   $scope.aboutLicenseMeta = {
-    headers: ['No. of Nodes', 'GB Per Day', 'License Valid Till'],
-    rows: ['nodes', 'gbperday', 'licence_expiry_date'],
+    headers: [
+      'License Valid Till',
+      'API Clients',
+      'API Endpoints',
+      'Configuration Collector',
+      'GB Per Day',
+      'Log Instances',
+      'Log Sources',
+      'Netflow Flows',
+      'Netflow Nodes',
+      'No. of Nodes',
+      'Probes',
+      'User Roles',
+      'Users'
+    ],
+    rows: [
+      'licence_expiry_date',
+      'api_clients',
+      'api_endpoints',
+      'config_collector',
+      'gbperday',
+      'log_instances',
+      'log_sources',
+      'netflow_flows',
+      'netflow_nodes',
+      'nodes',
+      'probes',
+      'user_roles',
+      'users'
+    ],
     id: 'nodes',
     inverted: true,
-    inverted_title: 'Licence Information ',
+    inverted_title: 'Licence Information '
   };
 
   function init() {
+    // Always display doc title as 'About'
+    const Private = $injector.get('Private');
+    const docTitle = Private(DocTitleProvider);
+    docTitle.change(VunetSidebarConstants.ABOUT);
   }
 
   // Fetch software release items
@@ -169,14 +204,23 @@ function manageAbout($scope,
     });
   };
 
-
   // Fetch licnese information
   $scope.fetchLicenseItems = () => {
     return StateService.getTenantInfo().then(function (data) {
       return [{
-        nodes: data.no_of_nodes,
+        api_clients: data.api_clients,
+        api_endpoints: data.api_endpoints,
+        config_collector: data.config_collector,
+        nodes: data.health_nodes,
         gbperday: data.gb_per_day,
         licence_expiry_date: data.licence_valid,
+        log_instances: data.log_instances,
+        log_sources: data.log_sources,
+        netflow_flows: data.netflow_flows,
+        netflow_nodes: data.netflow_nodes,
+        probes: data.probes,
+        user_roles: data.user_roles,
+        users: data.users
       }];
     });
   };

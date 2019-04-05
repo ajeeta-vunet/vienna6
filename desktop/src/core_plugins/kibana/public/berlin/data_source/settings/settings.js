@@ -1,6 +1,8 @@
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 import './settings.less';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 app.directive('vunetDataRetentionSettings', function () {
   return {
@@ -9,7 +11,7 @@ app.directive('vunetDataRetentionSettings', function () {
     controller: vunetDataRetentionSettings,
   };
 });
-function vunetDataRetentionSettings($scope, StateService) {
+function vunetDataRetentionSettings($injector, $scope, StateService) {
 
   // This callback is called to check if a particular row should be allowed
   // to delete. We can not allow user to delete the 'root index'.
@@ -19,6 +21,10 @@ function vunetDataRetentionSettings($scope, StateService) {
 
   // Init function
   function init() {
+    // Always display doc title as 'Data Retention Settings'
+    const Private = $injector.get('Private');
+    const docTitle = Private(DocTitleProvider);
+    docTitle.change(VunetSidebarConstants.DATA_RETENTION_SETTINGS);
   }
 
   // This callback is called to check if a particular index_prefix already exists
@@ -187,14 +193,22 @@ function vunetDataRetentionSettings($scope, StateService) {
   };
 
   // Delete selected item.
-  $scope.delete = (dataRetention) => {
+  $scope.delete = (rows) => {
 
-    // Get the index of element to delete.
-    const index = $scope.dataRetentionList.Retention_Preference.data_management_preference[0]
-      .per_index_setting.findIndex(data => data.index_prefix === dataRetention[0].index_prefix);
+    // Delete items in a loop.
+    rows.map((row) => {
 
-    // Delete the element from that index.
-    $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting.splice(index, 1);
+      // Get the index of element to delete.
+      const index = $scope.dataRetentionList.Retention_Preference.data_management_preference[0]
+        .per_index_setting.findIndex(data => data.index_prefix === row.index_prefix);
+
+      // Delete the element from that index.
+      // We remove the element from the UI scope first
+      // and then make an Api call to update them.
+      $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting.splice(index, 1);
+    });
+
+    // Make a put call to update the table entries after deletion
     return StateService.updateDataRetentionSettings($scope.dataRetentionList.Retention_Preference).then(function () {
       return Promise.resolve(true);
     });

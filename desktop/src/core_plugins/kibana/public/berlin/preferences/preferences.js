@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 import './vunet_preferences.less';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 app.directive('vunetPreferences', function () {
   return {
@@ -10,7 +12,8 @@ app.directive('vunetPreferences', function () {
     controller: vunetPreferences,
   };
 });
-function vunetPreferences($scope,
+function vunetPreferences($injector,
+  $scope,
   $http,
   StateService) {
 
@@ -18,6 +21,12 @@ function vunetPreferences($scope,
   // Gets the preference details from backend and keep it
   // ready for each domain to pick..
   function init() {
+
+    // Always display doc title as 'Preferences'
+    const Private = $injector.get('Private');
+    const docTitle = Private(DocTitleProvider);
+    docTitle.change(VunetSidebarConstants.PREFERENCES);
+
     $scope.allPreferenceMeta = [];
     $scope.preferenceData = [];
     StateService.getPreferenceDetails().then (function (preferences) {

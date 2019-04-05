@@ -3,8 +3,10 @@ import { SavedObjectRegistryProvider } from 'ui/saved_objects/saved_object_regis
 import 'ui/pager_control';
 import 'ui/pager';
 import { uiModules } from 'ui/modules';
+import { DocTitleProvider } from 'ui/doc_title';
 
 import { VisualizeListingTable } from './visualize_listing_table';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 const app = uiModules.get('app/visualize', ['ngRoute', 'react']);
 app.directive('visualizeListingTable', function (reactDirective) {
@@ -18,6 +20,10 @@ export function VisualizeListingController($injector, $http, chrome) {
   const config = $injector.get('config');
 
   timefilter.enabled = false;
+
+  // Always display doc title as 'Visualizations'
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.VISUALIZATIONS);
 
   // TODO: Extract this into an external service.
   const services = Private(SavedObjectRegistryProvider).byLoaderPropertiesName;

@@ -11,7 +11,7 @@ import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/r
 FeatureCatalogueRegistryProvider.register(() => {
   return {
     id: 'discover',
-    title: 'Discover',
+    title: 'Search',
     description: 'Interactively explore your data by querying and filtering raw documents.',
     icon: '/plugins/kibana/assets/app_discover.svg',
     path: '/app/kibana#/discover',

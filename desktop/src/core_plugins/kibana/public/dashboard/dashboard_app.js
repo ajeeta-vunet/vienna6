@@ -29,6 +29,7 @@ import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { DashboardViewportProvider } from './viewport/dashboard_viewport_provider';
 import { updateDashboardInCategory, addToCategory } from './dashboard_category';
 import { prepareMultilevelCategoryDropdown } from './multilevel_dashboard_navigation';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 const app = uiModules.get('app/dashboard', [
   'elasticsearch',
@@ -77,9 +78,13 @@ app.directive('dashboardApp', function ($injector, $http) {
 
       const dash = $scope.dash = $route.current.locals.dash;
       const categories = $route.current.locals.categories;
-      if (dash.id) {
-        docTitle.change(dash.title);
-      }
+
+      // Show doc title as 'Story Boards' always
+      // if (dash.id) {
+      //   docTitle.change(dash.title);
+      // }
+      docTitle.change(VunetSidebarConstants.STORY_BOARDS);
+
       logUserOperation($http, 'GET', 'dashboard', dash.title, dash.id);
 
       // Get allowedRoles from object
@@ -352,7 +357,7 @@ app.directive('dashboardApp', function ($injector, $http) {
                 addToCategory(dash, categoryObj, savedVisualizations);
               } else {
                 updateDashboardInCategory(dash, categoryObj, savedVisualizations, oldCategory);
-                docTitle.change(dash.lastSavedTitle);
+                // docTitle.change(dash.lastSavedTitle);
                 updateViewMode(DashboardViewMode.VIEW);
               }
               logUserOperation($http, 'POST', 'dashboard', dash.title, dash.id);

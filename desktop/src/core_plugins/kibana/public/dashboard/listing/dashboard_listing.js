@@ -7,6 +7,8 @@ import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
 import { deleteDash } from '../dashboard_category';
 import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 export function DashboardListingController($injector, $scope, $location, savedDashboards, savedVisualizations, $http) {
   const $filter = $injector.get('$filter');
@@ -19,6 +21,10 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   const dashboardConfig = $injector.get('dashboardConfig');
 
   timefilter.enabled = false;
+
+  // Display doc title as 'Story Boards' always
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.STORY_BOARDS);
 
   // Check with chrome if the creation is allowed for this user or not
   // Set whether the current logged in user be allowed to create a new

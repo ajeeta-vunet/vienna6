@@ -4,6 +4,9 @@ import './network_configuration.less';
 import './view_network_configuration.less';
 import ViewNetworkConfigTemplate from './view_network_configuration.html';
 import ViewNetworkConfigCtrl from './view_network_configuration.js';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+
 
 app.directive('vunetNetworkConfiguration', function () {
   return {
@@ -13,11 +16,17 @@ app.directive('vunetNetworkConfiguration', function () {
   };
 });
 
-function networkConfigurationController($scope,
+function networkConfigurationController($injector,
+  $scope,
   chrome,
   $modal,
   $http,
   StateService) {
+
+  // Always display doc title as 'Network Configuration'
+  const Private = $injector.get('Private');
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.NETWORK_CONFIGURATION);
 
   // Local variable to handle the data..
   $scope.selectedConfigInstanceList = [];

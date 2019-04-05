@@ -8,6 +8,8 @@ import { ConfirmationButtonTypes } from 'ui/modals';
 import { logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 export function ReportListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
@@ -20,6 +22,10 @@ export function ReportListingController($injector, $scope, $location, $http) {
   //const reportConfig = $injector.get('reportConfig');
 
   timefilter.enabled = false;
+
+  // Always display doc title as 'Reports'
+  const docTitle = Private(DocTitleProvider);
+  docTitle.change(VunetSidebarConstants.REPORTS);
 
   // Check with chrome if the creation is allowed for this user or not
   // Set whether the current logged in user be allowed to create a new

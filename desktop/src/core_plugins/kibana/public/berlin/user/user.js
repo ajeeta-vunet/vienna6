@@ -1,4 +1,6 @@
 import { uiModules } from 'ui/modules';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 const app = uiModules.get('app/berlin');
 
@@ -12,9 +14,15 @@ app.directive('user', function () {
   };
 });
 
-function userController($scope) {
+function userController($injector, $scope) {
 
   function init() {
+
+    // Always display doc title as 'User'
+    const Private = $injector.get('Private');
+    const docTitle = Private(DocTitleProvider);
+    docTitle.change(VunetSidebarConstants.USER);
+
     // Data for tabs component
     $scope.tabs = [
       { id: 'user', name: 'User Management' },

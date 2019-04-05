@@ -2,6 +2,9 @@ import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 import UploadFilesCtrl from './upload_files.js';
 import UploadFilesTemplate from './upload_files.html';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+
 app.directive('vunetFiles', function () {
   return {
     restrict: 'E',
@@ -9,12 +12,18 @@ app.directive('vunetFiles', function () {
     controller: vunetFiles,
   };
 });
-function vunetFiles($scope,
+function vunetFiles($injector,
+  $scope,
   StateService,
   $modal) {
 
   // Init function
   function init() {
+
+    // Always display doc title as 'Files'
+    const Private = $injector.get('Private');
+    const docTitle = Private(DocTitleProvider);
+    docTitle.change(VunetSidebarConstants.FILES);
   }
 
   $scope.open_upload = false;

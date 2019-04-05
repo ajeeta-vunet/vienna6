@@ -1,4 +1,5 @@
 import chrome from 'ui/chrome';
+import { VunetSidebarConstants } from './vunet_sidebar_constants';
 
 /* global $ */
 class sidebarController {
@@ -43,88 +44,191 @@ class sidebarController {
     $scope.updateData = function () {
       $scope.data = [
         {
-          id: 'Analytics', description: 'tooltip ', icon: 'icon-Analytics', pageurl: 'URL', active: false,
+          id: VunetSidebarConstants.ANALYTICS,
+          description: 'tooltip ',
+          icon: 'icon-Analytics',
+          pageurl: 'URL',
+          active: false,
           subgroups: [
-            { id: 'Story Boards', description: ' ', icon: '', pageurl: baseUrl + '/dashboards', isModifyAllowed: true, active: false },
-            { id: 'Search', description: ' ', icon: '', pageurl: baseUrl + '/discover', isModifyAllowed: true, active: false },
-            { id: 'Events', description: ' ', icon: '', pageurl: baseUrl + '/event', isModifyAllowed: true, active: false },
-            { id: 'Reports', description: ' ', icon: '', pageurl: baseUrl + '/reports', isModifyAllowed: true, active: false },
+            { id: VunetSidebarConstants.STORY_BOARDS,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/dashboards',
+              isModifyAllowed: true,
+              active: false
+            },
+            { id: VunetSidebarConstants.SEARCH,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/discover',
+              isModifyAllowed: true,
+              active: false
+            },
+            { id: VunetSidebarConstants.EVENTS,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/event',
+              isModifyAllowed: true,
+              active: false },
+            { id: VunetSidebarConstants.REPORTS,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/reports',
+              isModifyAllowed: true,
+              active: false
+            },
           ],
           isModifyAllowed: true
         },
         {
-          id: 'Analytics Configurations', description: ' ', icon: 'icon-Network', pageurl: '', active: false,
+          id: VunetSidebarConstants.ANALYTICS_CONFIGURATIONS,
+          description: ' ',
+          icon: 'icon-Network',
+          pageurl: '',
+          active: false,
           subgroups: [
-            { id: 'Visualizations', description: ' ', icon: '', pageurl: baseUrl + '/visualize', isModifyAllowed: true, active: false },
-            { id: 'Alert Rules', description: ' ', icon: '', pageurl: baseUrl + '/alerts', isModifyAllowed: true, active: false },
+            { id: VunetSidebarConstants.VISUALIZATIONS,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/visualize',
+              isModifyAllowed: true,
+              active: false
+            },
+            { id: 'Alert Rules',
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/alerts',
+              isModifyAllowed: true,
+              active: false
+            },
             {
-              id: 'Anomaly Detection ', description: ' ', icon: '', pageurl: baseUrl + '/anomalys',
-              isModifyAllowed: true, active: false
+              id: VunetSidebarConstants.ANOMALY_DETECTION,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/anomalys',
+              isModifyAllowed: true,
+              active: false
             },
             // { id: 'Manage ML Rules', description: ' ', icon: '', pageurl: '' },
             // { id: 'Manage Automated insights Rules', description: ' ', icon: '', pageurl: '' },
             {
-              id: 'Manage Resources', description: ' ', icon: '', pageurl: baseUrl + '/management',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.MANAGE_RESOURCES,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/management',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             },
             {
-              id: 'Network Configuration', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'network_configuartion',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.NETWORK_CONFIGURATION,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'network_configuartion',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             }
           ],
           isModifyAllowed: true
         },
         {
-          id: 'Data', description: ' ', icon: 'icon-Data', pageurl: '', active: false,
+          id: VunetSidebarConstants.DATA,
+          description: ' ',
+          icon: 'icon-Data',
+          pageurl: '',
+          active: false,
           subgroups: [
             {
-              id: 'Sources', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'data_source/configuration',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.SOURCES,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'data_source/configuration',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             },
             // { id: 'Adapt', description: ' ', icon: '', pageurl: '' },
             {
-              id: 'Enrich', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'data_source/enrichment',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.ENRICH,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'data_source/enrichment',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             }
           ],
           isModifyAllowed: chrome.isModifyAllowed()
         },
         {
-          id: 'Data Store', description: ' ', icon: 'icon-Data-Source', pageurl: '', active: false,
+          id: VunetSidebarConstants.DATA_STORE,
+          description: ' ',
+          icon: 'icon-Data-Source',
+          pageurl: '',
+          active: false,
           subgroups: [
             {
-              id: 'Storage', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'data_source/storage',
-              isModifyAllowed: true, active: false
+              id: VunetSidebarConstants.STORAGE,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'data_source/storage',
+              isModifyAllowed: true,
+              active: false
             },
             {
-              id: 'Files', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'data_source/files',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.FILES,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'data_source/files',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             },
             {
-              id: 'Data Retention Settings', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'data_source/settings',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.DATA_RETENTION_SETTINGS,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'data_source/settings',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             },
           ],
           isModifyAllowed: chrome.isModifyAllowed()
         },
         {
-          id: 'Settings', description: ' ', icon: 'icon-Settings', pageurl: '', active: false,
+          id: VunetSidebarConstants.SETTINGS,
+          description: ' ',
+          icon: 'icon-Settings',
+          pageurl: '',
+          active: false,
           subgroups: [
             {
-              id: 'Preferences', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'preferences',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.PREFERENCES,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'preferences',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             },
             {
-              id: 'Definitions', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'definition',
-              isModifyAllowed: chrome.isModifyAllowed(), active: false
+              id: VunetSidebarConstants.DEFINITIONS,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'definition',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
             },
             {
-              id: 'User', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'user',
-              isModifyAllowed: chrome.isCurrentUserAdmin(), active: false
+              id: VunetSidebarConstants.USER,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'user',
+              isModifyAllowed: chrome.isCurrentUserAdmin(),
+              active: false
             },
             {
-              id: 'About', description: ' ', icon: '', pageurl: baseUrl + berlinUrl + 'about',
-              isModifyAllowed: true, active: false
+              id: VunetSidebarConstants.ABOUT,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'about',
+              isModifyAllowed: true,
+              active: false
             }
           ],
           isModifyAllowed: true

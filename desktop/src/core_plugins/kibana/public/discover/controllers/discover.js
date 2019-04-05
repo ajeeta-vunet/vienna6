@@ -33,6 +33,7 @@ import { FilterManagerProvider } from 'ui/filter_manager';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import $ from 'jquery';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 const app = uiModules.get('apps/discover', [
   'kibana/notify',
@@ -206,8 +207,10 @@ function discoverController(
     .highlightAll(true)
     .version(true);
 
-  const pageTitleSuffix = savedSearch.id && savedSearch.title ? `: ${savedSearch.title}` : '';
-  docTitle.change(`Discover${pageTitleSuffix}`);
+  // const pageTitleSuffix = savedSearch.id && savedSearch.title ? `: ${savedSearch.title}` : '';
+
+  // We will always show doctitle as 'Search'
+  // docTitle.change(`Discover${pageTitleSuffix}`);
 
   let stateMonitor;
   const $appStatus = $scope.appStatus = this.appStatus = {
@@ -351,6 +354,8 @@ function discoverController(
       $scope.failuresShown = showTotal;
     };
 
+    docTitle.change(VunetSidebarConstants.SEARCH);
+
     stateMonitor = stateMonitorFactory.create($state, getStateDefaults());
     stateMonitor.onChange((status) => {
       $appStatus.dirty = status.dirty || !savedSearch.id;
@@ -484,7 +489,9 @@ function discoverController(
               } else {
                 // Update defaults so that "reload saved query" functions correctly
                 $state.setDefaults(getStateDefaults());
-                docTitle.change(savedSearch.lastSavedTitle);
+
+                // We will always show doctitle as 'Search'
+                // docTitle.change(savedSearch.lastSavedTitle);
               }
               logUserOperation($http, 'POST', 'search', savedSearch.title, savedSearch.id);
             }

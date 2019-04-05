@@ -15,6 +15,7 @@ app.directive('manageUsers', function () {
 function manageUsers($scope,
   $http,
   StateService,
+  Promise,
   $rootScope
 ) {
 
@@ -270,11 +271,25 @@ function manageUsers($scope,
     });
   }
 
-  // Delete a user - Currently we support only one user deletion...
-  $scope.deleteSelectedItems = (row) => {
-    return StateService.deleteUser(row[0].name).then(function () {
-      return new Promise((resolve) => resolve(''));
+  // Delete users
+  $scope.deleteSelectedItems = (rows) => {
+
+    // Iterate over list of users to be deleted and delete
+    // one by one. We return a list of promises which contains both
+    // success and failure cases.
+    const deletePromises = Promise.map(rows, function (row) {
+      return StateService.deleteUser(row.name)
+        .then(function () {
+          return '';
+        })
+        .catch(function () {
+          return '';
+        });
     });
+
+    // Wait till all Promises(deletePromises) are resolved
+    // and return single Promise
+    return Promise.all(deletePromises);
   };
 
   // There is nothing to be done for table action..

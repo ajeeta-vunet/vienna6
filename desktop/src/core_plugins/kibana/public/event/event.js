@@ -6,6 +6,8 @@ import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { FilterManagerProvider } from 'ui/filter_manager';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 require('ui/courier');
 require('ui/config');
@@ -19,8 +21,6 @@ require('plugins/kibana/event/directives/event_detailed_info');
 require('plugins/kibana/event/directives/additional_info');
 require('plugins/kibana/event/directives/severity_widget');
 require('angular-ui-bootstrap');
-
-document.title = 'Events - Vienna';
 
 const app = uiModules.get('app/event', [
   'elasticsearch',
@@ -760,7 +760,8 @@ app.directive('eventApp', function () {
       $scope.state = new AppState(stateDefaults);
 
       function init() {
-        //var docTitle = Private(require('ui/doc_title'));
+        const docTitle = Private(DocTitleProvider);
+        docTitle.change(VunetSidebarConstants.EVENTS);
         $scope.$emit('application.load');
         $scope.search();
       }

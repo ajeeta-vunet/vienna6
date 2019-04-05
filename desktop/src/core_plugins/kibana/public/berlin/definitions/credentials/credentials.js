@@ -11,6 +11,7 @@ app.directive('vunetCredentials', function () {
 });
 function vunetCredentials($scope,
   $http,
+  Promise,
   StateService) {
 
   $scope.sshMeta = {
@@ -479,13 +480,24 @@ function vunetCredentials($scope,
   };
 
   // Function to delete items from table
-  $scope.deleteSelectedCredentials = (event, restKey) => {
-    const selectedId = event[0].name;
-    return StateService.deleteCredentials(restKey, selectedId).then(function () {
-      return Promise.resolve(true);
-    }, function () {
-      return Promise.resolve(false);
+  $scope.deleteSelectedCredentials = (rows, restKey) => {
+
+    // Iterate over list of users to be deleted and delete
+    // one by one. We return a list of promises which contains both
+    // success and failure cases.
+    const deletePromises = Promise.map(rows, function (row) {
+
+      return StateService.deleteCredentials(restKey, row.name)
+        .then(function () {
+          return '';
+        })
+        .catch(function () {
+          return '';
+        });
     });
+
+    // Wait till all Promises are resolved and return single Promise
+    return Promise.all(deletePromises);
   };
 
   init();

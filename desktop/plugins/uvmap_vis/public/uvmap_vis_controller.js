@@ -3,6 +3,7 @@ import moment from 'moment';
 import { uiModules } from 'ui/modules';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
+import { SavedObjectsClientProvider } from 'ui/saved_objects';
 const module = uiModules.get('kibana/uvmap_vis', ['kibana']);
 module.controller('UVMapVisController', function ($scope, Private, Notifier, $http, $rootScope, timefilter, kbnUrl) {
   const dashboardContext = Private(dashboardContextProvider);
@@ -42,9 +43,82 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
     $rootScope.$broadcast('vusop:uvMapData', newParamsConnection);
   };
 
+
+  // This function will gets called only when
+  // connection has dashboard configured.
+  function setDashboardDict() {
+
+    // Get all the available dashboards to display
+    const savedObjectsClient = Private(SavedObjectsClientProvider);
+    const dashboardDict = {};
+    return savedObjectsClient.find({
+      type: 'dashboard',
+      fields: ['title'],
+      perPage: 1000
+    }).then(response => {
+      // Create dashboarad dictionary with title and id of dashboards
+      // for showing in the dashboard selection list
+      response.savedObjects.map(pattern => {
+        const id = pattern.id;
+        dashboardDict[pattern.get('title')] = id;
+      });
+      return dashboardDict;
+    });
+  }
+
+
   $scope.search = function run() {
+    let connection = $scope.vis.params.connection;
+
+    // Update dashboard title with dashboard id in connection
+    // only if dashboard is there in connection.
+    if (_.includes(connection, 'dashboard')) {
+
+      setDashboardDict().then((dashboardDict) => {
+
+        // Update connection by replacing dashboard name with dashboard id.
+        connection = connection.split('\n');
+
+        // Iterating through string array
+        _.each(connection, function (connectionEle, index) {
+
+          // Regex to get value within a quots.
+          const regexForDashboardName = /["].+["]/;
+
+          // checking the string having dashboard as substring
+          if (_.includes(connectionEle, 'dashboard')) {
+
+            // Get the dashboard title configured within the quots and replace same with empty.
+            // We are not allowing user to use dashboard title is having quotes, this will take care
+            // of replacing quotes with empty in dashboard title, it just replace the quotes which are
+            // not part of dashboard title
+            const dashTitle = connectionEle.match(regexForDashboardName)[0].replace(/"/g, '');
+
+            // Get the dashboard id using dashboard title.
+            const dashboard = dashboardDict[dashTitle];
+
+            // Replace dashboard name with dashboard id if dashboard is there, else just return connectionEle.
+            connection[index] =  dashboard ? connectionEle.replace(connectionEle.match(regexForDashboardName)[0], '"' + dashboard + '"')
+              : connectionEle;
+          }
+        });
+
+        // Convert string array to single string.
+        connection = connection.join('\n');
+
+        // Make POST call after resolving of getting dashboard dict.
+        makePostCall(connection);
+      });
+    } else {
+
+      // Make POST cal for no dashboard configured.
+      makePostCall(connection);
+    }
+  };
+
+  // To make POST a call.
+  function makePostCall(connection) {
     const expression = $scope.vis.params.expression;
-    const connection = $scope.vis.params.connection;
     const colorSchema = $scope.vis.params.colorSchema || [];
 
     // If both expression and connection doesn't have anything, we don't have
@@ -85,13 +159,13 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
         err.stack = resp.stack;
         notify.error(err);
       });
-  };
+  }
 
   // Function to be called when a node is selected
   $scope.onNodeSelect = function (params) {
     if (params.nodes[0] in $scope.data.node_dashboard_dict) {
-      const dashboard = '/dashboard/' + $scope.data.node_dashboard_dict[params.nodes[0]];
-      kbnUrl.redirect(dashboard);
+      const dashboardURL = '/dashboard/' + $scope.data.node_dashboard_dict[params.nodes[0]].value;
+      kbnUrl.redirect(dashboardURL);
 
       // We are forcing angular digest cycle to run to redirect to the
       // dashboard URL.

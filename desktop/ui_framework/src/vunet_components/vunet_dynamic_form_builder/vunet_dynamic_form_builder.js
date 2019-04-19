@@ -177,9 +177,9 @@ export class VunetDynamicFormBuilder extends Component {
         [key]: e.target.value
       }, () => this.init(false));
     } else if (type === 'number') {
-      // Typecast the value to a Number if type is number.
+      // check for non empty and non zero value then Typecast it to a Number for type number.
       this.setState({
-        [key]: Number(e.target.value)
+        [key]: e.target.value && Number(e.target.value)
       }, () => this.init(false));
 
     } else if(type === 'multi') {

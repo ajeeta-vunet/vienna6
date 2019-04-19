@@ -127,10 +127,13 @@ export class VunetDataTable extends Component {
     //                                }
     // 2: initialSortablePropertyName which takes header title.
 
-    this.sortableProperties = new SortableProperties(
-      this.createSortablePropertiesList(),
-      this.props.metaItem.rows[0]
-    );
+    // Create SortableProperties instance only column header is available
+    if (newProps.metaItem.rows.length > 0) {
+      this.sortableProperties = new SortableProperties(
+        this.createSortablePropertiesList(),
+        newProps.metaItem.rows[0]
+      );
+    }
 
     if (!_.isUndefined(_.difference(newProps.metaItem.headers, this.props.metaItem.headers)[0]) ||
       (!_.isUndefined(newProps.metaItem.forceUpdate) && newProps.metaItem.forceUpdate)) {
@@ -165,6 +168,17 @@ export class VunetDataTable extends Component {
       this.filterItems(this.state.filter);
     }
   };
+
+  // Calculetes the number of items(rows) in a page to
+  // show based on value selected.
+  calculeteNumberOfItems = (event) => {
+    if (event.target.value !== 'All') {
+      this.pager = new Pager(this.rows.length, event.target.value, 1);
+    } else {
+      this.pager = new Pager(this.rows.length, this.rows.length, 1);
+    }
+    this.calculateItemsOnPage();
+  }
 
   // Create a list of objects with name, getValue and isAscending
   // to pass in to SortableProperties class.
@@ -575,6 +589,7 @@ export class VunetDataTable extends Component {
   renderToolBarActions() {
     let addDeleteAction = '';
     const tableAction = [];
+    const rowsSelect = [];
     let hideDeleteButton = false;
     const isRowsSelected = this.state.selectedRowIds.length > 0 ? true : false;
 
@@ -616,9 +631,25 @@ export class VunetDataTable extends Component {
           </KuiButton>);
       }
     }
+
+    rowsSelect.push(
+      <select
+        className="kuiSelect"
+        key="value"
+        data-tip="Number Of Entries"
+        label="Select No of rows"
+        onChange={this.calculeteNumberOfItems}
+      >
+        <option value="10" label="10">10</option>
+        <option value="50" label="50">50</option>
+        <option value="100" label="100">100</option>
+        <option value="All" label="All">All</option>
+        <ReactTooltip />
+      </select>);
     return [
       ...tableAction,
       ...addDeleteAction,
+      ...rowsSelect,
     ];
   }
 

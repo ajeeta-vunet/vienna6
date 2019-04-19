@@ -29,7 +29,7 @@ connected
  = node_type:node_type_syntax_wo_dashboard newline {return {node_type}}
 
  node_type_syntax_with_dashboard
- = node:Variable whitespace "name" whitespace name:Variable whitespace "type" whitespace type:Variable whitespace "x" whitespace x:Number whitespace "y" whitespace y:Number whitespace "dashboard" whitespace dashboard:Variable { return {type:type, name:name, node:node, x:x, y:y, dashboard:dashboard}}
+ = node:Variable whitespace "name" whitespace name:Variable whitespace "type" whitespace type:Variable whitespace "x" whitespace x:Number whitespace "y" whitespace y:Number whitespace "dashboard" whitespace dashboard:VariableWithSpaceAndQuotes { return {type:type, name:name, node:node, x:x, y:y, dashboard:dashboard}}
  
  node_type_syntax_wo_dashboard
  = node:Variable whitespace "name" whitespace name:Variable whitespace "type" whitespace type:Variable whitespace "x" whitespace x:Number whitespace "y" whitespace y:Number { return {type:type, name:name, node:node, x:x, y:y}}
@@ -42,6 +42,15 @@ connected
 
  ipaddress
  = v:([0-9.]+) {return {value:v.join("")}}
+
+ VariableWithSpaceAndQuotes
+ = quote value:VariableExceptQuote quote {return {value}}
+
+ quote
+ = ["]
+
+ VariableExceptQuote
+ = v:[^"]+ {return { value:v.join("")}}
 
  whitespace
  = [ \t]*

@@ -831,4 +831,51 @@
       border-left-color: @text-color;
     }
   }
+  .kuiLocalNav {
+    background: black !important;
+  }
+}
+
+// Dark theme css for BMV in tabular view 
+.theme-dark {
+
+  // For Single Metric
+  .bs-metric-value {
+    color: white !important;
+  }
+
+  .data-rows:first-child {
+    td {
+      color: @text-color;
+    }
+  }
+
+  .bm-table-striped > tbody >tr:nth-child(odd) {background-color: @data-tables-odd-row-background;} /* Odd */
+  .bm-table-striped > tbody >tr:nth-child(even) {background-color: @data-tables-even-row-background;} /* Even */
+
+  .bm-table-striped {
+
+    // For inner bucket rows
+    .bm-bucket-td {
+      color: @text-color !important;
+    }
+
+    // For metric name.
+    .metric-name {
+      color: @text-color;
+    }
+
+    // For firstbucket row.
+    .bm-first-bucket-td {
+      color: @text-color;
+    }
+
+    // For table header
+    .data-rows:first-child {
+      td {
+        background: @black !important;
+      }
+    }
+  }
+
 }

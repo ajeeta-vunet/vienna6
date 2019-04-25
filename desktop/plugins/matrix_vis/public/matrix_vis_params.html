@@ -31,6 +31,7 @@
   <div class="table-color-range-error" ng-show="colorCodeOnPercentageUsed">
     Color schema is configured to use percentage values. Pl note that unchecking this field will make Color schema configuration invalid.
   </div>
+  <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="vis.indexPattern"></metric-link-info>
   <div class="checkbox">
     <label>
       <input 
@@ -48,7 +49,6 @@
     </label>
   </div>
   <div ng-show="vis.params.addSrNumber" class="row">
-    <div class="col-xs-1"> </div>
     <div class="col-xs-3">
       Base
         <kbn-tooltip text="Starting number to be used when showing serial numbers" placement="right" append-to-body="1">
@@ -63,7 +63,7 @@
 	    </kbn-tooltip>
       <input type="text" ng-model="vis.params.srNumberPrefix" class="form-control">
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-6">
       Column Title
 	    <kbn-tooltip text="Title for serial number column" placement="right" append-to-body="1">
         <i class="fa fa-question-circle table-vis-help-hover"></i>

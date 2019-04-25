@@ -1,3 +1,4 @@
+require('ui/directives/metric_link_info');
 import { uiModules } from 'ui/modules';
 import tableVisParamsTemplate from 'plugins/table_vis/table_vis_params.html';
 import { updateColorCodeOnPercentage } from 'ui/utils/vunet_colorcode_on_percentage';

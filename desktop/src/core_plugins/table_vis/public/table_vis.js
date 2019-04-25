@@ -49,6 +49,8 @@ function TableVisTypeProvider(Private) {
         },
         colorCodeValues: false,
         colorSchema: [],
+        linkInfoValues: false,
+        linkInfo: [],
         srNumberBase: 1,
         srNumberPrefix: '',
         srNumberTitle: 'Sr. No.',

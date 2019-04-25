@@ -37,6 +37,8 @@ function MatrixVisTypeProvider(Private) {
     visConfig: {
       defaults: {
         perPage: 10,
+        linkInfoValues: false,
+        linkInfo: [],
         enableNoOfColumns: false,
         collapseTimeHeaders: false,
         enableTimeFormatter: false,
@@ -76,7 +78,9 @@ function MatrixVisTypeProvider(Private) {
           aggFilter: ['!geo_centroid', '!geo_bounds'],
           min: 1,
           max: 1,
-          // maximum of 1 metric is allowed.
+          max: 4,
+          // maximum of 4 metrics is allowed. Out of this, last 3 should be
+          // latest value metric
           defaults: [
             { type: 'count', schema: 'metric' }
           ]

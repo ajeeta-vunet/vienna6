@@ -35,6 +35,7 @@
         Calculate metrics for every bucket/level
       </label>
     </div>
+    <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="vis.indexPattern"></metric-link-info>
     <div class="checkbox">
       <label>
         <input
@@ -70,7 +71,6 @@
       </label>
     </div>
     <div ng-show="vis.params.addSrNumber" class="row">
-      <div class="col-xs-1"></div>
       <div class="col-xs-3">
         Base
         <kbn-tooltip
@@ -101,7 +101,7 @@
           class="form-control"
         />
       </div>
-      <div class="col-xs-4">
+      <div class="col-xs-6">
         Column Title
         <kbn-tooltip
           text="Title for serial number column"
@@ -124,3 +124,4 @@
     ></metric-color-schema>
   </form>
 </div>
+i

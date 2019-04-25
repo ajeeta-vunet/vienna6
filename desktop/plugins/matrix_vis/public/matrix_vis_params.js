@@ -1,3 +1,4 @@
+require('ui/directives/metric_link_info');
 import { uiModules } from 'ui/modules';
 import matrixVisParamsTemplate from 'plugins/matrix_vis/matrix_vis_params.html';
 import { updateColorCodeOnPercentage } from 'ui/utils/vunet_colorcode_on_percentage';

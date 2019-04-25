@@ -1,0 +1,170 @@
+<div>
+  <div class="checkbox">
+    <label>
+      <input
+        type="checkbox"
+        ng-model="linkInfoValues"
+      />
+      Enable reference link values
+      <kbn-tooltip
+        text="Enable this to configure reference links to other dashboards or Events page from cells. The reference links will override the URL formatting configuration done on corresponding fields."
+        placement="right"
+        append-to-body="1"
+      >
+        <i class="fa fa-question-circle table-vis-help-hover"></i>
+      </kbn-tooltip>
+    </label>
+  </div>
+  <div
+    class="link-info-form"
+    ng-show="linkInfoValues"
+    >
+    <label>
+      Field
+      <kbn-tooltip
+        text="Select the field on which the link is to be shown."
+        placement="right"
+        append-to-body="1"
+        >
+        <i class="fa fa-question-circle"></i>
+      </kbn-tooltip>
+    </label>
+    <select
+      class="form-control ng-pristine ng-touched"
+      name="field"
+      ng-model="field"
+      ng-show="indexPattern.fields.length"
+      auto-select-if-only-one="field"
+      ng-options="field as field.name group by field.type for field in indexPattern.fields | orderBy:'name'"
+      >
+      <option value=""></option>
+    </select>
+    <div class="checkbox">
+      <label>
+        <input
+          type="checkbox"
+          ng-model="useFieldAsFilter"
+        />
+        Use this field value as filter when moving to dashboard
+        <kbn-tooltip
+          text="Enable this to use this field value as filter when moving to target dashboard"
+          placement="right"
+          append-to-body="1">
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+      </label>
+    </div>
+    <br/>
+    <label>Dashboard</label>
+    <select
+      class="form-control"
+      name="dashboard"
+      ng-options="option as option.title for option in dashboardList track by option.id"
+      ng-model="dashboard">
+    </select>
+    <label>Search String</label>
+    <input
+      type="text"
+      ng-model="searchString"
+      class="form-control"
+    />
+    <div class="checkbox">
+      <label>
+        <input
+          type="checkbox"
+          ng-model="retainFilters"
+        />
+        Retain currently applied filters when using this link
+        <kbn-tooltip
+          text="Enable this to ensure that currently present filters are maintained when using this reference link."
+          placement="right"
+          append-to-body="1">
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+      </label>
+    </div>
+    <div class="link-info-error">{{linkError}}</div>
+    <div ng-hide="editIndex >= 0">
+      <input
+        type="button"
+        value="Add link"
+        ng-click="addOrUpdateLink()"
+        class="form-control"
+      />
+    </div>
+    <div ng-show="editIndex >= 0"
+      class="row"
+      >
+      <div class="col-xs-6">
+        <input
+          type="button"
+          value="Update Link"
+          ng-click="addOrUpdateLink()"
+          class="form-control"
+        />
+      </div>
+      <div class="col-xs-6">
+        <input
+          type="button"
+          value="Cancel"
+          ng-click="cancelEdit()"
+          class="form-control"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="vis-link-info"
+    ng-show="linkInfoValues && (linkInfo.length > 0)"
+    >
+    <table class="link-info-table">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Dashboard</th>
+          <th>Search String</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="link in linkInfo">
+          <td style="text-align: center">{{link.field}}</td>
+          <td style="text-align: center">{{link.dashboard.title}}</td>
+          <td style="text-align: center">{{link.searchString}}</td>
+          <td>
+            <button
+              class="link-info-action-button"
+              ng-click="editLink($index)"
+              class="form-control"
+              >
+            <a
+              href=""
+              aria-label="Edit"
+              >
+            <i
+              aria-hidden="true"
+              class="fa fa-pencil"
+              ></i>
+            </a>
+            </button>
+            <button
+              class="link-info-action-button"
+              ng-click="deleteLink($index)"
+              class="form-control"
+              >
+            <a
+              href=""
+              aria-label="Delete"
+              >
+            <i
+              aria-hidden="true"
+              class="fa fa-trash-o"
+              ></i>
+            </a>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

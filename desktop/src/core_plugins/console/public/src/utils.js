@@ -117,11 +117,11 @@ utils.getValueToStoreInKibana = function (objectList, fieldToFetch) {
 // It returns the saved object like search, index-pattern...from the .kibana
 // object based on the param doc_type. For ex; To get title of all the saved
 // searched we need to pass 'search' for doc_type and ['title'] for the list.
-utils.getSavedObject = async function (doc_tpye, fieldList, page_size, Private) {
+utils.getSavedObject = async function (doc_type, fieldList, page_size, Private) {
   let savedObject = [];
   let savedObjectsClient = Private(SavedObjectsClientProvider);
   await savedObjectsClient.find({
-    type: doc_tpye,
+    type: doc_type,
     fields: fieldList,
     perPage: page_size
   }).then(response => {

@@ -103,6 +103,14 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
       valueAgg = write.aggStack[2];
     }
 
+    // If additional top hits aggregation metrics are specified, take them
+    let topHits = {};
+    // Number of addition columns to add. First 3 aggregations are for
+    // two groupings and one metric. Beyond that, all aggregations
+    // corresponds to additional columns with latest value that we would
+    // like to display
+    const topHitsLength = write.aggStack.length - 3;
+
     // Columns are based on first level of aggregations.. we need to get the
     // key of the first level and that will make the columns
 
@@ -121,6 +129,14 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
       column = { title: keyAgg.makeLabel(),
         aggConfig: firstAgg
       };
+      columns.push(column);
+    }
+
+    // Column for latest value metrics (in addition to the main metric)
+    for (let step = 3; step < write.aggStack.length; step++) {
+      column = { title: write.aggStack[step].makeLabel(),
+        aggConfig: keyAgg
+        };
       columns.push(column);
     }
 
@@ -356,6 +372,25 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
             // Always push the key row into this newly created row
             row.push(keyRow);
 
+            if (write.aggStack.length > 3) {
+              // If additional latest value metrics are there, we
+              // take and store them in an object. We add them
+              // back to the row at the end, as we do not want to
+              // affect empty cell filling logic etc
+              if (topHits[key] === undefined) {
+                // Seeing this key for the first time
+                topHits[key] = [];
+              }
+              for (let step = 3; step < write.aggStack.length; step++) {
+                const value = write.aggStack[step].getValue(intBuckets);
+                const topValue = new AggConfigResult(write.aggStack[step],
+                                                     'undefined',
+                                                     value,
+                                                     value);
+                topHits[key].push(topValue);
+              }
+            }
+
             // Also add it in the dictionay and global rows
             rowDict[key] = row;
             rows.push(row);
@@ -427,9 +462,10 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
     // case where we may not have values in row for each column
     rows.map(function (row) {
       // If length of this is less than length of columns, we need to add
-      // more entries into row
-      if (columns.length > row.length) {
-        count = columns.length - row.length;
+      // more entries into row. Here, we need to account for any latest
+      // value columns added for the header
+      if (columns.length > (row.length + topHitsLength)) {
+        count = columns.length - (row.length + topHitsLength);
         if (write.aggStack.length > 2) {
           addEmptyCells(valueAgg, row, count);
         } else {
@@ -481,6 +517,20 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
         });
       });
     }
+
+    if (topHitsLength) {
+      let value = '';
+      // If latest value columns are to be added, add it now
+      for (let key in rowDict) {
+        for (let step = 0; step < topHitsLength; step++) {
+          if (key in topHits) {
+            value = topHits[key][step];
+          }
+          rowDict[key].splice(1 + step, 0, value);
+        }
+      }
+    }
+
     // Update the rows and columns in root
     write.root.tables[0].rows = rows;
     write.root.tables[0].columns = columns;

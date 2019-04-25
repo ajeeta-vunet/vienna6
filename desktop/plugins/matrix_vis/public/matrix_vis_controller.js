@@ -60,13 +60,13 @@ module.controller('KbnMatrixVisController', function ($scope, Private, timefilte
           let sum = 0;
 
           row.forEach(function (cell) {
-            if (cell.type === 'metric' && cell.value !== '') {
+            if (cell.type === 'metric' && cell.value !== '' && typeof (cell.value) === 'number') {
               sum += cell.value;
             }
           });
 
           row.forEach(function (cell) {
-            if (cell.type === 'metric' && cell.value !== '') {
+            if (cell.type === 'metric' && cell.value !== '' && typeof (cell.value) === 'number') {
               cell.sum = sum;
             }
           });

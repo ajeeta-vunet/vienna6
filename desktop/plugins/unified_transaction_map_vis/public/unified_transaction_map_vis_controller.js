@@ -60,9 +60,9 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
     if (color.name === 'black') {
       label = '\n<code>' +  labelname + ': ' + metric + '</code>';
     } else if (color.name === 'green') {
-      label = '\n<b>' + labelname + ': ' + metric + '</b>';
-    } else if (color.name === 'orange') {
       label = '\n<i>' + labelname + ': ' + metric + '</i>';
+    } else if (color.name === 'orange') {
+      label = '\n<b>' + labelname + ': ' + metric + '</b>';
     } else if (color.name === 'red') {
       label = '\n<b><i>' + labelname + ': ' + metric + '</i></b>';
     }

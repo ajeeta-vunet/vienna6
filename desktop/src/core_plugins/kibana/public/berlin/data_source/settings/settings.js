@@ -37,17 +37,17 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
   $scope.settingsMeta = {
     headers: ['Index Prefix', 'Active Data', 'Inactive Data', 'Archived'],
     rows: ['index_prefix', 'active_data', 'inactive_data', 'archived_data'],
-    help: ['index prefix should be number and at least 1 alphabet, - and *' +
-      ' special characters allowed', 'Configure the number of days for which' +
+    help: ['index prefix can have number, - and * special characters allowed and at least 1 alphabet',
+      'Configure the number of days for which' +
     ' data corresponding to this index will be active. Active indices allows' +
     ' for live search and analytics on data.', 'Configure the number of days' +
     ' for which data corresponding to this index will be kept once it is marked' +
-    ' as inactive. After the configured number  of days, data will be either archived' +
+    ' as inactive. After the configured number of days, data will be either archived' +
     ' or deleted. Inactive indices are not considered in search and analytics. When' +
-    ' data is made inactive, it consumes minimal compute resources. At any point, inactive' +
+    ' data is made inactive, it consumes minimal compute resources. At any point within a given period, inactive' +
     ' data can be activated back for use in search and analytics',
-    'Defined the number of days for which archived data corresponding to this index will be kept ' +
-    'in the archive partition. At any point, archived data can be restored back to the system ', ''],
+      'Defined the number of days for which archived data corresponding to this index will be kept ' +
+    'in the archive partition. At any point within a given period, archived data can be restored back to the system ', ''],
     id: 'index_prefix',
     add: true,
     edit: true,
@@ -59,6 +59,7 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
         id: true,
         label: 'Index Prefix',
         type: 'text',
+        helpText: 'index prefix can have number, - and * special characters allowed and at least 1 alphabet',
         name: 'index_prefix',
         validationCallback: $scope.validateValue,
         props: {
@@ -68,13 +69,16 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
           pattern: '^(?!\\*)[\\w\\-\\*]*[a-zA-Z][\\w\\-\\*]*$',
         },
         errorText: 'Value can have numbers, alphabets, - (hyphen) and * (star) characters with the' +
-        ' length of 3 to 24. There must be at least 1 alphabet. Also it should not start with a *(star).' +
-        ' Or Value already exist.'
+        ' length of 3 to 24. There must be at least 1 alphabet. Also it should not start with a * (star)' +
+        ' and it should be a unique value.'
       },
       {
         key: 'active_data',
         label: 'Active data',
         type: 'number',
+        helpText: 'Configure the number of days for which' +
+        ' data corresponding to this index will be active. Active indices allows' +
+        ' for live search and analytics on data.',
         name: 'active_data',
         props: {
           required: true,
@@ -87,6 +91,12 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
         key: 'inactive_data',
         label: 'Inactive data',
         type: 'number',
+        helpText: 'Configure the number of days' +
+        ' for which data corresponding to this index will be kept once it is marked' +
+        ' as inactive. After the configured number of days, data will be either archived' +
+        ' or deleted. Inactive indices are not considered in search and analytics. When' +
+        ' data is made inactive, it consumes minimal compute resources. At any point within a given period, inactive' +
+        ' data can be activated back for use in search and analytics',
         name: 'inactive_data',
         props: {
           required: true,
@@ -99,6 +109,8 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
         key: 'archived_data',
         label: 'Archived data',
         type: 'number',
+        helpText: 'Defined the number of days for which archived data corresponding to this index will be kept ' +
+        'in the archive partition. At any point within a given period, archived data can be restored back to the system ',
         name: 'archived_data',
         props: {
           required: true,
@@ -154,6 +166,10 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
 
   // Function to add or edit data retention.
   $scope.updateDataRetentionSettings = (event, dataId, dataRetention) => {
+
+    // Initialze a flag to handle updating root index.
+    let isRootIndex = true;
+
     // When edit or add clicked.
     if (event === 'edit' || event === 'add') {
 
@@ -172,17 +188,21 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
         $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting.map((dataval, index) => {
           if (dataval.index_prefix === dataId) {
             $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting[index] = addOreditVal;
-          } else {
-            // When root index row is updating.
-            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].index_prefix = dataRetention.index_prefix;
-            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].searchable_data_in_days =
-             dataRetention.active_data;
-            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].non_searchable_data_in_days =
-             dataRetention.inactive_data;
-            $scope.dataRetentionList.Retention_Preference.data_management_preference[0].archive_data_after_days =
-             dataRetention.archived_data;
+            // Set root index to false if selected row is there under per_index_settings.
+            isRootIndex = false;
           }
         });
+      }
+
+      // Update root index
+      if(isRootIndex === true) {
+        $scope.dataRetentionList.Retention_Preference.data_management_preference[0].index_prefix = dataRetention.index_prefix;
+        $scope.dataRetentionList.Retention_Preference.data_management_preference[0].searchable_data_in_days =
+         dataRetention.active_data;
+        $scope.dataRetentionList.Retention_Preference.data_management_preference[0].non_searchable_data_in_days =
+         dataRetention.inactive_data;
+        $scope.dataRetentionList.Retention_Preference.data_management_preference[0].archive_data_after_days =
+         dataRetention.archived_data;
       }
 
       // For add or Edit update data retention settings(Uses PUT for both add and edit).

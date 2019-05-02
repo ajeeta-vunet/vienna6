@@ -43,7 +43,7 @@ export function BaseMapsVisualizationProvider(serviceSettings) {
      * @param status
      * @return {Promise}
      */
-    async render(esResponse, status) {
+    async render(esResponse, printReport, status) {
 
       if (!this._kibanaMap) {
         //the visualization has been destroyed;

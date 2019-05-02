@@ -42,7 +42,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         let $cell;
         let $cellContent;
 
-        const _contents = _.clone(contents, true);
+        const isContentsEmpty = contents === '' ? true : false;
+        const _contentShow = contents ? contents.show : undefined;
 
         let val;
         let visType;
@@ -73,16 +74,19 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
           }
         }
 
-        //hide the cell(td) if it's marked show:false
-        if (_contents && _contents.show !== undefined && !_contents.show) {
-          $cell.addClass('hide-cell');
-        }
+        if (visType === 'matrix') {
 
-        //hide all the extra row
-        //will show only those row which has data
-        //like if number of rows configured more then the data row
-        if (_contents === '' || (show !== undefined && !show)) {
-          $cell.addClass('hide-cell');
+          //hide the cell(td) if it's marked show:false
+          if (_contentShow !== undefined && !_contentShow) {
+            $cell.addClass('hide-cell');
+          }
+
+          //hide all the extra row
+          //will show only those row which has data
+          //like if number of rows configured more then the data row
+          if (isContentsEmpty || (show !== undefined && !show)) {
+            $cell.addClass('hide-cell');
+          }
         }
 
         if (_.isObject(contents)) {

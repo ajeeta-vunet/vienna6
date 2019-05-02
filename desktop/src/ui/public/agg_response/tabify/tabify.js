@@ -78,16 +78,16 @@ export function AggResponseTabifyProvider(Private, Notifier) {
         let value;
         if (agg.type.name === 'expression') {
           let expression = agg.params.Expression;
-          let index = 1;
 
           // Let us prepare the expression using the values we have got so
           // far for the metrics. For example: Replace M1 with 1st Metric
-          // value, M2 with 2nd metric value and so on
-          _.forEach(metricList, function (aggValue) {
+          // value, M2 with 2nd metric value and so on.
+          // We iterate from the end of the metricList so that we encounter '<Mdd>'
+          // before '<Md>' Example 'M10' before 'M1'
+          for(let index = metricList.length; index >= 1; index = index - 1) {
             const replaceString = new RegExp('(M' + index.toString() + ')', 'g');
-            expression = expression.replace(replaceString, aggValue);
-            index += 1;
-          });
+            expression = expression.replace(replaceString, metricList[index - 1]);
+          }
 
           // Evaluate the expression now
           try {

@@ -13,7 +13,7 @@ class VisController {
     this.vis.API.queryFilter.on('update', this.queryBarUpdateHandler);
   }
 
-  async render(visData, status) {
+  async render(visData, printReport, status) {
     if (status.params) {
       this.controls = [];
       this.controls = await this.initControls();

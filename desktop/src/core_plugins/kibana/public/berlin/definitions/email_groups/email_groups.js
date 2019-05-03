@@ -10,6 +10,7 @@ app.directive('vunetEmailgroups', function () {
 });
 function VunetEmailgroups($scope,
   $http,
+  Promise,
   StateService) {
 
   $scope.isRecieptsListValid = false;
@@ -156,12 +157,22 @@ function VunetEmailgroups($scope,
   };
 
   // Function to delete items from table
-  $scope.deleteSelectedEmailgroups = (event) => {
-    return StateService.deleteTenantAttribute(attributeName, event[0].name).then(() => {
-      return Promise.resolve(true);
-    }, function () {
-      return Promise.resolve(false);
+  $scope.deleteSelectedEmailgroups = (rows) => {
+    // Iterate over list of email groups to be deleted and delete
+    // one by one. We return a list of promises which contains both
+    // success and failure cases.
+    const deletePromises = Promise.map(rows, function (row) {
+
+      return StateService.deleteTenantAttribute(attributeName, row.name).then(() => {
+        return '';
+      })
+        .catch(function () {
+          return '';
+        });
     });
+
+    // Wait till all Promises are resolved and return single Promise
+    return Promise.all(deletePromises);
   };
 
   //Function to export email-groups

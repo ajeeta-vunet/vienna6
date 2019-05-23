@@ -84,7 +84,7 @@ export function calculateSum(write, bucket, Private, key) {
       sumValDict[agg.id] = sum;
       if (write.aggStack.length) {
         // process the next agg at this same level
-        calculateSum(write, bucket, key);
+        calculateSum(write, bucket, Private, key);
       }
   }
   write.aggStack.unshift(agg);

@@ -61,6 +61,10 @@ export function prepareLinkInfo(
     }
   }
 
+  if (queryString === '') {
+    queryString = '*';
+  }
+
   // Now, add filters specified in link info
   if ((searchString !== undefined) && (searchString !== '')) {
     if ((queryString !== '*') && (queryString !== '')) {
@@ -172,6 +176,10 @@ export function preparehtmlInfo(fieldName,
         if (typeof queryString !== 'string') {
           queryString = queryString.query_string.query;
         }
+      }
+
+      if (queryString === '') {
+        queryString = '*';
       }
 
       // Now, add filters specified in link info

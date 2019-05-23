@@ -38,7 +38,7 @@ function changeBackgroundColor(cell, backgroundColor) {
   cell.css('color', textColor);
 }
 
-let percetangeVal = 0;
+let valInPercentage = 0;
 // This function replace the content of cell with image
 // based on specif background color
 // #0f0f0f - red_cross.png
@@ -64,7 +64,7 @@ export function createCellContents(contents, getAppState, Private, timefilter) {
     if (contents.sum === 0) {
       contents = contents.toString('html', getAppState, Private, timefilter) + '  (0%)';
     } else {
-      percetangeVal = Math.abs(val * 100 / contents.sum);
+      valInPercentage = Math.abs(val * 100 / contents.sum);
       contents = contents.toString('html', getAppState, Private, timefilter) + '  (' + valInPercentage.toFixed(2) + '%)';
     }
   } else {
@@ -130,7 +130,7 @@ export function applyColorSchemaForTableVis(val, interval, cell, configObj, scop
     // max.
     if (matchColorRange) {
       if (colorRange.colorCodeOnPercentage) {
-        if ((percetangeVal >= colorRange.min) && (percetangeVal <= colorRange.max)) {
+        if ((valInPercentage >= colorRange.min) && (valInPercentage <= colorRange.max)) {
           bkColor = colorRange.color;
         }
       } else {

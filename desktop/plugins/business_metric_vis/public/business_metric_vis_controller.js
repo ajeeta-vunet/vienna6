@@ -47,12 +47,11 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     let referencePage = '';
     let searchString = '';
 
-    if (refLink.useMetricFilter) {
+    if (refLink.useMetricFilter && metricFilter !== undefined ) {
       // We need to use the filter applied for this metric
       searchString = metricFilter;
     }
-
-    if (refLink.searchString !== '') {
+    if (refLink.searchString !== undefined && refLink.searchString !== '') {
       // If additional search string is given combine it with search string
       // from metric
       if (searchString !== '') {

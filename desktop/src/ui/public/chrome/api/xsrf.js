@@ -8,9 +8,6 @@ export function initChromeXsrfApi(chrome, internals) {
   };
 
   $.ajaxPrefilter(function ({ kbnXsrfToken = true }, originalOptions, jqXHR) {
-    if (kbnXsrfToken) {
-      jqXHR.setRequestHeader('kbn-version', internals.version);
-    }
   });
 
   chrome.$setupXsrfRequestInterceptor = function ($httpProvider) {
@@ -18,9 +15,6 @@ export function initChromeXsrfApi(chrome, internals) {
       return {
         request: function (opts) {
           const { kbnXsrfToken = true } = opts;
-          if (kbnXsrfToken) {
-            set(opts, ['headers', 'kbn-version'], internals.version);
-          }
           return opts;
         }
       };

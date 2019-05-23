@@ -12,6 +12,7 @@ app.directive('vunetPreferences', function () {
     controller: vunetPreferences,
   };
 });
+
 function vunetPreferences($injector,
   $scope,
   $http,
@@ -77,13 +78,12 @@ function vunetPreferences($injector,
     }
 
     return StateService.editPreference(actualData, prefKey).then(function () {
-      // Update the preferenceData so that when fetch happens, we have the updated data
-      for(let index = 0; index < $scope.preferenceData.length; index++) {
-        if (Object.keys($scope.preferenceData[index])[0] === prefKey) {
-          $scope.preferenceData[index][prefKey] = actualData;
-          break;
-        }
-      }
+      // After editing, fetch the headers and rows for the selected ITSM preference type
+      // from the back-end.
+      StateService.getPreferenceDetails().then (function (preferences) {
+        $scope.allPreferenceMeta = preferences.preference_meta;
+        $scope.preferenceData = preferences.preferences;
+      });
       return Promise.resolve(true);
     }, function () {
       return Promise.resolve(false);

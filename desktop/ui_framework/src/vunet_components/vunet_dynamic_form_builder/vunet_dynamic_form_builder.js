@@ -100,7 +100,15 @@ export class VunetDynamicFormBuilder extends Component {
     // @@@
     if(rules.options.length) {
       rules.options.forEach(rule => {
-        if (rule.value === value) {
+        // Check whether the selected value exists in the rule.value
+        // For ex; when rule.value is a list [yes, No] and selected value = yes
+        // The indexof will return 0 for yes and 1 for No
+        // If not exists in the list then will return -1
+        // When rule.value is a string 'preferences'
+        // The indexof will return 0 for 'p' and 2 for 'e'
+        // If not exists in the string then will return -1
+        // Please note that the indexof will return the position of the first occurence.
+        if (rule.value.indexOf(value) !== -1) {
           rule.actions.forEach(action => {
             switch (Object.keys(action)[0]) {
               case 'hide':

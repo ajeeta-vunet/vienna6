@@ -112,10 +112,19 @@ export class SavedObjectsClient {
 
     const method = id && !overwrite ? 'create' : 'index';
     const time = this._getCurrentTime();
+    let vuId = '';
 
+    // Check if attributes exists and replace spaces
+    // in title with '-' to get id.
+    if(attributes && attributes.title && type !== 'config') {
+      vuId = attributes.title.replace(/ /g, '-');
+    }
+    else {
+      vuId = id;
+    }
     try {
       const response = await this._writeToCluster(method, {
-        id: this._generateEsId(type, id),
+        id: this._generateEsId(type, vuId),
         type: this._type,
         index: this._index,
         refresh: 'wait_for',

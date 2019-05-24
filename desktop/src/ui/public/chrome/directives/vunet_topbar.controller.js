@@ -479,6 +479,17 @@ class TopbarCtrl {
       }
     };
 
+    // This function gets called when user provides a filter in search box
+    // and press Enter key.
+    $scope.helpSearch = (search) => {
+      const url = '/vuDoc/search.html?q=' + search;
+
+      // Open an URL only when search filter is available.
+      if (search !== undefined) {
+        window.open(url, '_blank');
+      }
+    };
+
     $scope.viewNotificationDetails = (notificationSummary) => {
       // If notification summary present, that will be used as search string
       // Also, we do not want any current applied filters/search to

@@ -88,6 +88,51 @@
                 <i class='icon-Diagnostics bg-color' uib-tooltip="Run Diagnostics"></i>
               </button>
             </li>
+            <li class="uib-dropdown help-container" uib-dropdown>
+              <div class='uib-dropdown-toggle help-icon' data-toggle="dropdown"
+                uib-dropdown-toggle>
+                <i class="fa fa-question-circle help-icon-size"></i>
+                </i>
+              </div>
+              <ul class="dropdown-menu-right uib-dropdown-menu" uib-dropdown-menu ng-click="$event.stopPropagation()">
+                <div class="help-dropdown-content"> 
+                  <div class="row help-dropdown-content-header">
+                    Need Help ?
+                  </div>
+                  <div class="row search-container">
+                    <form
+                      name="queryBarForm"
+                      ng-submit="helpSearch(search)">
+                      <div class="flex-container">
+                        <input
+                          type="text"
+                          ng-model="search"
+                          class="search-text kuiToolBarSearchBox_input"
+                          placeholder="Search..."
+                          area-lable="Filter"/>
+                        <button type="submit">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="row help-links-container">
+                    <div>
+                      <a class="help-link" href="/vuDoc/data_source/index.html" target="_blank">Data Sources</a>
+                    </div>
+                    <div>
+                      <a class="help-link" href="/vuDoc/user_guide/index.html" target="_blank">User Guide</a>
+                    </div>
+                    <div>
+                      <a class="help-link" href="/vuDoc/faqs/index.html" target="_blank">FAQs</a>
+                    </div>
+                    <div>
+                      <a class="help-link" href="/vuDoc/support/index.html" target="_blank">Support</a>
+                    </div>
+                  </div>
+                </div>
+              </ul>
+            </li>
             <li uib-dropdown is-open>
               <div class="logout-button" uib-dropdown-toggle aria-expanded='false'>
                 <div uib-tooltip="Logout">

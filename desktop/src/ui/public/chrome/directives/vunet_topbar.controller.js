@@ -485,7 +485,7 @@ class TopbarCtrl {
       const url = '/vuDoc/search.html?q=' + search;
 
       // Open an URL only when search filter is available.
-      if (search !== undefined) {
+      if (search !== undefined && search !== '') {
         window.open(url, '_blank');
       }
     };

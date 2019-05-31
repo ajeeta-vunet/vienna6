@@ -89,15 +89,17 @@
               </button>
             </li>
             <li class="uib-dropdown help-container" uib-dropdown>
-              <div class='uib-dropdown-toggle help-icon' data-toggle="dropdown"
+              <div class='uib-dropdown-toggle help-icon' data-toggle="dropdown" uib-tooltip="Help"
                 uib-dropdown-toggle>
-                <i class="fa fa-question-circle help-icon-size"></i>
-                </i>
+                <i class="icon-Help help-icon-size"></i>
               </div>
               <ul class="dropdown-menu-right uib-dropdown-menu" uib-dropdown-menu ng-click="$event.stopPropagation()">
                 <div class="help-dropdown-content"> 
                   <div class="row help-dropdown-content-header">
-                    Need Help ?
+                    Hello, What can we do for you?
+                  </div>
+                  <div class="row help-dropdown-content-text">
+                    Search our help center
                   </div>
                   <div class="row search-container">
                     <form
@@ -110,25 +112,47 @@
                           class="search-text kuiToolBarSearchBox_input"
                           placeholder="Search..."
                           area-lable="Filter"/>
-                        <button type="submit">
-                          <i class="fa fa-search"></i>
-                        </button>
                       </div>
                     </form>
                   </div>
-                  <div class="row help-links-container">
-                    <div>
-                      <a class="help-link" href="/vuDoc/data_source/index.html" target="_blank">Data Sources</a>
+                  <div class="helpdropdown-links-container">
+                    <span>
+                      Recommended Links
+                    </span>
+                  <div class="help-links-container">
+                    <div class="row">
+                      <div class="col-md-6 help-link-icon">
+                        <a href="/vuDoc/data_source/index.html" target="_blank">
+                          <div>
+                            <img src="/ui/vienna_images/data_source.svg" height="42" width="42"/>
+                          </div>Data Sources
+                        </a>
+                      </div>
+                      <div class="col-md-6 help-link-icon">
+                        <a href="/vuDoc/user_guide/index.html" target="_blank">
+                          <div>
+                            <img src="/ui/vienna_images/faq.svg" height="42" width="42"/>
+                          </div>User Guide
+                        </a>
+                      </div>
                     </div>
-                    <div>
-                      <a class="help-link" href="/vuDoc/user_guide/index.html" target="_blank">User Guide</a>
+                    <div class="row">
+                      <div class="col-md-6 help-link-icon">
+                        <a href="/vuDoc/faqs/index.html" target="_blank">
+                          <div>
+                            <img src="/ui/vienna_images/user_guide.svg" height="42" width="42"/>
+                          </div>FAQs
+                        </a>
+                      </div>
+                      <div class="col-md-6 help-link-icon">
+                        <a href="/vuDoc/support/index.html" target="_blank">
+                          <div>
+                            <img src="/ui/vienna_images/suport.svg" height="42" width="42"/>
+                          </div>Support
+                        </a>
+                      </div>
                     </div>
-                    <div>
-                      <a class="help-link" href="/vuDoc/faqs/index.html" target="_blank">FAQs</a>
-                    </div>
-                    <div>
-                      <a class="help-link" href="/vuDoc/support/index.html" target="_blank">Support</a>
-                    </div>
+                  </div>
                   </div>
                 </div>
               </ul>

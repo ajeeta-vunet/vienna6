@@ -95,6 +95,7 @@ export default async (kbnServer, server, config) => {
       app: app,
       nav: uiExports.navLinks.inOrder,
       branch: config.get('pkg.branch'),
+      version: '6.1.3',
       buildNum: config.get('pkg.buildNum'),
       buildSha: config.get('pkg.buildSha'),
       basePath: config.get('server.basePath'),

@@ -15,7 +15,7 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
       return (
         hideWriteControls ?
           [
-            getFullScreenConfig(actions[TopNavIds.FULL_SCREEN])
+            // getFullScreenConfig(actions[TopNavIds.FULL_SCREEN])
           ]
           : [
             getHomeConfig(actions[TopNavIds.HOME]),
@@ -43,14 +43,14 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
   }
 }
 
-function getFullScreenConfig(action) {
-  return {
-    key: 'full screen',
-    description: 'Full Screen Mode',
-    testId: 'dashboardFullScreenMode',
-    run: action
-  };
-}
+// function getFullScreenConfig(action) {
+//   return {
+//     key: 'full screen',
+//     description: 'Full Screen Mode',
+//     testId: 'dashboardFullScreenMode',
+//     run: action
+//   };
+// }
 
 /**
  * @returns {kbnTopNavConfig}

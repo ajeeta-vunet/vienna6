@@ -274,6 +274,7 @@
         <div class="report-section">
           <div
             class="row recipient-item">
+           <div class="col-md-2 zero-left-padding">
             <label class="role_label">
               Role
             </label>
@@ -288,104 +289,126 @@
                 </i>
               </span>
             </kbn-tooltip>
-            <label class="recipients_label">
-              Recipients List
-            </label>
-            <kbn-tooltip
-              text="Provide recipients email to receive the scheduled reports. Multiple emails can be added separated by ',' "
-              placement="right"
-              append-to-body="1">
-              <span>
-                <i
-                  class="fa fa-question-circle"
-                  aria-hidden="true">
-                </i>
-              </span>
-            </kbn-tooltip>
-            <label class="email_group_label">
-              Email Groups
-            </label>
-            <kbn-tooltip
-              text="Choose email group receipients to receive the scheduled reports"
-              placement="right"
-              append-to-body="1">
-              <span>
-                <i
-                  class="fa fa-question-circle"
-                  aria-hidden="true">
-                </i>
-              </span>
-            </kbn-tooltip>
-            <label class="action_label">
-              Action
-            </label>
-            <kbn-tooltip
-              text="Click this delete button to delete the corrosponding recipient list"
-              placement="right"
-              append-to-body="1">
-              <span>
-                <i
-                  class="fa fa-question-circle"
-                  aria-hidden="true">
-                </i>
-              </span>
-            </kbn-tooltip>
+           </div>
+            <div class="col-md-5 zero-left-padding">
+              <label class="recipients_label">
+                Recipients List
+              </label>
+              <kbn-tooltip
+                text="Provide recipients email to receive the scheduled reports. Multiple emails can be added separated by ',' "
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </div>
+            <div class="col-md-3 zero-left-padding">
+              <label class="email_group_label">
+                Email Groups
+              </label>
+              <kbn-tooltip
+                text="Choose email group receipients to receive the scheduled reports"
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </div>
+            <div class="col-md-2 zero-left-padding">
+              <label class="action_label">
+                Action
+              </label>
+              <kbn-tooltip
+                text="Click this delete button to delete the corrosponding recipient list"
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </div>
           </div>
           <div
             class="row recipient-item"
             ng-repeat="item in recipientsList track by $index">
-            <ng-form name="recipientItemForm"
-              class ="recipient-form">
-              <select
-                class="recipient-role"
-                name="groupByField"
-                ng-options="role.name as role.name for role in userGroups | orderBy:'name'"
-                ng-model="item.role"
-                ng-disabled="disableInputElements"
-                required>
-                <option value=""> </option>
-              </select>
-              <input
-                multiple-emails
-                class="recipients"
-                ng-required="(enable_scheduling && item.selectEmailGroupList.length == 0) || !item.selectEmailGroupList.length"
-                type="text"
-                maxlength="1024"
-                ng-model="item.recipients"
-                ng-disabled="disableInputElements"
-                name="reportRecipients"
-                ng-class="{error:item.selectEmailGroupList.length == 0 && enable_scheduling && recipientItemForm.reportRecipients.$invalid}">
-              <searchable-multiselect
-                display-attr="description"
-                item-index="$index"
-                value-attr="name"
-                name="reportEmailGroup"
-                ng-model="item.selectEmailGroupList"
-                selected-items="item.selectEmailGroupList"
-                all-items="allEmailGroups"
-                add-item="addEmailGroup"
-                remove-item="removeEmailGroup"
-                ng-required="(enable_scheduling && item.recipients == '') || item.recipients == ''">
-              </searchable-multiselect>
-              <button
-                ng-disabled="disableInputElements"
-                class="email_buttons"
-                type="button"
-                class="remove"
-                ng-click="removeRecipients($index)">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-              </button>
-              <p ng-if="item.recipients !== '' && ((item.selectEmailGroupList.length == 0 && recipientItemForm.reportRecipients.$invalid) || recipientItemForm.reportRecipients.$invalid)"
-                class="error-highlight">
-                Please provide either valid email address or choose email group from the list. You can enter multiple email addresses separated by a comma ','
-              </p>
+            <ng-form name="recipientItemForm">
+              <div class="row zero-margin">
+                <div class="col-md-2 zero-left-padding">
+                  <select
+                  class="recipient-role"
+                  name="groupByField"
+                  ng-options="role.name as role.name for role in userGroups | orderBy:'name'"
+                  ng-model="item.role"
+                  ng-disabled="disableInputElements"
+                  required>
+                  <option value=""> </option>
+                </select>
+                </div>
+                <div class="col-md-5 zero-left-padding">
+                  <input
+                  multiple-emails
+                  class="recipients"
+                  ng-required="(enable_scheduling && item.selectEmailGroupList.length == 0) || !item.selectEmailGroupList.length"
+                  type="text"
+                  maxlength="1024"
+                  ng-model="item.recipients"
+                  ng-disabled="disableInputElements"
+                  name="reportRecipients"
+                  ng-class="{error:item.selectEmailGroupList.length == 0 && enable_scheduling && recipientItemForm.reportRecipients.$invalid}">
+                </div>
+                <div class="col-md-3 zero-left-padding">
+                  <searchable-multiselect
+                  display-attr="description"
+                  item-index="$index"
+                  value-attr="name"
+                  name="reportEmailGroup"
+                  ng-model="item.selectEmailGroupList"
+                  selected-items="item.selectEmailGroupList"
+                  all-items="allEmailGroups"
+                  add-item="addEmailGroup"
+                  remove-item="removeEmailGroup"
+                  ng-required="(enable_scheduling && item.recipients == '') || item.recipients == ''">
+                </searchable-multiselect>
+                </div>
+                <div class="col-md-2 zero-left-padding">
+                  <button
+                    ng-disabled="disableInputElements"
+                    class="email_buttons"
+                    type="button"
+                    class="remove"
+                    ng-click="removeRecipients($index)">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="row error-highlight recipient-error"
+                ng-if="item.recipients !== '' &&
+                        ((item.selectEmailGroupList.length == 0 &&
+                        recipientItemForm.reportRecipients.$invalid) ||
+                        recipientItemForm.reportRecipients.$invalid)">
+                    Please provide either valid email address or choose email 
+                    group from the list. You can enter multiple email addresses 
+                    separated by a comma ','
+              </div>
             </ng-form>
           </div>
           <div
             class="row add-recipient-style">
             <button
               ng-show="recipientsList.length < 65 && userGroups.length > 1"
-              class="add-new-field"
+              class="add-new-field add-field-item"
               type="button"
               ng-click="addRecipients()">
               <span>Add field</span>
@@ -393,7 +416,7 @@
             </button>
           </div>
           <div
-            class="row add-recipient-email-body">
+            class="row">
             <p> Email Body
               <kbn-tooltip
                 text="Use this to provide email body content which will be used in the report email"
@@ -403,6 +426,7 @@
             </p>
             <textarea
               type="text"
+              class="add-recipient-email-body"
               rows="6"
               cols="150"
               name="reportEmailBody"

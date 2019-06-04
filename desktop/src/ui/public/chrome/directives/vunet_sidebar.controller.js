@@ -169,7 +169,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'data_source/storage',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.isCurrentUserAdmin(),
               active: false
             },
             {

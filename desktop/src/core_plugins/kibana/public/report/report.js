@@ -288,11 +288,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     }
   };
 
-  // By default add an empty recipient for the new report
-  if ($scope.recipientsList.length === 0) {
-    $scope.addRecipients();
-  }
-
   // Reset the schedule frequency when enable scheduling
   // is unchecked.
   $scope.toggleEnableSchedule = function () {
@@ -343,6 +338,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       description: 'Download Report',
       testId: 'reportDownloadButton',
       run: function () { $scope.downloadReport(); },
+      disableButton() {
+        return Boolean(!reportcfg.id);
+      },
     },
     {
       key: 'email',
@@ -358,7 +356,10 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       key: 'download',
       description: 'Download Report',
       testId: 'reportDownloadButton',
-      run: function () { $scope.downloadReport(); }
+      run: function () { $scope.downloadReport(); },
+      disableButton() {
+        return Boolean(!reportcfg.id);
+      },
     },
     {
       key: 'email',

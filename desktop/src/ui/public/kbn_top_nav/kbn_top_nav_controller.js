@@ -1,8 +1,9 @@
 import { capitalize, isArray, isFunction } from 'lodash';
-
+import $ from 'jquery';
 import chrome from 'ui/chrome';
 import filterTemplate from 'ui/chrome/config/filter.html';
 import intervalTemplate from 'ui/chrome/config/interval.html';
+import { vunetConstants } from 'ui/vunet_constants.js';
 
 export function KbnTopNavControllerProvider($compile) {
   return class KbnTopNavController {
@@ -53,11 +54,18 @@ export function KbnTopNavControllerProvider($compile) {
     }
 
     // little usability helpers
-    getCurrent() { return this.currentKey; }
+    getCurrent() {
+      // checkHeightDynamically is added here when a timefilter is selected with an input
+      this.checkHeightDynamically();
+      return this.currentKey;
+    }
     isCurrent(key) { return this.getCurrent() === key; }
     open(key) { this.setCurrent(key); }
     close(key) { (!key || this.isCurrent(key)) && this.setCurrent(null); }
-    toggle(key) { this.setCurrent(this.isCurrent(key) ? null : key); }
+    toggle(key) {
+      this.setCurrent(this.isCurrent(key) ? null : key);
+      this.checkHeightDynamically();
+    }
     click(key) { this.handleClick(this.getItem(key)); }
     getItem(key) { return this.menuItems.find(i => i.key === key); }
     handleClick(menuItem) {
@@ -65,6 +73,32 @@ export function KbnTopNavControllerProvider($compile) {
         return false;
       }
       menuItem.run(menuItem, this);
+    }
+    // This function is used to set the height of the conatiner with respect to changes in the kbn-top-nav
+    checkHeightDynamically() {
+      setTimeout(function () {
+        const kuiLocalNavHeight = $('.kuiLocalNav').height();
+        const topbarHeight = $('.topbar-container').height();
+        const filterHeight = $('.filter-row-in-search').height();
+        const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
+        const heightToSetOnFullscreenMode = $(window).height() - kuiLocalNavHeight;
+        const dashboardTopMargin = kuiLocalNavHeight + filterHeight;
+        const elementToSelect = parent.document;
+        if (elementToSelect.fullscreen || elementToSelect.webkitIsFullScreen || elementToSelect.mozFullScreen) {
+          $('.alert-body-container').height(heightToSetOnFullscreenMode - vunetConstants.ALERT_BODY_CONTAINER);
+          $('.report-body-container').height(heightToSetOnFullscreenMode);
+          $('.menubar-fixed-top-containing-filterbar').height(heightToSetOnFullscreenMode - filterHeight);
+          $('.event-container').height(heightToSetOnFullscreenMode);
+          $('.dashboard-margin-top').css('margin-top', dashboardTopMargin);
+        }
+        else {
+          $('.alert-body-container').height(heightToSet - vunetConstants.ALERT_BODY_CONTAINER);
+          $('.report-body-container').height(heightToSet);
+          $('.menubar-fixed-top-containing-filterbar').height(heightToSet - filterHeight);
+          $('.event-container').height(heightToSet);
+          $('.dashboard-margin-top').css('margin-top', dashboardTopMargin);
+        }
+      }, 10);
     }
     // apply the defaults to individual options
     _applyOptDefault(opt = {}) {

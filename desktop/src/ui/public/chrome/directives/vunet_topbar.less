@@ -316,11 +316,16 @@
   .kuiModalOverlay{
     .kuiModal{
       max-height:90vh;
-      overflow:auto;
       margin-top:10rem;
       .kuiModalBody{
-        padding-right:3rem!important;
+        padding-right:3rem!important; 
       }
+    }
+    .run-diagnostic-modal-container{
+      .kuiModalBody{
+        height: 75vh;
+        overflow-y: auto;
+      } 
     }
   }
   .icon-fullscreen-container{

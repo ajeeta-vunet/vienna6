@@ -135,6 +135,14 @@ function discoverController(
   $scope.intervalEnabled = function (interval) {
     return interval.val !== 'custom';
   };
+  // Initialization of the height for seacrh page conatiner. Set timeout has been used so the the topbar is formed before the calculations
+  setTimeout(function () {
+    const kuiLocalNavHeight = $('.kuiLocalNav').height();
+    const topbarHeight = $('.topbar-container').height();
+    const filterHeight = $('.filter-row-in-search').height();
+    const heightToSet = $(window).height() - filterHeight - topbarHeight - kuiLocalNavHeight;
+    $('.menubar-fixed-top-containing-filterbar').height(heightToSet);
+  }, 10);
 
   $scope.timefilter = timefilter;
 

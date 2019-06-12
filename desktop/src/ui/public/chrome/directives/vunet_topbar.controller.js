@@ -211,6 +211,7 @@ class TopbarCtrl {
         $scope.diagnostic_data = data;
         $scope.modalData.isForm = false;
         $scope.modalData.title = 'Diagnostic Output';
+        $scope.modalData.class = 'run-diagnostic-modal-container';
 
         // Creating the modal message i.e table for displaying the diagnostic results
         $scope.modalData.message = createNotificationTable();
@@ -270,6 +271,7 @@ class TopbarCtrl {
     // This function is called when user clicks on logout button
     $scope.buttonLogout = () => {
       // $scope.showLogoutDropdown  = !$scope.showLogoutDropdown
+      $scope.modalData.class = 'logout-modal-container';
       $scope.modalData.isForm = false;
       $scope.modalData.title = 'Logout confirmation';
       $scope.modalData.message = '<h4> Are you sure you want to Logout ? </h4>';

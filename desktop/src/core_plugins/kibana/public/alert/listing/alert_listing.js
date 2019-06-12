@@ -22,7 +22,7 @@ export function AlertListingController($injector, $scope, $location, $http) {
   //const alertConfig = $injector.get('alertConfig');
   const docTitle = Private(DocTitleProvider);
   docTitle.change(VunetSidebarConstants.ALERT_RULES);
-  timefilter.enabled = true;
+  timefilter.enabled = false;
 
   // Check with chrome if the creation is allowed for this user or not
   // Set whether the current logged in user be allowed to create a new

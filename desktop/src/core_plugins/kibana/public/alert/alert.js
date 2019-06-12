@@ -1,4 +1,5 @@
 import _ from 'lodash';
+// import 'ui/timefilter';
 import 'plugins/kibana/alert/saved_alert/saved_alerts';
 import 'ui/vis/editors/default/sidebar';
 import 'ui/collapsible_sidebar';
@@ -24,6 +25,8 @@ import previewMetricTemplate from './preview_metric.html';
 import previewMetricCtrl from './preview_metric.controller.js';
 import utils from '../../../console/public/src/utils';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+import $ from 'jquery';
+import { vunetConstants } from 'ui/vunet_constants.js';
 
 const Promise = require('bluebird');
 
@@ -115,10 +118,20 @@ function alertAppEditor($scope,
   $http,
   kbnUrl,
   savedVisualizations,
+  timefilter,
   $modal) {
   const notify = new Notifier({
     location: 'Alert'
   });
+  // Initialization of the height for alert page conatiner. Set timeout has been used so the the topbar is formed before the caculations
+  setTimeout(function () {
+    const kuiLocalNavHeight = $('.kuiLocalNav').height();
+    const topbarHeight = $('.topbar-container').height();
+    const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
+    $('.alert-body-container').height(heightToSet - vunetConstants.ALERT_BODY_CONTAINER);
+  }, 10);
+
+  timefilter.enabled = true;
 
   // When the preview button is clicked, this will
   // show all the metrics for the corresponding BMV
@@ -361,7 +374,7 @@ function alertAppEditor($scope,
         // Check whether BMV exists. This check needs for existing alerts to
         // ensure that backward compatibility is working fine.
         if (alertcfgRule.selectedMetric !== undefined &&
-            alertcfgRule.selectedMetric.id !== '') {
+          alertcfgRule.selectedMetric.id !== '') {
           newRuleObj.selectedIndex = defaultValue;
           newRuleObj.vuMetricsBased = alertcfgRule.vuMetricsBased;
           newRuleObj.selectedMetric = alertcfgRule.selectedMetric;
@@ -385,10 +398,10 @@ function alertAppEditor($scope,
               if (error instanceof SavedObjectNotFound) {
                 notify.error(
                   'Problem in loading this alert... The BMV ' + alertcfgRule.selectedMetric.title +
-                ' used in the alert rule "' + newRuleObj.ruleNameAlias + '" has been already deleted.' +
-                'Please re-configure this alert');
+                  ' used in the alert rule "' + newRuleObj.ruleNameAlias + '" has been already deleted.' +
+                  'Please re-configure this alert');
               } else {
-              // Display the error message to the user.
+                // Display the error message to the user.
                 notify.error(error);
                 throw error;
               }
@@ -430,8 +443,7 @@ function alertAppEditor($scope,
     $scope.ansiblePlaybookName = alertcfg.ansible_playbook_name;
     $scope.ansiblePlaybookOptions = alertcfg.ansible_playbook_options;
     $scope.alertByReport = alertcfg.alertByReport;
-    if (alertcfg.alertReportList !== '')
-    {
+    if (alertcfg.alertReportList !== '') {
       // Here the alertReportList field will contain only name as following.
       // alertReportList = report1. report2...
       // To populate in the multiselect directive the format should be as following
@@ -463,7 +475,7 @@ function alertAppEditor($scope,
         // else show the not available message to the user.
         else {
           notify.error('Problem in loading this alert. The report "' + reportList[index] +
-          '" used in this alert is not available anymore, please reconfigure this alert');
+            '" used in this alert is not available anymore, please reconfigure this alert');
         }
       }
     }

@@ -43,46 +43,35 @@
 ::-webkit-scrollbar-track:hover {
   box-shadow: inset 0 0 10px grey; 
 }
-// ::-webkit-scrollbar:vertical {
-//   display: none;
-// }
-// ::-webkit-scrollbar-thumb:hover{
-// 	display:block;	
-// }
-// ::-webkit-scrollbar:active{
-//   display:inline;
-// }
 
-/* Chrome, Safari and Opera syntax */
-:-webkit-full-screen {
-  width:100%;
-  height:100%;
-  // background-color:@view_background; 
+// This has been done to show fullscreen in full viewport 
+#kibana-body:fullscreen{
+  .fixed-left {
+        display:none;
+  }
+  .app-wrapper{
+    left:0!important;
+    .topbar-container{
+      display:none;
+    }
+    .vunet-application{
+      dashboard-app{
+        kbn-top-nav{
+          width: 100%!important;
+        }
+      }
+      .dashboard-listing-container, .visualize-listing-container, .menubar-fixed-top, 
+      .report-listing-container, .alert-listing-container, .anomaly-listing-container, .data-sources-container{
+        height: @view-content-fullscreen-height-small!important;
+        width: 100%!important;
+      }
+      .management-container{
+        height: @view-content-fullscreen-height-medium!important;
+      }
+    }
+  }
 
 }
-
-/* Firefox syntax */
-:-moz-full-screen {
-  width:100%;
-  height:100%;
-  // background-color:@view_background; 
-}
-
-/* IE/Edge syntax */
-:-ms-fullscreen {
-  width:100%;
-  height:100%;
-  // background-color:@view_background; 
-}
-
-/* Standard syntax */
-:fullscreen {
-  width:100%;
-  height:100%;
-  // background-color:@view_background; 
-}
-
-
 body{
   font-family:@barlow-regular;
 }
@@ -152,8 +141,44 @@ input[type="file"]{
   }
 }
 
+.sidebar-open-width{
+  .tab-dashboard {
+    dashboard-app{
+      kbn-top-nav{
+        width: 86.175%;
+      }
+    }
+  }
+}
+
+.sidebar-closed-width{
+  .tab-dashboard {
+    dashboard-app{
+      kbn-top-nav{
+        width: 96%;
+      }
+    }
+  }
+}
+
+.tab-dashboard {
+  height: @view-content-height-dashboard ;
+  overflow-y: auto;
+  dashboard-app{
+    kbn-top-nav{
+      position: fixed;
+      
+    }
+  }
+}
 //Bacground color for all views
 .vunet-application{
+  //This is done for new visual builder visualization
+  .vis-editor{
+    visualize{
+      overflow-y: auto;
+    }
+  }
   .app-container{
     // this has been added to give this color in fullscreen mode for visualization
     background-color:@view_background; 
@@ -210,33 +235,44 @@ input[type="file"]{
     //This has been done to fix menubar  in alerts page
     .alert-body-container{
       overflow-y: auto;
-      height: @view-content-height-menubaronly ; 
     }
     // This has been added to fix menubar on top for reports page
     .report-body-container{
       overflow-y: auto;
-      height: @view-content-height-menubaronly-bigger; 
+      overflow-x: hidden;
     }
+    
+    // .kuiLocalNav{
+    //   .kuiLocalDropdown{
+    //     rbac-user-role{
+    //       .rbac{
+    //         .rbac_options{
+    //           
+    //         }
+    //       }  
+    //     }
+    //   }
+    // } 
   }
   // this has been done to add scroll to the analytics-> seacrh-> open
   .kuiLocalNav{
-    // this has been done as we have moved filter bar to kbn-top-nav
-    // filter-bar{
-    //   section{
-    //     width: 60%;
-    //     .filter-bar{
-    //       background-color:@action_bar_background;
-    //       border-bottom: none;
-    //     }   
-    //   }
-    // }
     .kuiLocalDropdown{
       saved-object-finder{
         .kuiVerticalRhythm{
           .li-striped {
             overflow-y: auto;
-            height:@view-content-height-menubar-bigger-withsearch-inbottomtoo;
+            height:17.5rem;
           }
+        }
+      } 
+      //this has been done to provide scroll for user-roles while saving anything.
+      .rbac{
+        .rbac-table-container{
+          height: 17.5rem;
+          overflow-y: auto;
+          margin-bottom: 1rem;
+          border: .1rem solid @border_color;
+          padding: 1rem;
         }
       }
     }
@@ -283,14 +319,6 @@ input[type="file"]{
   //This has been added for events page
   .event-container{
     overflow-y: auto;
-    height: @view-content-height-menubaronly ;
-  }
-  // This is done for the dashboard page
-  dashboard-app{
-    dashboard-viewport-provider{
-      overflow-y: auto;
-      height: 0;
-    }
   }
 
   // This has been added to fix menubar on top for manage configuration objects page
@@ -335,7 +363,7 @@ input[type="file"]{
         }
       }
       .kuiLocalDropdown{
-        padding: 2.5rem 1rem 1.5rem 0rem;
+        padding: 2.5rem 2rem 2.5rem 2rem;
         .kbn-timepicker-content {
           .kuiVerticalRhythmSmall{
             .kbn-timepicker-body{
@@ -366,13 +394,6 @@ input[type="file"]{
             padding-top:1rem;
           }
       }
-      // This has been added to give scroll to visualization adding page of dashboard.
-      .list-group-item{
-        paginate{
-          overflow-y:auto;
-          height: 22.5rem;
-        }
-      }
     }
   }
   //This has been done to add scroll to surrounding documents
@@ -392,7 +413,7 @@ input[type="file"]{
       .doc-viewer{
         .doc-viewer-content{
           overflow: auto;
-          height: @view-content-height-surrounding-single-doc;
+          height: @view-content-height-single-doc;
         }
       }
     }
@@ -526,7 +547,6 @@ button[disabled], {
 // This is given for anylytics seacrh page
 .menubar-fixed-top-containing-filterbar{
   overflow-y: auto;
-  height: @view-content-height-with-filter;
   // This has been added to fix the following 
   // In Analytics -> search --> if we have selected an Index pattern which has more length, the name is crossing the box.
   .sidebar-container{
@@ -562,6 +582,7 @@ button[disabled], {
 // These classes are used in business metric
 .referenceLinkDashboard {
   padding-top: 10px;
+  font-weight: bold;
 }
 
 // This css belongs to multilevel drop down menu under dashboards section.

@@ -132,6 +132,14 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     allowMultiple: true
   };
 
+  // Initialization of the height for report page conatiner. Set timeout has been used so the the topbar is formed before the caculations
+  setTimeout(function () {
+    const kuiLocalNavHeight = $('.kuiLocalNav').height();
+    const topbarHeight = $('.topbar-container').height();
+    const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
+    $('.report-body-container').height(heightToSet);
+  }, 10);
+
   // Set the landing page for alerts section
   $scope.landingPageUrl = () => `#${ReportConstants.LANDING_PAGE_PATH}`;
   $scope.forms = {};

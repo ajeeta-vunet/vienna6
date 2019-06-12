@@ -153,6 +153,7 @@ export class VunetModal extends Component {
           <KuiModal
             onClose={this.closeModal}
             style={{ width: '800px' }}
+            className={this.props.data.class}
           >
             <KuiModalHeader>
               <KuiModalHeaderTitle >

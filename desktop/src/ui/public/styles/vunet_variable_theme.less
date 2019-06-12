@@ -39,10 +39,26 @@
 @barlow-bold : 'Barlow-Bold';
 
 
-//Height variables for viewing content
-@view-content-height-with-filter : calc(~"100vh - 106px - 8rem");
-@view-content-height-menubaronly : calc(~"100vh - 58px - 8rem");
-@view-content-height-menubaronly-bigger : calc(~"100vh - 69px - 8rem");
-@view-content-height-menubar-bigger-withsearch : calc(~"100vh - 255px - 8rem");
-@view-content-height-menubar-bigger-withsearch-inbottomtoo : calc(~"100vh - 200px - 13rem");
-@view-content-height-surrounding-single-doc : calc(~"100vh - 160px - 8rem");
+// VARIABLES USED FOR HEIGHT CALCULATIONS
+@topbar-height : 6rem;
+@menubar-height-for-listing-pages-and-berlin : 58px; 
+@kbn-top-nav-height : 69px;
+@kbn-top-nav-height-with-filter : 106px;
+@kbn-top-nav-height-with-filterbar-and-searchbar: 255px;
+@menubar-height-for-single-docs : 160px;
+
+//Height variables for viewing content 
+@view-content-height-berlin : ~"calc(100vh - @{topbar-height})";
+@view-content-height-dashboard : ~"calc(100vh - @{kbn-top-nav-height-with-filter} - @{topbar-height})";
+@view-content-height-menubaronly : ~"calc(100vh - @{menubar-height-for-listing-pages-and-berlin} - @{topbar-height})";
+@view-content-height-menubaronly-bigger : ~"calc(100vh - @{kbn-top-nav-height} - @{topbar-height})";
+@view-content-height-menubar-bigger-withsearch : ~"calc(100vh - @{kbn-top-nav-height-with-filterbar-and-searchbar} - @{topbar-height})";
+@view-content-height-single-doc : ~"calc(100vh - @{menubar-height-for-single-docs} - @{topbar-height})";
+
+//Height variables for viewing content in FullScreen Mode
+// Small defines menubar with less height (eg berlin,listing pages)
+@view-content-fullscreen-height-small:~"calc(100vh - @{menubar-height-for-listing-pages-and-berlin})";
+// Medium defines kbn-top-nav height
+@view-content-fullscreen-height-medium:~"calc(100vh - @{kbn-top-nav-height})";
+// Large defines height of menubar with filterbar
+@view-content-fullscreen-height-large:~"calc(100vh - @{kbn-top-nav-height-with-filter})";

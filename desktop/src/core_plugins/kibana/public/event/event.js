@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import chrome from 'ui/chrome';
 import { uiModules } from 'ui/modules';
-
+import $ from 'jquery';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { FilterManagerProvider } from 'ui/filter_manager';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
@@ -69,6 +69,14 @@ app.directive('eventApp', function () {
       Private,
       timefilter
     ) {
+
+    // Initialization of the height for events page conatiner. Set timeout has been used so the the topbar is formed before the caculations
+      setTimeout(function () {
+        const kuiLocalNavHeight = $('.kuiLocalNav').height();
+        const topbarHeight = $('.topbar-container').height();
+        const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
+        $('.event-container').height(heightToSet);
+      }, 10);
 
       timefilter.enabled = true;
 

@@ -490,6 +490,7 @@ class TopbarCtrl {
       if (search !== undefined && search !== '') {
         window.open(url, '_blank');
       }
+      $scope.search = '';
     };
 
     $scope.viewNotificationDetails = (notificationSummary) => {

@@ -11,6 +11,7 @@ module.directive('visMap', function () {
       onLinkSelect: '=',
       onNodeDragEnd: '=',
       nodePlacementType: '=',
+      doesNodeHasDashboard: '=',
     },
     replace: true,
     template: '<div class="network-map"></div>',
@@ -101,7 +102,7 @@ module.directive('visMap', function () {
           }
         },
         PCAlert: {
-          image: '/ui/vienna_images/PC_alert.png',
+          image: '/ui/vienna_images/pc_alert.png',
           shape: 'image',
           size: 20,
           font: {
@@ -420,6 +421,21 @@ module.directive('visMap', function () {
             $scope.onLinkSelect(srcNode.key, destNode.key);
           }
         });
+
+        if ($scope.doesNodeHasDashboard) {
+          // On hovering a node make cursor as pointer.
+          network.on('hoverNode', function (params) {
+            if($scope.doesNodeHasDashboard(params)) {
+              network.canvas.body.container.style.cursor = 'pointer';
+            }
+          });
+
+          // On moving out of node make cursor as default.
+          network.on('blurNode', function () {
+            network.canvas.body.container.style.cursor = 'default';
+          });
+        }
+
 
         // When a node is dragged, at the end, this function is called.
         // It just prints the locations of the nodes in console. This

@@ -43,14 +43,21 @@ connected
  ipaddress
  = v:([0-9.]+) {return {value:v.join("")}}
 
+ // Have handled single and double quote separately because having both allowes "<some name>' and '<some name>".
  VariableWithSpaceAndQuotes
- = quote value:VariableExceptQuote quote {return {value}}
+ = quoteDouble value: VariableExceptDoubleQuote quoteDouble {return {value}} / quoteSingle value:VariableExceptSingleQuote quoteSingle {return {value}}
 
- quote
+ quoteDouble
  = ["]
 
- VariableExceptQuote
- = v:[^"]+ {return { value:v.join("")}}
+ quoteSingle
+ = [']
+
+ VariableExceptDoubleQuote
+ = v:([^"])+ {return {value:v.join("")}}
+
+ VariableExceptSingleQuote
+ = v:([^'])+ {return {value:v.join("")}}
 
  whitespace
  = [ \t]*

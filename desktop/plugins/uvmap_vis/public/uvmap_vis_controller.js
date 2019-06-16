@@ -83,7 +83,7 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
         _.each(connection, function (connectionEle, index) {
 
           // Regex to get value within a quots.
-          const regexForDashboardName = /["].+["]/;
+          const regexForDashboardName = /["'].+["']/;
 
           // checking the string having dashboard as substring
           if (_.includes(connectionEle, 'dashboard')) {
@@ -92,11 +92,11 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
             // We are not allowing user to use dashboard title is having quotes, this will take care
             // of replacing quotes with empty in dashboard title, it just replace the quotes which are
             // not part of dashboard title
-            const dashTitle = connectionEle.match(regexForDashboardName)[0].replace(/"/g, '');
+            const dashTitle = connectionEle.match(regexForDashboardName) &&
+            connectionEle.match(regexForDashboardName)[0].replace(/["']/g, '');
 
             // Get the dashboard id using dashboard title.
             const dashboard = dashboardDict[dashTitle];
-
             // Replace dashboard name with dashboard id if dashboard is there, else just return connectionEle.
             connection[index] =  dashboard ? connectionEle.replace(connectionEle.match(regexForDashboardName)[0], '"' + dashboard + '"')
               : connectionEle;
@@ -160,6 +160,15 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
         notify.error(err);
       });
   }
+
+  // Function to be called when hovering a node
+  $scope.doesNodeHasDashboard = function (params) {
+    if (params.node in $scope.data.node_dashboard_dict) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   // Function to be called when a node is selected
   $scope.onNodeSelect = function (params) {

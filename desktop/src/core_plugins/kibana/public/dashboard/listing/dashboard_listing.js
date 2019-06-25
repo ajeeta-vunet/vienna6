@@ -26,14 +26,6 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   const docTitle = Private(DocTitleProvider);
   docTitle.change(VunetSidebarConstants.STORY_BOARDS);
 
-  // Check with chrome if the creation is allowed for this user or not
-  // Set whether the current logged in user be allowed to create a new
-  // object or not
-  $scope.creationAllowed = false;
-  if (chrome.canCurrentUserCreateObject()) {
-    $scope.creationAllowed = true;
-  }
-
   const limitTo = $filter('limitTo');
   // TODO: Extract this into an external service.
   const services = Private(SavedObjectRegistryProvider).byLoaderPropertiesName;
@@ -90,6 +82,10 @@ export function DashboardListingController($injector, $scope, $location, savedDa
 
   this.pager = pagerFactory.create(this.items.length, 10, 1);
 
+  // Hide write controls if modify permission is not allowed for this user
+  if (!chrome.isModifyAllowed()) {
+    dashboardConfig.turnHideWriteControlsOn();
+  }
   this.hideWriteControls = dashboardConfig.getHideWriteControls();
 
   $scope.$watch(() => this.filter, () => {

@@ -36,13 +36,15 @@
           Add new {{ finder.properties.noun }}
         </button>
 
-        <button
+        <!-- User can navigate to manage resources page via the "Manage saved searches" button -->
+        <!-- Hide this button for all users -->
+        <!-- <button
           class="kuiButton kuiButton--secondary"
-          ng-if="!useLocalManagement"
+          ng-if="!useLocalManagement && isModifyAllowed"
           ng-click="finder.manageObjects(finder.properties.name)"
         >
           Manage {{ finder.properties.nouns }}
-        </button>
+        </button> -->
       </div>
     </div>
   </div>

@@ -191,7 +191,7 @@ function alertAppEditor($scope,
   }
 
   // If user can modify the existing object or is allowed to create an object
-  if (userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+  if (userRoleCanModify && chrome.isModifyAllowed()) {
     $scope.topNavMenu = [{
       key: 'save',
       description: 'Save Alert',

@@ -1179,6 +1179,32 @@ button[disabled], {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
   height: @view-content-height-menubaronly ;
+
+  // Hide checkbox for user with view permission
+  .vunet-table {
+    .hideSelectCheckBoxInViewUser{
+      .kuiControlledTable {
+        .kuiTable {
+          .kuiTableHeaderCell {
+            .kuiTableHeaderCell__liner {
+              .kuiCheckBox {
+                display: none;
+              }
+            }
+          }
+          .kuiTableRow {
+            .kuiTableRowCell {
+              .kuiTableRowCell__liner {
+                .kuiCheckBox {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 // Table look and feel for reports listing page

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import rison from 'rison-node';
+// import rison from 'rison-node';
 import { keyMap } from 'ui/utils/key_map';
 import { SavedObjectRegistryProvider } from 'ui/saved_objects/saved_object_registry';
 import { uiModules } from 'ui/modules';
@@ -235,9 +235,10 @@ module.directive('savedObjectFinder', function ($location, $injector, kbnUrl, Pr
         self.selector.enabled = false;
       };
 
-      self.manageObjects = function (type) {
-        $location.url('/management/kibana/objects?_a=' + rison.encode({ tab: type }));
-      };
+      // ng-click for "Manage saved searches" button is not used
+      // self.manageObjects = function (type) {
+      //   $location.url('/management/kibana/objects?_a=' + rison.encode({ tab: type }));
+      // };
 
       self.hitCountNoun = function () {
         return ((self.hitCount === 1) ? self.properties.noun : self.properties.nouns).toLowerCase();

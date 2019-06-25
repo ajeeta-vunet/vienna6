@@ -164,16 +164,8 @@ function discoverController(
     userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
   }
 
-  // Check with chrome if the creation is allowed for this user or not
-  // Set whether the current logged in user be allowed to create a new
-  // object or not
-  $scope.creationAllowed = false;
-  if (chrome.canCurrentUserCreateObject()) {
-    $scope.creationAllowed = true;
-  }
-
   // If user cannot modify, allow only open
-  if(!userRoleCanModify || !$scope.creationAllowed) {
+  if(!userRoleCanModify || !chrome.isModifyAllowed()) {
     $scope.topNavMenu = [{
       key: 'open',
       description: 'Open Saved Search',

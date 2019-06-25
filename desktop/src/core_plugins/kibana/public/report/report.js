@@ -183,7 +183,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // This function is called to disable input elements if the user
   // doesn't have permission to create things
   $scope.disableInputElements = false;
-  if (!chrome.canCurrentUserCreateObject()) {
+  if (!chrome.isModifyAllowed()) {
     $scope.disableInputElements = true;
   }
 
@@ -313,7 +313,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // Set whether the current logged in user be allowed to create a new
   // object or not
   $scope.creation_allowed = false;
-  if (chrome.canCurrentUserCreateObject()) {
+  if (chrome.isModifyAllowed()) {
     $scope.creation_allowed = true;
   }
 
@@ -331,7 +331,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
 
   // If user can modify the existing object or is allowed to create an object
-  if (userRoleCanModify && chrome.canCurrentUserCreateObject()) {
+  if (userRoleCanModify && chrome.isModifyAllowed()) {
     $scope.topNavMenu = [{
       key: 'save',
       description: 'Save Report',

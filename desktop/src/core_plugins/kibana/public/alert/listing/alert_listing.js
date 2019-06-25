@@ -19,18 +19,9 @@ export function AlertListingController($injector, $scope, $location, $http) {
   const Private = $injector.get('Private');
   const timefilter = $injector.get('timefilter');
   const config = $injector.get('config');
-  //const alertConfig = $injector.get('alertConfig');
   const docTitle = Private(DocTitleProvider);
   docTitle.change(VunetSidebarConstants.ALERT_RULES);
   timefilter.enabled = false;
-
-  // Check with chrome if the creation is allowed for this user or not
-  // Set whether the current logged in user be allowed to create a new
-  // object or not
-  $scope.creationAllowed = false;
-  if (chrome.canCurrentUserCreateObject()) {
-    $scope.creationAllowed = true;
-  }
 
   const limitTo = $filter('limitTo');
   // TODO: Extract this into an external service.
@@ -88,8 +79,11 @@ export function AlertListingController($injector, $scope, $location, $http) {
 
   this.pager = pagerFactory.create(this.items.length, 10, 1);
 
-  //this.hideWriteControls = alertConfig.getHideWriteControls();
-  this.hideWriteControls = false;
+  // Check with chrome if modify permission is allowed for this user or not
+  this.hideWriteControls = true;
+  if (chrome.isModifyAllowed()) {
+    this.hideWriteControls = false;
+  }
 
   $scope.$watch(() => this.filter, () => {
     deselectAll();

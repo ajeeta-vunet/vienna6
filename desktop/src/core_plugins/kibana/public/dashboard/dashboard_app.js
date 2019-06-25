@@ -100,7 +100,7 @@ app.directive('dashboardApp', function ($injector, $http) {
       }
 
       // If user cannot create a new one or modify the current existing one, hide write controls
-      if(!userRoleCanModify || !chrome.canCurrentUserCreateObject()) {
+      if(!userRoleCanModify || !chrome.isModifyAllowed()) {
         dashboardConfig.turnHideWriteControlsOn();
       }
 

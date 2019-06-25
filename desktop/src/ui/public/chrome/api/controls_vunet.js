@@ -24,11 +24,9 @@ export default function (chrome, internals) {
     return (internals.tenantId === '1' && internals.userPermission === 'admin');
   };
 
-  // FUnction to check if admin and modify are allowed
+  // Function to check if admin and modify are allowed
   chrome.isModifyAllowed = function () {
-    if (internals.userPermission === 'admin') {
-      return true;
-    } else if (internals.userPermission === 'modify') {
+    if (internals.userPermission === 'admin' || internals.userPermission === 'modify') {
       return true;
     } else {
       return false;
@@ -64,18 +62,6 @@ export default function (chrome, internals) {
    */
   chrome.isCurrentUserAdmin = function () {
     if (internals.userPermission === 'admin') {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  /**
-   * @return {current user, role and permission} - Return True if the current
-   * logged in user is allowed to create new objects
-   */
-  chrome.canCurrentUserCreateObject = function () {
-    if (internals.userPermission === 'modify' || internals.userPermission === 'admin') {
       return true;
     } else {
       return false;

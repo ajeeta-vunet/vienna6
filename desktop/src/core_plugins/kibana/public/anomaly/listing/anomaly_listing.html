@@ -46,13 +46,13 @@
             </div>
           </div>
   
-          <div class="kuiToolBarSection" ng-if="creationAllowed">
+          <div class="kuiToolBarSection" ng-if="!listingController.hideWriteControls">
             <!-- Bulk delete button -->
             <button
               class="kuiButton kuiButton--danger"
               ng-click="listingController.deleteSelectedItems()"
               aria-label="Delete selected anomalies"
-              ng-if="listingController.getSelectedItemsCount() > 0 && !listingController.hideWriteControls"
+              ng-if="listingController.getSelectedItemsCount() > 0"
               tooltip="Delete selected anomalies"
               tooltip-append-to-body="true"
               data-test-subj="deleteSelectedAnomalys"
@@ -66,7 +66,7 @@
               href="{{listingController.getCreateAnomalyHref()}}"
               aria-label="Create new anomaly"
               data-test-subj="newAnomalyLink"
-              ng-if="listingController.getSelectedItemsCount() === 0 && !listingController.hideWriteControls"
+              ng-if="listingController.getSelectedItemsCount() === 0"
               tooltip="Create new anomaly"
               tooltip-append-to-body="true"
             >
@@ -103,7 +103,7 @@
         <!-- EmptyTablePrompt -->
         <div
           class="kuiPanel kuiPanel--centered kuiPanel--withToolBar"
-          ng-if="!listingController.isFetchingItems && !listingController.items.length && !listingController.filter && creationAllowed"
+          ng-if="!listingController.isFetchingItems && !listingController.items.length && !listingController.filter"
         >
           <div class="kuiEmptyTablePrompt">
             <div class="kuiEmptyTablePrompt__message">

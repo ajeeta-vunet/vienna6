@@ -41,9 +41,10 @@ AggConfigResult.prototype.createFilter = function () {
 };
 
 AggConfigResult.prototype.toString = function (contentType,
-                                               getAppState = undefined,
-                                               Private = undefined,
-                                               timefilter = undefined) {
+  getAppState = undefined,
+  Private = undefined,
+  timefilter = undefined,
+  printReport = undefined) {
   const parsedUrl = {
     origin: window.location.origin,
     pathname: window.location.pathname,
@@ -68,13 +69,14 @@ AggConfigResult.prototype.toString = function (contentType,
       formattedValue = this.value;
       const refLink = this.aggConfig.vis.params.linkInfo;
       const link = preparehtmlInfo(fieldName,
-                              this.value,
-                              formattedValue,
-                              refLink,
-                              this.aggConfig.params.field.indexPattern.id,
-                              getAppState,
-                              Private,
-                              timefilter);
+        this.value,
+        formattedValue,
+        refLink,
+        this.aggConfig.params.field.indexPattern.id,
+        getAppState,
+        Private,
+        timefilter,
+        printReport);
 
       if (link !== undefined) {
         // If we could not find a link formatting match, then we should

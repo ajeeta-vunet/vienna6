@@ -15,6 +15,7 @@ import { idealTextColor, colorLuminance } from 'ui/utils/color_filter';
 import { fixBMVHeightForPrintReport } from 'ui/utils/print_report_utils';
 import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 import { SavedObjectNotFound } from 'ui/errors';
+import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisController', function ($scope, Private,
@@ -47,7 +48,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     let referencePage = '';
     let searchString = '';
 
-    if (refLink.useMetricFilter && metricFilter !== undefined ) {
+    if (refLink.useMetricFilter && metricFilter !== undefined) {
       // We need to use the filter applied for this metric
       searchString = metricFilter;
     }
@@ -361,16 +362,10 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       //check if metric exist
       if (!$scope.vis.params.metrics) return;
 
-      const esFilter = dashboardContext();
-      // Get the search string assigned to the logged-in user's role.
-      const searchString = chrome.getSearchString();
-      // if not empty means then  there is a search string for the logged-in user.
-      if (searchString !== '') {
-        // Just add the query string to the must list. We are just pushing this
-        // as there might be an existing query if the BMV is called
-        // from the dashboard.
-        esFilter.bool.must.push({ 'query_string': { 'query': searchString, 'analyze_wildcard': true, 'default_field': '*' } });
-      }
+      let esFilter = dashboardContext();
+
+      //Get the search string assigned to the logged-in user's role.
+      esFilter = addSearchStringForUserRole(esFilter);
 
       const payload = {
         metrics: [],

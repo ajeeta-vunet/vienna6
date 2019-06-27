@@ -1,6 +1,7 @@
 import { uiModules } from 'ui/modules';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
+import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 
 const chrome = require('ui/chrome');
 const _ = require('lodash');
@@ -117,6 +118,11 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
       $scope.nodePlacementType = 'physicsAndDragNDrop';
     }
 
+    let esFilter = dashboardContext();
+
+    //Get the search string assigned to the logged-in user's role.
+    esFilter = addSearchStringForUserRole(esFilter);
+
     const customNodes = $scope.vis.params.customNodes;
     const customLinks = $scope.vis.params.customLinks;
     const graphs = $scope.vis.params.graphs;
@@ -125,7 +131,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, $http
       customLinks: customLinks || '',
       graphs: graphs || '',
       time: {},
-      esFilter: dashboardContext(),
+      esFilter: esFilter,
     };
 
     // get the selected time duration from time filter

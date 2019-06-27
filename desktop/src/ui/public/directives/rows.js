@@ -63,7 +63,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
           visType = contents.aggConfig.vis.type.name;
           val = contents.value;
 
-          contents = createCellContents(contents, getAppState, Private, timefilter);
+          contents = createCellContents(contents, getAppState, Private, timefilter, $scope.printReport);
         } else {
           $cell = $cellContent = createCell();
 

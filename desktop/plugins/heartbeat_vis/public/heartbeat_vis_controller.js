@@ -1,6 +1,8 @@
 import { uiModules } from 'ui/modules';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
+import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
+
 const module = uiModules.get('kibana/heartbeat_vis', ['kibana', 'kibana/courier']);
 module.controller('HeartbeatVisController', function ($scope, Private, Notifier, $http, $rootScope, timefilter) {
   const queryFilter = Private(FilterBarQueryFilterProvider);
@@ -31,6 +33,11 @@ module.controller('HeartbeatVisController', function ($scope, Private, Notifier,
     $scope.time_duration_start = timeDuration.min.valueOf();
     $scope.time_duration_end = timeDuration.max.valueOf();
 
+    let esFilter = dashboardContext();
+
+    //Get the search string assigned to the logged-in user's role.
+    esFilter = addSearchStringForUserRole(esFilter);
+
     const httpResult = $http.post('../api/heartbeat_vis/run', {
       indexVal: indexVal,
       filterVal: filterVal,
@@ -38,7 +45,7 @@ module.controller('HeartbeatVisController', function ($scope, Private, Notifier,
       colorSchema: colorSchema,
       extended: {
         es: {
-          filter: dashboardContext()
+          filter: esFilter
         }
       },
       time: { 'gte': $scope.time_duration_start, 'lte': $scope.time_duration_end }

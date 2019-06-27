@@ -31,7 +31,12 @@ export function AggResponseBucketsProvider() {
       });
     } else {
       buckets.forEach(function (bucket) {
-        fn(bucket, bucket.key);
+
+        // Check for bucket before accessing bucket.key
+        // This was added to avoid showing blank pages
+        // for visualizations with buckets when index used
+        // to create it was deleted.
+        bucket && fn(bucket, bucket.key);
       });
     }
   };

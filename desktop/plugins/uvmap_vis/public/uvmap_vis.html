@@ -1,3 +1,22 @@
 <div ng-controller="UVMapVisController" class="uvmap-vis">
-    <vis-map map-data="data" on-node-select="onNodeSelect" on-node-drag-end="onNodeDragEnd" node-placement-type="nodePlacementType" does-node-has-dashboard="doesNodeHasDashboard"></vis-map>
+  <div
+    ng-if="(!data.nodes.length && !data.edges.length)"
+    class="table-vis-error">
+    <h2 aria-hidden="true">
+      <i
+        aria-hidden="true"
+        class="fa fa-exclamation-triangle">
+      </i>
+    </h2>
+    <h4>No results found</h4>
+  </div>
+  <div ng-if="(data && data.nodes.length && data.edges.length)">
+    <vis-map
+      map-data="data"
+      on-node-select="onNodeSelect"
+      on-node-drag-end="onNodeDragEnd"
+      node-placement-type="nodePlacementType"
+      does-node-has-dashboard="doesNodeHasDashboard">
+    </vis-map>
+  </div>
 </div>

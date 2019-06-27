@@ -4,6 +4,8 @@ import { uiModules } from 'ui/modules';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
+import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
+
 const module = uiModules.get('kibana/uvmap_vis', ['kibana']);
 module.controller('UVMapVisController', function ($scope, Private, Notifier, $http, $rootScope, timefilter, kbnUrl) {
   const dashboardContext = Private(dashboardContextProvider);
@@ -125,6 +127,11 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
     // anything to do..
     if (!expression && !connection) return;
 
+    let esFilter = dashboardContext();
+
+    //Get the search string assigned to the logged-in user's role.
+    esFilter = addSearchStringForUserRole(esFilter);
+
     // As we want to display one single metric, we choose the interval as
     // current time selection + 1 second. This will make sure that ES always
     // returns one single metric.
@@ -139,7 +146,7 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
       colorSchema: colorSchema,
       extended: {
         es: {
-          filter: dashboardContext()
+          filter: esFilter
         }
       },
       time: _.extend(timefilter.time, {

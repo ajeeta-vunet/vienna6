@@ -57,18 +57,18 @@ function applyBackgroundImage(backgroundColor) {
 // This function is used to find the content to be displayed in the cells.
 // For the "show metrics in %", this calculates the percentage value based on
 // the value and sum of the row / column. Otherwise, the value is returned.
-export function createCellContents(contents, getAppState, Private, timefilter) {
+export function createCellContents(contents, getAppState, Private, timefilter, printReport) {
   const val = contents.value;
 
   if (contents.sum !== -1) {
     if (contents.sum === 0) {
-      contents = contents.toString('html', getAppState, Private, timefilter) + '  (0%)';
+      contents = contents.toString('html', getAppState, Private, timefilter, printReport) + '  (0%)';
     } else {
       valInPercentage = Math.abs(val * 100 / contents.sum);
-      contents = contents.toString('html', getAppState, Private, timefilter) + '  (' + valInPercentage.toFixed(2) + '%)';
+      contents = contents.toString('html', getAppState, Private, timefilter, printReport) + '  (' + valInPercentage.toFixed(2) + '%)';
     }
   } else {
-    contents = contents.toString('html', getAppState, Private, timefilter);
+    contents = contents.toString('html', getAppState, Private, timefilter, printReport);
   }
   return contents;
 }

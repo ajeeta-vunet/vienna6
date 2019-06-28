@@ -46,9 +46,10 @@ function liveIndices($scope,
       name: 'archiveName',
       props: {
         required: true,
-        pattern: '.*'
+        pattern: '^[^_A-Z#,/\?|><"* ][^A-Z#,/\?|><"* ]{1,64}'
       },
-      errorText: 'Invalid Archive Name.'
+      errorText: `Archive Name cannot start with "_" , can only be in lowercase , can't exceed 64 characters
+                  and can't contain special characters(#,/\?|><"*) or whitespcae. `
     },
     {
       key: 'archiveList',

@@ -157,6 +157,7 @@
   }
 
   .vis-editor-agg {
+    width: 30rem;
     .flex-parent();
 
     //IE10/11 - prevent flex item from overflowing
@@ -236,7 +237,12 @@
 
     .vis-editor-agg-form-row {
       display: flex;
-
+      // This has been added to adjust the padding of Order in Visualizations
+      .form-group{
+        select{
+          padding: 5px 10px;
+        }
+      }
       > * {
         flex: 1 1 auto;
         margin-right: @vis-editor-agg-editor-spacing;
@@ -348,7 +354,6 @@ vis-editor-vis-options,
 vis-editor-vis-options > * {
   .flex-parent();
 }
-
 /**
    * 1. TODO: Override bootstrap styles. Remove !important once we're rid of bootstrap.
    */

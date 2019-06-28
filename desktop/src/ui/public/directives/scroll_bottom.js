@@ -15,7 +15,10 @@ module.directive('kbnScrollBottom', function () {
 
         if (!height || !position) return;
         if (remaining <= margin) {
-          $scope.$eval(attr.kbnScrollBottom);
+          // $evalAsync is used to evaluate something which needs to occur before the browser's view render.
+          // It will evaluate attr.kbnScrollBottom as then either update the value in current digest cycle
+          // or a new digest cycle ($apply) will be triggered.
+          $scope.$evalAsync(attr.kbnScrollBottom);
         }
       }
 

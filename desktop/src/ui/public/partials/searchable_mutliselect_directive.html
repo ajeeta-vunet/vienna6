@@ -24,7 +24,11 @@
     <li>
       <input type="text" class="form-control" ng-model="searchQuery" placeholder="Search">
     </li>
-    <li ng-repeat="item in allItems  | orderBy:valueAttr track by $index" ng-hide="searchQuery.length && item[displayAttr].toLowerCase().indexOf(searchQuery.toLowerCase()) < 0">
+    <div class="fixed-search-top">
+    <li ng-repeat="item in allItems  | orderBy:valueAttr track by $index" 
+        ng-hide="item.hasOwnProperty('description') ? ( searchQuery.length && (item[valueAttr].toLowerCase().indexOf(searchQuery.toLowerCase()) < 0 
+                                        && item[displayAttr].toLowerCase().indexOf(searchQuery.toLowerCase()) < 0) ) : 
+                                        searchQuery.length && item[valueAttr].toLowerCase().indexOf(searchQuery.toLowerCase()) < 0 ">
       <label class="checkbox clickable" ng-click="updateSelectedItems(item, $index)" ng-class="{'item-selected': isItemSelected(item[valueAttr]) }">
         <div class="row">
           <div ng-class="{'col-sm-12': displayAttr === undefined, 'col-sm-4': displayAttr !== undefined}">
@@ -38,5 +42,6 @@
         </div>
       </label>
     </li>
+  </div>
   </ul>
 </div>

@@ -173,7 +173,7 @@ export class VunetDataTable extends Component {
   // show based on value selected.
   calculeteNumberOfItems = (event) => {
     if (event.target.value !== 'All') {
-      this.pager = new Pager(this.rows.length, event.target.value, 1);
+      this.pager = new Pager(this.rows.length, Number(event.target.value), 1);
     } else {
       this.pager = new Pager(this.rows.length, this.rows.length, 1);
     }

@@ -253,6 +253,13 @@ input[type="file"]{
     //     }
     //   }
     // } 
+    // this has been done to show fullscreen visualizations in dashboards
+    .dashboard-margin-top{
+      height: 100%;
+      dashboard-viewport-provider{
+        height: 100%;
+      }
+    }
   }
   // this has been done to add scroll to the analytics-> seacrh-> open
   .kuiLocalNav{
@@ -1266,4 +1273,9 @@ button[disabled], {
       box-shadow: none;
     }
   }
+}
+
+// For all vienna object's title in save.html
+.vienna-object-title {
+  margin-bottom: 3px;
 }

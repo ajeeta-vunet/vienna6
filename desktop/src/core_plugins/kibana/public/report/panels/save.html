@@ -1,5 +1,6 @@
 <form
   role="form"
+  name="saveReportForm"
   ng-submit="opts.save()"
 >
   <h2 class="kuiLocalDropdownTitle">
@@ -11,32 +12,25 @@
       for="saveReportTitle"
     >
       Title
-      <kbn-tooltip
-        text="Title should not be more than 64 characters"
-        placement="right"
-        append-to-body="1">
-        <span>
-          <i
-            class="fa fa-question-circle"
-            aria-hidden="true">
-          </i>
-        </span>
-      </kbn-tooltip>
     </label>
   </div>
 
   <input
-    class="kuiLocalDropdownInput"
+    class="kuiLocalDropdownInput vienna-object-title"
     input-focus="select"
     type="text"
     data-test-subj="reportTitleInput"
     name="reportTitle"
-    maxlength="64"
+    ng-maxlength="64"
+    maxlength="65"
+    ng-pattern="/^[^#?%\/\\]+$/"
     ng-model="opts.reportcfg.title"
     aria-label="Name"
     required
   >
-
+  <p class="error-highlight" ng-show="saveReportForm.reportTitle.$error.maxlength || saveReportForm.reportTitle.$invalid" aria-hidden="true">
+      Title content must not exceed 64 characters and should not contain /, \, #, %, ?.
+  </p>
 
   <rbac-user-role
     allowed-roles="opts.allowedRoles"
@@ -46,6 +40,7 @@
   <button
     data-test-subj="saveReportButton"
     type="submit"
+    ng-disabled="saveReportForm.$invalid"
     class="kuiButton kuiButton--primary kuiVerticalRhythmSmall"
   >
     Save

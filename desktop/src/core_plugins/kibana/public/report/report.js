@@ -630,6 +630,12 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
     // We get shipperUrl
     $scope.shipperAddress = chrome.getShipperUrl();
+
+    // Prepare $scope.shipperAddressUrl by taking some part of $scope.shipperAddress
+    // This is to redirect when user clicks on url in the pdf file.
+    const shipperUrl = $scope.shipperAddress.split('/');
+    $scope.shipperAddressUrl = shipperUrl.slice(0, 3).join('/') + '/vunet.html#/login';
+
     // We will enable above once we get backend integration done: Bharat
 
     // This is to remove some classes and add ones required for making the

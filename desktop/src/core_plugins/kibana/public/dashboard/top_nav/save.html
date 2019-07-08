@@ -1,76 +1,68 @@
 <form
   role="form"
+  name="saveDashboardForm"
   ng-submit="opts.save()"
 >
   <h2 class="kuiLocalDropdownTitle">
     Save {{opts.displayName}}
   </h2>
 
-  <div class="kuiLocalDropdownSection">
+  <div class="kuiLocalDropdownSection vienna-object-title">
     <div class="kuiLocalDropdownHeader">
       <label
         class="kuiLocalDropdownHeader__label"
         for="saveDashboardTitle"
       >
         Title
-        <kbn-tooltip
-          text="Title should not be more than 64 characters"
-          placement="right"
-          append-to-body="1">
-          <span>
-            <i
-              class="fa fa-question-circle"
-              aria-hidden="true">
-            </i>
-          </span>
-        </kbn-tooltip>
       </label>
     </div>
 
 
     <input
       id="saveDashboardTitle"
-      class="kuiLocalDropdownInput"
+      name="saveDashboardTitle"
+      class="kuiLocalDropdownInput vienna-object-title"
       data-test-subj="dashboardTitle"
-      maxlength="64"
+      ng-maxlength="64"
+      maxlength="65"
       type="text"
       ng-model="model.title"
+      ng-pattern="/^[^#?%\/\\]+$/"
+      ng-model-option="{allowInvalid: true}"
       placeholder="Dashboard title"
       input-focus="select"
     >
   </div>
+  <p class="error-highlight" ng-show="saveDashboardForm.saveDashboardTitle.$error.maxlength || saveDashboardForm.saveDashboardTitle.$invalid" aria-hidden="true">
+    Title content must not exceed 64 characters and should not contain /, \, #, %, ?.
+  </p>
 
-  <div class="kuiLocalDropdownSection">
+  <div class="kuiLocalDropdownSection vienna-object-title">
     <div class="kuiLocalDropdownHeader">
       <label
         class="kuiLocalDropdownHeader__label"
         for="saveDashboardDescription"
       >
         Description
-        <kbn-tooltip
-          text="Description should not be more than 100 characters"
-          placement="right"
-          append-to-body="1">
-          <span>
-            <i
-              class="fa fa-question-circle"
-              aria-hidden="true">
-            </i>
-          </span>
-        </kbn-tooltip>
       </label>
     </div>
 
     <input
       id="saveDashboardDescription"
-      class="kuiLocalDropdownInput"
+      name="saveDashboardDescription"
+      class="kuiLocalDropdownInput vienna-object-title"
       data-test-subj="dashboardDescription"
       type="text"
       ng-model="model.description"
-      maxlength="100"
+      ng-model-option="{allowInvalid: true}"
+      ng-maxlength="100"
+      maxlength="101"
       placeholder="Dashboard description"
     >
   </div>
+  <p class="error-highlight" ng-show="saveDashboardForm.saveDashboardDescription.$error.maxlength || saveDashboard.saveDashboardDescription.$invalid" aria-hidden="true">
+    Description content must not exceed 100 characters
+  </p>
 
   <div class="kuiVerticalRhythm">
     <label class="kuiCheckBoxLabel kuiVerticalRhythmSmall">
@@ -119,7 +111,7 @@
   <button
     data-test-subj="confirmSaveDashboardButton"
     type="submit"
-    ng-disabled="!(model.title && opts.category.title)"
+    ng-disabled="!(model.title && opts.category.title) && saveDashboardForm.$invalid"
     class="kuiButton kuiButton--primary kuiVerticalRhythm"
     aria-label="Save dashboard"
   >

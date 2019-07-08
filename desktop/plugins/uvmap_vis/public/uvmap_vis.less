@@ -1,11 +1,9 @@
 @import (reference) "~ui/styles/mixins.less";
 
 
-.uvmap-vis {
-  min-width: 100%;
-  display: flex;
-  flex-direction: column;
-
+.uvm-vis-container {
+  width: 100%;
+  height: 100%;
   &-editor-expression {
     position: relative;
 
@@ -20,6 +18,15 @@
     .suggestions {
       position: absolute;
     }
+  }
+
+  .uvm-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
   }
 }
 

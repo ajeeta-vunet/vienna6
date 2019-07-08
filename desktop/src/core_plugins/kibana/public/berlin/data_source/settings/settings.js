@@ -183,6 +183,7 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
       // For add push the new item in to a list.
       if (event === 'add') {
         $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting.push(addOreditVal);
+        isRootIndex = false;
       } else {
         // For edit replace the item in a list except root index row.
         $scope.dataRetentionList.Retention_Preference.data_management_preference[0].per_index_setting.map((dataval, index) => {
@@ -193,7 +194,6 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
           }
         });
       }
-
       // Update root index
       if(isRootIndex === true) {
         $scope.dataRetentionList.Retention_Preference.data_management_preference[0].index_prefix = dataRetention.index_prefix;

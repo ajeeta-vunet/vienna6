@@ -1,7 +1,7 @@
-<div ng-controller="utmVisController" class="uvmap-vis">
+<div ng-controller="utmVisController" class="utm-vis-container">
   <div
-    ng-if="(!data.nodes.length && !data.edges.length)"
-    class="table-vis-error">
+    ng-if="!data.nodes.length"
+    class="utm-wrapper">
     <h2 aria-hidden="true">
       <i
         aria-hidden="true"
@@ -10,7 +10,9 @@
     </h2>
     <h4>No results found</h4>
   </div>
-  <div ng-if="(data.nodes.length && data.edges.length)">
+  <div
+    ng-if="data.nodes.length"
+    class="utm-wrapper">
     <vis-map
       map-data="data"
       on-node-select="onNodeSelect"

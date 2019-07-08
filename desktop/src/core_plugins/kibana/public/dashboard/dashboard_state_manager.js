@@ -246,12 +246,18 @@ export class DashboardStateManager {
   }
 
   setDescription(description) {
-    this.appState.description = description;
+    if (description) {
+      this.appState.description = description;
+    }
     this.saveState();
   }
 
   setTitle(title) {
-    this.appState.title = title;
+
+    // Don't update the title if title is coming as undefined.
+    if (title) {
+      this.appState.title = title;
+    }
     // The saved-object-save-as-check-box shows a warning if the current object title is different then
     // the existing object title. It calculates this difference by comparing this.dashboard.title to
     // this.dashboard.lastSavedTitle, so we need to push the temporary, unsaved title, onto the dashboard.

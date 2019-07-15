@@ -78,3 +78,48 @@ export function FilterManagerProvider(Private) {
 
   return filterManager;
 }
+
+// Returns the query from the filter addded to the saved search.
+// it handles is, is not, is one of, is not one of, exists, not exists,
+// between and not between filters
+export function getFiltersFromSavedSearch(savedSearchFilter, filter, $filter) {
+  const negate = savedSearchFilter.meta.negate ? 'NOT ' : '';
+  // exists and not exists filters
+  if (_.has(filter, 'exists')) {
+    return negate + '_exists_:' + _.get(filter, ['exists', 'field']);
+  }
+  // single phrase filter (is, is not)
+  else if (_.has(filter, ['query', 'match'])) {
+    for(const fieldName in filter.query.match) {
+      if(filter.query.match.hasOwnProperty(fieldName)) {
+        return negate + fieldName + ':' + _.get(filter, ['query', 'match', fieldName, 'query']);
+      }
+    }
+  }
+  // range filter (is between, is not between)
+  else if (_.has(filter, 'range')) {
+    for(const fieldName in filter.range) {
+      if(filter.range.hasOwnProperty(fieldName)) {
+        let toDate = new Date(_.get(filter, ['range', fieldName, 'lt']));
+        toDate.setDate(toDate.getDate() - 1);
+        toDate = $filter('date')(toDate, 'yyyy-MM-dd');
+        return negate + fieldName + ':[' + _.get(filter, ['range', fieldName, 'gte']) + ' TO ' + toDate + ']';
+      }
+    }
+  }
+  // multiple phrases filter (is one of, is not one of)
+  else if (_.has(filter, ['query', 'bool', 'should'])) {
+    let query;
+    filter.query.bool.should.map(function (queryfilter, index) {
+      for(const fieldName in queryfilter.match_phrase) {
+        if (index === 0) {
+          query = fieldName + ':' + queryfilter.match_phrase[fieldName];
+        }
+        else {
+          query = query + ' OR ' + fieldName + ':' + queryfilter.match_phrase[fieldName];
+        }
+      }
+    });
+    return negate + '(' + query + ')';
+  }
+}

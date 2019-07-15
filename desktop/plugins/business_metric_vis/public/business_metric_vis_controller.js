@@ -16,6 +16,7 @@ import { fixBMVHeightForPrintReport } from 'ui/utils/print_report_utils';
 import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 import { SavedObjectNotFound } from 'ui/errors';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
+import { getFiltersFromSavedSearch } from 'ui/filter_manager/filter_manager.js';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisController', function ($scope, Private,
@@ -415,6 +416,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       // used then send "*" as a default search filter to the back-end.
       const getMetrics = $scope.vis.params.metrics.map(function (metric, metricListIndex) {
         let savedSearchQuery = '*';
+        let savedSearchFilters = [];
         // if the saved search for the metric is undefined (old BMV)
         // empty (configured based on the index not saved search)
         // create the payload directly. No need to search in the saved searches.
@@ -429,6 +431,16 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             .then(function (savedSearch) {
             // get the filter query from the saved search
               savedSearchQuery = savedSearch.searchSource.get('query').query;
+              // Check whether any filter is added to the saved search
+              savedSearchFilters = savedSearch.searchSource.get('filter');
+              _.each(savedSearchFilters, function (savedSearchFilter) {
+                const filter = _.omit(savedSearchFilter, function (val, key) {
+                  if (key === 'meta' || key[0] === '$') return true;
+                  return false;
+                });
+                // Get the query applied in the filter and append
+                savedSearchQuery = savedSearchQuery + ' AND (' + getFiltersFromSavedSearch(savedSearchFilter, filter, $filter) + ')';
+              });
               createPayload(metric, metricListIndex, savedSearchQuery);
               return false;
             })

@@ -84,8 +84,8 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
         // Iterating through string array
         _.each(connection, function (connectionEle, index) {
 
-          // Regex to get value within a quots.
-          const regexForDashboardName = /["'].+["']/;
+          // Regex to get value within a qoutes.
+          const regexForDashboardName = /["].+["]/ || /['].+[']/;
 
           // checking the string having dashboard as substring
           if (_.includes(connectionEle, 'dashboard')) {

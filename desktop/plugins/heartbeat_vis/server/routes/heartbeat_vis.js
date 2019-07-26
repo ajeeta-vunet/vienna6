@@ -77,11 +77,17 @@ export default function (server) {
       } else {
         return '<p style="margin:8px;color:orange">' + metricString + '</p>';
       }
-    } else {
+    } else if (color === 'Green') {
       if (visFormat) {
         return ('<i>' + metricString + '</i>');
       } else {
         return '<p style="margin:8px;color:green">' + metricString + '</p>';
+      }
+    } else {
+      if (visFormat) {
+        return ('<code>' + metricString + '</code>');
+      } else {
+        return '<p style="margin:8px;color:black">' + metricString + '</p>';
       }
     }
   }

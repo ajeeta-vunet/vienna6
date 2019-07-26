@@ -1,4 +1,4 @@
-<div>
+<div class="metric-color-schema-container">
   <div>
     <label>Metric Color Schema
       <kbn-tooltip
@@ -12,9 +12,14 @@
           </i>
         </span>
       </kbn-tooltip>
+      <span>
+        <input
+          type="checkbox"
+          ng-click="toggleMetricColorSchema()"/>
+      </span>
     </label>
   </div>
-  <div class="metric-vis-color-schema">
+  <div ng-show="openMetricColorSchema" class="metric-vis-color-schema">
     <table class="color-schema-table">
       <thead>
         <tr>
@@ -72,59 +77,83 @@
 	    </tbody>
 	  </table>
     <hr>
-    <div class="color-range-form">
-      <label>Metric</label>
-      <select
-        ng-show="!showInputFieldForMetric"
-        class="form-control"
-        ng-options="metric for metric in metricList"
-        ng-model="metric">
-      </select>
+    <div
+      ng-show="openMetricColorSchema"
+      class="row zero-margin">
       <input
-      ng-show="showInputFieldForMetric"
-      type="text"
-      ng-model="metric"
-      class="form-control">
-      <label class="metric-vis-color-label">Min</label>
-      <input
-        type="number"
-        ng-model="min"
-        class="form-control">
-      <div class="error">{{minError}}</div>
-      <label class="metric-vis-color-label">Max</label>
-      <input
-        type="number"
-        ng-model="max"
-        class="form-control">
-      <div class="error">{{maxError}}</div>
-      <label class="metric-vis-color-label">Color</label>
-      <select
-        ng-model="color"
-        class="form-control">
-        <option value="Red">Red</option>
-        <option value="Orange">Orange</option>
-        <option value="Green">Green</option>
-      </select>
-      <div class="error">{{colorError}}</div>
-      <br />
-      <div
-        ng-hide="editIndex >= 0"
-        class="row">
-        <input
-          type="button"
-          value="Add range"
-          ng-click="addRange()"
-          class="form-control metric-vis-color-add">
-      </div>
-      <div
-        ng-show="editIndex >= 0"
-        class="row">
-        <input
-          type="button"
-          value="Update range"
-          ng-click="updateRange()"
-          class="form-control">
-      </div>
+        type="button"
+        value="Add range"
+        ng-click="addNextItem()"
+        class="form-control metric-vis-color-add">
     </div>
+    <form
+      ng-show="openMetricColorSchemaForm || editIndex >= 0"
+      name="metricColorSchemaForm">
+      <div class="color-range-form">
+        <label>Metric</label>
+        <select
+          ng-show="!showInputFieldForMetric"
+          class="form-control"
+          ng-options="metric for metric in metricList"
+          required
+          ng-model="metric">
+        </select>
+        <input
+        ng-show="showInputFieldForMetric"
+        type="text"
+        ng-model="metric"
+        class="form-control">
+        <label class="metric-vis-color-label">Min</label>
+        <input
+          type="number"
+          ng-model="min"
+          class="form-control">
+        <div class="error">{{minError}}</div>
+        <label class="metric-vis-color-label">Max</label>
+        <input
+          type="number"
+          ng-model="max"
+          class="form-control">
+        <div class="error">{{maxError}}</div>
+        <label class="metric-vis-color-label">Color</label>
+        <select
+          ng-model="color"
+          class="form-control"
+          required>
+          <option value="Red">Red</option>
+          <option value="Orange">Orange</option>
+          <option value="Green">Green</option>
+        </select>
+        <div class="error">{{colorError}}</div>
+        <br />
+        <div
+          class="row">
+          <div class="col-md-6">
+            <input
+            type="button"
+            value="Cancel"
+            ng-click="cancel()"
+            class="metric-vis-color-add form-control">
+          </div>
+          <div class="col-md-6">
+            <input
+              ng-hide="editIndex >= 0"
+              type="button"
+              value="Add"
+              ng-click="addRange()"
+              ng-disabled="metricColorSchemaForm.$invalid"
+              class="metric-vis-color-add form-control">
+            <input
+              ng-show="editIndex >= 0"
+              type="button"
+              value="Update range"
+              ng-click="updateRange()"
+              type="number"
+              ng-model="max"
+              class="form-control">
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

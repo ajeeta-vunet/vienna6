@@ -31,7 +31,7 @@ module.directive('metricLimitedColorSchema', function () {
       scope.minError = '';
       scope.maxError = '';
       scope.colorError = '';
-
+      scope.openMetricColorSchemaForm = false;
       // This function is called to validate the user input. This validates the
       // ranges
       function validate(colorSchema) {
@@ -85,6 +85,33 @@ module.directive('metricLimitedColorSchema', function () {
             metric
           });
         }
+        scope.openMetricColorSchemaForm = false;
+        scope.reset();
+      };
+
+      // Calls when metric colorschema checkbox is toggled.
+      scope.toggleMetricColorSchema = function () {
+        scope.openMetricColorSchema = !scope.openMetricColorSchema;
+        scope.visObj.params.colorSchema = [];
+      };
+
+      // To close the metric color schema form.
+      scope.cancel = function () {
+        scope.openMetricColorSchemaForm = false;
+        scope.reset();
+      };
+
+      // To open a new form to add metric color schema instance.
+      scope.addNextItem = function () {
+        scope.openMetricColorSchemaForm = true;
+      };
+
+      // To reset the fields value.
+      scope.reset = function () {
+        scope.min = '';
+        scope.max = '';
+        scope.color = '';
+        scope.metric = '';
       };
 
       // This function is called when a user wants to edit an existing
@@ -122,6 +149,7 @@ module.directive('metricLimitedColorSchema', function () {
           };
           scope.editIndex = -1;
         }
+        scope.reset();
       };
 
       // This is called when a colorSchema is deleted..

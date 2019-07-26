@@ -45,7 +45,7 @@ function vunetCredentials($scope,
           pattern: `^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9]
                      [0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5])$`
         },
-        errorText: 'Port should be between 1 - 65355 (inclusive).'
+        errorText: 'Port should be between 1 - 65535 (inclusive).'
       },
       {
         key: 'user_id',
@@ -126,7 +126,7 @@ function vunetCredentials($scope,
           pattern: `^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9]
                       [0-9][0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5])$`
         },
-        errorText: 'Port should be between 1 - 65355 (inclusive).'
+        errorText: 'Port should be between 1 - 65535 (inclusive).'
       },
       {
         key: 'user_id',
@@ -234,7 +234,7 @@ function vunetCredentials($scope,
           pattern: `^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9]
                         [0-9]|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5])$`
         },
-        errorText: 'Port should be between 1 - 65355 (inclusive).'
+        errorText: 'Port should be between 1 - 65535 (inclusive).'
       },
       {
         key: 'community_string',

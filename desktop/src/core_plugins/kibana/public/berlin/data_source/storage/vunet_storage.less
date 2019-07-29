@@ -19,8 +19,26 @@
   .row {
     margin:0rem;
   }
-  .live-indices-table , .archieved-indices-table{
+  .live-indices-table{
     padding:2.5rem 0rem 2.5rem 0rem;
+  }
+  // For the archieved-indices table we remove word wrap
+  .archieved-indices-table{
+    padding:2.5rem 0rem 2.5rem 0rem;
+    .vunet-table{
+      .kuiControlledTable{
+        .kuiTable{
+          .kuiTableRow{
+            .kuiTableRowCell{
+              .kuiTabelCellSpan{
+                white-space: pre-line;
+                word-break: break-all;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

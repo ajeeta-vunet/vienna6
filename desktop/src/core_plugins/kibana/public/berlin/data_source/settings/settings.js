@@ -128,14 +128,20 @@ function vunetDataRetentionSettings($injector, $scope, StateService) {
     const dataRetentionPreference = data.Retention_Preference.data_management_preference;
 
     // Push all elements in per_index_setting to dataRetentionList.
-    dataRetentionPreference[0].per_index_setting.map((data) => {
-      dataRetentionList.push({
-        'index_prefix': data.index_prefix,
-        'active_data': data.searchable_data_in_days,
-        'inactive_data': data.non_searchable_data_in_days,
-        'archived_data': data.archive_data_after_days
+    if (dataRetentionPreference[0].per_index_setting) {
+      dataRetentionPreference[0].per_index_setting.map((data) => {
+        dataRetentionList.push({
+          'index_prefix': data.index_prefix,
+          'active_data': data.searchable_data_in_days,
+          'inactive_data': data.non_searchable_data_in_days,
+          'archived_data': data.archive_data_after_days
+        });
       });
-    });
+    } else {
+      // If "per_index_setting" propety is not present then initialize it to empty array
+      // This happens when user deletes all indices except "1-*" from the table
+      dataRetentionPreference[0].per_index_setting = [];
+    }
 
     // Add last element coming from back end (root preference setting) to the list.
     dataRetentionList.push({ 'index_prefix': dataRetentionPreference[0].tenant_bu,

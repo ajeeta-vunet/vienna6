@@ -11,11 +11,17 @@ import {
 
 export function KuiListingTableToolBarFooter({ pager, itemsSelectedCount }) {
   const renderText = () => {
-    if (itemsSelectedCount === 1) {
+    // if no items are selected on table, then don't show any message on tableFooter
+    // if 1 or more items are selected, then we display the count
+    if (itemsSelectedCount === 0) {
+      return;
+    }
+    else if (itemsSelectedCount === 1) {
       return '1 item selected';
     }
-
-    return `${itemsSelectedCount} items selected`;
+    else {
+      return `${itemsSelectedCount} items selected`;
+    }
   };
 
   let pagerSection;

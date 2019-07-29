@@ -421,7 +421,7 @@ export class VunetDataTable extends Component {
     return cells.map((cell) => {
       return cell.action ?
         <span className="kuiStatusText"> {this.renderItemTypeIcon(cell.action, item[this.props.metaItem.id])}</span> :
-        <span>{cell.value}</span>;
+        <span className="kuiTabelCellSpan"> {cell.value}</span>;
     });
   }
 

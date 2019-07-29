@@ -156,6 +156,11 @@ function archivedIndices($scope,
       // If we called this for forceUpdate, reset that here...
       $scope.archivedIndicesMeta.forceUpdate = false;
 
+      // Format indices array to generate string with each index present in new line
+      _.forEach(data.details, function (item) {
+        item.indices = item.indices.join('\r\n');
+      });
+
       return data.details;
     });
   };

@@ -1,5 +1,5 @@
 import { saveAs } from '@elastic/filesaver';
-import { find, flattenDeep, pluck, sortBy, _ } from 'lodash';
+import { each, find, flattenDeep, pluck, sortBy } from 'lodash';
 import angular from 'angular';
 import { savedObjectManagementRegistry } from 'plugins/kibana/management/saved_object_registry';
 import objectIndexHTML from 'plugins/kibana/management/sections/objects/_objects.html';
@@ -125,7 +125,7 @@ uiModules.get('apps/management')
               .then(refreshData)
               .then(function () {
                 const updateOperation = require('ui/utils/vunet_object_operation');
-                _.each($scope.selectedItems, function (selectedItem) {
+                each($scope.selectedItems, function (selectedItem) {
                   updateOperation.updateVunetObjectOperation([selectedItem], 'search', $http, 'delete', chrome);
                 });
                 $scope.selectedItems.length = 0;

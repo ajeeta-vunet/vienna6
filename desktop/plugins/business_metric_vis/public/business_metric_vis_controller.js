@@ -92,7 +92,13 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         Private,
         timefilter);
     }
-    kbnUrl.redirect('/' + referencePage);
+
+    // Have changed from kbnUrl.redirect(url) to kbnUrl.change(url)
+    // kbnUrl.redirect(url): will replace the current url with new url
+    // will not add it to the browser's history
+    // kbnUrl.change(url): will navigate to the new url
+    // and add this url to the browser's history
+    kbnUrl.change('/' + referencePage);
   };
 
   // This function is used to set the historical

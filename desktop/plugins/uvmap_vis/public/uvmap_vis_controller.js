@@ -181,7 +181,13 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
   $scope.onNodeSelect = function (params) {
     if (params.nodes[0] in $scope.data.node_dashboard_dict) {
       const dashboardURL = '/dashboard/' + $scope.data.node_dashboard_dict[params.nodes[0]].value;
-      kbnUrl.redirect(dashboardURL);
+
+      // Have changed from kbnUrl.redirect(url) to kbnUrl.change(url)
+      // kbnUrl.redirect(url): will replace the current url with new url
+      // will not add it to the browser's history
+      // kbnUrl.change(url): will navigate to the new url
+      // and add this url to the browser's history
+      kbnUrl.change(dashboardURL);
 
       // We are forcing angular digest cycle to run to redirect to the
       // dashboard URL.

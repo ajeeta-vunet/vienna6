@@ -47,7 +47,7 @@ export function prepareLinkInfo(
   }
 
   // Add the initial portion of filters
-  globalLink = globalLink + 'filters:!(';
+  globalLink = 'filters:!(' + globalLink;
 
   // Add currently added search filters and any additional search
   // strings configured in the link info
@@ -166,7 +166,7 @@ export function preparehtmlInfo(fieldName,
       }
 
       // Add the initial portion of filters
-      globalLink = globalLink + 'filters:!(';
+      globalLink = 'filters:!(' + globalLink;
 
       // Add currently added search filters and any additional search
       // strings configured in the link info
@@ -222,7 +222,8 @@ export function preparehtmlInfo(fieldName,
       // If the value of the field is to be used as a filter, add that
       if (linkInfoList[linkIndex].useFieldAsFilter) {
         const appFilter = '(\'$state\':(store:appState),meta:(alias:!n,disabled:!f,index:\'' +
-          index + '\',key:' + fieldName + ',negate:!f,value:\'' + value + '\'),query:(match:(' +
+          index + '\',key:' + fieldName + ',negate:!f,params:(query:' + value + ',type:phrase),type:phrase,value:\''
+          + value + '\'),query:(match:(' +
           fieldName + ':(query:\'' + value + '\',type:phrase))))';
         appLink = appLink + (appSecond ? ',' : '') + appFilter;
       }

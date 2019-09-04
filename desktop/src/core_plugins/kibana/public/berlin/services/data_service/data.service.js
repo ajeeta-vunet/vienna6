@@ -534,6 +534,19 @@ class DataService {
     return this._postRequest(url, { 'index': index }, 'refreshing data for ' + name + ' for ' + sourceType);
   }
 
+  //Getting action buttons bmv
+  getActionButtonsDataForBusinessMetric() {
+    const url = this.urlBase + '/rba/' + '?type=action';
+    return this._getRequest(url, 'getting list of action buttons for BMV');
+  }
+
+  //Start the action for the action button
+  initiateAction(actionName, agrsToSend, userName) {
+    const url = this.urlBase + '/rba/' + actionName + '/';
+    agrsToSend.userName = userName;
+    return this._postRequest(url, agrsToSend, 'Initiating the action');
+  }
+
   // get all live indices
   getLiveIndices() {
     const url = this.data_store_url + 'live_indices/';

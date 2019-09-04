@@ -21,6 +21,7 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
         const chartHeight = 270;
         const numberOfMetricInRow = 4;
 
+
         // This approach is used so as to catch the error thrown
         // when a BM visualisation does not exist but is added in
         // report.
@@ -85,7 +86,6 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
               }
 
               if (vis.visType === 'business_metric') {
-
                 // Count the number of metrics to display.
                 visObj.visState.params.metrics.map((metric) => {
                   if (!metric.hideMetric) {
@@ -159,7 +159,10 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
                          vis.visType === 'heatmap' ||
                          (vis.visType === 'business_metric' &&
                             metricVisLength > 1 &&
+                            visObj.visState.params.metrics.length <= 5  &&
                             aggregationLength === 0)) {
+                //  visObj.visState.params.metrics.length <=5  has been added as we will show bmv in half page
+                // when less than 5 metric are there in multi-metric case
                 // We should reset metric vis count as it must start from scratch again
                 metricVisCount = 0;
 

@@ -309,6 +309,53 @@
     </div>
 
     <!-- historical data config ends -->
+
+    <!-- Action button config starts -->
+    <div class="collapse-header-wrapper">
+      <!-- title -->
+      <span class="collapse-header">
+        Action Buttons
+      </span>
+    </div>
+
+    <div class="form-group bottom-space">
+      <label>
+        Enable Action Buttons
+        <kbn-tooltip
+          text="Use this to display action buttons to your visualization and configure the action buttons"
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <span class="action-buttons-checkbox">
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="vis.params.actionButtonsEnabled"
+          ng-change="toggleActionButtonsData()"
+          ng-disabled="vis.params.aggregations.length > 2" 
+        />
+        <p class="more-than-two-buckets-error" ng-if="vis.params.aggregations.length > 2">
+          Action Buttons cannot be enabled if more than two buckets are configured.
+        </p>
+      </span>
+    </div>
+
+    <div
+      class="form-group bottom-space"
+      ng-show="vis.params.actionButtonsEnabled">
+      <action-buttons-data action-buttons-data="vis.params.actionButtonsData">
+      </action-buttons-data>
+    </div>
+
+    <!-- Action button config starts -->
+
     <div ng-show="!vis.params.enableTableFormat">
       <div class="form-group">
         <label>Metric Font Size - {{ vis.params.fontSize }}pt</label>

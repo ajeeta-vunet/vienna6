@@ -7,6 +7,7 @@ import 'plugins/business_metric_vis/directives/metric_table.js';
 import 'plugins/business_metric_vis/directives/historical_data_percentage.js';
 import 'plugins/business_metric_vis/factories/recursion_helper.js';
 
+import { noop } from 'lodash';
 import { uiModules } from 'ui/modules';
 
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
@@ -21,11 +22,110 @@ import { getFiltersFromSavedSearch } from 'ui/filter_manager/filter_manager.js';
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisController', function ($scope, Private,
   Notifier, $http, $rootScope, getAppState,
-  timefilter, courier, $filter, kbnUrl, $element, savedSearches) {
+  timefilter, courier, $filter, kbnUrl, $element, savedSearches, StateService, $timeout, confirmModal) {
 
   const notify = new Notifier({
     location: 'Alert'
   });
+
+  // Intitalizing the vunet-modal to false
+  $scope.showActionButtonsModal = false;
+
+  $scope.actionButtonsModalData = {
+    isForm: false
+  };
+
+
+  // Fuction to show confimation pop-up to start the action for single and multi-metric cases
+  $scope.confirmationToStartActionForSingleMultiMetric = function (actionName) {
+    $scope.actionToSendOnSubmit = actionName;
+    confirmModal(
+      'Are you sure you want to initiate the action ' + $scope.actionToSendOnSubmit + '?',
+      {
+        title: 'Initiate Action',
+        onConfirm: onActionButtonsModalSubmit,
+        onCancel: noop,
+        confirmButtonText: 'Yes, Initiate action',
+        cancelButtonText: 'No, Go back',
+      });
+  };
+
+  // This function will be called in the case of table format with buckets and will make the arguments to be sent to api call accordingly.
+  $scope.confirmationToStartActionForTableDirective = function (actionName, bucket, data, metr) {
+    let subBucketValueToSend = bucket.key;
+    let bucketValueToSend = data.key;
+    $scope.actionToSendOnSubmit = actionName;
+    const metricValueToSend = bucket.metric.formattedValue;
+    const historicalDataToSend = bucket.metric.historicalData;
+    const metricNameToSend = metr.label;
+
+    if (bucketValueToSend === undefined) {
+      subBucketValueToSend = null;
+      bucketValueToSend = bucket.key;
+    }
+    $scope.bucketArgsToSend = {};
+    $scope.bucketArgsToSend.bucket = bucketValueToSend;
+    $scope.bucketArgsToSend.subBucket = subBucketValueToSend;
+    $scope.bucketArgsToSend.metricname = metricNameToSend;
+    $scope.bucketArgsToSend.metricValue = metricValueToSend;
+    $scope.bucketArgsToSend.historcalData = historicalDataToSend;
+
+    confirmModal(
+      'Are you sure you want to initiate the action ' + $scope.actionToSendOnSubmit + '?',
+      {
+        title: 'Initiate Action',
+        onConfirm: onActionButtonsModalSubmit,
+        onCancel: noop,
+        confirmButtonText: 'Yes, Initiate action',
+        cancelButtonText: 'No, Go back',
+      });
+  };
+
+  // This function will be called in the case of table without buckets and will make the arguments to be sent to api call accordingly.
+  $scope.confirmationToStartActionForTableWithoutBuckets = function (actionName, metric, item) {
+    const metricValueToSend = item.formattedValue;
+    const historicalDataToSend = item.historicalData;
+    const metricNameToSend = metric;
+
+    $scope.bucketArgsToSend = {};
+    $scope.actionToSendOnSubmit = actionName;
+    $scope.bucketArgsToSend.metricname = metricNameToSend;
+    $scope.bucketArgsToSend.metricValue = metricValueToSend;
+    $scope.bucketArgsToSend.historcalData = historicalDataToSend;
+
+    confirmModal(
+      'Are you sure you want to initiate the action ' + $scope.actionToSendOnSubmit + '?',
+      {
+        title: 'Initiate Action',
+        onConfirm: onActionButtonsModalSubmit,
+        onCancel: noop,
+        confirmButtonText: 'Yes, Initiate action',
+        cancelButtonText: 'No, Go back',
+      });
+  };
+
+  function onActionButtonsModalSubmit() {
+    const agrsToSend = {};
+    agrsToSend.bmv = $scope.vis.title;
+    agrsToSend.args = $scope.bucketArgsToSend;
+    StateService.initiateAction($scope.actionToSendOnSubmit, agrsToSend).then(() => {
+    });
+    confirmModal(
+      'The action ' + $scope.actionToSendOnSubmit + ' has been initiated. Please check notifications for any updates. ',
+      {
+        title: 'Action Initiated',
+        onConfirm: noop,
+        confirmButtonText: 'Okay',
+      });
+  }
+
+  // This has been done to disable the action buttons if the visualization is saved.
+  const currentRoute = window.location.href;
+  if(currentRoute.includes('/visualize/create?type=business_metric')) {
+    $scope.isVisualizationSaved = false;
+  }else{
+    $scope.isVisualizationSaved = true;
+  }
 
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
@@ -37,6 +137,10 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
   // Constants used in calculation of css properties
   // in metric display.
+  $scope.actionButtonFontConstant = 2;
+  $scope.actionButtonPaddingConstant = .7;
+  $scope.actionButtonWidthConstant = 12.5;
+  $scope.drillDownHelpIconConstant = 5;
   $scope.superScriptConstant = 0.6;
   $scope.noDataContainerConstant = 0.30;
   $scope.noDataIconConstant = 0.55;
@@ -184,10 +288,16 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       }
     }
 
+    if($scope.txtFontSize <= 11) {
+      $scope.actionButtonFontSize = $scope.txtFontSize;
+    }else{
+      $scope.actionButtonFontSize = 11;
+    }
     // check if aggregations and historical data is configured
     // and get the length for the same.
     let aggregationsLength = 0;
     let historicalDataLength = 0;
+    let actionButtonsLength = 0;
 
     if ($scope.vis.params.aggregations) {
       aggregationsLength = $scope.vis.params.aggregations.length;
@@ -195,6 +305,10 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
     if ($scope.vis.params.historicalData) {
       historicalDataLength = $scope.vis.params.historicalData.length;
+    }
+    if($scope.vis.params.actionButtonsData) {
+      // If action button are configured the length will be 1 as we are calculating the length of columns(Action Buttons will come in 1 column)
+      actionButtonsLength = 1;
     }
 
     if (aggregationsLength === 0) {
@@ -213,7 +327,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     // calculate the no of columns to set the width of each column
     // we are adding 2 at the end to include the column headers 'Metric' and
     // 'For selected time'.
-    const noOfColumns = aggregationsLength + historicalDataLength + 2;
+    const noOfColumns = aggregationsLength + historicalDataLength + actionButtonsLength + 2;
     $scope.columnWidth = (100 / (noOfColumns)) + '%';
 
     // This function is used to prepare the inner most part of the
@@ -227,6 +341,10 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     const prepareMetricSet = function (fValue, metricsetType) {
       const metricset = {};
       metricset.formattedValue = fValue;
+      // We are pushing the action buttons header name to header meta when action buttons are configured.
+      if(fValue === 'For Selected Time') {
+        metricset.actionButtonsColumnName =  'Actions';
+      }
       metricset.historicalData = [];
 
       _.each($scope.vis.params.historicalData, function (dataObj) {
@@ -269,7 +387,6 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       }
       dataset.push(aggObj);
       count = count + 1;
-
       // Recursively call prepareBuckets() until
       // we reach the last inner most aggregation.
       if (count < maxCount) {
@@ -337,6 +454,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
     // prepare the metric part of the JSON structure for table headers.
     const metricsetForHeaders = prepareMetricSet('For Selected Time', 'header');
+
 
     // prepare the metric part of the JSON structure to
     // display a row with 'N.A.' values.
@@ -488,7 +606,6 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           }
           payload.historicalData.push(newObj);
         });
-
         // get the aggregations configured.
         payload.aggregations = $scope.vis.params.aggregations || [];
 
@@ -516,7 +633,8 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           $scope.metricDatas = resp;
           $scope.darkShade = '';
           let metricRowCount = 0;
-
+          // For case of multiple metric in simple format we are extracting the action buttons.
+          $scope.actionButtonForMultipleMetric = $scope.vis.params.actionButtonsData;
           // Prepare historical datasets with 'N.A.' as values when the metrics
           // do not have any data in the selected time range.
           angular.forEach($scope.metricDatas, function (metricData, index) {

@@ -1,4 +1,5 @@
 @import (reference) "~ui/styles/mixins.less";
+@import '~ui/styles/vunet_variable_theme.less';
 
 /* few generic classes */
 
@@ -12,12 +13,12 @@
 
 .bg-red {
   background: red;
-  color: #fff;
+  color: @white;
 }
 
 .bg-green {
   background: green;
-  color: #fff;
+  color: @white;
 }
 
 .green {
@@ -25,13 +26,26 @@
 }
 
 .white {
-  color: #fff !important;
+  color: @white !important;
 }
 
 .business-metric-sidebar-container {
   padding: 5px;
   .bottom-space {
     margin-bottom: 15px !important;
+    
+    .action-buttons-checkbox{
+      .more-than-two-buckets-error{
+        display:none;
+        color: red;
+        font-size: 1.1rem;
+      }
+      &:hover{
+        .more-than-two-buckets-error{
+          display:block;
+        }
+      }
+    }
   }
   .vudata-button {
     border-radius: 5px !important;
@@ -106,6 +120,50 @@
       }
     }
 
+    .single-metric-action-buttons-container{
+      width: 55%;
+      margin-left: auto;
+      margin-right: auto;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+      justify-content: space-around;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-align-content: space-around;
+      -ms-flex-line-pack: distribute;
+      align-content: space-around;
+      .single-metric-action-button{
+        padding: 1.2rem 2.2rem;
+        border-radius: 1rem;
+        color:@white;
+        &:hover{
+            font-weight: bold;
+            box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
+        }
+      }
+      .single-metric-action-button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.65;
+        filter: alpha(opacity=65);
+        background-color: #e8e7ee !important;
+        color: @disable_button_text_color !important;
+        &:hover{
+          box-shadow: none;
+          font-weight: normal;
+        }
+      }
+    }
+
     .more-info-container {
       justify-content: space-between;
       padding: 0% 3%;
@@ -118,7 +176,7 @@
       .historical-data-block {
         text-align: center;
 
-        .historical-data-label {
+        .historical-data-label, .action-buttons-data-label {
           text-align: center;
           font-size: 12px;
         }
@@ -165,7 +223,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 3px;
+      //this has been added to provide symmetry to bmv in multiple metric case
+      padding: 2rem 0rem 2rem 0rem;
+      width: 30rem;
       min-width: 170px;
       min-height: 100px;
       max-width: 800px;
@@ -177,7 +237,7 @@
         max-width: 330px;
         word-wrap: break-word;
         i {
-          vertical-align: super;
+          vertical-align: middle;
         }
       }
 
@@ -194,7 +254,7 @@
       }
 
       .single-metric-value {
-        color: #000;
+        color: @black;
         line-height: 1.15;
       }
 
@@ -205,6 +265,39 @@
       .single-metric-historical-data {
         .historical-data-label {
           color:#5c595c;
+        }
+      }
+    }
+    .multiple-metric-action-buttons-container{
+      align-items: center;
+      width: 30rem;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      justify-content: space-evenly;
+      -webkit-justify-content: space-evenly;
+      .multiple-metric-action-button{
+        border-radius: 1rem;
+        color: @white;
+        margin: .5rem 0rem;
+        text-align: center;
+        &:hover{
+          font-weight: bold;
+          box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
+        }
+      }
+      .multiple-metric-action-button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.65;
+        filter: alpha(opacity=65);
+        background-color: #e8e7ee !important;
+        color: @disable_button_text_color !important;
+        &:hover{
+          box-shadow: none;
+          font-weight: normal;
         }
       }
     }
@@ -223,14 +316,14 @@
 
 /* Side bar time shift css */
 
-.historical-data-config-container {
+.historical-data-config-container, .action-buttons-data-config-container{
 
   .row {
     margin: 0px;
     padding: 0px;
   }
 
-  .historical-data-table {
+  .historical-data-table, .action-buttons-data-table{
     width: 100%;
 
     thead tr {
@@ -258,12 +351,12 @@
     }
   }
 
-  .historical-data-form {
+  .historical-data-form, .action-buttons-data-form{
     margin-top: 10px;
     padding: 8px;
     border: 1px solid #bdbdbd;
 
-    .historical-data-element {
+    .historical-data-element, .action-buttons-data-element {
       margin-bottom: 15px;
     }
 
@@ -278,7 +371,7 @@
   .add-historical-data-button {
     margin: 15px 0px;
     background: #95A5A6;
-    color: #fff;
+    color: @white;
   }
 
   .time-shift-default-message {
@@ -325,7 +418,7 @@
   margin-bottom: 0px;
   thead {
     tr {
-      background-color: #fff;
+      background-color: @white;
       th {
         border-bottom: 2px solid #e8e8e8 !important;
       }
@@ -334,7 +427,7 @@
   tbody {
     tr {
      td {
-       border-top-color: #fff !important;
+       border-top-color: @white !important;
      }
     }
   }
@@ -344,23 +437,57 @@
 
 .bm-table-striped {
   width:100%;
-  color: #000;
+  color: @black;
   border: 1px solid #eeeeee;
   .bm-sub-table {
     width: 100%;
     thead {
       tr {
-        background: #fff;
+        background: @white;
         th {
           padding: 5px 10px;
           background: #e1e1e1;
           border-top: 1px solid #e9e9e9;
           border-bottom: 1px solid #e9e9e9;
           font-size: 14px;
-          color: #000;
+          color: @black;
           font-weight: normal;
           text-align: center;
-          border-left: 1px solid #fff;
+          border-left: 1px solid @white;
+        }
+      }
+    }
+    .no-buckets-table-action-button-border{
+      border-left: 1px solid #eeeeee;
+      .no-buckets-table-action-buttons-container{
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        justify-content: space-evenly;
+        -webkit-justify-content: space-evenly;
+        .no-buckets-table-action-button{
+          font-size: 1.25rem;
+          padding: .75rem .75rem;
+          margin: .5rem .5rem;
+          border-radius: 1rem;
+          &:hover{
+            font-weight: bold;
+            box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
+          }
+        }
+        .no-buckets-table-action-button[disabled] {
+          cursor: not-allowed;
+          opacity: 0.65;
+          filter: alpha(opacity=65);
+          background-color: #e8e7ee !important;
+          color: @disable_button_text_color !important;
+          &:hover{
+            box-shadow: none;
+            font-weight: normal;
+          }
         }
       }
     }
@@ -414,13 +541,49 @@
   }
   .metric-name {
     font-size:13px;
-    color: #000;
+    color: @black;
     word-break: break-all;
   }
   .goal-info {
     font-size: 11px;
     margin-top: 2px;
     word-break: break-all;
+  }
+  .action-buttons-border{
+    border-left: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
+    .table-metric-action-buttons-container{
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      justify-content: space-evenly;
+      -webkit-justify-content: space-evenly;
+      .table-metric-action-button{
+        font-size: 1.25rem;
+        padding: .75rem .75rem;
+        margin: .5rem .5rem;
+        border-radius: 1rem;
+        word-break: normal;
+        &:hover{
+          font-weight: bold;
+          box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
+        }
+      }
+      .table-metric-action-button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.65;
+        filter: alpha(opacity=65);
+        background-color: #e8e7ee !important;
+        color: @disable_button_text_color !important;
+        &:hover{
+          box-shadow: none;
+          font-weight: normal;
+        }
+      }
+    }
   }
 }
 
@@ -437,7 +600,7 @@
   td {
     background: #e1e1e1;
     font-size: 14px;
-    color: #000;
+    color: @black;
     font-weight: normal;
     text-align: center;
   }
@@ -449,6 +612,12 @@
 .more-options {
   label {
     font-weight: normal;
+  }
+  .form-group{
+    .vudata-checkbox{
+      vertical-align: sub;
+      margin-left: .5rem;
+    }
   }
 }
 

@@ -11,10 +11,252 @@
 
     .vis-container {
       overflow: hidden !important;
+      // This has been done to hide action buttons in business metric when report is downloaded.
+      .business-metric-container-wrapper{
+        table{
+          tr{
+            .hide-action-buttons-in-report{
+              display:none!important;
+            }
+          }
+        }
+        .single-metric-action-buttons-container, .multiple-metric-action-buttons-container{
+          display:none!important;
+        }
+      }
     }
 
     .leaflet-control-container {
       display: none;
+    }
+  }
+
+  // Code copied from vienna45 (7_0) to show default fonts etc.
+  //  This has been done to show bmv in a defined format like default fonts etc after downloading the reports.
+  .bs-metric-vis{
+    min-height: 170px !important;
+  }
+
+   /* one value */
+  .historical-data-block:first-child:nth-last-child(1) {
+    width: 30%;
+  }
+
+  /* two items */
+  .historical-data-block:first-child:nth-last-child(2),
+  .historical-data-block:first-child:nth-last-child(2) ~ .historical-data-block {
+    width: 50%;
+  }
+
+  /* three items */
+  .historical-data-block:first-child:nth-last-child(3),
+  .historical-data-block:first-child:nth-last-child(3) ~ .historical-data-block {
+    width: 33.3333%;
+  }
+
+  .business-metric-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .view-more-link {
+      -webkit-box-pack: end;
+      -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+      justify-content: flex-end;
+
+      i {
+        display: none;
+      }
+      padding: 4px 8px;
+    }
+
+    .bs-metric-vis {
+      width: 100%;
+      height: 74%;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+      justify-content: space-around;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-align-content: space-around;
+      -ms-flex-line-pack: distribute;
+      align-content: space-around;
+
+      .bs-metric-value {
+        line-height: 1;
+        font-weight: bold;
+        font-size: 30px !important;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .bs-metric-container {
+        text-align: center;
+        padding: 1em;
+
+        .bs-metric-label {
+          margin-bottom: 7px;
+          font-size: 14px !important;
+          i {
+            display: none !important;
+          }
+        }
+
+        .goal-label {
+          margin-bottom: 10px;
+          font-size: 14px !important;
+        }
+      }
+    }
+
+    .more-info-container {
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
+
+      padding: 0% 3%;
+      border-top: 1px solid #efefef;
+      padding-top: 4px;
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+
+      .historical-data-block {
+        text-align: center;
+
+        .historical-data-label {
+          text-align: center;
+          font-size: 12px;
+        }
+        .historical-data-value {
+          font-size: 15px;
+        }
+      }
+
+      .value-indicators {
+      text-align: center;
+      }
+
+      .red {
+        color: red;
+      }
+
+      .green {
+        color: green;
+      }
+
+      .align-historical-data-metric {
+        -webkit-box-pack: end;
+        -webkit-justify-content: flex-end;
+        -ms-flex-pack: end;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  // Used to display multiple metrics
+  // next to each other
+  .multiple-metric-container {
+    .single-metric-container {
+      float: left;
+      .single-metric-label {
+        font-size: 11pt !important;
+        i {
+          display: none !important;
+        }
+      }
+
+      .single-metric-value {
+        font-size: 24pt !important;
+      }
+
+      .no-data-section {
+        padding: 12px !important;
+        i {
+          font-size: 12px !important;
+        }
+        .error-message {
+          font-size: 13px;
+          padding-top: 5px;
+        }
+      }
+
+      .single-metric-goal {
+        font-size: 11pt !important ;
+      }
+
+      .single-metric-historical-data-label {
+        .historical-data-label {
+          font-size: 11pt !important;
+        }
+      }
+    }
+  }
+
+  // Hide help and link icons in tabular BM vis
+  .bm-table-td-metric-names {
+    i {
+      display: none;
+    }
+  }
+  // business metric specific changes end
+
+  // Use system font to allow selection of text
+  // in pdf generated for search, data tables and
+  // matrix
+  .table-condensed, .kbn-table {
+    td, th {
+      h6 {
+        font-family: 'sans-serif' !important;
+      }
+    }
+  }
+
+  .bm-table-striped {
+    td {
+      font-family: 'sans-serif' !important;
+    }
+    .bm-page-break {
+      page-break-inside:avoid !important;
+      page-break-after:auto !important;
+    }
+  }
+
+  // Fixed font size for metric value in
+  // metric vis
+  .health-metric-vis {
+    .health-metric-value {
+      font-size: 30px !important;
+    }
+    .view-metric-info-link {
+      i {
+        display: none;
+      }
+    }
+  }
+
+  // Fixed font size for metric value in
+  // metric vis
+  .metric-vis {
+    .metric-value {
+      font-size: 30px !important;
     }
   }
 }

@@ -353,7 +353,6 @@ class TopbarCtrl {
       if (!$rootScope.printReport) {
 
         StateService.getNotifications().then(function (data) {
-
         // Declaring the alert notifications count variable.
           let alertCount = 0;
 
@@ -363,17 +362,17 @@ class TopbarCtrl {
           if ($scope.notificationResponse) {
 
           //getting the latest alert object
-            const latestAlertObj = $scope.notificationResponse.Alerts[0];
+            const latestAlertObj = $scope.notificationResponse.Notifications[0];
 
             // Iterate over the new alert notification response
-            for (let item = 0; item < data.Alerts.length; item++) {
+            for (let item = 0; item < data.Notifications.length; item++) {
 
             // Compare the latest alert object and the objects in the
             // new alert notification response
             // We use angular.equals to compare two objects which ignores
             // $$hash_key present in the object
             /*eslint-disable*/
-              if (angular.equals(data.Alerts[item], latestAlertObj)) {
+              if (angular.equals(data.Notifications[item], latestAlertObj)) {
                 /*eslint-enable*/
               // When there is a match update the alert notification
               // count and come out of the loop
@@ -390,14 +389,14 @@ class TopbarCtrl {
           // When alerts are generated for the first time,
           // The alert notification count is equal to no of alert
           // notifications received.
-            alertCount = data.Alerts.length;
+            alertCount = data.Notifications.length;
           }
 
           // Updating the UI with new alert notifications received
           $scope.notificationResponse = data;
 
           // Calculating the  count of unified notifications
-          $scope.notificationLength = $scope.notificationLength + alertCount + data.Storage.length;
+          $scope.notificationLength = $scope.notificationLength + alertCount;
           // notificationLength is stored in newNotificationLength to reset
           // the newNotificationLength value after read the alerts.
           $scope.newNotificationLength = $scope.notificationLength;
@@ -463,6 +462,7 @@ class TopbarCtrl {
 
     // When user clicks on any notification, Redirect to alerts
     // dashboard or storage section based on the notification.
+
     $scope.showNotificationInformation = (header, notification) => {
 
       if (header === 'Alerts') {

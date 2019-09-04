@@ -3,6 +3,7 @@ require('ui/courier');
 require('plugins/business_metric_vis/directives/metric');
 require('ui/directives/business_metric_threshold');
 require('plugins/business_metric_vis/directives/historical_data.js');
+require('plugins/business_metric_vis/directives/action_buttons_data.js');
 require('plugins/business_metric_vis/directives/aggregations.js');
 
 import { uiModules } from 'ui/modules';
@@ -12,6 +13,7 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
 
   $scope.operMetricsList = [];
   $scope.historicalDataEnabled = false;
+  $scope.actionButtonsEnabled = false;
   $scope.indexFields = [];
   $scope.savedSearchIds = [];
   $scope.indexPatternIds = [];
@@ -145,6 +147,10 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
   $scope.togglehistoricalData = function () {
     $scope.vis.params.historicalData = [];
   };
+  $scope.toggleActionButtonsData = function () {
+    $scope.vis.params.actionButtonsData = [];
+  };
+
 
   // This function gets called for each metric
   function initMetric(bmIndex) {
@@ -171,6 +177,11 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
       // check if metrics exists loop through to populate
       if ($scope.vis.params.metrics) {
         const bmLength = $scope.vis.params.metrics.length;
+
+        //if action buttons have data
+        if ($scope.vis.params.actionButtonsData && $scope.vis.params.actionButtonsData.length) {
+          $scope.actionButtonsEnabled = true;
+        }
 
         //if historicalData has values
         if ($scope.vis.params.historicalData && $scope. vis.params.historicalData.length) {

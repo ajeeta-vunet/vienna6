@@ -9,8 +9,33 @@
         column-width="columnWidth"
         set-trend-color-for-tabular-bm="setTrendColorForTabularBm"
         ideal-text-color="idealTextColor"
+        confirmation-to-start-action-for-table-directive="confirmationToStartActionForTableDirective"
         >
       </table-directive>
+    </td>
+
+    <!-- In the ng-style of below td we have use 2 different widths in ng-style. This is w.r.t to action buttons column width 
+      which will be 17% if only one action button is configured but it will be 36% if more than 1 action buttons are configured -->
+
+    <td 
+      ng-show="!bucket.buckets && vis.params.actionButtonsData.length>0" 
+      ng-disabled="!isVisualizationSaved" 
+      class="action-buttons-border hide-action-buttons-in-report"
+      ng-style="{ 'width' : (vis.params.actionButtonsData.length<=1) ? '17%' : '36%' }" 
+      >
+      {{ bucket.metric.actionButtonsColumnName }}
+      <div ng-if="!bucket.metric.actionButtonsColumnName" 
+           class="table-metric-action-buttons-container">
+        <div 
+          ng-repeat="actionbutton in vis.params.actionButtonsData" 
+          ng-style="{'background-color': actionbutton.actionColor, color: idealTextColor(actionbutton.actionColor)}" 
+          class="table-metric-action-button"
+          ng-click="confirmationToStartActionForTableDirective(actionbutton.actionName, bucket, data, metr)"
+          uib-tooltip="{{actionbutton.actionName}}"
+          tooltip-placement="top">
+          {{actionbutton.actionName}}
+        </div>
+      </div>
     </td>
     <td
       width="{{ columnWidth }}"

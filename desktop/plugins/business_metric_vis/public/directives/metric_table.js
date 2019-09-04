@@ -9,7 +9,8 @@ app.directive('tableDirective', function (RecursionHelper) {
       vis: '=',
       columnWidth: '=',
       setTrendColorForTabularBm: '=',
-      idealTextColor: '='
+      idealTextColor: '=',
+      confirmationToStartActionForTableDirective: '='
     },
     template: require('plugins/business_metric_vis/directives/metric_table.html'),
     compile: function (element) {

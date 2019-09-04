@@ -37,17 +37,17 @@
                 <div ng-if="data.length > 0" ng-repeat="(header, data) in notificationResponse" class="notification-section">
                   <div class="notification-header">
                     <span>
-                      <i class="fa" ng-class="{'fa-bell': header=='Alerts',
-                                              'fa-database': header=='Storage'}">
+                      <i class="notification-heading-icon" ng-class="{'icon-Notification_type': header=='Notifications',
+                                              'icon-Storage_notification_type': header=='Storage'}">
                       </i>
-                    </span> {{header}}
+                    </span> 
+                    <span class="notification-heading-text"> {{header}} </span>
                     <i class='fa fa-times close-dropdown' ng-click="closeNotificationDropdown()" uib-tooltip="Close"></i>
                   </div>
                   <div ng-repeat="notification in data track by $index">
-                    <div ng-click="showNotificationInformation(header, notification)" class="notification-content"
-                      ng-class="{'new-notification': $index < newNotificationLength}">
-                      <div class="notification-subject alert-wrapper">
-                        <span>
+                    <div ng-click="viewNotificationDetails(notification.summary)" class="notification-content" ng-class="{'new-notification': $index < newNotificationLength}">
+                      <div class="notification-subject alert-wrapper row">
+                        <span class="col-sm-1 notification-type-icon">
                           <i class="fa" aria-hidden="true" ng-class="{'fa-warning': notification.type=='warning',
                                                  'fa-exclamation-circle': notification.type=='error',
                                                  'fa-info-circle': notification.type=='information',
@@ -57,18 +57,26 @@
                                                  }">
                           </i>
                         </span>
-                        <span class="notification-name">{{notification.name}}</span>
-                        <span uib-tooltip="Go to Details" class="pull-right go-to-notification-details" ng-click="viewNotificationDetails(notification.summary)">
-                          <i class="fa fa-arrow-circle-right" aria-hidden="true">
-                          </i>
-                        </span>
+                        <span class="col-sm-9 notification-name" >{{notification.name}}</span>
+                        <span uib-tooltip="Notification is of {{notification.category}} type" class="pull-right notification-category-icon-container col-sm-2">
+                            <i class="notification-category-icon" 
+                               ng-class="{'icon-Notification_Alert_Result': notification.category=='Alert',
+                                           'icon-Storage_Notification_Result': notification.category=='Storage',
+                                           'icon-Notification_Alert_Script_Result': notification.category=='Script'}"
+                              aria-hidden="true">
+                            </i>
+                          </span>
                       </div>
-                      <div class="notification-desc">
-                        {{notification.summary}}
+                      <div class="row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-8 notification-desc">
+                          {{notification.summary}}
+                        </div>
+                        <div class="col-sm-3 notification-time">
+                          {{ notification.timestamp | amUtc | amTimeAgo }}
+                        </div>
                       </div>
-                      <div class="notification-time">
-                        {{ notification.timestamp | amUtc | amTimeAgo }}
-                      </div>
+
                     </div>
                   </div>
                   <div class="view-notifications" ng-click="viewNotificationDetails('')">
@@ -89,12 +97,11 @@
               </button>
             </li>
             <li class="uib-dropdown help-container" uib-dropdown>
-              <div class='uib-dropdown-toggle help-icon' data-toggle="dropdown"
-                uib-dropdown-toggle>
+              <div class='uib-dropdown-toggle help-icon' data-toggle="dropdown" uib-dropdown-toggle>
                 <i class="icon-Help help-icon-size" uib-tooltip="Help"></i>
               </div>
               <ul class="dropdown-menu-right uib-dropdown-menu" uib-dropdown-menu ng-click="$event.stopPropagation()">
-                <div class="help-dropdown-content"> 
+                <div class="help-dropdown-content">
                   <div class="row help-dropdown-content-header">
                     Hello, What can we do for you?
                   </div>
@@ -102,16 +109,10 @@
                     Search our help center
                   </div>
                   <div class="row search-container">
-                    <form
-                      name="queryBarForm"
-                      ng-submit="helpSearch(search)">
+                    <form name="queryBarForm" ng-submit="helpSearch(search)">
                       <div class="flex-container">
-                        <input
-                          type="text"
-                          ng-model="search"
-                          class="search-text kuiToolBarSearchBox_input"
-                          placeholder="Search..."
-                          area-lable="Filter"/>
+                        <input type="text" ng-model="search" class="search-text kuiToolBarSearchBox_input" placeholder="Search..."
+                          area-lable="Filter" />
                       </div>
                     </form>
                   </div>
@@ -119,40 +120,40 @@
                     <span>
                       Recommended Links
                     </span>
-                  <div class="help-links-container">
-                    <div class="row">
-                      <div class="col-md-6 help-link-icon">
-                        <a href="/vuDoc/data_source/index.html" target="_blank">
-                          <div>
-                            <img src="/ui/vienna_images/data_source.svg" height="42" width="42"/>
-                          </div>Data Sources
-                        </a>
+                    <div class="help-links-container">
+                      <div class="row">
+                        <div class="col-md-6 help-link-icon">
+                          <a href="/vuDoc/data_source/index.html" target="_blank">
+                            <div>
+                              <img src="/ui/vienna_images/data_source.svg" height="42" width="42" />
+                            </div>Data Sources
+                          </a>
+                        </div>
+                        <div class="col-md-6 help-link-icon">
+                          <a href="/vuDoc/user_guide/index.html" target="_blank">
+                            <div>
+                              <img src="/ui/vienna_images/faq.svg" height="42" width="42" />
+                            </div>User Guide
+                          </a>
+                        </div>
                       </div>
-                      <div class="col-md-6 help-link-icon">
-                        <a href="/vuDoc/user_guide/index.html" target="_blank">
-                          <div>
-                            <img src="/ui/vienna_images/faq.svg" height="42" width="42"/>
-                          </div>User Guide
-                        </a>
+                      <div class="row">
+                        <div class="col-md-6 help-link-icon">
+                          <a href="/vuDoc/faqs/index.html" target="_blank">
+                            <div>
+                              <img src="/ui/vienna_images/user_guide.svg" height="42" width="42" />
+                            </div>FAQs
+                          </a>
+                        </div>
+                        <div class="col-md-6 help-link-icon">
+                          <a href="/vuDoc/support/index.html" target="_blank">
+                            <div>
+                              <img src="/ui/vienna_images/suport.svg" height="42" width="42" />
+                            </div>Support
+                          </a>
+                        </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-6 help-link-icon">
-                        <a href="/vuDoc/faqs/index.html" target="_blank">
-                          <div>
-                            <img src="/ui/vienna_images/user_guide.svg" height="42" width="42"/>
-                          </div>FAQs
-                        </a>
-                      </div>
-                      <div class="col-md-6 help-link-icon">
-                        <a href="/vuDoc/support/index.html" target="_blank">
-                          <div>
-                            <img src="/ui/vienna_images/suport.svg" height="42" width="42"/>
-                          </div>Support
-                        </a>
-                      </div>
-                    </div>
-                  </div>
                   </div>
                 </div>
               </ul>

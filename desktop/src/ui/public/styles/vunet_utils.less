@@ -258,6 +258,78 @@ input[type="file"]{
       height: 100%;
       dashboard-viewport-provider{
         height: 100%;
+        //this has been done to adjust the action buttons of bmv in dashboards
+        .react-grid-layout{
+          .react-grid-item{
+            .dashboard-panel{
+              .panel-default{
+                .panel-content{
+                  visualize{
+                    visualization{
+                      .vis-container {
+                        .business-metric-container-wrapper{
+                          .multiple-metric-container{
+                            .single-metric-container, .multiple-metric-action-buttons-container{
+                              width: 18rem;
+                            }
+                          }
+                          .single-metric-wrapper{
+                            .single-metric-show-container{
+                              .business-metric-container{
+                                .bs-metric-vis{
+                                  height: 55%;
+                                }
+                              }
+                              .single-metric-action-buttons-container{
+                                width: 100%;
+                                .single-metric-action-button{
+                                  width: 25%;
+                                  padding: .5rem .75rem;
+                                  overflow-x: hidden;
+                                  text-overflow: ellipsis;
+                                  text-align: center;
+                                  white-space: nowrap;
+                                }
+                              }
+                            }
+                          }
+                          .bm-table-striped{
+                            tbody{
+                              tr{
+                                td{
+                                  .action-buttons-border{
+                                    .table-metric-action-buttons-container{
+                                      flex-direction: column;
+                                      align-items: center;
+                                      .table-metric-action-button{
+                                        text-align: center;
+                                        width: 80%;
+                                      }
+                                    }
+                                  }
+                                  .no-buckets-table-action-button-border{
+                                    .no-buckets-table-action-buttons-container{
+                                      flex-direction: column;
+                                      align-items: center;
+                                      .no-buckets-table-action-button {
+                                        text-align: center;
+                                        width: 80%;
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -326,6 +398,20 @@ input[type="file"]{
   //This has been added for events page
   .event-container{
     overflow-y: auto;
+    //this has been done to to avoid word break in case of events of action scripts
+    .alert-content-block-container{
+      .detailed-alert-info{
+        .alert-content-block-wrapper{
+          .custom-table{
+            tr{
+              td{
+                word-break: normal;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   // This has been added to fix menubar on top for manage configuration objects page
@@ -780,397 +866,417 @@ button[disabled], {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-Help:before {
+.icon-Notification_Alert_Result:before {
   content: "\e900";
-  color: #5a4fef;
+  color: #f4b73b;
+}
+.icon-Storage_notification_type:before {
+  content: "\e901";
+  color: @accent_color;
+}
+.icon-Storage_Notification_Result:before {
+  content: "\e902";
+  color: #168413;
+}
+.icon-Notification_type:before {
+  content: "\e903";
+  color: @accent_color;
+}
+.icon-Notification_Alert_Script_Result:before {
+  content: "\e904";
+  color: #fd7561;
+}
+.icon-Help:before {
+  content: "\e905";
+  color: @accent_color;
 }
 .icon-Verify-Data-01:before {
-  content: "\e901";
+  content: "\e906";
   color: #dfdeeb;
 }
 .icon-Remote-Side-Configuration:before {
-  content: "\e902";
+  content: "\e907";
   color: #fff;
 }
 .icon-Data-Source-Configuration:before {
-  content: "\e903";
+  content: "\e908";
   color: #fff;
 }
 .icon-Analyse-01:before {
-  content: "\e904";
+  content: "\e909";
   color: #dfdeeb;
 }
 .icon-maximize:before {
-  content: "\e905";
-  color: #5a4fef;
+  content: "\e90a";
+  color: @accent_color;
 }
 .icon-Instances-Receiving-08:before {
-  content: "\e906";
-  color: #5a4fef;
+  content: "\e90b";
+  color: @accent_color;
 }
 .icon-Archive_Success .path1:before {
-  content: "\e907";
+  content: "\e90c";
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path2:before {
-  content: "\e908";
-  margin-left: -1em;
-  color: rgb(37, 174, 136);
-}
-.icon-Archive_Success .path3:before {
-  content: "\e909";
-  margin-left: -1em;
-  color: rgb(37, 174, 136);
-}
-.icon-Archive_Success .path4:before {
-  content: "\e90a";
-  margin-left: -1em;
-  color: rgb(37, 174, 136);
-}
-.icon-Archive_Success .path5:before {
-  content: "\e90b";
-  margin-left: -1em;
-  color: rgb(37, 174, 136);
-}
-.icon-Archive_Success .path6:before {
-  content: "\e90c";
-  margin-left: -1em;
-  color: rgb(37, 174, 136);
-}
-.icon-Archive_Success .path7:before {
   content: "\e90d";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path8:before {
+.icon-Archive_Success .path3:before {
   content: "\e90e";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path9:before {
+.icon-Archive_Success .path4:before {
   content: "\e90f";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path10:before {
+.icon-Archive_Success .path5:before {
   content: "\e910";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path11:before {
+.icon-Archive_Success .path6:before {
   content: "\e911";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path12:before {
+.icon-Archive_Success .path7:before {
   content: "\e912";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path13:before {
+.icon-Archive_Success .path8:before {
   content: "\e913";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path14:before {
+.icon-Archive_Success .path9:before {
   content: "\e914";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path15:before {
+.icon-Archive_Success .path10:before {
   content: "\e915";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path16:before {
+.icon-Archive_Success .path11:before {
   content: "\e916";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path17:before {
+.icon-Archive_Success .path12:before {
   content: "\e917";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path18:before {
+.icon-Archive_Success .path13:before {
   content: "\e918";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path19:before {
+.icon-Archive_Success .path14:before {
   content: "\e919";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path20:before {
+.icon-Archive_Success .path15:before {
   content: "\e91a";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path21:before {
+.icon-Archive_Success .path16:before {
   content: "\e91b";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path22:before {
+.icon-Archive_Success .path17:before {
   content: "\e91c";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path23:before {
+.icon-Archive_Success .path18:before {
   content: "\e91d";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path24:before {
+.icon-Archive_Success .path19:before {
   content: "\e91e";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path25:before {
+.icon-Archive_Success .path20:before {
   content: "\e91f";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path26:before {
+.icon-Archive_Success .path21:before {
   content: "\e920";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path27:before {
+.icon-Archive_Success .path22:before {
   content: "\e921";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path28:before {
+.icon-Archive_Success .path23:before {
   content: "\e922";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path29:before {
+.icon-Archive_Success .path24:before {
   content: "\e923";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
-.icon-Archive_Success .path30:before {
+.icon-Archive_Success .path25:before {
   content: "\e924";
+  margin-left: -1em;
+  color: rgb(37, 174, 136);
+}
+.icon-Archive_Success .path26:before {
+  content: "\e925";
+  margin-left: -1em;
+  color: rgb(37, 174, 136);
+}
+.icon-Archive_Success .path27:before {
+  content: "\e926";
+  margin-left: -1em;
+  color: rgb(37, 174, 136);
+}
+.icon-Archive_Success .path28:before {
+  content: "\e927";
+  margin-left: -1em;
+  color: rgb(37, 174, 136);
+}
+.icon-Archive_Success .path29:before {
+  content: "\e928";
+  margin-left: -1em;
+  color: rgb(37, 174, 136);
+}
+.icon-Archive_Success .path30:before {
+  content: "\e929";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
 .icon-Types-Configured-09:before {
-  content: "\e925";
-  color: #5a4fef;
+  content: "\e92a";
+  color: @accent_color;
 }
 .icon-Open-Indices-02:before {
-  content: "\e926";
+  content: "\e92b";
   color: #9e9e9e;
 }
 .icon-Loading-Indices-11:before {
-  content: "\e927";
+  content: "\e92c";
   color: #ff8e00;
 }
 .icon-Instances-Configured-07:before {
-  content: "\e928";
-  color: #5a4fef;
+  content: "\e92d";
+  color: @accent_color;
 }
 .icon-Closed-Indices-01:before {
-  content: "\e929";
+  content: "\e92e";
   color: #f33434;
 }
 .icon-Archive:before {
-  content: "\e92a";
+  content: "\e92f";
   color: #ff8e00;
 }
 .icon-Archive_failure .path1:before {
-  content: "\e92b";
+  content: "\e930";
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path2:before {
-  content: "\e92c";
-  margin-left: -1em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path3:before {
-  content: "\e92d";
-  margin-left: -1em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path4:before {
-  content: "\e92e";
-  margin-left: -1em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path5:before {
-  content: "\e92f";
-  margin-left: -1em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path6:before {
-  content: "\e930";
-  margin-left: -1em;
-  color: rgb(209, 64, 63);
-}
-.icon-Archive_failure .path7:before {
   content: "\e931";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path8:before {
+.icon-Archive_failure .path3:before {
   content: "\e932";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path9:before {
+.icon-Archive_failure .path4:before {
   content: "\e933";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path10:before {
+.icon-Archive_failure .path5:before {
   content: "\e934";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path11:before {
+.icon-Archive_failure .path6:before {
   content: "\e935";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path12:before {
+.icon-Archive_failure .path7:before {
   content: "\e936";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path13:before {
+.icon-Archive_failure .path8:before {
   content: "\e937";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path14:before {
+.icon-Archive_failure .path9:before {
   content: "\e938";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path15:before {
+.icon-Archive_failure .path10:before {
   content: "\e939";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path16:before {
+.icon-Archive_failure .path11:before {
   content: "\e93a";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path17:before {
+.icon-Archive_failure .path12:before {
   content: "\e93b";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path18:before {
+.icon-Archive_failure .path13:before {
   content: "\e93c";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path19:before {
+.icon-Archive_failure .path14:before {
   content: "\e93d";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path20:before {
+.icon-Archive_failure .path15:before {
   content: "\e93e";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path21:before {
+.icon-Archive_failure .path16:before {
   content: "\e93f";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path22:before {
+.icon-Archive_failure .path17:before {
   content: "\e940";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path23:before {
+.icon-Archive_failure .path18:before {
   content: "\e941";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path24:before {
+.icon-Archive_failure .path19:before {
   content: "\e942";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path25:before {
+.icon-Archive_failure .path20:before {
   content: "\e943";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path26:before {
+.icon-Archive_failure .path21:before {
   content: "\e944";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path27:before {
+.icon-Archive_failure .path22:before {
   content: "\e945";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path28:before {
+.icon-Archive_failure .path23:before {
   content: "\e946";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path29:before {
+.icon-Archive_failure .path24:before {
   content: "\e947";
   margin-left: -1em;
-  color: rgb(226, 76, 75);
+  color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path30:before {
+.icon-Archive_failure .path25:before {
   content: "\e948";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
-.icon-Archive_failure .path31:before {
+.icon-Archive_failure .path26:before {
   content: "\e949";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path27:before {
+  content: "\e94a";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path28:before {
+  content: "\e94b";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path29:before {
+  content: "\e94c";
+  margin-left: -1em;
+  color: rgb(226, 76, 75);
+}
+.icon-Archive_failure .path30:before {
+  content: "\e94d";
+  margin-left: -1em;
+  color: rgb(209, 64, 63);
+}
+.icon-Archive_failure .path31:before {
+  content: "\e94e";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
 .icon-Data:before {
-  content: "\e94a";
+  content: "\e94f";
 }
 .icon-Diagnostics:before {
-  content: "\e94b";
+  content: "\e950";
 }
 .icon-Notification:before {
-  content: "\e94c";
-  color: #5a4fef;
+  content: "\e951";
+  color: @accent_color;
 }
 .icon-user:before {
-  content: "\e94d";
-  color: #5a4fef;
+  content: "\e952";
+  color: @accent_color;
 }
 .icon-Menu-Collapse:before {
-  content: "\e94e";
+  content: "\e953";
   color: #6459f0;
 }
 .icon-down-arrow:before {
-  content: "\e94f";
+  content: "\e954";
 }
 .icon-Analytics:before {
-  content: "\e950";
-  color: #5a4fef;
+  content: "\e955";
+  color: @accent_color;
 }
 .icon-Data-Source:before {
-  content: "\e951";
-  color: #5a4fef;
+  content: "\e956";
+  color: @accent_color;
 }
 .icon-Network:before {
-  content: "\e952";
-  color: #5a4fef;
+  content: "\e957";
+  color: @accent_color;
 }
 .icon-Settings:before {
-  content: "\e953";
-  color: #5a4fef;
+  content: "\e958";
+  color: @accent_color;
 }
 
 // Table look and feel for dashboards listing page

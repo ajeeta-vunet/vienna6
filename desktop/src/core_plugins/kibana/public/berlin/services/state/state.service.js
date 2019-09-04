@@ -336,6 +336,16 @@ class StateService {
     return this._DataService.getListOfDatesHavingData();
   }
 
+  //Getting action buttons bmv
+  getActionButtonsDataForBusinessMetric() {
+    return this._DataService.getActionButtonsDataForBusinessMetric();
+  }
+
+  //Start the action for the action button
+  initiateAction(actionName, agrsToSend) {
+    return this._DataService.initiateAction(actionName, agrsToSend, this._currentState.user);
+  }
+
   // get all live indices
   getLiveIndices() {
     return this._DataService.getLiveIndices();

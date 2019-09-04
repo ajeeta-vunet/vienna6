@@ -81,6 +81,20 @@
             </div>
           </div>
         </div>
+        <div 
+          class="single-metric-action-buttons-container" 
+          ng-show="vis.params.actionButtonsData.length>0">
+          <div 
+            ng-repeat="actionbutton in vis.params.actionButtonsData" 
+            ng-disabled="!isVisualizationSaved"
+            ng-style="{'background-color': actionbutton.actionColor,'font-size': (actionButtonFontSize + actionButtonFontConstant) +'pt' , 'padding':(actionButtonFontSize * actionButtonPaddingConstants) +'pt',color: idealTextColor(actionbutton.actionColor)}" 
+            class="single-metric-action-button" 
+            ng-click="confirmationToStartActionForSingleMultiMetric(actionbutton.actionName)"
+            uib-tooltip="{{actionbutton.actionName}}"
+            tooltip-placement="top">
+            {{actionbutton.actionName}}
+          </div>
+        </div>
         <div
           class="flex-container more-info-container"
           ng-if="metricObj.historicalData.length"
@@ -144,13 +158,13 @@
               class="single-metric-label"
               ng-style="{'font-size': txtFontSize+'pt'}">
               {{ metricName }}
-              <kbn-tooltip
+               <kbn-tooltip
                 ng-if="vis.params.metrics[outerIndex].description"
                 text="{{vis.params.metrics[outerIndex].description}}"
                 placement="bottom"
                 append-to-body="1">
                 <i
-                  ng-style="{'font-size': (txtFontSize * superScriptConstant) +'pt'}"
+                  ng-style="{'font-size': (txtFontSize * superScriptConstant + drillDownHelpIconConstant) +'pt'}"
                   class="fa fa-question-circle"
                   aria-hidden="true">
                 </i>
@@ -165,7 +179,7 @@
                     placement="left"
                     append-to-body="1">
                     <i
-                      ng-style="{'font-size': (txtFontSize * superScriptConstant) +'pt'}"
+                      ng-style="{'font-size': (txtFontSize * superScriptConstant + drillDownHelpIconConstant) +'pt'}"
                       class="fa fa-arrow-circle-o-right"
                       aria-hidden="true">
                     </i>
@@ -232,7 +246,22 @@
         </div>
       </div>
     </div>
-  </div> <!-- Multiple metrics displayed inline -->
+    <div 
+      class="multiple-metric-action-buttons-container" 
+      ng-show="vis.params.actionButtonsData.length>0" >
+      <div 
+        ng-repeat="actionbutton in vis.params.actionButtonsData" 
+        ng-disabled="!isVisualizationSaved"
+        ng-style="{'background-color': actionbutton.actionColor,'font-size': (actionButtonFontSize + actionButtonFontConstant) +'pt' , 'padding':(actionButtonFontSize*actionButtonPaddingConstant) +'pt' ,'width': (actionButtonFontSize*actionButtonWidthConstant)+'pt',color: idealTextColor(actionbutton.actionColor)}"
+        class="multiple-metric-action-button" 
+        ng-click="confirmationToStartActionForSingleMultiMetric(actionbutton.actionName)"
+        uib-tooltip="{{actionbutton.actionName}}"
+        tooltip-placement="top">
+        {{actionbutton.actionName}}
+      </div>
+    </div>
+  </div> 
+  <!-- Multiple metrics displayed inline -->
 
   <!--Tabular format Display  -->
   <div
@@ -279,6 +308,34 @@
                     {{ vis.params.metrics[outerIndex].goalLabel }}
                 </div>
               </td>
+
+              <!-- This will be used when in table format and no buckets -->
+              <!-- In the ng-style of below td we have use 2 different widths in ng-style. This is w.r.t to action buttons column width which will
+                   be 15% if only one action button is configured but it will be 30% if more than 1 action buttons are configured -->
+
+              <td ng-show="vis.params.aggregations.length<=0 "
+                  ng-style="{ 'width' : (vis.params.actionButtonsData.length<=1) ? '15%' : '30%' }"
+                  class="hide-action-buttons-in-report">
+                  {{ item.actionButtonsColumnName }}
+                <div ng-if="!item.actionButtonsColumnName" 
+                     class="no-buckets-table-action-button-border" >
+                <!-- a ng-if will come to see for header of column and display -->
+                  <div class="no-buckets-table-action-buttons-container">
+                    <div 
+                      ng-repeat="actionbutton in vis.params.actionButtonsData" 
+                      ng-style="{'background-color': actionbutton.actionColor, color: idealTextColor(actionbutton.actionColor)}" 
+                      class="no-buckets-table-action-button" 
+                      ng-disabled="!isVisualizationSaved" 
+                      ng-click="confirmationToStartActionForTableWithoutBuckets(actionbutton.actionName, metric, item)"
+                      uib-tooltip="{{actionbutton.actionName}}" 
+                      tooltip-placement="top" >
+                      {{actionbutton.actionName}}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <!-- no buckets case end -->
+
               <!-- For time being commented out..
                    This section will be used for additional fields later once the response from
                    the back-end includes this field -->
@@ -299,7 +356,8 @@
                   vis='vis'
                   column-width="columnWidth"
                   set-trend-color-for-tabular-bm="setTrendColorForTabularBm"
-                  ideal-text-color="idealTextColor"
+                  ideal-text-color="idealTextColor",
+                  confirmation-to-start-action-for-table-directive="confirmationToStartActionForTableDirective"
                   >
                 </table-directive>
               </td>
@@ -348,4 +406,11 @@
       </tr>
     </table>
   </div><!--Tabular format Display ends-->
+  <vunet-modal 
+    show-modal="showActionButtonsModal" 
+    on-close="onActionButtonsModalClose" 
+    data="actionButtonsModalData"
+    on-submit="onActionButtonsModalSubmit" 
+  >
 </div>
+

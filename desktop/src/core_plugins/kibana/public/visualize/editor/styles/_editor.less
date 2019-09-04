@@ -62,7 +62,8 @@
   .vis-editor-content {
     .flex-parent();
     width: 100%;
-    z-index: 0;
+    // This has been changed beacuse of pop-up in action button bmv
+    z-index: 5;
 
     // overrides for tablet and desktop
     @media (min-width: @screen-md-min) {

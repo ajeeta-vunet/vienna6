@@ -1,0 +1,139 @@
+<div class="action-buttons-data-config-container bottom-space">
+  <form name=actionButtonsDataForm>
+    <table class="action-buttons-data-table bottom-space">
+      <thead>
+        <tr>
+          <th class="action-buttons-data-label">Label</th>
+          <th class="action-buuton-color">Color</th>
+          <th class="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="item in actionButtonsData track by $index">
+          <td>
+            {{ item.actionName }}
+          </td>
+          <td>
+            {{item.actionColor}}
+          </td>
+          <td>
+            <kbn-tooltip 
+              text="Edit this Action Button value" 
+              placement="bottom" 
+              append-to-body="1">
+              <a 
+                href="" 
+                ng-click="editConfig(item, $index)" 
+                class="" 
+                aria-label="Edit">
+                <i aria-hidden="true" class="fa fa-pencil">
+                </i>
+              </a>
+            </kbn-tooltip>
+            <kbn-tooltip 
+              text="Delete this Action Button value" 
+              placement="bottom" 
+              append-to-body="1">
+              <a 
+                href="" 
+                ng-click="deleteConfig($index)" 
+                class="" 
+                aria-label="Delete">
+                <i aria-hidden="true" class="fa fa-trash-o">
+                </i>
+              </a>
+            </kbn-tooltip>
+          </td>
+        </tr>
+        <tr ng-show="actionButtonsData.length < 1">
+          <td colspan="4" class="action-buttons-data-default-message">
+            No Action Buttons has been configured.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div ng-show="addingActionButton || (editIndex >= 0)" class="action-buttons-data-form bottom-space">
+      <div class="row action-buttons-data-element">
+        <label>
+          Action Name
+          <kbn-tooltip 
+            text="Enter an action name" 
+            placement="right" 
+            append-to-body="1">
+              <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <select 
+          class="form-control action-buttons-data-input"
+          name="action-name" 
+          ng-options="actionName for actionName in actionButtons" 
+          ng-model="actionName"
+          required>
+        </select>
+      </div>
+      <div class="row action-buttons-data-element">
+        <label>
+          Color
+          <kbn-tooltip 
+            text="Provide a color for the action button" 
+            placement="right" 
+            append-to-body="1"
+            >
+            <i class="fa fa-question-circle"></i>
+          </kbn-tooltip>
+        </label>
+        <input 
+          class="form-control action-buttons-data-input" 
+          type="color" 
+          ng-model="actionColor" 
+          name="action-color"
+          required />
+      </div>
+      <div ng-hide="editIndex >= 0" class="row">
+        <div class="col-xs-6">
+          <input 
+            type="button" 
+            value="Add config" 
+            ng-click="addConfig()" 
+            class="form-control">
+        </div>
+        <div class="col-xs-6">
+          <input 
+            type="button"
+            value="Cancel" 
+            ng-click="cancelEdit()" 
+            class="form-control">
+        </div>
+      </div>
+      <div ng-show="editIndex >= 0" class="row">
+        <div class="col-xs-6">
+          <input 
+            type="button" 
+            value="Update config" 
+            ng-click="updateConfig()" 
+            class="form-control">
+        </div>
+        <div class="col-xs-6">
+          <input 
+            type="button" 
+            value="Cancel" 
+            ng-click="cancelEdit()" 
+            class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="vis-editor-agg-wide-btn">
+      <button 
+        ng-if="actionButtonsData.length < 3" 
+        type="text" 
+        ng-click="addActionButton()" 
+        class="kuiButton kuiButton--secondary kuiButton--small">
+        Add a Action Button
+      </button>
+      <p 
+        class="text-primary" 
+        ng-if="actionButtonsData.length > 2"> 
+        A maximun of 3 actions can be added.</p>
+    </div>
+  </form>
+</div>

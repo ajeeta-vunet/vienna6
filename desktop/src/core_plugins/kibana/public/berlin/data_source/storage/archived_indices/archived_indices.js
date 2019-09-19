@@ -78,14 +78,14 @@ function archivedIndices($scope,
     if (eventType === 'restore') {
       $scope.modalData.isForm = false;
       $scope.modalData.title = 'Restore';
-      $scope.modalData.message = '<h4>The following archives will be restored.' +
+      $scope.modalData.message = '<h4 class="restore-indices-popup">The following archives will be restored.' +
        'Any existing data under these archives will be refreshed.<p><ul>' +
         $scope.archiveNameListHtml + '</ul></p></h4>';
     } else if (eventType === 'delete') {
       $scope.modalData.isForm = false;
       $scope.modalData.title = 'Delete Indices';
       $scope.modalData.indices = $scope.archiveNameList;
-      $scope.modalData.message = '<h4> The following archives will be deleted <p><ul>' +
+      $scope.modalData.message = '<h4 class="delete-indices-popup"> The following archives will be deleted <p><ul>' +
         $scope.archiveNameListHtml + '</ul></p></h4>';
     }
 

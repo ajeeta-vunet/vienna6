@@ -92,13 +92,13 @@ function liveIndices($scope,
       $scope.modalData.isForm = false;
       $scope.modalData.title = 'Close Indices';
       $scope.modalData.indices = $scope.indicesList;
-      $scope.modalData.message = '<h4> The following indices will be closed <p><ul>' +
+      $scope.modalData.message = '<h4 class="closed-indices-popup"> The following indices will be closed <p><ul>' +
         $scope.indicesListHtml + '</ul></p></h4>';
     } else {
       $scope.modalData.isForm = false;
       $scope.modalData.title = 'Open Indices';
       $scope.modalData.indices = $scope.indicesList;
-      $scope.modalData.message = '<h4> The following indices will be opened <p><ul>' +
+      $scope.modalData.message = '<h4 class="open-indices-popup"> The following indices will be opened <p><ul>' +
         $scope.indicesListHtml + '</ul></p></h4>';
     }
 

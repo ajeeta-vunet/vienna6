@@ -1,9 +1,10 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
 .vunetTabs{
-  padding: 2rem 0rem 0rem 6rem;
+  padding: 1.25rem 0rem 0rem 6rem;
   display:block;
   min-height: 40px;
+  height: 6rem;
   background-color: @action_bar_background;
     .kuiTabs{ 
       border-bottom:0px;
@@ -21,6 +22,19 @@
   }
   .live-indices-table{
     padding:2.5rem 0rem 2.5rem 0rem;
+    // This has been done to provide scroll to below pop-up and similar look and feel to live indices popup for symmetry
+    .closed-indices-popup, .open-indices-popup{
+      ul{
+        padding: .5rem 0rem 0rem 1rem;
+        background-color: rgb(235, 235, 228);
+        height: 15rem;
+        overflow-y: auto;
+        border-radius: 10px;
+        border: 1px solid rgb(183, 218, 227);
+        width: 97%;
+        font-size: 1.6rem;
+      }
+    }
   }
   // For the archieved-indices table we remove word wrap
   .archieved-indices-table{
@@ -37,6 +51,19 @@
             }
           }
         }
+      }
+    }
+    // This has been done to provide scroll to below pop-up and similar look and feel to archieve indices popup for symmetry
+    .restore-indices-popup, .delete-indices-popup{
+      ul{
+        padding: .5rem 0rem 0rem 1rem;
+        background-color: rgb(235, 235, 228);
+        height: 15rem;
+        overflow-y: auto;
+        border-radius: 10px;
+        border: 1px solid rgb(183, 218, 227);
+        width: 97%;
+        font-size: 1.6rem;
       }
     }
   }

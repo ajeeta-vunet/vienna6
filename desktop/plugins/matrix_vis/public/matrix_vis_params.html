@@ -1,199 +1,208 @@
 <div class="form-group matrix-params">
-  <div>
-    <label>Per Page</label>
-    <input 
-      type="number" 
-      ng-model="vis.params.perPage" 
-      class="form-control"
-    >
-  </div>
-  <!--
-    "Show metrics in percentage" feature is disabled, as this is not working as
-    expected even in the existing Vienna45. We need to finalize the requirements
-    and then we can take it. -->
-  <div class="checkbox">
-    <label>
+  <form name="matrixOptionsForm">
+    <div>
+      <label>Per Page</label>
+      <input 
+        type="number" 
+        ng-model="vis.params.perPage" 
+        class="form-control"
+        ng-pattern="/^([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[12][0-9]{3}|3000)$/"
+        name="perPage"
+      >
+      <div
+        ng-show="matrixOptionsForm.perPage.$error.pattern"
+        class="error"
+        >
+        Per Page should be between 1 and 3000.
+      </div>
+    </div>
+    <!--
+      "Show metrics in percentage" feature is disabled, as this is not working as
+      expected even in the existing Vienna45. We need to finalize the requirements
+      and then we can take it. -->
+    <div class="checkbox">
+      <label>
+          <input 
+            type="checkbox" 
+            ng-model="vis.params.metricsInPercentage" 
+            ng-required="colorCodeOnPercentageUsed"
+          >
+          Show metrics in percentage
+          <kbn-tooltip 
+            text="Enable this to show percentage along with the values in table. Works only for 'Count', 'Sum' or 'Unique Count' metric." 
+            placement="right" 
+            append-to-body="1"
+          >
+            <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
+          </kbn-tooltip>
+      </label>
+    </div>
+    <div class="table-color-range-error" ng-show="colorCodeOnPercentageUsed">
+      Color schema is configured to use percentage values. Pl note that unchecking this field will make Color schema configuration invalid.
+    </div>
+    <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="vis.indexPattern"></metric-link-info>
+    <div class="checkbox">
+      <label>
         <input 
           type="checkbox" 
-          ng-model="vis.params.metricsInPercentage" 
-          ng-required="colorCodeOnPercentageUsed"
-        >
-        Show metrics in percentage
+          ng-model="vis.params.addSrNumber"
+        > 
+        Add a serial number column
         <kbn-tooltip 
-          text="Enable this to show percentage along with the values in table. Works only for 'Count', 'Sum' or 'Unique Count' metric." 
+          text="Enable this to show an additional column of serial number for each row" 
           placement="right" 
           append-to-body="1"
         >
-          <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
         </kbn-tooltip>
-    </label>
-  </div>
-  <div class="table-color-range-error" ng-show="colorCodeOnPercentageUsed">
-    Color schema is configured to use percentage values. Pl note that unchecking this field will make Color schema configuration invalid.
-  </div>
-  <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="vis.indexPattern"></metric-link-info>
-  <div class="checkbox">
-    <label>
-      <input 
-        type="checkbox" 
-        ng-model="vis.params.addSrNumber"
-      > 
-      Add a serial number column
-      <kbn-tooltip 
-        text="Enable this to show an additional column of serial number for each row" 
-        placement="right" 
-        append-to-body="1"
-      >
-        <i class="fa fa-question-circle table-vis-help-hover"></i>
-      </kbn-tooltip>
-    </label>
-  </div>
-  <div ng-show="vis.params.addSrNumber" class="row">
-    <div class="col-xs-3">
-      Base
-        <kbn-tooltip text="Starting number to be used when showing serial numbers" placement="right" append-to-body="1">
-	      <i class="fa fa-question-circle table-vis-help-hover"></i>
-        </kbn-tooltip>
-      <input type="number" ng-model="vis.params.srNumberBase" class="form-control">
-    </div>
-    <div class="col-xs-3">
-      Prefix
-	    <kbn-tooltip text="Prefix to be attached to serial numbers" placement="right" append-to-body="1">
-	      <i class="fa fa-question-circle table-vis-help-hover"></i>
-	    </kbn-tooltip>
-      <input type="text" ng-model="vis.params.srNumberPrefix" class="form-control">
-    </div>
-    <div class="col-xs-6">
-      Column Title
-	    <kbn-tooltip text="Title for serial number column" placement="right" append-to-body="1">
-        <i class="fa fa-question-circle table-vis-help-hover"></i>
-	    </kbn-tooltip>
-      <input type="text" ng-model="vis.params.srNumberTitle" class="form-control">
-    </div>
-  </div>
-  <show-cumulative-row vis-obj="vis"></show-cumulative-row>
-  <div class="checkbox">
-    <label>
-      <input 
-        type="checkbox" 
-        ng-model="vis.params.showCumulativeColumn"
-      > 
-      Show column with cumulative results
-      <kbn-tooltip 
-        text="Enable this to show an additional column with cumulative results" 
-        placement="right" 
-        append-to-body="1"
-      >
-        <i class="fa fa-question-circle table-vis-help-hover"></i>
-      </kbn-tooltip>
-    </label>
-    <div class="dropdown cumulative-container" ng-show="vis.params.showCumulativeColumn">
-      <label>
-        <span>Cumulative operation to be done</span>
-        <select id="columnOperation" ng-model="vis.params.cumulativeColumnOperation">
-          <option value="sum">Sum</option>
-          <option value="avg">Average</option>
-          <option value="min">Min</option>
-          <option value="max">Max</option>
-        </select>
       </label>
     </div>
-  </div>
-  <div class="matrix-columns-input">
-    <label>
-      <input 
-        class="enable-matrix-columns-checkbox" 
-        type="checkbox" 
-        name="enableNoOfColumns" 
-        ng-model="vis.params.enableNoOfColumns"
-      >
-      <span>No of columns</span>
-      <kbn-tooltip 
-        text="Controls the number of columns to be displayed in the matrix table. This is applicable only when Date Histogram is selected in aggregation. Enabling this will have higher priority over the 'interval' field under Data -> Aggregations -> Date Histogram."
-        placement="right" 
-        append-to-body="1"
-      >
-        <i class="fa fa-question-circle"></i>
-      </kbn-tooltip>
-    </label>
-    <div ng-show="vis.params.enableNoOfColumns">
-      <input 
-        type="number" 
-        name="matrixColumnsInput" 
-        ng-model="vis.params.NoOfColumns" 
-        class="form-control"
-      >
+    <div ng-show="vis.params.addSrNumber" class="row">
+      <div class="col-xs-3">
+        Base
+          <kbn-tooltip text="Starting number to be used when showing serial numbers" placement="right" append-to-body="1">
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+          </kbn-tooltip>
+        <input type="number" ng-model="vis.params.srNumberBase" class="form-control">
+      </div>
+      <div class="col-xs-3">
+        Prefix
+        <kbn-tooltip text="Prefix to be attached to serial numbers" placement="right" append-to-body="1">
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+        <input type="text" ng-model="vis.params.srNumberPrefix" class="form-control">
+      </div>
+      <div class="col-xs-6">
+        Column Title
+        <kbn-tooltip text="Title for serial number column" placement="right" append-to-body="1">
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+        <input type="text" ng-model="vis.params.srNumberTitle" class="form-control">
+      </div>
     </div>
-  </div>
-  <div class="collapse-time-headers-container">
-    <label>
-      <input 
-        class="enable-matrix-columns-checkbox" 
-        type="checkbox" 
-        name="collapseTimeHeaders" 
-        ng-model="vis.params.collapseTimeHeaders"
-      >
-      Collapse Time headers
-      <kbn-tooltip 
-        text="Visualize more data by collapsing the time headers to show data daywise." 
-        placement="right" 
-        append-to-body="1"
-      >
-        <i class="fa fa-question-circle"></i>
-      </kbn-tooltip>
-    </label>
-    <div class="time-formatter">
-      <div>
-        Choose Metric Format
+    <show-cumulative-row vis-obj="vis"></show-cumulative-row>
+    <div class="checkbox">
+      <label>
+        <input 
+          type="checkbox" 
+          ng-model="vis.params.showCumulativeColumn"
+        > 
+        Show column with cumulative results
+        <kbn-tooltip 
+          text="Enable this to show an additional column with cumulative results" 
+          placement="right" 
+          append-to-body="1"
+        >
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+      </label>
+      <div class="dropdown cumulative-container" ng-show="vis.params.showCumulativeColumn">
+        <label>
+          <span>Cumulative operation to be done</span>
+          <select id="columnOperation" ng-model="vis.params.cumulativeColumnOperation">
+            <option value="sum">Sum</option>
+            <option value="avg">Average</option>
+            <option value="min">Min</option>
+            <option value="max">Max</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="matrix-columns-input">
+      <label>
         <input 
           class="enable-matrix-columns-checkbox" 
           type="checkbox" 
-          name="enabletimeFormatter" 
-          ng-model="vis.params.enableTimeFormatter">
+          name="enableNoOfColumns" 
+          ng-model="vis.params.enableNoOfColumns"
+        >
+        <span>No of columns</span>
+        <kbn-tooltip 
+          text="Controls the number of columns to be displayed in the matrix table. This is applicable only when Date Histogram is selected in aggregation. Enabling this will have higher priority over the 'interval' field under Data -> Aggregations -> Date Histogram."
+          placement="right" 
+          append-to-body="1"
+        >
+          <i class="fa fa-question-circle"></i>
+        </kbn-tooltip>
+      </label>
+      <div ng-show="vis.params.enableNoOfColumns">
+        <input 
+          type="number" 
+          name="matrixColumnsInput" 
+          ng-model="vis.params.NoOfColumns" 
+          class="form-control"
+        >
       </div>
-      <div ng-if="vis.params.enableTimeFormatter">
+    </div>
+    <div class="collapse-time-headers-container">
+      <label>
+        <input 
+          class="enable-matrix-columns-checkbox" 
+          type="checkbox" 
+          name="collapseTimeHeaders" 
+          ng-model="vis.params.collapseTimeHeaders"
+        >
+        Collapse Time headers
+        <kbn-tooltip 
+          text="Visualize more data by collapsing the time headers to show data daywise." 
+          placement="right" 
+          append-to-body="1"
+        >
+          <i class="fa fa-question-circle"></i>
+        </kbn-tooltip>
+      </label>
+      <div class="time-formatter">
         <div>
-          Input Format
-          <select ng-model="vis.params.inputTimeFormat" class="form-control">
-            <option value="millisecond">MilliSecond</option>
-            <option value="second">Second</option>
-            <option value="minute">Minute</option>
-            <option value="hour">Hour</option>
-            <option value="day">Day</option>
-          </select>
+          Choose Metric Format
+          <input 
+            class="enable-matrix-columns-checkbox" 
+            type="checkbox" 
+            name="enabletimeFormatter" 
+            ng-model="vis.params.enableTimeFormatter">
         </div>
-        <div>
-          Output Format
-          <select 
-            ng-model="vis.params.outputTimeFormat" 
-            ng-change="changeOutputTimeFormat(vis.params.outputTimeFormat)" 
-            class="form-control"
-          >
-            <option value="millisecond">MilliSecond</option>
-            <option value="second">Second</option>
-            <option value="minute">Minute</option>
-            <option value="hour">Hour</option>
-            <option value="day">Day</option>
-          </select>
+        <div ng-if="vis.params.enableTimeFormatter">
+          <div>
+            Input Format
+            <select ng-model="vis.params.inputTimeFormat" class="form-control">
+              <option value="millisecond">MilliSecond</option>
+              <option value="second">Second</option>
+              <option value="minute">Minute</option>
+              <option value="hour">Hour</option>
+              <option value="day">Day</option>
+            </select>
+          </div>
+          <div>
+            Output Format
+            <select 
+              ng-model="vis.params.outputTimeFormat" 
+              ng-change="changeOutputTimeFormat(vis.params.outputTimeFormat)" 
+              class="form-control"
+            >
+              <option value="millisecond">MilliSecond</option>
+              <option value="second">Second</option>
+              <option value="minute">Minute</option>
+              <option value="hour">Hour</option>
+              <option value="day">Day</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="collapse-time-headers-container">
-    <manage-column 
-      managed="vis.params.collapseManageColumn" 
-      action="vis.params.selectedColumnsActionType" 
-      selected="vis.params.selectedColumns">
-    </manage-column>
-  </div>
-  <p 
-    class="error-highlight" 
-    ng-show="vis.params.NoOfColumns > 100 || vis.params.NoOfColumns < 1"
-  >
-    Value entered must be in the range 1-100.
-  </p>
-  <br />
+    <div class="collapse-time-headers-container">
+      <manage-column 
+        managed="vis.params.collapseManageColumn" 
+        action="vis.params.selectedColumnsActionType" 
+        selected="vis.params.selectedColumns">
+      </manage-column>
+    </div>
+    <p 
+      class="error-highlight" 
+      ng-show="vis.params.NoOfColumns > 100 || vis.params.NoOfColumns < 1"
+    >
+      Value entered must be in the range 1-100.
+    </p>
+    <br />
 
-  <metric-color-schema vis-obj="vis" field-specified="true"></metric-color-schema>
-
+    <metric-color-schema vis-obj="vis" field-specified="true"></metric-color-schema>
+  </form>
 </div>

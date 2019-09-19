@@ -173,6 +173,23 @@ input[type="file"]{
 }
 //Bacground color for all views
 .vunet-application{
+  // This has been done to make absolute time selector come in one line
+  event-app{
+    kbn-top-nav{
+      .kuiLocalNav{
+        .kuiLocalNavRow{
+          .kuiLocalNavRow__section{
+            .kuiLocalMenuItem{
+              padding: 0rem .5rem;
+              pretty-duration{
+                padding-bottom: .2rem
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   //This is done for new visual builder visualization
   .vis-editor{
     visualize{
@@ -412,6 +429,10 @@ input[type="file"]{
         }
       }
     }
+    //This has been added to prevent the event page from clipping
+    .list-of-events-container{
+      margin-bottom: 2rem;
+    }
   }
 
   // This has been added to fix menubar on top for manage configuration objects page
@@ -429,7 +450,7 @@ input[type="file"]{
           .kuiVerticalRhythm{
             .list-group{
               overflow-y: auto;
-              height: @view-content-height-menubar-bigger-withsearch;
+              height: ~"calc(@{view-content-height-menubar-bigger-withsearch} - 10px)"; 
             }
           }
         }
@@ -632,10 +653,15 @@ button[disabled], {
 .display-inline-block{
   display: inline-block;
 }
-// This has been added to fix menubar on top
+// This has been added to fix menubar on top in berlin tabs and listing pages
 .menubar-fixed-top{
   overflow-y: auto;
   height: @view-content-height-menubaronly ;
+}
+// This has been addedd for vunet tabs
+.menubar-fixed-top-vunet-tabs{
+  overflow-y: auto;
+  height: @view-content-height-for-vunet-tabs ;
 }
 // This is given for anylytics seacrh page
 .menubar-fixed-top-containing-filterbar{

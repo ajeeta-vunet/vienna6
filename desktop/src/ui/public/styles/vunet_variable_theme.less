@@ -43,6 +43,7 @@
 @topbar-height : 6rem;
 @menubar-height-for-listing-pages-and-berlin : 58px; 
 @kbn-top-nav-height : 69px;
+@kbn-top-nav-height-for-vunet-tabs : 6rem;
 @kbn-top-nav-height-with-filter : 106px;
 @kbn-top-nav-height-with-filterbar-and-searchbar: 255px;
 @menubar-height-for-single-docs : 160px;
@@ -50,6 +51,7 @@
 //Height variables for viewing content 
 @view-content-height-berlin : ~"calc(100vh - @{topbar-height})";
 @view-content-height-dashboard : ~"calc(100vh - @{kbn-top-nav-height-with-filter} - @{topbar-height})";
+@view-content-height-for-vunet-tabs : ~"calc(100vh - @{kbn-top-nav-height-for-vunet-tabs} - @{topbar-height})"; 
 @view-content-height-menubaronly : ~"calc(100vh - @{menubar-height-for-listing-pages-and-berlin} - @{topbar-height})";
 @view-content-height-menubaronly-bigger : ~"calc(100vh - @{kbn-top-nav-height} - @{topbar-height})";
 @view-content-height-menubar-bigger-withsearch : ~"calc(100vh - @{kbn-top-nav-height-with-filterbar-and-searchbar} - @{topbar-height})";

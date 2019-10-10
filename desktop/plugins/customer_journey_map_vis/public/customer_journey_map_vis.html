@@ -1,0 +1,107 @@
+<div 
+  class="customer-journey-vis-container-wrapper" 
+  ng-controller="CustomerJourneyMapVisController">
+  <table 
+    ng-class="{'dark-theme': vis.params.colorSchema === 'Dark Theme',
+               'light-theme': vis.params.colorSchema === 'Light Theme',
+               'dark-gray-theme': vis.params.colorSchema === 'Dark Gray Theme',
+               'light-gray-theme': vis.params.colorSchema === 'Light Gray Theme'}">
+    <thead 
+      ng-if="vis.params.stages.length" 
+      ng-class="{'use-as-colored-table' : vis.params.dontUseAsTransactionFlow}">
+      <tr class="cjm-stage-name-row">
+        <th  
+          width={{columnWidth}}  
+          ng-repeat="stageName in stageHeaders track by $index" 
+          ng-init="indexForStageName=$index"
+          ng-show="!vis.params.stages[indexForStageName].hidestage">
+          <div class="stage-name-top-box">
+            <span>
+              {{stageName}}
+            </span>
+          </div>
+          <div class="stage-name-bottom-box">
+          </div>
+        </th>
+      </tr>
+      <tr class="cjm-stage-icon-row">
+        <th width={{columnWidth}}>{{vis.params.trancationFlow}}</th>
+        <th 
+          width={{columnWidth}} 
+          ng-repeat="stageIcon in stageIcons track by $index" 
+          ng-init="indexForStageIcon=$index"
+          ng-show="!vis.params.stages[indexForStageIcon].hidestage">
+          <img class="stage-icon" src="/ui/vienna_images/{{stageIcon}}.svg">
+        </th>
+      </tr>
+    </thead>
+    <tbody 
+      ng-if="vis.params.metricGroups.length" 
+      ng-repeat="tableDataItem in tableData track by $index" 
+      ng-init="indexForMetricGroups=$index"
+      ng-show="!vis.params.metricGroups[indexForMetricGroups].hideMetricGroup">
+      <tr ng-repeat="(metricGroupKey,metricGroups) in tableDataItem">
+        <td width={{columnWidth}}>{{metricGroupKey}}</td>
+        <td 
+          width={{columnWidth}} 
+          ng-repeat="metrics in metricGroups">
+          <div 
+            ng-if="metrics.length <= 1" 
+            ng-repeat="metric in metrics">
+            <div 
+              class="emoticon-seperator-container col-sm-6" 
+              ng-if="metric.emoticon">
+              <img class="cjm-emoticon" src="/ui/vienna_images/{{metric.emoticon}}.svg">
+            </div>
+            <div 
+              ng-class="{'col-sm-5 emoticon-coming-value':metric.emoticon}" 
+              ng-if="metric.view_more">
+              <span 
+                class="referral-link"
+                ng-style="{'color': metric.color , 'border-bottom-color': metric.color}" 
+                ng-class="{'bold-colored': metric.color }"
+                ng-click="viewDashboardForThisMetric(metric.view_more)">
+                {{metric.formattedValue}}
+              </span>
+            </div>
+            <div 
+              ng-class="{'col-sm-5 emoticon-coming-value':metric.emoticon}" 
+              ng-if="!metric.view_more">
+              <span 
+                ng-style="{'color': metric.color }" 
+                ng-class="{'bold-colored': metric.color }">
+                {{metric.formattedValue}}
+              </span>
+            </div>
+          </div>
+          <div 
+            ng-if="metrics.length > 1" 
+            ng-repeat="metric in metrics">
+            <div ng-if="metric.view_more">
+              <span>
+                {{metric.label}}:
+              </span>
+              <span 
+                class="referral-link"
+                ng-click="viewDashboardForThisMetric(metric.view_more)" 
+                ng-style="{'color': metric.color , 'border-bottom-color': metric.color}"
+                ng-class="{'bold-colored': metric.color }">
+                {{metric.formattedValue}}
+              </span>
+            </div>
+            <div ng-if="!metric.view_more">
+              <span>
+                {{metric.label}} :
+              </span>
+              <span
+                ng-style="{'color': metric.color }" 
+                ng-class="{'bold-colored': metric.color }">
+                {{metric.formattedValue}}
+              </span>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

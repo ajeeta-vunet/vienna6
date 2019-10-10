@@ -1,0 +1,454 @@
+
+  <div
+  ng-controller="CustomerJourneyMapVisParamsController"
+  class="customer-jourtney-map-sidebar-container">
+    <!-- configuring stages -->
+    <div class="sidebar-item">
+      <div class="sidebar-item-title">
+        Configure Stages
+      </div>
+      <div ng-repeat="stage in vis.params.stages track by $index" class="cjm-stage">
+        <div class="vis-editor-agg-header">
+          <button
+            aria-label="Toggle editor"
+            ng-click="openConfigureStage[$index].expanded = !openConfigureStage[$index].expanded"
+            aria-expanded="{{ !!openConfigureStage[$index].expanded }}"
+            aria-controls="{{ stage }}"
+            type="button"
+            data-test-subj="toggleEditor"
+            class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+            <i aria-hidden="true"
+              class="fa"
+              ng-class="{ 'fa-caret-right': !openConfigureStage[$index].expanded,
+                              'fa-caret-down': openConfigureStage[$index].expanded }">
+            </i>
+          </button>
+          <span class="vis-editor-agg-header-title">
+            Stage
+          </span>
+          <span class="vis-editor-agg-header-description handle-overflow">
+            {{ vis.params.stages[$index].name }}
+          </span>
+          <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+
+            <!-- Show/Hide stage will be taken care in next iteration please dont remove the following code -->
+            <!-- hide stage -->
+            <!-- <button
+              ng-if="stage.hidestage && vis.params.stages.length-1"
+              ng-model="stage.hidestage"
+              ng-click="stage.hidestage = false"
+              aria-label="Show stage"
+              tooltip="Show stage"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--basic kuiButton--small">
+              <i aria-hidden="true" class="fa fa-toggle-on"></i>
+            </button> -->
+
+            <!-- show stage -->
+            <!-- <button
+              ng-if="!stage.hidestage && vis.params.stages.length-1"
+              ng-model="stage.hidestage"
+              ng-click="stage.hidestage = true"
+              aria-label="Hide stage"
+              tooltip="Hide stage"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--basic kuiButton--small">
+              <i aria-hidden="true" class="fa fa-toggle-off"></i>
+            </button> -->
+          
+
+            <!-- up button -->
+            <button
+              aria-label="Increase Priority"
+              ng-if="vis.params.stages.length > 1"
+              ng-class="{ disabled: $first }"
+              ng-click="!$first && moveUpStage($index)"
+              tooltip="Increase Priority"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--primary kuiButton--small">
+              <i
+                aria-hidden="true"
+                class="fa fa-caret-up">
+              </i>
+            </button>
+      
+            <!-- down button -->
+            <button
+              aria-label="Decrease Priority"
+              ng-if="vis.params.stages.length > 1"
+              ng-class="{ disabled: $last }"
+              ng-click="!$last && moveDownStage($index)"
+              tooltip="Decrease Priority"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--primary kuiButton--small">
+              <i aria-hidden="true" class="fa fa-caret-down">
+              </i>
+            </button>
+      
+            <!-- remove button -->
+            <button
+              ng-if="vis.params.stages.length-1"
+              aria-label="Remove Dimension"
+              ng-click="removeStage($index)"
+              tooltip="Remove Dimension"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--danger kuiButton--small">
+              <i aria-hidden="true" class="fa fa-times">
+              </i>
+            </button>
+          </div>
+        </div>
+      
+        <div ng-show="openConfigureStage[$index].expanded">
+        
+          <div class="form-group">
+            <label>Name</label>
+            <input 
+              ng-model="stage.name" 
+              class="form-control" 
+              type="text" 
+              name="stageName" 
+              maxlength="24"
+              required
+              aria-invalid="true"
+              ng-change="checkIfSameStageName(stage.name , $index)">
+              <p
+              class="error-highlight"
+              ng-show="!openConfigureStage[$index].validName && visualizeEditor.stageName.$dirty">
+                Two stages can't have the same name.
+              </p>
+          </div>
+
+          <div class="form-group" >
+            <label>
+              Icon
+              <kbn-tooltip
+                text="Select a icon corresponding to the stage"
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </label>
+            <select
+              class="form-control"
+              name="stageIcon"
+              ng-options="icon for icon in stageIcons"
+              ng-model="stage.icon"
+              required
+              ng-class="{error: visualizeEditor.stageIcon.$error.required}">
+            </select>
+          </div>   
+        </div>
+      </div>
+      <div class="vis-editor-agg-wide-btn">
+        <div
+          ng-show="vis.params.stages.length < 10"
+          class="kuiButton kuiButton--secondary kuiButton--small"
+          ng-click="addStage()">
+          <i
+            aria-hidden="true"
+            class="fa fa-plus">
+          </i>
+          Add Stage
+        </div>
+      </div>
+    </div>
+
+    <!-- configuring metric groups -->
+    <div class="sidebar-item">
+      <div class="sidebar-item-title">
+        Configure Metric Groups
+      </div>
+      <div ng-repeat="metricGroup in vis.params.metricGroups track by $index" class="cjm-metric-group">
+        <div class="vis-editor-agg-header">
+          <button
+            aria-label="Toggle editor"
+            ng-click="openConfigureMetricGroup[$index].expanded = !openConfigureMetricGroup[$index].expanded"
+            aria-expanded="{{ !!openConfigureMetricGroup[$index].expanded }}"
+            aria-controls="{{ metricGroup }}"
+            type="button"
+            data-test-subj="toggleEditor"
+            class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+            <i aria-hidden="true"
+              class="fa"
+              ng-class="{ 'fa-caret-right': !openConfigureMetricGroup[$index].expanded,
+                              'fa-caret-down': openConfigureMetricGroup[$index].expanded }">
+            </i>
+          </button>
+          <span class="vis-editor-agg-header-title">
+            Metric group
+          </span>
+          <span class="vis-editor-agg-header-description" ng-if="metricGroup.emoticon">
+            <i class="fa fa-meh-o" aria-hidden="true"></i>
+          </span>
+          <span class="vis-editor-agg-header-description handle-overflow">
+            {{ vis.params.metricGroups[$index].name }}
+          </span>
+          <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+
+            <!-- Hide Metric Group -->
+            <button
+              ng-if="metricGroup.hideMetricGroup && vis.params.metricGroups.length-1"
+              ng-model="metricGroup.hideMetricGroup"
+              ng-click="metricGroup.hideMetricGroup = false"
+              aria-label="Show Metric Group"
+              tooltip="Show Metric Group"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--basic kuiButton--small">
+              <i aria-hidden="true" class="fa fa-toggle-on"></i>
+            </button>
+
+            <!-- Show Metric Group -->
+            <button
+              ng-if="!metricGroup.hideMetricGroup && vis.params.metricGroups.length-1"
+              ng-model="metricGroup.hideMetricGroup"
+              ng-click="metricGroup.hideMetricGroup = true"
+              aria-label="Show Metric Group"
+              tooltip="Show Metric Group"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--basic kuiButton--small">
+              <i aria-hidden="true" class="fa fa-toggle-off"></i>
+            </button>
+          
+
+            <!-- up button -->
+            <button
+              aria-label="Increase Priority"
+              ng-if="vis.params.metricGroups.length > 1"
+              ng-class="{ disabled: $first }"
+              ng-click="!$first && moveUpMetricGroup($index)"
+              tooltip="Increase Priority"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--primary kuiButton--small">
+              <i
+                aria-hidden="true"
+                class="fa fa-caret-up">
+              </i>
+            </button>
+      
+            <!-- down button -->
+            <button
+              aria-label="Decrease Priority"
+              ng-if="vis.params.metricGroups.length > 1"
+              ng-class="{ disabled: $last }"
+              ng-click="!$last && moveDownMetricGroup($index)"
+              tooltip="Decrease Priority"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--primary kuiButton--small">
+              <i aria-hidden="true" class="fa fa-caret-down">
+              </i>
+            </button>
+      
+            <!-- remove button -->
+            <button
+              ng-if="vis.params.metricGroups.length-1"
+              aria-label="Remove Dimension"
+              ng-click="removeMetricGroup($index)"
+              tooltip="Remove Dimension"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--danger kuiButton--small">
+              <i aria-hidden="true" class="fa fa-times">
+              </i>
+            </button>
+          </div>
+        </div>
+      
+        <div ng-show="openConfigureMetricGroup[$index].expanded">
+        
+          <div class="form-group" >
+            <label>Name</label>
+            <input 
+              ng-model="metricGroup.name" 
+              class="form-control" 
+              type="text" 
+              name="metricGroupName" 
+              maxlength="24"
+              required
+              ng-change="checkIfSameMetricGroupName(metricGroup.name , $index)"
+              aria-invalid="true">
+              <p
+                class="error-highlight"
+                ng-show="!openConfigureMetricGroup[$index].validName && visualizeEditor.metricGroupName.$dirty">
+                  Two Metric Groups can't have the same name.
+              </p>
+          </div>
+
+          <div class="form-group" >
+            <label>
+              Enable emoticon
+              <kbn-tooltip
+                text="Enable this to provide a emoticon based on the metric value for" 
+                placement="right"
+                append-to-body="1">
+                <span>
+                  <i
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </span>
+              </kbn-tooltip>
+            </label>
+            <input
+              type="checkbox"
+              class="cjm-emoticon-checkbox"
+              ng-model="metricGroup.emoticon">
+          </div>
+          <div class="cjm-configure-metric">
+            <div class="form-group cjm-configure-metrices">
+              <button
+                aria-label="Toggle editor"
+                ng-click="openConfigureMetrices[$index].expanded = !openConfigureMetrices[$index].expanded"
+                aria-expanded="{{ !!openConfigureMetrices[$index].expanded }}"
+                type="button"
+                data-test-subj="toggleEditor"
+                class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+                <i aria-hidden="true"
+                  class="fa"
+                  ng-class="{ 'fa-caret-right': !openConfigureMetrices[$index].expanded,
+                              'fa-caret-down': openConfigureMetrices[$index].expanded }">
+                </i>
+              </button>
+              Configure Metrices
+            </div>
+            <div ng-show="openConfigureMetrices[$index].expanded">
+              <div ng-repeat="stage in vis.params.stages">
+                <div class="row cjm_stage_in_metric_group_row">
+                  <span 
+                    class="col-sm-6 cjm_stage_in_metric_group">
+                    {{stage.name}}
+                  </span>
+                  <select
+                    ng-model="metricGroup.metrics[stage.name]"
+                    class="col-sm-6 stage_metric_group_bmv_value form-control" 
+                    required
+                    name="metricForMetricGroupStage"
+                    ng-options="option as option.title for option in bmvList track by option.id"
+                    ng-class="{error: visualizeEditor.metricForMetricGroupStage.$error.required}">
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <div class="vis-editor-agg-wide-btn">
+        <button
+          ng-show="vis.params.metricGroups.length < 10"
+          class="kuiButton kuiButton--secondary kuiButton--small"
+          ng-click="addMetricGroup()"
+          ng-disabled="vis.params.stages.length < 1">
+          <i
+            aria-hidden="true"
+            class="fa fa-plus">
+          </i>
+          Add Metric Group
+        </button>
+        <kbn-tooltip
+          ng-if="vis.params.stages.length < 1"
+          text="Metric Groups can only be added after adding minimun one stage" 
+          placement="right"
+          append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </div>
+    </div>
+
+    <!-- ADvanced Options -->
+    <div class="sidebar-item">
+      <div class="sidebar-item-title">
+        Advanced Settings
+      </div>
+
+      <div class="form-group" >
+        <label>Stage Header</label>
+        <input 
+          ng-model="vis.params.stageHeaderName"
+          class="form-control" 
+          type="text" 
+          name="stageHeaderName" 
+          maxlength="24"
+          aria-invalid="true">
+      </div>
+      <div class="form-group" >
+        <label>Tranction Flow</label>
+        <input 
+          ng-model="vis.params.trancationFlow"
+          class="form-control" 
+          type="text" 
+          name="trancationFlow" 
+          maxlength="24"
+          aria-invalid="true">
+      </div>
+
+      <div class="form-group" >
+          <label>
+            Color Schemas
+            <kbn-tooltip
+              text="Select a theme for customer journey"
+              placement="right"
+              append-to-body="1">
+              <span>
+                <i
+                  class="fa fa-question-circle"
+                  aria-hidden="true">
+                </i>
+              </span>
+            </kbn-tooltip>
+          </label>
+          <select
+            class="form-control"
+            name ="colorSchema"
+            ng-options="theme for theme in colorSchemas"
+            ng-model="vis.params.colorSchema"
+            required
+            ng-class="{error: visualizeEditor.colorSchema.$error.required}">
+          </select>
+        </div> 
+
+      <div class="form-group" >
+        <label>
+          Dont use as customer journey flow.
+          <kbn-tooltip
+            text="Enable this to use Cjm as a table instead of flows." 
+            placement="right"
+            append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+        <input
+          type="checkbox"
+          name="cjmArrowcheckobox"
+          class="cjm-arrow-checkbox"
+          ng-model="vis.params.dontUseAsTransactionFlow">
+      </div>
+
+    </div>
+</div>
+
+

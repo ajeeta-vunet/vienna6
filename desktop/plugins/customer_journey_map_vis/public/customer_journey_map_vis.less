@@ -1,0 +1,1040 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.cjm-emoticon-checkbox{
+  margin-left: 1rem!important;
+  vertical-align: sub;
+}
+.cjm-configure-metrices{
+  font-weight: bold;
+}
+.cjm-metric-group , .cjm-stage{
+  margin-bottom: 1rem;
+}
+.stage_metric_group_bmv_value{
+  width: 45%;
+  // height: 2.5rem;
+  border-radius: .3rem;
+  border: .1rem solid #D9D9D9;
+}
+.cjm-configure-metric{
+  width: 95%;
+  margin-left: auto;
+}
+.cjm_stage_in_metric_group_row{
+  margin-bottom: 1rem;
+  .cjm_stage_in_metric_group{
+    padding-right: 0px;
+    padding-left: 2rem;
+    padding-top: .3rem;
+  }
+}
+
+      .maxlength-error{
+        color:@red;
+        padding: .25rem 0rem;
+      }
+
+
+// Css For the Table
+
+.customer-journey-vis-container-wrapper{
+  width: 100%;
+  word-break: break-all;
+  table{
+    width: 98%;
+    thead{
+      text-align: center;
+      .cjm-stage-icon-row{
+        border-bottom: .2rem solid @white;
+        th{
+          border-radius: .7rem;
+          padding: 1rem 0rem; 
+          text-align: center;
+          // These are the background colors for stage icons table header row
+          &:nth-child(1){
+            background-color: #959ea7;
+            padding: 0rem 1rem;
+            color: #252525;
+            font-size: 1.8rem;
+            font-family: @roboto-medium;
+            font-weight: normal;
+          }
+          &:nth-child(2){
+            background-color: #e6b0aa;
+          }
+          &:nth-child(3){
+            background-color: #fec7ae;
+          }
+          &:nth-child(4){
+            background-color: #f6e7b6;
+          }
+          &:nth-child(5){
+            background-color: #bee6db;
+          }
+          &:nth-child(6){
+            background-color: #b7dfb9;
+          }
+          &:nth-child(7){
+            background-color: #c4dfee;
+          }
+          &:nth-child(8){
+            background-color: #becce0;
+          }
+          &:nth-child(9){
+            background-color: #c6bee0;
+          }
+          &:nth-child(10){
+            background-color: #dfb9ea;
+          }
+          &:nth-child(11){
+            background-color: #c99eb5;
+          }
+        }
+        .stage-icon{
+          width: 10rem;
+          height: 10rem;
+        }
+      }
+      .cjm-stage-name-row{
+        // height: 5rem;
+        color:@white;
+        // These are the background colors and shape for the table header
+        th{
+          text-align: center;
+          &:nth-child(1){
+            background: linear-gradient(to bottom, #3d566e 0%,#3d566e 50%,#2c3e50 50%,#2c3e50 100%);
+            .stage-name-top-box{
+              background-color: #3d566e;
+            }
+            .stage-name-bottom-box{
+              background-color: #2c3e50;
+            }
+          }
+          &:nth-child(2){
+            // background: linear-gradient(to bottom, #e74c3c 0%,#e74c3c 50%,#c0392b 50%,#c0392b 100%);
+            .stage-name-top-box{
+              background-color: #e74c3c;
+            }
+            .stage-name-bottom-box{
+              background-color: #c0392b;
+            }
+          }
+          &:nth-child(3){
+            .stage-name-top-box{
+              background-color: #fd7335;
+            }
+            .stage-name-bottom-box{
+              background-color: #d05016;
+            }
+            
+          }
+          &:nth-child(4){
+            // background: linear-gradient(to bottom, #f7a84e 0%,#f7a84e 50%,#ea9e48 50%,#ea9e48 100%);
+            .stage-name-top-box{
+              background-color: #f7a84e;
+            }
+            .stage-name-bottom-box{
+              background-color: #ea9e48;
+            }
+          }
+          &:nth-child(5){
+            // background: linear-gradient(to bottom, #64ceb0 0%,#64ceb0 50%,#54b79b 50%,#54b79b 100%);
+            .stage-name-top-box{
+              background-color: #64ceb0;
+            }
+            .stage-name-bottom-box{
+              background-color: #54b79b;
+            }
+          }
+          &:nth-child(6){
+            // background: linear-gradient(to bottom, #8bc24a 0%,#8bc24a 50%,#4baf4f 50%,#4baf4f 100%);
+            .stage-name-top-box{
+              background-color: #8bc24a;
+            }
+            .stage-name-bottom-box{
+              background-color: #4baf4f;
+            }
+          }
+          &:nth-child(7){
+            // background: linear-gradient(to bottom, #75bde5 0%,#75bde5 50%,#68abcf 50%,#68abcf 100%);
+            .stage-name-top-box{
+              background-color: #75bde5;
+            }
+            .stage-name-bottom-box{
+              background-color: #68abcf;
+            }
+          }
+          &:nth-child(8){
+            .stage-name-top-box{
+              background-color: #698fc3;
+            }
+            .stage-name-bottom-box{
+              background-color: #5679a8;
+            }
+          }
+          &:nth-child(9){
+            .stage-name-top-box{
+              background-color: #7863c0;
+            }
+            .stage-name-bottom-box{
+              background-color: #6957aa;
+            }
+          }
+          &:nth-child(10){
+            .stage-name-top-box{
+              background-color: #c055df;
+            }
+            .stage-name-bottom-box{
+              background-color: #aa4bc6;
+            }
+          }
+          &:nth-child(11){
+            .stage-name-top-box{
+              background-color: #e4405f;
+            }
+            .stage-name-bottom-box{
+              background-color: #d13d60;
+            }
+          }
+          .stage-name-top-box{
+            transform: skewX(25deg);
+            z-index: 1;
+            position: relative;
+            padding: 1rem 2rem 0rem 1rem;
+            height: 3rem;
+            span{
+              // display inline has been given as skew only working for block elements
+              display: inline-block;
+              transform: skewX(-25deg);
+              word-break: break-word;
+            }
+          }
+          .stage-name-bottom-box{
+            transform: skewX(-25deg);
+            height: 3rem;
+            // span{
+            //   // display inline has been given as skew only working for block elements
+            //   display: inline-block;
+            //   transform: skewX(30deg);
+            // }
+          }
+        }
+      }
+    }
+    tbody{
+      border-bottom: .2rem solid @white;
+      font-size: 1.8rem;
+      color: #252525;
+      font-family: @roboto-regular;
+      &:nth-child(2){
+        tr{
+          td{
+            border-top-right-radius: .7rem!important;
+            border-top-left-radius: .7rem!important;
+          }
+        }
+      }
+      &:nth-last-child(1){
+        tr{
+          td{
+            border-bottom-right-radius: .7rem!important;
+            border-bottom-left-radius: .7rem!important;
+          }
+        }
+      }
+      tr{
+        min-height: 9rem;
+        height: 9rem;
+        td{
+          padding:1rem 1rem ;
+          text-align: center;
+          .emoticon-seperator-container{
+            padding-right: 0px;
+            .cjm-emoticon{
+              width: 4.5rem;      
+            }
+          }
+          .emoticon-coming-value{
+            text-align: center;
+            margin-left: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-left: .15rem solid #cbcbcc;
+          }
+          
+          .referral-link{
+            border-bottom-width: .2rem;
+            border-bottom-style: solid;
+            // &:hover{
+            //   color: #5a4fef!important;
+            // }
+          }
+          .bold-colored{
+            font-family: @roboto-medium;
+          }
+          // This are the background colors of the table body columns
+          &:nth-child(1){
+            border-radius: .7rem;
+            font-size: 1.8rem;
+            padding: 0rem 1rem;
+            font-family:@roboto-medium;
+            color: #252525;
+            background-color: #d2d3d9;
+          }
+          &:nth-child(2){
+            background-color: #f9ebe9;
+          }
+          &:nth-child(3){
+            background-color: #ffe9df; 
+          }
+          &:nth-child(4){
+            background-color: #fdf9ec;
+          }
+          &:nth-child(5){
+            background-color: #eef9f6;
+          }
+          &:nth-child(6){
+            background-color: #edf7ed;
+          }
+          &:nth-child(7){
+            background-color: #e9f3f9;
+          }
+          &:nth-child(8){
+            background-color: #e7ecf4;
+          }
+          &:nth-child(9){
+            background-color: #eae7f4;
+          }
+          &:nth-child(10){
+            background-color: #f7edfa;
+          }
+          &:nth-child(11){
+            background-color: #faebef;
+          }
+        }
+      }
+    }
+    .use-as-colored-table{
+      .cjm-stage-name-row{
+        .stage-name-top-box{
+          height: 6rem;
+          padding-top: 1.5rem;
+          transform: skewX(0deg)!important;
+          span{
+            transform: skewX(0deg)!important;
+          }
+        }
+        .stage-name-bottom-box{
+          display: none;
+        }
+      }
+    } 
+  }
+}
+
+.customer-journey-vis-container-wrapper{
+
+  // DARK THEME BACKGROUNDS
+  .dark-theme{
+    thead{
+      .cjm-stage-icon-row{
+        th{
+          &:nth-child(1){
+            background-color: #f4e5cd!important;
+          }
+          &:nth-child(2){
+            background-color: #d2cf9a!important;
+          }
+          &:nth-child(3){
+            background-color: #d7e4db!important;
+          }
+          &:nth-child(4){
+            background-color: #bee6db!important;
+          }
+          &:nth-child(5){
+            background-color: #afcbc6!important;
+          }
+          &:nth-child(6){
+            background-color: #c3ddec!important;
+          }
+          &:nth-child(7){
+            background-color: #a5adcf!important;
+          }
+          &:nth-child(8){
+            background-color: #ffb2c1!important;
+          }
+          &:nth-child(9){
+            background-color: #e699a0!important;
+          }
+          &:nth-child(10){
+            background-color: #e0a9af!important;
+          }
+          &:nth-child(11){
+            background-color: #b9b3b7!important;
+          }
+        }
+      }
+      .cjm-stage-name-row{
+        th{
+          &:nth-child(1){
+            background: linear-gradient(to bottom, #e3bf81 0%,#e3bf81 50%,#b58f59 50%,#b58f59 100%);
+            .stage-name-top-box{
+              background-color: #e3bf81!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #b58f59!important;
+            }
+          }
+          &:nth-child(2){
+            .stage-name-top-box{
+              background-color: #8f8702!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #4c4704!important;
+            }
+          }
+          &:nth-child(3){
+            .stage-name-top-box{
+              background-color: #9cbca5!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #788e7d!important;
+            }
+            
+          }
+          &:nth-child(4){
+            .stage-name-top-box{
+              background-color: #3aa077!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #237753!important;
+            }
+          }
+          &:nth-child(5){
+            .stage-name-top-box{
+              background-color: #387c71!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #214f46!important;
+            }
+          }
+          &:nth-child(6){
+            .stage-name-top-box{
+              background-color: #066d91!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #025268!important;
+            }
+          }
+          &:nth-child(7){
+            .stage-name-top-box{
+              background-color: #1e3288!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #0c193f!important;
+            }
+          }
+          &:nth-child(8){
+            .stage-name-top-box{
+              background-color: #fe3e63!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #d6254f!important;
+            }
+          }
+          &:nth-child(9){
+            .stage-name-top-box{
+              background-color: #c00111!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #890717!important;
+            }
+          }
+          &:nth-child(10){
+            .stage-name-top-box{
+              background-color: #b12737!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #841c2b!important;
+            }
+          }
+          &:nth-child(11){
+            .stage-name-top-box{
+              background-color: #4f424b!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #281d25!important;
+            }
+          }
+        }
+      }
+    }
+    tbody{
+      tr{
+        td{
+          &:nth-child(1){
+            background-color: #fcf8f2!important;
+          }
+          &:nth-child(2){
+            background-color: #faf3e5!important;
+          }
+          &:nth-child(3){
+            background-color: #e9f8ed!important; 
+          }
+          &:nth-child(4){
+            background-color: #ebf5f1!important;
+          }
+          &:nth-child(5){
+            background-color: #ebf2f1!important;
+          }
+          &:nth-child(6){
+            background-color: #e9f3f9!important;
+          }
+          &:nth-child(7){
+            background-color: #edeff6!important;
+          }
+          &:nth-child(8){
+            background-color: #ffe2e8!important;
+          }
+          &:nth-child(9){
+            background-color: #f9e5e7!important;
+          }
+          &:nth-child(10){
+            background-color: #f7e9eb!important;
+          }
+          &:nth-child(11){
+            background-color: #edeced!important;
+          }
+        }
+      }
+    }
+  }
+
+  // LIGHT THEME BACKGROUNDS
+  .light-theme{
+    thead{
+      .cjm-stage-icon-row{
+        th{
+          &:nth-child(1){
+            background-color: #89c0d0!important;
+          }
+          &:nth-child(2){
+            background-color: #d0d6dc!important;
+          }
+          &:nth-child(3){
+            background-color: #efdfe0!important;
+          }
+          &:nth-child(4){
+            background-color: #ffd7d6!important;
+          }
+          &:nth-child(5){
+            background-color: #ffc5cd!important;
+          }
+          &:nth-child(6){
+            background-color: #dee9c1!important;
+          }
+          &:nth-child(7){
+            background-color: #c0dfd9!important;
+          }
+          &:nth-child(8){
+            background-color: #ffcdbc!important;
+          }
+          &:nth-child(9){
+            background-color: #f3bdb5!important;
+          }
+          &:nth-child(10){
+            background-color: #ffb3b8!important;
+          }
+          &:nth-child(11){
+            background-color: #f4aaaa!important;
+          }
+        }
+      }
+      .cjm-stage-name-row{
+        th{
+          &:nth-child(1){
+            background: linear-gradient(to bottom, #1381a2 0%,#1381a2 50%,#125c6d 50%,#125c6d 100%);
+            .stage-name-top-box{
+              background-color: #1381a2!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #125c6d!important;
+            }
+          }
+          &:nth-child(2){
+            .stage-name-top-box{
+              background-color: #8999a8!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #596c7c!important;
+            }
+          }
+          &:nth-child(3){
+            .stage-name-top-box{
+              background-color: #d7aeb2!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #af8c91!important;
+            }
+            
+          }
+          &:nth-child(4){
+            .stage-name-top-box{
+              background-color: #ff9b99!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #c66a6a!important;
+            }
+          }
+          &:nth-child(5){
+            .stage-name-top-box{
+              background-color: #ff6e83!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #d35e74!important;
+            }
+          }
+          &:nth-child(6){
+            .stage-name-top-box{
+              background-color: #adc965!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #879b49!important;
+            }
+          }
+          &:nth-child(7){
+            .stage-name-top-box{
+              background-color: #61afa0!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #4d8479!important;
+            }
+          }
+          &:nth-child(8){
+            .stage-name-top-box{
+              background-color: #ff8357!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #d1623f!important;
+            }
+          }
+          &:nth-child(9){
+            .stage-name-top-box{
+              background-color: #e25b45!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #b23e32!important;
+            }
+          }
+          &:nth-child(10){
+            .stage-name-top-box{
+              background-color: #ff414d!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #bf2635!important;
+            }
+          }
+          &:nth-child(11){
+            .stage-name-top-box{
+              background-color: #e32b2b!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #b51c1c!important;
+            }
+          }
+        }
+      }
+    }
+    tbody{
+      tr{
+        td{
+          &:nth-child(1){
+            background-color: #d0e6ec!important;
+          }
+          &:nth-child(2){
+            background-color: #f3f5f6!important;
+          }
+          &:nth-child(3){
+            background-color: #fbf7f7!important; 
+          }
+          &:nth-child(4){
+            background-color: #fff5f5!important;
+          }
+          &:nth-child(5){
+            background-color: #fff4f5!important;
+          }
+          &:nth-child(6){
+            background-color: #f7f9ef!important;
+          }
+          &:nth-child(7){
+            background-color: #eff7f5!important;
+          }
+          &:nth-child(8){
+            background-color: #ffede6!important;
+          }
+          &:nth-child(9){
+            background-color: #fbe7e3!important;
+          }
+          &:nth-child(10){
+            background-color: #f5dfe1!important;
+          }
+          &:nth-child(11){
+            background-color: #fce9e9!important;
+          }
+        }
+      }
+    }
+  }
+
+  // LIGHT GRAY THEME BACKGROUNDS
+  .dark-gray-theme{
+    thead{
+      .cjm-stage-icon-row{
+        th{
+          &:nth-child(1){
+            background-color: #aab6bd!important;
+          }
+          &:nth-child(2){
+            background-color: #bdc3c8!important;
+          }
+          &:nth-child(3){
+            background-color: #bfc2c4!important;
+          }
+          &:nth-child(4){
+            background-color: #c1c3c4!important;
+          }
+          &:nth-child(5){
+            background-color: #bdc1c3!important;
+          }
+          &:nth-child(6){
+            background-color: #b3bbbf!important;
+          }
+          &:nth-child(7){
+            background-color: #b5babd!important;
+          }
+          &:nth-child(8){
+            background-color: #b6b8ba!important;
+          }
+          &:nth-child(9){
+            background-color: #afb1b3!important;
+          }
+          &:nth-child(10){
+            background-color: #acadae!important;
+          }
+          &:nth-child(11){
+            background-color: #9da0a3!important;
+          }
+        }
+      }
+      .cjm-stage-name-row{
+        th{
+          &:nth-child(1){
+            background: linear-gradient(to bottom, #556e7b 0%,#556e7b 50%,#3a4d56 50%,#3a4d56 100%);
+            .stage-name-top-box{
+              background-color: #556e7b!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #3a4d56!important;
+            }
+          }
+          &:nth-child(2){
+            .stage-name-top-box{
+              background-color: #596871!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #334047!important;
+            }
+          }
+          &:nth-child(3){
+            .stage-name-top-box{
+              background-color: #555d63!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #434a4f!important;
+            }
+            
+          }
+          &:nth-child(4){
+            .stage-name-top-box{
+              background-color: #646a6c!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #404647!important;
+            }
+          }
+          &:nth-child(5){
+            .stage-name-top-box{
+              background-color: #5a646a!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #475156!important;
+            }
+          }
+          &:nth-child(6){
+            .stage-name-top-box{
+              background-color: #415560!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #33444c!important;
+            }
+          }
+          &:nth-child(7){
+            .stage-name-top-box{
+              background-color: #39444b!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #283237!important;
+            }
+          }
+          &:nth-child(8){
+            .stage-name-top-box{
+              background-color: #484d52!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #32393f!important;
+            }
+          }
+          &:nth-child(9){
+            .stage-name-top-box{
+              background-color: #383c41!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #1e2327!important;
+            }
+          }
+          &:nth-child(10){
+            .stage-name-top-box{
+              background-color: #303334!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #0f1415!important;
+            }
+          }
+          &:nth-child(11){
+            .stage-name-top-box{
+              background-color: #0b1218!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #000000!important;
+            }
+          }
+        }
+      }
+    }
+    tbody{
+      tr{
+        td{
+          &:nth-child(1){
+            background-color: #dde2e5!important;
+          }
+          &:nth-child(2){
+            background-color: #eef0f1!important;
+          }
+          &:nth-child(3){
+            background-color: #f2f3f3!important; 
+          }
+          &:nth-child(4){
+            background-color: #ebecec!important;
+          }
+          &:nth-child(5){
+            background-color: #f2f3f3!important;
+          }
+          &:nth-child(6){
+            background-color: #eceeef!important;
+          }
+          &:nth-child(7){
+            background-color: #e8eaeb!important;
+          }
+          &:nth-child(8){
+            background-color: #e4e4e5!important;
+          }
+          &:nth-child(9){
+            background-color: #dddedf!important;
+          }
+          &:nth-child(10){
+            background-color: #e0e1e1!important;
+          }
+          &:nth-child(11){
+            background-color: #e6e7e7!important;
+          }
+        }
+      }
+    }
+  }
+
+  // LIGHT GRAY THEME BACKGROUNDS
+  .light-gray-theme{
+    thead{
+      .cjm-stage-icon-row{
+        th{
+          &:nth-child(1){
+            background-color: #dedbd5!important;
+          }
+          &:nth-child(2){
+            background-color: #e2dfdb!important;
+          }
+          &:nth-child(3){
+            background-color: #d6dbd9!important;
+          }
+          &:nth-child(4){
+            background-color: #c9cbcc!important;
+          }
+          &:nth-child(5){
+            background-color: #cfcccb!important;
+          }
+          &:nth-child(6){
+            background-color: #c2c1bf!important;
+          }
+          &:nth-child(7){
+            background-color: #b6b6b7!important;
+          }
+          &:nth-child(8){
+            background-color: #bbc5ca!important;
+          }
+          &:nth-child(9){
+            background-color: #bdc3c6!important;
+          }
+          &:nth-child(10){
+            background-color: #bfc2c4!important;
+          }
+          &:nth-child(11){
+            background-color: #c1c3c4!important;
+          }
+        }
+      }
+      .cjm-stage-name-row{
+        th{
+          &:nth-child(1){
+            background: linear-gradient(to bottom, #bdb7ab 0%,#bdb7ab 50%,#a5a097 50%,#a5a097 100%);
+            .stage-name-top-box{
+              background-color: #bdb7ab!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #a5a097!important;
+            }
+          }
+          &:nth-child(2){
+            .stage-name-top-box{
+              background-color: #b6afa5!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #938d86!important;
+            }
+          }
+          &:nth-child(3){
+            .stage-name-top-box{
+              background-color: #999da0!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #848689!important;
+            }
+            
+          }
+          &:nth-child(4){
+            .stage-name-top-box{
+              background-color: #787c7f!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #636668!important;
+            }
+          }
+          &:nth-child(5){
+            .stage-name-top-box{
+              background-color: #877f7d!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #595856!important;
+            }
+          }
+          &:nth-child(6){
+            .stage-name-top-box{
+              background-color: #666560!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #595856!important;
+            }
+          }
+          &:nth-child(7){
+            .stage-name-top-box{
+              background-color: #48494b!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #343435!important;
+            }
+          }
+          &:nth-child(8){
+            .stage-name-top-box{
+              background-color: #556e7b!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #3a4d56!important;
+            }
+          }
+          &:nth-child(9){
+            .stage-name-top-box{
+              background-color: #596871!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #334047!important;
+            }
+          }
+          &:nth-child(10){
+            .stage-name-top-box{
+              background-color: #5e666c!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #434a4f!important;
+            }
+          }
+          &:nth-child(11){
+            .stage-name-top-box{
+              background-color: #646a6c!important;
+            }
+            .stage-name-bottom-box{
+              background-color: #404647!important;
+            }
+          }
+        }
+      }
+    }
+    tbody{
+      tr{
+        td{
+          &:nth-child(1){
+            background-color: #f2f1ee!important;
+          }
+          &:nth-child(2){
+            background-color: #f8f7f6!important;
+          }
+          &:nth-child(3){
+            background-color: #f5f5f5!important; 
+          }
+          &:nth-child(4){
+            background-color: #efefef!important;
+          }
+          &:nth-child(5){
+            background-color: #ececec!important;
+          }
+          &:nth-child(6){
+            background-color: #eeeeee!important;
+          }
+          &:nth-child(7){
+            background-color: #ececed!important;
+          }
+          &:nth-child(8){
+            background-color: #e2e4e6!important;
+          }
+          &:nth-child(9){
+            background-color: #e1e3e4!important;
+          }
+          &:nth-child(10){
+            background-color: #e7e8e9!important;
+          }
+          &:nth-child(11){
+            background-color: #eff0f0!important;
+          }
+        }
+      }
+    }
+  }
+}

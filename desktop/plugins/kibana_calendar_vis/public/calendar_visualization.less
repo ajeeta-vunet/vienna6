@@ -1,0 +1,29 @@
+@lightgrey: #ccc;
+@lightblack: #aaa;
+
+.calendar-vis-container {
+
+  .calendar-chart {
+    flex-direction: column;
+    overflow: auto;
+  }
+
+  .day, .hour {
+    stroke: @lightgrey;
+    stroke-width: 1px;
+    fill: transparent;
+  }
+
+  .data-day {
+    cursor: pointer;
+    stroke: @lightgrey;
+    stroke-width: 1px;
+  }
+
+  .month {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1px;
+  }
+
+}

@@ -100,6 +100,13 @@ uiModules
       return filter;
     };
 
+    Timefilter.prototype.setTime = function (from, to, mode) {
+      $rootScope.$$timefilter.time.from = from;
+      $rootScope.$$timefilter.time.to = to;
+      $rootScope.$$timefilter.time.mode = mode;
+      $rootScope.$apply();
+    };
+
     Timefilter.prototype.getBounds = function () {
       return {
         min: dateMath.parse(this.time.from),

@@ -1,0 +1,29 @@
+@import "variables.less";
+
+.euiToolTipStyle(@size: null) {
+  // .euiBottomShadow(@color: @euiColorInk);
+  border-radius: @euiBorderRadius;
+  background-color: @euiTooltipBackgroundColor;
+  color: @euiColorGhost;
+  z-index: @euiZLevel9;
+  max-width: 256px;
+  overflow-wrap: break-word;
+
+  & when (@size = 's') {
+    padding: @euiSizeS;
+  }
+& when not (@size = 's') {
+    padding: @euiSizeM;
+  }
+}
+
+.euiToolTipTitle {
+  font-weight: @euiFontWeightBold;
+  border-bottom: solid 1px tintOrShade(@euiColorFullShade, 35%, 80%);
+  padding-bottom: @euiSizeXS;
+  margin-bottom: @euiSizeXS;
+}
+
+.euiToolTipAnimation(@side: 'top', @delay: @euiAnimSpeedNormal) {
+  animation: map-get(@euiTooltipAnimations, @side) @euiAnimSpeedSlow ease-out @euiAnimSpeedNormal forwards;
+}

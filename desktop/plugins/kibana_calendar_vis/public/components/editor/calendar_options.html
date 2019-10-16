@@ -1,0 +1,40 @@
+<div>
+
+  <div class="kuiSideBarFormRow">
+    <label class="kuiSideBarFormRow__label" for="colorSchema">
+      Color Schema
+    </label>
+    <div class="kuiSideBarFormRow__control">
+      <select id="colorSchema" class="kuiSelect kuiSideBarSelect" ng-model="vis.params.colorSchema" ng-options="mode for mode in collections.colorSchemas"></select>
+    </div>
+  </div>
+
+  <div class="kuiSideBarFormRow">
+    <label class="kuiSideBarFormRow__label" for="invertColors">
+      Reverse Color Schema
+    </label>
+    <div class="kuiSideBarFormRow__control">
+      <input class="kuiCheckBox" id="invertColors" type="checkbox" ng-model="vis.params.invertColors">
+    </div>
+  </div>
+
+  <div class="kuiSideBarFormRow" ng-if="!vis.params.setColorRange">
+    <label class="kuiSideBarFormRow__label" for="percentageMode">
+      Percentage Mode
+    </label>
+    <div class="kuiSideBarFormRow__control">
+      <input class="kuiCheckBox" id="percentageMode" type="checkbox" ng-model="vis.params.percentageMode">
+    </div>
+  </div>
+
+  <div class="kuiSideBarFormRow" ng-if="!vis.params.setColorRange">
+    <label class="kuiSideBarFormRow__label" for="colorsNumber">
+      Number of colors
+    </label>
+    <div class="kuiSideBarFormRow__control">
+      <input id="colorsNumber" class="kuiSideBarInput" ng-model="vis.params.colorsNumber" type="number" greater-than="1"
+        less-than="11">
+    </div>
+  </div>
+
+</div>

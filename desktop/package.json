@@ -218,7 +218,7 @@
     "url-loader": "0.5.9",
     "uuid": "3.0.1",
     "validate-npm-package-name": "2.2.2",
-    "vis": "4.19.1",
+    "vis-network": "6.0.0",
     "vision": "4.1.0",
     "webpack": "3.6.0",
     "webpack-merge": "4.1.0",

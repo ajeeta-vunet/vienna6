@@ -1,4 +1,5 @@
 @import (reference) "~ui/styles/mixins.less";
+@import "~ui/styles/vunet_variable_theme.less";
 
 .graph-container {
   width: 100%;
@@ -36,8 +37,8 @@
 .business-metric-list-config-container {
 
   .row {
-    margin: 0px;
-    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
   }
 
   .metric-list-table {
@@ -89,6 +90,7 @@
 }
 
 .utm-vis-container {
+  position: relative;
   width: 100%;
   height: 100%;
   .utm-wrapper {
@@ -99,4 +101,201 @@
     width: 100%;
     height: 100%;
   }
+
+  .node-details-container-expanded {
+    width: 33%;
+    transition: all .7s ease;
+  }
+  .node-details-container-collapsed {
+    width: 0%;
+    transition: all .7s ease;        
+  }
+
+  // SideBar CSS starts from here
+  .node-details-container {
+    font-family: @roboto-regular;
+    .row {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+    .col-sm-1, .col-sm-2, .col-sm-3,
+    .col-sm-4, .col-sm-5, .col-sm-6,
+    .col-sm-7, .col-sm-8, .col-sm-9,
+    .col-sm-10, .col-sm-11, .col-sm-12 {
+      padding: 0px;
+    }
+
+    box-shadow: -2px 0px 4px 1px rgba(0,0,0,.1);
+    position: absolute;
+    z-index: 1;
+    right: 0rem;
+    top: 0rem;
+    height: 100%;
+    overflow-y: auto;
+    background-color: #fff;
+
+    .metrics-group-header-container {
+       padding: 5% 0% 5% 5%;
+       display: flex;
+       flex-direction: row;
+       align-items: center;
+       .header-node-image-wrapper {
+        .header-node-image-container {
+          width: 62%;
+          border-radius: 50%;
+          .header-node-image {
+            border-radius: 50%;
+            width: 100%;
+          }
+        }
+       }
+       .node-name-container{
+        .node-name {
+          color: @grey_lighter;
+          font-size: 135%;
+          word-break: break-word;
+        }
+        .edge-name-wrapper {
+          display: flex;
+          flex-direction: row;
+          .edge-name-container {
+            font-size: 98%;
+            display: flex;
+            flex-direction: column;
+          }
+          .edge-icon {
+            padding-left: 3%;
+          }
+        } 
+        .node-name-underline{
+          width: 15%;
+          height: .2rem;
+        }
+       }
+      
+      .header-close-icon-container {
+        text-align: center;
+        .header-close-icon {
+          font-size: 160%;
+        }
+      }
+    }
+
+    .no-metrics-container {
+      padding: 3% 2.25% 0% 0%;
+      margin-left: 7%;
+      font-family: @roboto-medium;
+      color: @grey_dark;
+    }
+
+    .metrics-group-container {
+      padding: 3% 2.25% 0% 0%;
+      margin-left: 7%;
+      border-bottom: .1rem dashed @seperator_color_greyDark;
+
+      .metric-table-wrapper {
+        padding-bottom: 3%;
+        .metric-table {
+          width: 100%;
+
+          .metric-table-header {
+            padding-bottom: 2%;
+            .table-header-label {
+              font-size: 100%;
+              font-family: @roboto-medium;
+              color: @grey_dark;
+              word-break: break-all;
+            }
+            .table-header-value-wrapper {
+              font-size: 77.77%;
+              font-family: @roboto-regular;
+              color: @grey_smoke;
+              word-break: break-all;
+              .table-header-value-container {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-end;
+                .table-header-value-text {
+                  border-bottom: .1rem dashed @seperator_color_greyDark;
+                }
+              }
+            }
+            .table-header-value-icon-container {
+              text-align: center;
+              .table-header-value-icon {
+                font-size: 120%;
+              }
+            }
+            .table-header-icon{
+              font-size: 120%;
+            }
+            .fa-times-circle {
+              color: red;
+            }
+          }
+
+          .metric-table-data-container {
+            .table-row {
+              padding-top: 1%;
+              .table-row-label {
+                font-size: 94.44%;
+                font-family: @roboto-regular;
+                color: @grey_light;
+                word-break: break-all;
+              }
+              .table-row-value-wrapper {
+                font-size: 94.44%;
+                font-family: @roboto-bold;
+                .table-row-value-container {
+                  display: flex;
+                  flex-direction: row;
+                  align-items: flex-end;
+                  .table-row-value-text {
+                    word-break: break-all
+                  }
+                }
+              }
+              .table-row-value-icon {
+                text-align: center;
+                .fa-history{
+                  font-size: 120%;
+                  color: @accent_color;
+                }  
+              }
+            } 
+            .table-history-container-wrapper{
+              font-size: 80%;
+              background: @view_background;
+              padding: 2.5% 0% 2% 2.5%;
+              .table-history-row {
+                .table-history-row-label {
+                  display: inline;
+                  font-family: @roboto-regular;
+                  color: @grey_light;
+                }
+                .table-history-row-value-wrapper {
+                  padding-left: 3.25%;
+                  font-family: @roboto-medium;
+                  color: @grey_light;
+                }
+              }
+            } 
+          }
+
+        }  
+      }
+    }
+    .groups-seperator-container{
+      border-bottom: .1rem dashed @seperator_color_greyDark;
+      border-top: .1rem dashed @seperator_color_greyDark;
+      padding: 2% 3%;
+      .group-name{
+        padding-left: 1.5%;
+        font-size: 88.88%;
+        color: @grey_dark;
+        font-family: @roboto-medium;
+      }
+    }
+  }
 }
+

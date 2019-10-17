@@ -5,14 +5,12 @@
       <thead>
         <tr>
           <th>Metric</th>
-          <th>On hover</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="metric in visParams.metrics">
           <td style="text-align: center">{{metric.name.title}}</td>
-          <td style="text-align: center">{{metric.onHover}}</td>
           <td>
             <kbn-tooltip
               text="Edit this metric"
@@ -75,22 +73,6 @@
           class="form-control"
           ng-options="option as option.title for option in bmvList track by option.id"
           required>
-        </select>
-      </div>
-      <div class="row metric-element">
-        <label>Display on hover</label>
-        <kbn-tooltip
-          text="If Selected as True, metric is displayed on hover. Otherwise, metric is displayed on the graph always."
-          placement="right"
-          append-to-body="1">
-          <i class="fa fa-question-circle"></i>
-        </kbn-tooltip>
-        <select
-          ng-model="opts.onHover"
-          class="form-control"
-          required>
-          <option>True</option>
-          <option>False</option>
         </select>
       </div>
       <div

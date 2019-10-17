@@ -1,243 +1,129 @@
+import { colors } from 'ui/utils/severity_colors.js';
+
 const module = require('ui/modules').get('kibana/uvmap_vis');
 const _ = require('lodash');
-const vis = require('vis');
+const vis = require('vis-network');
 module.directive('visMap', function () {
 
   return {
     restrict: 'E',
     scope: {
       mapData: '=',
-      onNodeSelect: '=',
-      onLinkSelect: '=',
-      onNodeDragEnd: '=',
       nodePlacementType: '=',
       doesNodeHasDashboard: '=',
+      utmEventArgs: '='
     },
     replace: true,
     template: '<div class="network-map"></div>',
     link: ($scope, element) => {
 
+      // We obtain all the methods to be called for various events
+      const {
+        onNodeSelect,
+        onNodeDeselect,
+        onEdgeDeselect,
+        onLinkSelect,
+        onNodeDragStart,
+        onNodeDragEnd,
+        onNetworkStabilized
+      } = $scope.utmEventArgs;
+
       // These are the groups we support..
       const groups = {
+        DataBase: {
+          image: '/ui/vienna_images/database_utm.jpg'
+        },
+        NodeBalancer: {
+          image: '/ui/vienna_images/load_balancer.jpg'
+        },
         PC: {
-          image: '/ui/vienna_images/pc_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/pc.jpg'
         },
         Wifi: {
-          image: '/ui/vienna_images/wireless_access_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        WifiAlert: {
-          image: '/ui/vienna_images/wireless_access_alert.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/wifi_utm.jpg'
         },
         Printer: {
-          image: '/ui/vienna_images/printer_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        PrinterAlert: {
-          image: '/ui/vienna_images/printer_alert.png',
-          shape: 'image',
-          size: 20,
-
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/printer.jpg'
         },
         Mobile: {
-          image: '/ui/vienna_images/mobile_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        MobileAlert: {
-          image: '/ui/vienna_images/mobile_alert.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/mobile.jpg'
         },
         Switch: {
-          image: '/ui/vienna_images/switch_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        SwitchAlert: {
-          image: '/ui/vienna_images/switch_alert.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        PCAlert: {
-          image: '/ui/vienna_images/pc_alert.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/switch.jpg'
         },
         Firewall: {
-          image: '/ui/vienna_images/firewall_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        FirewallAlert: {
-          image: '/ui/vienna_images/firewall_alert.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/firewall.jpg'
         },
         Router: {
-          image: '/ui/vienna_images/router_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        RouterAlert: {
-          image: '/ui/vienna_images/router_alert.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/router.jpg'
         },
         App: {
-          image: '/ui/vienna_images/application.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/application.jpg'
         },
         Device: {
-          image: '/ui/vienna_images/network_element.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/device.jpg'
+        },
+        Firmware: {
+          image: '/ui/vienna_images/firmware.jpg'
+        },
+        NetworkElement: {
+          image: '/ui/vienna_images/network_element_umt.jpg'
+        },
+        NetworkDevice: {
+          image: '/ui/vienna_images/network_device.jpg'
         },
         Server: {
-          image: '/ui/vienna_images/server_active.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+          image: '/ui/vienna_images/server.jpg'
         },
-        ServerAlert: {
-          image: '/ui/vienna_images/server_alert.png',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
-        },
-        other: {
-          image: '/ui/vienna_images/other.svg',
-          shape: 'image',
-          size: 20,
-          font: {
-            color: '#2E3458',
-            size: 17
-          }
+        Other: {
+          image: '/ui/vienna_images/other_utm.jpg'
         }
       };
 
-      // Font option for node.
-      const nodeFont = {
-        align: 'left',
-        ital: {
-          color: 'green',
-          size: 12,
-          face: '"Open Sans", Helvetica, Arial, sans-serif',
-        },
-        bold: {
-          color: 'orange',
-          size: 12,
-          face: '"Open Sans", Helvetica, Arial, sans-serif',
-        },
-        boldital: {
-          color: 'red',
-          size: 12,
-          face: '"Open Sans", Helvetica, Arial, sans-serif',
-        },
-        mono: {
-          color: 'black',
-          size: 12,
-          face: '"Open Sans", Helvetica, Arial, sans-serif',
+      // We populate groups with common properties below
+      _.forOwn(groups, (group) =>
+      {
+        group.shape = 'circularImage';
+        group.size = 20;
+        group.font = {
+          size: 21,
+          color: '#353535'
+        };
+      });
+
+      // Other groups are added below
+      groups.metric = {
+        shape: 'text',
+        font: {
+          size: 18,
+          align: 'left',
+          color: '#353535'
         }
       };
-
-      // Font option for edge.
-      const edgeFont = {
-        align: 'bottom',
-        ital: {
-          color: 'green',
-          size: 12,
-          face: '"Open Sans", Helvetica, Arial, sans-serif',
-        },
-        bold: {
-          color: 'orange',
-          size: 12,
-          face: '"Open Sans", Helvetica, Arial, sans-serif',
-        },
-        boldital: {
-          color: 'red',
-          size: 12,
-          face: '"Open Sans", Helvetica, Arial, sans-serif',
-        }
+      groups.iconGreen = {
+        shape: 'icon',
+        icon: { face: 'FontAwesome', size: 20, color: colors.green, code: '\uf058' },
+        iconFontFace: 'FontAwesome',
+        iconSize: 21,
       };
-
+      groups.iconYellow = {
+        shape: 'icon',
+        icon: { face: 'FontAwesome', size: 20, color: colors.yellow, code: '\uf06a' },
+        iconFontFace: 'FontAwesome',
+        iconSize: 21,
+      };
+      groups.iconOrange = {
+        shape: 'icon',
+        icon: { face: 'FontAwesome', size: 20, color: colors.orange, code: '\uf06a' },
+        iconFontFace: 'FontAwesome',
+        iconSize: 21,
+      };
+      groups.iconRed = {
+        shape: 'icon',
+        icon: { face: 'FontAwesome', size: 20, color: colors.red, code: '\uf057' },
+        iconFontFace: 'FontAwesome',
+        iconSize: 21,
+      };
 
       // We watch mapData and if it changes, we draw the network
       $scope.$watch('mapData', function () {
@@ -267,22 +153,27 @@ module.directive('visMap', function () {
               }
             },
             physics: false,
-            font: edgeFont,
             length: 500,
             smooth: {
-              enabled: false
+              enabled: true,
+              type: 'cubicBezier',
+              roundness: 0.65,
             }
           },
           nodes: {
+            borderWidth: 2,
             physics: false,
             chosen: true,
             color: {
+              background: 'white',
               hover: {
-                border: 'blue',
-                background: 'red',
+                background: 'white',
+              },
+              highlight: {
+                background: 'white',
               }
             },
-            font: nodeFont
+            widthConstraint: 215,
           },
           interaction: {
             selectConnectedEdges: false,
@@ -300,23 +191,28 @@ module.directive('visMap', function () {
                 scaleFactor: 0.5
               }
             },
-            physics: true,
-            font: edgeFont,
+            physics: false,
             length: 500,
             smooth: {
-              enabled: false
+              enabled: true,
+              type: 'cubicBezier',
+              roundness: 0.65
             }
           },
           nodes: {
+            borderWidth: 2,
             physics: true,
             chosen: true,
             color: {
+              background: 'white',
               hover: {
-                border: 'blue',
-                background: 'red',
+                background: 'white',
+              },
+              highlight: {
+                background: 'white',
               }
             },
-            font: edgeFont
+            widthConstraint: 215,
           },
           interaction: {
             selectConnectedEdges: false,
@@ -324,34 +220,19 @@ module.directive('visMap', function () {
           }
         };
 
-
         let network;
 
-        // Create a vis network using information received from backend.
-        // To create a network using physics first to get X and Y value
-        // then updates X and Y value by drag and drop of the nodes.
-        if ($scope.nodePlacementType === 'physicsAndDragNDrop') {
-          const dataNodes = visData.nodes.get();
-          let countOfZeroNodes = 0;
-          _.each(dataNodes, function (dataNode) {
-            if (dataNode.x === 0 && dataNode.y === 0) {
-              countOfZeroNodes++;
-            }
-          });
+        // Use 'withPhysics' to network uses physics to
+        // automatically align nodes get X and Y value
 
-          if(countOfZeroNodes >= 2) {
-            network = new vis.Network(element[0], visData, physicsEnableOption);
-            network.stabilize();
-          } else {
-            network = new vis.Network(element[0], visData, options);
-            network.stabilize();
-          }
-        } else if ($scope.nodePlacementType === 'dragNDrop') {
-          // To create a network using drag and drop of the nodes.
-          network = new vis.Network(element[0], visData, options);
-        } else if ($scope.nodePlacementType === 'withPhysics') {
-          // To create a network using physics.
+        // Use 'dragNDrop' to manually update X and Y
+        // value by drag and drop of the nodes
+
+        if ($scope.nodePlacementType === 'withPhysics' ||
+            $scope.nodePlacementType === 'physicsAndDragNDrop') {
           network = new vis.Network(element[0], visData, physicsEnableOption);
+        } else if ($scope.nodePlacementType === 'dragNDrop') {
+          network = new vis.Network(element[0], visData, options);
         } else {
           // Throw an error if nodePlacementType has not passed.
           throw 'Network will not be created without nodePlacementType';
@@ -364,18 +245,14 @@ module.directive('visMap', function () {
         $scope.first_stable = false;
         // Once network gets stablized, we stop the stablization
         network.on('stabilized', () => {
-
           if($scope.nodePlacementType === 'physicsAndDragNDrop') {
             // check network has stabilized or not
             // if it is stabilized then stop stabilization
-            // and gets positions ofall nodes.
+            // switch options to dragNDrop
             if ($scope.first_stable) {
-
               network.storePositions();
               network.setOptions(options);
               network.off('stabilized');
-              const positionList = network.getPositions();
-              $scope.onNodeDragEnd(positionList, data.nodes);
             } else {
               $scope.first_stable = true;
             }
@@ -384,48 +261,82 @@ module.directive('visMap', function () {
           }
         });
 
+        const handleCallbackResp = (resp) => {
+          switch (resp.action) {
+            case 'moveNode':
+              _.each(resp.val, (node) => {
+                network.moveNode(node.id, node.x, node.y);
+              });
+              break;
+            case 'selectNodes':
+              network.selectNodes(resp.val);
+              break;
+            default:
+              throw `action of type ${resp.action} was not found`;
+          }
+        };
+
+        // After physics is applied we need to re-align the nodeGroups and icons below the node
+        // TODO: performs this action using a setTimeout is a hack, find better way of implementing this
+        setTimeout(() => {
+          if (onNetworkStabilized) {
+            const callbackResp = onNetworkStabilized(network.getPositions());
+
+            // If a callbackResp is provided, we perform the required action
+            if (callbackResp) {
+              handleCallbackResp(callbackResp);
+            }
+          }
+        }, 500);
+
         // When a node is selected, we check if there is a dashboard
         // associated with it, if so, we load that dashboard.
         network.on('selectNode', (params) => {
           // Invoke the passed function
-          if ($scope.onNodeSelect) {
-            $scope.onNodeSelect(params);
+          if (onNodeSelect) {
+            const NodeImageGroups = groups;
+            // send selectedNodeId
+            const callbackResp = onNodeSelect(params.nodes[0], NodeImageGroups);
+
+            // If a callbackResp is provided, we perform the required action
+            if (callbackResp) {
+              handleCallbackResp(callbackResp);
+            }
           }
         });
 
-        // When a node is selected, we check if there is a dashboard
-        // associated with it, if so, we load that dashboard.
+        // Perform any action when a node is de-selected
+        // A node can be de-selected by clicking outside the node
+        network.on('deselectNode', (params) => {
+          if (onNodeDeselect) {
+            // send list of deselected nodes
+            onNodeDeselect(params.nodes);
+          }
+        });
+
+        // Perform any action when a edge is de-selected
+        // An edge can be de-selected by clicking outside the edge
+        network.on('deselectEdge', (params) => {
+          if (onEdgeDeselect) {
+            // send list of deselected edges
+            onEdgeDeselect(params.edges);
+          }
+        });
+
+        // Function is called when an edge clicked
         network.on('selectEdge', (params) => {
           // Invoke the passed function
-          if ($scope.onLinkSelect) {
-            const linkId = params.edges[0];
-            let linkObj;
-            // Get the link-information
-            _.forEach(data.edges, function (edge) {
-              if (edge.id === linkId) {
-                linkObj = edge;
-              }
-            });
-
-            let srcNode;
-            let destNode;
-            _.forEach(data.nodes, function (node) {
-              if (node.id === linkObj.from) {
-                srcNode = node;
-              }
-
-              if (node.id === linkObj.to) {
-                destNode = node;
-              }
-            });
-            $scope.onLinkSelect(srcNode.key, destNode.key);
+          if (onLinkSelect) {
+            // send selectedEdgeId
+            onLinkSelect(params.edges[0]);
           }
         });
 
         if ($scope.doesNodeHasDashboard) {
           // On hovering a node make cursor as pointer.
           network.on('hoverNode', function (params) {
-            if($scope.doesNodeHasDashboard(params)) {
+            // send hoveredNodeId
+            if($scope.doesNodeHasDashboard(params.node)) {
               network.canvas.body.container.style.cursor = 'pointer';
             }
           });
@@ -436,17 +347,44 @@ module.directive('visMap', function () {
           });
         }
 
+        // when a node is dragged this function is called once
+        network.on('dragStart', (params) => {
+          if (onNodeDragStart) {
+            // send draggedNodeId
+            const callbackResp = onNodeDragStart(params.nodes[0]);
 
-        // When a node is dragged, at the end, this function is called.
-        // It just prints the locations of the nodes in console. This
-        // will help people to fix 'x', 'y' for different nodes,
-        // data.nodes will print the nodes information
-        network.on('dragEnd', () => {
-          //function to update new x and y values in all nodes.
-          if($scope.onNodeDragEnd !== undefined) {
-            $scope.onNodeDragEnd(network.getPositions(), data.nodes);
+            // If a callbackResp is provided, we perform the required action
+            if (callbackResp) {
+              handleCallbackResp(callbackResp);
+            }
           }
         });
+
+        // When a node is dragged and released, at the end, this function is called
+        network.on('dragEnd', (params) => {
+          //function to update new x and y values in all nodes.
+          if(onNodeDragEnd) {
+            // send draggedNodeList
+            onNodeDragEnd(params.nodes, network.getPositions());
+          }
+        });
+
+
+        // Default zoomScale used afterd fitting all the nodes
+        const currentZoomScale  = network.getScale();
+
+        // We calculate the required offset, 85% of default zoomScale
+        const zoomOutLimitOffset = (currentZoomScale * 0.85);
+
+        // If user zooms out too much such that the node disappaers
+        // then apply default zoom and fit all nodes
+        network.on('zoom', () => {
+          if(network.getScale() <= currentZoomScale - zoomOutLimitOffset)
+          {
+            network.fit();
+          }
+        });
+
       });
     }
   };

@@ -13,8 +13,7 @@
   <div ng-if="(data && data.nodes.length && data.edges.length)" class="uvm-wrapper">
     <vis-map
       map-data="data"
-      on-node-select="onNodeSelect"
-      on-node-drag-end="onNodeDragEnd"
+      utm-event-args="utmEventArgs"
       node-placement-type="nodePlacementType"
       does-node-has-dashboard="doesNodeHasDashboard">
     </vis-map>

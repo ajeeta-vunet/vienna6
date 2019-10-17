@@ -109,16 +109,60 @@ module.controller('UnifiedTransactionVisParamsController', function ($scope, $ro
     }
   };
 
-  // Event to update Node's X and Y value.
-  $rootScope.$on('vusop:utmMapData', (event, newNodes) => {
-    _.each($scope.vis.params.customNodes, function (customNodes) {
-      _.each(newNodes, function (newnode) {
-        if (customNodes.nodeLabel === newnode.id) {
-          customNodes.nodeX = newnode.X;
-          customNodes.nodeY = newnode.Y;
-        }
-      });
-    });
-    $scope.$apply();
+  // Event to initialise 'X' and 'Y' positions of all nodes
+  // and respective groups
+  $rootScope.$on('vusop:utmInitData', (event, nodes) => {
+    if (!_.isEqual($scope.vis.params.allNodes, nodes)) {
+      $scope.vis.params.allNodes = nodes;
+      $scope.$apply();
+    }
   });
+
+  // Event to save 'X' and 'Y' position of dragged nodes
+  $rootScope.$on('vusop:utmUpdateDataOnDrag', (event, newNodes) => {
+    _.each(newNodes, (node) => {
+      const id = node.id;
+      const x = node.x;
+      const y = node.y;
+
+      let visParamsArgsToUpdate = undefined;
+
+      // First we check if dragged node is a parentNode(node) or childNode (nodeGroup)
+      // ChildNodes have a parentId property used to identify who their parent is
+
+      // If dragged node is childNode, we need to find its parentArgs in vis.params.allNodes using parentId
+      // we iterate over the parentArgs to get the repective metricGroup having same Id as our childNode and update X,Y position
+
+      // If dragged node is parentNode, we need to find that node in vis.params.allNodes using Id
+      // update X,Y position
+
+      if (node.parentId) {
+        const visParamsNodeArgs = _.find($scope.vis.params.allNodes, (visParamsNode) => {
+          return visParamsNode.id === node.parentId;
+        });
+        visParamsArgsToUpdate = _.find(visParamsNodeArgs.metric_groups, (metricGroup) => {
+          return metricGroup.id === id || metricGroup.statusIcon.id === id;
+        });
+      } else {
+        visParamsArgsToUpdate = _.find($scope.vis.params.allNodes, (visParamsNode) => {
+          return visParamsNode.id === id;
+        });
+      }
+
+      // We update the 'X' and 'Y' positions of all the nodes
+      // We identify iconNodes with the parentMetricGroupId property
+      // Note: ideally we should use a property like 'nodeType: icon' instead of
+      // using parentMetricGroupId to identify if its a icon node
+      if (visParamsArgsToUpdate) {
+        if (node.parentMetricGroupId) {
+          visParamsArgsToUpdate.statusIcon.x = x;
+          visParamsArgsToUpdate.statusIcon.y = y;
+        } else {
+          visParamsArgsToUpdate.x = x;
+          visParamsArgsToUpdate.y = y;
+        }
+      }
+    });
+  });
+
 });

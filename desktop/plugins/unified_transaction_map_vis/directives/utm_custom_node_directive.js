@@ -20,25 +20,23 @@ module.directive('customNode', function () {
       const { nodeX, nodeY } = scope.visParams;
 
       // List of node types
-      scope.nodeType = ['PC',
-        'PCAlert',
-        'Wifi',
-        'WifiAlert',
-        'Printer',
-        'PrinterAlert',
-        'Mobile',
-        'MobileAlert',
-        'Switch',
-        'SwitchAlert',
-        'Firewall',
-        'FirewallAlert',
-        'Router',
-        'RouterAlert',
+      scope.nodeType = [
         'App',
+        'DataBase',
         'Device',
+        'Firewall',
+        'Firmware',
+        'Mobile',
+        'NetworkDevice',
+        'NetworkElement',
+        'NodeBalancer',
+        'PC',
+        'Printer',
+        'Router',
         'Server',
-        'ServerAlert',
-        'other'
+        'Switch',
+        'Wifi',
+        'Other'
       ];
 
       // If X and Y values are not coming then assign X and Y

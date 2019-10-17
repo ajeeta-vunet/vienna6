@@ -497,6 +497,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           metricListIndex: metricListIndex,
           index: index,
           label: metric.label,
+          metricGroup: metric.groupName,
           // Add the metric along with the threshold to the payload request.
           metricType: metric.type || '',
           field: metric.field || '',

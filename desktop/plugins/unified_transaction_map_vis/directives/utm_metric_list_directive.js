@@ -21,7 +21,6 @@ module.directive('utmMetricList', function () {
       scope.opts = {
         name: '',
         placement: 'Down',
-        onHover: ''
       };
 
       // Initialize scope.editIndex
@@ -53,14 +52,12 @@ module.directive('utmMetricList', function () {
           const metric = params.metrics[index];
           scope.editIndex = index;
           scope.opts.name = metric.name;
-          scope.opts.onHover = metric.onHover;
         }
       };
 
       // Resets the values.
       scope.reset = function () {
         scope.opts.name = '';
-        scope.opts.onHover = '';
         scope.editIndex = -1;
       };
 
@@ -74,8 +71,8 @@ module.directive('utmMetricList', function () {
           scope.visParams.metrics = [];
         }
 
-        const { name, placement, onHover } = scope.opts;
-        const metricList = { name, placement, onHover };
+        const { name, placement } = scope.opts;
+        const metricList = { name, placement };
 
         // When edit is updating
         if (scope.editIndex !== -1) {

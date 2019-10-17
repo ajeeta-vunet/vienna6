@@ -144,6 +144,22 @@ Time (input is assumed to be number of seconds):
     </p>
   </div>
   <div class="form-group bottom-space">
+      <label>
+        Group Name
+      </label>
+      <input
+        class="form-control"
+        type="text"
+        ng-model="metric.groupName"
+        name="metricGroup"
+        ng-maxlength="40"/>
+      <p
+        class="error-highlight"
+        ng-show="vudataMetricForm.metricGroup.$error.maxlength">
+        Group name must be less than 40 characters
+      </p>
+    </div>  
+  <div class="form-group bottom-space">
     <label>
       Description
       <kbn-tooltip

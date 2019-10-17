@@ -17,8 +17,13 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
   // To pass node placement type to the vis-map directive.
   $scope.nodePlacementType = 'dragNDrop';
 
+  // When a node is dragged, at the end, this function is called.
+  // It just prints the locations of the nodes in console. This
+  // will help people to fix 'x', 'y' for different nodes,
+  // data.nodes will print the nodes information
   // Function to update x and y values in visParamsConnection.
-  $scope.onNodeDragEnd = function (positions, nodes) {
+  $scope.onNodeDragEnd = function (draggedNodeList, positions) {
+    const nodes = $scope.data.nodes;
     let visParamsConnection = $scope.vis.params.connection;
     visParamsConnection = visParamsConnection.split('\n');
 
@@ -67,7 +72,6 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
       return dashboardDict;
     });
   }
-
 
   $scope.search = function run() {
     let connection = $scope.vis.params.connection;
@@ -169,8 +173,8 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
   }
 
   // Function to be called when hovering a node
-  $scope.doesNodeHasDashboard = function (params) {
-    if (params.node in $scope.data.node_dashboard_dict) {
+  $scope.doesNodeHasDashboard = function (hoveredNodeId) {
+    if (hoveredNodeId in $scope.data.node_dashboard_dict) {
       return true;
     } else {
       return false;
@@ -178,9 +182,9 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
   };
 
   // Function to be called when a node is selected
-  $scope.onNodeSelect = function (params) {
-    if (params.nodes[0] in $scope.data.node_dashboard_dict) {
-      const dashboardURL = '/dashboard/' + $scope.data.node_dashboard_dict[params.nodes[0]].value;
+  $scope.onNodeSelect = function (selectedNodeId) {
+    if ($scope.doesNodeHasDashboard(selectedNodeId)) {
+      const dashboardURL = '/dashboard/' + $scope.data.node_dashboard_dict[selectedNodeId].value;
 
       // Have changed from kbnUrl.redirect(url) to kbnUrl.change(url)
       // kbnUrl.redirect(url): will replace the current url with new url
@@ -195,6 +199,14 @@ module.controller('UVMapVisController', function ($scope, Private, Notifier, $ht
       $scope.$apply();
     }
   };
+
+  // following methods are passed to vis_map
+  // these methods are invoked on occurance of various events in the UTM
+  $scope.utmEventArgs = {
+    onNodeSelect: $scope.onNodeSelect,
+    onNodeDragEnd: $scope.onNodeDragEnd,
+  };
+
 
   // This is bad, there should be a single event that triggers a refresh of data.
 

@@ -194,6 +194,42 @@ input[type="file"]{
   .vis-type-customer_journey_map{
     background: @white!important;
   }
+    //This has been done to remove overflow form UTm visulization
+    .vis-type-unified_transaction_map{
+      visualize{
+        visualization-editor{
+          visualization{
+            padding: 0px;
+            .vis-container {
+              overflow: hidden;
+            }
+          }
+        }
+      }
+    }
+    //This has been done to remove overflow form UTm visulization in dashboard
+    dashboard-app{
+      dashboard-viewport-provider{
+        .react-grid-layout{
+          .react-grid-item{
+            .dashboard-panel{
+              .panel{
+                .panel-content{
+                  visualize{
+                    .unified_transaction_map{
+                      padding: 0px;
+                      .vis-container {
+                        overflow: hidden;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }  
   //This is done for new visual builder visualization
   .vis-editor{
     visualize{

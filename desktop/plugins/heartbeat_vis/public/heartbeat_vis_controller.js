@@ -2,8 +2,8 @@ import { uiModules } from 'ui/modules';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
-
 const module = uiModules.get('kibana/heartbeat_vis', ['kibana', 'kibana/courier']);
+const _ = require('lodash');
 module.controller('HeartbeatVisController', function ($scope, Private, Notifier, $http, $rootScope, timefilter) {
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
@@ -72,7 +72,30 @@ module.controller('HeartbeatVisController', function ($scope, Private, Notifier,
   // This function is called when a user click on the link when full-path is
   // displayed, this fetch the hop-by-hop details for a specific
   // source-destination pair
-  $scope.onLinkSelect = function (sourceAddr, destAddr) {
+  $scope.onLinkSelect = function (selectedEdgeId) {
+    let linkObj;
+    let srcNode;
+    let destNode;
+
+    // Get the link-information
+    _.forEach($scope.data.edges, function (edge) {
+      if (edge.id === selectedEdgeId) {
+        linkObj = edge;
+      }
+    });
+
+    _.forEach($scope.data.nodes, function (node) {
+      if (node.id === linkObj.from) {
+        srcNode = node;
+      }
+
+      if (node.id === linkObj.to) {
+        destNode = node;
+      }
+    });
+
+    const sourceAddr = srcNode.key;
+    const destAddr = destNode.key;
     if (!$scope.full_path) {
       return;
     }
@@ -137,6 +160,13 @@ module.controller('HeartbeatVisController', function ($scope, Private, Notifier,
       $scope.fetch_hop();
     }
   };
+
+  // following methods are passed to vis_map
+  // these methods are invoked on occurance of various events in the UTM
+  $scope.utmEventArgs = {
+    onLinkSelect: $scope.onLinkSelect,
+  };
+
 
   // When the time filter changes
   $scope.$listen(timefilter, 'fetch', $scope.searchContext);

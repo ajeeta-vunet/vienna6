@@ -1,0 +1,40 @@
+@import (reference) "~ui/styles/mixins.less";
+
+.html-vis {
+  width: 100%;
+}
+
+.vis-type-html{
+  .vis-editor-sidebar {
+    max-width: 600px;
+    .html-editor {
+      min-height: 500px;
+      min-width: 575px;
+      font-size: 14px !important;
+    }
+  }
+}
+
+.vis-editor {
+
+  &.vis-type-markdown {
+
+    .visualization-options {
+      .flex-parent();
+      flex: 1 1 auto;
+    }
+
+    .html-vis-options {
+      .flex-parent();
+      flex: 1 1 auto;
+
+      textarea {
+        flex: 1 1 auto;
+        resize: none;
+      }
+
+    }
+
+  }
+
+}

@@ -275,7 +275,32 @@ Time (input is assumed to be number of seconds):
       </p>
     </div>
 
-    <!-- Threshold config  starts-->
+    <!-- Inteval options  -->
+    <div
+      class="form-group bottom-space">
+      <label>
+          Interval
+        <kbn-tooltip
+          text="Select a interval of your choice"
+          placement="right"
+          append-to-body="1">
+          <i class="fa fa-question-circle"></i>
+        </kbn-tooltip>
+      </label>
+      <select
+        class="form-control"
+        ng-options="option for option in intervalOptions"
+        name="intervalMetric"
+        ng-model="metric.intervalMetric">
+      </select>
+      <p
+        class="error"
+        ng-show="vudataMetricForm.intervalMetric.$error.required">
+        Please select a value.
+      </p>
+    </div>
+
+    <!-- Threshold config starts-->
     <div class="collapse-header-wrapper">
       <button
         aria-label="{{ showThresholdOptions ? 'Close' : 'Open' }}"
@@ -295,9 +320,27 @@ Time (input is assumed to be number of seconds):
         Threshold
       </span>
     </div>
-
     <div
       ng-if="showThresholdOptions">
+      <div class="form-group bottom-space">
+        <label>
+          Enable auto-baselining
+          <kbn-tooltip text="Enable this to allow the system to determine the thresholds automatically"
+            placement="right"
+            append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="metric.enableAutoBaseLining"/>
+      </div>
       <div class="form-group bottom-space">
         <label>
           Enable Threshold
@@ -321,10 +364,10 @@ Time (input is assumed to be number of seconds):
         ng-show="opts.thresholdEnabled">
           <vudata-metric-threshold
             metric-type="metric.type"
-            Threshold="metric.threshold"
+            threshold="metric.threshold"
             index-fields="indexFields"
             field="opts.fieldObj">
-          </vudata-metric-Threshold>
+          </vudata-metric-threshold>
       </div>
       <div
         class="form-group bottom-space">

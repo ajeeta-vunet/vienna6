@@ -179,6 +179,7 @@
             index-fields="operMetricsList[$index].indexFields"
             all-fields="operMetricsList[$index].allFields"
             additional-fields="operMetricsList[$index].additionalFields"
+            interval-options="intervalOptions"
             selected-fields="operMetricsList[$index].selectedFields">
           </vudata-metric>
         </div>
@@ -264,7 +265,10 @@
     <div
       class="form-group bottom-space"
       ng-show="vis.params.historicalDataEnabled">
-      <historical-data historical-data="vis.params.historicalData">
+      <historical-data
+        historical-data="vis.params.historicalData"
+        interval-options="intervalOptions"
+        >
       </historical-data>
       <div class="form-group bottom-space">
         <label>
@@ -372,7 +376,7 @@
           type="range"
           ng-model="vis.params.textFontSize"
           class="form-control"
-          min="7"
+          min="0"
           max="100" />
       </div>
     </div>

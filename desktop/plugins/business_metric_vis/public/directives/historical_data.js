@@ -7,6 +7,7 @@ app.directive('historicalData', function () {
     restrict: 'E',
     scope: {
       historicalData: '=',
+      intervalOptions: '=',
     },
     template: require('plugins/business_metric_vis/directives/historical_data.html'),
     link: function (scope) {
@@ -23,38 +24,6 @@ app.directive('historicalData', function () {
         'Same Time Previous Month',
         'Same Time Previous Year',
         'Custom configuration'
-      ];
-
-      // Initializing the options for interval
-      // metric
-      scope.intervalOptions = [ 'Previous Window',
-        'This Day',
-        'This Week',
-        'This Month',
-        'This Year',
-        'Previous Day',
-        'Day Before Previous Day',
-        'Previous Week',
-        'Previous Month',
-        'Previous Year',
-        'Last 15 Minutes',
-        'Last 30 Minutes',
-        'Last 1 Hours',
-        'Last 4 Hours',
-        'Last 12 Hours',
-        'Last 24 Hours',
-        'Last 7 days',
-        'Last 30 days',
-        'Last 60 days',
-        'Last 90 days',
-        'Last 6 Months',
-        'Last 1 Years',
-        'Last 2 Years',
-        'Last 5 Years',
-        'DTD',
-        'WTD',
-        'MTD',
-        'YTD'
       ];
 
       // This function will be called when the

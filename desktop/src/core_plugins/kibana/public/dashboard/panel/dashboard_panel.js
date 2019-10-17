@@ -28,11 +28,11 @@ export class DashboardPanel extends React.Component {
     this.props.onDestroy();
   }
 
-  renderEmbeddedContent() {
+  renderEmbeddedContent(panelContentClass) {
     return (
       <div
         id="embeddedPanel"
-        className="panel-content"
+        className={panelContentClass}
         ref={panelElement => this.panelElement = panelElement}
       />
     );
@@ -44,11 +44,11 @@ export class DashboardPanel extends React.Component {
     return <PanelError error={errorMessage} />;
   }
 
-  renderEmbeddedContent() {
+  renderEmbeddedContent(panelContentClass) {
     return (
       <div
         id="embeddedPanel"
-        className="panel-content"
+        className={panelContentClass}
         ref={panelElement => this.panelElement = panelElement}
       />
     );
@@ -60,11 +60,33 @@ export class DashboardPanel extends React.Component {
 
   render() {
     let classes;
+    let dashboardPanelClass = 'dashboard-panel';
+    let panelContentClass = 'panel-content';
+
     const { visState, viewOnlyMode, error, panel, embeddableFactory } = this.props;
     if (visState && visState.type === 'markdown' && visState.params.useForHeading) {
       classes = classNames('markdown-panel panel-default', this.props.className, {
         'panel--edit-mode': !viewOnlyMode
       });
+    }
+
+    // When 'useForHeading' option is checked in HTML vis, we make the background
+    // of this visualization panel to be transparent.
+    else if(visState && visState.type === 'html' && visState.params.useForHeading) {
+      classes = classNames('html-panel panel-default', this.props.className, {
+        'panel--edit-mode': !viewOnlyMode
+      });
+    }
+
+    // To display rounded corners for BMV panels when
+    // panel header is not present, we have defined the following 2 classes:
+    // dashboardPanelClass, panelContentClass
+    else if (visState && visState.type === 'business_metric') {
+      classes = classNames('panel panel-default', this.props.className, {
+        'panel--edit-mode': !viewOnlyMode
+      });
+      dashboardPanelClass = 'dashboard-panel-without-header dashboard-panel';
+      panelContentClass = 'panel-content-without-header panel-content';
     }
     else {
       classes = classNames('panel panel-default', this.props.className, {
@@ -73,7 +95,7 @@ export class DashboardPanel extends React.Component {
     }
     return (
       <div
-        className="dashboard-panel"
+        className={dashboardPanelClass}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
       >
@@ -86,7 +108,7 @@ export class DashboardPanel extends React.Component {
             panelId={panel.panelIndex}
           />
 
-          {error ? this.renderEmbeddedError() : this.renderEmbeddedContent()}
+          {error ? this.renderEmbeddedError() : this.renderEmbeddedContent(panelContentClass)}
 
         </div>
       </div>

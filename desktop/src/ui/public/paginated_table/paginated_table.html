@@ -18,11 +18,15 @@
       <thead data-test-subj="paginated-table-header"
              style="display:table-header-group;">
         <tr>
-          <th ng-if="addSrNumber">
-            <h6 class="zero-margin">{{srNumberTitle}}</h6>
+          <th
+            ng-if="addSrNumber">
+            <h6
+              ng-style="{'font-size': cellFontSize + 'px'}"
+              class="zero-margin">{{srNumberTitle}}</h6>
           </th> 
           <th scope="col"
               ng-if="!isMatrix"
+              ng-style="{'font-size': cellFontSize + 'px'}"
               ng-repeat="col in columns"
               ng-click="paginatedTable.sortColumn($index)"
               kbn-accessible-click
@@ -64,7 +68,11 @@
             </h6>
           </th>
           <th ng-if="isMatrix && cumulativeColumnOperation !== null">
-            <h6 class="zero-margin">Cumulative ( {{cumulativeColumnOperation.charAt(0).toUpperCase() + cumulativeColumnOperation.slice(1)}} )</h6>
+            <h6
+              ng-style="{'font-size': cellFontSize + 'px'}"
+              class="zero-margin">
+              Cumulative ( {{cumulativeColumnOperation.charAt(0).toUpperCase() + cumulativeColumnOperation.slice(1)}} )
+            </h6>
           </th>
         </tr>
       </thead>
@@ -76,6 +84,7 @@
       <tfoot ng-if="showTotal">
         <tr>
           <th scope="col"
+              ng-style="{'font-size': cellFontSize + 'px'}"
               ng-repeat="col in columns"
               class="numeric-value">{{col.total}}</th>
         </tr>

@@ -269,30 +269,6 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
   // back end to get the response data.
   $scope.search = function run() {
 
-    // If the textFontSize is defined, lets use it.
-    if ($scope.vis.params.textFontSize) {
-      $scope.txtFontSize = $scope.vis.params.textFontSize;
-
-      // If the textFontSize is not defined, then lets set the defaults
-    } else {
-      // If the metric font size is less than or equal tp 24pt,
-      // set the text font size to 70% the size of metric
-      // font size.
-      if ($scope.vis.params.fontSize && $scope.vis.params.fontSize <= 24) {
-        $scope.txtFontSize = $scope.vis.params.fontSize * 70 / 100;
-
-      } else {
-        // If the metric font size is greater than 24pt,
-        // set the text font size to 16pt.
-        $scope.txtFontSize = 16;
-      }
-    }
-
-    if($scope.txtFontSize <= 11) {
-      $scope.actionButtonFontSize = $scope.txtFontSize;
-    }else{
-      $scope.actionButtonFontSize = 11;
-    }
     // check if aggregations and historical data is configured
     // and get the length for the same.
     let aggregationsLength = 0;
@@ -527,12 +503,13 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           fieldType: fieldType || '',
           filter: metric.filter || '*',
           savedSearchFilter: savedSearchQuery,
+          enableAutoBaselining: metric.enableAutoBaseLining,
+          intervalMetric: metric.intervalMetric,
           additionalFields: metric.additionalFields,
           threshold: finalThreshold,
           format: metric.format || ''
         });
       };
-
       // Go through each metric and add threshold to the payload request.
       // Some of the metrics might be using saved search and some of them
       // might be using index. If saved search is used then we should get the

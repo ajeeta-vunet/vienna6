@@ -366,6 +366,131 @@ dashboard-viewport-provider {
     }
   }
 
+  .dashboard-panel-without-header {
+    background: #f6f7fb;
+    border-radius: 4px;
+  }
+
+  .panel-content-without-header {
+    border-radius: 4px;
+  }
+
+  // This is done to make sure that html panel heading comes properly in dashboard
+  .html-panel {
+    margin: 0;
+    // maintain the 100% height of the panel
+    height: 100%;
+    flex: 1;
+
+    // flex layout allows us to define the visualize element as "fill available space"
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .panel-heading {
+      padding: 8px;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      display: flex;
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      background-color: @white;
+      border: none;
+
+      /**
+       * 1. Required to get the pop up component arrow to line up with the menu icon.
+       */
+      .panel-dropdown:hover {
+        color: @globalColorBlue;
+      }
+
+      .kuiPopover__body {
+        z-index: 25;
+      }
+
+      .panel-title {
+        font-size: inherit;
+
+        // flexbox fix for IE10
+        // http://stackoverflow.com/questions/22008135/internet-explorer-10-does-not-apply-flexbox-on-inline-elements
+        display: inline-block;
+
+        .ellipsis();
+        flex: 1 1 auto;
+
+        i {
+          opacity: 0.3;
+          font-size: 1.2em;
+          margin-right: 4px;
+        }
+      }
+
+      .panel-move:hover {
+        cursor: move;
+      }
+    }
+
+    .visualize-show-spy {
+      visibility: hidden;
+    }
+
+    //hide maximise button when used as header
+    .panel-heading-floater {
+      display: none;
+    }
+
+    /**
+     * 1. Use opacity to make this element accessible to screen readers and keyboard.
+     * 2. Show on focus to enable keyboard accessibility.
+     */
+    .viewModeExpandPanelToggle {
+      opacity: 0; /* 1 */
+      &:focus {
+        opacity: 1; /* 2 */
+      }
+    }
+
+    &:hover {
+      .panel-heading-floater {
+        opacity: 1;
+      }
+      .visualize-show-spy {
+        visibility: visible;
+      }
+      .viewModeExpandPanelToggle {
+        opacity: 1;
+      }
+    }
+
+    .load-error {
+      text-align: center;
+      font-size: 1em;
+      display: flex;
+      flex: 1 0 auto;
+      justify-content: center;
+      flex-direction: column;
+
+      .fa-exclamation-triangle {
+        font-size: 2em;
+        color: @dashboard-panel-load-error-color;
+      }
+    }
+
+    /**
+     * 1. For tile maps, this is necessary to get the panel pop over to show up. Otherwise the tilemap ends up having
+     * a bigger z-index than the pop over.
+     */
+    .panel-content {
+      background: none;
+      display: flex;
+      flex: 1 1 100%;
+      height: auto;
+      z-index: 1; /* 1. */
+      padding: 0 8px 8px 8px;
+    }
+  }
+
+  // This is done to make sure that mardown panel heading comes properly in dashboard
   .markdown-panel {
     margin: 0;
     // maintain the 100% height of the panel
@@ -424,20 +549,9 @@ dashboard-viewport-provider {
       visibility: hidden;
     }
 
-    /**
-     * 1. Use opacity to make this element accessible to screen readers and keyboard.
-     * 2. Show on focus to enable keyboard accessibility.
-     */
+    //hide maximise button when used as header
     .panel-heading-floater {
-      opacity: 0; /* 1 */
-      position: absolute;
-      right: 1px;
-      top: 1px;
-      background-color: @dashboard-panel-bg;
-      z-index: 5;
-      &:focus {
-        opacity: 1; /* 2 */
-      }
+      display: none;
     }
 
     /**
@@ -482,6 +596,7 @@ dashboard-viewport-provider {
      * a bigger z-index than the pop over.
      */
     .panel-content {
+      background: none;
       display: flex;
       flex: 1 1 100%;
       height: auto;
@@ -529,6 +644,13 @@ dashboard-viewport-provider {
   .markdown-panel-heading {
     background-color: #F5F5F5;
     border-color: #F5F5F5;
+  }
+
+  .html-panel-heading {
+    overflow: hidden;
+    background-color: #F5F5F5;
+    border-color: #F5F5F5;
+    padding: 0px !important;
   }
 
   .panel--edit-mode:hover {

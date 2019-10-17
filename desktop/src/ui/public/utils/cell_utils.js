@@ -2,6 +2,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import { doCumulativeOperation } from 'ui/utils/cumulative_ops.js';
 import { convertToSeconds } from 'ui/utils/interval_utils.js';
+import d3 from 'd3';
 
 // This function takes the background color of a cell in
 // hexadecimal format and then calculates a value bgDelta
@@ -38,7 +39,7 @@ function changeBackgroundColor(cell, backgroundColor) {
   cell.css('color', textColor);
 }
 
-let valInPercentage = 0;
+const valInPercentage = 0;
 // This function replace the content of cell with image
 // based on specif background color
 // #0f0f0f - red_cross.png
@@ -57,9 +58,10 @@ function applyBackgroundImage(backgroundColor) {
 // This function is used to find the content to be displayed in the cells.
 // For the "show metrics in %", this calculates the percentage value based on
 // the value and sum of the row / column. Otherwise, the value is returned.
-export function createCellContents(contents, getAppState, Private, timefilter, printReport) {
+export function createCellContents(contents, getAppState, Private, timefilter, printReport, cellElement, addBar, addBarValMultiplier) {
   const val = contents.value;
 
+  let valInPercentage = 0;
   if (contents.sum !== -1) {
     if (contents.sum === 0) {
       contents = contents.toString('html', getAppState, Private, timefilter, printReport) + '  (0%)';
@@ -67,8 +69,22 @@ export function createCellContents(contents, getAppState, Private, timefilter, p
       valInPercentage = Math.abs(val * 100 / contents.sum);
       contents = contents.toString('html', getAppState, Private, timefilter, printReport) + '  (' + valInPercentage.toFixed(2) + '%)';
     }
+    addBar = true;
   } else {
+    valInPercentage = contents.value;
     contents = contents.toString('html', getAppState, Private, timefilter, printReport);
+  }
+
+  // Do not display the horizontal bars in table cells for reports.
+  if (addBar && !printReport) {
+    valInPercentage = valInPercentage * addBarValMultiplier;
+    // We are creating a horizontal bar to represent the %age value..
+    const svg = d3.select(cellElement).append('div').append('svg').attr({ width: 100, height: 10 });
+    // Margin is used to get it exactly on top of the text..
+    // This is to show 100% bar with gray color..
+    svg.append('rect').attr({ x: 0, y: 0, width: 100, height: 10, fill: '#d7d9da' });
+    // This is to put the color on part based on the percentage value..
+    svg.append('rect').attr({ x: 0, y: 0, width: valInPercentage, height: 10, fill: '#5a4fef' });
   }
   return contents;
 }

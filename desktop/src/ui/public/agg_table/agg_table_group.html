@@ -1,5 +1,6 @@
 <table ng-if="rows"
        class="table agg-table-group"
+       ng-class="{'vunet-grid-table': useTableGrids, 'vunet-plain-table': !useTableGrids}"
        ng-repeat="table in rows">
   <thead>
     <tr>
@@ -23,6 +24,7 @@
           color-schema="colorSchema"
           link-info="linkInfo"
           add-sr-number="addSrNumber"
+          cell-font-size="cellFontSize"
           cumulative-row-operation="cumulativeRowOperation"
           cumulative-column-operation="cumulativeColumnOperation">
         </kbn-agg-table-group>
@@ -40,6 +42,7 @@
                        print-report="printReport"
                        is-collapse-time-headers="isCollapseTimeHeaders"
                        add-sr-number="addSrNumber"
+                       cell-font-size="cellFontSize"
                        sr-number-title="srNumberTitle"
                        cumulative-row-operation="cumulativeRowOperation"
                        cumulative-column-operation="cumulativeColumnOperation">
@@ -71,6 +74,7 @@
                              color-schema="colorSchema"
                              link-info="linkInfo"
                              add-sr-number="addSrNumber"
+                             cell-font-size="cellFontSize"
                              cumulative-row-operation="cumulativeRowOperation"
                              cumulative-column-operation="cumulativeColumnOperation">
         </kbn-agg-table-group>
@@ -88,6 +92,7 @@
                        interval="interval"
                        print-report="printReport"
                        add-sr-number="addSrNumber"
+                       cell-font-size="cellFontSize"
                        cumulative-row-operation="cumulativeRowOperation"
                        cumulative-column-operation="cumulativeColumnOperation">
         </kbn-agg-table>

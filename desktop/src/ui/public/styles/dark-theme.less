@@ -770,36 +770,74 @@
 
 .theme-dark {
   // Dark theme data table css
-
-  // Table header background
-  .table-condensed thead tr th {
-    background: @black;
+  .agg-table-group .agg-table-paginated {
+    border: 1px solid @dashboard-bg;
   }
 
-  .agg-table-group tbody tr:nth-child(odd) {
-    background-color: @data-tables-odd-row-background;
-  } /*odd*/
+  .vunet-grid-table {
 
-  .agg-table-group tbody tr:nth-child(even) {
-    background-color: @data-tables-even-row-background;
-  } /* even*/
+    // Table header background
+    .table-condensed thead tr th {
+      background: @dashboard-bg;
+      font-weight: bold;
+    }
+    .table-condensed {
+      tbody{
+        tr{
+          td{
+            color: @white;
+          }
+        }
+      }
+    }
 
-  .table-condensed tr th {
-    border-left: 1px solid @dashboard-bg;
-    border-top: 1px solid @dashboard-bg;
-    border-right: 1px solid @dashboard-bg;
-    color: @text-color;
+    tbody tr:nth-child(odd) {
+      background-color: @data-tables-odd-row-background;
+    } /*odd*/
+
+    tbody tr:nth-child(even) {
+      background-color: @data-tables-even-row-background;
+    } /* even*/
+
+    .table-condensed tr th {
+      border-left: 1px solid @dashboard-bg;
+      border-top: 1px solid @dashboard-bg;
+      border-right: 1px solid @dashboard-bg;
+      color: @text-color;
+    }
+
+    .table-condensed tbody td {
+      border-left: 1px solid @dashboard-bg;
+      border-bottom: 1px solid @dashboard-bg;
+      border-right: 1px solid @dashboard-bg;
+      color: @text-color;
+    }
   }
 
-  .table-condensed tbody td {
-    border-left: 1px solid @dashboard-bg;
-    border-bottom: 1px solid @dashboard-bg;
-    border-right: 1px solid @dashboard-bg;
-    color: @text-color;
-  }
-
-  .agg-table-paginated {
-    border:1px solid @dashboard-bg;
+  .vunet-plain-table {
+    .table-condensed {
+      thead {
+        tr{
+          th {
+            background-color: @black;
+            color: @white;
+            border-right: .1rem solid @dashboard-bg;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            border: .1rem solid @dashboard-bg;
+            color: @white;
+          }
+        }
+      }
+    }
+    .agg-table-paginated {
+      border:1px solid @dashboard-bg;
+      overflow-x: hidden;
+    }
   }
 }
 
@@ -838,11 +876,6 @@
 
 // Dark theme css for BMV in tabular view 
 .theme-dark {
-
-  // For Single Metric
-  .bs-metric-value {
-    color: white !important;
-  }
 
   .data-rows:first-child {
     td {

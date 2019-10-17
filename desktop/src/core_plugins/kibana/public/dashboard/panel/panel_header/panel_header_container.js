@@ -37,9 +37,12 @@ const mapStateToProps = ({ dashboard }, { panelId }) => {
     title: panel.title === undefined ? embeddableTitle : panel.title,
     isExpanded: getMaximizedPanelId(dashboard) === panelId,
     isViewOnlyMode: getFullScreenMode(dashboard) || getViewMode(dashboard) === DashboardViewMode.VIEW,
+    visType: visState.type,
     //don't show header if vis type is business metric
     hidePanelTitles: getHidePanelTitles(dashboard) || (visState && visState.type &&
       (visState && visState.type === 'business_metric') && hideBmvTitle(visState)) ||
+      (visState && visState.type === 'html') ||
+      (visState && visState.type === 'metric') ||
       (visState && visState.type && (visState.type === 'markdown') && hideMarkdownTitle(visState)),
   };
 };

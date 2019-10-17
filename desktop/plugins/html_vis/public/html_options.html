@@ -1,0 +1,14 @@
+<div class="html-vis-options form-group"  ng-controller="KbnHtmlEditController">
+  <div>
+    <label>HTML</label>
+  </div>
+  <div>
+    <div ui-ace="{theme: 'monokai', mode: 'html', onLoad: aceLoaded }" class="html-editor" ng-model="vis.params.html"></div>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" ng-model="vis.params.useForHeading">
+      Use this for heading
+    </label>
+  </div>
+</div>

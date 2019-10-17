@@ -223,6 +223,18 @@ uiModules
           }
         };
 
+        // This function checks if given visualisation is
+        // a html and the content needs to be used as header
+        $scope.isHtmlVisForHeading = function (savedObj) {
+          if (savedObj && savedObj.vis &&
+            savedObj.vis.type.name === 'html' &&
+            savedObj.visState.params.useForHeading) {
+            return true;
+          } else {
+            return false;
+          }
+        };
+
         $scope.$watch('vis.initialized', $scope.fetch);
 
         $scope.fetch();

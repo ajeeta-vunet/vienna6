@@ -28,6 +28,7 @@ uiModules
         isCollapseTimeHeaders: '=?',
         addSrNumber: '=?',
         srNumberTitle: '=?',
+        cellFontSize: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?',
         printReport: '=?'

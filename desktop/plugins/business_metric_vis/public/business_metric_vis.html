@@ -18,49 +18,64 @@
                   {'background-color': metricObj.color,
                    'color': '#fff' }">
         <div
-          class="view-more-link one-metric-link"
-          ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
-          <div
-            ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
-            <!-- <kbn-tooltip
-              text="View More"
-              placement="left"
-              append-to-body="0"> -->
-              <i
-                uib-tooltip='View More'
-                class="fa fa-arrow-circle-o-right"
-                ng-class="{'white': vis.params.metrics[outerIndex].bgColorEnabled }"
-                aria-hidden="true">
-              </i>
-            <!-- </kbn-tooltip> -->
-          </div>
-        </div>
-        <div class="bs-metric-vis">
+          class="bs-metric-vis"
+          ng-class="{'container-height-medium': vis.params.historicalDataEnabled || vis.params.actionButtonsEnabled,
+                    'container-height-small' : vis.params.historicalDataEnabled && vis.params.actionButtonsEnabled}">
           <div class="bs-metric-container">
-            <div
-              class="bs-metric-label"
-              ng-style="{'font-size': txtFontSize+'pt'}">
-              {{ vis.params.metrics[outerIndex].label }}
-              <kbn-tooltip
-                ng-show="vis.params.metrics[outerIndex].description"
-                text="{{vis.params.metrics[outerIndex].description}}"
-                placement="bottom"
-                append-to-body="1">
-                <i
-                  class="fa fa-question-circle"
-                  ng-class="{'white': vis.params.metrics[outerIndex].bgColorEnabled }"
-                  aria-hidden="true">
-                </i>
-              </kbn-tooltip>
+            <div ng-if="!vis.params.metrics[outerIndex].referenceLink.enabled">
+              <div
+                class="bs-metric-label"
+                ng-style="{'font-size': vis.params.textFontSize+'pt'}">
+                {{ vis.params.metrics[outerIndex].label }}
+                <kbn-tooltip
+                  ng-show="vis.params.metrics[outerIndex].description"
+                  text="{{vis.params.metrics[outerIndex].description}}"
+                  placement="bottom"
+                  append-to-body="1">
+                  <i
+                    class="fa fa-question-circle"
+                    ng-class="{'white': vis.params.metrics[outerIndex].bgColorEnabled }"
+                    aria-hidden="true">
+                  </i>
+                </kbn-tooltip>
+              </div>
+              <div
+                ng-show="metricObj.success"
+                class="bs-metric-value"
+                ng-style="vis.params.metrics[outerIndex].bgColorEnabled ?
+                          {'font-size': vis.params.fontSize+'pt', 'background': metricObj.color }:
+                          {'font-size': vis.params.fontSize+'pt', 'color': metricObj.color }">
+                {{ metricObj.formattedValue }}
+              </div>
             </div>
-            <div
-              ng-show="metricObj.success"
-              class="bs-metric-value"
-              ng-style="vis.params.metrics[outerIndex].bgColorEnabled ?
-                        {'font-size': vis.params.fontSize+'pt', 'background': metricObj.color }:
-                        {'font-size': vis.params.fontSize+'pt', 'color': metricObj.color }">
-              {{ metricObj.formattedValue }}
-            </div>
+            <div ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
+                <div
+                  class="bs-metric-label"
+                  ng-style="{'font-size': vis.params.textFontSize+'pt'}"
+                  ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
+                  {{ vis.params.metrics[outerIndex].label }}
+                  <kbn-tooltip
+                    ng-show="vis.params.metrics[outerIndex].description"
+                    text="{{vis.params.metrics[outerIndex].description}}"
+                    placement="bottom"
+                    append-to-body="1">
+                    <i
+                      class="fa fa-question-circle"
+                      ng-class="{'white': vis.params.metrics[outerIndex].bgColorEnabled }"
+                      aria-hidden="true">
+                    </i>
+                  </kbn-tooltip>
+                </div>
+                <div
+                  ng-show="metricObj.success"
+                  class="bs-metric-value"
+                  ng-style="vis.params.metrics[outerIndex].bgColorEnabled ?
+                            {'font-size': vis.params.fontSize+'pt', 'background': metricObj.color }:
+                            {'font-size': vis.params.fontSize+'pt', 'color': metricObj.color }"
+                  ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
+                  {{ metricObj.formattedValue }}
+                </div>
+              </div>
             <div
               ng-show="!metricObj.success"
               ng-style="{'padding': (vis.params.fontSize * noDataContainerConstant) +'pt'}"
@@ -76,7 +91,7 @@
             </div>
             <div
               class="goal-label"
-              ng-style="{'font-size': txtFontSize+'pt'}">
+              ng-style="{'font-size': vis.params.textFontSize+'pt'}">
               {{ vis.params.metrics[outerIndex].goalLabel }}
             </div>
           </div>
@@ -87,7 +102,7 @@
           <div 
             ng-repeat="actionbutton in vis.params.actionButtonsData" 
             ng-disabled="!isVisualizationSaved"
-            ng-style="{'background-color': actionbutton.actionColor,'font-size': (actionButtonFontSize + actionButtonFontConstant) +'pt' , 'padding':(actionButtonFontSize * actionButtonPaddingConstants) +'pt',color: idealTextColor(actionbutton.actionColor)}" 
+            ng-style="{'background-color': actionbutton.actionColor,'font-size': (vis.params.textFontSize + actionButtonFontConstant) +'pt' , 'padding':(vis.params.textFontSize * actionButtonPaddingConstants) +'pt',color: idealTextColor(actionbutton.actionColor)}" 
             class="single-metric-action-button" 
             ng-click="confirmationToStartActionForSingleMultiMetric(actionbutton.actionName)"
             uib-tooltip="{{actionbutton.actionName}}"
@@ -154,45 +169,57 @@
         ng-init="innerIndex=$index">
         <div class="single-metric-container">
           <div class="single-metric-content">
-            <div
-              class="single-metric-label"
-              ng-style="{'font-size': txtFontSize+'pt'}">
-              {{ metricName }}
-               <kbn-tooltip
-                ng-if="vis.params.metrics[outerIndex].description"
-                text="{{vis.params.metrics[outerIndex].description}}"
-                placement="bottom"
-                append-to-body="1">
-                <i
-                  ng-style="{'font-size': (txtFontSize * superScriptConstant + drillDownHelpIconConstant) +'pt'}"
-                  class="fa fa-question-circle"
-                  aria-hidden="true">
-                </i>
-              </kbn-tooltip>
-              <span
-                class="view-more-link"
-                ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
-                <span
-                  ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
-                  <kbn-tooltip
-                    text="View More"
-                    placement="left"
-                    append-to-body="1">
-                    <i
-                      ng-style="{'font-size': (txtFontSize * superScriptConstant + drillDownHelpIconConstant) +'pt'}"
-                      class="fa fa-arrow-circle-o-right"
-                      aria-hidden="true">
-                    </i>
-                  </kbn-tooltip>
-                </span>
-              </span>
+            <div ng-if="!vis.params.metrics[outerIndex].referenceLink.enabled">
+              <div
+                class="single-metric-label"
+                ng-style="{'font-size': vis.params.textFontSize+'pt'}">
+                {{ metricName }}
+                <kbn-tooltip
+                  ng-if="vis.params.metrics[outerIndex].description"
+                  text="{{vis.params.metrics[outerIndex].description}}"
+                  placement="bottom"
+                  append-to-body="1">
+                  <i
+                    ng-style="{'font-size': (vis.params.textFontSize * superScriptConstant) +'pt'}"
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </kbn-tooltip>
+              </div>
+              <div
+                ng-show="metricObj.success"
+                class="single-metric-value"
+                ng-style="{'font-size': vis.params.fontSize+'pt',
+                          'color': metricObj.color }">
+                {{ metricObj.formattedValue }}
+              </div>
             </div>
-            <div
-              ng-show="metricObj.success"
-              class="single-metric-value"
-              ng-style="{'font-size': vis.params.fontSize+'pt',
-                        'color': metricObj.color }">
-              {{ metricObj.formattedValue }}
+            <div ng-if="vis.params.metrics[outerIndex].referenceLink.enabled">
+              <div
+                class="single-metric-label"
+                ng-style="{'font-size': vis.params.textFontSize+'pt'}"
+                ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
+                {{ metricName }}
+                <kbn-tooltip
+                  ng-if="vis.params.metrics[outerIndex].description"
+                  text="{{vis.params.metrics[outerIndex].description}}"
+                  placement="bottom"
+                  append-to-body="1">
+                  <i
+                    ng-style="{'font-size': (vis.params.textFontSize * superScriptConstant) +'pt'}"
+                    class="fa fa-question-circle"
+                    aria-hidden="true">
+                  </i>
+                </kbn-tooltip>
+              </div>
+              <div
+                ng-show="metricObj.success"
+                class="single-metric-value"
+                ng-style="{'font-size': vis.params.fontSize+'pt',
+                          'color': metricObj.color }"
+                ng-click="viewDashboardForThisMetric(vis.params.metrics[outerIndex].referenceLink, vis.params.metrics[outerIndex].filter)">
+                {{ metricObj.formattedValue }}
+              </div>
             </div>
             <div
               ng-show="!metricObj.success"
@@ -210,7 +237,7 @@
             <div
               ng-show="metricObj.success"
               class="single-metric-goal"
-              ng-style="{'font-size': txtFontSize+'pt'}">
+              ng-style="{'font-size': vis.params.textFontSize+'pt'}">
               {{ vis.params.metrics[outerIndex].goalLabel }}
             </div>
             <div
@@ -252,7 +279,7 @@
       <div 
         ng-repeat="actionbutton in vis.params.actionButtonsData" 
         ng-disabled="!isVisualizationSaved"
-        ng-style="{'background-color': actionbutton.actionColor,'font-size': (actionButtonFontSize + actionButtonFontConstant) +'pt' , 'padding':(actionButtonFontSize*actionButtonPaddingConstant) +'pt' ,'width': (actionButtonFontSize*actionButtonWidthConstant)+'pt',color: idealTextColor(actionbutton.actionColor)}"
+        ng-style="{'background-color': actionbutton.actionColor,'font-size': (vis.params.textFontSize + actionButtonFontConstant) +'pt' , 'padding':(vis.params.textFontSize*actionButtonPaddingConstant) +'pt' ,'width': (vis.params.textFontSize*actionButtonWidthConstant)+'pt',color: idealTextColor(actionbutton.actionColor)}"
         class="multiple-metric-action-button" 
         ng-click="confirmationToStartActionForSingleMultiMetric(actionbutton.actionName)"
         uib-tooltip="{{actionbutton.actionName}}"

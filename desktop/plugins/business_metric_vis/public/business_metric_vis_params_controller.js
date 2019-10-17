@@ -17,6 +17,61 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
   $scope.indexFields = [];
   $scope.savedSearchIds = [];
   $scope.indexPatternIds = [];
+  // Initializing the options for interval
+  // metric
+  $scope.intervalOptions = [
+    '',
+    'Previous Window',
+    'This Day',
+    'This Week',
+    'This Month',
+    'This Year',
+    'Previous Day',
+    'Day Before Previous Day',
+    'Previous Week',
+    'Previous Month',
+    'Previous Year',
+    'Last 15 Minutes',
+    'Last 30 Minutes',
+    'Last 1 Hours',
+    'Last 4 Hours',
+    'Last 12 Hours',
+    'Last 24 Hours',
+    'Last 7 days',
+    'Last 30 days',
+    'Last 60 days',
+    'Last 90 days',
+    'Last 6 Months',
+    'Last 1 Years',
+    'Last 2 Years',
+    'Last 5 Years',
+    'Last 10 Years',
+    'DTD',
+    'WTD',
+    'MTD',
+    'YTD',
+    'Next Window',
+    'Next Day',
+    'Day After Next Day',
+    'Next Week',
+    'Next Month',
+    'Next Year',
+    'Next 24 Hours',
+    'Next 12 Hours',
+    'Next 4 Hours',
+    'Next1 Hours',
+    'Next 15 Minutes',
+    'Next 30 Minutes',
+    'Next 7 days',
+    'Next 30 days',
+    'Next 60 days',
+    'Next 90 days',
+    'Next 6 Months',
+    'Next 1 Years',
+    'Next 2 Years',
+    'Next 5 Years',
+    'Next 10 Years',
+  ];
 
   // If the BMV is built based on the index then the saved search for that BMV should be empty
   const defaultSavedSearch = {
@@ -186,14 +241,6 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
         //if historicalData has values
         if ($scope.vis.params.historicalData && $scope. vis.params.historicalData.length) {
           $scope.historicalDataEnabled = true;
-        }
-
-        if (!$scope.vis.params.textFontSize) {
-          if ($scope.vis.params.fontSize <= 24) {
-            $scope.vis.params.textFontSize = $scope.vis.params.fontSize * 70 / 100;
-          } else {
-            $scope.vis.params.textFontSize = 16;
-          }
         }
 
         for (let metricLength = 0; metricLength < bmLength; metricLength++) {

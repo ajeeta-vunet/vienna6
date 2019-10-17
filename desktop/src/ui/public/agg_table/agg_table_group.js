@@ -23,6 +23,8 @@ uiModules
         isCollapseTimeHeaders: '=?',
         addSrNumber: '=?',
         srNumberTitle: '=?',
+        useTableGrids: '=?',
+        cellFontSize: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?',
       },

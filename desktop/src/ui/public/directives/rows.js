@@ -15,8 +15,10 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
     restrict: 'A',
     link: function ($scope, $el, attr) {
       function addCell($tr, contents, interval, configObj, show) {
+
         function createCell() {
-          return $(document.createElement('td'));
+          const cellElement = document.createElement('td');
+          return cellElement;
         }
 
         function createFilterableCell(aggConfigResult) {
@@ -47,6 +49,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
 
         let val;
         let visType;
+        let cellElement;
         if (contents instanceof AggConfigResult) {
           const field = contents.aggConfig.getField();
           const isCellContentFilterable =
@@ -57,15 +60,28 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             $cell = createFilterableCell(contents);
             $cellContent = $cell.find('[data-cell-content]');
           } else {
-            $cell = $cellContent = createCell();
+            cellElement = createCell();
+            $cell = $cellContent = $(cellElement);
           }
 
           visType = contents.aggConfig.vis.type.name;
           val = contents.value;
 
-          contents = createCellContents(contents, getAppState, Private, timefilter, $scope.printReport);
+          let addBar = false;
+          let addBarValMultiplier = 1;
+          if (field && field.displayName && field.displayName in contents.aggConfig.vis.indexPattern.fieldFormatMap) {
+            if (contents.aggConfig.vis.indexPattern.fieldFormatMap[field.displayName].type.id === 'percentage') {
+              if (contents.aggConfig.vis.indexPattern.fieldFormatMap[field.displayName]._params.transform === '0-1_range') {
+                addBarValMultiplier = 100;
+              }
+              addBar = true;
+            }
+          }
+          contents = createCellContents(contents, getAppState, Private, timefilter, $scope.printReport, cellElement,
+            addBar, addBarValMultiplier);
         } else {
-          $cell = $cellContent = createCell();
+          cellElement = createCell();
+          $cell = $cellContent = $(cellElement);
 
           // TODO: It would be better to actually check the type of the field, but we don't have
           // access to it here. This may become a problem with the switch to BigNumber
@@ -118,6 +134,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             }
           }
         }
+        // This is to update the font size based on whats configured in the table.
+        $cellContent.css('font-size', $scope.cellFontSize);
         $tr.append($cell);
       }
 

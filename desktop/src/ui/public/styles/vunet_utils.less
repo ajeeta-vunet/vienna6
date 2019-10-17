@@ -296,11 +296,6 @@ input[type="file"]{
                           }
                           .single-metric-wrapper{
                             .single-metric-show-container{
-                              .business-metric-container{
-                                .bs-metric-vis{
-                                  height: 55%;
-                                }
-                              }
                               .single-metric-action-buttons-container{
                                 width: 100%;
                                 .single-metric-action-button{
@@ -785,8 +780,18 @@ button[disabled], {
 // Remove @white spaces for business metric panels
 .bs-metric-panel {
   padding: 0px !important;
+  border-radius: 4px;
+  .vis-container{
+    overflow: hidden;
+  }
 }
 
+// Remove scrollbar for html vis
+.html-panel-heading {
+  .vis-container{
+    overflow: hidden;
+  }
+}
 // Get rid of extra @white spaces in visualisations
 // added under a dashboard.
 .dashboard-panel {
@@ -796,63 +801,87 @@ button[disabled], {
 }
 
 // Data table css
-
-// Table header background
-.table-condensed thead tr th{
-  background: @data-tables-header-background;
-}
-
 .agg-table-group {
   margin-bottom: 0px;
+
+  .table-condensed {
+    margin:0px;
+    .zero-margin {
+      margin: 2px 0px;
+      font-weight: bold;
+    }
+  }
+
+  .agg-table-paginated {
+    // Set the height of empty rows in table / matrix to 22px
+    tr td {
+      height: 22px;
+    }
+  }
 }
 
-.agg-table-group tbody tr:nth-child(odd) {
+// For tables with grids
+.vunet-grid-table {
+
+  .table-condensed tr th {
+    border-bottom: 1px solid @data-tables-border;
+    border-top: 1px solid @data-tables-border !important;
+    padding: 9px 7px 7px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+  }
+
+  .table-condensed tbody td {
+    border-top: 0px;
+    padding: 9px 7px 7px 14px;
+    font-size: 12px;
+    color: #000;
+  }
+
+  .table-condensed tbody tr td {
+    padding: 9px 7px 7px 14px;
+  }
+
+  tbody tr:nth-child(odd) {
     background-color: @white;
-} /*odd*/
+  } /*odd*/
 
-.agg-table-group tbody tr:nth-child(even) {
-    background-color: @data-tables-even-row-background;
-} /* even*/
+  tbody tr:nth-child(even) {
+     background-color: @data-tables-even-row-background;
+  } /* even*/
+}
 
-.table-condensed {
-  margin:0px;
+// For tables without grids
+.vunet-plain-table {
+  // Table header background
+  .table-condensed thead tr th {
+    background: @white;
+  }
+
+  .table-condensed tr th {
+    border-bottom: 1px solid @data-tables-border;
+    border-top: 1px solid @data-tables-border !important;
+    padding: 9px 7px 7px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(20, 14, 14);
+  }
+
+  .table-condensed tbody td {
+    border-top: 0px;
+    padding: 5px 5px;
+    font-size: 12px;
+    color: #000;
+  }
+
+  .table-condensed tbody tr td {
+    padding: 9px 7px 7px 14px;
+  }
 }
 
 .table-condensed-print-report {
   font-family: 'sans-serif' !important;
-}
-
-.table-condensed tr th {
-  border-left: 1px solid @data-tables-border;
-  border-top: 1px solid @data-tables-border;
-  border-right: 1px solid @data-tables-border;
-  border-bottom:0px;
-  padding: 4px 5px;
-  font-size: 13px;
-  font-weight: normal;
-  color: #000;
-}
-
-.table-condensed tbody td {
-  border-left: 1px solid @data-tables-border;
-  border-bottom: 1px solid @data-tables-border;
-  border-right: 1px solid @data-tables-border;
-  border-top: 0px;
-  padding: 4px 5px;
-  font-size: 12px;
-  color: #000;
-}
-
-.table-condensed tbody tr td {
-  padding:4px 5px;
-}
-
-.agg-table-paginated {
-  border:1px solid @data-tables-border;
-  // Set the height of empty rows in table / matrix to 22px
-  tr td {
-    height: 22px;
-  }
 }
 
 .userCommentSection {

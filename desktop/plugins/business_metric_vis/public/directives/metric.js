@@ -13,6 +13,7 @@ app.directive('vudataMetric', function () {
       indexFields: '=',
       allFields: '=',
       additionalFields: '=',
+      intervalOptions: '=',
       addAdditionalFields: '&',
       removeAdditionalFields: '&'
     },

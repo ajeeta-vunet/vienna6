@@ -17,6 +17,30 @@
         Per Page should be between 1 and 3000.
       </div>
     </div>
+    <div class="form-group">
+      <label for="datatableVisualizationCellFontSize">Data Font Size</label>
+      <input
+        type="number"
+        name="cellFontSize"
+        ng-model="vis.params.cellFontSize"
+        min="8"
+        max="20"
+        class="form-control"
+        id="datatableVisualizationCellFontSize"
+      />
+      <div
+        ng-show="tableOptionsForm.cellFontSize.$error.min"
+        class="error"
+        >
+        Font size should be more than 8.
+      </div>
+      <div
+        ng-show="tableOptionsForm.cellFontSize.$error.max"
+        class="error"
+        >
+        Font size should be less than 20.
+      </div>
+    </div>
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="vis.params.showMeticsAtAllLevels" />
@@ -116,6 +140,19 @@
           class="form-control"
         />
       </div>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="vis.params.useTableGrids" />
+          Show table grids.
+        <kbn-tooltip
+          text="Enable this to get a striped table with grids"
+          placement="right"
+          append-to-body="1"
+        >
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+      </label>
     </div>
     <show-cumulative-row vis-obj="vis"></show-cumulative-row>
     <metric-color-schema

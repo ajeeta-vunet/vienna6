@@ -1,0 +1,26 @@
+<div ng-controller="insightVisController" class="insight-vis-wrapper"
+  ng-style="data.length === 1 && {'overflow':'hidden'}">
+  <div ng-if="!data.length || !insightAvailableFlag" class="no-data-container-wrapper">
+    <div class="insight-vis-no-data-container">
+      <h2 aria-hidden="true">
+        <i aria-hidden="true" class="fa fa-exclamation-triangle">
+        </i>
+      </h2>
+      <h4>No Insights Found</h4>
+    </div>
+  </div>
+  <div ng-if="data.length" class="insight-vis-container">
+    <div ng-repeat="insight in data"
+    ng-style="(!insight.data && {'display':'none'}) || (data.length === 1 && {'margin-bottom':'0px'})"
+     class="item-container row">
+      <div class="image-container col-sm-3">
+        <img class="item-image" src="{{insight.image}}">
+      </div>
+      <div class="text-container col-sm-9">
+        <div class="insight-value">{{insight.metadata.value[0]}}</div>
+        <div class="insight-title">{{insight.name}}</div>
+        <div class="insight-data">{{insight.data.text}}</div>
+      </div>
+    </div>
+  </div>
+</div>

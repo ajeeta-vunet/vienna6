@@ -1,0 +1,80 @@
+<div ng-controller="insightVisParamsController" class="insight-metric-sidebar-container">
+
+  <!-- BMV Section -->
+  <div class="sidebar-item">
+    <div class="sidebar-item-title">
+      Configure Business Metric
+    </div>
+    <div class="add-insight-wrapper">
+
+      <div class="form-group">
+        <insight-metric-list bmv="vis.params.bmv">
+        </insight-metric-list>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insights Section -->
+  <div ng-if="vis.params.bmv.length>=1" class="sidebar-item">
+    <div class="sidebar-item-title">
+      Configure Insights
+    </div>
+    <div class="outer-insights-container">
+      <div class="insight-container" ng-repeat="insight in vis.params.insights track by $index">
+        <div class="vis-editor-agg-header">
+          <button aria-label="Toggle editor"
+            ng-click="operInsightList.expanded[$index] = !operInsightList.expanded[$index]"
+            aria-expanded="{{ !!operInsightList.expanded[$index] }}" aria-controls="{{ insight }}" type="button"
+            data-test-subj="toggleEditor"
+            class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+            <i aria-hidden="true" class="fa" ng-class="{ 'fa-caret-right': !operInsightList.expanded[$index],
+                          'fa-caret-down': operInsightList.expanded[$index] }">
+            </i>
+          </button>
+          <span ng-show="!vis.params.insights[$index].nodeLabel" class="vis-editor-agg-header-title text-display">
+            {{insight.name}}
+          </span>
+          <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+            <div class="vis-editor-agg-header-controls">
+
+              <!-- up button -->
+              <button aria-label="Move Up" ng-if="vis.params.insights.length > 1" ng-class="{ disabled: $first }"
+                class="kuiButton kuiButton--primary kuiButton--small" ng-click="!$first && moveUp($index)"
+                tooltip="Move Up" tooltip-append-to-body="true" type="button" class="btn btn-xs btn-default">
+                <i aria-hidden="true" class="fa fa-caret-up">
+                </i>
+              </button>
+
+              <!-- down button -->
+              <button aria-label="Move Down" ng-if="vis.params.insights.length > 1" ng-class="{ disabled: $last }"
+                class="kuiButton kuiButton--primary kuiButton--small" ng-click="!$last && moveDown($index)"
+                tooltip="Move Down" tooltip-append-to-body="true" type="button" class="btn btn-xs btn-default">
+                <i aria-hidden="true" class="fa fa-caret-down">
+                </i>
+              </button>
+
+              <!-- remove button -->
+              <button aria-label="Remove Insight" ng-click="removeInsight($index)" tooltip="Remove Insight"
+                tooltip-append-to-body="true" type="button" class="kuiButton kuiButton--danger kuiButton--small">
+                <i aria-hidden="true" class="fa fa-times">
+                </i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="vis-editor-agg-header-controls">
+          <insight-config-container ng-show="operInsightList.expanded[$index]"
+            vis-params="vis.params.insights[$index]">
+          </insight-config-container>
+        </div>
+      </div>
+      <div ng-show="vis.params.insights.length<5" class="vis-editor-agg-wide-btn add-button-placement">
+        <div class="kuiButton kuiButton--secondary kuiButton--small" ng-click="addInsight()">
+          <i aria-hidden="true" class="fa fa-plus">
+          </i>
+          Add Insights
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

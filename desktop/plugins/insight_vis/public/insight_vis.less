@@ -1,0 +1,73 @@
+@import (reference) "~ui/styles/mixins.less";
+@import "~ui/styles/vunet_variable_theme.less";
+
+.insight-vis-wrapper {
+  width: 100%; 
+  .insight-vis-container {
+    width: 100%;
+    .row {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+    .col-sm-1, .col-sm-2, .col-sm-3,
+    .col-sm-4, .col-sm-5, .col-sm-6,
+    .col-sm-7, .col-sm-8, .col-sm-9,
+    .col-sm-10, .col-sm-11, .col-sm-12 {
+      padding: 0px;
+    }
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    .item-container {
+      width: 40rem;
+      min-width: 200px;
+      max-width: 700px;
+      border-bottom: .1rem solid @seperator_color_grey;
+      margin: 1rem 2rem 4rem 1rem;
+      .image-container {
+        vertical-align: top;
+        margin-bottom: 2rem;
+        .item-image {
+          width: 7.2rem;
+        }
+      }
+      .text-container {
+        .insight-value {
+          font-size: 4.9rem;
+          font-family: @roboto-bold;
+          color: #004a98;
+          word-break: break-word;
+        }
+        .insight-title {
+          font-size: 1.6rem;
+          font-family: @roboto-medium;
+          color: #004a98;
+          padding: .5rem 0rem;
+        }
+        .insight-data {
+          font-size: 1.5rem;
+          font-family: @roboto-regular;
+          color: #252525;
+          padding-bottom: 2rem;
+        }
+      }
+    }
+  }
+  .no-data-container-wrapper {
+    display: flex;
+    text-align: center;
+    height: 100%;
+    .insight-vis-no-data-container {
+        margin: auto;
+    }
+  }
+}
+
+// Remove wordwrap from table body
+.add-insight-wrapper {
+  .metric-list-table {
+    tbody {
+      word-wrap: break-word;
+    }
+  }
+}

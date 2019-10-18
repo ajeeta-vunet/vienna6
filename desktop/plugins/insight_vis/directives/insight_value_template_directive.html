@@ -1,0 +1,29 @@
+<div class="form-group">
+  <div>
+    <label>Select icon</label>
+    <kbn-tooltip text="Select insight icon" placement="right" append-to-body="1">
+      <i class="fa fa-question-circle"></i>
+    </kbn-tooltip>
+    <div>
+      <select ng-model="visParams.group" class="form-control" ng-options="option for option in iconList | orderBy:option" required>
+      </select>
+    </div>
+  </div>
+  <div class="form-group bottom-space">
+    <div>
+      <div>
+        <label>
+          Configuration
+          <kbn-tooltip text="Provide advanced configuration for business metric" placement="bottom" append-to-body="1">
+            <span>
+              <i class="fa fa-question-circle" aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+      </div>
+      <textarea ng-model="visParams.data" class="form-control" rows="5" required>
+      </textarea>
+    </div>
+  </div>
+</div>

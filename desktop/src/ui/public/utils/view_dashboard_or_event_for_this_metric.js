@@ -6,9 +6,9 @@ export function viewDashboardOrEventForThisMetric(
   Private,
   timefilter,
   kbnUrl,
-  refLink,
-  searchString) {
+  refLink) {
   let referencePage = '';
+  let searchString = '';
 
   // We currently do not support metric internal filters to be passed to
   // the drilled down dashboard.

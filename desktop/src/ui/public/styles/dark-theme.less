@@ -5,6 +5,16 @@
   color: @text-color;
   background-color: @dashboard-bg;
 
+  // This is done to get lighter colors for
+  // line and text in pie chart
+  .label-line {
+    stroke:@gray10;
+  }
+
+  .label-text {
+    fill: @gray10;
+  }
+
 // /src/ui/public/styles/bootstrap/scaffolding.less
   a {
     color: @link-color;
@@ -812,23 +822,27 @@
       border-right: 1px solid @dashboard-bg;
       color: @text-color;
     }
+
+    .agg-table-paginated {
+      border:1px solid @dashboard-bg;
+    }
   }
 
-  .vunet-plain-table {
-    .table-condensed {
-      thead {
+  .vunet-plain-table{
+    .table-condensed{
+      thead{
         tr{
-          th {
+          th{
             background-color: @black;
             color: @white;
-            border-right: .1rem solid @dashboard-bg;
+            border-right: .1rem solid #434242;
           }
-        }
+        } 
       }
-      tbody {
-        tr {
-          td {
-            border: .1rem solid @dashboard-bg;
+      tbody{
+        tr{
+          td{
+            border: .1rem solid #434242;
             color: @white;
           }
         }
@@ -839,6 +853,7 @@
       overflow-x: hidden;
     }
   }
+  
 }
 
 .theme-dark {
@@ -911,4 +926,58 @@
     }
   }
 
+}
+
+// Defining Css colors for dark theme
+
+
+.theme-dark{
+  // This is done for insights visualization
+  .insight-vis-wrapper {
+    .insight-vis-container {
+      .item-container {
+        .text-container {
+          .insight-data{
+            color:@text-color;
+          }
+          .insight-value{
+            color:white;
+          }
+          .insight-title{
+            color:white;
+          }
+        }
+      }
+    }
+  }
+
+  // This is done for KPI visualization
+  .status-indicator-and-kpi-vis-container-wrapper{
+    .status-and-kpi-outer-container {
+      .kpi-container-vertical{
+        .kpi-label{
+          color: white;
+        }
+        .kpi-description {
+          color:@text-color;
+        }
+      }
+      .kpi-container-horizontal{
+        .kpi-horizontal-container{
+          border: .1rem solid #434242!important;
+          .kpi-icon{
+            border-right: .1rem solid #434242!important;
+          }
+          .kpi-horizontal-details-container{
+            .kpi-label{
+              color: white;
+            }
+            .kpi-description {
+              color:@text-color;
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -21,7 +21,19 @@ app.directive('vudataMetric', function () {
     link: function (scope) {
 
       scope.selectedFields = [];
-
+      scope.metricIcons = [
+        'archival_cost',
+        'archival_growth_rate',
+        'archival_volume',
+        'cpu',
+        'hard_disk',
+        'operational_performance_index',
+        'productivity_hours',
+        'ram_memory',
+        'resource_cost',
+        'total_man_hours',
+        'unproductivity_hours'
+      ];
       // The selected fields in the "Additional Fields" should be in dict format like {"name" : "host"}
       // But we are storing the selected fields as "host" in saved object. So we need to build the dict format
       // using the value fetched from the saved object.

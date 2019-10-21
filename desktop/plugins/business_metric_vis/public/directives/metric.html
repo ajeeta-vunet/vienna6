@@ -291,6 +291,29 @@ Time (input is assumed to be number of seconds):
       </p>
     </div>
 
+    <div class="form-group bottom-space">
+      <label>
+        Icon
+        <kbn-tooltip
+        text="The icon has been used for this metric"
+        placement="right"
+        append-to-body="1">
+          <span>
+            <i
+              class="fa fa-question-circle"
+              aria-hidden="true">
+            </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <select
+        class="form-control"
+        ng-model="metric.metricIcon"
+        name="metricIcon"
+        ng-options="option as option for option in metricIcons">
+      </select>
+    </div>
+
     <!-- Inteval options  -->
     <div
       class="form-group bottom-space">
@@ -315,8 +338,8 @@ Time (input is assumed to be number of seconds):
         Please select a value.
       </p>
     </div>
-
-    <!-- Threshold config starts-->
+    
+    <!--Threshold config  starts-->
     <div class="collapse-header-wrapper">
       <button
         aria-label="{{ showThresholdOptions ? 'Close' : 'Open' }}"

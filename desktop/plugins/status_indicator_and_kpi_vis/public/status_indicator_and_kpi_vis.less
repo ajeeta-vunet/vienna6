@@ -1,0 +1,168 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.status-indicator-and-kpi-vis-container-wrapper {
+  font-family: @roboto-regular;
+  width: 100%;
+  .status-and-kpi-outer-container{
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    .status-and-kpi-container{
+      width: 25rem;
+      min-width: 150px;
+      margin: 2rem; 
+      .background-good{
+        background-image: linear-gradient(-90deg, #165513 , #66ae2a );
+      }
+      .background-ok{
+        background-image: linear-gradient(to bottom right, #ffd210 ,#e19500 );
+      }
+      .background-warning{
+        background-image: linear-gradient(-90deg, #e58f15, #ff7063  );
+      }
+      .background-bad{
+        background-image:linear-gradient(to bottom right, #ff6b54, #ff0012);
+      }
+      .status-content-container{
+        border-top-left-radius: 4rem;
+        border-bottom-left-radius: 4rem;
+        border-top-right-radius: 1.5em;
+        border-bottom-right-radius: 1.5rem;
+        .status-indicator-icon{
+          padding-left: 2.5px;
+          img{
+            width: 7rem;
+            padding-top: .2rem;
+          }
+        }
+        .status-icon-and-label-container-wrapper{
+          padding-right: 5px;
+          padding-top: .8rem;
+          text-align: center;
+          padding-left: 0px;
+          .status-icon-and-label-container{
+            padding-top: .5rem;
+            padding-bottom: 0.3rem;
+            width: 85%;
+            .bmv-metric-icon{
+              img{
+                width: 2rem;
+              }
+            }
+            .status-indicator-label{
+              color: @white;
+              font-family: @roboto-bold;
+              font-size: 2rem;
+            }
+          }
+          .status-indicator-description{
+            color: @white;
+            font-size: 1.2rem;
+            line-height: 1.2;
+            width: 85%;
+            margin-right: auto;
+          }
+        }       
+      }
+    }
+    .kpi-container-vertical {
+      display: flex;
+      flex-flow: column wrap;
+      text-align: center;
+      .kpi-vertical-container{
+        width: 20rem;
+        margin: 0rem 1rem 2rem 1rem;
+        min-width: 100px;
+        max-width: 300px;
+        padding: 1.25rem 1rem;
+      } 
+      .kpi-icon{
+        img{
+          width: 8rem;
+        }
+      }
+      .kpi-value{
+        font-size: 3.8rem;
+        color: #004a98;
+        padding: 1rem 0rem .5rem 0rem;
+        font-family: @roboto-bold;
+      }
+      .kpi-label{
+        font-size: 1.6rem;
+        color: #222222;
+        font-family: @roboto-medium;
+
+      }
+      .kpi-description{
+        font-size: 1.5rem;
+        color: #252525;
+        letter-spacing: .05rem;
+        padding-top: .3rem;
+        word-break: break-all;
+      }
+    }
+    .kpi-horizontal-container{
+      // width: 20rem;
+      width: 35rem;
+      border: .2rem solid @border_color_lighter;
+      border-radius : 1rem;
+      margin: 1rem 0rem 3rem 0rem;
+      padding: 1.25rem 0rem 1.25rem 2.2rem!important;
+      min-width: 200px;
+      max-width: 450px;
+      padding: 1.25rem 0rem;
+      display: flex;
+      flex-flow: column wrap;
+      text-align: center;
+      .kpi-icon{
+        width: 30%;
+        margin-top: 1.75rem;
+        border-right: .1rem solid @border_color_lighter;
+        img{
+          width: 8rem;
+        }
+      }
+      .kpi-horizontal-details-container{
+        height: 12rem;   
+        text-align: left;
+        .kpi-value{
+          font-size: 3.8rem;
+          color: #004a98;
+          font-family: @roboto-bold;
+        }
+        .kpi-label{
+          font-size: 1.6rem;
+          color: #222222;
+          font-family: @roboto-medium;
+  
+        }
+        .kpi-description{
+          font-size: 1.5rem;
+          color: #252525;
+          letter-spacing: .05rem;
+          padding-top: .3rem;
+          word-break: break-all;
+          padding-right: 1.5rem;
+        }
+      } 
+      .center-align-if-no-desc{
+        padding-top: 1.5rem;
+      }
+      
+    }
+    .kpi-container-horizontal , .kpi-container-vertical{
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-evenly;
+    }
+  }
+  .no-data-container-wrapper {
+    display: flex;
+    text-align: center;
+    height: 100%;
+    .kpi-vis-no-data-container {
+        margin: auto;
+    }
+  }
+}

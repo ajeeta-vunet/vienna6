@@ -1,0 +1,177 @@
+
+  <div
+  ng-controller="statusIndicatorAndKpiVisParamsController"
+  class="status-indicator-and-kpi-sidebar-container">
+    <!-- configuring parametres -->
+    <div class="sidebar-item">
+      <div class="sidebar-item-title">
+        Configure Parameters
+      </div>
+      <div class="form-group" >
+        <label>Template</label>
+        <select 
+          ng-model="vis.params.request_type" 
+          class="form-control" 
+          name="parameterType" 
+          required
+          aria-invalid="true"
+          ng-options="option as option for option in visualizationTypes"
+          ng-class="{error: visualizeEditor.parameterType.$error.required}">
+        </select>
+      </div>
+      <div ng-if="vis.params.request_type === 'KPI'">
+        <div class="form-group" >
+          <label>
+            Select KPI Template
+          </label>
+          <select
+            ng-model="vis.params.kpiTemplate"
+            class="form-control" 
+            required
+            name="kpiTemplate"
+            ng-options="template as template for template in kpiTemplateList"
+            >
+          </select>
+        </div>
+      </div>
+      <div ng-repeat="parameter in vis.params.parameters track by $index" class="">
+        <div class="vis-editor-agg-header">
+          <button
+            aria-label="Toggle editor"
+            ng-click="openConfigureParameter[$index].expanded = !openConfigureParameter[$index].expanded"
+            aria-expanded="{{ !!openConfigureParameter[$index].expanded }}"
+            aria-controls="{{ parameter }}"
+            type="button"
+            data-test-subj="toggleEditor"
+            class="kuiButton kuiButton--primary kuiButton--small vis-editor-agg-header-toggle">
+            <i aria-hidden="true"
+              class="fa"
+              ng-class="{ 'fa-caret-right': !openConfigureParameter[$index].expanded,
+                              'fa-caret-down': openConfigureParameter[$index].expanded }">
+            </i>
+          </button>
+          <span class="vis-editor-agg-header-title">
+            Parameter
+          </span>
+          <span class="vis-editor-agg-header-description handle-overflow">
+            {{ vis.params.parameters[$index].name.title }}
+          </span>
+          <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
+          
+
+            <!-- up button -->
+            <button
+              aria-label="Increase Priority"
+              ng-if="vis.params.parameters.length > 1"
+              ng-class="{ disabled: $first }"
+              ng-click="!$first && moveUpParameter($index)"
+              tooltip="Increase Priority"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--primary kuiButton--small">
+              <i
+                aria-hidden="true"
+                class="fa fa-caret-up">
+              </i>
+            </button>
+      
+            <!-- down button -->
+            <button
+              aria-label="Decrease Priority"
+              ng-if="vis.params.parameters.length > 1"
+              ng-class="{ disabled: $last }"
+              ng-click="!$last && moveDownParameter($index)"
+              tooltip="Decrease Priority"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--primary kuiButton--small">
+              <i aria-hidden="true" class="fa fa-caret-down">
+              </i>
+            </button>
+      
+            <!-- remove button -->
+            <button
+              ng-if="vis.params.parameters.length-1"
+              aria-label="Remove Parameter"
+              ng-click="removeParameter($index)"
+              tooltip="Remove Parameter"
+              tooltip-append-to-body="true"
+              type="button"
+              class="kuiButton kuiButton--danger kuiButton--small">
+              <i aria-hidden="true" class="fa fa-times">
+              </i>
+            </button>
+          </div>
+        </div>
+      
+        <div ng-show="openConfigureParameter[$index].expanded" >
+          <div class="form-group" >
+            <label>
+              Select Business Metric
+            </label>
+            <select
+              ng-model="parameter.name"
+              class="form-control" 
+              required
+              name="parameterBmv"
+              ng-options="option as option.title for option in bmvList track by option.id"
+              >
+            </select>
+            <p
+              class="error-highlight"
+              ng-show="visualizeEditor.parameterBmv.$error.required && visualizeEditor.parameterBmv.$dirty">
+              Please select a business Metric>
+            </p>
+          </div>
+          
+          <div ng-if="vis.params.request_type === 'Status Indicator'">
+
+            <div class="form-group">
+              <label>
+                Status Indicator Label
+              </label>
+              <input 
+                ng-model="parameter.statusIndicatorLabel" 
+                class="form-control" 
+                type="text" 
+                name="statusIndicatorLabel" 
+                maxlength="16"
+                required
+                aria-invalid="true">
+            </div> 
+  
+            <div class="form-group">
+              <label>
+                Status Indicator Description
+              </label>
+              <input 
+                ng-model="parameter.statusIndicatorDescription" 
+                class="form-control" 
+                type="text" 
+                name="statusIndicatorDescription" 
+                maxlength="24"
+                required
+                aria-invalid="true">
+            </div>
+            
+          </div> 
+
+        </div>
+      </div>
+      <div class="vis-editor-agg-wide-btn">
+        <div
+          ng-show="vis.params.parameters.length < 10"
+          class="kuiButton kuiButton--secondary kuiButton--small"
+          ng-click="addParameter()">
+          <i
+            aria-hidden="true"
+            class="fa fa-plus">
+          </i>
+          Add parameter
+        </div>
+      </div>
+    </div>
+
+</div>
+
+

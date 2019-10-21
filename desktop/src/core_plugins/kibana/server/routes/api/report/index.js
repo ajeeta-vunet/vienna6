@@ -171,4 +171,23 @@ export function reportDownloadApi(server) {
     }
   });
 
+  server.route({
+    method: 'POST',
+    path: '/vuSmartMaps/api/{tenant_id}/bu/{bu_id}/insights/',
+    handler: (request, reply) => {
+      const tenantId = request.params.tenant_id;
+      const buId = request.params.bu_id;
+      Request.post({
+        url: 'https://127.0.0.1/vuSmartMaps/api/' + tenantId + '/bu/' + buId + '/_insightsReport_/',
+        body: JSON.stringify(request.payload),
+        headers: { 'user': 'testadmin' }
+      }, function (error, response, body) {
+        if (response.statusCode !== 200) {
+          reply(body).code(response.statusCode);
+        } else {
+          reply(body);
+        }
+      });
+    }
+  });
 }

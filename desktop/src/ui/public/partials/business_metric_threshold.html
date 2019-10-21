@@ -143,12 +143,14 @@
         <br/>
         <div>
           <label>Color</label>
-          <input
-            colorpicker
-            colorpicker-parent="true"
-            type="text"
-            ng-model="color"
-            class="form-control"/>
+          <select
+            class="form-control"
+            ng-model="color">
+            <option value="#05a608">Green</option>
+            <option value="#fecc2f">Yellow</option>
+            <option value="#f46f0c">Orange</option>
+            <option value="#dd171d">Red</option>
+          </select>
           <div class="error">{{colorError}}</div>
           <br/>
         </div>

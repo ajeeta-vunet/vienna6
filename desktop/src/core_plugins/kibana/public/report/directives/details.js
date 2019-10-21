@@ -198,7 +198,8 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
 
                 // We can start it from the earlier ending page
                 if (vis.visType === 'table' || vis.visType === 'business_metric'
-                    ||  vis.visType === 'customer_journey_map') {
+                    ||  vis.visType === 'customer_journey_map'
+                    || vis.visType === 'status_indicator_and_kpi') {
                   // Set width to 100% for table visulaization.
                   vis.$scope.height = '100%';
                 } else {

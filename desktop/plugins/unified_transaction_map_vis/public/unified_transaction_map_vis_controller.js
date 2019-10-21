@@ -591,6 +591,8 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
                 default:
                   throw 'icon does not exist for the color ' + metricGroup.font.color;
               }
+              metricGroup.font.color = 'black';
+
               additionalNodes.push(metricGroup);
               additionalNodes.push(iconNode);
             });

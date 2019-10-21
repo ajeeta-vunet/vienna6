@@ -84,7 +84,7 @@ module.directive('visMap', function () {
       _.forOwn(groups, (group) =>
       {
         group.shape = 'circularImage';
-        group.size = 20;
+        group.size = 40;
         group.font = {
           size: 21,
           color: '#353535'
@@ -146,6 +146,7 @@ module.directive('visMap', function () {
         const options = {
           groups: groups,
           edges: {
+            width: 2,
             arrows: {
               middle: {
                 enabled: true,
@@ -185,6 +186,7 @@ module.directive('visMap', function () {
         const physicsEnableOption = {
           groups: groups,
           edges: {
+            width: 2,
             arrows: {
               middle: {
                 enabled: true,

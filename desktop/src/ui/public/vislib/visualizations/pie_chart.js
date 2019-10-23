@@ -1,7 +1,6 @@
 import d3 from 'd3';
 import _ from 'lodash';
 import $ from 'jquery';
-import numeral from 'numeral';
 import { PieContainsAllZeros, ContainerTooSmall } from 'ui/errors';
 import { VislibVisualizationsChartProvider } from './_chart';
 import { truncateLabel } from '../components/labels/truncate_labels';
@@ -14,7 +13,8 @@ export function VislibVisualizationsPieChartProvider(Private) {
     isDonut: false,
     showTooltip: true,
     color: undefined,
-    fillColor: undefined
+    fillColor: undefined,
+    isHorseShoe: false
   };
   /**
    * Pie Chart Visualization
@@ -60,7 +60,6 @@ export function VislibVisualizationsPieChartProvider(Private) {
      */
     addPathEvents(element) {
       const events = this.events;
-
       return element
         .call(events.addHoverEvent())
         .call(events.addMouseoutEvent())
@@ -106,8 +105,9 @@ export function VislibVisualizationsPieChartProvider(Private) {
      */
     addPath(width, height, svg, slices) {
       const self = this;
-      const marginFactor = 0.95;
+      const marginFactor = 0.92;
       const isDonut = self._attr.isDonut;
+      const isHorseShoe = self._attr.isHorseShoe;
       const radius = (Math.min(width, height) / 2) * marginFactor;
       const color = self.handler.data.getPieColorFunc();
       const tooltip = self.tooltip;
@@ -127,16 +127,35 @@ export function VislibVisualizationsPieChartProvider(Private) {
           return d.percentOfParent * 100;
         });
 
-      const x = d3.scale.linear().range([0, 2 * Math.PI]);
+      let x;
+      if (isHorseShoe) {
+        // x axis range for horse shoe
+        x = d3.scale.linear().range([0, 1.4 * Math.PI]);
+      } else {
+        x = d3.scale.linear().range([0, 2 * Math.PI]);
+      }
+
+      // y axis range
       const y = d3.scale.sqrt().range([0, radius * 0.7]);
 
       const startAngle = function (d) {
-        return Math.max(0, Math.min(2 * Math.PI, x(d.x)));
+        // Start angle for horse shoe option.
+        if (isHorseShoe) {
+          d.startAngle = 1.3 * Math.PI + Math.max(0, Math.min(2 * Math.PI, x(d.x)));
+        } else {
+          d.startAngle = Math.max(0, Math.min(2 * Math.PI, x(d.x)));
+        }
+        return d.startAngle;
       };
 
       const endAngle = function (d) {
         if (d.dx < 1e-8) return x(d.x);
-        return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx)));
+        // End angle for horse shoe option
+        if (isHorseShoe) {
+          return 1.3 * Math.PI + Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx)));
+        } else {
+          return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx)));
+        }
       };
 
       const arc = d3.svg.arc()
@@ -152,14 +171,29 @@ export function VislibVisualizationsPieChartProvider(Private) {
           return Math.max(0, y(d.y));
         })
         .outerRadius(function (d) {
-          return Math.max(0, y(d.y + d.dy));
+          // Radius for horse shoe.
+          if (isHorseShoe) {
+            return Math.max(0, y(d.y + 1.2));
+          } else {
+            return Math.max(0, y(d.y + d.dy));
+          }
         });
 
-      const outerArc = d3.svg.arc()
-        .startAngle(startAngle)
-        .endAngle(endAngle)
-        .innerRadius(radius * 0.8)
-        .outerRadius(radius * 0.8);
+      let outerArc;
+      // outerArc for horse shoe.
+      if (isHorseShoe) {
+        outerArc = d3.svg.arc()
+          .startAngle(startAngle)
+          .endAngle(endAngle)
+          .innerRadius(radius * 0.8)
+          .outerRadius(radius * 1.15);
+      } else {
+        outerArc = d3.svg.arc()
+          .startAngle(startAngle)
+          .endAngle(endAngle)
+          .innerRadius(radius * 0.8)
+          .outerRadius(radius * 0.85);
+      }
 
       let maxDepth = 0;
       const path = arcs
@@ -185,7 +219,7 @@ export function VislibVisualizationsPieChartProvider(Private) {
         });
 
       // add labels
-      if (showLabels) {
+      if (showLabels || showValues) {
         const labelGroups = labels
           .datum(slices)
           .selectAll('.label')
@@ -214,15 +248,27 @@ export function VislibVisualizationsPieChartProvider(Private) {
               d3.select(this.parentNode).remove();
               return;
             }
+
+            // Show both labels and values if show label and show value is enabled.
+            if (showValues && showLabels) {
+              return `${d.name} (${d.size})`;
+            }
             if (showValues) {
-              const value = numeral(d.value / 100).format('0.[00]%');
-              return `${d.name} (${value})`;
+              // Return only value if show value is enabled.
+              return d.size;
+            } else if (showLabels) {
+              // Show label
+              return d.name;
             }
             return d.name;
           }).text(function () {
             return truncateLabel(this, truncateLabelLength);
           }).attr('text-anchor', function (d) {
-            const midAngle = startAngle(d) + (endAngle(d) - startAngle(d)) / 2;
+            let midAngle = startAngle(d) + (endAngle(d) - startAngle(d)) / 2;
+            // midAngle for horse shoe.
+            if (isHorseShoe && midAngle > 2 * Math.PI) {
+              midAngle = midAngle - 2 * Math.PI;
+            }
             return (midAngle < Math.PI) ? 'start' : 'end';
           })
           .attr('class', 'label-text')
@@ -237,16 +283,24 @@ export function VislibVisualizationsPieChartProvider(Private) {
 
             const bbox = this.getBBox();
             const pos = outerArc.centroid(d);
-            const midAngle = startAngle(d) + (endAngle(d) - startAngle(d)) / 2;
+            let midAngle = startAngle(d) + (endAngle(d) - startAngle(d)) / 2;
+            if (isHorseShoe && midAngle > 2 * Math.PI) {
+              midAngle = midAngle - 2 * Math.PI;
+            }
             pos[1] += 4;
-            pos[0] = (0.7 + d.depth / 10) * radius * (midAngle < Math.PI ? 1 : -1);
+            if (isHorseShoe) {
+              // Add 0.3 while calculating position for height of lables
+              pos[0] = (0.3 + 0.7 + d.depth / 10) * radius * (midAngle < Math.PI ? 1 : -1);
+            } else {
+              pos[0] = (0.7 + d.depth / 10) * radius * (midAngle < Math.PI ? 1 : -1);
+            }
             d.position = {
               x: pos[0],
               y: pos[1],
               left: midAngle < Math.PI ? pos[0] : pos[0] - bbox.width,
               right: midAngle > Math.PI ? pos[0] + bbox.width : pos[0],
               bottom: pos[1] + 5,
-              top: pos[1] - bbox.height - 5,
+              top: pos[1] - bbox.height + 20,
             };
 
             const conflicts = [];

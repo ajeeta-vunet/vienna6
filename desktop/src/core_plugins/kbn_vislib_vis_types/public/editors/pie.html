@@ -17,6 +17,18 @@
         >
       </div>
     </div>
+
+    <div class="kuiSideBarFormRow">
+      <label class="kuiSideBarFormRow__label" for="isHorseShoe">
+        Horse Shoe
+      </label>
+      <div class="kuiSideBarFormRow__control">
+        <input id="isHorseShoe" name="isHorseShoe" type="checkbox" value="{{isHorseShoe}}"
+               ng-checked="vis.params.isHorseShoe"
+               ng-model="vis.params.isHorseShoe"
+        >
+      </div>
+    </div>
   </div>
 
   <vislib-basic-options></vislib-basic-options>

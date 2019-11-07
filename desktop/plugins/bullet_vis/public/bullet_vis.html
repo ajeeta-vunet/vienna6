@@ -1,0 +1,24 @@
+<div
+  ng-controller="bulletVisController"
+  class="bullet-vis-container-wrapper"
+  >
+
+  <!--Displays bullet graph within this container -->
+  <div
+    class="bullet-vis-container"
+    id="bullet-vis-container">
+  </div>
+
+  <!-- Displays if data is not found-->
+  <div
+    ng-if="reponseLength <= 0"
+    class="no-data-container-wrapper">
+    <div class="bullet-vis-no-data-container">
+      <h2 aria-hidden="true">
+        <i aria-hidden="true" class="fa fa-exclamation-triangle">
+        </i>
+      </h2>
+      <h4>No Results Found</h4>
+    </div>
+  </div>
+</div>

@@ -35,7 +35,6 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
 
     const bullets = $scope.vis.params.bullets;
     const insights = $scope.vis.params.insights;
-
     const body = {
       bmv: bullets || '',
       time: {},
@@ -66,11 +65,11 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
       bulletDict.threshold = [];
 
       // If result is N.A. then consider value as 0.
-      bulletDict.currentMetric = respDict.metrics[bulletConfig.metric].value !== 'N.A.' ?
+      bulletDict.currentMetric = respDict.metrics[bulletConfig.metric] && respDict.metrics[bulletConfig.metric].value !== 'N.A.' ?
         [respDict.metrics[bulletConfig.metric].value] : [0];
 
       // If result is N.A. then consider value as 0.
-      bulletDict.maxMetric = respDict.metrics[bulletConfig.maxMetric].value !== 'N.A.' ?
+      bulletDict.maxMetric = respDict.metrics[bulletConfig.maxMetric] && respDict.metrics[bulletConfig.maxMetric].value !== 'N.A.' ?
         [respDict.metrics[bulletConfig.maxMetric].value] : [0];
 
       // Title for bullet graph.
@@ -111,7 +110,8 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
       // Get the length of response for displaying No
       // Results Found message if responseLength is <=0 .
       $scope.reponseLength = Object.keys(resp.bmv).length;
-      const insightsData = resp.insights;
+      // Commented code is for insights.
+      // const insightsData = resp.insights;
       const respDict = resp.bmv;
 
       // BuletChart data.
@@ -124,7 +124,7 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
         for (const key in respDict) {
           if (respDict.metrics) {
             // If buckects is not configured.
-            prepareBulletInstance(bulletConfig, respDict, bulletChartData, key, bulletKey);
+            prepareBulletInstance(bulletConfig, respDict, bulletChartData, bulletConfig.label, bulletKey);
           } else if (respDict[key].metrics) {
             // If object in a list has metrics then prepare a bullet list (For single bucket level).
             prepareBulletInstance(bulletConfig, respDict[key], bulletChartData, key, bulletKey);
@@ -144,27 +144,27 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
 
       // Update bulletDescription field in bulletChartData
       // if insights are configured to show description against each bullet graph
-      insightsData.map(insight => {
-        // For each group of bullets.
-        for (const bullet in bulletChartData) {
-          if (bulletChartData.hasOwnProperty(bullet)) {
-            for (const insightKey in insight.data) {
-              if (insight.data.hasOwnProperty(insightKey)) {
-                // map the title for each group of bullets.
-                if (insightKey === bullet) {
-                  // Iterate through each bullet in group of bullets and update the bulletDescription by maping bullet title with insight.
-                  bulletChartData[bullet].map(bulletBucketData => {
-                    if (insight.data[insightKey][bulletBucketData.title] && insight.data[insightKey][bulletBucketData.title]) {
-                      bulletBucketData.bulletDescription = insight.data[insightKey][bulletBucketData.title].TEXT;
-                    } else {
-                      bulletBucketData.bulletDescription = '';
-                    }
-                  });
-                }
-              }
-            }
-          }}
-      });
+      // insightsData.map(insight => {
+      // For each group of bullets.
+      //   for (const bullet in bulletChartData) {
+      //     if (bulletChartData.hasOwnProperty(bullet)) {
+      //       for (const insightKey in insight.data.text) {
+      //         if (insight.data.text.hasOwnProperty(insightKey)) {
+      //           // map the title for each group of bullets.
+      //           if (insightKey === bullet) {
+      //             // Iterate through each bullet in group of bullets and update the bulletDescription by maping bullet title with insight.
+      //             bulletChartData[bullet].map(bulletBucketData => {
+      //               if (insight.data.text[insightKey][bulletBucketData.title] && insight.data.text[insightKey][bulletBucketData.title]) {
+      //                 bulletBucketData.bulletDescription = insight.data.text[insightKey][bulletBucketData.title].TEXT;
+      //               } else {
+      //                 bulletBucketData.bulletDescription = '';
+      //               }
+      //             });
+      //           }
+      //         }
+      //       }
+      //     }}
+      // });
 
       let margin;
       let width;
@@ -183,9 +183,9 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
           //   450 : document.getElementById('bullet-vis-container').offsetHeight;
         } else {
           // For horizontal graph.
-          totalwidth = document.getElementById('bullet-vis-container').offsetWidth;
-          // totalheight = ((document.getElementById('bullet-vis-container').offsetHeight === 0)) ?
-          //   300 : document.getElementById('bullet-vis-container').offsetHeight;
+          totalwidth = $element[0].offsetWidth;
+          // totalheight = (($element[0].offsetHeight === 0)) ?
+          //   300 : $element[0].offsetHeight;
         }
       });
 
@@ -243,7 +243,7 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
         .style('opacity', 0);
 
       // To remove all child elements.
-      document.getElementById('bullet-vis-container').innerHTML = '';
+      $element[0].innerHTML = '';
 
       // Iterate through bulletChartData to display bullet graph.
       for (const bullet in bulletChartData) {
@@ -262,12 +262,8 @@ module.controller('bulletVisController', function ($scope, $element, Private, No
             titleElement.innerHTML = bullet;
           }
 
-          const documentElement = document.getElementById('bullet-vis-container');
-
-          // Append titleElement and element as chield elements to
-          // documentElement element(container element).
-          documentElement.appendChild(titleElement);
-          documentElement.appendChild(element);
+          $element[0].appendChild(titleElement);
+          $element[0].appendChild(element);
 
           // Remove all svg before updating svg elements.
           d3.select(element).selectAll('svg').remove();

@@ -121,9 +121,8 @@
       </div>
       <div class="vis-editor-agg-wide-btn add-button-placement">
         <div
-          ng-hide="opts.aggLength >= 1"
+          ng-hide="opts.aggLength >= 1 || vis.params.bullets.length==7"
           class="kuiButton kuiButton--secondary kuiButton--small"
-          ng-show="vis.params.bullets.length<7"
           ng-click="addBullet()">
           <i
             aria-hidden="true"
@@ -133,8 +132,10 @@
         </div>
       </div>
 
+      <!-- Commented code is for insights configuratin for bullet chart 
+      insight configuration is taken here from the ER:1705-->
       <!-- Get Insights configuratin here -->
-      <div
+      <!-- <div
         ng-if="vis.params.bullets.length>=1"
         class="sidebar-item">
           <div class="sidebar-item-title">
@@ -167,10 +168,10 @@
                   Insight
                 </span>
                 <div class="vis-editor-agg-header-controls kuiButtonGroup kuiButtonGroup--united">
-                  <div class="vis-editor-agg-header-controls">
+                  <div class="vis-editor-agg-header-controls"> -->
       
                     <!-- up button -->
-                    <button
+                    <!-- <button
                       aria-label="Move Up"
                       ng-if="vis.params.insights.length > 1"
                       ng-class="{ disabled: $first }"
@@ -184,10 +185,10 @@
                         aria-hidden="true"
                         class="fa fa-caret-up">
                       </i>
-                    </button>
+                    </button> -->
       
                     <!-- down button -->
-                    <button
+                    <!-- <button
                       aria-label="Move Down"
                       ng-if="vis.params.insights.length > 1"
                       ng-class="{ disabled: $last }"
@@ -200,10 +201,10 @@
                       >
                       <i aria-hidden="true" class="fa fa-caret-down">
                       </i>
-                    </button>
+                    </button> -->
       
                     <!-- remove button -->
-                    <button
+                    <!-- <button
                       aria-label="Remove Insight"
                       ng-click="removeInsight($index)"
                       tooltip="Remove Insight"
@@ -238,7 +239,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Advance Section to show graph in vertical-->
         <!-- <div class="sidebar-item-title">

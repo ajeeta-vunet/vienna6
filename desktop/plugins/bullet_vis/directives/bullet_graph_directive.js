@@ -13,7 +13,6 @@ module.directive('bulletGraph', function () {
     },
     template: require('./bullet_graph_directive.html'),
     link: function (scope) {
-      scope.aggLength = 0;
       // Update the metricList when ever the metrics changes in BMV.
       scope.$watch('metricList', function () {
         scope.updateMetricsList();
@@ -31,6 +30,9 @@ module.directive('bulletGraph', function () {
         // Get the aggLength for selected BMV.
         scope.aggLength = selectedBMV && selectedBMV.aggregationLength;
       };
+
+      // Call updateMetricsList function initially while loading.
+      scope.updateMetricsList();
     }
   };
 });

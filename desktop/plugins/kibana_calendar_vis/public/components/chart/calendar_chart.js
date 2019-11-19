@@ -64,7 +64,7 @@ export class CalendarChart extends React.Component {
     }
 
     render() {
-      const { visConfig, vislibData, dispatcher } = this.props;
+      const { id, visConfig, vislibData, dispatcher } = this.props;
 
       return (
         <svg
@@ -91,6 +91,7 @@ export class CalendarChart extends React.Component {
             />
           ))}
           <ChartGrid
+            id={id}
             type={visConfig.get('type')}
             gridConfig={visConfig.get('grid')}
             vislibData={vislibData}

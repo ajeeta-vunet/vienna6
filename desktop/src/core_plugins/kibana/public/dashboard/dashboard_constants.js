@@ -6,7 +6,7 @@ export const DashboardConstants = {
 };
 export const DEFAULT_PANEL_WIDTH = 6;
 export const DEFAULT_PANEL_HEIGHT = 3;
-export const DASHBOARD_GRID_COLUMN_COUNT = 12;
+export const DASHBOARD_GRID_COLUMN_COUNT = 72;
 
 export function createDashboardEditUrl(id) {
   return `/dashboard/${id}`;

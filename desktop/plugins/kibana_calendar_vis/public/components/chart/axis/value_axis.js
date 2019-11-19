@@ -77,7 +77,7 @@ export class ValueAxis {
     return colors;
   }
 
-  drawValues(vislibData) {
+  drawValues(vislibData, chartId) {
     const rows = vislibData.getData();
     const seriesData = rows.map(r => r.series[0].values);
     const colorsNumber = this.visConfig.get('colorsNumber');
@@ -120,7 +120,7 @@ export class ValueAxis {
 
     seriesData.forEach(d => {
       d.forEach(v => {
-        const id = '#day-' + moment(v.x).format(TIME_FORMAT);
+        const id = '#day-' + moment(v.x).format(TIME_FORMAT) + '-' + chartId;
         d3.select(id)
           .classed('data-day', true)
           .attr('data-label', label(v))

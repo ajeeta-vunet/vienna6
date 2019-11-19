@@ -14,8 +14,8 @@
     ng-if="((data.nodes.length>0) && (data.edges.length>0))" 
     class="table-vis-error">
     <div
-      ng-if="typeVal=='tracepath_beat'" 
-      ng-hide="full_path" 
+      ng-if="typeVal=='tracepath_beat'"
+      ng-hide="full_path"
       ng-click="search()">
       <p class="network-map-back-button"> Back </p>
     </div>
@@ -28,7 +28,8 @@
     <vis-map map-data="data"
       ng-if="typeVal!='tracepath_beat'"
       class="network-map-vis"
-      node-placement-type="nodePlacementType">
+      node-placement-type="nodePlacementType"
+      utm-event-args="utmEventArgs">
     </vis-map>
   </div>
 </div>

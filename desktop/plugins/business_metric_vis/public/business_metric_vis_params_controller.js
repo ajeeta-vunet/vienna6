@@ -59,7 +59,7 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
     'Next 24 Hours',
     'Next 12 Hours',
     'Next 4 Hours',
-    'Next1 Hours',
+    'Next 1 Hours',
     'Next 15 Minutes',
     'Next 30 Minutes',
     'Next 7 days',

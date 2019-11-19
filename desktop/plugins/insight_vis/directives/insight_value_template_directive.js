@@ -21,10 +21,10 @@ module.directive('insightValueTemplate', function () {
         'Action Required',
         'Archival Cost',
         'Archival Volume',
-        'Calender',
+        'Calendar',
         'Information',
         'Network',
-        'Operational Perormance',
+        'Operational Performance',
         'Server',
         'Service',
         'Time'

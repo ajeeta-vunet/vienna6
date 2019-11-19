@@ -55,10 +55,10 @@ module.controller('insightVisController', function ($scope, Private, Notifier, $
       'Action Required': '/ui/vienna_images/action_required_insight.png',
       'Archival Cost': '/ui/vienna_images/archival_cost_insight.png',
       'Archival Volume': '/ui/vienna_images/archival_volume_insight.png',
-      'Calender': '/ui/vienna_images/calender_insight.png',
+      'Calendar': '/ui/vienna_images/calender_insight.png',
       'Information': '/ui/vienna_images/information_insight.png',
       'Network': '/ui/vienna_images/network_insight.png',
-      'Operational Perormance': '/ui/vienna_images/operational_perormance_insight.png',
+      'Operational Performance': '/ui/vienna_images/operational_perormance_insight.png',
       'Server': '/ui/vienna_images/server_insights.png',
       'Service': '/ui/vienna_images/service_insight.png',
       'Time': '/ui/vienna_images/time_insight.png'

@@ -48,10 +48,10 @@ export function expandView({ API }) {
   let end;
   if (day === undefined) {
     start = moment(new Date(year, month - 1, 1));
-    end = moment(new Date(year, month, 0));
+    end = moment(new Date(new Date(year, month, 1).getTime() - 1));
   } else {
     start = moment(new Date(year, month - 1, day, 0));
-    end = moment(new Date(year, month - 1, day, 23));
+    end = moment(new Date(new Date(year, month - 1, day, 24).getTime() - 1));
   }
 
   timeFilter.setTime(start, end, 'absolute');

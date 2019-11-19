@@ -27,20 +27,30 @@ const markdownIt = new MarkdownIt({
 
 export const errorContainer = 'visualize-error';
 
-export const CalendarErrorHandler = {
-  el: undefined,
-  bindEl: function (el) {
-    this.el = el;
-    return this;
-  },
-  removeError: function () {
-    d3.select(this.el).selectAll(`.${errorContainer}`).remove();
-  },
-  error: function (msg) {
-    this.removeError();
+export class CalendarErrorHandler {
+  constructor() {
+    this.el = undefined;
+    this.id = undefined;
+  }
 
+  bindEl(el, id) {
+    this.el = el;
+    this.id = id;
+    return this;
+  }
+
+  removeError() {
+    d3.select(this.el)
+      .attr('id', this.id)
+      .selectAll(`.${errorContainer}`)
+      .remove();
+  }
+
+  error(msg) {
+    this.removeError();
     const div = d3.select(this.el)
       .append('div')
+      .attr('id', this.id)
       // class name needs `chart` in it for the polling checkSize function
       // to continuously call render on resize
       .attr('class', `${errorContainer} chart error`);
@@ -59,4 +69,4 @@ export const CalendarErrorHandler = {
     }
     return div;
   }
-};
+}

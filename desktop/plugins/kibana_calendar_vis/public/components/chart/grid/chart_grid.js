@@ -33,6 +33,7 @@ export class ChartGrid extends React.Component {
     const { gridConfig } = this.props;
     this.gridConfig = new GridConfig(gridConfig);
     this.chartGrid = undefined;
+    this.chartId = this.props.id;
   }
 
   componentDidMount() {
@@ -59,7 +60,7 @@ export class ChartGrid extends React.Component {
       yOffset: yOffset
     };
 
-    this._drawGrid(this.chartGrid, wrapper);
+    this._drawGrid(this.chartId, this.chartGrid, wrapper);
   }
 
   componentWillUnmount() {
@@ -81,7 +82,7 @@ export class ChartGrid extends React.Component {
     return new Date(_.head(values).x).getDate();
   }
 
-  _drawGrid(svg, { year, aggs, cellSize, xOffset, yOffset }) {
+  _drawGrid(chartId, svg, { year, aggs, cellSize, xOffset, yOffset }) {
     const { type, dispatcher } = this.props;
 
     if(type === VIS_CHART_TYPE.HEATMAP_YEAR) {
@@ -99,7 +100,7 @@ export class ChartGrid extends React.Component {
         .data(d3.time.days(startFullDate, endFullDate))
         .enter().append('g').append('rect')
         .attr('id', (d) => {
-          return 'day-' + moment(d).format(TIME_FORMAT);
+          return 'day-' + moment(d).format(TIME_FORMAT) + '-' + chartId;
         })
         .classed('day', true)
         .attr('data-year', () => year)
@@ -153,7 +154,7 @@ export class ChartGrid extends React.Component {
         .data(d3.time.days(startDate, endDate))
         .enter().append('g').append('rect')
         .attr('id', (d) => {
-          return 'day-' + moment(d).format(TIME_FORMAT);
+          return 'day-' + moment(d).format(TIME_FORMAT) + '-' + chartId;
         })
         .classed('day', true)
         .attr('data-year', () => year)
@@ -200,7 +201,7 @@ export class ChartGrid extends React.Component {
         .data(d3.time.hours(startTime, endTime))
         .enter().append('g').append('rect')
         .attr('id', (d) => {
-          return 'day-' + moment(d).format(TIME_FORMAT);
+          return 'day-' + moment(d).format(TIME_FORMAT) + '-' + chartId;
         })
         .classed('hour', true)
         .attr('width', cellSize)

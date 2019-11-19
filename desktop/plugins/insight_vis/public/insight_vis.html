@@ -11,7 +11,7 @@
   </div>
   <div ng-if="data.length" class="insight-vis-container">
     <div ng-repeat="insight in data"
-    ng-style="(!insight.data && {'display':'none'}) || (data.length === 1 && {'margin-bottom':'0px'})"
+    ng-style="(!insight.data.text && {'display':'none'}) || (data.length === 1 && {'margin-bottom':'0px'})"
      class="item-container row">
       <div class="image-container col-sm-3">
         <img class="item-image" src="{{insight.image}}">

@@ -137,10 +137,11 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     const dataSet = $scope.data.nodes;
     const allNodes = [];
     const nodesToMove = [];
+    const initialOffSet = 110;
 
     _.each(dataSet, (node) => {
       let metricGroupList = [];
-      let offset = 80;
+      let offset = initialOffSet;
       const pos = nodePositions[node.id];
       const parentNodeId = node.id;
       const parentNodeX = pos.x;

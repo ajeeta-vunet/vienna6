@@ -41,12 +41,14 @@ export function calendarVisualizationProvider(config) {
 
   class CalendarVisualization {
     constructor(el, vis) {
+      this.chartId = vis.title.replace(/ /g, '-');
       this.el = el;
       this.vis = vis;
       this.container = document.createElement('div');
       this.container.className = containerName;
       this.el.appendChild(this.container);
-      CalendarErrorHandler.bindEl(this.container);
+      this.errorHandler = new CalendarErrorHandler();
+      this.errorHandler.bindEl(this.container, this.chartId);
       this.dispatcher = new Dispatcher();
       this.dispatcher.addConfig(config).addContainer(this.container);
       this.calendarVis = document.createElement('div');
@@ -96,7 +98,7 @@ export function calendarVisualizationProvider(config) {
       const renderArray = this.charts.map((cEl, i) => {
         return new Promise((resolve) => {
           self.renderDOM(<CalendarChart
-            id={`chart_${vislibData.dataAt(i).label.slice(0, 4)}`}
+            id={this.chartId}
             visConfig={self.visConfig}
             vislibData={vislibData.dataAt(i)}
             dispatcher={self.dispatcher.addAPI(self.vis.API)}
@@ -221,7 +223,7 @@ export function calendarVisualizationProvider(config) {
 
       if(aggs || data || params || time || resize) {
         const renderValues = this.valueAxes.map(async (axis) => {
-          await axis.drawValues(vislibData);
+          await axis.drawValues(vislibData, this.chartId);
         });
         await renderValues;
         const addons = [];
@@ -265,7 +267,7 @@ export function calendarVisualizationProvider(config) {
         visData.rows.forEach(r => {
           const vals = r.series[0].values;
           vals.forEach(v => {
-            const dayId = 'day-' + moment(v.x).format(TIME_FORMAT);
+            const dayId = 'day-' + moment(v.x).format(TIME_FORMAT) + '-' + this.chartId;
             this.hashTable.put(dayId, v);
           });
         });
@@ -344,7 +346,7 @@ export function calendarVisualizationProvider(config) {
         this._validateData(visData);
         this.hashTable.clearAll();
         this._putAll(visData);
-        CalendarErrorHandler.removeError();
+        this.errorHandler.removeError();
         const vislibData = new Data(visData, this.vis.getUiState());
         this._fixData(vislibData.data.rows);
         this.visConfig.update(updateStatus, {
@@ -355,7 +357,7 @@ export function calendarVisualizationProvider(config) {
         if (error instanceof KbnError) {
           return new Promise(async (resolve) => {
             await self.destroy();
-            error.displayToScreen(CalendarErrorHandler);
+            error.displayToScreen(this.errorHandler);
             resolve();
           });
         } else {

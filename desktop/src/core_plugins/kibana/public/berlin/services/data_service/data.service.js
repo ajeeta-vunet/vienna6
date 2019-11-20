@@ -965,6 +965,31 @@ class DataService {
     return this._putRequest(url, dataretention, 'updating data enrichment entry');
   }
 
+  // Function to fetch Images.
+  getUploadedImages() {
+    const url = this.urlBase + '/fgw/?file_type=images';
+    return this._getRequest(url, 'getting images');
+  }
+
+  // Uploads the Image Information.
+  uploadImageFile(upload, usageType, File, imageName) {
+    const url = this.urlBase + '/fgw/?file_type=images&usage_type=' + usageType + '&image_name=' + imageName;
+    return this.$q((resolve, reject) => {
+      upload.upload({ url: url, file: File }).then((response) => {
+        resolve(response);
+      }, (errorResponse) => {
+        this._handleErrorResponse(errorResponse, 'updating file.');
+        reject(errorResponse);
+      });
+    });
+  }
+
+  // Deletes the Image file.
+  deleteUploadedImage(rowId) {
+    const url = this.urlBase + '/fgw/?file_type=images&image_name=' + rowId;
+    return this._deleteRequest(url, 'Deleting an Image ' + rowId);
+  }
+
 }
 
 DataService.$inject = ['$log',

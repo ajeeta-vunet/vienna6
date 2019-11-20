@@ -21,5 +21,6 @@ export const VunetSidebarConstants = {
   PREFERENCES: 'Preferences',
   DEFINITIONS: 'Definitions',
   USER: 'User',
-  ABOUT: 'About'
+  ABOUT: 'About',
+  IMAGEMANAGR: 'Manage Images'
 };

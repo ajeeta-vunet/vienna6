@@ -31,7 +31,7 @@
           ng-repeat="stageIcon in stageIcons track by $index" 
           ng-init="indexForStageIcon=$index"
           ng-show="!vis.params.stages[indexForStageIcon].hidestage">
-          <img class="stage-icon" src="/ui/vienna_images/{{stageIcon}}.svg">
+          <img class="stage-icon" src="{{stageIconsDict[stageIcon]}}">
         </th>
       </tr>
     </thead>

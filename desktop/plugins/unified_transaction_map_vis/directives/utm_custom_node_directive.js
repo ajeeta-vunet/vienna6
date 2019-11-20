@@ -1,13 +1,14 @@
 import { uiModules } from 'ui/modules';
 import { validateLabel } from 'ui/utils/validate_label.js';
 require('../directives/utm_metric_list_directive.js');
+import { getImages } from 'ui/utils/vunet_image_utils.js';
 
 const module = uiModules.get('kibana');
 
 // This directive is used to create node.
 // This takes the following parameters:
 // visParams:  Node object holding all the details of node.
-module.directive('customNode', function () {
+module.directive('customNode', function (StateService) {
   return {
     restrict: 'E',
     scope: {
@@ -19,25 +20,10 @@ module.directive('customNode', function () {
     link: function (scope) {
       const { nodeX, nodeY } = scope.visParams;
 
-      // List of node types
-      scope.nodeType = [
-        'App',
-        'DataBase',
-        'Device',
-        'Firewall',
-        'Firmware',
-        'Mobile',
-        'NetworkDevice',
-        'NetworkElement',
-        'NodeBalancer',
-        'PC',
-        'Printer',
-        'Router',
-        'Server',
-        'Switch',
-        'Wifi',
-        'Other'
-      ];
+      // Get the updated nodeType with uploaded images.
+      getImages(StateService).then(function (iconDict) {
+        scope.nodeType  =  Object.keys(iconDict);
+      });
 
       // If X and Y values are not coming then assign X and Y
       // with 0. First time to display nodes it uses physics to

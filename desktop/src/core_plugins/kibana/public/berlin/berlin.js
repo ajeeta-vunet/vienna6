@@ -18,6 +18,8 @@ app
   .constant('BASE_URL', '/vuSmartMaps/api')
   .constant('VUINSITE_BASE_URL', '/vuInsite/api/default/')
   .constant('MAXIMUM_FILE_SIZE', 209715200)
+  .constant('MAXIMUM_IMAGE_FILE_SIZE', 51200)
+
   .constant('USER_BASE_URL', '/api/default/');
 
 app.service('DataService', DataService);

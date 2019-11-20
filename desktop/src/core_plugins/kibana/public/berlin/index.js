@@ -41,6 +41,7 @@ import 'plugins/kibana/berlin/data_source/configuration/tracepathbeatDataSource.
 import 'plugins/kibana/berlin/data_source/configuration/urlheartbeatDataSource.directive';
 import 'plugins/kibana/berlin/data_source/files/files';
 import 'plugins/kibana/berlin/data_source/settings/settings';
+import 'plugins/kibana/berlin/image_manager/image_manager.js';
 
 import { BerlinConstants } from './berlin_constants';
 import { EnrichmentConstants } from './data_source/enrichment/enrichment_constants';
@@ -54,7 +55,7 @@ import { DetailsConstants } from './details/details_constants';
 import { UserConstants } from './user/user_constants';
 import { FilesConstants } from './data_source/files/files_constants';
 import { DataRetentionSettingsConstants } from './data_source/settings/settings_constants';
-
+import { ImageManagerInterfaceConstants } from './image_manager/image_manager_constants.js';
 import enrichmentGroupsTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment_groups.html';
 import enrichmentTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment.html';
 import configurationTemplate from 'plugins/kibana/berlin/data_source/configuration/configuration.html';
@@ -67,6 +68,7 @@ import detailsTemplate from 'plugins/kibana/berlin/details/details.html';
 import userTemplate from './user/user.html';
 import filesTemplate from 'plugins/kibana/berlin/data_source/files/files.html';
 import settingsTemplate from 'plugins/kibana/berlin/data_source/settings/settings.html';
+import imageManagerTemplate from 'plugins/kibana/berlin/image_manager/image_manager.html';
 
 uiRoutes
   .defaults(/berlin/, {
@@ -108,6 +110,9 @@ uiRoutes
   })
   .when(BerlinConstants.BERLIN_PATH + DataRetentionSettingsConstants.DATA_RETENTION_SETTINGS_PATH, {
     template: settingsTemplate,
+  })
+  .when(BerlinConstants.BERLIN_PATH + ImageManagerInterfaceConstants.IMAGEMANAGER_PATH, {
+    template: imageManagerTemplate,
   });
 
 

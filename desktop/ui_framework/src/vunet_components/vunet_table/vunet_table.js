@@ -380,15 +380,21 @@ export class VunetDataTable extends Component {
   renderRowCells(item) {
     const cells = [];
     this.props.metaItem.rows.forEach(row => {
-      if (this.props.metaItem.columnData) {
-        const columnData = this.props.metaItem.columnData.find(cd => cd.columnName === row);
-        if (columnData) {
-          cells.push({ value: columnData.func(row, item[row]) });
+
+      // For add image in Table Cell.
+      if (typeof (item[row]) === 'object' && item[row].image) {
+        cells.push({ value: <img src={item[row].image}/> });
+      } else {
+        if (this.props.metaItem.columnData) {
+          const columnData = this.props.metaItem.columnData.find(cd => cd.columnName === row);
+          if (columnData) {
+            cells.push({ value: columnData.func(row, item[row]) });
+          } else {
+            cells.push({ value: item[row] });
+          }
         } else {
           cells.push({ value: item[row] });
         }
-      } else {
-        cells.push({ value: item[row] });
       }
     });
 

@@ -310,7 +310,7 @@ Time (input is assumed to be number of seconds):
         class="form-control"
         ng-model="metric.metricIcon"
         name="metricIcon"
-        ng-options="option as option for option in metricIcons">
+        ng-options="option as option for option in metricIconNameList | orderBy: metricIcon">
       </select>
     </div>
 

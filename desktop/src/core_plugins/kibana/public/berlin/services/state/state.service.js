@@ -503,6 +503,21 @@ class StateService {
     return this._DataService.updateDataRetentionSettings(dataretention);
   }
 
+  // Function to fetch Images.
+  getUploadedImages() {
+    return this._DataService.getUploadedImages();
+  }
+
+  // Uploads the Image Information.
+  uploadImageFile(upload, usageType, File, imageName) {
+    return this._DataService.uploadImageFile(upload, usageType, File, imageName);
+  }
+
+  // Deletes the Image file.
+  deleteUploadedImage(rowId) {
+    return this._DataService.deleteUploadedImage(rowId);
+  }
+
 }
 
 StateService.$inject = ['$log', '$q', 'DataService', '$rootScope'];

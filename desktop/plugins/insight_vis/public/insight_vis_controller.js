@@ -2,6 +2,7 @@ import { uiModules } from 'ui/modules';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
+import { getImages } from 'ui/utils/vunet_image_utils.js';
 
 const chrome = require('ui/chrome');
 const _ = require('lodash');
@@ -11,7 +12,7 @@ const _ = require('lodash');
 const module = uiModules.get('kibana/insight_vis', ['kibana']);
 
 module.controller('insightVisController', function ($scope, Private, Notifier, $http, $rootScope,
-  timefilter) {
+  timefilter, StateService) {
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
 
@@ -50,39 +51,30 @@ module.controller('insightVisController', function ($scope, Private, Notifier, $
     const timeDurationStart = timeDuration.min.valueOf();
     const timeDurationEnd = timeDuration.max.valueOf();
 
-    // Image dictionary to map image paths
-    const imageList = {
-      'Action Required': '/ui/vienna_images/action_required_insight.png',
-      'Archival Cost': '/ui/vienna_images/archival_cost_insight.png',
-      'Archival Volume': '/ui/vienna_images/archival_volume_insight.png',
-      'Calendar': '/ui/vienna_images/calender_insight.png',
-      'Information': '/ui/vienna_images/information_insight.png',
-      'Network': '/ui/vienna_images/network_insight.png',
-      'Operational Performance': '/ui/vienna_images/operational_perormance_insight.png',
-      'Server': '/ui/vienna_images/server_insights.png',
-      'Service': '/ui/vienna_images/service_insight.png',
-      'Time': '/ui/vienna_images/time_insight.png'
-    };
-
     body.time = {
       'gte': timeDurationStart,
       'lte': timeDurationEnd
     };
 
-    const httpResult = $http.post(urlBase + '/insights/', body)
-      .then(resp => resp.data)
-      .catch(resp => { throw resp.data; });
+    // Get the updated iconDict with uploaded images.
+    // make API call after iconDict has been populated.
+    getImages(StateService).then(function (iconDict) {
 
-    // Perform operation after getting response.
-    httpResult.then(function (resp) {
-      $scope.insightAvailableFlag = false;
-      _.each(resp.insights, (insight) => {
-        insight.image = imageList[insight.group];
-        if (insight.data.text) {
-          $scope.insightAvailableFlag = true;
-        }
+      const httpResult = $http.post(urlBase + '/insights/', body)
+        .then(resp => resp.data)
+        .catch(resp => { throw resp.data; });
+
+      // Perform operation after getting response.
+      httpResult.then(function (resp) {
+        $scope.insightAvailableFlag = false;
+        _.each(resp.insights, (insight) => {
+          insight.image = iconDict[insight.group];
+          if (insight.data.text) {
+            $scope.insightAvailableFlag = true;
+          }
+        });
+        $scope.data = resp.insights;
       });
-      $scope.data = resp.insights;
     });
   };
 

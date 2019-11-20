@@ -43,7 +43,7 @@
         ng-repeat="(metricName, metric) in metrices.metrics track by $index" 
         ng-if="vis.params.kpiTemplate === 'Vertical Alignment'">
         <div class="kpi-icon">
-          <img src="/ui/vienna_images/{{metric.metricIcon}}.svg">
+          <img src="{{metricImageDict[metric.metricIcon]}}">
         </div>
         <div class="kpi-value"
           ng-style="{color:metric.color}"
@@ -71,7 +71,7 @@
       ng-if="vis.params.kpiTemplate === 'Horizontal Alignment'">
        <div class="row">
          <div class="col-sm-4 kpi-icon">
-            <img src="/ui/vienna_images/{{metric.metricIcon}}.svg">
+            <img src="{{metricImageDict[metric.metricIcon]}}">
          </div>
          <div 
             class="col-sm-8 kpi-horizontal-details-container"

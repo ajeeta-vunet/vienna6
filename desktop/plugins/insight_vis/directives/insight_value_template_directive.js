@@ -1,5 +1,6 @@
 import { uiModules } from 'ui/modules';
 require('../directives/insight_value_template_directive.js');
+import { getImages } from 'ui/utils/vunet_image_utils.js';
 
 const module = uiModules.get('kibana');
 
@@ -8,7 +9,7 @@ const module = uiModules.get('kibana');
 // This takes the following parameters:
 // insight: object holding all the details of that perticualr insight.
 
-module.directive('insightValueTemplate', function () {
+module.directive('insightValueTemplate', function (StateService) {
   return {
     restrict: 'E',
     replace: true,
@@ -17,18 +18,10 @@ module.directive('insightValueTemplate', function () {
     },
     template: require('./insight_value_template_directive.html'),
     link: function (scope) {
-      scope.iconList = [
-        'Action Required',
-        'Archival Cost',
-        'Archival Volume',
-        'Calendar',
-        'Information',
-        'Network',
-        'Operational Performance',
-        'Server',
-        'Service',
-        'Time'
-      ];
+      // Get the updated iconList with uploaded images.
+      getImages(StateService).then(function (iconDict) {
+        scope.iconList =  Object.keys(iconDict);
+      });
     }
   };
 });

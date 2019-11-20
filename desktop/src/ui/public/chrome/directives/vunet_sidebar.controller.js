@@ -199,18 +199,26 @@ class sidebarController {
           active: false,
           subgroups: [
             {
-              id: VunetSidebarConstants.PREFERENCES,
-              description: ' ',
-              icon: '',
-              pageurl: baseUrl + berlinUrl + 'preferences',
-              isModifyAllowed: chrome.isModifyAllowed(),
-              active: false
-            },
-            {
               id: VunetSidebarConstants.DEFINITIONS,
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'definition',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
+            },
+            {
+              id: VunetSidebarConstants.IMAGEMANAGR,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'image_manager',
+              isModifyAllowed: chrome.isCurrentUserAdmin(),
+              active: false
+            },
+            {
+              id: VunetSidebarConstants.PREFERENCES,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'preferences',
               isModifyAllowed: chrome.isModifyAllowed(),
               active: false
             },
@@ -391,6 +399,10 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[4].subgroups[3].active = true;
+      } else if (currentRoute.includes('/berlin/image_manager')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[4].subgroups[4].active = true;
       }
     };
 

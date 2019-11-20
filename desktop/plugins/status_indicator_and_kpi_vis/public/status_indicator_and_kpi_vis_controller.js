@@ -7,10 +7,10 @@ import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_con
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 import { viewDashboardOrEventForThisMetric } from 'ui/utils/view_dashboard_or_event_for_this_metric.js';
-
+import { getImages } from 'ui/utils/vunet_image_utils.js';
 const module = uiModules.get('kibana/status_indicator_and_kpi_vis', ['kibana']);
 module.controller('statusIndicatorAndKpiVisController', function ($scope, Private,
-  $http, getAppState, timefilter, kbnUrl) {
+  $http, getAppState, timefilter, kbnUrl, StateService) {
 
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
@@ -28,6 +28,11 @@ module.controller('statusIndicatorAndKpiVisController', function ($scope, Privat
     const refLink = kpiBlock.view_more;
     viewDashboardOrEventForThisMetric(getAppState, Private, timefilter, kbnUrl, refLink);
   };
+
+  // Get the updated metricImageDict list with uploaded images.
+  getImages(StateService).then(function (iconDict) {
+    $scope.metricImageDict =  iconDict;
+  });
 
   // This function prepares data sets from the
   // user entered data and makes a POST call to the

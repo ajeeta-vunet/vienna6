@@ -1,12 +1,14 @@
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { getBusinessMetricList } from 'ui/utils/business_metric_list.js';
+import { getImages } from 'ui/utils/vunet_image_utils.js';
+
 require('ui/courier');
 
 const _ = require('lodash');
 import { uiModules } from 'ui/modules';
 
 const module = uiModules.get('kibana/customer_journey_map_vis', ['kibana']);
-module.controller('CustomerJourneyMapVisParamsController', function ($scope, $rootScope, Private) {
+module.controller('CustomerJourneyMapVisParamsController', function ($scope, $rootScope, Private, StateService) {
 
   const savedObjectsClient = Private(SavedObjectsClientProvider);
   // Gets the list of all business stage visualization configured.
@@ -20,7 +22,10 @@ module.controller('CustomerJourneyMapVisParamsController', function ($scope, $ro
     $rootScope.$broadcast('courier:searchRefresh');
   };
 
-  $scope.stageIcons = ['verfiy_beneficiary', 'swift', 'otp', 'rate_and_charges', 'fund_debit', 'fts'];
+  // Get the updated stageIcons list with uploaded images.
+  getImages(StateService).then(function (iconDict) {
+    $scope.stageIcons = Object.keys(iconDict);
+  });
 
   // Extra images specific to clients. Please dont delete the below commeneted code .
   // , 'Aadhaar', 'AEPS', 'ATM',

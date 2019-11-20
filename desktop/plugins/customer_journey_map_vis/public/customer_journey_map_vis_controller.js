@@ -7,10 +7,10 @@ import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_con
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
-
+import { getImages } from 'ui/utils/vunet_image_utils.js';
 const module = uiModules.get('kibana/customer_journey_map_vis', ['kibana']);
 module.controller('CustomerJourneyMapVisController', function ($scope, Private,
-  $http, getAppState, timefilter, kbnUrl) {
+  $http, getAppState, timefilter, kbnUrl, StateService) {
 
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
@@ -81,6 +81,11 @@ module.controller('CustomerJourneyMapVisController', function ($scope, Private,
     _.each($scope.vis.params.stages, function (stage) {
       $scope.stageHeaders.push(stage.name);
       $scope.stageIcons.push(stage.icon);
+    });
+
+    // Get the updated stageIconsDict list with uploaded images.
+    getImages(StateService).then(function (iconDict) {
+      $scope.stageIconsDict = iconDict;
     });
 
     $scope.columnWidth = 100 / $scope.stageHeaders.length + '%';

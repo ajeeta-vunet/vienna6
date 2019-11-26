@@ -109,6 +109,7 @@ uiModules
           const container = getVisContainer();
           if (!container) return;
           $scope.vis.size = [container.width(), container.height()];
+          visualization.vis.setUiState($scope.uiState);
           const status = getUpdateStatus($scope);
           visualization.render($scope.visData, $scope.printReport, status)
             .then(() => {

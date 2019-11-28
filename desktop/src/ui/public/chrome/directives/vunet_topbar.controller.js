@@ -149,7 +149,14 @@ class TopbarCtrl {
     };
 
     $scope.session_idle_timeout = chrome.getSessionIdleTimeout();
-    $scope.myTimeOut = $timeout(function () { $scope.idleTimeout(); }, $scope.session_idle_timeout);
+
+    // If current time is not stored in local storage or is set to empty then save the
+    // current time in local storage.
+    if (!(localStorage.getItem('lastActiveTime')) || (localStorage.getItem('lastActiveTime') === '')) {
+      const lastActiveTime = new Date().getTime();
+      window.localStorage.setItem('lastActiveTime', lastActiveTime);
+    }
+    $scope.myTimeOut = $timeout(function () { $scope.checkForIdleTimeout(); }, $scope.session_idle_timeout);
 
     // This is to disable run-diagnostic once diagnostic is already displayed
     $scope.diagnostic_display_on = false;
@@ -246,17 +253,28 @@ class TopbarCtrl {
       window.location.href = window.location.origin + '/vunet.html#/login';
     };
 
-    // Listener for IdleTimeout event of the session idle timer
-    $scope.idleTimeout = () => {
+    // Listener for checkForIdleTimeout event of the session idle timer
+    $scope.checkForIdleTimeout = () => {
+      // Get the current time.
+      const currentTime = new Date();
+
+      // Get the last active time from local storage.
+      const lastActiveTime = window.localStorage.getItem('lastActiveTime');
+
+      // If the difference between current time and last active time is
+      // greater than session idle time out, we logout the user.
+      const elapsedTime = currentTime.getTime() - lastActiveTime;
+      if (elapsedTime >= $scope.session_idle_timeout) {
       // username becomes empty when the user logout.
       // If the user already logged out from any other tab, just redirect him
       // to login page
-      if (window.localStorage.username === '') {
-        $scope.stopIdleTimerAndGoToLoginPage();
-      } else {
-        // If the user is logged in, Log out the user.
-        // This also calls the REST API to logout the user in the backend
-        $scope.logout();
+        if (window.localStorage.username === '') {
+          $scope.stopIdleTimerAndGoToLoginPage();
+        } else {
+          // If the user is logged in, Log out the user.
+          // This also calls the REST API to logout the user in the backend
+          $scope.logout();
+        }
       }
     };
 
@@ -289,6 +307,7 @@ class TopbarCtrl {
         StateService.logoutUser().then(() => {
           // Remove the username
           window.localStorage.username = '';
+          window.localStorage.setItem('lastActiveTime', '');
           $scope.stopIdleTimerAndGoToLoginPage();
           $scope.showModal = false;
         });
@@ -300,10 +319,10 @@ class TopbarCtrl {
       StateService.logoutUser().then(() => {
         // Remove the username
         window.localStorage.username = '';
+        window.localStorage.setItem('lastActiveTime', '');
         $scope.stopIdleTimerAndGoToLoginPage();
       });
     };
-
 
     // Redirect the user to login page, immediately after the user logged out
     // from any other tab
@@ -314,27 +333,33 @@ class TopbarCtrl {
       }
     }, false);
 
-    //Reset timer on events and start again
-    $scope.resetTimerAndStartAgain = () => {
+    // In this function we check if idle session time out
+    // has happened when user interacted with the application.
+    // and then update the lastActiveTime in local storage with
+    // current time.
+    $scope.updateLastActivityTime = () => {
       $timeout.cancel($scope.myTimeOut);
-      $scope.myTimeOut = $timeout(function () { $scope.idleTimeout(); }, $scope.session_idle_timeout);
+      $scope.checkForIdleTimeout();
+      const lastActiveTime = new Date().getTime();
+      localStorage.setItem('lastActiveTime', lastActiveTime);
     };
 
-    //Resting the Idle timer on various actions
+    // When user performs any action check for idle timeout
+    // and update the user's last activity time.
     $window.addEventListener('mousemove', function () {
-      $scope.resetTimerAndStartAgain();
+      $scope.updateLastActivityTime();
     });
     $window.addEventListener('keydown', function () {
-      $scope.resetTimerAndStartAgain();
+      $scope.updateLastActivityTime();
     });
     $window.addEventListener('DOMMouseScroll', function () {
-      $scope.resetTimerAndStartAgain();
+      $scope.updateLastActivityTime();
     });
     $window.addEventListener('mousewheel', function () {
-      $scope.resetTimerAndStartAgain();
+      $scope.updateLastActivityTime();
     });
     $window.addEventListener('mousedown', function () {
-      $scope.resetTimerAndStartAgain();
+      $scope.updateLastActivityTime();
     });
 
 

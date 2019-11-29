@@ -540,8 +540,15 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
                   if (key === 'meta' || key[0] === '$') return true;
                   return false;
                 });
+                // There might be no search query but filter in a saved search. So check whether empty for the first time
                 // Get the query applied in the filter and append
-                savedSearchQuery = savedSearchQuery + ' AND (' + getFiltersFromSavedSearch(savedSearchFilter, filter, $filter) + ')';
+                if (savedSearchQuery === '') {
+                  savedSearchQuery = ' (' + getFiltersFromSavedSearch(savedSearchFilter, filter, $filter) + ')';
+                }
+                else {
+                  // Append the query from the filters
+                  savedSearchQuery = savedSearchQuery + ' AND (' + getFiltersFromSavedSearch(savedSearchFilter, filter, $filter) + ')';
+                }
               });
               createPayload(metric, metricListIndex, savedSearchQuery);
               return false;

@@ -51,6 +51,7 @@ uiModules.get('apps/management')
     this.formValues = {
       id: $routeParams.id ? decodeURIComponent($routeParams.id) : undefined,
       name: '',
+      userVisibleName: '',
       expandWildcard: false,
       timeFieldOption: undefined,
     };
@@ -267,6 +268,7 @@ uiModules.get('apps/management')
       const {
         id,
         name,
+        userVisibleName,
         timeFieldOption,
       } = this.formValues;
 
@@ -277,6 +279,7 @@ uiModules.get('apps/management')
       sendCreateIndexPatternRequest(indexPatterns, {
         id,
         name,
+        userVisibleName,
         timeFieldName,
       }).then(createdId => {
         if (!createdId) {

@@ -1,4 +1,3 @@
-import utils from '../../../src/core_plugins/console/public/src/utils';
 require('ui/courier');
 require('plugins/business_metric_vis/directives/metric');
 require('ui/directives/business_metric_threshold');
@@ -7,6 +6,7 @@ require('plugins/business_metric_vis/directives/action_buttons_data.js');
 require('plugins/business_metric_vis/directives/aggregations.js');
 
 import { uiModules } from 'ui/modules';
+import { getSavedObject } from 'ui/utils/kibana_object.js';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisParamsController', function ($scope, $rootScope, courier, savedSearches, $filter, Private) {
@@ -218,13 +218,13 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
 
   // This will execute once. Get all the available saved search.
   // We are also passing "allowedRolesJSON" to get only the saved search the user is having access.
-  Promise.resolve(utils.getSavedObject('search', ['title', 'allowedRolesJSON'], 10000, Private))
+  Promise.resolve(getSavedObject('search', ['title', 'allowedRolesJSON'], 10000, Private))
     .then(function (response) {
       $scope.savedSearchIds = response;
     });
 
   // This will execute once get all the available index patterns
-  Promise.resolve(utils.getSavedObject('index-pattern', ['title'], 10000, Private))
+  Promise.resolve(getSavedObject('index-pattern', ['title'], 10000, Private))
     .then(function (response) {
       $scope.indexPatternIds = response;
 

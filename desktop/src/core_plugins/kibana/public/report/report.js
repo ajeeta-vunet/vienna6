@@ -26,7 +26,7 @@ import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
-import utils from '../../../console/public/src/utils';
+import { getValueToStoreInKibana } from 'ui/utils/kibana_object.js';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 require('ui/directives/searchable_multiselect.js');
@@ -336,10 +336,10 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       key: 'save',
       description: 'Save Report',
       template: require('plugins/kibana/report/panels/save.html'),
-      testId: 'reportSaveButton',
-      disableButton() {
-        return Boolean(isScheduleInvalid || !$scope.forms.reportcfgForm.$valid);
-      },
+      testId: 'reportSaveButton'
+      //disableButton() {
+      //  return Boolean(isScheduleInvalid || !$scope.forms.reportcfgForm.$valid);
+      //},
     },
     {
       key: 'download',
@@ -354,10 +354,10 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       key: 'email',
       description: 'Email Report',
       testId: 'reportEmailButton',
-      run: function () { $scope.emailReport(); },
-      disableButton() {
-        return Boolean(!$scope.forms.reportcfgForm.$valid);
-      }
+      run: function () { $scope.emailReport(); }
+      //disableButton() {
+      //  return Boolean(!$scope.forms.reportcfgForm.$valid);
+      //}
     }];
   } else {
     $scope.topNavMenu = [{
@@ -629,12 +629,12 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   if ($scope.printReport === true) {
 
     // We get shipperUrl
-    $scope.shipperAddress = chrome.getShipperUrl();
+    $scope.shipperAddress = 'https://127.0.0.1/app/vienna';
 
     // Prepare $scope.shipperAddressUrl by taking some part of $scope.shipperAddress
     // This is to redirect when user clicks on url in the pdf file.
-    const shipperUrl = $scope.shipperAddress.split('/');
-    $scope.shipperAddressUrl = shipperUrl.slice(0, 3).join('/') + '/vunet.html#/login';
+    //const shipperUrl = $scope.shipperAddress.split('/');
+    $scope.shipperAddressUrl = 'https://127.0.0.1/app/vienna';
 
     // We will enable above once we get backend integration done: Bharat
 
@@ -796,7 +796,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     recipientsList = JSON.parse(JSON.stringify($scope.recipientsList));
     _.each(recipientsList, function (recipient) {
       const selectEmailGroupList = recipient.selectEmailGroupList;
-      recipient.selectEmailGroupList = utils.getValueToStoreInKibana(selectEmailGroupList, 'name');
+      recipient.selectEmailGroupList = getValueToStoreInKibana(selectEmailGroupList, 'name');
     });
     if (recipientsList.length && recipientsList[0].role === '') {
       // Use only the configured recipients. If the role of first

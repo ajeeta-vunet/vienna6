@@ -788,7 +788,7 @@ class DataService {
   }
 
   //Import data to elasticsearch
-  importData(file, indexName, isTimeseries, timeField, upload) {
+  importData(file, indexName, docType, isTimeseries, timeField, timeFormat, Custom_field, upload) {
     const url = this.urlBase + '/data/';
     return this.$q((resolve, reject) => {
       upload.upload({
@@ -796,8 +796,11 @@ class DataService {
         file: file,
         data: {
           'index_name': indexName,
+          'doc_type': docType,
           'is_time_series_data': isTimeseries,
-          'timestamp_field': timeField
+          'timestamp_field': timeField,
+          'customized_timestamp_format': timeFormat,
+          'custom_field_dict': Custom_field
         }
       }).then((response) => {
         resolve(response);

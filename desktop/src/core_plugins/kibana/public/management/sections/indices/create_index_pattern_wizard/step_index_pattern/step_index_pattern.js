@@ -19,6 +19,7 @@ module.directive('stepIndexPattern', function () {
       isFetchingMatchingIndices: '=',
       hasIndices: '&',
       indexPatternName: '=',
+      indexPatternUserVisibleName: '=',
       allIndices: '=',
       partialMatchingIndices: '=',
       matchingIndices: '=',

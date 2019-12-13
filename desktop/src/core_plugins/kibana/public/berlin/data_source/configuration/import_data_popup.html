@@ -23,22 +23,34 @@
 
     <!-- FEED DATA INTO -->
     <div ng-show='File'>
-      <div class="form-group importXls-form-group" ng-class="{'
-      has-error': importXlsForm.indexName.$invalid && importXlsForm.indexName.$touched}">
-        <label class="col-sm-3 control-label zero-padding">Load data into
-          <div class="display-inline" uib-tooltip="Index name where data will be stored." tooltip-placement="bottom">
-            <i class="fa fa-question-circle"></i>
-          </div>
-        </label>
+      <div class="form-group importXls-form-group" ng-class="{'has-error': importXlsForm.indexName.$invalid &&  importXlsForm.indexName.$touched }">
+        <label class="col-sm-3 control-label zero-padding">Load Data Into
+            <div class="display-inline" uib-tooltip="Please select the Index name where data will be stored." tooltip-placement="bottom">
+              <i class="fa fa-question-circle"></i>
+            </div>
+          </label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" ng-model="index_name" name="indexName" required ng-maxlength='32'>
-          <p ng-if="index_name" class="index-helper">The Index name will be saved as
-            vunet-{{indexStringInfo}}-{{index_name}}</p>
-          <span class="help-block" ng-if="importXlsForm.indexName.$error.maxlength">Index name should not exceed 32
-            characters.</span>
+          <ui-select
+            required
+            name="indexName"
+            ng-model="indexPattern.name"
+          >
+            <ui-select-match placeholder="Select an existing index or provide a new one">
+              {{$select.selected}}
+            </ui-select-match>
+            <ui-select-choices
+              repeat="option in indexPatternList
+                | filter: $select.search
+                | orderBy"
+              refresh="addUserIndex($select)"
+            >
+              <div ng-bind-html="option | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+          <p ng-if="indexPattern.name" class="index-helper">The Index name will be saved as
+            vunet-{{indexStringInfo}}-{{indexPattern.name}}</p>
         </div>
       </div>
-
       <!-- TIME FIELD -->
       <div class="form-group importXls-form-group" ng-class="{'has-error': importXlsForm.timeField.$invalid &&  importXlsForm.timeField.$touched }">
         <label class="col-sm-3 control-label zero-padding">Time Field
@@ -49,10 +61,72 @@
         <div class="col-sm-9">
           <select class="form-control" ng-model="time_field" name="timeField" ng-options="header for header in uniqueHeaders"
             required>
+            <option value="" disabled selected hidden>Select a time field for your index</option>
           </select>
         </div>
       </div>
-
+      <!-- ADVANCED FIELDS -->
+      <div class="form-group importXls-form-group">
+        <label class="col-sm-3 control-label zero-padding">Advanced fields
+          <kbn-tooltip
+            text="Use this to add additional fields"
+            placement="right"
+            append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+        </label>
+        <input
+          type="checkbox"
+          class="vudata-checkbox"
+          ng-model="advancedFields"
+          ng-disabled="displayOnlyTabularFormat()"
+          ng-change="enableHorizontalViewFormat()"
+        />
+      </div>
+      <!-- CUSTOM TIME FIELD FORMAT -->
+      <div class="form-group importXls-form-group" ng-show="advancedFields">
+        <label class="col-sm-3 control-label zero-padding">Time Format
+          <div class="display-inline" uib-tooltip="Please select the format for the timestamp field." tooltip-placement="bottom">
+            <i class="fa fa-question-circle"></i>
+          </div>
+        </label>
+        <div class="col-sm-9">
+          <select class="form-control" ng-model="time_format" name="customTimeFormat" ng-options="format for format in customDateFormats">
+            <option value="" class="timestamp" disabled selected hidden>Select format of the time field if text</option>
+          </select>
+        </div>
+      </div>
+      <!-- DOC TYPE -->
+      <div class="form-group importXls-form-group" ng-show="advancedFields">
+        <label class="col-sm-3 control-label zero-padding">Document Type
+          <div class="display-inline" uib-tooltip="Type of the document" tooltip-placement="bottom">
+            <i class="fa fa-question-circle"></i>
+          </div>
+        </label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" ng-model="doc_type" name="docType" ng-maxlength='32' placeholder="Optional document type">
+          <span class="help-block" ng-if="importXlsForm.docType.$error.maxlength">Document type should not exceed 32
+            characters.</span>
+        </div>
+      </div>
+      <!-- CUSTOM STRING -->
+      <div class="form-group importXls-form-group" ng-show="advancedFields">
+        <label class="col-sm-3 control-label zero-padding">Custom Field
+          <div class="display-inline" uib-tooltip="This should be in {key:value} format and will be added to each document" tooltip-placement="bottom">
+            <i class="fa fa-question-circle"></i>
+          </div>
+        </label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" ng-model="custom_field" name="customField" ng-maxlength='100' placeholder="Optional custom field">
+          <span class="help-block" ng-if="importXlsForm.customField.$error.maxlength">Custom field should not exceed 100
+            characters.</span>
+        </div>
+      </div>
       <!-- ADD EXTRA COLUMN ON HOLD FOR NOW -->
       <!-- <div class="panel-group">
             <div class="panel panel-default">

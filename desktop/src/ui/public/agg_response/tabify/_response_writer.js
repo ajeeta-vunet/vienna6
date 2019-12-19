@@ -266,6 +266,13 @@ export function TabbedAggResponseWriterProvider(Private) {
     const table = split.tables[0] || this._table(false);
 
     while (cells.length < this.columns.length) cells.push('');
+
+    for (let i = cells.length - 1; i >= 0; i--) {
+      if (cells[i].aggConfig.enabled === false) {
+        cells.splice(i, 1);
+      }
+    }
+
     table.rows.push(cells);
     return table;
   };

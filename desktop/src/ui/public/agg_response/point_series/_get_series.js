@@ -48,7 +48,7 @@ export function PointSeriesGetSeriesProvider(Private) {
         const firstVal = siri.values[0];
         let y;
 
-        if (firstVal) {
+        if (firstVal.aggConfigResult) {
           const agg = firstVal.aggConfigResult.aggConfig;
           y = _.find(aspects.y, function (y) {
             return y.agg === agg;

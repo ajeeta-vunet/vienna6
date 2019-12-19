@@ -32,7 +32,7 @@
               kbn-accessible-click
               tabindex="0"
               class="{{ col.class }}"
-              ng-show="paginatedTable.checkMatrix(col.show)">
+              ng-show="paginatedTable.checkMatrix(col.show) && col.enabled === true">
             <span ng-bind="::col.title"></span>
             <kbn-info ng-if="col.info"
                       info="{{ col.info }}"
@@ -52,7 +52,7 @@
               tabindex="0"
               style="word-wrap:break-word;"
               class="{{ col.class }} cell-hover"
-              ng-show="paginatedTable.checkMatrix(col.show)">
+              ng-show="paginatedTable.checkMatrix(col.show) && col.enabled === true">
             <h6 class="zero-margin">
               <span  ng-click="paginatedTable.filterColumn($index)" ng-bind="col.title"></span>
               <span  ng-click="paginatedTable.sortColumn($index)" ng-if="!printReport">

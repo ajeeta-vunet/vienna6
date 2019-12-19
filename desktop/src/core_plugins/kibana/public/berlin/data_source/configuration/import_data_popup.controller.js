@@ -1,10 +1,8 @@
-
-
+import { getSavedObject } from 'ui/utils/kibana_object.js';
 const XLSX = require('xlsx');
-
 class importPopupCtrl {
-  constructor($scope, $uibModalInstance, StateService, Upload, HTTP_SUCCESS_CODE, chrome) {
-
+  constructor($scope, $injector, $uibModalInstance, StateService, Upload, HTTP_SUCCESS_CODE, chrome) {
+    const Private = $injector.get('Private');
     // This is used to show another popup after upload
     $scope.successfulUpload = false;
     const tentantInfo = chrome.getTenantBu();
@@ -13,14 +11,93 @@ class importPopupCtrl {
     $scope.exportExcel = function (event) {
 
       if (event) {
+
         //All validation declaration or variables has been set to false or empty
         $scope.uniqueHeaders = [];
-        $scope.time_field = '';
-        $scope.index_name = '';
+        $scope.indexPatternList = [];
+        $scope.indexPattern = {};
+        $scope.indexPattern.name = ''
+        $scope.doc_type = '';
+        $scope.custom_field = '';
         $scope.isEmptyHeaderPresent = false;
         $scope.isFileTypeWrong = false;
         $scope.isFileSizeMore = false;
         $scope.moreThanOneSheetsInFile = false;
+        $scope.customDateFormats = [
+          '%Y-%m-%d',
+          '%Y-%m-%d %H:%M:%S',
+          '%Y-%m-%d %H:%M:%S.%f',
+          '%Y-%m-%d %H:%M:%S.%fZ',
+          '%Y/%m/%d',
+          '%Y/%m/%d %H:%M:%S',
+          '%Y/%m/%d %H:%M:%S.%f',
+          '%Y/%m/%d %H:%M:%S.%Z',
+          '%d/%m/%Y',
+          '%d/%m/%Y %H:%M:%S',
+          '%d/%m/%Y %H:%M:%S.%f',
+          '%d/%m/%Y %H:%M:%S.%fZ',
+          '%d-%m-%Y',
+          '%d-%m-%Y %H:%M:%S',
+          '%d-%m-%Y %H:%M:%S.%f',
+          '%d-%m-%Y %H:%M:%S.%fZ',
+          '%d %B %Y',
+          '%d %B %Y %H:%M:%S',
+          '%d %B %Y %H:%M:%S.%f',
+          '%d %B %Y %H:%M:%S.%fZ',
+          '%B %d, %Y',
+          '%B %d, %Y %H:%M:%S',
+          '%B %d, %Y %H:%M:%S.%f',
+          '%B %d, %Y %H:%M:%S.%fZ'
+        ];
+
+        Promise.resolve(getSavedObject('index-pattern', ['title', 'userVisibleName'], 10000, Private))
+          .then(function (response) {
+            angular.forEach(response, function(indexPattern){
+              let index_name = indexPattern.userVisibleName
+              // if name is not specified for the index pattern and pattern not started with dot (.)
+              // then remove the prefix (vunet-1-1-) and suffix (-*) from the title and show
+              // For ex; there is no name defined for vunet-1-1-server-health-* index pattern.
+
+              // So we need to remove the prefix (vunet-1-1-) and suffix (-*) from the title and show to the user.
+              if (index_name === undefined && indexPattern.title.charAt(0) !== '.')
+              {
+                // Remove vunet-1-1- from the index pattern first
+                const index_arg = indexPattern.title.replace('vunet-' + $scope.indexStringInfo + '-','').split('-')
+                // Remove the prefix from the index. I mean "-*".
+                if (index_arg.length > 1)
+                  index_arg.pop();
+
+                // Now build the index name again by concatenating all the arguments from the array.
+                if (index_arg[0] != 'vunet') {
+                  angular.forEach(index_arg, function(item){
+                    if (index_name === undefined)
+                      index_name = item
+                    else
+                      index_name = index_name + '-' + item;
+                  })
+                }
+              }
+              $scope.indexPatternList.push(index_name)
+            })
+          });
+
+        // If data needs to be loaded into a new index other than the existing from the list
+        // this will do the job.
+        $scope.addUserIndex = function ($select) {
+          var search = $select.search;
+          var Indiceslist = angular.copy($select.items);
+
+          if (!search) {
+            //use the predefined list
+            $select.items = Indiceslist;
+          }
+          else {
+            //manually add new index and set selection
+            var userInputIndex = search;
+            $select.items = [userInputIndex].concat(Indiceslist);
+            $select.selected = userInputIndex;
+          }
+        };
 
         //Extracting the filename
         const fileName = event.target.files[0].name;
@@ -107,8 +184,11 @@ class importPopupCtrl {
             $scope.moreThanOneSheetsInFile = true;
 
             // Emptying the form in the case when 1st upload has been made with one worksheet
-            $scope.time_field = '';
-            $scope.index_name = '';
+            $scope.doc_type = '';
+            $scope.custom_field = '';
+            $scope.indexPattern.name = '';
+            $scope.indexPatternList = [];
+            $scope.customDateFormats = [];
             $scope.uniqueHeaders = [];
           }
 
@@ -126,14 +206,19 @@ class importPopupCtrl {
 
     //Submit function of the form
     $scope.importExcelData = function () {
-
       // Checking if it a timeseries data or not
       let isTimeSeriesData = 'True';
       if ($scope.time_field === 'Not a time series data') {
         isTimeSeriesData = 'False';
       }
 
-      StateService.importData($scope.File, $scope.index_name, isTimeSeriesData, $scope.time_field, Upload).then((response) => {
+      if ($scope.advancedFields === false) {
+        $scope.time_format = ''
+        $scope.custom_field = ''
+        $scope.doc_type = ''
+      }
+
+      StateService.importData($scope.File, $scope.indexPattern.name, $scope.doc_type, isTimeSeriesData, $scope.time_field, $scope.time_format, $scope.custom_field, Upload).then((response) => {
         if (response.status === HTTP_SUCCESS_CODE) {
           $scope.successfulUpload = true;
           // // We remove the succes message after 4 sec
@@ -152,7 +237,7 @@ class importPopupCtrl {
   }
 }
 
-importPopupCtrl.$inject = ['$scope', '$uibModalInstance', 'StateService', 'Upload', 'HTTP_SUCCESS_CODE', 'chrome'];
+importPopupCtrl.$inject = ['$scope', '$injector', '$uibModalInstance', 'StateService', 'Upload', 'HTTP_SUCCESS_CODE', 'chrome'];
 /*eslint-disable*/
 export default importPopupCtrl;
 /*eslint-enable*/

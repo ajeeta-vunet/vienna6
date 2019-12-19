@@ -1,6 +1,7 @@
 export function sendCreateIndexPatternRequest(indexPatterns, {
   id,
   name,
+  userVisibleName,
   timeFieldName,
 }) {
   // get an empty indexPattern to start
@@ -9,6 +10,7 @@ export function sendCreateIndexPatternRequest(indexPatterns, {
       Object.assign(indexPattern, {
         id,
         title: name,
+        userVisibleName: userVisibleName,
         timeFieldName,
       });
 

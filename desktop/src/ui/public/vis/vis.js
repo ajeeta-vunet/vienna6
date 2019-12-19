@@ -149,7 +149,20 @@ export function VisProvider(Private, Promise, indexPatterns, timefilter, getAppS
     }
 
     getAggConfig() {
-      return new AggConfigs(this, this.aggs.raw.filter(agg => agg.enabled));
+      // in the trend visualization, the expression metric will work only
+      // when the supported metrics are enabled.
+      // If we remove the disabled metrics then the expression
+      // metric will not work. So by default send all the metrics without filtering.
+      // We will remove the disabled metric from the results before rendering the vis.
+      // Note that we are filtering out only for matrix visualization as enable/disable
+      // functionality is not working properly.
+      if (this.type.type === 'matrix') {
+        return new AggConfigs(this, this.aggs.raw.filter(agg => agg.enabled));
+      }
+      else
+      {
+        return new AggConfigs(this, this.aggs.raw);
+      }
     }
 
     getState() {

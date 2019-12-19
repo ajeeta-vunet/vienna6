@@ -60,7 +60,7 @@ uiModules
 
         self.toCsv = function (formatted) {
           const rows = $scope.table.rows;
-          const columns = formatted ? $scope.formattedColumns : $scope.table.columns;
+          const columns = formatted ? $scope.formattedColumns.filter(formattedCol => formattedCol.enabled) : $scope.table.columns.filter(col => col.aggConfig.enabled);
           const nonAlphaNumRE = /[^a-zA-Z0-9]/;
           const allDoubleQuoteRE = /"/g;
           let srNumber = -1;
@@ -130,6 +130,7 @@ uiModules
             const field = agg.getField();
             const formattedColumn = {
               title: col.title,
+              enabled:col.aggConfig.enabled,
               filterable: field && field.filterable && agg.schema.group === 'buckets',
               aggConfigResult: col.aggConfigResult,
               show: col.show

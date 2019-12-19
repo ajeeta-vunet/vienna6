@@ -419,8 +419,8 @@ class StateService {
   }
 
   //Import data to elastic search
-  importData(file, indexName, isTimeseries, timeField, upload) {
-    return this._DataService.importData(file, indexName, isTimeseries, timeField, upload);
+  importData(file, indexName, docType, isTimeseries, timeField, timeFormat, Custom_field, upload) {
+    return this._DataService.importData(file, indexName, docType, isTimeseries, timeField, timeFormat, Custom_field, upload);
   }
 
   // This function is called to refresh data receive flag for a given instance

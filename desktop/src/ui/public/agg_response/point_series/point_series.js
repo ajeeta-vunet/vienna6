@@ -16,6 +16,14 @@ export function AggResponsePointSeriesProvider(Private) {
 
   return function pointSeriesChartDataFromTable(vis, table) {
     const chart = {};
+
+    //Remove the column which is in disabled state
+    for (let i = table.columns.length - 1; i >= 0; i--) {
+      if (table.columns[i].aggConfig.enabled === false) {
+        table.columns.splice(i, 1);
+      }
+    }
+
     const aspects = chart.aspects = getAspects(vis, table);
 
     chart.tooltipFormatter = tooltipFormatter;

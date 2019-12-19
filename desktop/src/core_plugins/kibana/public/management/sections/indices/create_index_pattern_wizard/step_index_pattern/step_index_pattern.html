@@ -56,24 +56,51 @@
               You can't use empty spaces or the characters <strong>\ / ? " < > |</strong>.
             </p>
           </div>
-
-          <!-- Action -->
-          <button
-            data-test-subj="createIndexPatternGoToStep2Button"
-            class="kuiButton kuiButton--primary kuiButton--iconText kuiVerticalRhythmSmall"
-            ng-click="stepIndexPattern.goToNextStep()"
-            ng-disabled="!stepIndexPattern.canGoToNextStep()"
-          >
-            <span class="kuiButton__inner">
-              <span>
-                Next step
+          <div>
+            <label
+              for="indexPatternUserVisibleNameField"
+              class="kuiLabel kuiVerticalRhythmSmall"
+            >
+              User Visible Index Name
+            </label>
+            <div class="kuiVerticalRhythmSmall kuiVerticalRhythm">
+              <input
+                id="indexPatternUserVisibleName"
+                class="kuiTextInput kuiTextInput--large createIndexPatternInputField"
+                ng-model="stepIndexPattern.indexPatternUserVisibleName"
+                name="indexPatternUserVisibleName"
+                type="text"
+                ng-maxlength="100"
+                ng-class="{error: stepIndexPattern.indexPatternNameForm.indexPatternUserVisibleName.$error.required}"
+                aria-describedby="indexPatternNameFieldHelp1 indexPatternUserVisibleNameHelp2"
+              >
+            </div>
+            <p
+              class="error-highlight"
+              ng-show="stepIndexPattern.indexPatternNameForm.indexPatternUserVisibleName.$error.maxlength">
+              User visible index name must be less than 100 characters
+            </p>
+          </div>
+        </div>
+        <div class="createIndexPatternButtonContainer kuiVerticalRhythm">
+            <!-- Action -->
+            <button
+              data-test-subj="createIndexPatternGoToStep2Button"
+              class="kuiButton kuiButton--primary kuiButton--iconText kuiVerticalRhythmSmall"
+              ng-click="stepIndexPattern.goToNextStep()"
+              ng-disabled="!stepIndexPattern.canGoToNextStep()"
+            >
+              <span class="kuiButton__inner">
+                <span>
+                  Next step
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="kuiButton__icon kuiIcon fa-chevron-right"
+                ></span>
               </span>
-              <span
-                aria-hidden="true"
-                class="kuiButton__icon kuiIcon fa-chevron-right"
-              ></span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
       </form>
 

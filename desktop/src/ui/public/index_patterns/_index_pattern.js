@@ -45,6 +45,7 @@ export function IndexPatternProvider(Private, config, Promise, confirmModalPromi
 
   const mapping = mappingSetup.expandShorthand({
     title: 'text',
+    userVisibleName: 'text',
     timeFieldName: 'keyword',
     intervalName: 'keyword',
     fields: 'json',

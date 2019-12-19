@@ -1,4 +1,4 @@
-import utils from '../../../core_plugins/console/public/src/utils';
+import { getSavedObject } from 'ui/utils/kibana_object.js';
 
 define(function (require) {
   const module = require('ui/modules').get('kibana');
@@ -24,7 +24,7 @@ define(function (require) {
         scope.dashboard = '';
         scope.searchString = '';
         // Get all the dashboards
-        Promise.resolve(utils.getSavedObject('dashboard', ['title', 'allowedRolesJSON'], 10000, Private))
+        Promise.resolve(getSavedObject('dashboard', ['title', 'allowedRolesJSON'], 10000, Private))
           .then(function (response) {
             scope.dashboardList = response;
           });

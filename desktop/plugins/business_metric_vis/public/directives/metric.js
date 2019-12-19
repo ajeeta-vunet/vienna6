@@ -1,4 +1,4 @@
-import utils from '../../../../src/core_plugins/console/public/src/utils';
+import { getValueToStoreInKibana } from 'ui/utils/kibana_object.js';
 const _ = require('lodash');
 require('ui/courier');
 require('ui/directives/searchable_multiselect');
@@ -109,13 +109,13 @@ app.directive('vudataMetric', function (StateService) {
           // like [system.memory.used,system.memory.total] from the add additional fields
           scope.addAdditionalFields = function (item) {
             scope.selectedFields.push({ name: item.name });
-            scope.metric.additionalFields = utils.getValueToStoreInKibana(scope.selectedFields, 'name');
+            scope.metric.additionalFields = getValueToStoreInKibana(scope.selectedFields, 'name');
           };
 
           // Removes the selected field from selectedFields and additionalFields.
           scope.removeAdditionalFields = function (index) {
             scope.selectedFields.splice(index, 1);
-            scope.metric.additionalFields = utils.getValueToStoreInKibana(scope.selectedFields, 'name');
+            scope.metric.additionalFields = getValueToStoreInKibana(scope.selectedFields, 'name');
           };
 
           // Reset the threshold fields if 'match'

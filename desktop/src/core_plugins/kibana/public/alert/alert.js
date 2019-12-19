@@ -23,7 +23,7 @@ import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
 import { SavedObjectNotFound } from 'ui/errors';
 import previewMetricTemplate from './preview_metric.html';
 import previewMetricCtrl from './preview_metric.controller.js';
-import utils from '../../../console/public/src/utils';
+import { getSavedObject, getVisualizationObjectByType, getValueToStoreInKibana } from 'ui/utils/kibana_object.js';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 import $ from 'jquery';
 import { vunetConstants } from 'ui/vunet_constants.js';
@@ -42,13 +42,13 @@ uiRoutes
     template: alertTemplate,
     resolve: {
       indexPatternIds: function (Private) {
-        return Promise.resolve(utils.getSavedObject('index-pattern', ['title'], 10000, Private));
+        return Promise.resolve(getSavedObject('index-pattern', ['title'], 10000, Private));
       },
       vuMetricList: function (Private) {
-        return Promise.resolve(utils.getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
+        return Promise.resolve(getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
       },
       reports: function (Private) {
-        return Promise.resolve(utils.getSavedObject('report', ['title', 'allowedRolesJSON'], 10000, Private));
+        return Promise.resolve(getSavedObject('report', ['title', 'allowedRolesJSON'], 10000, Private));
       },
       alertcfg: function (savedAlerts) {
         return savedAlerts.get();
@@ -68,13 +68,13 @@ uiRoutes
     template: alertTemplate,
     resolve: {
       indexPatternIds: function (Private) {
-        return Promise.resolve(utils.getSavedObject('index-pattern', ['title'], 10000, Private));
+        return Promise.resolve(getSavedObject('index-pattern', ['title'], 10000, Private));
       },
       vuMetricList: function (Private) {
-        return Promise.resolve(utils.getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
+        return Promise.resolve(getVisualizationObjectByType('visualization', [], 10000, 'business_metric', Private));
       },
       reports: function (Private) {
-        return Promise.resolve(utils.getSavedObject('report', ['title', 'allowedRolesJSON'], 10000, Private));
+        return Promise.resolve(getSavedObject('report', ['title', 'allowedRolesJSON'], 10000, Private));
       },
       alertcfg: function (savedAlerts, $route, courier) {
         return savedAlerts.get($route.current.params.id)
@@ -752,7 +752,7 @@ function alertAppEditor($scope,
     alertcfg.alertByTicket = $scope.alertByTicket;
     alertcfg.alertByEmail = $scope.alertByEmail;
     alertcfg.alertEmailId = $scope.alertEmailId;
-    alertcfg.alertEmailGroup = utils.getValueToStoreInKibana($scope.selectEmailGroupList, 'name');
+    alertcfg.alertEmailGroup = getValueToStoreInKibana($scope.selectEmailGroupList, 'name');
     alertcfg.alertEmailBody = $scope.alertEmailBody;
     alertcfg.enable_runbook_automation = $scope.enableRunBookAutomation;
     alertcfg.runbook_script = $scope.runBookScript;

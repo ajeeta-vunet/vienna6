@@ -55,6 +55,7 @@ app.directive('vudataMetric', function (StateService) {
             if (scope.metric.field === field.name) {
               scope.opts.fieldObj = field;
               scope.metric.fieldType = field.type;
+              scope.metric.scripted = field.scripted;
               return;
             }
           });

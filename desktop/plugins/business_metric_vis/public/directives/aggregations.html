@@ -101,7 +101,7 @@
           <select
             class="form-control"
             name="bucketField"
-            ng-options="field.name as field.name group by field.type for field in intersectionList | orderBy:'name'"
+            ng-options="field.name as field.name group by field.type for field in intersectionList.fields | orderBy:'name'"
             ng-model="aggregation.field"
             ng-change="updateBucketFieldName($index)"
             required>

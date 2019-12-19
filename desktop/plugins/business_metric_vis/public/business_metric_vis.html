@@ -289,10 +289,132 @@
     </div>
   </div> 
   <!-- Multiple metrics displayed inline -->
-
-  <!--Tabular format Display  -->
+  <!--Vertical tabular format Display  -->
   <div
-    ng-if="vis.params.enableTableFormat">
+    ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'vertical'">
+    <table class="bm-table-striped">
+      <tr ng-repeat="entry in metricDatas track by $index"
+        ng-init="outerIndex=$index"
+        class="data-rows">
+        <td width="{{ columnWidth }}" class="bm-table-td-metric-names"
+          ng-repeat="(colName, value) in metricDatas[outerIndex] track by $index"
+          ng-init="colIndex=$index; aggLength=vis.params.aggregations.length"
+          ng-style="columnMeta[colIndex]['bgColorEnabled'] ?
+                          {'background': value.color, color: idealTextColor(value.color)}:
+                          {'color': value.color }"
+          ng-show="columnMeta[colIndex]['hide'] !== true"
+          >
+          <div ng-style="colIndex >= aggLength && (outerIndex !== 0 || outerIndex == 0) ? {'text-align' : 'center'} : {'text-align' : 'left'}">
+            <span ng-if="outerIndex !== 0 && columnMeta[colIndex]['Reference Link']">
+                <a ng-click="viewDashboardForThisMetric(columnMeta[colIndex]['Reference Link'],
+                  undefined,value.formattedValue !== undefined? value.formattedValue : value)"
+                  ng-style="columnMeta[colIndex]['bgColorEnabled'] ?
+                          {'background': value.color, color: idealTextColor(value.color)}:
+			  {'color': value.color }">
+                  <u> {{value.formattedValue !== undefined? value.formattedValue : value}} </u>
+                </a>
+            </span>
+            <span ng-if="outerIndex === 0 || (outerIndex !== 0 && columnMeta[colIndex]['Reference Link'] === undefined) &&
+              columnMeta[colIndex]['historicData'] !== true">
+              {{value.formattedValue !== undefined? value.formattedValue : value}}
+            </span>
+                <span
+                  ng-if="outerIndex !== 0 && columnMeta[colIndex]['historicData'] === true &&
+                  (vis.params.enableHistDataValueWithPercentage === true || vis.params.enableHistDataPercentage !== true)"
+                  class="historical-data-value">
+                  <i
+                    class="historical-data-value fa"
+                    ng-class="value.icon"
+                    aria-hidden="true">
+                  </i>
+                  <span>{{ value.formattedValue }}</span>
+                </span>
+                <!-- Display historical data values in percentage -->
+                <span ng-if="outerIndex !== 0 && columnMeta[colIndex]['historicData'] === true && (vis.params.enableHistDataPercentage ||
+                                vis.params.enableHistDataValueWithPercentage)">
+                  <historical-data-percentage
+                    obj="value"
+                    vis="vis">
+                  </historical-data-percentage>
+                </span>
+            <span class="metric-name">
+              <i ng-if="outerIndex === 0"
+                ng-click="sortColumn(colIndex, colName)"
+                class="fa"
+                ng-class="{
+                'fa-sort-asc': sort.columnIndex === colIndex && sort.direction === 'asc',
+                'fa-sort-desc':  sort.columnIndex === colIndex && sort.direction === 'desc',
+                'fa-sort': sort.columnIndex !== colIndex || sort.direction === null
+                }">
+              </i>
+            </span>
+            <span class="metric-name"
+              ng-repeat="metric in vis.params.metrics track by $index"
+              ng-if="outerIndex === 0 && value === metric.label">
+              <kbn-tooltip
+                ng-if="metric.description !== undefined && metric.description !== ''"
+                text="{{metric.description}}"
+                placement="right"
+                append-to-body="1">
+                <i
+                  class="fa fa-question-circle table-metric-icon"
+                  aria-hidden="true">
+                </i>
+              </kbn-tooltip>
+              <span
+                class="view-more-link"
+                ng-if="metric.referenceLink.enabled">
+                <span
+                  ng-click="viewDashboardForThisMetric(metric.referenceLink, metric.filter)">
+                  <kbn-tooltip
+                    text="View More"
+                    placement="right"
+                    append-to-body="1">
+                    <i
+                      class="fa fa-arrow-circle-o-right table-metric-icon"
+                      aria-hidden="true">
+                    </i>
+                  </kbn-tooltip>
+                </span>
+              </span>
+            </span>
+          </div>
+          <div class="goal-info"
+            ng-repeat="metric in vis.params.metrics track by $index"
+            ng-if="outerIndex === 0 && value === metric.label">
+            {{metric.goalLabel}}
+          </div>
+          <div
+                data-cell-content
+                ng-repeat="agg in vis.params.aggregations track by $index"
+                ng-if="outerIndex !== 0 && (metricDatas[0]['Column' + colIndex + ''] === agg.customLabel
+                  || metricDatas[0]['Column' + colIndex + ''] === agg.field)"
+              >
+                <span class="table-cell-filter">
+                  <span
+                    ng-click="onFilterClick(agg.field, value, agg.index, false)"
+                    class="fa fa-search-plus"
+                    tooltip="Filter for value"
+                    tooltip-append-to-body="1"
+                  ></span>
+
+                  <span
+                    ng-click="onFilterClick(agg.field, value, agg.index, true)"
+                    class="fa fa-search-minus"
+                    tooltip="Filter out value"
+                    tooltip-append-to-body="1"
+                  >
+                  </span>
+                </span>
+              </div>
+        </td>
+      </tr>
+   </table>
+  </div><!--Vertical tabular format Display ends-->
+
+  <!--Horizontal tabular format Display  -->
+  <div
+    ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'horizontal'">
     <table class="bm-table-striped">
       <tr
         class="data-rows"
@@ -432,7 +554,7 @@
         </td>
       </tr>
     </table>
-  </div><!--Tabular format Display ends-->
+  </div><!--Horizontal tabular format Display ends-->
   <vunet-modal 
     show-modal="showActionButtonsModal" 
     on-close="onActionButtonsModalClose" 

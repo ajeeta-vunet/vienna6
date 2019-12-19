@@ -7,7 +7,7 @@ define(function (require) {
   // This directive is used to create link info configuration. This will
   // be used by all visualizations which provides facility to user
   // to configure navigation links to other dashboards
-  module.directive('metricLinkInfo', function ($route, Private) {
+  module.directive('metricLinkInfo', function ($filter, Private) {
     return {
       restrict: 'E',
       replace: true,
@@ -41,7 +41,8 @@ define(function (require) {
           if (index !== -1) {
             const linkInfo = scope.linkInfo[index];
             scope.editIndex = index;
-            scope.field = scope.indexPattern.fields.byName[linkInfo.field];
+            //scope.field = scope.indexPattern.fields.byName[linkInfo.field];
+            scope.field = $filter('filter')(scope.indexPattern.fields, { name: linkInfo.field }, true);
             // Show only the title of the dashboard to the user
             scope.dashboard = linkInfo.dashboard;
             scope.searchString = linkInfo.searchString;
@@ -53,6 +54,9 @@ define(function (require) {
         // This function is called when a user wants to add a linkInfo or
         // update an existing linkInfo.
         scope.addOrUpdateLink = function () {
+          if (scope.linkInfo === undefined) {
+            scope.linkInfo = [];
+          }
           // Get the dashboard id for the corrosponding title
           const dashboard = scope.dashboard;
           const editIndex = scope.editIndex;

@@ -17,6 +17,7 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
   $scope.indexFields = [];
   $scope.savedSearchIds = [];
   $scope.indexPatternIds = [];
+  $scope.intersectionList = [];
   // Initializing the options for interval
   // metric
   $scope.intervalOptions = [
@@ -129,6 +130,19 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
       return false;
     }
   };
+
+  $scope.enableHorizontalViewFormat = function() {
+    if ($scope.vis.params.enableTableFormat === true) {
+      $scope.vis.params.tabularFormat = 'horizontal';
+    }
+    else {
+      $scope.vis.params.tabularFormat = '';
+    }
+  }
+
+  $scope.setTabularFormat = function(tabularFormat) {
+    $scope.vis.params.tabularFormat = tabularFormat;
+  }
 
   // This will set the indexFields with the fields according to the data
   // source selected. It also takes care of grouping the fields

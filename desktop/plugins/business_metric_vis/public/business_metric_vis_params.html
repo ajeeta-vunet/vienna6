@@ -203,7 +203,7 @@
     <div class="sidebar-item-title">
       buckets
     </div>
-    <aggregations vis="vis">
+    <aggregations vis="vis" intersection-list="intersectionList">
     </aggregations>
   </div>
   <div class="sidebar-item more-options">
@@ -231,7 +231,26 @@
         class="vudata-checkbox"
         ng-model="vis.params.enableTableFormat"
         ng-disabled="displayOnlyTabularFormat()"
+        ng-change="enableHorizontalViewFormat()"
       />
+      <div>
+        <label>
+          <input type="radio" ng-model="vis.params.tabularFormat" value="horizontal" ng-change="setTabularFormat('horizontal')" name="horizontal">
+          Horizontal
+        </label>
+        <label>
+          <input type="radio" ng-model="vis.params.tabularFormat" value="vertical" ng-change="setTabularFormat('vertical')" name="vertical">
+            Vertical
+        </label>
+        <!-- Disabled as this will be done in the future
+          <label>
+          <input type="radio" ng-model="vis.params.tabularFormat" value="Matrix" ng-change="setTabularFormat('matrix')">
+          Matrix
+        </label>-->
+      </div>
+    </div>
+    <div ng-show="vis.params.tabularFormat === 'vertical'">
+      <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="intersectionList"></metric-link-info>
     </div>
     <!-- historical data config starts -->
     <div class="collapse-header-wrapper">

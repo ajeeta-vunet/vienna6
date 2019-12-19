@@ -10,6 +10,7 @@ import 'plugins/business_metric_vis/factories/recursion_helper.js';
 import { noop } from 'lodash';
 import { uiModules } from 'ui/modules';
 
+import AggConfigResult from 'ui/vis/agg_config_result';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { idealTextColor, colorLuminance } from 'ui/utils/color_filter';
@@ -18,6 +19,7 @@ import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 import { SavedObjectNotFound } from 'ui/errors';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 import { getFiltersFromSavedSearch } from 'ui/filter_manager/filter_manager.js';
+import { FilterBarClickHandlerProvider } from 'ui/filter_bar/filter_bar_click_handler';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisController', function ($scope, Private,
@@ -129,12 +131,27 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
+  const filterBarClickHandler = Private(FilterBarClickHandlerProvider);
 
   // Get the first part of the url containing the tenant
   // and bu id to prepare urls for api calls.
   // Example output: /vuSmartMaps/api/1/bu/1/
   const urlBase = chrome.getUrlBase();
 
+  $scope.onFilterClick = function (field, value, index_id, negate) {
+    const $state = getAppState();
+    let meta = [];
+    let filter = {};
+    filter['meta'] = {"index":index_id, "negate": negate};
+    filter["query"] = {}
+    filter["query"]["match"]={}
+    filter["query"]["match"][field] = {"query":value,"type":"phrase"};
+    meta.push(filter);
+    if ($state.query.language === 'lucene') {
+      $state.$newFilters = meta;
+    }
+    $state.$newFilters = meta;
+  };
   // Constants used in calculation of css properties
   // in metric display.
   $scope.actionButtonFontConstant = 2;
@@ -145,13 +162,66 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
   $scope.noDataContainerConstant = 0.30;
   $scope.noDataIconConstant = 0.55;
 
+  $scope.sort = {
+    columnIndex: null,
+    columnName: null,
+    direction: null
+  };
+
+  self.sort = {
+    columnIndex: null,
+    columnName: null,
+    direction: null
+  };
+
+  $scope.sortColumn = function (colIndex, colName, sortDirection = 'asc') {
+    if (self.sort.columnIndex === colIndex) {
+      const directions = {
+        null: 'asc',
+        'asc': 'desc',
+        'desc': null
+      };
+      sortDirection = directions[self.sort.direction];
+    }
+    self.sort.columnIndex = colIndex;
+    self.sort.columnName = colName;
+    self.sort.direction = sortDirection;
+    if ($scope.sort) {
+      _.assign($scope.sort, self.sort);
+    }
+  }
+
+  function valueGetter(row) {
+    let value = row[self.sort.columnName];
+    if (value && value.value != null) value = value.value;
+    if (typeof value === 'boolean') value = value ? 0 : 1;
+    if (value instanceof AggConfigResult && value.valueOf() === null) value = false;
+      return value;
+  }
+
+  function resortRows() {
+    if ($scope.metricDatas) {
+      const sort = self.sort;
+      const orderBy = $filter('orderBy');
+      if (sort.direction !== null) {
+        const headersData = $scope.metricDatas[0];
+        $scope.metricDatas.splice(0, 1);
+        $scope.metricDatas = orderBy($scope.metricDatas, valueGetter, sort.direction === 'desc');
+        $scope.metricDatas.splice(0, 0, headersData);
+      }
+    }
+  }
+
+
   // This function is called when the 'View More' link
   // in the metric visualization is clicked. This will
   // handle the redirection to a dashboard or events of
   // interest page based on users input to reference page.
-  $scope.viewDashboardForThisMetric = function (refLink, metricFilter) {
+  $scope.viewDashboardForThisMetric = function (refLink, metricFilter, value) {
     let referencePage = '';
     let searchString = '';
+    let fieldName = undefined;
+    let fieldValue = '';
 
     if (refLink.useMetricFilter && metricFilter !== undefined) {
       // We need to use the filter applied for this metric
@@ -166,14 +236,18 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         searchString = refLink.searchString;
       }
     }
-    if (refLink.type === 'dashboard') {
+    if (refLink.useFieldAsFilter) {
+      fieldName = refLink.field;
+      fieldValue = value;
+    }
+    if (refLink.type === 'dashboard' || refLink.dashboard) {
       referencePage = prepareLinkInfo(
         'dashboard/',
         refLink.dashboard.id,
         searchString,
         refLink.retainFilters,
-        undefined,
-        undefined,
+        fieldName,
+        fieldValue,
         undefined,
         undefined,
         undefined,
@@ -287,23 +361,38 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       actionButtonsLength = 1;
     }
 
+    // Check whether, more than one metrics are to te displayed.
+    // If it is only one metric, we would be displaying them
+    // with CSS class used for single metric
+    let displayedMetrics = 0;
+    _.each($scope.vis.params.metrics, function (metric) {
+      if (!metric.hideMetric) {
+        displayedMetrics += 1;
+      }
+    });
+    $scope.displayedMetrics = displayedMetrics;
+
     if (aggregationsLength === 0) {
       // Check whether, more than one metrics are to te displayed.
       // If it is only one metric, we would be displaying them
       // with CSS class used for single metric
-      let displayedMetrics = 0;
-      _.each($scope.vis.params.metrics, function (metric) {
-        if (!metric.hideMetric) {
-          displayedMetrics += 1;
-        }
-      });
+    //  let displayedMetrics = 0;
+    //  _.each($scope.vis.params.metrics, function (metric) {
+    //    if (!metric.hideMetric) {
+    //      displayedMetrics += 1;
+    //    }
+    //  });
       $scope.displayedMetrics = displayedMetrics;
     }
 
     // calculate the no of columns to set the width of each column
     // we are adding 2 at the end to include the column headers 'Metric' and
     // 'For selected time'.
-    const noOfColumns = aggregationsLength + historicalDataLength + actionButtonsLength + 2;
+    //const noOfColumns = aggregationsLength + historicalDataLength + actionButtonsLength + 2;
+    const noOfColumns = $scope.vis.params.tabularFormat === 'vertical' ?
+                        aggregationsLength + (displayedMetrics * (historicalDataLength+1)):
+                        aggregationsLength + historicalDataLength + actionButtonsLength +  2;
+
     $scope.columnWidth = (100 / (noOfColumns)) + '%';
 
     // This function is used to prepare the inner most part of the
@@ -502,6 +591,9 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           metricType: metric.type || '',
           field: metric.field || '',
           fieldType: fieldType || '',
+          advancedConfig: metric.advancedConfig || '',
+          hideMetric: metric.hideMetric || false,
+          scripted: metric.scripted || false,
           filter: metric.filter || '*',
           savedSearchFilter: savedSearchQuery,
           enableAutoBaselining: metric.enableAutoBaseLining,
@@ -567,6 +659,103 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         }
       });
 
+      // This function will be called for the 2nd metric and so on...
+      const updateMetricAndHistoricalData = function (metric, metricList, row, columnName, colIndex, fieldKey) {
+        let value;
+        let formattedValue;
+        let color;
+        for (let index in metricList) {
+          const label = metricList[index].label
+          if (metric['label'] == label) {
+            if (metric['value'] !== undefined) {
+              if (row['Column0'] == fieldKey) {
+                value = metric['value'];
+                formattedValue = metric['formattedValue'];
+                color = metric['color'];
+              }
+              else  {
+                value = 'N.A.';
+                formattedValue = 'N.A.';
+                color = 'N.A.';
+              }
+              row[columnName+ colIndex] = {value:value, formattedValue:formattedValue, color:color};
+              colIndex = colIndex + 1;
+              // Add historic Data
+              if (metric.hasOwnProperty('historicalData')) {
+                for (let hist in metric['historicalData']) {
+                  let histColor = $scope.setTrendColor(metric['historicalData'][hist].icon, metricList[index].upTrendColor)
+                  row[columnName + colIndex] = {value:metric['historicalData'][hist]['value'], formattedValue:metric['historicalData'][hist].formattedValue, color:histColor,
+                    icon:metric['historicalData'][hist].icon, percentageChange:metric['historicalData'][hist].percentageChange};
+                  colIndex = colIndex + 1;
+                }
+              }
+              else {
+                for (let hist in $scope.vis.params.historicalData) {
+                  row[columnName + colIndex] = {value:'N.A.', formattedValue:'N.A.', percentageChange: -1};
+                  colIndex = colIndex + 1;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      const iterateResults = function (result, destList, stack, metricList, columnName, metricIndex, rowIndex = 1) {
+        let key;
+        let fieldKey;
+        for (key in result) {
+          if (result[key].hasOwnProperty('buckets')) {
+            if (result[key].hasOwnProperty('key')) {
+              stack.push(result[key]['key']);
+            }
+            iterateResults(result[key]['buckets'], destList, stack, metricList, columnName, metricIndex, rowIndex);
+            stack.pop(result[key]['key']);
+          }
+          else {
+            if (metricIndex == 0) {
+              let row = {};
+              let colIndex = 0;
+              angular.forEach(stack, function (key, index){
+                row[columnName + colIndex] = key;
+                colIndex = colIndex + 1;
+              })
+
+              let metric = {};
+              if (result[key].hasOwnProperty('metric')) {
+                row[columnName + colIndex] = result[key]['key'];
+                colIndex = colIndex + 1;
+                metric = result[key]['metric']
+                fieldKey = result[key]['key']
+              }
+              else {
+                metric = result[key]
+                fieldKey = result[key]['key']
+              }
+              updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex, fieldKey)
+              destList.push(row);
+            }
+            else
+            {
+              let colIndex = Object.keys(destList[rowIndex]).length;
+              let metric = {};
+              
+              if (result[key].hasOwnProperty('metric')) {
+                metric = result[key]['metric']
+                fieldKey = result[key]['key']
+              }
+              else {
+                metric = result[key]
+                fieldKey = result[key]['key']
+              }
+              let row = destList[rowIndex];
+              updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex, fieldKey)
+            }
+          }
+          rowIndex = rowIndex + 1;
+        }
+      };
+
+
       // prepare data sets to make POST call to the back end
       // to get the time shift values.
       Promise.all(getMetrics).then(function () {
@@ -607,6 +796,10 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           'lte': timeDurationEnd
         };
 
+        if ($scope.vis.params.enableTableFormat) {
+          payload.tabularFormat = $scope.vis.params.tabularFormat;
+        }
+
         // POST call to the backend to get necessary information and
         // prepare the business metric vis.
         const httpResult = $http.post(urlBase + '/metric/', payload)
@@ -618,70 +811,150 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           $scope.metricDatas = resp;
           $scope.darkShade = '';
           let metricRowCount = 0;
-          // For case of multiple metric in simple format we are extracting the action buttons.
-          $scope.actionButtonForMultipleMetric = $scope.vis.params.actionButtonsData;
-          // Prepare historical datasets with 'N.A.' as values when the metrics
-          // do not have any data in the selected time range.
-          angular.forEach($scope.metricDatas, function (metricData, index) {
-            for (const key in metricData) {
-              if (metricData.hasOwnProperty(key)) {
-                // Case when there are aggregations configured.
-                if ($scope.vis.params.aggregations &&
-                  $scope.vis.params.aggregations.length > 0) {
-
-                  metricRowCount = getRowsCount(metricData[key].buckets, metricRowCount);
-
-                  if (!metricData[key].hasOwnProperty('buckets')) {
-                    metricData[key].buckets = [];
-                  }
-
-                  // If there are no buckets for this metric in
-                  // the response recieved or if there is no data for
-                  // this metric, create a row with 'N.A.'
-                  // values.
-                  if ((metricData[key].buckets &&
-                    metricData[key].buckets.length === 0) ||
-                    metricData[key].success === false) {
-
-                    prepareBuckets(metricData[key].buckets,
-                      metricsetWithNoData,
-                      'N.A.',
-                      0,
-                      $scope.vis.params.aggregations.length);
-
-                    // If latest value metric is selected , Fill historical data
-                    // with 'N.A.'. This is done as we do not support historical
-                    // data for 'latest value'.
-                  } else if ($scope.vis.params.metrics[index].type === 'latest') {
-
-                    addEmptyHistoricalDataForAggregations(metricData[key].buckets);
-                  }
-
-                  // Case when there are no aggregations configured.
-                } else {
-
-                  // Prepare historical datasets with 'N.A.' as values when
-                  // the metrics do not have any data in the selected time range or
-                  // when 'latest value' metric is selected.
-                  if (metricData[key].success === false ||
-                    $scope.vis.params.metrics[index].type === 'latest') {
-                    metricData[key].historicalData = [];
-                    populateEmptyHistoricalDataValues(metricData[key].historicalData);
+          if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'vertical') {
+            $scope.metricDatas = [];
+            $scope.columnMeta = [];
+            let item = {};
+            let colIndex = 0;
+            let columnName = 'Column'
+            for (let index in $scope.vis.params.aggregations) {
+              // Add bucket names to header
+              let label = $scope.vis.params.aggregations[index].customLabel
+              let field = $scope.vis.params.aggregations[index].field
+              if (label == "") {
+                label = $scope.vis.params.aggregations[index].field
+              }
+              item[columnName + colIndex] = label;
+              colIndex = colIndex + 1;
+              let refLink = {};
+              let match = false;
+              if ($scope.vis.params.linkInfo.length) {
+                for (let i in $scope.vis.params.linkInfo) {
+                  if (field === $scope.vis.params.linkInfo[i].field) {
+                    refLink['Reference Link'] = $scope.vis.params.linkInfo[i];
+                    match = true;
                   }
                 }
-                // Using the colorLuminance function to make the time shift
-                // section background 15% more darker than the metric background color.
-                $scope.darkShade = colorLuminance(metricData[key].color, -0.15);
+              }
+              if (!match)
+              {
+                refLink['plain text'] = '';
+              }
+              refLink['historicData'] = false
+              // Set it to false as the aggregation header should be always visible
+              $scope.columnMeta.push(refLink);
+            }
+            for (let index in $scope.vis.params.metrics) {
+              let refLink = {};
+              // Add metric names and historic data names to header
+              item[columnName + colIndex] = $scope.vis.params.metrics[index].label;
+              colIndex = colIndex + 1;
+              let field = $scope.vis.params.metrics[index].field
+              let type = $scope.vis.params.metrics[index].type
+              // Set it to true/false based on the hideMetric.
+              refLink['hide'] = $scope.vis.params.metrics[index].hideMetric;
+              refLink['bgColorEnabled'] = $scope.vis.params.metrics[index].bgColorEnabled
+              refLink['historicData'] = false
+              if (type === 'latest') {
+                if ($scope.vis.params.linkInfo.length) {
+                  for (let i in $scope.vis.params.linkInfo) {
+                    if (field === $scope.vis.params.linkInfo[i].field) {
+                      refLink['Reference Link'] = $scope.vis.params.linkInfo[i];
+                      break;
+                    }
+                  }
+                }
+              }
+              $scope.columnMeta.push(refLink);
+              for (let hist in $scope.vis.params.historicalData) {
+                let refLink = {};
+                item[columnName + colIndex] = $scope.vis.params.historicalData[hist].label;
+                colIndex = colIndex + 1;
+                // We need to hide historical data for the hidden metric also.
+                // So seti it to true/false based on the corrosponding metric's hideMetric.
+                refLink['hide'] = $scope.vis.params.metrics[index].hideMetric;
+                refLink['bgColorEnabled'] = $scope.vis.params.metrics[index].bgColorEnabled
+                refLink['historicData'] = true
+                $scope.columnMeta.push(refLink);
               }
             }
-          });
+            // it's very complex and difficult to achive show hide metrics if we add to
+            // the existing metricDatas list.
+            // The existing metricDatas list will have only the bucket/metric names in the first item.
+            // in the rest items, we have metric value for the buckets.
+            // Format of the metricDatas  [["Target","memory","IO disk"],
+            //["samson-Vostro-3578","0.92","1930773028.32"],["10.0.2.15",null,null],["127.0.0.1",null,null]]
+            $scope.metricDatas.push(item)
+            angular.forEach(resp, function (metricData, index) {
+              iterateResults(metricData, $scope.metricDatas, [], $scope.vis.params.metrics, columnName, index);
+            })
+            // We should not return. need to execute the report related code
+            metricRowCount = $scope.metricDatas.length;
+          }
+          else if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'horizontal') {
+            // For case of multiple metric in simple format we are extracting the action buttons.
+            $scope.actionButtonForMultipleMetric = $scope.vis.params.actionButtonsData;
+            // Prepare historical datasets with 'N.A.' as values when the metrics
+            // do not have any data in the selected time range.
+            angular.forEach($scope.metricDatas, function (metricData, index) {
+              for (const key in metricData) {
+                if (metricData.hasOwnProperty(key)) {
+                  // Case when there are aggregations configured.
+                  if ($scope.vis.params.aggregations &&
+                    $scope.vis.params.aggregations.length > 0) {
+
+                      metricRowCount = getRowsCount(metricData[key].buckets, metricRowCount);
+
+                      if (!metricData[key].hasOwnProperty('buckets')) {
+                        metricData[key].buckets = [];
+                      }
+
+                      // If there are no buckets for this metric in
+                      // the response recieved or if there is no data for
+                      // this metric, create a row with 'N.A.'
+                      // values.
+                      if ((metricData[key].buckets &&
+                        metricData[key].buckets.length === 0) ||
+                        metricData[key].success === false) {
+
+                          prepareBuckets(metricData[key].buckets,
+                            metricsetWithNoData,
+                            'N.A.',
+                            0,
+                            scope.vis.params.aggregations.length);
+
+                            // If latest value metric is selected , Fill historical data
+                            // with 'N.A.'. This is done as we do not support historical
+                            // data for 'latest value'.
+                      } else if ($scope.vis.params.metrics[index].type === 'latest') {
+
+                        addEmptyHistoricalDataForAggregations(metricData[key].buckets);
+                      }
+                      // Case when there are no aggregations configured.
+                  } else {
+                    // Prepare historical datasets with 'N.A.' as values when
+                    // the metrics do not have any data in the selected time range or
+                    // when 'latest value' metric is selected.
+                    if (metricData[key].success === false ||
+                      $scope.vis.params.metrics[index].type === 'latest') {
+                      metricData[key].historicalData = [];
+                      populateEmptyHistoricalDataValues(metricData[key].historicalData);
+                    }
+                  }
+                  // Using the colorLuminance function to make the time shift
+                  // section background 15% more darker than the metric background color.
+                  $scope.darkShade = colorLuminance(metricData[key].color, -0.15);
+                }
+              }
+            });
+          }
 
           // Populate the total number of rows in $scope.vis.params.
           $scope.vis.params.rowsCount = metricRowCount;
 
           // prepend the table headers for the tabular
           // view of BM.
-          if ($scope.vis.params.enableTableFormat) {
+          if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'horizontal') {
             $scope.metricDatas.splice(0, 0, headersData);
           }
 
@@ -705,6 +978,8 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     makePostCall();
 
   };
+
+  $scope.$watchMulti(['[]sort'], resortRows);
 
   // This is bad, there should be a single event that triggers a refresh of data.
   // When there is a change in business metric vis configuration

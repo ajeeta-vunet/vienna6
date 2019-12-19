@@ -409,6 +409,15 @@
   }
 }
 
+.link-info-container {
+  .checkbox {
+    label {
+      padding-left: 0px;
+      cursor: pointer;
+    }
+  }
+}
+
 .metric-container {
   display: flex;
   justify-content: space-between;
@@ -520,7 +529,33 @@
     border-bottom: 1px solid #eeeeee;
     text-align: left;
     padding: 0px 5px;
+
+    position: relative;
+    /**
+     * 1. Center vertically regardless of row height.
+    */
+    .table-cell-filter {
+      position: absolute;
+      white-space: nowrap;
+      right: 0;
+      top: 50%; /* 1 */
+      transform: translateY(-50%); /* 1 */
+      display: none;
+    }
   }
+  .cell-hover-show {
+    // so that the cell doesn't change size on hover
+    visibility: hidden;
+  }
+  .bm-table-td-metric-names:hover {
+    .table-cell-filter {
+      display: inline;
+    }
+    .cell-hover-show {
+      visibility: visible;
+    }
+  }
+
   .bm-first-bucket-td {
     word-break: break-all;
     border-bottom: 1px solid #eeeeee;
@@ -639,3 +674,17 @@
   }
 }
 
+.checkbox {
+  position: relative;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  label {
+    min-height: @line-height-computed; // Ensure the input doesn't jump when there is no text
+    padding-left: 0px;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+  }
+}

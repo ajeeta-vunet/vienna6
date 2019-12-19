@@ -9,6 +9,7 @@ app.directive('aggregations', function (courier, $filter, Promise) {
     restrict: 'EA',
     scope: {
       vis: '=',
+      intersectionList: '=',
     },
     template: require('plugins/business_metric_vis/directives/aggregations.html'),
     link: function (scope) {
@@ -37,7 +38,9 @@ app.directive('aggregations', function (courier, $filter, Promise) {
         //  [fieldObj1, fieldObj2...],
         //  [fieldObj1, fieldObj2...],
         // ]
+        let indexPattern;
         Promise.map(uniqueIndexList, function (indexId) {
+          indexPattern = indexId;
           return courier.indexPatterns.get(indexId).then(function (data) {
             let fields = data.fields.raw;
             fields = $filter('filter')(fields, { aggregatable: true });
@@ -51,6 +54,8 @@ app.directive('aggregations', function (courier, $filter, Promise) {
           // Get the common fields among all the
           // metric index fields.
           scope.intersectionList = [];
+          scope.intersectionList = [];
+          scope.intersectionList = {fields: []};
           let maxIterCount = 0;
           let smallArrIndex = 0;
           let smallArr = [];
@@ -110,7 +115,9 @@ app.directive('aggregations', function (courier, $filter, Promise) {
             // the item in smallArr exists in all the arrays in fields array.
             // Push this item in intersectionList.
             if (foundMatch) {
-              scope.intersectionList.push(smallArr[maxIterCount - 1]);
+              let field = smallArr[maxIterCount - 1]
+              field['index'] = indexPattern;
+              scope.intersectionList.fields.push(field);
             }
 
             // Decreament the index of smallArr
@@ -122,19 +129,24 @@ app.directive('aggregations', function (courier, $filter, Promise) {
       // Add a bucket.
       scope.addBucket = function () {
         // Set the bucket size to 3 by default.
-        const dataObj = { field: '', fieldType: '', size: 3, customLabel: '' };
+        //const dataObj = { field: '', fieldType: '', size: 3, customLabel: '' };
+        const dataObj = { field: '', fieldType: '', size: 3, customLabel: '', index: '' };
         scope.vis.params.aggregations.push(dataObj);
         scope.operAggList.push({ expanded: false });
-
+        if (scope.vis.params.aggregations.length > 0
+          && (scope.vis.params.tabularFormat === undefined || scope.vis.params.tabularFormat === '')) {
+          scope.vis.params.tabularFormat = 'horizontal';
+        }
       };
 
       // This will be called when the aggregation field
       // shown in the select box is changed.
       scope.updateBucketFieldName = function (index) {
         // Get the field object using the field name
-        _.each(scope.intersectionList, function (field) {
+        _.each(scope.intersectionList.fields, function (field) {
           if (scope.vis.params.aggregations[index].field === field.name) {
             scope.vis.params.aggregations[index].fieldType = field.type;
+            scope.vis.params.aggregations[index].index = field.index;
             if (field.type === 'date') {
               // Set default values
               scope.vis.params.aggregations[index].interval = 'hourly';

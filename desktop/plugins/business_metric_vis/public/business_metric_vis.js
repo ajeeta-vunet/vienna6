@@ -24,6 +24,10 @@ function BusinessMetricVisProvider(Private) {
         'with upto three time shift values',
     category: CATEGORY.DATA,
     visConfig: {
+      defaults: {
+        linkInfoValues: false,
+        linkInfo: [],
+      },
       template: businessMetricVisTemplate
     },
     editorConfig: {

@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const chrome = require('ui/chrome');
 
+import d3 from 'd3';
 import { uiModules } from 'ui/modules';
-
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
@@ -33,6 +33,54 @@ module.controller('statusIndicatorAndKpiVisController', function ($scope, Privat
   getImages(StateService).then(function (iconDict) {
     $scope.metricImageDict =  iconDict;
   });
+
+  // We generate a gauge with an image in the centre
+  // and append it into the KPI visualisation
+  function  insertGauge() {
+    _.each($scope.responseData, (bmv) => {
+      _.forOwn(bmv.metrics, (value, key) => {
+        const metric = bmv.metrics[key];
+        const w = 170;
+        const h = 170;
+        const outerRadius = (w / 2) - 10;
+        const innerRadius = (w / 2) - 15;
+
+        // define the arc in the shape of a horse-shoe
+        const arc = d3.svg.arc()
+          .innerRadius(innerRadius)
+          .outerRadius(outerRadius)
+          .cornerRadius(15)
+          .startAngle(-Math.PI / 4)
+          .endAngle(Math.PI + (Math.PI / 4));
+
+        // We select the html element we are going to insert
+        // the svg and remove all children
+        d3.select(`#${metric.id}`).html('');
+
+        // Create the svg inside the requried html element
+        const svg = d3.select(`#${metric.id}`)
+          .append('svg')
+          .attr('width', w)
+          .attr('height', h)
+          .append('g')
+          .attr('transform', 'translate(' + w / 2 + ',' + h / 2 + ')');
+
+        // Insert the arc into the svg
+        svg.append('path')
+          .attr('d', arc)
+          .attr('transform', 'rotate(-90)')
+          .attr('fill', metric.color);
+
+        if (metric.metricIcon) {
+          // insert image in the centre of svg
+          svg.append('image')
+            .attr('xlink:href', `/ui/vienna_images/${metric.metricIcon}.svg`)
+            .attr('width', w / 3).attr('height', h / 3)
+            .attr('x', -w / 6).attr('y', -h / 5);
+        }
+      });
+    });
+  }
 
   // This function prepares data sets from the
   // user entered data and makes a POST call to the
@@ -70,8 +118,29 @@ module.controller('statusIndicatorAndKpiVisController', function ($scope, Privat
 
       // Perform operation after getting response.
       httpResult.then(function (resp) {
+        resp.bmv.KpiMetrics = {};
+
+        // Format the response bmv for KPI visualisation
+        _.each(resp.bmv, (bmv) => {
+          _.forOwn(bmv.metrics, (value, key) => {
+            const metric = bmv.metrics[key];
+            const metricValue = metric.formattedValue;
+
+            // Add attribute 'id' (<visualizationName> + <metricLabel>)
+            metric.id = metric.visualization_name.replace(/ /g, '_') + '_' + metric.label.replace(/ /g, '_');
+
+            // Add attributes 'formattedValueData' and 'formattedValueMeasure'
+            // if formattedValue = 100KB, formattedValueData = 100, formattedValueMeasure = KB
+            metric.formattedValueMeasure = metricValue.match(/[^\d]*$/)[0];
+            metric.formattedValueData = metricValue.replace(metric.formattedValueMeasure, '');
+            // Here we create a single list containing all the metrics
+            resp.bmv.KpiMetrics[metric.id] = value;
+          });
+        });
+
         $scope.responseData = resp.bmv;
-        //  We are extracting the data to to used
+
+        // Format the response bmv for status visualisation
         _.each($scope.vis.params.parameters, function (bmv) {
           _.each(Object.keys($scope.responseData), function (bmvName) {
             if (bmvName === bmv.name.title) {
@@ -97,6 +166,11 @@ module.controller('statusIndicatorAndKpiVisController', function ($scope, Privat
             }
           });
         });
+
+        // Insert gauge into the KPI visualisation
+        // This action needs to be performed synchronously after the
+        // resonse is processed and UI is rendered. Temporary Soln: use setImmediate()
+        setImmediate(insertGauge);
       });
     }
   };

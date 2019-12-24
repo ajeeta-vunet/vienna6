@@ -1,5 +1,6 @@
 <div>
-  <form class="vudata">
+  <form class="vudata"
+        name="vudataMetricForm">
     <div>
        <label>
         Thresholds
@@ -153,6 +154,20 @@
           </select>
           <div class="error">{{colorError}}</div>
           <br/>
+        </div>
+        <div>
+          <label>Insights</label>
+          <input
+          class="form-control"
+          type="text"
+          name="insights"
+          ng-model="insights"          
+          ng-maxlength="36"/>
+          <div
+            class="error"
+            ng-show="vudataMetricForm.insights.$error.maxlength">
+            Insight text must be less than 36 characters.
+          </div>
         </div>
         <br/>
         <div

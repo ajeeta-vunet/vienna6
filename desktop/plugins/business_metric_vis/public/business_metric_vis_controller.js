@@ -481,7 +481,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         const index = metric.index;
         const fieldType = metric.fieldType;
 
-        // Build threshold from the configured interval, min, max fields.
+        // Build threshold from the configured interval, min, max, insight fields.
         const finalThreshold = [];
         _.each(metric.threshold, function (row) {
           const newRow = {};
@@ -490,6 +490,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           newRow.min = row.min;
           newRow.match = row.match;
           newRow.color = row.color;
+          newRow.insights = row.insights;
           finalThreshold.push(newRow);
         });
 

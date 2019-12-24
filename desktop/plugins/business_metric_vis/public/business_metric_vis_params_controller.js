@@ -8,6 +8,7 @@ require('plugins/business_metric_vis/directives/aggregations.js');
 import { uiModules } from 'ui/modules';
 import { getSavedObject } from 'ui/utils/kibana_object.js';
 
+const _ = require('lodash');
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
 module.controller('BusinessMetricVisParamsController', function ($scope, $rootScope, courier, savedSearches, $filter, Private) {
 
@@ -82,6 +83,14 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
   $scope.search = function () {
     $rootScope.$broadcast('courier:searchRefresh');
   };
+
+  // To creating a list of metric labels when ever user creates a metric.
+  $scope.$watch('vis.params.metrics', function () {
+    $scope.metricLabelList = [];
+    _.each($scope.vis.params.metrics, function (metric) {
+      $scope.metricLabelList.push(metric.label);
+    });
+  }, true);
 
   // Delete one of the metric configured.
   $scope.removeMetric = function (index) {

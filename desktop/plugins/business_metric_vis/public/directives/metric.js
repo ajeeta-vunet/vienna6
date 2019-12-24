@@ -1,5 +1,6 @@
 import { getValueToStoreInKibana } from 'ui/utils/kibana_object.js';
 const _ = require('lodash');
+import { validateLabel } from 'ui/utils/validate_label.js';
 require('ui/courier');
 require('ui/directives/searchable_multiselect');
 const app = require('ui/modules').get('kibana/business_metric_vis', ['kibana', 'kibana/courier']);
@@ -9,6 +10,7 @@ app.directive('vudataMetric', function (StateService) {
   return {
     restrict: 'E',
     scope: {
+      metricLabelList: '=',
       metric: '=',
       metricLength: '=',
       indexFields: '=',
@@ -188,6 +190,15 @@ app.directive('vudataMetric', function (StateService) {
         scope.opts.thresholdEnabled = true;
         scope.opts.optionsEnabled = true;
       }
+
+      // Function to invalidate form if more than
+      // 1 custom label configured with same name.
+      scope.validateLabel = function (modelVal) {
+        scope.duplicateNode = false;
+        // Set form to invalid if return value of validateLabel function is true.
+        scope.duplicateNode = scope.vudataMetricForm.metricAlias.$invalid = validateLabel(scope.metricLabelList, modelVal);
+      };
+
     }
   };
 });

@@ -36,6 +36,7 @@ app.directive('vudataMetricThreshold', function () {
         scope.max = '';
         scope.match = '';
         scope.color = '';
+        scope.insights = '';
         scope.metric = '';
         scope.minError = '';
         scope.maxError = '';
@@ -160,7 +161,7 @@ app.directive('vudataMetricThreshold', function () {
       scope.addRange = function () {
         validate(scope.threshold);
         if (!scope.minError && !scope.maxError && !scope.colorError && !scope.matchError) {
-          const { match, min, max, color, severity } = scope;
+          const { match, min, max, color, severity, insights } = scope;
           let { interval, intervalUnit } = scope;
           if (scope.intervalEnabled === false) {
             interval = '';
@@ -173,7 +174,8 @@ app.directive('vudataMetricThreshold', function () {
             min,
             max,
             color,
-            severity
+            severity,
+            insights
           });
           scope.addingThreshold = false;
         }
@@ -202,6 +204,7 @@ app.directive('vudataMetricThreshold', function () {
           scope.max = thresholdRange.max;
           scope.color = thresholdRange.color;
           scope.severity = thresholdRange.severity;
+          scope.insights  = thresholdRange.insights;
           scope.matchError = '';
           scope.minError = '';
           scope.maxError = '';
@@ -212,7 +215,7 @@ app.directive('vudataMetricThreshold', function () {
       // This function is called when a user wants to update an existing
       // threshold.
       scope.updateRange = function () {
-        const { interval, intervalUnit, match, min, max, color, severity, editIndex } = scope;
+        const { interval, intervalUnit, match, min, max, color, severity, insights, editIndex } = scope;
         const threshold = scope.threshold.slice() || [];
         threshold.splice(editIndex, 1);
         validate(threshold);
@@ -224,7 +227,8 @@ app.directive('vudataMetricThreshold', function () {
             min,
             max,
             color,
-            severity
+            severity,
+            insights
           };
           scope.editIndex = -1;
           scope.addingThreshold = false;

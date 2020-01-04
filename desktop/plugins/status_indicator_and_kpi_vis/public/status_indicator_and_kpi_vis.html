@@ -3,14 +3,9 @@
   ng-style="responseData && {'overflow':'hidden'}">
   <div class="status-and-kpi-outer-container">
     <!-- Status Indicator template -->
-    <div
-      class=status-and-kpi-container 
-      ng-if="vis.params.request_type == 'Status Indicator'"
-      ng-repeat="metric in statusData"
-      ng-style="responseData && {'margin-bottom':'0px'}">
-      <div 
-        class="row status-content-container"
-        ng-class="metric.background">
+    <div class=status-and-kpi-container ng-if="vis.params.request_type == 'Status Indicator'"
+      ng-repeat="metric in statusData" ng-style="responseData && {'margin-bottom':'0px'}">
+      <div class="row status-content-container" ng-class="metric.background">
         <div class="col-sm-3 status-indicator-icon">
           <img src="{{metric.image}}">
         </div>
@@ -26,32 +21,26 @@
         </div>
       </div>
     </div>
-    
+
 
     <!-- KPI Template -->
 
-    <div
-      ng-class="{'kpi-container-vertical' : vis.params.kpiTemplate === 'Vertical Alignment',
-                 'kpi-container-horizontal' : vis.params.kpiTemplate === 'Horizontal Alignment'}" 
-      ng-repeat="(bmvName, metrices) in responseData track by $index"
-      ng-if="vis.params.request_type == 'KPI'"
-      ng-style="responseData && {'margin-bottom':'0px'}">
+    <div ng-class="{'kpi-container-vertical' : vis.params.kpiTemplate === 'Vertical Alignment',
+                 'kpi-container-horizontal' : vis.params.kpiTemplate === 'Horizontal Alignment',
+                 'kpi-container-gauge' : vis.params.kpiTemplate === 'Gauge template'
+                }" ng-repeat="(metricName, metric) in responseData.KpiMetrics track by $index"
+      ng-if="vis.params.request_type == 'KPI'" ng-style="responseData && {'margin-bottom':'0px'}">
 
       <!-- Vertical Aligned template for KPI -->
-      <div 
-        class="kpi-vertical-container"
-        ng-repeat="(metricName, metric) in metrices.metrics track by $index" 
-        ng-if="vis.params.kpiTemplate === 'Vertical Alignment'">
+      <div class="kpi-vertical-container" ng-if="vis.params.kpiTemplate === 'Vertical Alignment'">
         <div class="kpi-icon">
           <img src="{{metricImageDict[metric.metricIcon]}}">
         </div>
-        <div class="kpi-value"
-          ng-style="{color:metric.color}"
+        <div class="kpi-value" ng-style="{color:metric.color}"
           ng-if="!metric.view_more || !metric.view_more.enabled">
           {{metric.formattedValue}}
         </div>
-        <div class="kpi-value"
-          ng-style="{color:metric.color}"
+        <div class="kpi-value" ng-style="{color:metric.color}"
           ng-if="metric.view_more && metric.view_more.enabled"
           ng-click="viewDashboardForThisMetric(metric)">
           {{metric.formattedValue}}
@@ -63,26 +52,20 @@
           {{metric.description}}
         </div>
       </div>
-  
-     <!-- Horizontal Aligned template for KPI -->
-     <div 
-      class="kpi-horizontal-container"
-      ng-repeat="(metricName, metric) in metrices.metrics track by $index" 
-      ng-if="vis.params.kpiTemplate === 'Horizontal Alignment'">
-       <div class="row">
-         <div class="col-sm-4 kpi-icon">
+
+      <!-- Horizontal Aligned template for KPI -->
+      <div class="kpi-horizontal-container" ng-if="vis.params.kpiTemplate === 'Horizontal Alignment'">
+        <div class="row">
+          <div class="col-sm-4 kpi-icon">
             <img src="{{metricImageDict[metric.metricIcon]}}">
-         </div>
-         <div 
-            class="col-sm-8 kpi-horizontal-details-container"
+          </div>
+          <div class="col-sm-8 kpi-horizontal-details-container"
             ng-class="{'center-align-if-no-desc' : !metric.description}">
-            <div class="kpi-value"
-              ng-style="{color:metric.color}"
+            <div class="kpi-value" ng-style="{color:metric.color}"
               ng-if="!metric.view_more || !metric.view_more.enabled">
               {{metric.formattedValue}}
             </div>
-            <div class="kpi-value"
-              ng-style="{color:metric.color}"
+            <div class="kpi-value" ng-style="{color:metric.color}"
               ng-if="metric.view_more && metric.view_more.enabled"
               ng-click="viewDashboardForThisMetric(metric)">
               {{metric.formattedValue}}
@@ -90,14 +73,61 @@
             <div class="kpi-label">
               {{metric.label}}
             </div>
-            <div 
-              class="kpi-description"
-              ng-if="metric.description">
+            <div class="kpi-description" ng-if="metric.description">
               {{metric.description}}
             </div>
-         </div>
-       </div>
-     </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gauge template for KPI  -->
+      <div class="kpi-gauge-container" ng-if="vis.params.kpiTemplate === 'Gauge template'">
+        <div class="kpi-body">
+          <div class="kpi-label">
+            {{metric.label}}
+          </div>
+
+          <div class="kpi-icon" ng-attr-id="{{metric.id}}">
+          </div>
+
+          <div class="kpi-value" ng-style="{color:metric.color}"
+            ng-click="viewDashboardForThisMetric(metric)">
+            <div class="kpi-value-data">
+              {{metric.formattedValueData}}
+            </div>
+            <div class="kpi-value-measure" ng-if="metric.formattedValueMeasure">
+              {{metric.formattedValueMeasure}}
+            </div>
+          </div>
+
+          <div class="kpi-insight" ng-if="metric.insights" ng-style="{color:metric.color}">
+            {{metric.insights}}
+          </div>
+
+          <div class="kpi-desc">
+            {{metric.description}}
+          </div>
+
+          <div class="kpi-historic-wrapper" ng-if="metric.historicalData">
+            <div class="kpi-historic-data" ng-repeat="historicalData in metric.historicalData">
+              <div class="historic-data-value-container">
+                <span ng-class="{'fa-caret-up': historicalData.icon=='fa-caret-up',
+                  'fa-caret-down': historicalData.icon=='fa-caret-down'}"
+                  ng-if="historicalData.icon"
+                  class="fa historic-data-icon"
+                  ng-style='{"color": "{{historicalData.color}}" }'>
+                </span>
+                <div class="historic-data-value" ng-style='{"color": "{{historicalData.color}}" }'>
+                  {{historicalData.formattedValue}}
+                </div>
+              </div>
+              <div class="historic-data-label">
+                {{historicalData.label}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>

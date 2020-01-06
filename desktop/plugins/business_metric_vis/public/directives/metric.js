@@ -63,19 +63,24 @@ app.directive('vudataMetric', function (StateService) {
           });
 
           // If the metric field of a particular field type is changed to
-          // another field type, We reset the threshold. This is done to store
-          // color configurations only for a particular field type.
-          // A configuration for a 'number' field has (interval, min, max, color).
-          // A configuration for a 'string' field has (match, color).
+          // another field type, We need to reset the threshold settings
+          // if they are incompatible. If the field was just changed to number,
+          // and if threshold settings are using valueStr, we need to clear
+          // them. Simialrly, if the field was just changed to string, and if
+          // threshold settig are using value, we need to clear.
           if (scope.metric.threshold && scope.metric.threshold.length > 0) {
-            if (scope.opts.fieldObj.type === 'string' &&
-                  scope.metric.type !== 'cardinality' &&
-                  scope.metric.threshold[0].max !== '') {
-              scope.opts.thresholdEnabled = false;
-            }
-            if (scope.opts.fieldObj.type === 'number' &&
-                  scope.metric.threshold[0].match !== '') {
-              scope.opts.thresholdEnabled = false;
+            if (scope.opts.fieldObj !== undefined) {
+              if (scope.opts.fieldObj.type === 'string' &&
+                scope.metric.type !== 'cardinality' &&
+                scope.metric.threshold[0].value !== '' &&
+	        scope.metric.threshold[0].value !== undefined) {
+                scope.opts.thresholdEnabled = false;
+              }
+              if (scope.opts.fieldObj.type === 'number' &&
+                scope.metric.threshold[0].valueStr !== '' &&
+	        scope.metric.threshold[0].valueStr !== undefined) {
+                scope.opts.thresholdEnabled = false;
+              }
             }
           }
         },
@@ -130,7 +135,8 @@ app.directive('vudataMetric', function (StateService) {
             // configured. Unique count always needs 'min'
             // and 'max' fields.
             if (scope.metric.threshold &&
-                scope.metric.threshold[0].match !== '') {
+                scope.metric.threshold[0].valueStr !== '' &&
+	        scope.metric.threshold[0].valueStr !== undefined) {
               scope.opts.thresholdEnabled = false;
             }
           }

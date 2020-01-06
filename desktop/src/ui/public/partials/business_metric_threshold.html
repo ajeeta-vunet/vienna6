@@ -20,43 +20,35 @@
       <table class="color-schema-table">
         <thead>
           <tr>
-            <th ng-show="showMinMax">Interval</th>
-            <th ng-show="showMatch">Match</th>
-            <th ng-show="showMinMax">Min</th>
-            <th ng-show="showMinMax">Max</th>
-            <th ng-show="showMinMax">Alert</th>
+            <th>Op</th>
+            <th>Value</th>
             <th>Color</th>
+            <th>Alert</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="colorRange in threshold">
             <td
-              class="vudata-color-values"
-              ng-show="showMinMax">
-              {{colorRange.interval}}{{colorRange.intervalUnit}}
-            </td>
-            <td
-              ng-show="showMatch"
               class="vudata-color-values">
-              {{colorRange.match}}
+              {{colorRange.comparison}}
             </td>
             <td
               class="vudata-color-values"
-              ng-show="showMinMax">
-              {{colorRange.min}}</td>
-            <td
-              class="vudata-color-values"
-              ng-show="showMinMax">
-              {{colorRange.max}}
+              ng-if="showStr">
+              {{colorRange.valueStr}}
             </td>
             <td
-              class="vudata-alert-state"
-              ng-show="showMinMax">
-              {{colorRange.severity}}
+              class="vudata-color-values"
+              ng-if="showNum">
+              {{colorRange.value}}
             </td>
             <td class="vudata-color-values">
               {{colorRange.color}}
+            </td>
+            <td
+              class="vudata-alert-state">
+              {{colorRange.severity}}
             </td>
             <td>
               <kbn-tooltip
@@ -65,7 +57,7 @@
                 append-to-body="1">
                 <a
                   href=""
-                  ng-click="editRange(colorRange, $index)"
+                  ng-click="editEntry(colorRange, $index)"
                   class="vudata-color-edit"
                   aria-label="Edit">
                   <i
@@ -80,7 +72,7 @@
                 append-to-body="1">
                 <a
                   href=""
-                  ng-click="deleteRange($index)"
+                  ng-click="deleteEntry($index)"
                   class="vudata-color-delete"
                   aria-label="Delete">
                   <i
@@ -143,6 +135,20 @@
         </div>
         <br/>
         <div>
+          <label>Comparison</label>
+          <select
+            class="form-control"
+            ng-model="comparison">
+            <option value="==">Equal to</option>
+            <option value="!=">Not equal to</option>
+            <option value="<">Less than</option>
+            <option value="<=">Less than or equal to</option>
+	    <option value=">">Greater than</option>
+	    <option value=">=">Greater than or equal to</option>
+            <option value="Range" ng-show="showNum">Range</option>
+          </select>
+        </div>
+        <div>
           <label>Color</label>
           <select
             class="form-control"
@@ -172,35 +178,47 @@
         <br/>
         <div
           class="string-match"
-          ng-show="showMatch">
-          <label>Match</label>
+          ng-show="showStr">
+          <label>Value</label>
           <input
             type="string"
-            ng-model="match"
+            ng-model="valueStr"
             class="form-control"/>
           <div
             class="table-color-range-error">
-            {{matchError}}
+            {{valueStrError}}
           </div>
           <br/>
         </div>
         <div
           class="range-compare"
-          ng-show="showMinMax">
-          <label class="vudata-color-label">Min</label>
+          ng-show="comparison === 'Range'">
+          <label class="vudata-color-label">Min Value</label>
           <input
             type="number"
-            ng-model="min"
+            ng-model="valueMin"
             class="form-control"/>
-          <div class="error">{{minError}}</div>
-          <br/>
-          <label class="vudat-color-label">Max</label>
+          <div class="table-color-range-error">{{valueMinError}}</div>
+        </div>
+        <div
+          class="range-compare"
+          ng-show="comparison === 'Range'">
+          <label class="vudata-color-label">Max Value</label>
           <input
             type="number"
-            ng-model="max"
+            ng-model="value"
             class="form-control"/>
-          <div class="error">{{maxError}}</div>
-          <br/>
+          <div class="table-color-range-error">{{valueMaxError}}</div>
+        </div>
+        <div
+          class="range-compare"
+          ng-show="showNum && comparison !== 'Range'">
+          <label class="vudat-color-label">Value</label>
+          <input
+            type="number"
+            ng-model="value"
+            class="form-control"/>
+          <div class="table-color-range-error">{{valueError}}</div>
         </div>
         <div>
           <label class="vudata-color-label">Alert</label>
@@ -239,8 +257,8 @@
           <div class="col-xs-6">
             <input
               type="button"
-              value="Add range"
-              ng-click="addRange()"
+              value="Add entry"
+              ng-click="addEntry()"
               class="form-control vudata-button"/>
           </div>
           <div class="col-xs-6">
@@ -257,8 +275,8 @@
           <div class="col-xs-6">
             <input
               type="button"
-              value="Update range"
-              ng-click="updateRange()"
+              value="Update entry"
+              ng-click="updateEntry()"
               class="form-control vudata-button"/>
           </div>
           <div class="col-xs-6">

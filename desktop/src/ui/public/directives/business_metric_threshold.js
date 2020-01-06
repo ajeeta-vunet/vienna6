@@ -18,8 +18,8 @@ app.directive('vudataMetricThreshold', function () {
 
       // Initialize the flags to display
       // threshold configuration fields.
-      scope.showMatch = false;
-      scope.showMinMax = false;
+      scope.showStr = false;
+      scope.showNum = false;
 
       // This function gets called when user
       // enables or disables the interval option
@@ -32,15 +32,17 @@ app.directive('vudataMetricThreshold', function () {
       // This function is called when a user clicks to add a new threshold
       scope.addThreshold = function () {
         scope.editIndex = -1;
-        scope.min = '';
-        scope.max = '';
-        scope.match = '';
+        scope.comparison = '';
+        scope.value = '';
+        scope.valueMin = '';
+        scope.valueStr = '';
         scope.color = '';
         scope.insights = '';
         scope.metric = '';
-        scope.minError = '';
-        scope.maxError = '';
-        scope.matchError = '';
+        scope.valueMinError = '';
+        scope.valueMaxError = '';
+        scope.valueError = '';
+        scope.valueStrError = '';
         scope.colorError = '';
         scope.intervalEnabled = false;
         scope.interval = '';
@@ -51,79 +53,39 @@ app.directive('vudataMetricThreshold', function () {
 
       // This function is called to validate the user input. This validates the
       // ranges
-      function validate(threshold) {
-        const { interval, intervalUnit, match, min, max, color } = scope;
+      function validate() {
+        const { comparison, valueStr, valueMin, value, color } = scope;
         // Display 'min' and 'max' if metric type selected is 'Unique count', 'count'
         // or if field type is 'number'.
         if (scope.isMetricValueNumber()) {
-          scope.minError = min || (min === 0) ? '' :  'Min is required.';
-          scope.maxError = max || (max === 0) ? '' : 'Max is required.';
-          scope.matchError = '';
-          if (!scope.minError && !scope.maxError) {
-            if (max < min || max === min) {
-              scope.maxError = 'Max should be greater than min.';
-            }
+          if (comparison === 'Range') {
+            scope.valueMinError = valueMin || (valueMin === 0) ? '' :  'Min Value is required.';
+            scope.valueMaxError = value || (value === 0) ? '' :  'Max Value is required.';
+            if (!scope.valueMinError && !scope.valueMaxError) {
+              if (value < valueMin || value === valueMin) {
+                scope.valueMaxError = 'Max value should be greater than min.';
+              }
+	    }
+            scope.valueError = '';
           }
+          else {
+            scope.valueError = value || (value === 0) ? '' : 'Value is required.';
+            scope.valueMinError = '';
+            scope.valueMaxError = '';
+          }
+          scope.valueStrError = '';
         }
         else {
-          scope.matchError = match.length > 0 ? '' :  'Match is required.';
-          scope.minError = '';
-          scope.maxError = '';
+          scope.valueStrError = valueStr.length > 0 ? '' :  'String value is required.';
+          scope.valueMinError = '';
+          scope.valueMaxError = '';
+          scope.valueError = '';
         }
 
         scope.colorError = color ? '' : 'Color is required.';
         if (color) {
           if (!/(^#[0-9a-fA-F]{6}$)|(^#[0-9a-fA-F]{3}$)/i.test(color)) {
             scope.colorError = 'Color should be valid hexadecimal color representation.';
-          }
-        }
-
-        // Display 'min' and 'max' if metric type selected is 'Unique count', 'count'
-        // or if field type is 'number'.
-        if (scope.isMetricValueNumber()) {
-          if (!scope.minError && !scope.maxError) {
-            const noOverlap = threshold.every(colorRange => {
-              const linterval = colorRange.interval;
-              const lintervalUnit = colorRange.intervalUnit;
-              const lmin = colorRange.min;
-              const lmax = colorRange.max;
-
-              // We are here means, the field entries are same. Compare
-              // the other values
-              if ((interval === linterval) &&
-                  (intervalUnit === lintervalUnit)) {
-                if ((min >= lmin) && (min <= lmax)) {
-                  return false;
-                }
-                if ((max >= lmin) && (max <= lmax)) {
-                  return false;
-                }
-                if ((min < lmin) && (max > lmax)) {
-                  return false;
-                }
-              }
-              return true;
-            });
-            if (!noOverlap) {
-              scope.maxError = 'The range specified overlaps with another range.';
-            }
-          }
-        }
-        else {
-          if (!scope.matchError) {
-            const noOverlap = threshold.every(colorRange => {
-              const lmatch = colorRange.match;
-
-              // Check if 'match' value is same as the current 'match'
-              // value we are trying to insert
-              if (match === lmatch) {
-                return false;
-              }
-              return true;
-            });
-            if (!noOverlap) {
-              scope.matchError = 'The match value is already specified.';
-            }
           }
         }
       }
@@ -158,10 +120,10 @@ app.directive('vudataMetricThreshold', function () {
 
       // This function is called when a range is being added. It first invokes
       // validate function and if things are fine, push the threshold
-      scope.addRange = function () {
-        validate(scope.threshold);
-        if (!scope.minError && !scope.maxError && !scope.colorError && !scope.matchError) {
-          const { match, min, max, color, severity, insights } = scope;
+      scope.addEntry = function () {
+        validate();
+        if (!scope.valueMinError && !scope.valueMaxError && !scope.valueError && !scope.colorError && !scope.valueStrError) {
+          const { comparison, valueStr, valueMin, value, color, severity, insights } = scope;
           let { interval, intervalUnit } = scope;
           if (scope.intervalEnabled === false) {
             interval = '';
@@ -170,9 +132,10 @@ app.directive('vudataMetricThreshold', function () {
           scope.threshold.push({
             interval,
             intervalUnit,
-            match,
-            min,
-            max,
+            comparison,
+            valueStr,
+            valueMin,
+            value,
             color,
             severity,
             insights
@@ -183,7 +146,7 @@ app.directive('vudataMetricThreshold', function () {
 
       // This function is called when a user wants to edit an existing
       // threshold
-      scope.editRange = function (thresholdRange, index) {
+      scope.editEntry = function (thresholdRange, index) {
         if (index !== -1) {
 
           // if intervalUnit is configured,
@@ -199,33 +162,36 @@ app.directive('vudataMetricThreshold', function () {
           scope.metric = thresholdRange.metric;
           scope.interval = thresholdRange.interval;
           scope.intervalUnit = thresholdRange.intervalUnit;
-          scope.match = thresholdRange.match;
-          scope.min = thresholdRange.min;
-          scope.max = thresholdRange.max;
+          scope.valueStr = thresholdRange.valueStr;
+          scope.valueMin = thresholdRange.valueMin;
+          scope.value = thresholdRange.value;
           scope.color = thresholdRange.color;
           scope.severity = thresholdRange.severity;
           scope.insights  = thresholdRange.insights;
-          scope.matchError = '';
-          scope.minError = '';
-          scope.maxError = '';
+          scope.comparison = thresholdRange.comparison;
+          scope.valueStrError = '';
+          scope.valueMinError = '';
+          scope.valueMaxError = '';
+          scope.valueError = '';
           scope.colorError = '';
         }
       };
 
       // This function is called when a user wants to update an existing
       // threshold.
-      scope.updateRange = function () {
-        const { interval, intervalUnit, match, min, max, color, severity, insights, editIndex } = scope;
+      scope.updateEntry = function () {
+        const { interval, intervalUnit, comparison, valueStr, valueMin, value, color, severity, insights, editIndex } = scope;
         const threshold = scope.threshold.slice() || [];
         threshold.splice(editIndex, 1);
-        validate(threshold);
-        if (!scope.minError && !scope.maxError && !scope.colorError && !scope.matchError) {
+        validate();
+        if (!scope.valueMinError && !scope.valueMaxError && !scope.valueError && !scope.colorError && !scope.valueStrError) {
           scope.threshold[editIndex] = {
             interval,
             intervalUnit,
-            match,
-            min,
-            max,
+            comparison,
+            valueStr,
+            valueMin,
+            value,
             color,
             severity,
             insights
@@ -237,14 +203,16 @@ app.directive('vudataMetricThreshold', function () {
 
       // This is called when a edit is cancelled.
       scope.cancelEdit = function () {
+        scope.comparison = '';
         scope.editIndex = -1;
-        scope.match = '';
-        scope.min = '';
-        scope.max = '';
+        scope.valueStr = '';
+        scope.valueMin = '';
+        scope.value = '';
         scope.color = '';
-        scope.matchError = '';
-        scope.minError = '';
-        scope.maxError = '';
+        scope.valueStrError = '';
+        scope.valueMinError = '';
+        scope.valueMaxError = '';
+        scope.valueError = '';
         scope.colorError = '';
         scope.interval = '';
         scope.intervalUnit = '';
@@ -252,7 +220,7 @@ app.directive('vudataMetricThreshold', function () {
       };
 
       // This is called when a threshold is deleted.
-      scope.deleteRange = function (index) {
+      scope.deleteEntry = function (index) {
         const option = confirm('Are you sure you want to delete?');
         if (option) {
           scope.threshold.splice(index, 1);
@@ -266,11 +234,11 @@ app.directive('vudataMetricThreshold', function () {
       // type.
       scope.showAttrsBasedOnMetricType = function () {
         if (scope.isMetricValueNumber()) {
-          scope.showMatch = false;
-          scope.showMinMax = true;
+          scope.showStr = false;
+          scope.showNum = true;
         } else {
-          scope.showMatch = true;
-          scope.showMinMax = false;
+          scope.showStr = true;
+          scope.showNum = false;
         }
       };
 

@@ -140,18 +140,18 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
     }
   };
 
-  $scope.enableHorizontalViewFormat = function() {
+  $scope.enableHorizontalViewFormat = function () {
     if ($scope.vis.params.enableTableFormat === true) {
       $scope.vis.params.tabularFormat = 'horizontal';
     }
     else {
       $scope.vis.params.tabularFormat = '';
     }
-  }
+  };
 
-  $scope.setTabularFormat = function(tabularFormat) {
+  $scope.setTabularFormat = function (tabularFormat) {
     $scope.vis.params.tabularFormat = tabularFormat;
-  }
+  };
 
   // This will set the indexFields with the fields according to the data
   // source selected. It also takes care of grouping the fields
@@ -237,6 +237,25 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
       $scope.vis.params.metrics[bmIndex].savedSearch = defaultSavedSearch;
     }
     $scope.setIndexPattern(bmIndex);
+
+    // Adjust the threshold parameters so that they are converted into new
+    // format. old format had match, max and min fields.
+    _.each($scope.vis.params.metrics[bmIndex].threshold, function (threshold) {
+      if (threshold.match !== '' && threshold.match !== undefined && threshold.match !== null) {
+        // This is the old match case. We convert this to new equal case
+        threshold.comparison = '==';
+        threshold.valueStr = threshold.match;
+        threshold.match = '';
+      }
+      if (threshold.max !== undefined && threshold.max !== '' && threshold.max !== null) {
+        // This is the old range case. We convert this to new range case
+        threshold.comparison = 'Range';
+        threshold.value = threshold.max;
+        threshold.valueMin = threshold.min;
+        threshold.max = null;
+        threshold.min = null;
+      }
+    });
   }
 
   // This will execute once. Get all the available saved search.

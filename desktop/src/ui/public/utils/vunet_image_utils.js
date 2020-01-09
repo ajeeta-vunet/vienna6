@@ -1,3 +1,5 @@
+const chrome = require('ui/chrome');
+
 
 // This function updated list with images and returns it.
 export const dictInDictForImages = function (dictInDict) {
@@ -13,9 +15,13 @@ export const dictInDictForImages = function (dictInDict) {
 // This function updated dict with images and returns it.
 export const getUploadedImagesDict = function (StateService, dict) {
   return StateService.getUploadedImages().then(function (data) {
-    data.visualization.map(image => {
-      dict[image.name] = image['file-name'];
-    });
+    const tenantBuList = chrome.getTenantBu();
+    if (data && data.visualization) {
+      data.visualization.map(image => {
+        const imgPath = `/ui/vienna_images/${tenantBuList[0]}/${tenantBuList[1]}/visualization/${image['file-name']}`;
+        dict[image.name] = imgPath;
+      });
+    }
     return dict;
   });
 };

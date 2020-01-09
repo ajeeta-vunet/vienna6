@@ -605,6 +605,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           intervalMetric: metric.intervalMetric,
           additionalFields: metric.additionalFields,
           threshold: finalThreshold,
+          advancedConfig: metric.advancedConfig,
           format: metric.format || ''
         });
       };

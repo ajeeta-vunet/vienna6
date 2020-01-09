@@ -4,6 +4,7 @@ import UploadImageFilesCtrl from './upload_files.js';
 import UploadImageFilesTemplate from './upload_files.html';
 import { DocTitleProvider } from 'ui/doc_title';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+const chrome = require('ui/chrome');
 
 app.directive('imageManagementInterface', function () {
   return {
@@ -93,22 +94,29 @@ function imageManagementInterfaceController($injector,
     // in locally takes time at that time images will not render in to a table.
     return StateService.getUploadedImages().then(function (data) {
       let imageFiles = [];
+      const tenantBuList = chrome.getTenantBu();
 
       // Update the image files from data returned by backend.
       imageFiles = data.visualization.map((imageData) => {
+
+        // Prepare the image path using the tenant and bu id.
+        const imgPath = `/ui/vienna_images/${tenantBuList[0]}/${tenantBuList[1]}/visualization/${imageData['file-name']}`;
         return ({
           'image_name': imageData.name,
           'uploaded_for': 'visualization',
-          'preview': { 'image': imageData['file-name'] }
+          'preview': { 'image': imgPath }
         });
       });
 
       // Update logo image in image files list.
       data.logo && data.logo.length > 0 && data.logo.map((logoData) => {
+
+        // Prepare the image path using the tenant and bu id.
+        const imgPath = `/ui/vienna_images/${tenantBuList[0]}/${tenantBuList[1]}/logo/${logoData['file-name']}`;
         imageFiles.push({
           'image_name': logoData.name,
           'uploaded_for': 'Logo',
-          'preview': { 'image': logoData['file-name'] }
+          'preview': { 'image': imgPath }
         });
       });
       $scope.imagesMeta.forceUpdate = false;

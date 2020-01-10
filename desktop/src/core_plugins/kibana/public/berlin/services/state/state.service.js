@@ -419,8 +419,8 @@ class StateService {
   }
 
   //Import data to elastic search
-  importData(file, indexName, docType, isTimeseries, timeField, timeFormat, Custom_field, upload) {
-    return this._DataService.importData(file, indexName, docType, isTimeseries, timeField, timeFormat, Custom_field, upload);
+  importData(file, indexName, docType, isTimeseries, timeField, timeFormat, customField, upload) {
+    return this._DataService.importData(file, indexName, docType, isTimeseries, timeField, timeFormat, customField, upload);
   }
 
   // This function is called to refresh data receive flag for a given instance
@@ -458,6 +458,39 @@ class StateService {
     return this._DataService.downloadSampleDataEnrichment();
   }
 
+  // Get all the vuBlocks
+  getvuBlockList() {
+    return this._DataService.getvuBlockList();
+  }
+
+  // Get all details of a vuBlock
+  getvuBlockDetails(vuBlockName) {
+    return this._DataService.getvuBlockDetails(vuBlockName);
+  }
+
+  // Get details of a tab clicked on vuBlock details page
+  getvuBlockTabDetails(vuBlockName, tabName) {
+    return this._DataService.getvuBlockTabDetails(vuBlockName, tabName);
+  }
+
+  // update vuBlock status
+  updateVuBlockStatus(vuBlockName, data) {
+    return this._DataService.updateVuBlockStatus(vuBlockName, data);
+  }
+
+  // get wizard data for editing an instance under vuBlock
+  getWizardDataForSource(vuBlockName, sourceInstanceName) {
+    return this._DataService.getWizardDataForSource(vuBlockName, sourceInstanceName);
+  }
+
+  // update source instance
+  updateDataSource(vuBlockName, sourceInstanceName, data) {
+    return this._DataService.updateDataSource(vuBlockName, sourceInstanceName, data);
+  }
+
+  getAgentConfiguration(vuBlockName, sourceInstanceName) {
+    return this._DataService.getAgentConfiguration(vuBlockName, sourceInstanceName);
+  }
 
   requestDiagnostic() {
     return this._DataService.requestDiagnostic();

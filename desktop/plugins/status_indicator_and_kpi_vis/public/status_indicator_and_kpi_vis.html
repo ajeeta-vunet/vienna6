@@ -1,6 +1,7 @@
-<div class="status-indicator-and-kpi-vis-container-wrapper"
+<div
+  class="status-indicator-and-kpi-vis-container-wrapper"
   ng-controller="statusIndicatorAndKpiVisController"
-  ng-style="responseData && {'overflow':'hidden'}">
+  ng-style="responseData && {'overflow-x':'hidden'}">
   <div class="status-and-kpi-outer-container">
     <!-- Status Indicator template -->
     <div class=status-and-kpi-container ng-if="vis.params.request_type == 'Status Indicator'"
@@ -36,11 +37,15 @@
         <div class="kpi-icon">
           <img src="{{metricImageDict[metric.metricIcon]}}">
         </div>
-        <div class="kpi-value" ng-style="{color:metric.color}"
+        <div
+          class="kpi-value"
+          ng-style="{color:metric.color}"
           ng-if="!metric.view_more || !metric.view_more.enabled">
           {{metric.formattedValue}}
         </div>
-        <div class="kpi-value" ng-style="{color:metric.color}"
+        <div
+          class="kpi-value"
+          ng-style="{color:metric.color}"
           ng-if="metric.view_more && metric.view_more.enabled"
           ng-click="viewDashboardForThisMetric(metric)">
           {{metric.formattedValue}}
@@ -65,7 +70,9 @@
               ng-if="!metric.view_more || !metric.view_more.enabled">
               {{metric.formattedValue}}
             </div>
-            <div class="kpi-value" ng-style="{color:metric.color}"
+            <div
+              class="kpi-value"
+              ng-style="{color:metric.color}"
               ng-if="metric.view_more && metric.view_more.enabled"
               ng-click="viewDashboardForThisMetric(metric)">
               {{metric.formattedValue}}
@@ -90,12 +97,28 @@
           <div class="kpi-icon" ng-attr-id="{{metric.id}}">
           </div>
 
-          <div class="kpi-value" ng-style="{color:metric.color}"
-            ng-click="viewDashboardForThisMetric(metric)">
-            <div class="kpi-value-data">
+          <div
+            class="kpi-value"
+            ng-style="{color:metric.color}">
+            <div
+              class="kpi-value-data"
+              ng-if="!metric.view_more && !metric.view_more.enabled">
               {{metric.formattedValueData}}
             </div>
-            <div class="kpi-value-measure" ng-if="metric.formattedValueMeasure">
+            <div
+              class="kpi-value-data"
+              ng-if="metric.view_more && metric.view_more.enabled"
+              ng-click="viewDashboardForThisMetric(metric)">
+              {{metric.formattedValueData}}
+            </div>
+
+            <div class="kpi-value-measure"
+              ng-if="metric.formattedValueMeasure && !metric.view_more && !metric.view_more.enabled">
+              {{metric.formattedValueMeasure}}
+            </div>
+            <div class="kpi-value-measure"
+              ng-if="metric.formattedValueMeasure && metric.view_more && metric.view_more.enabled"
+              ng-click="viewDashboardForThisMetric(metric)">
               {{metric.formattedValueMeasure}}
             </div>
           </div>
@@ -111,7 +134,8 @@
           <div class="kpi-historic-wrapper" ng-if="metric.historicalData">
             <div class="kpi-historic-data" ng-repeat="historicalData in metric.historicalData">
               <div class="historic-data-value-container">
-                <span ng-class="{'fa-caret-up': historicalData.icon=='fa-caret-up',
+                <span
+                  ng-class="{'fa-caret-up': historicalData.icon=='fa-caret-up',
                   'fa-caret-down': historicalData.icon=='fa-caret-down'}"
                   ng-if="historicalData.icon"
                   class="fa historic-data-icon"

@@ -28,6 +28,10 @@ export class KuiModal extends Component {
       <FocusTrap
         focusTrapOptions={{
           fallbackFocus: () => this.modal,
+          // This is added to close the modal when
+          // clicked outside.
+          onDeactivate: () => this.props.onClose(),
+          clickOutsideDeactivates: true
         }}
       >
         {

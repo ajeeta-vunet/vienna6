@@ -20,6 +20,7 @@
 import React, {
   Component,
 } from 'react';
+
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import './_vunet_dynamic_form_builder.less';
@@ -29,12 +30,41 @@ export class VunetDynamicFormBuilder extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { isValidated: false, hideElm: [] };
+
+    // Create an operdict
+    const listOperDictCopy = {};
+    this.props.formData.item.forEach(_item => {
+      if (_item.type === 'formGroup') {
+        listOperDictCopy[_item.key] = {};
+        listOperDictCopy[_item.key].isListValidated = false;
+        listOperDictCopy[_item.key].showFormGroup = false;
+      }
+    });
+
+    this.state = {
+      isValidated: false,
+      listOperDict: listOperDictCopy,
+      hideElm: [],
+      operDict: {}
+    };
   }
 
-  //@@@
+  static defaultProps = { buttonsList: ['Cancel', 'Submit'] }
+
   componentDidMount() {
-    this.setState({ ...this.props.formData.editData }); // eslint-disable-line
+
+    // If the 'vunet_dynamic_form_builder' component is being called from
+    // 'vunet_form_wizard' component, then check for 'isParentFormWizard'
+    // flag and do a form validation. This is done to enable the buttons
+    // for transitions between the forms in the wizard for a saved
+    // instance ( 'Edit form'  use case)
+    if (this.props.formData && this.props.formData.isParentFormWizard) {
+      this.setState({ ...this.props.formData.editData }, function () { // eslint-disable-line
+        this.setState({ isValidated: this.formEl.checkValidity() });
+      });
+    } else {
+      this.setState({ ...this.props.formData.editData }); // eslint-disable-line
+    }
     this.init(true);
   }
 
@@ -131,7 +161,103 @@ export class VunetDynamicFormBuilder extends Component {
   */
   onCancel = (e) => {
     e.preventDefault();
-    if (this.props.onCancel) this.props.onCancel();
+
+    // We pass the state in onCancel as this can be used as
+    // a callback function in other components.
+    // Example: The 'vunetFormWizard' component calls the
+    // 'vunetDynamicFormBuilder' component with its prevStep
+    // function as a callback to onCancel function in
+    // vunetDynamicFormBuilder.
+    if (this.props.onCancel) {
+      this.props.onCancel(this.state);
+    }
+  }
+
+  /*
+  * Cancel callback of form group
+  */
+  onCancelFormGroup = (parentKey) => {
+    const listOperDictCopy = { ...this.state.listOperDict };
+    listOperDictCopy[parentKey].showFormGroup = false;
+    listOperDictCopy[parentKey].rowIndex = -1;
+    this.setState({ listOperDict: listOperDictCopy });
+  }
+
+  // This function is called to add the currently open row to the
+  // corresponding formGroup list
+  addRowToFormGroup = (parentKey, childKeyList) => {
+    const listOperDictCopy = { ...this.state.listOperDict };
+    const formGroupStateKeys = childKeyList.map(chKey => { return parentKey + '$' + chKey;});
+    let formGroupData = this.state[parentKey] ? this.state[parentKey] : [];
+    const formGroupInnerData = {};
+
+    // Create a dict with the formGroup object's field keys
+    childKeyList.forEach(chKey => {
+      formGroupInnerData[chKey] = this.state[parentKey + '$' + chKey];
+    });
+
+    // Get the rowIndex for this entry
+    const rowIndex = listOperDictCopy[parentKey].rowIndex;
+
+    // If rowIndex is anything other than -1, we should overwrite that row
+    // in the state instead of appending things..
+    if (rowIndex !== -1) {
+      // Splice the row in formGroupData
+      formGroupData[rowIndex] = formGroupInnerData;
+    } else {
+      formGroupData = [...formGroupData, ...[formGroupInnerData]];
+    }
+
+    // Save the updated list object (form group) to the state.
+    this.setState({ [parentKey]: formGroupData }, () => {
+
+      // Delete the temporary entries..
+      formGroupStateKeys.forEach(formGroupStateKey => {
+        delete this.state[formGroupStateKey];
+      });
+    });
+
+    // update the operDict flags after adding an entry.
+    listOperDictCopy[parentKey].isListValidated = false;
+    listOperDictCopy[parentKey].showFormGroup = false;
+    this.setState({ listOperDict: listOperDictCopy });
+  }
+
+  // Called for editing the specific row..
+  editRowInFormGroup = function (parentKey, childKeyList, rowIndex) {
+    const formGroupStateKeys = childKeyList.map(chKey => { return parentKey + '$' + chKey; });
+    const formGroupData = this.state[parentKey][rowIndex];
+
+    // Set the operational data
+    const listOperDictCopy = { ...this.state.listOperDict };
+    listOperDictCopy[parentKey].showFormGroup = true;
+    listOperDictCopy[parentKey].rowIndex = rowIndex;
+    this.setState({ listOperDict: listOperDictCopy });
+
+    // Iterate on keys and set the state variable in temporary fields from
+    // the row
+    formGroupStateKeys.forEach(key => {
+      const newKey = key.split('$');
+      this.setState({
+        [key]: formGroupData[newKey[1]],
+      });
+    });
+  }
+
+  // This is called when a formGroup row is deleted, it removes the
+  // row from the state and set the state again
+  deleteRowInFormGroup = function (parentKey, rowIndex) {
+
+    // Get the formGroupData dict from state
+    const formGroupData = this.state[parentKey] ? this.state[parentKey] : [];
+
+    // Splice the row with rowIndex
+    if (formGroupData.length > 0) {
+      formGroupData.splice(rowIndex, 1);
+    }
+
+    //Set the state again..
+    this.setState({ [parentKey]: formGroupData });
   }
 
   /*
@@ -140,14 +266,78 @@ export class VunetDynamicFormBuilder extends Component {
   */
   onChange = (e, key, type = 'single') => {
     // Find the element from props..
-    const elm =  this.props.formData.item.find(_item => _item.key === key);
+    let parentElm = {};
+    let elm = {};
+    let formGroup = false;
 
+    // If we find a '$' in key, we consider it
+    // to be a key of a form element under form group.
+    if(key.indexOf('$') > 0) {
+
+      // get the parent and child keys in an array (keys).
+      // the string before the $ has the parent key.
+      const keys = key.split('$');
+
+      // get the form group
+      parentElm = this.props.formData.item.find(_item => _item.key === keys[0]);
+
+      // If we dont find the parent element we do not
+      // proceed.
+      if (parentElm === undefined) {
+        return;
+      }
+
+      // get the element inside the form group.
+      elm = parentElm.content.metaData.find(_item => _item.key === keys[1]);
+      formGroup = true;
+
+      // get the form element which is not inside the form group
+    } else {
+      elm = this.props.formData.item.find(_item => _item.key === key);
+    }
+
+    // If we dont find the element we do not
+    // validate it.
+    if(elm === undefined) {
+      return;
+    }
     // Validate the content to set isValidated flag.. This flag is checked to
     // enable/disable Submit button..
     let validationCallbackValue = false;
     if(elm.validationCallback) {
       validationCallbackValue = elm.validationCallback(key, e.target.value);
     }
+
+    if (formGroup) {
+      const formEl = this.formEl;
+      const formLength = formEl.length;
+      let isListValidated = true;
+
+      // If the form is invalid, check for validity for
+      // every element in the form.
+      if (formEl.checkValidity() === false) {
+        for (let count = 0; count < formLength; count++) {
+          const elem = formEl[count];
+
+          // If any element in the form is invalid
+          // find if this element exists under a form group(listElement)
+          if (!elem.validity.valid) {
+            if (parentElm.content.metaData.find(item => item.name === elem.name)) {
+
+              // Set the validation flag for the corresponding
+              // form group. This will be used to disable the form group
+              // submit button if any element in it is invalid.
+              isListValidated = false;
+            }
+          }
+        }
+      }
+      // Create an operdict
+      const listOperDictCopy = { ...this.state.listOperDict };
+      listOperDictCopy[parentElm.key].isListValidated = isListValidated;
+      this.setState({ listOperDict: listOperDictCopy });
+    }
+
 
     // If element is other than multi-select, check the content by invoking
     // the validate function.. If element is multi-select, we should just
@@ -299,6 +489,33 @@ export class VunetDynamicFormBuilder extends Component {
   }
 
   /*
+  * This function is used to display the form group
+  * when add or edit is clicked for a particular form group
+  */
+  showFormGroupSection = (formGroupkey, formGroupDefaultData) => {
+    const listOperDictCopy = { ...this.state.listOperDict };
+
+    // Initialize a dictionary to store the default values to the
+    // for the fields in form group.
+    const formGroupChildKeys = {};
+    listOperDictCopy[formGroupkey].showFormGroup = true;
+    listOperDictCopy[formGroupkey].rowIndex = -1;
+
+    // Populate the default values received for the
+    // formgroup
+    for (const key in formGroupDefaultData) {
+      if (formGroupDefaultData.hasOwnProperty(key)) {
+        formGroupChildKeys[formGroupkey + '$' + key] = formGroupDefaultData[key];
+      }
+    }
+
+    // Update the state with keys of formgroup that is being configured.
+    // This is done to reflect the default values in form group UI.
+    this.setState({ ...formGroupChildKeys });
+    this.setState({ listOperDict: listOperDictCopy });
+  }
+
+  /*
   * Render elements
   * Params:
   * {
@@ -312,8 +529,7 @@ export class VunetDynamicFormBuilder extends Component {
   *   props: extra configuration like css, data-* attributes etc, will be render as it is
   * }
   */
-  renderForm = () => {
-    const formData = this.props.formData.item;
+  renderForm = (formData, parentKey = '') => {
     const isAddOrEdit = this.props.formData.action === 'add' ? true : false;
 
     const formUI = formData.map((m) => {
@@ -331,8 +547,9 @@ export class VunetDynamicFormBuilder extends Component {
       const errorText = m.errorText ? m.errorText : '';
       const helpText = m.helpText ? m.helpText : '';
       let value = m.value;
-
-      const target = key;
+      // If the form element belongs to a form group, we prepend the
+      // key with parentKey received as argument with a '$' in the middle.
+      const target = parentKey !== '' ? parentKey + '$' + key : key;
       value = this.state[target] || '';
 
       // This is default input element.. We update this for type specific
@@ -415,7 +632,7 @@ export class VunetDynamicFormBuilder extends Component {
         // if available to convert the value for display purposes
         value = accessor ? accessor.func(m.key, value) : value;
 
-        input = <select className="form-input" value={value} onChange={(e)=>{this.onChange(e, m.key);}}>{input}</select>;
+        input = <select className="form-input" value={value} onChange={(e)=>{this.onChange(e, target);}}>{input}</select>;
       }
 
       if(type === 'multiSelect') {
@@ -517,24 +734,152 @@ export class VunetDynamicFormBuilder extends Component {
 
       }
 
+      if (type === 'formGroup') {
+
+        // This is a form group... We need to add an object for this in
+        // state's operDict as well
+
+        const formGroupKeys = m.content.metaData.map((o) => o.key);
+        const tableRows = this.state[m.key] && this.state[m.key].map((row, rowIndex) => {
+          return (
+            <tr key={rowIndex}>
+              { Object.keys(row)
+                .map((key, index) => <td key={index}> {row[formGroupKeys[index]]} </td>)
+              }
+              <td>
+                <span onClick={() => { this.editRowInFormGroup(m.key, formGroupKeys, rowIndex); }}>
+                  <i className="fa fa-pencil" />
+                </span>
+                <span onClick={() => {this.deleteRowInFormGroup(m.key, rowIndex); }}>
+                  <i className="fa fa-trash" />
+                </span>
+              </td>
+            </tr>
+          );
+        });
+
+        const tableHeaders = m.content.metaData.map((o, index) => <th key={index}>{o.key}</th>);
+
+        if (this.state[m.key] && this.state[m.key].length > 0) {
+          tableHeaders.push(<th key="action">Action</th>);
+        }
+
+        const inputGroup = this.renderForm(m.content.metaData, m.key);
+        input = (
+          <div className="form-group-wrapper">
+            <table className="table">
+              <thead>
+                <tr>{tableHeaders}</tr>
+              </thead>
+              <tbody>{tableRows}</tbody>
+            </table>
+            {this.state.listOperDict[key].showFormGroup &&
+            <div>
+              <fieldset key={key}>
+                {inputGroup}
+              </fieldset>
+              <div
+                className="form-group-buttons-container"
+              >
+                <button
+                  className="kuiButton kuiButton--hollow vunet-button"
+                  type="button"
+                  onClick={() => { this.onCancelFormGroup(key); }}
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={!this.state.listOperDict[key].isListValidated}
+                  className="kuiButton kuiButton--hollow vunet-button"
+                  type="button"
+                  onClick={() => { this.addRowToFormGroup(key, formGroupKeys); }}
+                >
+                  {this.state.listOperDict[m.key].rowIndex === -1 && 'Add Entry'}
+                  {this.state.listOperDict[m.key].rowIndex > -1 && 'Update Entry'}
+                </button>
+              </div>
+            </div>
+            }
+          </div>);
+      }
+
+      if (type === 'html') {
+        input = <div className="html-container" dangerouslySetInnerHTML={{ __html: m.htmlContent }} />;
+      }
+
+      if (type === 'paragraph') {
+        input = (<div className="paragraph-container">{m.textContent}</div>);
+      }
+
+      if (type === 'button') {
+        input = (
+          <div className="form-button-wrapper">
+            <button
+              className={'btn form-button ' + m.buttonType}
+              type="button"
+              name={m.name}
+              onClick={(e) => {this.props.formData.buttonCallback(e);}}
+            >
+              {m.label}
+            </button>
+          </div>
+        );
+      }
+
+      if (type === 'referenceLink') {
+        input = (
+          <div className="reference-link-wrapper">
+            <a
+              className="form-link"
+              name={m.name}
+              href={m.url}
+            > {m.label}
+            </a>
+          </div>
+        );
+      }
+
+      // if (type === 'stepper') {
+      //   input = (
+      //     <VunetStepper
+      //       data={m.content}
+      //     />
+      //   );
+      // }
+
       // Return the complete input element if its not a hidden element..
       return (
         <div key={'g' + key} className="form-group row">
-          <div className="row">
-            <label
-              className="form-label"
-              key={'l' + key}
-              htmlFor={key}
-            >
-              {m.label}
-            </label>
-            {helpText !== '' &&
-              <span className="dynamic-form-tooltip">
-                <i className="fa fa-question-circle" />
-                <span className="tooltiptext">{helpText}</span>
-              </span>
-            }
-          </div>
+          {
+            (m.type !== 'stepper' &&
+             m.type !== 'html' &&
+             m.type !== 'button' &&
+             m.type !== 'referenceLink' &&
+             m.type !== 'paragraph') &&
+             <div className="row">
+               <label
+                 className="form-label"
+                 key={'l' + key}
+                 htmlFor={key}
+               >
+                 <span>{m.label}</span>
+                 { m.type === 'formGroup' &&
+                 <span
+                   className="add-row-icon"
+                   onClick={() => { this.showFormGroupSection(m.key, m.content.data); }}
+                 >
+                   <i className="fa fa-plus-circle" />
+                 </span>
+                 }
+               </label>
+               { helpText !== '' &&
+               <span className="dynamic-form-tooltip">
+                 <i className="fa fa-question-circle" />
+                 <span className="tooltiptext">{helpText}</span>
+               </span>
+               }
+             </div>
+          }
           <div className="row">
             {input}
           </div>
@@ -552,17 +897,29 @@ export class VunetDynamicFormBuilder extends Component {
     return (
       <div className="vunet-dynamic-form-div">
         <form
+          name="dynamic-form"
           className={'vunet-dynamic-form ' + (this.state.isValidated ? 'was-validated' : '')}
           noValidate
           onSubmit={(e)=>{this.onSubmit(e);}}
           ref={form => (this.formEl = form)}
         >
           <div className="form-components-wrapper">
-            {this.renderForm()}
+            {this.renderForm(this.props.formData.item)}
           </div>
           <div className="row form-actions">
-            <button className="kuiButton kuiButton--hollow vunet-button" onClick={(e)=>{this.onCancel(e);}}>Cancel</button>
-            <button disabled={!this.state.isValidated} className="kuiButton kuiButton--primary vunet-button" type="submit">Submit</button>
+            <button
+              className="kuiButton kuiButton--hollow vunet-button"
+              onClick={(e)=>{this.onCancel(e);}}
+            >
+              {this.props.buttonsList[0]}
+            </button>
+            <button
+              disabled={!this.state.isValidated}
+              className="kuiButton kuiButton--primary vunet-button"
+              type="submit"
+            >
+              {this.props.buttonsList[1]}
+            </button>
           </div>
         </form>
       </div>
@@ -574,5 +931,6 @@ VunetDynamicFormBuilder.propTypes = {
   className: PropTypes.string, //form class for applying custom css
   formData: PropTypes.object, // formData - data for edit
   onSubmit: PropTypes.func, // submit callback
-  onCancel: PropTypes.func // cancel callback
+  onCancel: PropTypes.func, // cancel callback
+  buttonsList: PropTypes.array // display names for the form action buttons
 };

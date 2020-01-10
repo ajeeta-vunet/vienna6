@@ -1,10 +1,11 @@
 import DataService from   'plugins/kibana/berlin/services/data_service/data.service';
 import StateService from 'plugins/kibana/berlin/services/state/state.service';
-
 import { uiModules } from 'ui/modules';
 import { VunetDataTable }  from 'ui_framework/src/vunet_components/vunet_table/vunet_table';
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
+import { VunetSwitch } from 'ui_framework/src/vunet_components/vunet_switch/vunet_switch';
+
 
 import DataEnrichmentUtilService from 'plugins/kibana/berlin/data_source/enrichment/data_enrichment.utils.service';
 
@@ -34,6 +35,9 @@ app.config(function (NotificationProvider) {
   // user is coming from berlin and getting set here through chrome
 });
 
+app.directive('vunetSwitch', function (reactDirective) {
+  return reactDirective(VunetSwitch);
+});
 
 app.directive('vunetDataTable', function (reactDirective) {
 

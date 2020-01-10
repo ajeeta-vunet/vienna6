@@ -12,6 +12,7 @@ export const VunetSidebarConstants = {
   NETWORK_CONFIGURATION: 'Network Configuration',
   DATA: 'Data',
   SOURCES: 'Sources',
+  VUBLOCK: 'vuModule',
   ENRICH: 'Enrich',
   DATA_STORE: 'Data Store',
   STORAGE: 'Storage',

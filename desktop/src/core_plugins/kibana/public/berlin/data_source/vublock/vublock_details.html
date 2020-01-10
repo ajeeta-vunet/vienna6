@@ -1,0 +1,157 @@
+<vu-block-details>
+  <div class="vu-block-details-container">
+    <div class="vu-block-details-navbar">
+      <div>
+        vuBlock Details
+      </div>
+      <div class="align-right">
+        <a href="/app/vienna#/berlin/data_source/vuBlock">Back to Listing Page</a>
+      </div>
+      <div>
+        Export
+      </div>
+      <div>
+        Edit
+      </div>
+    </div>
+    <div class="vu-block-details-summary-container">
+      <div class="vu-block-details-icon-section">
+        <div
+          ng-style="{'background-image':'url(/ui/vienna_images/{{vuBlock.icon}})'}"
+          class="vu-block-details-icon-wrapper">
+        </div>
+        <div
+          class="vu-block-details-status"
+          ng-class="{'active-vu-block': vuBlockStatusButtonText === 'Deactivate' }">
+           {{vuBlock.status}}
+        </div>
+      </div>
+      <div class="vu-block-details-separator">
+      </div>
+      <div class="vu-block-details-summary">
+        <div class="vu-block-details-header">
+          {{vuBlock.name}}
+        </div>
+        <div class="vu-block-details-description">
+           {{vuBlock.description}}
+        </div>
+        <div class="vu-block-tags-container">
+          <div class="vu-block-tags-header">
+            Tags
+          </div>
+          <div class="vu-block-tags-toolbar">
+            <div class="vu-block-tags-input">
+              {{ vuBlockTags }}
+            </div>
+            <div class="vu-block-tags-separator"></div>
+            <div ng-click="changeVuBlockStatus()" class="vu-block-disable-button-wrapper">
+              <button
+                class="vu-block-status-button">
+                  {{ vuBlockStatusButtonText }} 
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="tabs.length" class="vu-block-details-tabs-container">
+      <vunet-tab
+        class="vunetTabs"
+        tabs="tabs"
+        landing-tab="landingTab"
+        switch-tab="onTabChange">
+      </vunet-tab>
+    </div>
+    <div ng-if="id==='sources'" class="">
+      <vu-block-sources>
+        <div
+          class="sources-container"
+          data-test-subj="sourcesLandingPage">
+          <vunet-data-table
+            fetch-items="fetchSourceItems"
+            meta-item="sourcesMeta">
+          </vunet-data-table>
+        </div>
+      </vu-block-sources>
+    </div>
+    <div ng-if="id==='fields'" class="">
+      <vu-block-fields>
+        <div
+          class="fields-container"
+          data-test-subj="fieldsLandingPage">
+          <vunet-data-table
+            fetch-items="fetchFieldItems"
+            meta-item="fieldsMeta">
+          </vunet-data-table>
+        </div>
+      </vu-block-fields>
+    </div>
+    <!-- <div ng-if="id==='maps'" class="">
+      <map>
+        <div ng-if="visObj && visObj.vis"
+          class="map-container"
+          data-test-subj="mapLandingPage">
+            <visualize
+              vis="visObj.vis"
+              saved-obj="visObj"
+              search-source="visObj.searchSource"
+              show-spy-panel="chrome.getVisible()"
+              element="$el"
+              ui-state="uiState"
+              print-report="printingReport"
+              element-height="height"
+              element-width="width">
+            </visualize>
+        </div>
+      </map>
+    </div> -->
+    <div ng-if="id==='storyboards'" class="">
+      <vu-block-storyboards>
+        <div
+          class="storyboards-container"
+          data-test-subj="storyboardsLandingPage">
+          <vunet-data-table
+            fetch-items="fetchItems"
+            meta-item="storyboardsMeta">
+          </vunet-data-table>
+        </div>
+      </vu-block-storyboards>
+    </div>
+    <div ng-if="id==='golden_signals'" class="">
+      <vu-block-golden-signals>
+        <div
+          class="golden-signals-container"
+          data-test-subj="goldenSignalsLandingPage">
+          <vunet-data-table
+            fetch-items="fetchItems"
+            meta-item="goldenSignalsMeta">
+          </vunet-data-table>
+        </div>
+      </vu-block-golden-signals>
+    </div>
+    <div ng-if="id==='alert_rules'" class="">
+      <vu-block-alert-rules>
+        <div
+          class="alert-rules-container"
+          data-test-subj="alertRulesLandingPage">
+          <vunet-data-table
+            fetch-items="fetchItems"
+            meta-item="alertRulesMeta">
+          </vunet-data-table>
+        </div>
+      </vu-block-alert-rules>
+    </div>
+    <div ng-if="id==='docs'" class="">
+      <vu-block-docs>
+        <div
+          class="docs-container"
+          data-test-subj="docsLandingPage">
+          <vunet-data-table
+            fetch-items="fetchItems"
+            meta-item="docsMeta">
+          </vunet-data-table>
+        </div>
+      </vu-block-docs>
+    </div>
+  </div>
+</vu-block-details>

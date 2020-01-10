@@ -130,7 +130,7 @@
         color:@black;
         font-size:1.6rem;
         .kuiTableHeaderCell__liner{
-          padding: 1rem 3rem 1rem 2.8rem;
+          padding: 1rem 3rem 1rem 3rem;
           .kuiCheckBox{
             border-radius : .4rem;
             border: .1rem solid @border_color_table_checkbox;
@@ -151,7 +151,7 @@
           }
           .kuiCheckBox:checked {
             border: .1rem solid @accent_color;
-            background-color: @white ;  
+            background-color: @white;
           }
         }
       }
@@ -197,10 +197,14 @@
   }
 
   // Inverted Table CSS
-  .table-inverted{
+  .table-inverted,
+  .outer-table {
     border:none;
     box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color;
     border-radius:1rem;
+    .table-collapse-width {
+      width: 5rem;
+    }
     thead{
       border-bottom: .1rem solid @seperator_color;
       .kuiTableHeaderCell{
@@ -210,7 +214,7 @@
         font-family:@roboto-medium;
         font-size:1.6rem;
         color:@accent_color;
-        padding-left: 1.5rem;
+        padding-left: 2rem;
       }
     }
     tbody{
@@ -220,7 +224,7 @@
           border:none;
           .kuiTableRowCell__liner{
             // padding-left: 3rem;
-            padding: 1rem 3rem 1rem 2.8rem;
+            padding: 1rem 3rem 1rem 4rem;
           }
         }
       }
@@ -301,5 +305,82 @@
   }
 }
 
+.inner-table {
+    .kuiTableHeaderCell__liner {
+      padding-left: 0rem !important;
+    }
+    .kuiTableRowCell__liner {
+      padding: 0rem !important;
+      background: @action_bar_background;
+      .vunet-table {
+        background: @action_bar_background;
+        .kuiControlledTable {
+          box-shadow: none;
+          border-radius: none;
+          background: @action_bar_background;
+          .kuiToolBar {
+            background: @action_bar_background;
+            .kuiToolBarSearch {
+              margin-left: 10rem;
+            }
+          }
+          .kuiTable {
+            background: @action_bar_background;
+            thead {
+              tr th {
+                padding-left: 12rem;
+              }
+            }
+            tbody {
+              border-bottom: 0rem;
+              tr td {
+                padding-left: 12rem;
+              }
+            }
+          }
+          .kuiToolBarFooter {
+            background: @action_bar_background;
+          }
+        }
+      }
+    }
+  }
 
+  .outer-table {
+    .expander-wrapper {
+      .kuiTableRowCell__liner {
+        padding: 1rem 1rem 1rem 2rem !important;
+      }
+    }
+    .kuiTableHeaderCell {
+      color: @text_color1 !important;
+    }
+    .subtable-active {
+      border-left: 2px solid @accent_color;
+      height: 6vh;
+      background: #fff;
+      box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+      transform: scale(1,1);
+      width: 100%;
+      .kuiTableRowCell {
+        color: @accent_color;
+        font-weight: bold;
+      }
+    }
+    .kuiTableRow {
+      &:hover,
+      &:focus {
+        cursor: pointer;
+      }
+    }
+  }
 
+  .form-wizard-modal {
+    .kuiModalFooter {
+        display: none;
+    }
+
+    .kuiModalBody {
+      padding: 0px !important;
+    }
+  }

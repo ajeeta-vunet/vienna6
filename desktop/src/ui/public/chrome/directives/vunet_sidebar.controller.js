@@ -138,6 +138,14 @@ class sidebarController {
           active: false,
           subgroups: [
             {
+              id: VunetSidebarConstants.VUBLOCK,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'data_source/vuBlock',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
+            },
+            {
               id: VunetSidebarConstants.SOURCES,
               description: ' ',
               icon: '',
@@ -363,14 +371,18 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[4].active = true;
-      } else if (currentRoute.includes('/berlin/data_source/configuration')) {
+      } else if (currentRoute.includes('/berlin/data_source/vuBlock')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[2].subgroups[0].active = true;
-      } else if (currentRoute.includes('/berlin/data_source/enrichment/')) {
+      } else if (currentRoute.includes('/berlin/data_source/configuration')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[2].subgroups[1].active = true;
+      } else if (currentRoute.includes('/berlin/data_source/enrichment/')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[2].subgroups[2].active = true;
       } else if (currentRoute.includes('/berlin/data_source/storage')) {
         $scope.clearActive();
         $scope.clearParentActive();

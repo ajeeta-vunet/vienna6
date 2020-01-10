@@ -286,6 +286,23 @@ input[type="file"]{
         }
       }
     }
+    // remove scroll from KPI visualisation in dashboard
+    .react-grid-layout {
+      .react-grid-item{
+        .dashboard-panel{
+          .panel-default{
+            .panel-content{
+              .vis-container {
+                .status-indicator-and-kpi-vis-container-wrapper{
+                  overflow: hidden !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     //This has been done to fix menubar  in alerts page
     .alert-body-container{
       overflow-y: auto;

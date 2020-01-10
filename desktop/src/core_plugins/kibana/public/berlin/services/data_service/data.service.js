@@ -571,6 +571,50 @@ class DataService {
     return this._getFileRequest(url, 'getting sample data enrichment files', { responseType: 'blob' });
   }
 
+  // Get all the vuBlocks
+  getvuBlockList() {
+    const url = this.urlBase + '/vublock';
+    return this._getRequest(url, 'getting vublock list');
+  }
+
+  // Get all details of a vuBlock
+  getvuBlockDetails(vuBlockName) {
+    const url = this.urlBase + '/vublock/' + vuBlockName + '/storyboard';
+    return this._getRequest(url, 'getting vublock details');
+  }
+
+  // Get details of a tab clicked on vuBlock details page
+  getvuBlockTabDetails(vuBlockName, tabName) {
+    const url = this.urlBase + '/vublock/' + vuBlockName + '/' + tabName;
+    return this._getRequest(url, 'getting tab details for' + tabName);
+  }
+
+  // update the current status of vuBlock
+  updateVuBlockStatus(vuBlockName, data) {
+    const url = this.urlBase + '/vublock/' + vuBlockName;
+    return this._putRequest(url, data, 'update vuBlock status');
+  }
+
+  // get wizard data for editing an instance under vuBlock
+  getWizardDataForSource(vuBlockName, sourceInstanceName) {
+    const url = this.urlBase + '/vublock/' + vuBlockName +
+                '/source/' + sourceInstanceName + '?template';
+    return this._getRequest(url, 'getting wizard data');
+  }
+
+  // update source instance
+  updateDataSource(vuBlockName, sourceInstanceName, data) {
+    const url = this.urlBase + '/vublock/' + vuBlockName +
+      '/source/' + sourceInstanceName;
+    return this._putRequest(url, data, 'update data source');
+  }
+
+  getAgentConfiguration(vuBlockName, sourceInstanceName) {
+    const url = this.urlBase + '/vublock/' + vuBlockName +
+      '/source/' + sourceInstanceName + '?agent-config';
+    return this._getRequest(url, 'getting agent configuration');
+  }
+
 
   // perform operations on archived indices
   updateArchivedIndices(action) {
@@ -788,7 +832,7 @@ class DataService {
   }
 
   //Import data to elasticsearch
-  importData(file, indexName, docType, isTimeseries, timeField, timeFormat, Custom_field, upload) {
+  importData(file, indexName, docType, isTimeseries, timeField, timeFormat, customField, upload) {
     const url = this.urlBase + '/data/';
     return this.$q((resolve, reject) => {
       upload.upload({
@@ -800,7 +844,7 @@ class DataService {
           'is_time_series_data': isTimeseries,
           'timestamp_field': timeField,
           'customized_timestamp_format': timeFormat,
-          'custom_field_dict': Custom_field
+          'custom_field_dict': customField
         }
       }).then((response) => {
         resolve(response);

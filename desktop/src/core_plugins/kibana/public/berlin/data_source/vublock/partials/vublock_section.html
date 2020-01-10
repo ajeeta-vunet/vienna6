@@ -1,0 +1,19 @@
+<div>
+  <div class="vu-block-section-header"> {{ name }} </div>
+  <div class="vu-block-list-container">
+    <div ng-click="viewVuBlockConfiguration(vuBlock.id)"
+      class="vu-block"
+      ng-repeat="vuBlock in vuBlockList | filter:searchQuery">
+      <div class="vu-block-header">
+        {{ vuBlock.name }}
+      </div>
+      <div
+        class="vu-block-icon"
+        ng-style="{'background-image':'url(/ui/vienna_images/{{vuBlock.icon}})'}">
+      </div>
+      <div class="vu-block-status-div" ng-class="{'active-vu-block': vuBlock.status==='Active' }">
+        {{vuBlock.status}}
+      </div>
+    </div>
+  </div>
+</div>

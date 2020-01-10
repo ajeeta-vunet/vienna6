@@ -69,7 +69,7 @@ export class VunetDataTable extends Component {
       editId: '', // Holds the id of the row on which operation is done.
       curEvent: '', // Holds the event when an operation is performed on rows
       formModal: {}, // Initialize the form modal object.
-      containerClassName: 'vunet', // Specify a parent class for the container
+      containerClassName: 'vunet-table', // Specify a parent class for the container
       // holding the table
       showSubTable: 0 // Flag to display sub table for a row.
     };
@@ -141,18 +141,18 @@ export class VunetDataTable extends Component {
       this.debouncedFetch();
     }
 
-    let classname = 'vunet-table';
+    let classnames = 'vunet-table ' + newProps.metaItem.containerClassName;
 
     // Hide the checkboxes in vunet table rows
     if (this.props.metaItem.selection !== undefined && !this.props.metaItem.selection) {
-      classname += ' vunetHideSelector';
+      classnames += ' vunetHideSelector';
     }
 
     // Hide the search bar of vunet table
     if (this.props.metaItem.search !== undefined && !this.props.metaItem.search) {
-      classname += ' vunetHideSearch';
+      classnames += ' vunetHideSearch';
     }
-    this.setState({ containerClassName: classname });
+    this.setState({ containerClassName: classnames });
   }
 
   /**
@@ -331,8 +331,10 @@ export class VunetDataTable extends Component {
   * column 'Action'.
   */
   renderHeader() {
-    if ((this.props.metaItem.edit || (this.props.metaItem.rowAction && this.props.metaItem.rowAction.length > 0)) &&
-      !this.props.metaItem.headers.includes('Action')) {
+    if ((this.props.metaItem.edit ||
+        (this.props.metaItem.rowAction &&
+         this.props.metaItem.rowAction.length > 0)) &&
+        !this.props.metaItem.headers.includes('Action')) {
       this.props.metaItem.headers.push('Action');
     }
 
@@ -378,6 +380,7 @@ export class VunetDataTable extends Component {
   * A cell can be data value or any row action buttons.
   */
   renderRowCells(item) {
+
     const cells = [];
     this.props.metaItem.rows.forEach(row => {
 
@@ -479,12 +482,27 @@ export class VunetDataTable extends Component {
     } else {
       const rows = this.rows.filter(item => this.state.selectedRowIds.includes(item[this.props.metaItem.id]));
       //tableType is being sent as the second parameter of deleteSelectedItems
-      const tableType = this.props.tableType ? this.props.tableType : '';
-      this.props.deleteSelectedItems(rows, tableType)
-        .then(() => this.fetchItems(this.state.filter))
-        .catch(() => { })
-        .then(() => this.deselectAll())
-        .then(() => this.closeDeleteModal());
+      let tableType = this.props.tableType ? this.props.tableType : '';
+      if (this.props.metaItem.isFormWizard &&
+          this.props.metaItem.isFormWizard === true) {
+        const restApiId = this.props.metaItem.restApiId;
+        tableType = restApiId;
+
+        // Delete items in sub table
+        this.props.metaItem.deleteSelectedItems(rows, tableType)
+          .then(() => this.fetchItems(this.state.filter))
+          .catch(() => { })
+          .then(() => this.deselectAll())
+          .then(() => this.closeDeleteModal());
+      } else {
+
+        // Delete items in table
+        this.props.deleteSelectedItems(rows, tableType)
+          .then(() => this.fetchItems(this.state.filter))
+          .catch(() => { })
+          .then(() => this.deselectAll())
+          .then(() => this.closeDeleteModal());
+      }
     }
   };
 
@@ -496,19 +514,36 @@ export class VunetDataTable extends Component {
   };
 
   /**
-  * Open add modal with custom form defination
+  * Open add modal with custom form definition
   */
   onCreate() {
-    this.setState({
-      showAddEditModal: true,
-      formModal: {
-        title: 'Add' + (this.props.metaItem.title ? '  ' + this.props.metaItem.title : ''),
-        action: 'add',
-        editData: this.props.metaItem.default || {},
-        item: this.props.metaItem.table,
-        accessor: this.props.metaItem.columnData
-      }
-    });
+    if (this.props.metaItem.isFormWizard) {
+      this.setState({
+        showAddEditModal: true,
+        formModal: {
+          title: 'Add' + (this.props.metaItem.title ? '  ' + this.props.metaItem.title : ''),
+          action: 'add',
+          restApiId: this.props.metaItem.restApiId,
+          isFormWizard: this.props.metaItem.isFormWizard,
+          class: 'form-wizard-modal',
+          saveData: this.props.metaItem.saveData,
+          getAllEditData: this.getAllEditData,
+          deleteSelectedItems: this.deleteSelectedItems,
+          buttonCallback: this.buttonCallback
+        }
+      });
+    } else {
+      this.setState({
+        showAddEditModal: true,
+        formModal: {
+          title: 'Add' + (this.props.metaItem.title ? '  ' + this.props.metaItem.title : ''),
+          action: 'add',
+          editData: this.props.metaItem.default || {},
+          item: this.props.metaItem.table,
+          accessor: this.props.metaItem.columnData
+        }
+      });
+    }
   }
 
   /**
@@ -534,22 +569,61 @@ export class VunetDataTable extends Component {
   }
 
   /**
-  * Row level acction callback
+  * Used only when form wizard is opened inside a modal.
+  * This is a callback function which is passed to the VunetFormWizard
+  * component. This gets called when any of the buttons get clicked.
+  */
+  buttonCallback = (buttonName, restApiId, name) => {
+    return this.props.metaItem.buttonCallback(buttonName, restApiId, name);
+  }
+
+  /**
+   * Used only when form wizard is opened inside a modal.
+   * This is a callback function which is passed to the 'VunetFormWizard'
+   * component. This gets called when the 'VunetFormWizard' component gets
+   * mounted. This provides the data and meta data required by the
+   * form to display the form elements. This provides additional data
+   * corresponding to a row in the sub table.
+   */
+  getAllEditData = (restApiId, name) => {
+    return this.props.metaItem.getAllEditData(restApiId, name);
+  }
+
+  /**
+  * Row level action callback
   */
   onRowActionClick(event, rowId, inverted = false) {
     if (event === 'edit') {
-      const _editData = !inverted ? this.rows.find(item => item[this.props.metaItem.id] === rowId) : this.rows[0];
-      this.setState({
-        showAddEditModal: true,
-        editId: rowId,
-        formModal: {
-          title: 'Edit' + (this.props.metaItem.title ? '  ' + this.props.metaItem.title : ''),
-          action: 'edit',
-          editData: _editData || {},
-          item: this.props.metaItem.table,
-          accessor: this.props.metaItem.columnData
-        }
-      });
+      if (this.props.metaItem.isFormWizard) {
+        const restApiId = this.props.metaItem.restApiId;
+        this.setState({
+          showAddEditModal: true,
+          formModal: {
+            title: 'Edit' + (this.props.metaItem.title ? '  ' + this.props.metaItem.title : ''),
+            action: 'edit',
+            restApiId: restApiId,
+            name: rowId,
+            isFormWizard: this.props.metaItem.isFormWizard,
+            class: 'form-wizard-modal',
+            saveData: this.props.metaItem.saveData,
+            getAllEditData: this.getAllEditData,
+            buttonCallback: this.buttonCallback
+          }
+        });
+      } else {
+        const _editData = !inverted ? this.rows.find(item => item[this.props.metaItem.id] === rowId) : this.rows[0];
+        this.setState({
+          showAddEditModal: true,
+          editId: rowId,
+          formModal: {
+            title: 'Edit' + (this.props.metaItem.title ? '  ' + this.props.metaItem.title : ''),
+            action: 'edit',
+            editData: _editData || {},
+            item: this.props.metaItem.table,
+            accessor: this.props.metaItem.columnData
+          }
+        });
+      }
     } else {
       if (event === 'delete') {
         this.setState({ showDeleteModal: true, deleteSource: 'row', editId: rowId, curEvent: event });
@@ -583,8 +657,17 @@ export class VunetDataTable extends Component {
       editId: ''
     });
     const tableType = this.props.tableType ? this.props.tableType : '';
-    this.props.onSubmit(action, this.state.editId, event, tableType)
-      .then((fetch) => fetch ? this.fetchItems(tableType) : '');
+
+    // If isSubTable is true, the modal has been
+    // opened by sub table.
+    if (this.props.metaItem.isSubTable &&
+      this.props.metaItem.isSubTable === true) {
+      this.props.metaItem.onSubmit()
+        .then((fetch) => fetch ? this.fetchItems(tableType) : '');
+    } else {
+      this.props.onSubmit(action, this.state.editId, event, tableType)
+        .then((fetch) => fetch ? this.fetchItems(tableType) : '');
+    }
   }
 
   /**
@@ -749,13 +832,17 @@ export class VunetDataTable extends Component {
    * This function takes care of displaying inner
    * table for a row in nested tables.
    */
-  subTable(table, span) {
+  subTable = (table, span, id) => {
+    // check if rest api id is defined othewise use parent table id
+    const apiId = table.subTable.meta.restApiId ? table.subTable.meta.restApiId : id;
     return (
       <KuiTableRow key={table.type}>
-        <KuiTableRowCell colSpan={span}>
+        <KuiTableRowCell className="inner-table" colSpan={span}>
           <VunetDataTable
-            fetchItems={table.subTable.fetch}
+            fetchItems={() => table.subTable.fetch(apiId)}
             metaItem={table.subTable.meta}
+            rowAction={table.subTable.onSubTableRowAction}
+            onSubmit={table.subTable.onModalSubmit}
           />
         </KuiTableRowCell>
       </KuiTableRow>
@@ -772,46 +859,73 @@ export class VunetDataTable extends Component {
 
     // Prepare headers for the table.
     const headers = this.props.metaItem.headers;
-    const headerCells = headers.map((headerCell) =>
-      <KuiTableHeaderCell>{headerCell}</KuiTableHeaderCell>
+    const headerCells = headers.map((headerCell, index) =>
+      (
+        <KuiTableHeaderCell
+          key={index}
+        >
+          {headerCell}
+        </KuiTableHeaderCell>
+      )
     );
 
     const rows = this.createRows();
+    const tableBody = rows.map((row, index) => {
 
-    const tableBody = rows.map((row) => {
-      const hasSubTable = this.rows.find(item => item.type === row.id);
+      const hasSubTable = this.rows.find(item => item.name === row.id);
+
       // Add one to handle additional column for 'expand' / 'collapase' icon
       const colSpan = row.cells.length + 1;
 
       return (
-        <KuiTableBody>
-          <KuiTableRow key={rows.id}>
-            <KuiTableRowCell>
+        <KuiTableBody key={index}>
+          <KuiTableRow
+            key={rows.id}
+            className={this.state.showSubTable === row.id ? 'subtable-active' : ''}
+            onClick={() => this.onSubTableToggle(row.id)}
+          >
+            <KuiTableRowCell className="expander-wrapper">
               <span
                 key="expnder1"
-                className="fa fa-plus"
-                onClick={() => this.onSubTableToggle(row.id)}
+                className={this.state.showSubTable === row.id ? 'fa fa-angle-up' : 'fa fa-angle-down'}
               />
             </KuiTableRowCell>
-            {row.cells.map(cell => <KuiTableRowCell>{cell} </KuiTableRowCell>)}
+            {row.cells.map((cell, index) =>
+              (
+                <KuiTableRowCell
+                  key={index}
+                >
+                  {cell}
+                </KuiTableRowCell>
+              )
+            )}
           </KuiTableRow>
-          {hasSubTable && this.state.showSubTable === row.id && this.subTable(hasSubTable, colSpan)}
+          {hasSubTable &&
+           this.state.showSubTable === row.id &&
+           this.subTable(hasSubTable, colSpan, row.id)}
         </KuiTableBody>
       );
     });
 
-    return (
-      <KuiTable>
+    const nestedTable = (
+      <KuiTable className="outer-table">
+
         <KuiTableHeader>
-          <KuiTableHeaderCell style={{ width: '30px' }}>
-            -
-          </KuiTableHeaderCell>
+          <KuiTableHeaderCell
+            className="table-collapse-width"
+          />
           {headerCells}
         </KuiTableHeader>
 
         {tableBody}
 
       </KuiTable>
+    );
+
+    return (
+      <div className={this.state.containerClassName}>
+        {nestedTable}
+      </div>
     );
   }
 
@@ -894,5 +1008,6 @@ VunetDataTable.propTypes = {
   fetchItems: PropTypes.func, // Fetch rows callback
   metaItem: PropTypes.object, // Additional meta
   tableType: PropTypes.string, // table-type to identify table
-  onSubmit: PropTypes.func // On from submit callbcak
+  onSubmit: PropTypes.func, // On from submit callback
+  getAllEditData: PropTypes.func // function reference to get form wizard data.
 };

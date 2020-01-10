@@ -1,0 +1,215 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.vu-block-app-container {
+
+  background: #fff;
+  margin: 2rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  height:100%;
+  .vu-block-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 2rem 0rem;
+    .vu-block-search-wrapper {
+      flex: 1 1 auto;
+      .vu-block-search {
+        width: 100%;
+        border-radius: 10rem;
+        outline: none;
+        padding: 1rem 1.5rem;
+        font-size: 1.5rem;
+        font-family: @roboto-regular;
+        border-style: solid;
+        border-color: @grey_smoke;
+      }
+    }
+    .toolbar-item {
+      padding: 0rem 1rem 0rem 1rem;
+      .toolbar-item-text  {
+        border-right: 1px solid  @grey_smoke;
+        padding-right: 1.2rem;
+        vertical-align: text-bottom;
+      }
+    }
+    :last-child {
+      span {
+        border-right: none;
+      }
+    }
+  }
+  .vu-block-section-wrapper {
+    height: calc(100vh - @topbar-height - 22rem);
+    overflow-y: auto;
+    .vu-block-section-header {
+      font-family: 'Roboto-Medium';
+      font-size: 2rem;
+      color: @element_text_header;
+      padding-left: 1.5rem;
+    }
+    .vu-block-list-container {
+      display: flex;
+      flex-wrap: wrap;
+      .vu-block {
+        margin: 1.7rem 1.5rem;
+        border-radius: 1rem;
+        width: 17.5rem;
+        border: 1px solid @grey_smoke;
+        .vu-block-header {
+          padding: 1.5rem 0.8rem;
+          height: 6rem;
+          font-family: @roboto-bold;
+          font-size: 1.2rem;
+          text-transform: uppercase;
+          color: @element_text_header;
+          text-align: center;
+        }
+        .vu-block-icon {
+          height: 5rem;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          margin-bottom: 1.5rem;
+        }
+        .vu-block-status-div {
+          padding: 1.4rem 0;
+          background: @background_color_grey;
+          text-align: center;
+          font-size: 1.2rem;
+          font-family: @roboto-bold;
+          text-transform: uppercase;
+          color: @element_text_header;
+          border-radius: 0 0 0.8rem 0.8rem;
+        }
+        .active-vu-block {
+          background: @green;
+          color: @white;
+        }
+      }
+    }
+    .section-separator {
+      margin: 2rem 0rem;
+      border-bottom-style: dashed;
+      border-width: 1px;
+      border-color:  @grey_smoke;
+    }
+  }
+}
+
+.vu-block-details-container {
+  .kuiModalOverlay {
+    padding-bottom: 0;
+  }
+
+
+  height: calc(100vh - @topbar-height) !important;
+  overflow-y: auto;
+  background: #fff;
+  margin: 2rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  height: 100%;
+  .vu-block-details-navbar{
+    display: flex;
+    div {
+      padding-right: 1rem;
+    }
+    .align-right {
+      margin-left: auto;
+    }
+  }
+  .vu-block-details-summary-container {
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    .vu-block-details-icon-section {
+      border-radius: 1rem;
+      width: 16.6rem;
+      border: 1px solid @grey_smoke;
+      margin-right: 3rem;
+      .vu-block-details-icon-wrapper {
+        border-radius: 1rem;
+        height: 11rem;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .vu-block-details-status {
+        padding: 1.4rem 0;
+        background: @background_color_grey;
+        text-align: center;
+        font-size: 1.2rem;
+        font-family: @roboto-bold;
+        text-transform: uppercase;
+        color: @element_text_header;
+        border-radius: 0 0 0.8rem 0.8rem;
+      }
+      .active-vu-block {
+        background: @green;
+        color: @white;
+      }
+    }
+    .vu-block-details-separator {
+      height: 8rem;
+      border-right: 1px solid @grey_smoke;
+    }
+    .vu-block-details-summary {
+      flex: 1 1 auto;
+      margin-left: 3rem;
+      .vu-block-details-header {
+        font-size: 3rem;
+        font-family: @roboto-medium;
+        color: @black_shade1;
+      }
+      .vu-block-details-description {
+        color: @grey_light;
+        font-size: 1.6rem;
+        font-family: @roboto-regular;
+        margin-bottom: 1.5rem;
+      }
+      .vu-block-tags-container {
+        .vu-block-tags-header {
+          font-size: 1.5rem;
+          font-family: @roboto-bold;
+          color: @black_shade1;
+          margin-bottom: 0.7rem;
+        }
+        .vu-block-tags-toolbar {
+          display: flex;
+          align-items: center;
+          .vu-block-tags-input {
+            flex: 1 1 auto;
+            width: 100%;
+            padding: 1.3rem ;
+            border-radius: 1rem;
+            width: 100%;
+            outline: none;
+            font-size: 1.6rem;
+            font-family: @roboto-bold;
+            border: 1px solid @grey_smoke;
+            margin-right: 3rem;
+            min-height: 5rem;
+          }
+          .vu-block-tags-separator {
+            height: 2.8rem;
+            border-right: 1px solid @grey_smoke;
+          }
+          .vu-block-status-button {
+            margin-left: 3rem;
+            border-radius: 0.5rem;
+            border: 1px solid @accent_color;
+            color: #fff;
+            font-size: 1.5rem;
+            font-family: @roboto-bold;
+            padding: 1.3rem 5rem;
+            background: @accent_color;
+            width: 17rem;
+            box-shadow: none;
+            outline: 0;
+          }
+        }
+      }
+    }
+  }
+}

@@ -16,6 +16,8 @@ import 'plugins/kibana/berlin/data_source/storage/live_indices/live_indices';
 import 'plugins/kibana/berlin/data_source/storage/archived_indices/archived_indices';
 import 'plugins/kibana/berlin/data_source/enrichment/enrichment_groups';
 import 'plugins/kibana/berlin/data_source/enrichment/enrichment';
+import 'plugins/kibana/berlin/data_source/vublock/vublock_list';
+import 'plugins/kibana/berlin/data_source/vublock/vublock_details';
 import 'plugins/kibana/berlin/preferences/preferences';
 import 'plugins/kibana/berlin/definitions/definition';
 import 'plugins/kibana/berlin/definitions/credentials/credentials';
@@ -47,6 +49,7 @@ import { BerlinConstants } from './berlin_constants';
 import { EnrichmentConstants } from './data_source/enrichment/enrichment_constants';
 import { ConfigurationConstants } from './data_source/configuration/configuration_constants';
 import { StorageConstants } from './data_source/storage/storage_constants';
+import { VuBlockConstants } from  './data_source/vublock/vu_block_constants';
 import { PreferenceConstants } from './preferences/preference_constants';
 import { DefinitionConstants } from './definitions/definition_constants';
 import { AboutConstants } from './about/about_constants';
@@ -58,6 +61,8 @@ import { DataRetentionSettingsConstants } from './data_source/settings/settings_
 import { ImageManagerInterfaceConstants } from './image_manager/image_manager_constants.js';
 import enrichmentGroupsTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment_groups.html';
 import enrichmentTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment.html';
+import vuBlockTemplate from 'plugins/kibana/berlin/data_source/vublock/vublock_list.html';
+import vuBlockDetailsTemplate from 'plugins/kibana/berlin/data_source/vublock/vublock_details.html';
 import configurationTemplate from 'plugins/kibana/berlin/data_source/configuration/configuration.html';
 import storageTemplate from 'plugins/kibana/berlin/data_source/storage/storage.html';
 import preferencesTemplate from 'plugins/kibana/berlin/preferences/preferences.html';
@@ -82,6 +87,26 @@ uiRoutes
   })
   .when(BerlinConstants.BERLIN_PATH + EnrichmentConstants.ENRICHMENT_PATH, {
     template: enrichmentTemplate,
+  })
+  .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.VUBLOCK_PATH, {
+    template: vuBlockTemplate,
+  })
+  .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.VUBLOCK_DETAILS_PATH, {
+    template: vuBlockDetailsTemplate,
+    resolve: {
+      vuBlock: function (StateService, $route) {
+        return StateService.getvuBlockDetails($route.current.params.vuBlockName)
+          .then(function (data) {
+            return data;
+          });
+      },
+      // visObj: function (savedVisualizations) {
+      //   return savedVisualizations.get(
+      //     'area-aug').then(function (savedVisualization) {
+      //     return savedVisualization;
+      //   });
+      // }
+    }
   })
   .when(BerlinConstants.BERLIN_PATH + ConfigurationConstants.CONFIGURATION_PATH, {
     template: configurationTemplate,

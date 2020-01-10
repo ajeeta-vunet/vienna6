@@ -32,6 +32,7 @@ import {
 } from 'ui_framework/components';
 
 import { VunetDynamicFormBuilder } from '../vunet_dynamic_form_builder/vunet_dynamic_form_builder';
+import { VunetFormWizard } from '../vunet_form_wizard/vunet_form_wizard';
 
 import './_vunet_modal.less';
 
@@ -91,6 +92,17 @@ export class VunetModal extends Component {
     if (this.props.data.isForm !== undefined && !this.props.data.isForm) {
       return (
         <p dangerouslySetInnerHTML={{ __html: this.props.data.message }} />
+      );
+
+    // if 'isFormWizard' flag is passed as props
+    // load the form wizard component
+    } else if (this.props.data.isFormWizard === true) {
+      return (
+        <VunetFormWizard
+          data={this.state.data}
+          onSubmit={() => { this.onFormSubmit(); }}
+          onCancel={() => { this.closeModal(); }}
+        />
       );
     } else {
       return (

@@ -1,0 +1,210 @@
+@import '../../../../../styles/variable';
+// For refactoring code we have to import bootstrap at two or more
+@import '../../../../../node_modules/bootstrap/scss/bootstrap.scss';
+
+
+.card-bmv {
+    box-shadow: $shadow;
+    border-bottom: 2px solid $primary;
+    margin-bottom: $grid-gutter-width/2;
+    border-radius: 0.25rem;
+  
+    .card-header {
+      background: $white;
+  
+      .metric-card-title {
+        color: $primary;
+        font-size: 1rem;
+        line-height: 1.1;
+      }
+      .card-icons-right {
+        position: absolute;
+        right: 1rem;
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+    .table {
+      tbody,
+      thead,
+      tfoot {
+        tr {
+          height: 2rem;
+          td,
+          th {
+            padding: 0.5rem;
+          }
+        }
+      }
+      thead {
+        tr {
+          th {
+            border-bottom-width: 1px;
+            font-weight: 400;
+          }
+        }
+      }
+      tbody {
+        tr {
+          height: 2rem;
+          td {
+            font-size: 0.8rem;
+            border-top-width: 0px;
+          }
+        }
+      }
+    }
+  }
+  
+  .image-half {
+    .icon-container {
+      display: flexbox;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+  
+      img {
+        width: 6rem;
+      }
+    }
+  }
+  
+  .info-half {
+    text-align: center !important;
+  
+    .card-v1,
+    .card-v3 {
+      font-family: 'Roboto';
+      font-weight: bold;
+      font-size: 1rem;
+      color: $gray-600;
+      white-space: nowrap;
+    }
+  
+    .card-v2 {
+      font-family: 'Roboto';
+      // font-weight: 300;
+      font-size: 3.5rem;
+      line-height: 4rem;
+      //   color: red !important;
+    }
+  
+    .card-v4 {
+      font-family: 'Roboto';
+      font-size: 0.85rem;
+      color: $gray-darker;
+    }
+  
+    .description {
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+    }
+    &.standalone {
+      text-align: center;
+  
+      .image-half {
+        min-height: 8rem;
+      }
+      .info-half {
+        .card-v1,
+        .card-v3 {
+          font-size: 1rem;
+        }
+  
+        .card-v2 {
+          font-size: 3.5rem;
+        }
+  
+        .card-v4 {
+          font-family: 'Roboto';
+          font-size: 0.85rem;
+          // How user will know its clickable
+          // cursor: pointer;
+          // Overriding Jaegel
+          // color: #8e91b2;
+          // color: $link-color;
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+      .bmv-historical {
+        margin-top: 2rem;
+  
+        .his-label,
+        .his-value {
+          font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+  
+        .his-value {
+          font-size: 1.6rem;
+        }
+  
+        .his-label {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+  .back-container {
+    margin-top: 4rem;
+    text-align: center;
+    vertical-align: middle;
+    img {
+      height: 1.1rem;
+      margin-right: 0.5rem;
+    }
+    a {
+      font-size: 1.1rem;
+      line-height: 1.1rem;
+    }
+  }
+  
+  .vu-insight {
+    + .vu-insight {
+      margin-top: 1.5rem;
+      border-top: 1px solid $smoke;
+      padding-top: 1.5rem;
+    }
+    img{
+      width: 100%;
+    }
+    .col-12{
+      img{
+        max-width: 40%;
+      }
+    }
+    .insights-h1 {
+      color: $primary;
+      font-size: 1.5rem;
+      font-weight: bold;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+  
+      .insights-value {
+        margin-right: 0.5rem;
+        line-height: 1.5rem;
+        position: relative;
+  
+        + .insights-value {
+          margin-left: 0.5rem;
+  
+          &::before {
+            position: absolute;
+            top: 25%;
+            left: -0.3rem;
+            bottom: 25%;
+            content: ' ';
+            border-left: 1px solid $smoke;
+          }
+        }
+      }
+    }
+  
+    .insights-h2 {
+      color: $black;
+      font-weight: bold;
+    }
+  }
+  

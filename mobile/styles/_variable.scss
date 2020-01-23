@@ -1,0 +1,247 @@
+/** 
+ * ------------------------- NOTICE ------------------------------- 
+ *
+ *                  CONFIDENTIAL INFORMATION                       
+ *                  ------------------------                       
+ *    This Document contains Confidential Information or           
+ *    Trade Secrets, or both, which are the property of VuNet      
+ *    Systems Ltd.  This document may not be copied, reproduced,   
+ *    reduced to any electronic medium or machine readable form    
+ *    or otherwise duplicated and the information herein may not   
+ *    be used, disseminated or otherwise disclosed, except with    
+ *    the prior written consent of VuNet Systems Ltd.              
+ *                                                                 
+ *------------------------- NOTICE ------------------------------- 
+ 
+ * Copyright 2020 VuNet Systems Ltd.
+ * All rights reserved.
+ * Use of copyright notice does not imply publication.
+*/
+// Custom Variables
+/*Theme Colors*/
+
+$themecolor: #b30984;
+// $themecolor-dark: #6e3e7f;
+// $themecolor-alt: #4D3F89;
+$theme-light: #fff;
+$theme-dark: #4f515f;
+
+$boxed-width: 1200px;
+// $shadow:0.5rem 0.5rem 4rem  rgba(77, 86, 144, 0.26);
+$shadow: 0rem 0.25rem 0.5rem rgba(77, 86, 144, 0.26);
+$inside-shadow: inset -0 0.25rem 1rem rgba(77, 86, 144, 0.26);
+$transitions: 0.2s ease-in;
+$transparent-dark-bg: rgba(0, 0, 0, 0.05);
+$card-alt: #e4e9ef;
+$smoke: #e4e9ef;
+
+/*******************************/
+
+// Bootstrap overrides
+/*******************************/
+
+/**
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
+ *  14. Component
+ */
+
+//
+// Colors
+//
+$white: #fff !default;
+$gray-light: #dee2e6 !default;
+$gray-medium: #cccfe3 !default;
+$gray-dark: #afb5c1 !default;
+$gray-darker: #8e91b2 !default;
+$black: #000 !default;
+
+$blue: #138dff !default;
+$indigo: #6610f2 !default;
+$purple: #8b5edd !default;
+$pink: #e83e8c !default;
+$red: #dd171d !default;
+$orange: #fb8c00 !default;
+$yellow: #ffbc34 !default;
+$green: #05a608 !default;
+$teal: #20c997 !default;
+$cyan: #4fc3f7 !default;
+
+$primary: $themecolor !default;
+$secondary: #6a6c88 !default;
+$success: $green !default;
+$info: $blue !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-light !default;
+$dark: $gray-dark !default;
+
+$text-muted: $gray-medium !default;
+
+$colors: (
+  blue: $blue,
+  indigo: $indigo,
+  purple: $purple,
+  pink: $pink,
+  red: $red,
+  orange: $orange,
+  yellow: $yellow,
+  green: $green,
+  teal: $teal,
+  cyan: $cyan,
+  white: $white,
+  gray: $gray-medium,
+  gray-dark: $gray-dark,
+);
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $success,
+    'info': $info,
+    'warning': $warning,
+    'danger': $danger,
+    'light': $light,
+    'dark': $dark,
+  ),
+  $theme-colors
+);
+//
+// Quickly modify global styling by enabling or disabling optional features.
+$enable-caret: true !default;
+$enable-rounded: true !default;
+$enable-shadows: false !default;
+$enable-gradients: false !default;
+$enable-transitions: true !default;
+$enable-hover-media-query: false !default;
+$enable-grid-classes: true !default;
+$enable-print-styles: false !default;
+// Body
+//
+// Settings for the  element.
+$main-body-bg: #fff !default;
+$body-bg: $white;
+$body-color: #6a7a8c !default;
+$grid-gutter-width: 1rem !default;
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+$font-size-base: 0.75rem; // 12px
+
+$font-family-sans-serif: 'Roboto', sans-serif !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-bold: 700 !default;
+$h1-font-size: 36px !default;
+$h2-font-size: 30px !default;
+$h3-font-size: 24px !default;
+$h4-font-size: 18px !default;
+$h5-font-size: 16px !default;
+$h6-font-size: 14px !default;
+$headings-margin-bottom: (1rem / 2) !default;
+$headings-font-weight: 400 !default;
+$headings-color: inherit !default;
+// Breadcrumbs
+$breadcrumb-bg: $body-bg;
+$breadcrumb-margin-bottom: 1.5rem;
+// Cards
+$card-border-width: 0px !default;
+$card-border-color: transparent !default;
+$card-border-radius: 0.25rem !default;
+// Dropdowns
+$dropdown-item-padding-x: 1rem !default;
+$dropdown-item-padding-y: 0.65rem !default;
+$dropdown-border-color: $gray-medium; // 200
+$dropdown-divider-bg: $gray-medium; // 100
+// Buttons
+$btn-secondary-border: $gray-medium; // 300
+// Progress bars
+$progress-bg: $gray-light; //100
+// Tables
+$table-bg-accent: $gray-light; // 100
+$table-bg-hover: $gray-light; // 100
+$table-hover-bg: $gray-light !default; // 100
+$table-cell-padding: 1rem !default;
+$table-bg-level: -10 !default;
+$table-bg-level2: 1 !default;
+$table-bg-level3: -5 !default;
+// Components
+$component-active-color: $white !default;
+$component-active-bg: $themecolor !default;
+$badge-pill-padding-x: 0.2em !default;
+$badge-pill-padding-y: 1em !default;
+// Forms
+$enable-validation-icons: true;
+$input-group-addon-bg: $gray-light; // 100
+$input-border-color: $gray-light; // 200
+$input-group-addon-border-color: $gray-light; // 200
+$input-btn-focus-color: rgba(0, 0, 0, 0.25) !default;
+$input-focus-border-color: rgba(0, 0, 0, 0.25) !default;
+$custom-control-indicator-active-bg: rgba(0, 0, 0, 35%) !default;
+$input-btn-focus-box-shadow: transparent !default;
+$custom-select-focus-box-shadow: transparent !default;
+$custom-select-indicator-color: $gray-dark !default; // 800
+$custom-select-indicator: str-replace(
+  url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='#{$custom-select-indicator-color}' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E"),
+  '#',
+  '%23'
+) !default;
+$custom-select-border-width: 1px !default;
+
+$input-btn-padding-y: 0.375rem !default;
+$input-btn-padding-x: 0.375rem !default;
+$input-btn-font-size: $font-size-base * 1.25 !default;
+
+// Define common padding and border radius sizes and more.
+$border-width: 1px !default;
+$border-color: rgba(0, 0, 0, 0.1) !default;
+$border-radius: 2px !default;
+$border-radius-lg: 2px !default;
+$border-radius-sm: 1px !default;
+// Progress bars
+$progress-height: 5px !default;
+//Tabs
+$nav-tabs-link-active-bg: $white !default;
+// Grid breakpoints
+//
+// Define the minimum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1600px,
+) !default;
+//Navbar
+$navbar-dark-color: rgba($white, 0.8) !default;
+$navbar-dark-hover-color: rgba($white, 1) !default;
+
+// HEADER
+$collapse-button-size: 3rem;
+$nav-brand-font-size: 1rem;
+$nav-brand-line-height: 1.25 * $nav-brand-font-size;
+$nav-brand-image-size: $nav-brand-line-height;
+$nav-brand-font: bold $nav-brand-font-size 'Roboto';
+
+// Footer
+$footer-height: 3.5rem;
+$footer-icon-height: 1.5rem;
+$footer-padding: ($footer-height - $footer-icon-height)/2;
+
+// Sidebar
+$sidebar-width: 240px;

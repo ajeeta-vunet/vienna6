@@ -1,0 +1,2475 @@
+{
+  "BMV One": {
+    "type": "kpi",
+    "level": "metric",
+    "metrics": {
+      "Count": {
+        "status": 1,
+        "description": "",
+        "value": 66336,
+        "label": "Count",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV4",
+        "success": true,
+        "formattedValue": "66,336",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV4"
+      },
+      "Down": {
+        "status": 1,
+        "description": "",
+        "value": 7655880.0,
+        "label": "Down",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV4",
+        "success": true,
+        "formattedValue": "02:07:35.880",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV4"
+      }
+    }
+  },
+  "BMV3": {
+    "http://demoapp.vunetsystems.com/shop": {
+      "metrics": {
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1.155sec",
+          "description": "",
+          "success": true,
+          "value": 1155.58,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "type": "table",
+    "https://www.google.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,565",
+          "description": "",
+          "success": true,
+          "value": 2565,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1.130sec",
+          "description": "",
+          "success": true,
+          "value": 1130.2,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "https://vunetsystems.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1,886",
+          "description": "",
+          "success": true,
+          "value": 1886,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "0.0ms",
+          "description": "",
+          "success": true,
+          "value": 0.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "https://facebook.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,634",
+          "description": "",
+          "success": true,
+          "value": 2634,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "966.64ms",
+          "description": "",
+          "success": true,
+          "value": 966.64,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "level": "bucket",
+    "fieldName": "url",
+    "https://www.yatra.com/": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1,747",
+          "description": "",
+          "success": true,
+          "value": 1747,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "https://demo.vunetsystems.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1,887",
+          "description": "",
+          "success": true,
+          "value": 1887,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "0.0ms",
+          "description": "",
+          "success": true,
+          "value": 0.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "https://test.i": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,095",
+          "description": "",
+          "success": true,
+          "value": 2095,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "0.0ms",
+          "description": "",
+          "success": true,
+          "value": 0.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "http://127.0.0.1": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,516",
+          "description": "",
+          "success": true,
+          "value": 2516,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "0.0ms",
+          "description": "",
+          "success": true,
+          "value": 0.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "https://twitter.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1,885",
+          "description": "",
+          "success": true,
+          "value": 1885,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1.140sec",
+          "description": "",
+          "success": true,
+          "value": 1140.91,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "https://192.168.8.97/vunet": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "752",
+          "description": "",
+          "success": true,
+          "value": 752,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "0.0ms",
+          "description": "",
+          "success": true,
+          "value": 0.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    },
+    "https://yahoo.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "1,884",
+          "description": "",
+          "success": true,
+          "value": 1884,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        },
+        "TotalTime": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "4.34ms",
+          "description": "",
+          "success": true,
+          "value": 4.34,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3"
+        }
+      },
+      "level": "metric"
+    }
+  },
+  "BMV5A": {
+    "fieldName": "url",
+    "type": "table",
+    "https://www.google.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,565",
+          "description": "",
+          "success": true,
+          "value": 2565,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5A"
+        },
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:48:18.951",
+          "description": "",
+          "success": true,
+          "value": 2898951.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5A"
+        }
+      },
+      "level": "metric"
+    },
+    "http://127.0.0.1": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,516",
+          "description": "",
+          "success": true,
+          "value": 2516,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5A"
+        }
+      },
+      "level": "metric"
+    },
+    "https://facebook.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,634",
+          "description": "",
+          "success": true,
+          "value": 2634,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5A"
+        },
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:42:26.139",
+          "description": "",
+          "success": true,
+          "value": 2546139.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5A"
+        }
+      },
+      "level": "metric"
+    },
+    "level": "bucket",
+    "https://twitter.com": {
+      "metrics": {
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:35:50.609",
+          "description": "",
+          "success": true,
+          "value": 2150609.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5A"
+        }
+      },
+      "level": "metric"
+    }
+  },
+  "BMV2": {
+    "type": "kpi",
+    "level": "metric",
+    "metrics": {
+      "Count": {
+        "status": 1,
+        "description": "",
+        "value": 66336,
+        "label": "Count",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV2",
+        "success": true,
+        "formattedValue": "66,336",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV2"
+      },
+      "Down": {
+        "status": 1,
+        "description": "",
+        "value": 7655880.0,
+        "label": "Down",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV2",
+        "success": true,
+        "formattedValue": "02:07:35.880",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV2"
+      }
+    }
+  },
+  "BMV2A": {
+    "type": "kpi",
+    "level": "metric",
+    "metrics": {
+      "Count": {
+        "status": 1,
+        "description": "",
+        "value": 66336,
+        "label": "Count",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV2A",
+        "success": true,
+        "formattedValue": "66,336",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV2A"
+      }
+    }
+  },
+  "BMV1A": {
+    "type": "kpi",
+    "level": "metric",
+    "metrics": {
+      "Count": {
+        "status": 1,
+        "description": "",
+        "value": 66336,
+        "label": "Count",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV1A",
+        "success": true,
+        "formattedValue": "66,336",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV1A"
+      }
+    }
+  },
+  "BMV-Trend": {
+    "2019-10-04 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "901",
+          "description": "",
+          "success": true,
+          "value": 901,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-18 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "189",
+          "description": "",
+          "success": true,
+          "value": 189,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-06 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "197",
+          "description": "",
+          "success": true,
+          "value": 197,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-10 19:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "195",
+          "description": "",
+          "success": true,
+          "value": 195,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-29 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-20 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "778",
+          "description": "",
+          "success": true,
+          "value": 778,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-30 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "899",
+          "description": "",
+          "success": true,
+          "value": 899,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-20 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "756",
+          "description": "",
+          "success": true,
+          "value": 756,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-01 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "897",
+          "description": "",
+          "success": true,
+          "value": 897,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-28 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "130",
+          "description": "",
+          "success": true,
+          "value": 130,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-29 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "782",
+          "description": "",
+          "success": true,
+          "value": 782,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-27 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "68",
+          "description": "",
+          "success": true,
+          "value": 68,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "851",
+          "description": "",
+          "success": true,
+          "value": 851,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 10:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "455",
+          "description": "",
+          "success": true,
+          "value": 455,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-27 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-10 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-04 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "894",
+          "description": "",
+          "success": true,
+          "value": 894,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-04 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "205",
+          "description": "",
+          "success": true,
+          "value": 205,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-20 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "382",
+          "description": "",
+          "success": true,
+          "value": 382,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "781",
+          "description": "",
+          "success": true,
+          "value": 781,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "776",
+          "description": "",
+          "success": true,
+          "value": 776,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-28 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "390",
+          "description": "",
+          "success": true,
+          "value": 390,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-21 19:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "260",
+          "description": "",
+          "success": true,
+          "value": 260,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 11:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-26 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "4",
+          "description": "",
+          "success": true,
+          "value": 4,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-04 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "894",
+          "description": "",
+          "success": true,
+          "value": 894,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-10 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-19 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "674",
+          "description": "",
+          "success": true,
+          "value": 674,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-04 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "658",
+          "description": "",
+          "success": true,
+          "value": 658,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-29 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-29 19:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "325",
+          "description": "",
+          "success": true,
+          "value": 325,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-27 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "260",
+          "description": "",
+          "success": true,
+          "value": 260,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-30 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "663",
+          "description": "",
+          "success": true,
+          "value": 663,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-18 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "783",
+          "description": "",
+          "success": true,
+          "value": 783,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-02 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-20 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "768",
+          "description": "",
+          "success": true,
+          "value": 768,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-21 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "260",
+          "description": "",
+          "success": true,
+          "value": 260,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "899",
+          "description": "",
+          "success": true,
+          "value": 899,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 11:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "325",
+          "description": "",
+          "success": true,
+          "value": 325,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "837",
+          "description": "",
+          "success": true,
+          "value": 837,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "type": "trend",
+    "2019-11-29 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-06 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "455",
+          "description": "",
+          "success": true,
+          "value": 455,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-28 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "782",
+          "description": "",
+          "success": true,
+          "value": 782,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-02 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-10 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "259",
+          "description": "",
+          "success": true,
+          "value": 259,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-19 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "73",
+          "description": "",
+          "success": true,
+          "value": 73,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-20 19:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "264",
+          "description": "",
+          "success": true,
+          "value": 264,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 19:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "64",
+          "description": "",
+          "success": true,
+          "value": 64,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-01 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "228",
+          "description": "",
+          "success": true,
+          "value": 228,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-05 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-20 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-26 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "6",
+          "description": "",
+          "success": true,
+          "value": 6,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-04 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "900",
+          "description": "",
+          "success": true,
+          "value": 900,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "775",
+          "description": "",
+          "success": true,
+          "value": 775,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 11:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "121",
+          "description": "",
+          "success": true,
+          "value": 121,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "770",
+          "description": "",
+          "success": true,
+          "value": 770,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-29 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 11:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "897",
+          "description": "",
+          "success": true,
+          "value": 897,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-01 11:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "902",
+          "description": "",
+          "success": true,
+          "value": 902,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-02 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "389",
+          "description": "",
+          "success": true,
+          "value": 389,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-02 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "750",
+          "description": "",
+          "success": true,
+          "value": 750,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 11:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "455",
+          "description": "",
+          "success": true,
+          "value": 455,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-27 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "20",
+          "description": "",
+          "success": true,
+          "value": 20,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-30 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "244",
+          "description": "",
+          "success": true,
+          "value": 244,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "level": "bucket",
+    "2019-11-20 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-19 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "485",
+          "description": "",
+          "success": true,
+          "value": 485,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "325",
+          "description": "",
+          "success": true,
+          "value": 325,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "897",
+          "description": "",
+          "success": true,
+          "value": 897,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-02 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "318",
+          "description": "",
+          "success": true,
+          "value": 318,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-19 20:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "99",
+          "description": "",
+          "success": true,
+          "value": 99,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-26 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "6",
+          "description": "",
+          "success": true,
+          "value": 6,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-06 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-28 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-20 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-01 10:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "737",
+          "description": "",
+          "success": true,
+          "value": 737,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-29 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "260",
+          "description": "",
+          "success": true,
+          "value": 260,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-19 19:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "294",
+          "description": "",
+          "success": true,
+          "value": 294,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "fieldName": "@timestamp",
+    "2019-11-27 16:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-16 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-09-27 11:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "59",
+          "description": "",
+          "success": true,
+          "value": 59,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-24 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "260",
+          "description": "",
+          "success": true,
+          "value": 260,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-01 12:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "895",
+          "description": "",
+          "success": true,
+          "value": 895,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-10 15:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "806",
+          "description": "",
+          "success": true,
+          "value": 806,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-11-22 13:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-10-07 10:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "865",
+          "description": "",
+          "success": true,
+          "value": 865,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-10 14:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-02 17:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    },
+    "2019-12-10 18:00:00": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "780",
+          "description": "",
+          "success": true,
+          "value": 780,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV Trend"
+        }
+      },
+      "level": "metric"
+    }
+  },
+  "BMV5": {
+    "fieldName": "url",
+    "type": "table",
+    "https://www.google.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,565",
+          "description": "",
+          "success": true,
+          "value": 2565,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5"
+        },
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:48:18.951",
+          "description": "",
+          "success": true,
+          "value": 2898951.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5"
+        }
+      },
+      "level": "metric"
+    },
+    "http://127.0.0.1": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,516",
+          "description": "",
+          "success": true,
+          "value": 2516,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5"
+        }
+      },
+      "level": "metric"
+    },
+    "https://facebook.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,634",
+          "description": "",
+          "success": true,
+          "value": 2634,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5"
+        },
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:42:26.139",
+          "description": "",
+          "success": true,
+          "value": 2546139.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5"
+        }
+      },
+      "level": "metric"
+    },
+    "level": "bucket",
+    "https://twitter.com": {
+      "metrics": {
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:35:50.609",
+          "description": "",
+          "success": true,
+          "value": 2150609.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV5"
+        }
+      },
+      "level": "metric"
+    }
+  },
+  "BMV3A": {
+    "fieldName": "url",
+    "type": "table",
+    "https://www.google.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,565",
+          "description": "",
+          "success": true,
+          "value": 2565,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3A"
+        },
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:48:18.951",
+          "description": "",
+          "success": true,
+          "value": 2898951.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3A"
+        }
+      },
+      "level": "metric"
+    },
+    "http://127.0.0.1": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,516",
+          "description": "",
+          "success": true,
+          "value": 2516,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3A"
+        }
+      },
+      "level": "metric"
+    },
+    "https://facebook.com": {
+      "metrics": {
+        "Count": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "2,634",
+          "description": "",
+          "success": true,
+          "value": 2634,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3A"
+        },
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:42:26.139",
+          "description": "",
+          "success": true,
+          "value": 2546139.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3A"
+        }
+      },
+      "level": "metric"
+    },
+    "level": "bucket",
+    "https://twitter.com": {
+      "metrics": {
+        "Down": {
+          "threshold": [],
+          "insights": "Looks all fine",
+          "formattedValue": "00:35:50.609",
+          "description": "",
+          "success": true,
+          "value": 2150609.0,
+          "metricIcon": "",
+          "color": "#05a608",
+          "groupName": "BMV3A"
+        }
+      },
+      "level": "metric"
+    }
+  },
+  "BMV1": {
+    "type": "kpi",
+    "level": "metric",
+    "metrics": {
+      "Fast Count": {
+        "status": 1,
+        "description": "",
+        "value": 15471,
+        "label": "Fast Count",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "Grou",
+        "success": true,
+        "formattedValue": "15,471",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV1"
+      }
+    }
+  },
+  "BMV4A": {
+    "type": "kpi",
+    "level": "metric",
+    "metrics": {
+      "Count": {
+        "status": 1,
+        "description": "",
+        "value": 66336,
+        "label": "Count",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV4A",
+        "success": true,
+        "formattedValue": "66,336",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV4A"
+      },
+      "Down": {
+        "status": 1,
+        "description": "",
+        "value": 7655880.0,
+        "label": "Down",
+        "threshold": [],
+        "insights": "Looks all fine",
+        "metricIcon": "",
+        "groupName": "BMV4A",
+        "success": true,
+        "formattedValue": "02:07:35.880",
+        "color": "#05a608",
+        "visualization_type": "business_metric",
+        "visualization_name": "BMV4A"
+      }
+    }
+  }
+}

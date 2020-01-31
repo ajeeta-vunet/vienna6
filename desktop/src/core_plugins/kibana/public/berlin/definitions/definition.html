@@ -1,10 +1,12 @@
 <vunet-definations>
-  <vunet-tab
-    class="vunetTabs"
-    tabs="tabs"
-    landing-tab="landingTab"
-    switch-tab="onTabChange">
-  </vunet-tab>
+  <div class="definitions-tabs-wrapper">
+    <vunet-tab
+      class="vunetTabs"
+      tabs="tabs"
+      landing-tab="landingTab"
+      switch-tab="onTabChange">
+    </vunet-tab>
+  </div>
   <div ng-show="id==='credentials'" class="user-container menubar-fixed-top-vunet-tabs">
 
     <vunet-credentials class="vunet-credentials-directive">

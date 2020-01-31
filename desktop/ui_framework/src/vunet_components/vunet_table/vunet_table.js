@@ -71,7 +71,8 @@ export class VunetDataTable extends Component {
       formModal: {}, // Initialize the form modal object.
       containerClassName: 'vunet-table', // Specify a parent class for the container
       // holding the table
-      showSubTable: 0 // Flag to display sub table for a row.
+      showSubTable: 0, // Flag to display sub table for a row.
+      useBoxShadowForTable: true // Set this to false to get rid of shadow effect on table borders
     };
 
     // Run the function inside _.debounce after 200 milli seconds
@@ -141,7 +142,18 @@ export class VunetDataTable extends Component {
       this.debouncedFetch();
     }
 
-    let classnames = 'vunet-table ' + newProps.metaItem.containerClassName;
+    let classnames = 'vunet-table';
+
+    // If containerClassName is defined then use it.
+    if(newProps.metaItem.containerClassName !== '' &&
+      newProps.metaItem.containerClassName !== undefined) {
+      classnames = ' ' + newProps.metaItem.containerClassName;
+    }
+
+    // If useBoxShadowForTable is set to false, remove the box shadow on table.
+    if(this.props.metaItem.useBoxShadowForTable !== undefined && !this.props.metaItem.useBoxShadowForTable) {
+      classnames += ' remove-box-shadow';
+    }
 
     // Hide the checkboxes in vunet table rows
     if (this.props.metaItem.selection !== undefined && !this.props.metaItem.selection) {

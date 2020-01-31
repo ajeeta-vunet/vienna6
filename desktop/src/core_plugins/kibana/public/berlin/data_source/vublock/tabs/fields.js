@@ -31,6 +31,7 @@ function vuBlockFields($scope,
     tableAction: [],
     default: {},
     forceUpdate: false,
+    useBoxShadowForTable: false,
   };
 
   // Callback function to fetch fields information

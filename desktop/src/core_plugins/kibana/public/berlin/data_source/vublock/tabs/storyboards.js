@@ -26,7 +26,8 @@ function vuBlockStoryboards($scope) {
     search: true,
     tableAction: [],
     default: {},
-    forceUpdate: false
+    forceUpdate: false,
+    useBoxShadowForTable: false,
   };
 
   if ($scope.vuBlock.story_boards && $scope.vuBlock.story_boards.length) {

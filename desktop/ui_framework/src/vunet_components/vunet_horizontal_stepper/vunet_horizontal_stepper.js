@@ -25,29 +25,106 @@ import PropTypes from 'prop-types';
 export class VunetHorizontalStepper extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      data: props.data,
+      steps: props.data.steps,
+      currentStep: props.data.currentStep
     };
   }
 
+  // Update the current step when user clicks the form
+  // wizard buttons to view contents of next / previous step.
+  componentWillReceiveProps(newProps) {
+    this.setState({ currentStep: newProps.data.currentStep });
+  }
+
+  // This is a callback function which calls the
+  // switchStep  function in vunet form wizard
+  // component.
+  onSwitch = (index) => {
+    this.setState({ currentStep: index });
+    this.props.onSwitch(index);
+  }
+
   render() {
-    const nodes = this.state.data.map((nodeObj, index) => {
-      const nodeStyle = {
-        background: nodeObj.node_color
-      };
 
-      const textStyle = {
-        color: nodeObj.node_color,
-      };
+    const nodes = this.state.steps.map((nodeObj, index) => {
+      //Inline style initialization for stepper sub components
 
-      const linkStyle = {
-        background: nodeObj.link_color
-      };
+      // inline style for the step node
+      let nodeStyle = {};
 
-      const stepStyle = {
-        width: (100 / this.state.data.length) + '%'
-      };
+      // inline style for the step icon
+      let iconStyle = {};
+
+      // inline style for the step text
+      let textStyle = {};
+
+      // inline style for the connecting lines between steps
+      let linkStyle = {};
+
+      // inline style for each step node with its connecting line
+      let stepStyle = {};
+
+      // Use the following inline styles when user action is 'edit'
+      if (this.props.data.action === 'edit') {
+
+        // Update the inline style of step node to indicate
+        // the current step.
+        if(this.state.currentStep === index) {
+          nodeStyle = {
+            background: nodeObj.node_color,
+            border: '1px solid ' + nodeObj.node_color,
+          };
+
+          iconStyle = {
+            color: '#fff',
+          };
+
+        } else {
+          nodeStyle = {
+            background: '#fff',
+            border: '1px solid ' + nodeObj.node_color
+          };
+
+          iconStyle = {
+            color: nodeObj.node_color,
+          };
+        }
+
+        textStyle = {
+          color: nodeObj.node_color,
+        };
+
+        linkStyle = {
+          background: nodeObj.link_color
+        };
+
+        stepStyle = {
+          width: (100 / this.state.steps.length) + '%'
+        };
+      } else {
+        // Use the following inline styles for 'add' action
+        nodeStyle = {
+          background: '#fff',
+          background: nodeObj.node_color
+        };
+
+        iconStyle = {
+          color: nodeObj.node_color,
+        };
+
+        textStyle = {
+          color: nodeObj.node_color,
+        };
+
+        linkStyle = {
+          background: nodeObj.link_color
+        };
+
+        stepStyle = {
+          width: (100 / this.state.steps.length) + '%'
+        };
+      }
 
       return (
         <div
@@ -56,8 +133,18 @@ export class VunetHorizontalStepper extends Component {
           style={stepStyle}
         >
           <div className="circle-icon-wrapper">
-            <div className="circle-icon" style={nodeStyle}>
-              <i className={nodeObj.icon} aria-hidden="true" />
+            <div
+              style={nodeStyle}
+              className={'circle-icon'}
+              onClick={() => {
+                this.onSwitch(index);
+              }}
+            >
+              <i
+                className={nodeObj.icon}
+                style={iconStyle}
+                aria-hidden="true"
+              />
             </div>
           </div>
           <div className="step-header-container">
@@ -72,7 +159,7 @@ export class VunetHorizontalStepper extends Component {
     return (
       <div className="horizontal-stepper-container">
         <div className="row steps">
-          <div className="col-md-1 pre-step-connector"/>
+          <div className="col-md-1 pre-step-connector" />
           <div className="col-md-11 steps-container">{nodes}</div>
         </div>
       </div>
@@ -81,5 +168,6 @@ export class VunetHorizontalStepper extends Component {
 }
 
 VunetHorizontalStepper.propTypes = {
-  data: PropTypes.array
+  data: PropTypes.object,
+  onSwitch: PropTypes.func
 };

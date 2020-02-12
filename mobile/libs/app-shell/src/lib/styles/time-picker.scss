@@ -1,0 +1,320 @@
+/** 
+ * ------------------------- NOTICE ------------------------------- 
+ *
+ *                  CONFIDENTIAL INFORMATION                       
+ *                  ------------------------                       
+ *    This Document contains Confidential Information or           
+ *    Trade Secrets, or both, which are the property of VuNet      
+ *    Systems Ltd.  This document may not be copied, reproduced,   
+ *    reduced to any electronic medium or machine readable form    
+ *    or otherwise duplicated and the information herein may not   
+ *    be used, disseminated or otherwise disclosed, except with    
+ *    the prior written consent of VuNet Systems Ltd.              
+ *                                                                 
+ *------------------------- NOTICE ------------------------------- 
+ 
+ * Copyright 2020 VuNet Systems Ltd.
+ * All rights reserved.
+ * Use of copyright notice does not imply publication.
+*/
+$color_1: #222;
+$color_2: #bbb;
+$primary_cal: #626fef;
+$color_5: $gray-dark;
+
+.datepicker---date-picker-container---1kNBY {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  line-height: 20px;
+  border: none;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding: 0 5px;
+  position: relative;
+  display: inline-block;
+
+  * {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+
+    &:before {
+      -webkit-box-sizing: inherit;
+      -moz-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+
+    &:after {
+      -webkit-box-sizing: inherit;
+      -moz-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+  }
+
+  .react-datepicker__header {
+    text-align: center;
+    background-color: $white;
+    border: none;
+    position: relative;
+    padding: 0;
+  }
+
+  .react-datepicker__month {
+    margin: 0;
+    text-align: center;
+  }
+
+  .react-datepicker__current-month {
+    color: $color_1;
+    font-size: 13px;
+    text-transform: uppercase;
+    height: 20px;
+    margin: 8px 0;
+  }
+
+  .react-datepicker__navigation {
+    background: none;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    top: 3px;
+    padding: 5px;
+    border: none;
+    z-index: 1;
+    outline: 0;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    &:hover {
+      border-radius: 3px;
+      background-color: $smoke;
+    }
+  }
+
+  .react-datepicker__navigation--previous {
+    left: 8px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMiIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDIyIDMwIj4KPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogI2IzMDk4NDsKICAgICAgICBmaWxsLXJ1bGU6IGV2ZW5vZGQ7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTM1NS42MjQsMTEyNC42M2ExLjM0NSwxLjM0NSwwLDEsMSwxLjMzLTEuMzRBMS4zMzYsMS4zMzYsMCwwLDEsMzU1LjYyNCwxMTI0LjYzWm0tMy40NjktNC4zN2EyLjI2LDIuMjYsMCwxLDEsMi4yMzMtMi4yNkEyLjI0NiwyLjI0NiwwLDAsMSwzNTIuMTU1LDExMjAuMjZabTMuNDY5LTguOGExLjM0NSwxLjM0NSwwLDEsMS0xLjMzMSwxLjM1QTEuMzM4LDEuMzM4LDAsMCwxLDM1NS42MjQsMTExMS40NlptMS41OTItNC4yNy0xMS43ODcsMTAuNzcsMTEuNzUyLDEwLjgyQTIuNDEyLDIuNDEyLDAsMCwxLDM1NS43LDExMzNoLTAuMDgyYTIuMzM3LDIuMzM3LDAsMCwxLTEuMzkyLS40NmwtMTcuMjQ5LTEyLjY0YTIuNDIzLDIuNDIzLDAsMCwxLC4wMDctMy45bDE3LjI0OS0xMi41NWEyLjM2NCwyLjM2NCwwLDAsMSwzLjIzNi40NEEyLjQzMywyLjQzMywwLDAsMSwzNTcuMjE2LDExMDcuMTlaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMzM2IC0xMTAzKSIvPgogIDwvc3ZnPgo=');
+    background-size: 15px 15px;
+  }
+
+  .react-datepicker__navigation--next {
+    right: 8px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMiIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDIyIDMwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjYjMwOTg0OwogICAgICAgIGZpbGwtcnVsZTogZXZlbm9kZDsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggaWQ9IlNoYXBlXzJfY29weSIgZGF0YS1uYW1lPSJTaGFwZSAyIGNvcHkiIGNsYXNzPSJjbHMtMSIgZD0iTTk3MC4zNzYsMTExMS4zN2ExLjM0NSwxLjM0NSwwLDEsMS0xLjMzLDEuMzRBMS4zMzYsMS4zMzYsMCwwLDEsOTcwLjM3NiwxMTExLjM3Wm0zLjQ2OSw0LjM3YTIuMjYsMi4yNiwwLDEsMS0yLjIzMywyLjI2QTIuMjQ2LDIuMjQ2LDAsMCwxLDk3My44NDUsMTExNS43NFptLTMuNDY5LDguOGExLjM0NSwxLjM0NSwwLDEsMSwxLjMzMS0xLjM1QTEuMzM3LDEuMzM3LDAsMCwxLDk3MC4zNzYsMTEyNC41NFptLTEuNTkyLDQuMjcsMTEuNzg3LTEwLjc3LTExLjc1Mi0xMC44MkEyLjQxMiwyLjQxMiwwLDAsMSw5NzAuMywxMTAzaDAuMDgyYTIuMzM3LDIuMzM3LDAsMCwxLDEuMzkyLjQ2bDE3LjI0OSwxMi42NGEyLjQyMywyLjQyMywwLDAsMS0uMDA3LDMuOWwtMTcuMjQ5LDEyLjU1YTIuMzY0LDIuMzY0LDAsMCwxLTMuMjM2LS40NEEyLjQzMywyLjQzMywwLDAsMSw5NjguNzg0LDExMjguODFaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtOTY4IC0xMTAzKSIvPgo8L3N2Zz4K');
+    background-size: 15px 15px;
+  }
+
+  .react-datepicker__day {
+    color: $color_1;
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    line-height: 20px;
+    border: 0;
+    padding: 5px;
+    margin: 2px;
+    cursor: pointer;
+    font-size: 13px;
+
+    &:hover {
+      background: #eee;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    &:hover.react-datepicker__day--disabled {
+      background: inherit;
+      cursor: default;
+      color: $color_2;
+    }
+  }
+
+  .react-datepicker__day-name {
+    color: $primary;
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    line-height: 20px;
+    border: 0;
+    padding: 5px;
+    margin: 2px;
+    padding-top: 9px;
+    font-size: 12px;
+    font-family: 'Roboto';
+    font-weight: 300;
+  }
+
+  .react-datepicker__day.react-datepicker__day--disabled {
+    background: inherit;
+    cursor: default;
+    color: $color_2;
+  }
+
+  .react-datepicker__day-names {
+    white-space: nowrap;
+  }
+
+  .react-datepicker__day--outside-month {
+    color: $color_2;
+  }
+
+  .react-datepicker__day--today {
+    color: $primary_cal;
+  }
+
+  .react-datepicker__day--selected {
+    color: $white;
+    font-weight: bold;
+    background-color: $primary_cal;
+    border-radius: 50%;
+
+    &:hover {
+      background-color: $primary_cal;
+    }
+  }
+}
+
+.datepicker---date-input-container---2zD9B {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  line-height: 20px;
+  position: relative;
+
+  * {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+
+    &:before {
+      -webkit-box-sizing: inherit;
+      -moz-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+
+    &:after {
+      -webkit-box-sizing: inherit;
+      -moz-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+  }
+}
+
+.datepicker---date-input---1vOyn {
+  // width: 120px;
+  > input {
+    display: block;
+    width: 100%;
+    height: auto;
+    line-height: inherit;
+    padding: 5px 12px;
+    padding-left: 30px;
+    font-size: 13px;
+    color: $color_1;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+
+    &:focus {
+      border-color: $primary_cal;
+    }
+  }
+}
+
+.datepicker---date-input-icon---1UeQu {
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  color: $color_5;
+  width: 14px;
+  height: 14px;
+}
+
+.datepicker---time-input-container---s4Ikh {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  line-height: 20px;
+  position: relative;
+
+  * {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+
+    &:before {
+      -webkit-box-sizing: inherit;
+      -moz-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+
+    &:after {
+      -webkit-box-sizing: inherit;
+      -moz-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+  }
+}
+
+.datepicker---time-input---2ICRB {
+  // width: 120px;
+  > input {
+    display: block;
+    width: 100%;
+    height: auto;
+    line-height: inherit;
+    padding: 5px 12px;
+    padding-left: 30px;
+    font-size: 13px;
+    color: $color_1;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+
+    &:focus {
+      border-color: $primary_cal;
+    }
+  }
+}
+
+.datepicker---time-input-icon---3TeZ8 {
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  color: $color_5;
+  width: 14px;
+  height: 14px;
+}
+
+@media all and (-ms-high-contrast: none) {
+  .datepicker---date-input---1vOyn {
+    > input {
+      height: 32px;
+    }
+  }
+
+  .datepicker---time-input---2ICRB {
+    > input {
+      height: 32px;
+    }
+  }
+}
+
+@media (-ms-high-contrast: active) {
+  .datepicker---date-input---1vOyn {
+    > input {
+      height: 32px;
+    }
+  }
+
+  .datepicker---time-input---2ICRB {
+    > input {
+      height: 32px;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "npmScope": "vu",
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "colombo": {
+      "tags": ["front-end"]
+    },
+    "colombo-e2e": {
+      "tags": ["front-end", "test"]
+    },
+    "utils": {
+      "tags": ["library"]
+    },
+    "store": {
+      "tags": ["library"]
+    },
+    "types": {
+      "tags": ["library"]
+    },
+    "vis": {
+      "tags": ["library"]
+    },
+    "app-shell": {
+      "tags": ["library"]
+    },
+    "http": {
+      "tags": ["library"]
+    },
+    "colombo-lib": {
+      "tags": ["library"]
+    }
+  }
+}

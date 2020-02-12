@@ -74,7 +74,7 @@ module.controller('statusIndicatorAndKpiVisController', function ($scope, Privat
         if (metric.metricIcon) {
           // insert image in the centre of svg
           svg.append('image')
-            .attr('xlink:href', `/ui/vienna_images/${metric.metricIcon}.svg`)
+            .attr('xlink:href', $scope.metricImageDict[metric.metricIcon])
             .attr('width', w / 3).attr('height', h / 3)
             .attr('x', -w / 6).attr('y', -h / 5);
         }
@@ -169,8 +169,30 @@ module.controller('statusIndicatorAndKpiVisController', function ($scope, Privat
 
         // Insert gauge into the KPI visualisation
         // This action needs to be performed synchronously after the
-        // resonse is processed and UI is rendered. Temporary Soln: use setImmediate()
-        setImmediate(insertGauge);
+        // resonse is processed and UI is rendered.
+        // We use a setTimeout inside a recursive function to achieve this.
+        const metric = $scope.responseData.KpiMetrics;
+        const metricId = Object.values(metric)[0].id;
+        let timeOutHandler = undefined;
+        let counter = 1;
+        const maxIteration = 5;
+        const insertGaugeHadler = () => {
+          if (counter <= maxIteration) {
+            // exit recursive loop when required elements are present in dom and metricImageDict.
+            if (document.getElementById(metricId) && $scope.metricImageDict) {
+              insertGauge();
+              clearTimeout(timeOutHandler);
+            } else {
+              timeOutHandler = setTimeout(insertGaugeHadler, 300);
+            }
+            counter++;
+          }
+        };
+
+        // If KPI template is 'gauge' insert image inside it
+        if ($scope.vis.params.kpiTemplate === 'Gauge template') {
+          insertGaugeHadler();
+        }
       });
     }
   };

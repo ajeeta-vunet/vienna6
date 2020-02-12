@@ -65,6 +65,11 @@ function vuBlockDetails($scope,
     // this page loads.
     $scope.landingTab = 'storyboards';
     $scope.id = 'storyboards';
+
+    // Use white color as background color for tabs
+    $scope.tabStyle = {
+      backgroundColor: '#fff'
+    };
   }
 
   // This function updates the vuBlock state from 'Active' to

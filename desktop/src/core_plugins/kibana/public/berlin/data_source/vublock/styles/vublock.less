@@ -1,7 +1,7 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
 .vu-block-app-container {
-
+  box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color;
   background: #fff;
   margin: 2rem;
   padding: 2rem;
@@ -52,6 +52,9 @@
       display: flex;
       flex-wrap: wrap;
       .vu-block {
+        &:hover {
+          box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
         margin: 1.7rem 1.5rem;
         border-radius: 1rem;
         width: 17.5rem;
@@ -102,8 +105,15 @@
     padding-bottom: 0;
   }
 
+  .vu-block-details-tabs-container {
+    border-bottom: 1px solid @grey_smoke;
+    .kuiTab {
+      margin-bottom: 0;
+    }
+  }
 
-  height: calc(100vh - @topbar-height) !important;
+  box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color;
+  height: calc(100vh - @topbar-height - 8rem)!important;
   overflow-y: auto;
   background: #fff;
   margin: 2rem;

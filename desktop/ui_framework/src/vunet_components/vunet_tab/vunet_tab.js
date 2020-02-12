@@ -36,13 +36,14 @@ export class VunetTab extends Component {
   };
 
   // Display the tabs configured.
-  renderTabs() {
+  renderTabs(tabStyle) {
     return this.props.tabs.map((tab, index) => (
       <KuiTab
         className="vunetTabButtons"
         onClick={() => this.onSelectedTabChanged(tab.id)}
         isSelected={tab.id === this.state.selectedTabId}
         key={index}
+        style={tabStyle}
       >
         {tab.name}
       </KuiTab>
@@ -51,9 +52,17 @@ export class VunetTab extends Component {
 
   // Render all the tabs
   render() {
+    let tabStyle = {};
+    if(this.props.tabStyle === undefined) {
+      tabStyle = {
+        backgroundColor: '#f1f2f7'
+      };
+    } else {
+      tabStyle = this.props.tabStyle;
+    }
     return (
-      <KuiTabs>
-        {this.renderTabs()}
+      <KuiTabs style={tabStyle}>
+        {this.renderTabs(tabStyle)}
       </KuiTabs>
     );
   }
@@ -61,6 +70,7 @@ export class VunetTab extends Component {
 
 VunetTab.propTypes = {
   tabs: PropTypes.array,
+  tabStyle: PropTypes.object,
   landingTab: PropTypes.string,
   switchTab: PropTypes.func
 };

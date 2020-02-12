@@ -30,8 +30,7 @@ function vuBlockGoldenSignals($scope,
     tableAction: [],
     default: {},
     forceUpdate: false,
-    inverted: false,
-    useBoxShadowForTable: false,
+    inverted: false
   };
 
   // Callback function to fetch golden signals information

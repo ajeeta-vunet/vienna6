@@ -29,8 +29,7 @@ function vuBlockDocs($scope,
     tableAction: [],
     default: {},
     forceUpdate: false,
-    inverted: false,
-    useBoxShadowForTable: false,
+    inverted: false
   };
 
   // Callback function to fetch docs information

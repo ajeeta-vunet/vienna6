@@ -3,7 +3,7 @@
   <div class="vu-block-list-container">
     <div ng-click="viewVuBlockConfiguration(vuBlock.id)"
       class="vu-block"
-      ng-repeat="vuBlock in vuBlockList | orderBy:'status' | filter:searchQuery">
+      ng-repeat="vuBlock in vuBlockList | filter:searchQuery">
       <div class="vu-block-header">
         {{ vuBlock.name }}
       </div>

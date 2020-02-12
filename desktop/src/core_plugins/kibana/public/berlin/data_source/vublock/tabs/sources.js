@@ -33,7 +33,6 @@ function vuBlockSources($scope,
     forceUpdate: false,
     inverted: false,
     hasSubTable: true,
-    useBoxShadowForTable: false,
     subTable: {
       fetch: $scope.fetchSubTableContents,
       meta: {
@@ -160,7 +159,6 @@ function vuBlockSources($scope,
         sourceObj.subTable.meta.edit = true;
         sourceObj.subTable.meta.isFormWizard = true;
         sourceObj.subTable.meta.isSubTable = true;
-        sourceObj.subTable.meta.useBoxShadowForTable = false;
         sourceObj.subTable.meta.getAllEditData = $scope.getAllEditData;
         sourceObj.subTable.fetch = $scope.fetchSubTableContents;
         sourceObj.subTable.meta.saveData = $scope.saveData;

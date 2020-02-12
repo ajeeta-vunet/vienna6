@@ -32,8 +32,7 @@ function vuBlockAlertRules($scope,
     tableAction: [],
     default: {},
     forceUpdate: false,
-    inverted: false,
-    useBoxShadowForTable: false,
+    inverted: false
   };
 
   // Callback function to fetch alert rules information

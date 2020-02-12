@@ -1,17 +1,16 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
-.storage-tabs-wrapper {
-  padding: 1.25rem 0rem 0rem 6.5rem;
-  background: @action_bar_background;
-}
-
-.vunetTabs {
+.vunetTabs{
+  padding: 1.25rem 0rem 0rem 6rem;
+  display:block;
+  min-height: 40px;
   height: 6rem;
-  .kuiTabs {
-    border-bottom:0px;
-    .kuiTab{
-      padding:1rem 3rem;
-    }
+  background-color: @action_bar_background;
+    .kuiTabs{ 
+      border-bottom:0px;
+      .kuiTab{
+        padding:1rem 3rem;
+      }
   }
 }
 

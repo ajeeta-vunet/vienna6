@@ -142,15 +142,15 @@ export class VunetFormWizard extends Component {
     });
   }
 
+  // Will be used in vuBlock phase 2
   // This function updates the tab content when
-  // user moves between the tabs by clicking on the step
-  // icon at the top.
-  switchStep =(index) => {
-    this.setState({
-      currentStep: index,
-      currentForm: { ...this.state.data.wizardData[index] }
-    });
-  }
+  // user moves between the tabs
+  // switchStep(index) {
+  //   this.setState({
+  //     currentStep: index,
+  //     currentForm: { ...this.state.data.wizardData[index] }
+  //   });
+  // }
 
   // This function calls the callback function
   // to save the form wizard data to the back end.
@@ -234,23 +234,10 @@ export class VunetFormWizard extends Component {
       formData.item = [...this.state.currentForm.metaData];
       formData.isParentFormWizard = true;
       formData.buttonCallback = this.buttonCallback;
-
-      // Prepare data required by the horizontal stepper
-      // component.
-      // steps:       List of objects, where each object is a step.
-      // action:      User action can be 'add' or 'edit'
-      // currentStep: Current step in form wizard.
-      const stepperData = {};
-      stepperData.steps = this.state.wizardTabs;
-      stepperData.action = this.props.data.action;
-      stepperData.currentStep = this.state.currentStep;
       formWizard = (
         <div className="wizard-container">
           <div className="row wizard-tabs-container">
-            <VunetHorizontalStepper
-              data={stepperData}
-              onSwitch={this.switchStep}
-            />
+            <VunetHorizontalStepper data={this.state.wizardTabs} />
           </div>
           <div key={this.state.currentStep} className="row wizard-view">
             {/* Call the dynamic form builder component to display the
@@ -273,7 +260,7 @@ export class VunetFormWizard extends Component {
               }}
             />
           </div>
-          <div>{this.state.operDict.errorMsg !== '' && errorSection}</div>
+          {this.state.operDict.errorMsg !== '' && errorSection}
         </div>
       );
     }

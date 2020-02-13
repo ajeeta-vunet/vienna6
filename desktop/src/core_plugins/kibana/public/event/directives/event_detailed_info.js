@@ -14,13 +14,11 @@ app.directive('eventDetailedInfo', function () {
       // This function checks if a value for a key needs to
       // be displayed in custom time format.
       scope.ifDisplayCustomTimeFormat = function (key) {
-        if (key === 'Alert_Active_For' ||
-          key === 'Alert_Frequency_for_Today' ||
-          key === 'Alert_Frequency_in_Last_2_Days' ||
-          key === 'Alert_Frequency_in_Last_7_Days' ||
-          key === 'Downtime_for_Today' ||
-          key === 'Downtime_in_Last_2_Days' ||
-          key === 'Downtime_in_Last_7_Days') {
+        if (key === 'Today Active For' ||
+          key === 'Last 7 Days Active For' ||
+          key === 'Last 1 Month Active For' ||
+          key === 'Active For' ||
+          key === 'Duration') {
           return true;
         }
         else {
@@ -31,15 +29,13 @@ app.directive('eventDetailedInfo', function () {
       // This function checks if a value for a key needs to
       // be displayed as it has been received with out any processing
       scope.ifDisplayValue = function (key) {
-        if (!(key === 'Alert_Active_For' ||
-          key === 'Alert_Frequency_for_Today' ||
-          key === 'Alert_Frequency_in_Last_2_Days' ||
-          key === 'Alert_Frequency_in_Last_7_Days' ||
-          key === 'Downtime_for_Today' ||
-          key === 'Downtime_in_Last_2_Days' ||
-          key === 'Downtime_in_Last_7_Days' ||
-          key === 'Alert_Start_Time' ||
-          key === 'timestamp')) {
+        if (!(key === 'Today Active For' ||
+          key === 'Last 7 Days Active For' ||
+          key === 'Last 1 Month Active For' ||
+          key === 'Active For' ||
+          key === 'Duration' ||
+          key === 'Start Time' ||
+          key === 'Time')) {
           return true;
         }
         else {

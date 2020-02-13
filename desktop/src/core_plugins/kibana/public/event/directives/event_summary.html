@@ -7,79 +7,56 @@
       class="fa event-list-icon"
       ng-class="setIconsForAlertItems(event.severity)"
       aria-hidden="true"></i>
-    <span class="event-list-header"> {{ event.type }} </span>
+    <span class="event-list-header"> {{ event.severity }} </span>
     <span class="event-list-time">{{ event.timestamp | date : 'yyyy-MM-dd HH:mm:ss Z' }}</span>
   </div>
   <div class="row">
-    <div class="col-md-8 event-summary">
+    <div class="col-md-12 event-summary">
       {{ event.summary }}
+  </div>
+  <div class="row">
     </div>
-    <div class="col-md-4 risk-score-container">
-      <span class="risk-score-header"> Risk Score</span>
-      <span class="risk-score">{{ event['risk-score'] }}</span>
+    <div class="col-md-8 event-summary">
+      {{ event.tags }}
+    </div>
+    <div class="col-md-4 current-status-container">
+      <span class="current-status-header"> Status</span>
+      <span class="current-status">{{ event['status'] }}</span>
     </div>
   </div>
-  <div class="event-history-header">Alert History</div>
-  <div class="row event-list-global-count">
+  <div class="event-history-header"
+    ng-if="event.History !== undefined">
+    History (Alarm Active Duration)
+  </div>
+  <div class="row event-list-global-count"
+    ng-if="event.History !== undefined">
     <div
-      ng-show="event.History.Alert_Frequency_for_Today >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Frequency_for_Today | displayTwoTimeUnits }}
+        {{ event.History.Today['Active For'] | displayTwoTimeUnits }}
       </span>
       <p>Today</p>
     </div>
     <div
-      ng-show="event.History.Alert_Frequency_in_Last_2_Days >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Frequency_in_Last_2_Days | displayTwoTimeUnits }}
+        {{ event.History['Last 7 Days']['Active For'] | displayTwoTimeUnits }}
       </span>
-      <p>In 48 hours</p>
+      <p>Last 7 Days</p>
     </div>
     <div
-      ng-show="event.History.Alert_Frequency_in_Last_7_Days >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Frequency_in_Last_7_Days | displayTwoTimeUnits }}
+        {{ event.History['Last 1 Month']['Active For'] | displayTwoTimeUnits }}
       </span>
-      <p>In 7 days</p>
+      <p>Last 1 Month</p>
     </div>
     <div
-      ng-show="event.History.Alert_Active_For >= 0"
       class="event-count-container">
       <span class="event-count">
-        {{ event.History.Alert_Active_For | displayTwoTimeUnits }}
+        {{ event.duration | displayTwoTimeUnits }}
       </span>
-      <p>Active for</p>
-    </div>
-    <div ng-show="event.History.Downtime_for_Today >= 0"
-      class="event-count-container">
-      <span class="event-count">
-        {{ event.History.Downtime_for_Today | displayTwoTimeUnits }}
-      </span>
-      <p>Today</p>
-    </div>
-    <div ng-show="event.History.Downtime_in_Last_2_Days >= 0"
-      class="event-count-container">
-      <span class="event-count">
-        {{ event.History.Downtime_in_Last_2_Days | displayTwoTimeUnits }}
-      </span>
-      <p>In 48 hours</p>
-    </div>
-    <div ng-show="event.History.Incident_Count_for_Today >=0 "
-      class="event-count-container">
-      <span class="event-count">
-        {{ event.History.Incident_Count_for_Today | displayTwoTimeUnits }}
-      </span>
-      <p>Events Today</p>
-    </div>
-    <div ng-show="event.History.Incident_Count_in_Last_2_Days >=0 "
-      class="event-count-container">
-      <span class="event-count">
-        {{ event.History.Incident_Count_in_Last_2_Days | displayTwoTimeUnits }}
-      </span>
-      <p>Events in 48 hours</p>
+      <p>Recently Active For</p>
     </div>
   </div>
   <div class="row">

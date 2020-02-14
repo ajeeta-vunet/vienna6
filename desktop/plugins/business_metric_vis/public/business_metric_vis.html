@@ -462,7 +462,7 @@
               <!-- In the ng-style of below td we have use 2 different widths in ng-style. This is w.r.t to action buttons column width which will
                    be 15% if only one action button is configured but it will be 30% if more than 1 action buttons are configured -->
 
-              <td ng-show="vis.params.aggregations.length<=0 "
+              <td ng-show="vis.params.aggregations.length<=0 && vis.params.actionButtonsData.length>0"
                   ng-style="{ 'width' : (vis.params.actionButtonsData.length<=1) ? '15%' : '30%' }"
                   class="hide-action-buttons-in-report">
                   {{ item.actionButtonsColumnName }}

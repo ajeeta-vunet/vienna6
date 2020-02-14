@@ -62,8 +62,7 @@
   .vis-editor-content {
     .flex-parent();
     width: 100%;
-    // This has been changed beacuse of pop-up in action button bmv
-    z-index: 5;
+    //z-index 5 was removed because it was blocking the pop-up of create filter button
 
     // overrides for tablet and desktop
     @media (min-width: @screen-md-min) {

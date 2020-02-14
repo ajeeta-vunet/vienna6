@@ -270,8 +270,8 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
         stateMonitor.setInitialState($state.toJSON());
         $scope.kbnTopNav.close('save');
 
-        // If it's a new BMV then we don't need to notify DAQ to update the alert rule.
-        if (savedVis.visState.type === 'business_metric' && $route.current.params.id) {
+        // If it's a  BMV, since alert and other objects depend on it, then we need to notify DAQ to update the alert rule.
+        if (savedVis.visState.type === 'business_metric') {
           updateOperation.updateVunetObjectOperation([savedVis], 'visualization', $http, 'modify', chrome);
         }
 

@@ -18,8 +18,7 @@
     {{ agg.schema.title }}
   </span>
 
-  <!-- description -->
-  <span ng-if="!editorOpen && aggForm.$valid" class="vis-editor-agg-header-description">
+  <span class ="vis-editor-agg-header-description" ng-if="!editorOpen && aggForm.$valid" uib-tooltip={{describe()}} >
     {{ describe() }}
   </span>
 

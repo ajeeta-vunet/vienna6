@@ -161,9 +161,6 @@
   .vis-editor-agg {
     width: 30rem;
     .flex-parent();
-
-    //IE10/11 - prevent flex item from overflowing
-    flex-basis: 100%;
   }
 
     // wraps the .vis-editor-agg and nesting-indicator ^^
@@ -205,6 +202,11 @@
       .vis-editor-agg-header-description {
         font-weight: normal;
         padding-right: @vis-editor-agg-editor-spacing;
+        //The below lines were added since there are large header descriptions which overflows into other components.
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 20rem;
+        white-space: nowrap;
 
         &.danger {
           .text-danger();
@@ -306,6 +308,12 @@
   * 1. Show invalid state if the user has interacted with the input without selecting an option.
   */
   .vis-editor-field-ui-select {
+    .ui-select-choices-row-inner {
+      word-wrap: break-word;
+      word-break: break-all;
+      white-space: normal !important;
+      width: 100%;
+    }
     &.ng-invalid.ng-dirty,
     &.ng-invalid.ng-touched {
       .ui-select-match {

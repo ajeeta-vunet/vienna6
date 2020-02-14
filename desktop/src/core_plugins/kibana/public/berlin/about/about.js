@@ -34,20 +34,20 @@ function manageAbout($injector,
   $scope.aboutTenantMeta = {
     headers: ['Company Name', 'Email', 'Phone number'],
     rows: ['enterprise_name', 'email', 'phone_no'],
-    id: 'enterprise_name',
+    //id: 'enterprise_name', Company name needed to be edited. and the id field was disabled.
     edit: false,
     inverted: true,
     inverted_title: 'Company Information',
     table: [{
       key: 'enterprise_name',
       label: 'Company Name',
-      id: true,
+      //id: true,
       name: 'enterprise_name',
       helpText: 'Provide the company name',
       props: {
         type: 'text',
         required: true,
-        pattern: '^[a-zA-Z][a-zA-Z0-9!,.()/@#$%^&*\s]{3,100}$'
+        pattern: '^[a-zA-Z][a-zA-Z0-9!,.()/@#$%^& *\s]{3,100}$'//space also accepted now in the company name.
       },
       errorText: 'Please enter a valid Company name. It should be more than 3 and less than 100 characters'
     },

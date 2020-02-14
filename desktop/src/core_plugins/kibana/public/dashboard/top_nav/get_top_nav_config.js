@@ -16,6 +16,7 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
         hideWriteControls ?
           [
             // getFullScreenConfig(actions[TopNavIds.FULL_SCREEN])
+            getRefreshConfig(actions[TopNavIds.REFRESH]), //'Refresh button was needed for view users also.
           ]
           : [
             getHomeConfig(actions[TopNavIds.HOME]),

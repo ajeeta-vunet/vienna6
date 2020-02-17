@@ -293,18 +293,18 @@
   <div
     ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'vertical'">
     <table class="bm-table-striped">
-      <tr ng-repeat="entry in metricDatas track by $index"
+      <tr ng-repeat="entry in verticalDatas track by $index"
         ng-init="outerIndex=$index"
         class="data-rows">
         <td width="{{ columnWidth }}" class="bm-table-td-metric-names"
-          ng-repeat="(colName, value) in metricDatas[outerIndex] track by $index"
-          ng-init="colIndex=$index; aggLength=vis.params.aggregations.length"
+          ng-repeat="(colName, value) in verticalDatas[outerIndex] track by $index"
+          ng-init="colIndex=$index"
           ng-style="columnMeta[colIndex]['bgColorEnabled'] ?
                           {'background': value.color, color: idealTextColor(value.color)}:
                           {'color': value.color }"
           ng-show="columnMeta[colIndex]['hide'] !== true"
           >
-          <div ng-style="colIndex >= aggLength && (outerIndex !== 0 || outerIndex == 0) ? {'text-align' : 'center'} : {'text-align' : 'left'}">
+          <div ng-style="colIndex >= aggregationsLength && (outerIndex !== 0 || outerIndex == 0) ? {'text-align' : 'center'} : {'text-align' : 'left'}">
             <span ng-if="outerIndex !== 0 && columnMeta[colIndex]['Reference Link']">
                 <a ng-click="viewDashboardForThisMetric(columnMeta[colIndex]['Reference Link'],
                   undefined,value.formattedValue !== undefined? value.formattedValue : value)"
@@ -354,7 +354,7 @@
               <kbn-tooltip
                 ng-if="metric.description !== undefined && metric.description !== ''"
                 text="{{metric.description}}"
-                placement="right"
+                placement="bottom"
                 append-to-body="1">
                 <i
                   class="fa fa-question-circle table-metric-icon"
@@ -387,8 +387,8 @@
           <div
                 data-cell-content
                 ng-repeat="agg in vis.params.aggregations track by $index"
-                ng-if="outerIndex !== 0 && (metricDatas[0]['Column' + colIndex + ''] === agg.customLabel
-                  || metricDatas[0]['Column' + colIndex + ''] === agg.field)"
+                ng-if="outerIndex !== 0 && (verticalDatas[0]['Column' + colIndex + ''] === agg.customLabel
+                  || verticalDatas[0]['Column' + colIndex + ''] === agg.field)"
               >
                 <span class="table-cell-filter">
                   <span
@@ -418,7 +418,7 @@
     <table class="bm-table-striped">
       <tr
         class="data-rows"
-        ng-repeat="items in metricDatas track by $index"
+        ng-repeat="items in horizontalDatas track by $index"
         ng-init="outerIndex=$index-1">
         <td>
           <table class="bm-sub-table bm-page-break">

@@ -132,6 +132,12 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
     if ($scope.vis.params &&
       $scope.vis.params.aggregations &&
       $scope.vis.params.aggregations.length > 0) {
+      // Tabulat format for the old BMVs would be undefined.
+      // So make it horizontal format by default.
+      if ($scope.vis.params.tabularFormat === undefined) {
+        $scope.vis.params.tabularFormat = 'horizontal';
+      }
+
       $scope.vis.params.enableTableFormat = true;
       return true;
     }

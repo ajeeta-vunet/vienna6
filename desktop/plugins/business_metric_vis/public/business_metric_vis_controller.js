@@ -198,14 +198,14 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
   }
 
   function resortRows() {
-    if ($scope.metricDatas) {
+    if ($scope.verticalDatas) {
       const sort = self.sort;
       const orderBy = $filter('orderBy');
       if (sort.direction !== null) {
-        const headersData = $scope.metricDatas[0];
-        $scope.metricDatas.splice(0, 1);
-        $scope.metricDatas = orderBy($scope.metricDatas, valueGetter, sort.direction === 'desc');
-        $scope.metricDatas.splice(0, 0, headersData);
+        const headersData = $scope.verticalDatas[0];
+        $scope.verticalDatas.splice(0, 1);
+        $scope.verticalDatas = orderBy($scope.verticalDatas, valueGetter, sort.direction === 'desc');
+        $scope.verticalDatas.splice(0, 0, headersData);
       }
     }
   }
@@ -349,6 +349,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
     if ($scope.vis.params.aggregations) {
       aggregationsLength = $scope.vis.params.aggregations.length;
+      $scope.aggregationsLength = aggregationsLength;
     }
 
     if ($scope.vis.params.historicalData) {
@@ -666,52 +667,50 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       });
 
       // This function will be called for the 2nd metric and so on...
-      const updateMetricAndHistoricalData = function (metric, metricList, row, columnName, colIndex, fieldKey) {
+      const updateMetricAndHistoricalData = function (metric, metricList, row, columnName, colIndex) {
         let value;
         let formattedValue;
         let color;
-        for (let index = 0; index < metricList.length; index++) {
-          const label = metricList[index].label;
+        angular.forEach(metricList, function (metricObj) {
+        //for (let index = 0; index < metricList.length; index++) {
+          const label = metricObj.label;
           if (metric.label === label) {
             if (metric.value !== undefined) {
-              if (row.Column0 === fieldKey) {
-                value = metric.value;
-                formattedValue = metric.formattedValue;
-                color = metric.color;
-              }
-              else  {
-                value = 'N.A.';
-                formattedValue = 'N.A.';
-                color = 'N.A.';
-              }
-              row[columnName + colIndex] = { value: value, formattedValue: formattedValue, color: color };
-              colIndex = colIndex + 1;
-              // Add historic Data
-              if (metric.hasOwnProperty('historicalData')) {
-                for (let hist = 0; hist < metric.historicalData.length; hist++) {
-                  const histColor = $scope.setTrendColor(metric.historicalData[hist].icon, metricList[index].upTrendColor);
-                  row[columnName + colIndex] = { value: metric.historicalData[hist].value,
-			  formattedValue: metric.historicalData[hist].formattedValue,
-			  color: histColor,
-			  icon: metric.historicalData[hist].icon,
-			  percentageChange: metric.historicalData[hist].percentageChange };
-                  colIndex = colIndex + 1;
-                }
-              }
-              else {
-                for (let hist = 0; hist < $scope.vis.params.historicalData.length; hist++) {
-                  row[columnName + colIndex] = { value: 'N.A.', formattedValue: 'N.A.', percentageChange: -1 };
-                  colIndex = colIndex + 1;
-                }
-              }
+              value = metric.value;
+              formattedValue = metric.formattedValue;
+              color = metric.color;
+            }
+            else  {
+              value = 'N.A.';
+              formattedValue = 'N.A.';
+              color = 'N.A.';
+            }
+            row[columnName + colIndex] = { value: value, formattedValue: formattedValue, color: color };
+            colIndex = colIndex + 1;
+            // Add historic Data
+            if (metric.hasOwnProperty('historicalData')) {
+              angular.forEach(metric.historicalData, function (hist, index) {
+                const histColor = $scope.setTrendColor(hist.icon, metricList[index].upTrendColor);
+                row[columnName + colIndex] = { value: hist.value,
+			          formattedValue: hist.formattedValue,
+			          color: histColor,
+			          icon: hist.icon,
+			          percentageChange: hist.percentageChange };
+                colIndex = colIndex + 1;
+              });
+            }
+            else {
+              angular.forEach($scope.vis.params.historicalData, function () {
+                row[columnName + colIndex] = { value: 'N.A.', formattedValue: 'N.A.', percentageChange: -1 };
+                colIndex = colIndex + 1;
+              });
             }
           }
-        }
+        });
       };
 
       const iterateResults = function (result, destList, stack, metricList, columnName, metricIndex, rowIndex = 1) {
         let key;
-        let fieldKey;
         for (key in result) {
           if (result[key].hasOwnProperty('buckets')) {
             if (result[key].hasOwnProperty('key')) {
@@ -734,13 +733,11 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
                 row[columnName + colIndex] = result[key].key;
                 colIndex = colIndex + 1;
                 metric = result[key].metric;
-                fieldKey = result[key].key;
               }
               else {
                 metric = result[key];
-                fieldKey = result[key].key;
               }
-              updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex, fieldKey);
+              updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex);
               destList.push(row);
             }
             else
@@ -750,14 +747,12 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
               if (result[key].hasOwnProperty('metric')) {
                 metric = result[key].metric;
-                fieldKey = result[key].key;
               }
               else {
                 metric = result[key];
-                fieldKey = result[key].key;
               }
               const row = destList[rowIndex];
-              updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex, fieldKey);
+              updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex);
             }
           }
           rowIndex = rowIndex + 1;
@@ -820,87 +815,10 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           $scope.metricDatas = resp;
           $scope.darkShade = '';
           let metricRowCount = 0;
-          if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'vertical') {
-            $scope.metricDatas = [];
-            $scope.columnMeta = [];
-            const item = {};
-            let colIndex = 0;
-            const columnName = 'Column';
-            for (let index = 0; index < $scope.vis.params.aggregations.length; index++) {
-              // Add bucket names to header
-              let label = $scope.vis.params.aggregations[index].customLabel;
-              const field = $scope.vis.params.aggregations[index].field;
-              if (label === '') {
-                label = $scope.vis.params.aggregations[index].field;
-              }
-              item[columnName + colIndex] = label;
-              colIndex = colIndex + 1;
-              const refLink = {};
-              let match = false;
-              if ($scope.vis.params.linkInfo.length) {
-                for (const i in $scope.vis.params.linkInfo) {
-                  if (field === $scope.vis.params.linkInfo[i].field) {
-                    refLink['Reference Link'] = $scope.vis.params.linkInfo[i];
-                    match = true;
-                  }
-                }
-              }
-              if (!match)
-              {
-                refLink['plain text'] = '';
-              }
-              refLink.historicData = false;
-              // Set it to false as the aggregation header should be always visible
-              $scope.columnMeta.push(refLink);
-            }
-            for (let index = 0; index < $scope.vis.params.metrics.length; index++) {
-              const refLink = {};
-              // Add metric names and historic data names to header
-              item[columnName + colIndex] = $scope.vis.params.metrics[index].label;
-              colIndex = colIndex + 1;
-              const field = $scope.vis.params.metrics[index].field;
-              const type = $scope.vis.params.metrics[index].type;
-              // Set it to true/false based on the hideMetric.
-              refLink.hide = $scope.vis.params.metrics[index].hideMetric;
-              refLink.bgColorEnabled = $scope.vis.params.metrics[index].bgColorEnabled;
-              refLink.historicData = false;
-              if (type === 'latest') {
-                if ($scope.vis.params.linkInfo.length) {
-                  for (const i in $scope.vis.params.linkInfo) {
-                    if (field === $scope.vis.params.linkInfo[i].field) {
-                      refLink['Reference Link'] = $scope.vis.params.linkInfo[i];
-                      break;
-                    }
-                  }
-                }
-              }
-              $scope.columnMeta.push(refLink);
-              for (let hist = 0; hist < $scope.vis.params.historicalData.length; hist++) {
-                const refLink = {};
-                item[columnName + colIndex] = $scope.vis.params.historicalData[hist].label;
-                colIndex = colIndex + 1;
-                // We need to hide historical data for the hidden metric also.
-                // So seti it to true/false based on the corrosponding metric's hideMetric.
-                refLink.hide = $scope.vis.params.metrics[index].hideMetric;
-                refLink.bgColorEnabled = $scope.vis.params.metrics[index].bgColorEnabled;
-                refLink.historicData = true;
-                $scope.columnMeta.push(refLink);
-              }
-            }
-            // it's very complex and difficult to achive show hide metrics if we add to
-            // the existing metricDatas list.
-            // The existing metricDatas list will have only the bucket/metric names in the first item.
-            // in the rest items, we have metric value for the buckets.
-            // Format of the metricDatas  [["Target","memory","IO disk"],
-            //["samson-Vostro-3578","0.92","1930773028.32"],["10.0.2.15",null,null],["127.0.0.1",null,null]]
-            $scope.metricDatas.push(item);
-            angular.forEach(resp, function (metricData, index) {
-              iterateResults(metricData, $scope.metricDatas, [], $scope.vis.params.metrics, columnName, index);
-            });
-            // We should not return. need to execute the report related code
-            metricRowCount = $scope.metricDatas.length;
-          }
-          else if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'horizontal') {
+          // The tabularformat for the old BMVs would be undefined. So show old BMVs in horizontal forat by default
+          if ($scope.vis.params.enableTableFormat && ($scope.vis.params.tabularFormat === undefined ||
+            $scope.vis.params.tabularFormat === 'horizontal')) {
+            $scope.vis.params.tabularFormat = 'horizontal';
             // For case of multiple metric in simple format we are extracting the action buttons.
             $scope.actionButtonForMultipleMetric = $scope.vis.params.actionButtonsData;
             // Prepare historical datasets with 'N.A.' as values when the metrics
@@ -957,7 +875,89 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               }
             });
           }
+          else if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'vertical') {
+            $scope.verticalDatas = [];
+            $scope.columnMeta = [];
+            const item = {};
+            let colIndex = 0;
+            const columnName = 'Column';
+            for (let index = 0; index < $scope.vis.params.aggregations.length; index++) {
+              // Add bucket names to header
+              let label = $scope.vis.params.aggregations[index].customLabel;
+              const field = $scope.vis.params.aggregations[index].field;
+              if (label === '') {
+                label = $scope.vis.params.aggregations[index].field;
+              }
+              item[columnName + colIndex] = label;
+              colIndex = colIndex + 1;
+              const refLink = {};
+              let match = false;
+              if ($scope.vis.params.linkInfo.length) {
+                for (const i in $scope.vis.params.linkInfo) {
+                  if (field === $scope.vis.params.linkInfo[i].field) {
+                    refLink['Reference Link'] = $scope.vis.params.linkInfo[i];
+                    match = true;
+                  }
+                }
+              }
+              if (!match)
+              {
+                refLink['plain text'] = '';
+              }
+              refLink.historicData = false;
+              // Set it to false as the aggregation header should be always visible
+              $scope.columnMeta.push(refLink);
+            }
+            angular.forEach($scope.vis.params.metrics, function (metric, index) {
+            //for (let index = 0; index < $scope.vis.params.metrics.length; index++) {
+              const refLink = {};
+              const metricIndex = index;
+              // Add metric names and historic data names to header
+              item[columnName + colIndex] = metric.label;
+              colIndex = colIndex + 1;
+              const field = metric.field;
+              const type = metric.type;
+              // Set it to true/false based on the hideMetric.
+              refLink.hide = metric.hideMetric;
+              refLink.bgColorEnabled = metric.bgColorEnabled;
+              refLink.historicData = false;
+              if (type === 'latest') {
+                if ($scope.vis.params.linkInfo.length) {
+                  for (const i in $scope.vis.params.linkInfo) {
+                    if (field === $scope.vis.params.linkInfo[i].field) {
+                      refLink['Reference Link'] = $scope.vis.params.linkInfo[i];
+                      break;
+                    }
+                  }
+                }
+              }
+              $scope.columnMeta.push(refLink);
 
+              angular.forEach($scope.vis.params.historicalData, function (hist) {
+                const refLink = {};
+                item[columnName + colIndex] = hist.label;
+                colIndex = colIndex + 1;
+                // We need to hide historical data for the hidden metric also.
+                // So seti it to true/false based on the corrosponding metric's hideMetric.
+                refLink.hide = $scope.vis.params.metrics[metricIndex].hideMetric;
+                refLink.bgColorEnabled = $scope.vis.params.metrics[metricIndex].bgColorEnabled;
+                refLink.historicData = true;
+                $scope.columnMeta.push(refLink);
+              });
+            });
+            // it's very complex and difficult to achive show hide metrics if we add to
+            // the existing verticalDatas list.
+            // The existing verticalDatas list will have only the bucket/metric names in the first item.
+            // in the rest items, we have metric value for the buckets.
+            // Format of the verticalDatas  [["Target","memory","IO disk"],
+            //["samson-Vostro-3578","0.92","1930773028.32"],["10.0.2.15",null,null],["127.0.0.1",null,null]]
+            $scope.verticalDatas.push(item);
+            angular.forEach(resp, function (metricData, index) {
+              iterateResults(metricData, $scope.verticalDatas, [], $scope.vis.params.metrics, columnName, index);
+            });
+            // We should not return. need to execute the report related code
+            metricRowCount = $scope.verticalDatas.length;
+          }
           // Populate the total number of rows in $scope.vis.params.
           $scope.vis.params.rowsCount = metricRowCount;
 
@@ -965,6 +965,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           // view of BM.
           if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'horizontal') {
             $scope.metricDatas.splice(0, 0, headersData);
+            $scope.horizontalDatas = $scope.metricDatas;
           }
 
           // If we are printing the report and we have multiple aggregation,

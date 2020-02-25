@@ -32,9 +32,16 @@ export class InputControlVis extends Component {
         case 'list':
           controlComponent = (
             <ListControl
-              control={control}
+              id={control.id}
+              label={control.label}
+              options={control.selectOptions}
+              selectedOptions={control.value}
+              disableMsg={control.isEnabled() ? null : control.disabledReason}
+              multiselect={control.options.multiselect}
               controlIndex={index}
               stageFilter={this.props.stageFilter}
+              fetchOptions={query => { this.props.refreshControl(index, query); }}
+              control={control}
             />
           );
           break;

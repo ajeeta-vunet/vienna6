@@ -1,14 +1,75 @@
 import _ from 'lodash';
 
+
+export function noValuesDisableMsg(fieldName, indexPatternName) {
+  return `Filtering occurs on the "${fieldName}" field,
+which doesn't exist on any documents in the "${indexPatternName}" index pattern.
+Choose a different field or index documents that contain values for this field.`;
+}
+
+export function noIndexPatternMsg(indexPatternId) {
+  return `Could not locate index-pattern id: ${indexPatternId}.`;
+}
+
 export class Control {
-  constructor(controlParams, filterManager) {
+  constructor(controlParams, filterManager, kbnApi, useTimeFilter) {
     this.id = controlParams.id;
     this.options = controlParams.options;
     this.type = controlParams.type;
     this.label = controlParams.label ? controlParams.label : controlParams.fieldName;
     this.filterManager = filterManager;
+    this.kbnApi = kbnApi;
+    this.useTimeFilter = useTimeFilter;
+    this.controlParams = controlParams;
+
     // restore state from kibana filter context
     this.reset();
+    // disable until initialized
+    this.disable('Control has not been initialized');
+  }
+
+  async fetch() {
+    throw new Error('fetch method not defined, subclass are required to implement');
+  }
+
+
+  /**
+   *
+   * @param ancestors {array of Controls}
+   */
+  setAncestors(ancestors) {
+    this.ancestors = ancestors;
+  }
+
+  hasAncestors() {
+    return this.ancestors && this.ancestors.length > 0;
+  }
+
+  hasUnsetAncestor() {
+    return this.ancestors.reduce((accumulator, ancestor) => {
+      return accumulator || !ancestor.hasValue();
+    }, false);
+  }
+
+  getAncestorValues() {
+    return this.ancestors.map(ancestor => {
+      return ancestor.value;
+    });
+  }
+
+  getAncestorFilters() {
+    return this.ancestors.map(ancestor => {
+      return ancestor.filterManager.createFilter(ancestor.value);
+    });
+  }
+
+  format(value) {
+    const field = this.filterManager.getField();
+    if (field) {
+      return field.format.convert(value);
+    }
+
+    return value;
   }
 
   set(newValue) {
@@ -28,11 +89,11 @@ export class Control {
   }
 
   clear() {
-    this.set(this.filterManager.getUnsetValue());
+    this.value = undefined;
   }
 
   hasChanged() {
-    return this._hasChanged;
+    return !_.isEqual(this.value, this.filterManager.getValueFromFilterBar());
   }
 
   hasKbnFilter() {
@@ -47,6 +108,15 @@ export class Control {
   }
 
   hasValue() {
-    return !_.isEqual(this.value, this.filterManager.getUnsetValue());
+    return this.value !== undefined;
+  }
+
+  isEnabled() {
+    return this.enable;
+  }
+
+  disable(reason) {
+    this.enable = false;
+    this.disabledReason = reason;
   }
 }

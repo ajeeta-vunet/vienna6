@@ -28,4 +28,13 @@ export class FilterManager {
   getUnsetValue() {
     return this.unsetValue;
   }
+
+  getIndexPattern() {
+    return this.indexPattern;
+  }
+
+  getField() {
+    return this.indexPattern.fields.byName[this.fieldName];
+  }
+
 }

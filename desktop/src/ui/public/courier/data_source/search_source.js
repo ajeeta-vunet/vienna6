@@ -57,7 +57,7 @@ import { RootSearchSourceProvider } from './_root_search_source';
 import { AbstractDataSourceProvider } from './_abstract';
 import { SearchRequestProvider } from '../fetch/request';
 import { SegmentedRequestProvider } from '../fetch/request/segmented';
-
+import angular from 'angular';
 export function SearchSourceProvider(Promise, Private, config) {
   const SourceAbstract = Private(AbstractDataSourceProvider);
   const SearchRequest = Private(SearchRequestProvider);
@@ -73,6 +73,30 @@ export function SearchSourceProvider(Promise, Private, config) {
   _.class(SearchSource).inherits(SourceAbstract);
   function SearchSource(initialState) {
     SearchSource.Super.call(this, initialState);
+    this._fields = parseInitialFields(initialState);
+    this._parent = undefined;
+
+    this._filterPredicates = [
+      (filter) => {
+        // remove null/undefined filters
+        return filter;
+      },
+      (filter) => {
+        const disabled = _.get(filter, 'meta.disabled');
+        return disabled === undefined || disabled === false;
+      },
+      (filter, data) => {
+        if (!config.get('courier:ignoreFilterIfFieldNotInIndex')) {
+          return true;
+        }
+
+        if ('meta' in filter && 'index' in data) {
+          const field = data.index.fields.byName[filter.meta.key];
+          if (!field) return false;
+        }
+        return true;
+      }
+    ];
   }
 
   /*****
@@ -98,8 +122,20 @@ export function SearchSourceProvider(Promise, Private, config) {
     'size',
     'source',
     'version',
-    'fields'
+    'fields',
+    'index'
   ];
+
+  function parseInitialFields(initialFields) {
+    if (!initialFields) {
+      return {};
+    }
+
+    return typeof initialFields === 'string' ?
+      JSON.parse(initialFields)
+      : _.cloneDeep(initialFields);
+  }
+
 
   SearchSource.prototype.index = function (indexPattern) {
     const state = this._state;
@@ -155,6 +191,82 @@ export function SearchSourceProvider(Promise, Private, config) {
     return onlyHardLinked || this.skipTimeRangeFilter ? undefined : Private(RootSearchSourceProvider).get();
   };
 
+  /**
+     * Set a searchSource that this source should inherit from
+     * @param  {SearchSource} searchSource - the parent searchSource
+     * @return {this} - chainable
+     */
+  SearchSource.prototype.setParent = function (parent, options = {}) {
+    this._parent = parent;
+    this._inheritOptions = options;
+    return this;
+  };
+
+  SearchSource.prototype.createCopy = function () {
+    const json = angular.toJson(this._fields);
+    const newSearchSource = new SearchSource(json);
+    // when serializing the internal fields we lose the internal classes used in the index
+    // pattern, so we have to set it again to workaround this behavior
+    newSearchSource.setField('index', this.getField('index'));
+    newSearchSource.setParent(this.getParent());
+    return newSearchSource;
+  };
+
+  SearchSource.prototype.createChild = function (options = {}) {
+    const childSearchSource = new SearchSource();
+    childSearchSource.setParent(this, options);
+    return childSearchSource;
+  };
+
+  SearchSource.prototype.setFields = function (newFields) {
+    this._fields = newFields;
+    return this;
+  };
+
+  SearchSource.prototype.setField = function (field, value) {
+    if (!SearchSource.prototype._methods.includes(field)) {
+      throw new Error(`Can't set field '${field}' on SearchSource. Acceptable fields are: ${SearchSource.prototype._methods.join(', ')}.`);
+    }
+    if (field === 'index') {
+      const fields = this._fields;
+
+      const hasSource = fields.source;
+      const sourceCameFromIp = hasSource && fields.source.hasOwnProperty(forIp);
+      const sourceIsForOurIp = sourceCameFromIp && fields.source[forIp] === fields.index;
+      if (sourceIsForOurIp) {
+        delete fields.source;
+      }
+
+      if (value === null || value === undefined) {
+        delete fields.index;
+        return this;
+      }
+
+      if (!isIndexPattern(value)) {
+        throw new TypeError('expected indexPattern to be an IndexPattern duck.');
+      }
+
+      fields[field] = value;
+      if (!fields.source) {
+        // imply source filtering based on the index pattern, but allow overriding
+        // it by simply setting another field for "source". When index is changed
+        fields.source = function () {
+          return value.getSourceFiltering();
+        };
+        fields.source[forIp] = value;
+      }
+
+      return this;
+    }
+
+    if (value == null) {
+      delete this._fields[field];
+      return this;
+    }
+
+    this._fields[field] = value;
+    return this;
+  };
   /**
    * Temporarily prevent this Search from being fetched... not a fan but it's easy
    */

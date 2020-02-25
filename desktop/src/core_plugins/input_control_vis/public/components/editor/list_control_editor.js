@@ -17,6 +17,22 @@ export function ListControlEditor(props) {
     props.handleNumberOptionChange(props.controlIndex, 'size', evt);
   };
 
+  // Prepare Parent candidates options for parent control.
+  const parentCandidatesOptions = [
+    { value: '', text: '' },
+    ...props.parentCandidates,
+  ];
+
+  // Create the options for parent control.
+  const parentControlOptions = parentCandidatesOptions.map((parent) => {
+    return (
+      <option
+        key={parent.text}
+        value={parent.value}
+      >{parent.text}
+      </option>
+    );
+  });
   return (
     <div>
 
@@ -65,6 +81,22 @@ export function ListControlEditor(props) {
         </div>
       </div>
 
+      { parentCandidatesOptions.length > 1 &&
+        <div className="kuiSideBarFormRow">
+          <label className="kuiSideBarFormRow__label" htmlFor={sizeId}>
+            Parent Control
+          </label>
+          <div className="kuiSideBarFormRow__control kuiFieldGroupSection--wide">
+            <select
+              className="kuiTextInput"
+              onChange={(evt) => props.handleParentChange(props.controlIndex, evt)}
+              value={props.controlParams.parent}
+            >
+              {parentControlOptions}
+            </select>
+          </div>
+        </div>
+      }
     </div>
   );
 }
@@ -77,5 +109,6 @@ ListControlEditor.propTypes = {
   handleFieldNameChange: PropTypes.func.isRequired,
   handleIndexPatternChange: PropTypes.func.isRequired,
   handleCheckboxOptionChange: PropTypes.func.isRequired,
-  handleNumberOptionChange: PropTypes.func.isRequired
+  handleNumberOptionChange: PropTypes.func.isRequired,
+  handleParentChange: PropTypes.func.isRequired,
 };

@@ -34,15 +34,17 @@ export function AbstractDataSourceProvider(Private, Promise, PromiseEmitter, con
 
     // set internal state values
     self._methods.forEach(function (name) {
-      self[name] = function (val) {
-        if (val == null) {
-          delete self._state[name];
-        } else {
-          self._state[name] = val;
-        }
+      if(name !== 'index') {
+        self[name] = function (val) {
+          if (val == null) {
+            delete self._state[name];
+          } else {
+            self._state[name] = val;
+          }
 
-        return self;
-      };
+          return self;
+        };
+      }
     });
 
     self.history = [];

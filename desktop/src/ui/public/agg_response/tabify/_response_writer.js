@@ -268,7 +268,7 @@ export function TabbedAggResponseWriterProvider(Private) {
     while (cells.length < this.columns.length) cells.push('');
 
     for (let i = cells.length - 1; i >= 0; i--) {
-      if (cells[i].aggConfig.enabled === false) {
+      if (cells[i] && cells[i].aggConfig && cells[i].aggConfig.enabled === false) {
         cells.splice(i, 1);
       }
     }

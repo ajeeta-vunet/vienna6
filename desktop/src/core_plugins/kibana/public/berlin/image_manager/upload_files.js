@@ -5,7 +5,7 @@ class UploadFilesCtrl {
     // const imageTypeList = [''];
     const notify = new Notifier();
     $scope.successfulUpload = false;
-    const imageTypeList = ['image/png', 'image/jpeg', 'image/svg', 'image/jpg'];
+    const imageTypeList = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
 
     // fileUploadError Flag pass to the checkFileSizeAndType directive.
     $scope.fileUploadError = false;

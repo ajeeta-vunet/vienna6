@@ -19,12 +19,15 @@ import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 import { SavedObjectNotFound } from 'ui/errors';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 import { getFiltersFromSavedSearch } from 'ui/filter_manager/filter_manager.js';
+import moment from 'moment';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
+const utcRegex = new RegExp ('\\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+Z\\b');
 module.controller('BusinessMetricVisController', function ($scope, Private,
-  Notifier, $http, $rootScope, getAppState,
+  Notifier, $http, $rootScope, getAppState, config,
   timefilter, courier, $filter, kbnUrl, $element, savedSearches, StateService, $timeout, confirmModal) {
 
+  const timeFormat = config.get('dateFormat');
   const notify = new Notifier({
     location: 'Alert'
   });
@@ -472,6 +475,12 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       // found, we increament the 'metricCount'. The metricCount tracks
       // the total number of rows in BM.
       _.each(dataset, function (item) {
+        // We test response to the check if this is a timestamp and if so
+        // we would change the format to a standard time format set in Advance Settings under Manage Resources.
+        if (utcRegex.test(item.key)) {
+          const m = moment(item.key);
+          item.key = m.local().format(timeFormat);
+        }
         if (item.buckets && item.buckets.length > 0) {
           metricCount = getRowsCount(item.buckets, metricCount);
         } else {
@@ -826,6 +835,12 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             angular.forEach($scope.metricDatas, function (metricData, index) {
               for (const key in metricData) {
                 if (metricData.hasOwnProperty(key)) {
+                  // We test response to the check if this is a timestamp and if so
+                  // we would change the format to a standard time format set in Advance Settings under Manage Resources.
+                  if(utcRegex.test(metricData[key].formattedValue)) {
+                    const m = moment(metricData[key].formattedValue);
+                    metricData[key].formattedValue = m.local().format(timeFormat);
+                  }
                   // Case when there are aggregations configured.
                   if ($scope.vis.params.aggregations &&
                     $scope.vis.params.aggregations.length > 0) {

@@ -103,6 +103,9 @@ app.directive('dashboardApp', function ($injector, $http) {
       if(!userRoleCanModify || !chrome.isModifyAllowed()) {
         dashboardConfig.turnHideWriteControlsOn();
       }
+      else {
+        dashboardConfig.turnHideWriteControlsOff();
+      }
 
       const dashboardStateManager = new DashboardStateManager(dash, AppState, dashboardConfig.getHideWriteControls());
 

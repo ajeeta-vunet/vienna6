@@ -20,6 +20,9 @@ uiModules.get('kibana')
           },
           turnHideWriteControlsOn() {
             hideWriteControls = true;
+          },
+          turnHideWriteControlsOff() {
+            hideWriteControls = false;
           }
         };
       }

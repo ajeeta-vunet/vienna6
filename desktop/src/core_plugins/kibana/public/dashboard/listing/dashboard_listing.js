@@ -86,6 +86,9 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   if (!chrome.isModifyAllowed()) {
     dashboardConfig.turnHideWriteControlsOn();
   }
+  else {
+    dashboardConfig.turnHideWriteControlsOff();
+  }
   this.hideWriteControls = dashboardConfig.getHideWriteControls();
 
   $scope.$watch(() => this.filter, () => {

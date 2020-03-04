@@ -75,7 +75,7 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
               let visObj = undefined;
               if (vis.visType === 'business_metric' || vis.visType === 'metric') {
                 // Get the savedObj of BM vis in the current iteration.
-                visObj = results[0].find(function (obj) {
+                visObj = results[sectionId - 1].find(function (obj) {
                   return obj.id === vis.id;
                 });
 
@@ -217,8 +217,8 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
 
               visId = visId + 1;
             });
+            sectionId = sectionId + 1;
           });
-          sectionId = sectionId + 1;
         });
       }
       init();

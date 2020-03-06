@@ -818,6 +818,12 @@ class DataService {
     });
   }
 
+  // get vendor and devices list
+  getVendorAndDeviceList() {
+    const url = this.urlBase + '/data_source/vendor_device_info/';
+    return this._getRequest(url, 'getting vendor device information');
+  }
+
   // Importing data enrichment file.
   importDataEnrichment(fileData, upload) {
     const url = this.urlBase + '/data_enrich_config/';

@@ -413,6 +413,11 @@ class StateService {
     return this._DataService.importDataSources(fileData, upload);
   }
 
+  // get vendor and devices list
+  getVendorAndDeviceList() {
+    return this._DataService.getVendorAndDeviceList();
+  }
+
   // Import data enrichment file
   importDataEnrichment(fileData, upload) {
     return this._DataService.importDataEnrichment(fileData, upload);

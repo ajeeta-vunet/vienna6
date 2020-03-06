@@ -9,8 +9,8 @@ export function VegaVisualizationProvider(vegavisConfig, serviceSettings) {
 
   return class VegaVisualization {
     constructor(el, vis) {
-      this._el = el;
-      this._vis = vis;
+      this.el = el;
+      this.vis = vis;
     }
 
     /**
@@ -48,9 +48,9 @@ export function VegaVisualizationProvider(vegavisConfig, serviceSettings) {
         }
 
         if (vegaParser.useMap) {
-          this._vegaView = new VegaMapView(vegaConfig, this._vis.editorMode, this._el, vegaParser, serviceSettings);
+          this._vegaView = new VegaMapView(vegaConfig, this.vis.editorMode, this.el, vegaParser, serviceSettings);
         } else {
-          this._vegaView = new VegaView(vegaConfig, this._vis.editorMode, this._el, vegaParser, serviceSettings);
+          this._vegaView = new VegaView(vegaConfig, this.vis.editorMode, this.el, vegaParser, serviceSettings);
         }
         await this._vegaView.init();
 

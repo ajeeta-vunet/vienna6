@@ -19,9 +19,8 @@
  */
 
 
+export * from './lib/routes';
 export * from './lib/app-shell';
 export * from './lib/store';
-export * from './lib/route-guards';
 export * from './lib/types/route';
 export * from './lib/config';
-export * from './lib/routes';

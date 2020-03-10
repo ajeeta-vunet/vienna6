@@ -26,15 +26,12 @@ import { AppShell } from '@vu/app-shell';
 import { environment } from './environments/environment';
 import { merge } from 'lodash';
 import { defaults } from 'chart.js';
-import { ChartJsConfig } from './app/chart-js-config';
-import { ColomboConfig } from '@vu/colombo-lib';
+import * as ChartJsConfig from './app/chart-js-config.json';
 import configureStore from './app/store';
 import { routes } from './app/routes';
 import { isMobile } from '@vu/utils';
 
-merge(defaults, ChartJsConfig);
-
-ColomboConfig.assetsPath = environment.assetsPath;
+merge(defaults, (ChartJsConfig as any).default);
 
 if (!isMobile()) {
   window.location.href = window.location.origin + '/vunet';

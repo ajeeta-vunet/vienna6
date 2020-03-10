@@ -21,7 +21,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody } from 'reactstrap';
-import { DashboardsUrl } from '@vu/colombo-lib';
+import { DashboardsUrl } from '@vu/vis';
 
 /**
  * Will render the default page

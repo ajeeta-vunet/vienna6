@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
@@ -27,8 +28,9 @@
       "@vu/plugins": ["libs/plugins/src/index.ts"],
       "@vu/app-shell": ["libs/app-shell/src/index.ts"],
       "@vu/http": ["libs/http/src/index.ts"],
-      "@vu/colombo-lib": ["libs/colombo-lib/src/index.ts"],
-      "@vu/dashboard": ["libs/dashboard/src/index.ts"]
+      "@vu/dashboard": ["libs/dashboard/src/index.ts"],
+      "@vu/alert": ["libs/alert/src/index.ts"],
+      "@vu/routes": ["libs/routes/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

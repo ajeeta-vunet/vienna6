@@ -19,12 +19,13 @@
  */
 
 import React from 'react';
-import { BaseVisualization, ViewDashboardProp } from '../base-component';
+import { BaseVisualization, ViewDashboardProp, ViewDashboardState } from '../base-component';
 import { VisShell } from '../shell/shell';
 import { Line, ChartData as ChartData2 } from 'react-chartjs-2';
 import { ChartOptions, ChartData } from 'chart.js';
 import { Metrics, KpiMetric, Metric } from '@vu/types';
-import { sortBy, first } from 'lodash';
+import { sortBy } from 'lodash';
+import { BucketTable } from '../bmv/bucket-table';
 
 /**
  * Display the Trend Visualization
@@ -33,12 +34,22 @@ import { sortBy, first } from 'lodash';
  * @class TrendVisualization
  * @extends {(BaseVisualization<{ data: any } & ViewDashboardProp>)}
  */
-export class TrendVisualization extends BaseVisualization<{ data: Metrics } & ViewDashboardProp> {
+export class TrendVisualization extends BaseVisualization<{ data: Metrics } & ViewDashboardProp,ViewDashboardState & {fallBackToTable: boolean}> {
+  constructor(props){
+    super(props);
+    this.state = { fallBackToTable: false}
+  }
+  componentDidCatch(){
+    this.setState({ fallBackToTable: true})
+  }
   render() {
+    if(this.state.fallBackToTable){
+      return <BucketTable {...this.props} />;
+    }
     if (this.props.data.type !== 'trend') {
       return null;
     }
-
+    // return <div>Trend</div>
     const filter = Object.entries(this.props.data).filter((a) => typeof a && a[1] !== 'string');
     const description = filter.length > 0 ? (filter[0][1] as any).description : '';
     const data: ChartData2<ChartData> = (canvas: HTMLCanvasElement) => {
@@ -98,7 +109,7 @@ export class TrendVisualization extends BaseVisualization<{ data: Metrics } & Vi
             type: 'time',
             ticks: {
               autoSkip: true,
-              maxTicksLimit: 20,
+              maxTicksLimit: 10,
             },
             display: true,
             gridLines: {
@@ -107,7 +118,7 @@ export class TrendVisualization extends BaseVisualization<{ data: Metrics } & Vi
             },
             scaleLabel: {
               display: true,
-              labelString: '@ Timestamp per 30 Seconds',
+              labelString: '',
             },
           },
         ],

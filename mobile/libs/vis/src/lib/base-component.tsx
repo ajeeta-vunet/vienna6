@@ -21,6 +21,15 @@
 import { Component } from 'react';
 import { Metrics } from '@vu/types';
 
+/**
+ * Resources file, will store constants used in the app
+ */
+export const DashboardsUrl = () => '/dashboard';
+export const ViewDashboards = (dashboardId: string = ':dashboardId') => `${DashboardsUrl()}/${dashboardId}`;
+export const ExpandedVisualizationUrl = (dashboardId: string = ':dashboardId', visId: string = ':visId') =>
+  `${ViewDashboards(dashboardId)}/${visId}`;
+
+  
 type PropsFromMap = {
   data: Metrics;
   VisTitle: string;
@@ -30,11 +39,14 @@ type PropsFromMap = {
 
 type DispatchFromMap = {};
 
-export type ViewDashboardProp = PropsFromMap & DispatchFromMap;
-export type ViewDashboardState = {};
+export type ViewDashboardProp = PropsFromMap & DispatchFromMap ;
+export type ViewDashboardState = { error?: any };
 
 export class BaseVisualization<
   P extends ViewDashboardProp = ViewDashboardProp,
   S extends ViewDashboardState = ViewDashboardState,
   SS = any
-> extends Component<P, S, SS> {}
+> extends Component<P, S, SS> {
+  componentDidCatch(){
+  }
+}

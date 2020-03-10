@@ -25,19 +25,19 @@ const TenantKey = 'VU_TENANT_ID';
 
 export class UserSettingStore {
   static get TenantId() {
-    return JSON.parse( localStorage.getItem(TenantKey));
+    return JSON.parse(localStorage.getItem(TenantKey)) || 1;
   }
   static set TenantId(TenantId: number) {
     localStorage.setItem(TenantKey, JSON.stringify(TenantId));
   }
   static get BuId() {
-    return JSON.parse(localStorage.getItem(BUKey));
+    return JSON.parse(localStorage.getItem(BUKey)) || 1;
   }
   static set BuId(BuId: number) {
     localStorage.setItem(BUKey, JSON.stringify(BuId));
   }
   static get UserName(): string {
-    return localStorage.getItem(UserNameKey);
+    return localStorage.getItem(UserNameKey) ;
   }
   static set UserName(v: string) {
     localStorage.setItem(UserNameKey, v);

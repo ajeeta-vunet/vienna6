@@ -1,0 +1,21 @@
+{
+  "global":{
+    "defaultFontFamily": "Roboto",
+    "defaultFontColor": "#72748d",
+    "defaultFontStyle": "bold",
+    "legend": {
+      "labels": {
+        "usePointStyle": true
+      }
+    },
+    "tooltips": {
+      "cornerRadius": 8,
+      "xPadding": 12,
+      "yPadding": 12,
+      "backgroundColor": "#f8f8f8",
+      "bodyFontColor": "#72748d",
+      "titleFontColor": "#72748d"
+    }
+  }
+  
+}

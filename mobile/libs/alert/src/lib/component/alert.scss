@@ -1,0 +1,181 @@
+/**
+ * ------------------------- NOTICE -------------------------------
+ *
+ *                  CONFIDENTIAL INFORMATION
+ *                  ------------------------
+ *    This Document contains Confidential Information or
+ *    Trade Secrets, or both, which are the property of VuNet
+ *    Systems Ltd.  This document may not be copied, reproduced,
+ *    reduced to any electronic medium or machine readable form
+ *    or otherwise duplicated and the information herein may not
+ *    be used, disseminated or otherwise disclosed, except with
+ *    the prior written consent of VuNet Systems Ltd.
+ *
+ *------------------------- NOTICE -------------------------------
+ *
+ * Copyright 2020 VuNet Systems Ltd.
+ * All rights reserved.
+ * Use of copyright notice does not imply publication.
+ */
+
+@import '../../../../../styles/variable';
+
+
+.alert-main {
+
+  .card-header {
+    background: $white;
+    color: $primary;
+    font-size: .75rem;
+    font-weight: bold;
+    line-height: 1.1;
+  }
+
+  .alert-summary-right {
+    flex: 3 0 auto;
+    max-width: 100%;
+    width: 75%;
+    min-width: 75%
+  }
+
+  .alert-summary-left {
+    flex: 1 0 auto;
+    max-width: 100%;
+    width: 25%;
+    min-width: 25%;
+
+    position: relative;
+
+    &::after {
+      position: absolute;
+      right: 0;
+      border-right: 1px solid $smoke;
+      height: 2.5rem;
+      content: ' ';
+      top: 0.5rem;
+    }
+  }
+
+  .filter-name {
+    font-size: 0.7rem;
+  }
+
+  .a-count {
+    height: 2rem;
+    min-width: 2rem;
+    margin: 0 0 0.5rem;
+    line-height: 2rem;
+    padding: 0;
+    font-size: .75rem;
+
+    &.a-count-big {
+      color: $primary;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: initial 0.25rem;
+    }
+  }
+
+  button.circular {
+    border-radius: 1rem !important;
+    transition-duration: 0.5s;
+  }
+}
+
+.vu-alert-card {
+  box-shadow: $shadow;
+  border-left: 2px solid $primary !important;
+  margin-bottom: $grid-gutter-width/2;
+  border-radius: 0.25rem;
+
+  .card-header {
+    display: flex;
+    align-content: flex-end;
+    background: $white;
+
+    .left,
+    .right {
+      display: inline-block;
+    }
+
+    .left {
+      flex-grow: 1;
+    }
+
+    .right {
+      flex-grow: 0;
+      display: flex;
+    }
+
+    .heading {
+      font: 1em sans-serif;
+      font-weight: bold;
+      color: $primary;
+    }
+  }
+
+  .alert-card-heading {
+    color: $black;
+    font-weight: bold;
+    font-size: .8rem;
+  }
+
+  .card-body {
+    padding-top: 0.25rem;
+
+    .row {
+      align-content: center;
+    }
+
+    .left-content,
+    .right-content {
+
+      color: $black;
+      font-weight: 500;
+
+      .event-date {
+        font-weight: bold;
+        color: $primary;
+      }
+    }
+
+    .left-content {
+      vertical-align: middle;
+      font-weight: bold;
+
+      .metricValue {
+        color: $primary;
+        font-size: 2rem;
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      border-right: 1px solid $smoke;
+
+      &.smallMetric{
+        .metricValue {
+          font-size: 1.25rem;
+        }
+      }
+    }
+
+    .right-content {
+      p {
+        text-align: justify;
+      }
+    }
+
+    .tags {
+      .tag {
+        color: $primary;
+        font-weight: bold;
+
+        +.tag {
+          &::before {
+            content: ', ';
+          }
+        }
+      }
+    }
+  }
+}

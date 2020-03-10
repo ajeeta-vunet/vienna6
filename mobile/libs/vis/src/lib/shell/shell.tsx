@@ -22,10 +22,12 @@ import React from 'react';
 import { Card, CardHeader, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { ViewDashboardProp } from '@vu/vis';
-import MaterialIcon from 'material-icons-react';
-import { ExpandedVisualizationUrl } from '@vu/colombo-lib';
+import { ExpandedVisualizationUrl } from '@vu/vis';
 
 import './shell.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { toTitleCase } from '@vu/utils';
 /**
  * Outer Shell for all the visualizations
  *
@@ -34,18 +36,30 @@ import './shell.scss';
  * @returns
  */
 export function VisShell(props: ViewDashboardProp & { children: any }) {
+  // if(false){
+  //   return  <Col className="col-12">
+  //   <Card className={(props.full ? 'standalone' : '') + ' card-bmv shadow'}>
+  //     <CardHeader>
+  //       <div className="metric-card-title d-inline-block">
+  //         {toTitleCase(props.data.id)}
+  //       </div>
+  //     </CardHeader>
+  //     {props.data  ? props.children : <h2 className="text-center">Error Loading</h2>}
+  //   </Card>
+  // </Col>
+  // }
   return (
     <Col className="col-12">
       <Card className={(props.full ? 'standalone' : '') + ' card-bmv shadow'}>
         <CardHeader>
           <div className="metric-card-title d-inline-block">
-            {props.data.id}
+            {toTitleCase(props.data.id)}
             {props.full ? null : (
               <Link
                 to={ExpandedVisualizationUrl(props.dashboard.dashboardId,props.dashboard.key)}
                 className="card-icons-right"
               >
-                <MaterialIcon icon="open_in_new" />
+                <FontAwesomeIcon className="text-dark" icon={faExternalLinkAlt} />
               </Link>
             )}
           </div>

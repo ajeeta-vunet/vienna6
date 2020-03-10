@@ -22,15 +22,17 @@ import React from 'react';
 import { Container, Row } from 'reactstrap';
 import { FooterIcon } from './footer-icon';
 import { SettingsUrl, AlexaUrl, UserUrl } from '../../config';
-import { DashboardsUrl } from '@vu/colombo-lib';
+import { AlertsUrl } from '@vu/alert';
+import { DashboardsUrl } from '@vu/vis';
 
 /**
  * Icons to display
  */
-const icons = [
+const icons: { icon: string; to: string }[] = [
   { icon: 'Dashboard', to: DashboardsUrl() },
   { icon: 'User', to: UserUrl },
   { icon: 'Voice', to: AlexaUrl },
+  { icon: 'Notification', to: AlertsUrl },
   {
     icon: 'Settings',
     to: SettingsUrl,

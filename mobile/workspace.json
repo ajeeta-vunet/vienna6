@@ -248,30 +248,6 @@
         }
       }
     },
-    "colombo-lib": {
-      "root": "libs/colombo-lib",
-      "sourceRoot": "libs/colombo-lib/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "config": "libs/colombo-lib/.eslintrc",
-            "tsConfig": ["libs/colombo-lib/tsconfig.lib.json", "libs/colombo-lib/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "!libs/colombo-lib/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/colombo-lib/jest.config.js",
-            "tsConfig": "libs/colombo-lib/tsconfig.spec.json"
-          }
-        }
-      }
-    },
     "dashboard": {
       "root": "libs/dashboard",
       "sourceRoot": "libs/dashboard/src",
@@ -292,6 +268,54 @@
           "options": {
             "jestConfig": "libs/dashboard/jest.config.js",
             "tsConfig": "libs/dashboard/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "alert": {
+      "root": "libs/alert",
+      "sourceRoot": "libs/alert/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "libs/alert/.eslintrc",
+            "tsConfig": ["libs/alert/tsconfig.lib.json", "libs/alert/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/alert/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/alert/jest.config.js",
+            "tsConfig": "libs/alert/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "routes": {
+      "root": "libs/routes",
+      "sourceRoot": "libs/routes/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "libs/routes/.eslintrc",
+            "tsConfig": ["libs/routes/tsconfig.lib.json", "libs/routes/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/routes/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/routes/jest.config.js",
+            "tsConfig": "libs/routes/tsconfig.spec.json"
           }
         }
       }

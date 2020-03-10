@@ -42,9 +42,15 @@
       padding-right: $footer-padding;
       margin-left: -$footer-padding/2;
       margin-right: -$footer-padding/2;
+
       //   &.ripple:hover {
       //     box-shadow: $inside-shadow;
       //   }
+      a.active {
+        img {
+          filter: hue-rotate(60deg) brightness(55%);
+        }
+      }
 
       img {
         display: inline-block;

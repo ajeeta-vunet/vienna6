@@ -18,12 +18,11 @@
  * Use of copyright notice does not imply publication.
  */
 
-import { DashboardPage, ViewDashboardPage } from './components';
-import { DashboardsUrl, ExpandedVisualizationUrl, ViewDashboards } from '@vu/colombo-lib';
-import { AppRoute } from '@vu/app-shell';
+import { AppRoute } from '@vu/routes';
+import { DashboardModule }from '@vu/dashboard';
+import { AlertModule }from '@vu/alert';
 
 export const routes: AppRoute[] = [
-  { type: 'PrivateRoute', name: 'Dashboards', routeProps: { component: ViewDashboardPage, path: ExpandedVisualizationUrl() } },
-  { type: 'PrivateRoute', name: 'Dashboards', routeProps: { component: ViewDashboardPage, path: ViewDashboards() } },
-  { type: 'PrivateRoute', name: 'Dashboards', routeProps: { component: DashboardPage, path: DashboardsUrl() } },
+  DashboardModule,
+  AlertModule,
 ];

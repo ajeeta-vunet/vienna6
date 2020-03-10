@@ -1,3 +1,5 @@
+import { AppTitle } from '../reducer/reducers';
+
 /** 
  * ------------------------- NOTICE ------------------------------- 
  *
@@ -31,6 +33,7 @@ export enum AppUiActionEnum {
   TIMESELECTOR_TOGGLE = 'TIMESELECTOR_TOGGLE',
   STICKY_HEADER_SHOW = 'STICKY_HEADER_SHOW',
   STICKY_HEADER_HIDE = 'STICKY_HEADER_HIDE',
+  SET_TITLE = 'SET_TITLE',
 }
 
 /**
@@ -48,4 +51,8 @@ export interface AppUiAction {
     | AppUiActionEnum.STICKY_HEADER_SHOW
     | AppUiActionEnum.STICKY_HEADER_HIDE;
 }
-export type AppUiActions = AppUiAction;
+export interface SetTitleAction {
+  type: AppUiActionEnum.SET_TITLE;
+  title: AppTitle;
+}
+export type AppUiActions = AppUiAction & SetTitleAction;

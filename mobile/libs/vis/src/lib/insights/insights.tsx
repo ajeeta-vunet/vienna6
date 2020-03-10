@@ -23,7 +23,7 @@ import React from 'react';
 import { BaseVisualization } from '../base-component';
 import { VisShell } from '../shell/shell';
 import { CardBody } from 'reactstrap';
-import { getImage } from '@vu/utils';
+import { ImageManager } from '@vu/utils';
 export class InsightVisualization extends BaseVisualization {
   render() {
     if (this.props.data.type !== 'insights') {
@@ -38,7 +38,7 @@ export class InsightVisualization extends BaseVisualization {
                 className={this.props.full ? 'col-12 text-center' : 'col-auto'}
                 style={{ width: this.props.full ? 200 : 100 }}
               >
-                <img src={getImage(v.group)} alt={v.group} />
+                <img src={ImageManager.getImage(v.group)} alt={v.group} />
               </div>
               <div className={this.props.full ? 'col-12 pt-4 text-center' : 'col'}>
                 <div className="insights-h1">

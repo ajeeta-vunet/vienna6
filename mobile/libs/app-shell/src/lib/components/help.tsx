@@ -21,7 +21,8 @@
 import React from 'react';
 import { Card, CardBody, CardHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { DashboardsUrl } from '@vu/colombo-lib';
+import { DashboardsUrl } from '@vu/vis';
+
 
 /**
  * Will render the help page,

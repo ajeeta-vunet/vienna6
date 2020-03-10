@@ -15,25 +15,31 @@
       "tags": ["front-end", "test"]
     },
     "utils": {
-      "tags": ["library"]
+      "tags": ["library:shared"]
     },
     "store": {
-      "tags": ["library"]
+      "tags": ["library:core"]
     },
     "types": {
-      "tags": ["library"]
+      "tags": ["library:shared"]
     },
     "vis": {
-      "tags": ["library"]
+      "tags": ["library:core"]
     },
     "app-shell": {
-      "tags": ["library"]
+      "tags": ["library:core"]
     },
     "http": {
-      "tags": ["library"]
+      "tags": ["library:shared"]
     },
-    "colombo-lib": {
-      "tags": ["library"]
+    "alert": {
+      "tags": ["library:core"]
+    },
+    "dashboard": {
+      "tags": ["library:core"]
+    },
+    "routes": {
+      "tags": ["library:shared"]
     }
   }
 }

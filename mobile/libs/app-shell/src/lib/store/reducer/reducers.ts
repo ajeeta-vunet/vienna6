@@ -30,7 +30,12 @@ import { AppUiActions, AppUiActionEnum } from '../action';
 export interface AppUiStore {
   appui: AppUiState;
 }
-
+export type AppTitle = {
+  heading: string;
+  subHeading: string;
+  displayLeftArrow: boolean;
+  displayRightArrow: boolean;
+};
 /**
  * Defines the state of app ui
  *
@@ -44,11 +49,14 @@ export interface AppUiState {
   isTimeSelectorOpen: boolean;
   // true if Header is sticky, otherwise false
   isStickyHeaderVisible: boolean;
+  // title that is displayed in header
+  title: AppTitle;
 }
 export const AppUiInitialState: AppUiState = {
   isSidebarOpen: false,
   isTimeSelectorOpen: false,
   isStickyHeaderVisible: false,
+  title: { displayLeftArrow: false, displayRightArrow: false, heading: 'Home', subHeading: '' },
 };
 
 /**
@@ -95,6 +103,11 @@ export const AppUiReducer: Reducer<AppUiState, AppUiActions> = (state: any = App
       return {
         ...state,
         isStickyHeaderVisible: true,
+      };
+    case AppUiActionEnum.SET_TITLE:
+      return {
+        ...state,
+        title: action.title,
       };
     default:
       return state;

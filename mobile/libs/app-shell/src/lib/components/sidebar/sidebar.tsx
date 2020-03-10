@@ -22,11 +22,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import LogoutButton from '../logout';
 import { DashboardsState, LoadDashboardsAction } from '@vu/store';
-import { Link } from 'react-router-dom';
 import { AppShellStore } from '../../store/app-shell-store';
-import { ViewDashboards } from '@vu/colombo-lib';
 import { AppUiActionEnum } from '../../store';
-import { NavLink } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { ViewDashboards } from '@vu/vis';
 
 /**
  * Props For Sidebar
@@ -83,11 +82,17 @@ export const Sidebar = connect(
   return (
     <div className={'vu-sidebar ' + (props.isSidebarOpen ? 'open' : 'closed')}>
       <div className="sidebar-username">{props.user}</div>
-      <hr/>
+      <hr />
       <div className="sidebar-items">
         {props.dashboards.dashboards &&
           props.dashboards.dashboards.map((v) => (
-            <NavLink className="sidebar-item" key={v.id} to={ViewDashboards(v.id)} onClick={props.closeSidebar}>
+            <NavLink
+              className="sidebar-item"
+              key={v.id}
+              to={ViewDashboards(v.id)}
+              onClick={props.closeSidebar}
+              activeClassName="active"
+            >
               {v.title}
             </NavLink>
           ))}

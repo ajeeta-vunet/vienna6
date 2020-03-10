@@ -21,23 +21,20 @@
 import { applyMiddleware, combineReducers, createStore, Store, StoreEnhancer, Reducer } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import {
-  AuthReducer,
-  DashboardReducer,
-  TimeRangeReducer,
-  AuthActionTypes,
-} from '@vu/store';
+import { AuthReducer, DashboardReducer, TimeRangeReducer, AuthActionTypes } from '@vu/store';
 import { AppShellStore, AppShellInitialState, AppUiReducer, AppShellActions } from '@vu/app-shell';
+import { AlertStore, AlertsInitialState, AlertsReducer, AlertActions } from '@vu/alert';
 
-export type ColomboAppStore =AppShellStore;
+export type ColomboAppStore = AppShellStore & AlertStore;
 
-export type AppActions = AppShellActions ;
+export type AppActions = AppShellActions & AlertActions;
 
 /**
  * The initial state of the application
  */
 const InitialColomboState: ColomboAppStore = {
   ...AppShellInitialState,
+  alert: AlertsInitialState,
 };
 
 /**
@@ -51,7 +48,8 @@ const appReducer: Reducer<ColomboAppStore, AppActions> = combineReducers<Colombo
   auth: AuthReducer,
   dashboard: DashboardReducer,
   timerange: TimeRangeReducer,
-  appui: AppUiReducer
+  appui: AppUiReducer,
+  alert: AlertsReducer
 });
 /**
  * This is the root reducer which will handle states globally

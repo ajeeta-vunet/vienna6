@@ -24,3 +24,4 @@ export * from './lib/is-mobile';
 export * from './lib/images';
 export * from './lib/user-settings';
 export * from './lib/vibration';
+export * from './lib/title-case';

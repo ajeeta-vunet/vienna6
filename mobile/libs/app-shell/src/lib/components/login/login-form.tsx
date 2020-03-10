@@ -19,13 +19,13 @@
  */
 
 import React, { ChangeEvent } from 'react';
-import { Button, Form, FormGroup, Label, Input, Alert, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { connect, DispatchProp } from 'react-redux';
 import { Redirect, withRouter, RouteChildrenProps } from 'react-router';
 import { compose } from 'redux';
 import queryString from 'query-string';
 import { AuthState, LoginFormState, LoginUser } from '@vu/store';
-import { ColomboConfig, DashboardsUrl } from '@vu/colombo-lib';
+import { DashboardsUrl } from '@vu/vis';
 import { AppShellStore } from '../../store/app-shell-store';
 
 export type LoginFormProps = { auth: AuthState } & DispatchProp & RouteChildrenProps;

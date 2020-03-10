@@ -22,27 +22,8 @@ import { Redirect, Route, RouteProps } from 'react-router-dom';
 import React from 'react';
 import { LoginUrl, LogoutUrl, HelpUrl } from './config';
 import { LoginPage, LogoutButton, HelpPage, Notfound } from './components';
-import { AuthState } from '@vu/store';
+import { AppRoute } from '@vu/routes';
 
-export type AppRoute =
-  | {
-      routeProps: RouteProps;
-      name: string;
-      icon?: string;
-      type: 'Route' | 'PrivateRoute';
-    }
-  | {
-      routeProps: RouteProps;
-      name: string;
-      icon?: string;
-      type: 'AuthorizedRoute';
-      authorizer: (a: AuthState) => boolean;
-    }
-  | {
-      component: JSX.Element;
-      name: string;
-      type: 'JSX';
-    };
 
 export function AddAppSpecificRoutes(routes: AppRoute[]): AppRoute[] {
   return [
@@ -51,6 +32,6 @@ export function AddAppSpecificRoutes(routes: AppRoute[]): AppRoute[] {
     { type: 'PrivateRoute', name: 'Logout', routeProps: { component: LogoutButton, path: LogoutUrl } },
     { type: 'Route', name: 'Help', routeProps: { component: HelpPage, path: HelpUrl } },
     ...routes,
-    { type: 'JSX', component: <Route component={Notfound} />, name: '404' },
+    { type: 'JSX', component: <Route component={Notfound} key="404" />, name: '404' },
   ];
 }

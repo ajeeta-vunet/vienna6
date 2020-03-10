@@ -29,7 +29,5 @@ export interface KpiMetric {
   level: 'metric';
   type: 'kpi';
   id: string;
-  metrics: {
-    [key: string]: Metric;
-  };
+  metrics: Metric[];
 }

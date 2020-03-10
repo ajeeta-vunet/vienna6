@@ -21,14 +21,14 @@
 import { AuthActions, AuthActionTypes } from '../action/types';
 import { Reducer } from 'react';
 import { UserSettingStore } from '@vu/utils';
-
+import { ALL_DASHBOARDS_URL } from '../../urls';
 
 /**
  * This will prevent user from misspelling the AuthState variable
  */
 export type AuthStore = {
   auth: AuthState;
-}
+};
 
 /**
  * type for Auth State
@@ -43,7 +43,7 @@ export interface AuthState {
   error: string;
 }
 export const AuthInitialState: AuthState = {
-  isAuthenticated: !!UserSettingStore.UserName,
+  isAuthenticated: undefined,
   loggingIn: false,
   user: UserSettingStore.UserName,
   error: undefined,

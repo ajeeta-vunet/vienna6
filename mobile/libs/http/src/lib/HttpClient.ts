@@ -43,13 +43,10 @@ class HttpClient {
   public static getInstance(): HttpClient {
     if (!HttpClient.instance) {
       HttpClient.instance = new HttpClient();
+      Axios.defaults.withCredentials = true;
     }
 
     return HttpClient.instance;
-  }
-  public Setup({ baseURL }: { baseURL: string }) {
-    Axios.defaults.withCredentials = true;
-    Axios.defaults.baseURL = baseURL;
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async get<Response = any>(url: string, options?) {

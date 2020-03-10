@@ -19,21 +19,26 @@
 */
 
 import React from 'react';
-import { Metrics, Metric } from '@vu/types';
+import { Metrics, Metric, KpiMetric, TableMetric } from '@vu/types';
 import _ from 'lodash';
-import { BaseVisualization, ViewDashboardProp } from '../base-component';
+import { BaseVisualization, ViewDashboardProp, ViewDashboardState } from '../base-component';
 import { VisShell } from '../shell/shell';
 import { BMV_MAX_ROWS } from './config';
 import { Link } from 'react-router-dom';
-import { ExpandedVisualizationUrl } from '@vu/colombo-lib';
+import { ExpandedVisualizationUrl } from '@vu/vis';
 type MetricWithKey = {
   key: string;
-} & Metrics;
+} & (TableMetric | KpiMetric);
 
 export type BucketTableProps = { data: MetricWithKey[] };
 type TableCell = { value: string; color: string } | string;
-type FlatMetrics = { header: string[]; bucketLevel: number; rows: FlatMetric[] };
-type FlatMetric = { columns: TableCell[]; data: { [key: string]: Metric } };
+type FlatMetrics = { header: string[]; rows: FlatMetric[] };
+type FlatMetric = { columns: TableCell[]; data: Metric[] };
+
+const extractKeys = (data: TableMetric): MetricWithKey[] =>
+  Object.entries(data)
+    .filter((a) => typeof a[1] !== 'string' && typeof a[1] !== 'number')
+    .map((key) => ({ key: key[0], ...(key[1] as TableMetric | KpiMetric) }));
 
 /**
  * Displays A bucketed Table
@@ -42,70 +47,74 @@ type FlatMetric = { columns: TableCell[]; data: { [key: string]: Metric } };
  * @class BucketTable
  * @extends {(BaseVisualization<BucketTableProps & ViewDashboardProp>)}
  */
-export class BucketTable extends BaseVisualization<ViewDashboardProp> {
+export class BucketTable extends BaseVisualization<ViewDashboardProp, ViewDashboardState> {
   render() {
-    const d = Object.entries(this.props.data)
-      .filter((a) => (typeof a[1] !== 'string' && typeof a[1] !== 'number'))
-      .map((key) => Object.assign(key[1], { key: key[0] }));
-    const flattenedData: FlatMetrics = flattenData(d);
+    if (this.props.data.type !== 'table' && this.props.data.type !== 'trend') {
+      return null;
+    }
+
+    const flattenedData: FlatMetrics = flattenData(this.props.data);
     const sliceTo =
       flattenedData.rows.length > BMV_MAX_ROWS && !this.props.full ? BMV_MAX_ROWS - 1 : flattenedData.rows.length;
+
     return (
       <VisShell {...this.props}>
         <div className="table-responsive">
-          <table className="table mb-0">
-            <thead>
-              <tr>
-                <th>
-                  <b>Metric</b>
-                </th>
-                {flattenedData.header.map((a) => (
-                  <th key={a}>
-                    <b>{a}</b>
+          {flattenedData.rows.length === 0 ? (
+            <h1 className="text-center py-5">No data</h1>
+          ) : (
+            <table className="table mb-0">
+              <thead>
+                <tr>
+                  <th>
+                    <b>{this.props.data.fieldName}</b>
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {flattenedData.rows.slice(0, sliceTo).map((a, i) => (
-                <tr key={i}>
-                  {a.columns.map((b, i) =>
-                    typeof b === 'string' ? (
-                      <td key={i}>{b}</td>
-                    ) : (
-                      <td key={i} style={{ color: b.color }}>
-                        {b.value}
-                      </td>
-                    ),
-                  )}
-                  {flattenedData.header
-                    .slice(flattenedData.bucketLevel, flattenedData.header.length - flattenedData.bucketLevel)
-                    .map((v, i) => {
-                      const val: Metric = a.data[v] ? (a.data[v] as Metric) : null;
+                  {flattenedData.header.map((a) => (
+                    <th key={a}>
+                      <b>{a}</b>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {flattenedData.rows.slice(0, sliceTo).map((a: FlatMetric, i) => (
+                  <tr key={i}>
+                    {a.columns.map((b, i) =>
+                      typeof b === 'string' ? (
+                        <td key={i}>{b}</td>
+                      ) : (
+                        <td key={i} style={{ color: b.color }}>
+                          {b.value}
+                        </td>
+                      ),
+                    )}
+                    {flattenedData.header.slice(a.columns.length - 1).map((v, i) => {
+                      const val: Metric = a.data[i] ? a.data[i] : null;
                       return (
                         <td key={i} style={{ color: val ? val.color : '' }}>
-                          {val ? val.formattedValue : '-'}
+                          {val ? val.formattedValue : 'No Value'}
                         </td>
                       );
                     })}
-                </tr>
-              ))}
-            </tbody>
-            {d.length > BMV_MAX_ROWS && !this.props.full ? (
-              <tfoot>
-                <tr>
-                  <td className="text-center text-link" colSpan={100}>
-                    <Link
-                      to={ExpandedVisualizationUrl(this.props.dashboard.dashboardId, this.props.dashboard.key)}
-                      className="card-v4 text-link"
-                    >
-                      Readmore
-                    </Link>
-                  </td>
-                </tr>
-              </tfoot>
-            ) : null}
-          </table>
+                  </tr>
+                ))}
+              </tbody>
+              {flattenedData.rows.length > BMV_MAX_ROWS && !this.props.full ? (
+                <tfoot>
+                  <tr>
+                    <td className="text-center text-link" colSpan={100}>
+                      <Link
+                        to={ExpandedVisualizationUrl(this.props.dashboard.dashboardId, this.props.dashboard.key)}
+                        className="card-v4 text-link"
+                      >
+                        Readmore
+                      </Link>
+                    </td>
+                  </tr>
+                </tfoot>
+              ) : null}
+            </table>
+          )}
         </div>
       </VisShell>
     );
@@ -117,41 +126,24 @@ export class BucketTable extends BaseVisualization<ViewDashboardProp> {
  * @param path columns
  * @param bucketLevel bucket level
  */
-const flattenData = (data: MetricWithKey[], path: string[] = [], bucketLevel: number = 0): FlatMetrics => {
+const flattenData = (data: TableMetric, path: string[] = []): FlatMetrics => {
+  const __data = extractKeys(data);
   let header: string[] = [];
-  // let Bucketlevel = -1;
   const rows = _.flatten<FlatMetric>(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data.map((datum: any, indexValue) => {
+    __data.map((datum, indexValue) => {
       if (indexValue === 0) {
         if (datum.level === 'metric') {
-          header = [...path, ...header, ...Object.keys(datum.metrics)];
+          header = [...path, ...header, ...datum.metrics.map((a) => a.label)];
         } else if (datum.level === 'bucket') {
-          const metricData = Object.entries(datum)
-            .filter((a) => (typeof a[1] !== 'string' && typeof a[1] !== 'number'))
-            .map(
-              (key) =>
-                Object.assign(key[1], { key: key[0] }) as Metrics & {
-                  key: string;
-                },
-            );
-          const retval = flattenData(metricData, [...path, datum.fieldName], bucketLevel + 1);
-          // Bucketlevel = Bucketlevel + retval.bucketLevel + 1;
+          const retval = flattenData(datum, [...path, datum.fieldName]);
           header = retval.header;
         }
       }
       if (datum.level === 'metric') {
+        datum.metrics;
         return { columns: [...path, datum.key], data: datum.metrics } as FlatMetric;
       } else if (datum.level === 'bucket') {
-        const metricData = Object.entries(datum)
-          .filter((a) => (typeof a[1] !== 'string' && typeof a[1] !== 'number'))
-          .map(
-            (key) =>
-              Object.assign(key[1], { key: key[0] }) as Metrics & {
-                key: string;
-              },
-          );
-        const retVal = flattenData(metricData, [...path, datum.key]);
+        const retVal = flattenData(datum, [...path, datum.key]);
         return retVal.rows;
       } else {
         return {} as FlatMetric;
@@ -161,6 +153,5 @@ const flattenData = (data: MetricWithKey[], path: string[] = [], bucketLevel: nu
   return {
     header: header,
     rows: rows,
-    bucketLevel: 0, //Bucketlevel
   };
 };

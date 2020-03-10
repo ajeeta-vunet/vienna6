@@ -24,8 +24,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretUp, faEquals, faDotCircle } from '@fortawesome/free-solid-svg-icons';
 import { BaseVisualization, ViewDashboardProp } from '../base-component';
 import { VisShell } from '../shell/shell';
-import { ColomboConfig, Colors } from '@vu/colombo-lib';
-import { getImage } from '@vu/utils';
+import { Colors } from 'globalconst';
+import { ImageManager } from '@vu/utils';
+
 /**
  * Displays a single metric BMV
  *
@@ -48,7 +49,7 @@ export class BMVSingleMetric extends BaseVisualization<ViewDashboardProp> {
               <div className="icon-container d-flex">
                 <img
                   src={
-                    metricData.metricIcon ? getImage(metricData.metricIcon) : ColomboConfig.assetsPath + 'Icon_03.svg'
+                    metricData.metricIcon ? ImageManager.getImage(metricData.metricIcon) : '/mobile/assets/Icon_03.svg'
                   }
                   alt={metricData.visualization_name}
                 />

@@ -65,6 +65,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     } as CustomEndTimeRangeAction);
   },
 });
+
+/**
+ * Proptype for this Component
+ */
 type TSProps = {
   isTimeSelectorOpen: boolean;
   time: TimeRangeState;

@@ -23,13 +23,14 @@ import './app-shell.scss';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Header, Sidebar, Footer } from './components';
 import { connect } from 'react-redux';
-
 import { Dispatch } from 'redux';
 import { HeaderToggleScroll } from './config';
 import { AppShellStore } from './store/app-shell-store';
 import { AppUiActionEnum } from './store';
-import { PrivateRoute, AuthorizedRoute } from './route-guards';
-import { AppRoute, AddAppSpecificRoutes } from './routes';
+import { PrivateRoute, AuthorizedRoute, AppRoute } from '@vu/routes';
+import { AddAppSpecificRoutes } from './routes';
+import { ALL_DASHBOARDS_URL, AuthActionTypes, LoginSuccessAction } from '@vu/store';
+import { UserSettingStore } from '@vu/utils';
 
 export interface AppShellProps {
   config: {
@@ -40,10 +41,51 @@ export interface AppShellProps {
   isAuthenticated: boolean;
   isStickyHeaderVisible: boolean;
   setNavbarState: (arg0: boolean) => void;
+  setUserIsLoggedIn: (user: string) => void;
+}
+
+/**
+ *
+ *
+ * @returns {Promise<boolean>}
+ */
+async function isUserLoggedInHack(): Promise<boolean> {
+  try {
+    let ret = undefined;
+    const resp = await fetch(ALL_DASHBOARDS_URL());
+    ret = resp.status === 200;
+    return ret;
+  } catch (error) {
+    return false;
+  }
 }
 
 export class AppShellInternal extends Component<AppShellProps, {}> {
+  componentDidUpdate(prevProps) {
+    // try{
+    //   if ((this.props.location.hash !== prevProps.location.hash) || (this.props.location !== prevProps.location)) {
+    //     try {
+    //       // trying to use new API - https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo
+    //       window.scroll({
+    //         top: 0,
+    //         left: 0,
+    //         behavior: 'smooth',
+    //       });
+    //     } catch (error) {
+    //       // just a fallback for older browsers
+    //       window.scrollTo(0, 0);
+    //     }
+    //   }
+    // }catch{}
+  }
+
+  componentDidCatch() {
+    console.error();
+  }
   componentDidMount() {
+    isUserLoggedInHack().then((a) => {
+      if (a) this.props.setUserIsLoggedIn(UserSettingStore.UserName);
+    });
     window.addEventListener('scroll', this.listenToScroll);
   }
 
@@ -72,16 +114,24 @@ export class AppShellInternal extends Component<AppShellProps, {}> {
         {isAuthenticated ? <Header /> : null}
         {isAuthenticated ? <Sidebar /> : null}
         <Switch>
-          {AddAppSpecificRoutes(this.props.appRoutes).map((module: AppRoute) => {
+          {AddAppSpecificRoutes(this.props.appRoutes).map((module: AppRoute, i: number) => {
             switch (module.type) {
               case 'JSX':
+                // module.component.key = i;
                 return module.component;
               case 'Route':
-                return <Route {...module.routeProps} key={module.name} />;
+                return <Route {...module.routeProps} key={i} />;
               case 'PrivateRoute':
-                return <PrivateRoute component={module.routeProps.component} {...module.routeProps} key={module.name} />;
+                return <PrivateRoute component={module.routeProps.component} {...module.routeProps} key={i} />;
               case 'AuthorizedRoute':
-                return <AuthorizedRoute component={module.routeProps.component} authorizer={module.authorizer} {...module.routeProps} key={module.name} />;
+                return (
+                  <AuthorizedRoute
+                    component={module.routeProps.component}
+                    authorizer={module.authorizer}
+                    {...module.routeProps}
+                    key={i}
+                  />
+                );
             }
           })}
         </Switch>
@@ -99,6 +149,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setNavbarState: (show: boolean) =>
     dispatch({
       type: show ? AppUiActionEnum.STICKY_HEADER_SHOW : AppUiActionEnum.STICKY_HEADER_HIDE,
+    }),
+  setUserIsLoggedIn: (user: string) =>
+    dispatch<LoginSuccessAction>({
+      type: AuthActionTypes.LOGIN_SUCCESS,
+      username: user,
     }),
 });
 export const AppShell = connect(mapStateToProps, mapDispatchToProps)(AppShellInternal);

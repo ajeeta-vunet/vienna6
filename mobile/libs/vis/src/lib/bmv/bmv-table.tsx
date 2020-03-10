@@ -19,12 +19,11 @@
 */
 
 import React from 'react';
-import _ from 'lodash';
-import { BaseVisualization, ViewDashboardProp } from '../base-component';
+import _, { flow, add } from 'lodash';
+import { BaseVisualization, ViewDashboardProp, ExpandedVisualizationUrl } from '../base-component';
 import { VisShell } from '../shell/shell';
 import { BMV_MAX_ROWS } from './config';
 import { Link } from 'react-router-dom';
-import { ExpandedVisualizationUrl } from '@vu/colombo-lib';
 
 /**
  * BMV Table Visualization
@@ -33,20 +32,19 @@ import { ExpandedVisualizationUrl } from '@vu/colombo-lib';
  * @class BMVTable
  * @extends {(BaseVisualization<TableProps & ViewDashboardProp>)}
  */
-export class BMVTable extends BaseVisualization<ViewDashboardProp> {
+export class BMVTable extends BaseVisualization<ViewDashboardProp> { 
   render() {
     if (this.props.data.type !== 'kpi') {
       return null;
     }
-    const metricsArray = Object.keys(this.props.data.metrics).map((key) => ({
-      _displayName: key,
-      ...(this.props.data as any).metrics[key],
-    }));
-    const histKeys = _.uniq(_.flattenDeep(metricsArray.map((a) => a.historicalData || [])).map((a) => a.label));
+    const histKeys = _.uniq(_.flattenDeep(this.props.data.metrics.map((a) => a.historicalData || [])).map((a) => a.label));
     return (
       <VisShell {...this.props}>
         <div className="table-responsive">
-          <table className="table mb-0">
+          {
+            this.props.data.metrics.length===0 ?
+            <h1 className="text-center py-5">No data</h1>:
+            <table className="table mb-0">
             <thead>
               <tr>
                 <th>
@@ -63,10 +61,10 @@ export class BMVTable extends BaseVisualization<ViewDashboardProp> {
               </tr>
             </thead>
             <tbody>
-              {metricsArray.slice(0, BMV_MAX_ROWS).map((v, i) => {
+              {this.props.data.metrics.slice(0, BMV_MAX_ROWS).map((v, i) => {
                 return (
                   <tr key={i}>
-                    <td>{v._displayName}</td>
+                    <td>{v.label}</td>
                     <td style={{ color: v.color ? v.color : '' }}>{v.formattedValue}</td>
                     {histKeys.map((ha, hi) => {
                       const hk = v.historicalData.find((a) => a.label === ha);
@@ -83,7 +81,7 @@ export class BMVTable extends BaseVisualization<ViewDashboardProp> {
                 );
               })}
             </tbody>
-            {metricsArray.length > BMV_MAX_ROWS && !this.props.full ? (
+            {this.props.data.metrics.length > BMV_MAX_ROWS && !this.props.full ? (
               <tfoot>
                 <tr>
                   <td className="text-center text-link" colSpan={100}>
@@ -98,6 +96,7 @@ export class BMVTable extends BaseVisualization<ViewDashboardProp> {
               </tfoot>
             ) : null}
           </table>
+          }
         </div>
       </VisShell>
     );

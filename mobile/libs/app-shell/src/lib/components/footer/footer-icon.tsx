@@ -20,8 +20,7 @@
 
 import { Col } from 'reactstrap';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ColomboConfig } from '@vu/colombo-lib';
+import { NavLink } from 'react-router-dom';
 
 /**
  *
@@ -30,8 +29,8 @@ import { ColomboConfig } from '@vu/colombo-lib';
  */
 export const FooterIcon = (props: { iconName: string; to: string }) => (
   <Col className={'footerIcon ripple ' + props.iconName}>
-    <Link to={props.to}>
-      <img src={ColomboConfig.assetsPath + props.iconName + '.svg'} alt="" />
-    </Link>
+    <NavLink to={props.to} activeClassName="active">
+      <img src={'/mobile/assets/' + props.iconName + '.svg'} alt="" />
+    </NavLink>
   </Col>
 );

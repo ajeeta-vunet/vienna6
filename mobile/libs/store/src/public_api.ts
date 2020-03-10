@@ -20,4 +20,5 @@
 export * from './lib/auth';
 export * from './lib/dashboard';
 export * from './lib/time-range';
+export * from './lib/urls';
 export * from './lib/store';

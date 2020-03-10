@@ -26,7 +26,6 @@ import { Dispatch } from 'redux';
 import { TimeSelector } from './time-selector';
 import { AppUiState, AppUiActionEnum } from '../../store';
 import { AppShellStore } from '../../store/app-shell-store';
-import { ColomboConfig } from '@vu/colombo-lib';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 /** Type for props recieved from Map */
@@ -85,39 +84,34 @@ export const Header = connect(
       undefined
     )}
     <NavbarBrand className="w-100 mb-2" href="/mobile/">
-      <img src={ColomboConfig.assetsPath + 'Logo.svg'} alt="" />
+      <img src='/mobile/assets/Logo.svg' alt="" />
       <span className="brand-name">vuSmartMaps</span>
     </NavbarBrand>
 
     <div className="w-100 mb-3 bottom-bar">
-      <p className="dashboard-title text-white font-weight-bold mb-1">Dashboard</p>
+    <p className="dashboard-title text-white font-weight-bold mb-1">{props.appui.title.heading}</p>
       <div className="d-flex">
         <div className="text-white">
-          {props.dashboard.dashboards &&
-          props.dashboard.current &&
-          props.dashboard.dashboards.findIndex((a) => a.id === props.dashboard.current.id) !== 0 ? (
+          {props.appui.title.displayLeftArrow ? (
             <FontAwesomeIcon icon={faChevronLeft} className="mr-1" />
           ) : null}
           <span className="mr-2">
-            {props.dashboard.current ? props.dashboard.current.id.replace('dashboard:', '') : ''}
+            {props.appui.title.subHeading}
           </span>
-          {props.dashboard.dashboards &&
-          props.dashboard.current &&
-          props.dashboard.dashboards.findIndex((a) => a.id === props.dashboard.current.id) !==
-            props.dashboard.dashboards.length - 1 ? (
+          {props.appui.title.displayRightArrow ? (
             <FontAwesomeIcon icon={faChevronRight} />
           ) : null}
         </div>
         <div className="ml-auto text-white time-selection-container">
           <div onClick={props.toggleTimeselector}>
             <img
-              src={ColomboConfig.assetsPath + 'Time.svg'}
+              src={'/mobile/assets/Time.svg'}
               alt="Time Selector"
               className={'time-icon ' + (props.dashboard.loading ? 'fa-spin' : '')}
             />
             <span className="px-2">{props.time.display}</span>
             <img
-              src={ColomboConfig.assetsPath + (props.appui.isTimeSelectorOpen ? 'Collapse.svg' : 'Expand.svg')}
+              src={'/mobile/assets/' + (props.appui.isTimeSelectorOpen ? 'Collapse.svg' : 'Expand.svg')}
               className="time-arrow"
               alt={props.appui.isTimeSelectorOpen ? 'Collapse' : 'Expand'}
             />

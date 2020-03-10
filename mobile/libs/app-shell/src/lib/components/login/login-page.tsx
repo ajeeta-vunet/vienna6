@@ -21,7 +21,6 @@
 import React from 'react';
 import LoginForm from './login-form';
 import { Row, Col, Container } from 'reactstrap';
-import { ColomboConfig } from '@vu/colombo-lib';
 
 /**
  * Will render the login page
@@ -36,7 +35,7 @@ export const LoginPage = () => (
       <Row className="vu-login mb-5">
         <Col>
           <div className="login-header text-center ">
-            <img className="login_image" src={ColomboConfig.assetsPath + 'vunet_logo.svg'} alt="" />
+            <img className="login_image" src='/mobile/assets/vunet_logo.svg' alt="" />
             <p className="login_wtsl">Welcome to the Smart life with</p>
             <h3 className="login_vsm">vuSmartMaps</h3>
           </div>

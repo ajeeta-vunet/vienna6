@@ -52,15 +52,20 @@ export class VisualizeListingTable extends Component {
     this.pager = new Pager(this.items.length, 10, 1);
 
     this.debouncedFetch = _.debounce(filter => {
+      // here state.filter is in sync with filter
       this.props.fetchItems(filter)
         .then(items => {
-          this.setState({
-            isFetchingItems: false,
-            selectedRowIds: [],
-            filter,
-          });
-          this.items = items;
-          this.calculateItemsOnPage();
+          // here state.filter is not in sync with filter
+          // But we know this will be called atleast once, so we'll ignore other case
+          if (this.state.filter === filter) {
+            this.setState({
+              isFetchingItems: false,
+              selectedRowIds: [],
+              // No need to update filter here, this will handle the characters were missed
+            });
+            this.items = items;
+            this.calculateItemsOnPage();
+          }
         });
     }, 200);
   }

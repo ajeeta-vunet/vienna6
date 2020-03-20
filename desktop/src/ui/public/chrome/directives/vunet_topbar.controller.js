@@ -344,6 +344,9 @@ class TopbarCtrl {
       localStorage.setItem('lastActiveTime', lastActiveTime);
     };
 
+    // This function is called when autorefresh is enabled
+    $scope.$on('courier:searchRefresh', $scope.updateLastActivityTime);
+
     // When user performs any action check for idle timeout
     // and update the user's last activity time.
     $window.addEventListener('mousemove', function () {

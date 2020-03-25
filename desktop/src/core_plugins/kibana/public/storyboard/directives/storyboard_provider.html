@@ -1,0 +1,22 @@
+<vunet-tab
+  class="vunetTabs"
+  tabs="dashBoards"
+  landing-tab="landingTab"
+  switch-tab="onTabChange"
+  remove-tab="onTabRemove"
+  delete="showDelete">
+</vunet-tab>
+<div ng-show="dashboardExists">
+  <dashboard-viewport-provider
+    get-container-api="getContainerApi"
+    get-embeddable-factory="getEmbeddableFactory">
+  </dashboard-viewport-provider>
+</div>
+<div
+    ng-show="!dashboardExists"
+    class="text-center start-screen"
+  >
+    <h3 class="kuiTitle kuiVerticalRhythm" style="color:red ">
+      This storyboard is no longer exists. Please recreate it or remove from this storyboard
+    </h3>
+  </div>

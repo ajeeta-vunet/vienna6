@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export function PanelHeader({ title, actions, isViewOnlyMode, hidePanelTitles }) {
+
   if (isViewOnlyMode && (!title || hidePanelTitles)) {
     return (
       <div className="panel-heading-floater">

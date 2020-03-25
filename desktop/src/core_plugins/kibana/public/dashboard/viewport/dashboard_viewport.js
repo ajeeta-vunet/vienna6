@@ -13,7 +13,9 @@ export function DashboardViewport({
   useMargins,
   isFullScreenMode,
   onExitFullScreenMode,
+  objectType,
 }) {
+
   return (
     <div
       data-shared-items-count={panelCount}
@@ -27,6 +29,7 @@ export function DashboardViewport({
         getEmbeddableFactory={getEmbeddableFactory}
         getContainerApi={getContainerApi}
         maximizedPanelId={maximizedPanelId}
+        objectType={objectType}
       />
     </div>
   );
@@ -40,4 +43,5 @@ DashboardViewport.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   useMargins: PropTypes.bool.isRequired,
+  objectType: PropTypes.string,
 };

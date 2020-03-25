@@ -108,14 +108,12 @@
     </div> -->
     <div ng-if="id==='storyboards'" class="">
       <vu-block-storyboards>
-        <div
-          class="storyboards-container"
-          data-test-subj="storyboardsLandingPage">
-          <vunet-data-table
-            fetch-items="fetchItems"
-            meta-item="storyboardsMeta">
-          </vunet-data-table>
-        </div>
+        <storyboard-provider
+          dash-boards="dashboards"
+          landing-tab="landingTab"
+          get-container-api="getContainerApi"
+          get-embeddable-factory="getEmbeddableFactory">
+        </storyboard-provider>
       </vu-block-storyboards>
     </div>
     <div ng-if="id==='golden_signals'" class="">

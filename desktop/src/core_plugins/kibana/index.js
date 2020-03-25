@@ -162,6 +162,20 @@ export default function (kibana) {
         icon: 'plugins/kibana/assets/event.svg',
         group: 'Insights'
       }, {
+        id: 'kibana:storyboard',
+        title: 'Insights',
+        order: -1008,
+        url: `${kbnBaseUrl}#/storyboards`,
+        // The subUrlBase is the common substring of all urls for this app. If not given, it defaults to the url
+        // above. This app has to use a different subUrlBase, in addition to the url above, because "#/storyboard"
+        // routes to a page that creates a new storyboard. When we introduced a landing page, we needed to change
+        // the url above in order to preserve the original url for BWC. The subUrlBase helps the Chrome api nav
+        // to determine what url to use for the app link.
+        subUrlBase: `${kbnBaseUrl}#/storyboard`,
+        description: 'compose dashboards for your infrastructure',
+        icon: 'plugins/kibana/assets/dashboard.svg',
+        group: 'Insights'
+      }, {
         id: 'kibana:dashboard',
         title: 'Insights',
         order: -1007,

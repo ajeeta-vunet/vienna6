@@ -1,16 +1,16 @@
-import { SavedObjectRegistryProvider } from 'ui/saved_objects/saved_object_registry';
+import { StoryBoardConstants, createStoryboardEditUrl } from '../storyboard_constants';
 import 'ui/pager_control';
 import 'ui/pager';
 import chrome from 'ui/chrome';
-import { DashboardConstants, createDashboardEditUrl } from '../dashboard_constants';
 import { SortableProperties } from 'ui_framework/services';
 import { ConfirmationButtonTypes } from 'ui/modals';
-import { deleteDash } from '../dashboard_category';
 import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
 import { DocTitleProvider } from 'ui/doc_title';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+import {  logUserOperationForDeleteMultipleObjects } from 'plugins/kibana/log_user_operation';
+const Promise = require('bluebird');
 
-export function DashboardListingController($injector, $scope, $location, savedDashboards, savedVisualizations, $http) {
+export function StoryboardListingController($injector, $scope, $location, savedStoryboards, savedVisualizations, $http) {
   const $filter = $injector.get('$filter');
   const confirmModal = $injector.get('confirmModal');
   const Notifier = $injector.get('Notifier');
@@ -18,19 +18,17 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   const Private = $injector.get('Private');
   const timefilter = $injector.get('timefilter');
   const config = $injector.get('config');
-  const dashboardConfig = $injector.get('dashboardConfig');
+  const storyboardConfig = $injector.get('storyboardConfig');
 
   timefilter.enabled = false;
 
   // Display doc title as 'Story Boards' always
   const docTitle = Private(DocTitleProvider);
-  docTitle.change(VunetSidebarConstants.DASHBOARDS);
+  docTitle.change(VunetSidebarConstants.STORYBOARDS);
 
   const limitTo = $filter('limitTo');
-  // TODO: Extract this into an external service.
-  const services = Private(SavedObjectRegistryProvider).byLoaderPropertiesName;
-  const dashboardService = services.dashboards;
-  const notify = new Notifier({ location: 'Dashboard' });
+  const storyboardService = savedStoryboards;
+  const notify = new Notifier({ location: 'Storyboard' });
 
   let selectedItems = [];
   const sortableProperties = new SortableProperties([
@@ -56,7 +54,7 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   const fetchItems = () => {
     this.isFetchingItems = true;
 
-    dashboardService.find(this.filter, config.get('savedObjects:listingLimit'))
+    storyboardService.find(this.filter, config.get('savedObjects:listingLimit'))
       .then(result => {
         this.isFetchingItems = false;
         this.items = result.hits;
@@ -84,12 +82,9 @@ export function DashboardListingController($injector, $scope, $location, savedDa
 
   // Hide write controls if modify permission is not allowed for this user
   if (!chrome.isModifyAllowed()) {
-    dashboardConfig.turnHideWriteControlsOn();
+    storyboardConfig.turnHideWriteControlsOn();
   }
-  else {
-    dashboardConfig.turnHideWriteControlsOff();
-  }
-  this.hideWriteControls = dashboardConfig.getHideWriteControls();
+  this.hideWriteControls = storyboardConfig.getHideWriteControls();
 
   $scope.$watch(() => this.filter, () => {
     deselectAll();
@@ -141,11 +136,23 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   this.deleteSelectedItems = function deleteSelectedItems() {
     const doDelete = () => {
       const selectedIds = selectedItems.map(item => item.id);
-      deleteDash(Private, selectedIds, savedVisualizations, savedDashboards, dashboardService, fetchItems, deselectAll, notify, $http);
+      Promise.map(selectedIds, function (id) {
+        return savedStoryboards.get(id).then(function () {
+          return storyboardService.delete(id).then(fetchItems)
+            .then(() => {
+              deselectAll();
+              logUserOperationForDeleteMultipleObjects($http, selectedIds, 'storyboard');
+            })
+            .catch(error => notify.error(error));
+        })
+          .catch(function () {
+            notify.error('Failed in delete storyboard');
+          });
+      });
     };
 
     confirmModal(
-      'Are you sure you want to delete the selected dashboards? This action is irreversible!',
+      'Are you sure you want to delete the selected storyboards? This action is irreversible!',
       {
         title: 'Warning',
         confirmButtonText: 'Delete',
@@ -167,10 +174,11 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   };
 
   this.getUrlForItem = function getUrlForItem(item) {
-    return `#${createDashboardEditUrl(item.id)}`;
+    return `#${createStoryboardEditUrl(item.id)}`;
   };
 
-  this.getCreateDashboardHref = function getCreateDashboardHref() {
-    return `#${DashboardConstants.CREATE_NEW_DASHBOARD_URL}`;
+
+  this.getCreateStoryboardHref = function getCreateStoryboardHref() {
+    return `#${StoryBoardConstants.CREATE_NEW_STORYBOARD_URL}`;
   };
 }

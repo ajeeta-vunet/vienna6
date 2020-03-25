@@ -89,11 +89,17 @@ export const getHidePanelTitles = dashboard => dashboard.view.hidePanelTitles;
  * @return {string|undefined}
  */
 export const getMaximizedPanelId = dashboard => dashboard.view.maximizedPanelId;
-
 /**
  * @param dashboard {DashboardState}
  * @return {MetadataState}
  */
+
+export const getObjectType = dashboard => dashboard.view.objectType;
+/**
+ * @param dashboard {MetadataState}
+ * @return {string}
+ */
+
 export const getMetadata = dashboard => dashboard.metadata;
 /**
  * @param dashboard {MetadataState}
@@ -104,4 +110,5 @@ export const getTitle = dashboard => dashboard.metadata.title;
  * @param dashboard {MetadataState}
  * @return {string}
  */
+
 export const getDescription = dashboard => dashboard.metadata.description;

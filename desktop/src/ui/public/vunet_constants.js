@@ -1,3 +1,4 @@
 export const vunetConstants = {
-  ALERT_BODY_CONTAINER: 10
+  ALERT_BODY_CONTAINER: 10,
+  STORYBOARD_BODY_CONTAINER: 45
 };

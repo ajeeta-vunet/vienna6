@@ -74,12 +74,14 @@ export function KbnTopNavControllerProvider($compile) {
       }
       menuItem.run(menuItem, this);
     }
+
     // This function is used to set the height of the conatiner with respect to changes in the kbn-top-nav
     checkHeightDynamically() {
       setTimeout(function () {
         const kuiLocalNavHeight = $('.kuiLocalNav').height();
         const topbarHeight = $('.topbar-container').height();
         const filterHeight = $('.filter-row-in-search').height();
+        const storyboardTabHeight = $('.kuiTabWrapper').height();
         const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
         const heightToSetOnFullscreenMode = $(window).height() - kuiLocalNavHeight;
         const dashboardTopMargin = kuiLocalNavHeight + filterHeight;
@@ -90,15 +92,19 @@ export function KbnTopNavControllerProvider($compile) {
           $('.menubar-fixed-top-containing-filterbar').height(heightToSetOnFullscreenMode - filterHeight);
           $('.event-container').height(heightToSetOnFullscreenMode);
           $('.dashboard-margin-top').css('margin-top', dashboardTopMargin);
+          $('.vunet-storyboards-container').height(heightToSetOnFullscreenMode -
+            filterHeight - storyboardTabHeight - vunetConstants.STORYBOARD_BODY_CONTAINER);
         }
         else {
           $('.alert-body-container').height(heightToSet - vunetConstants.ALERT_BODY_CONTAINER);
           $('.report-body-container').height(heightToSet);
           $('.menubar-fixed-top-containing-filterbar').height(heightToSet - filterHeight);
           $('.event-container').height(heightToSet);
-          $('.dashboard-margin-top').css('margin-top', dashboardTopMargin);
+          $('.dashboard-margin-top').height(heightToSetOnFullscreenMode);
+          $('.vunet-storyboards-container').height(heightToSet -
+            filterHeight - storyboardTabHeight - vunetConstants.STORYBOARD_BODY_CONTAINER);
         }
-      }, 10);
+      }, 100);
     }
     // apply the defaults to individual options
     _applyOptDefault(opt = {}) {

@@ -35,7 +35,8 @@ function ResponsiveGrid({
   children,
   maximizedPanelId,
   useMargins,
-  isHomeDashboard
+  isHomeDashboard,
+  objectType
 }) {
   // This is to prevent a bug where view mode changes when the panel is expanded.  View mode changes will trigger
   // the grid to re-render, but when a panel is expanded, the size will be 0. Minimizing the panel won't cause the
@@ -63,8 +64,8 @@ function ResponsiveGrid({
     <ReactGridLayout
       width={lastValidGridSize}
       className={classes}
-      isDraggable={true}
-      isResizable={true}
+      isDraggable={objectType === 'dashboard' ? true : false}
+      isResizable={objectType === 'dashboard' ? true : false}
       margin={[MARGINS, MARGINS]}
       cols={DASHBOARD_GRID_COLUMN_COUNT}
       rowHeight={10}
@@ -164,8 +165,10 @@ export class DashboardGrid extends React.Component {
     const {
       panels,
       getContainerApi,
-      maximizedPanelId
+      maximizedPanelId,
+      objectType
     } = this.props;
+
 
     // Part of our unofficial API - need to render in a consistent order for plugins.
     const panelsInOrder = Object.keys(panels).map(key => panels[key]);
@@ -192,6 +195,7 @@ export class DashboardGrid extends React.Component {
         >
           <DashboardPanel
             panelId={panel.panelIndex}
+            objectType={objectType}
             getContainerApi={getContainerApi}
             embeddableFactory={this.embeddableFactoryMap[panel.type]}
             onPanelFocused={this.onPanelFocused}
@@ -203,7 +207,7 @@ export class DashboardGrid extends React.Component {
   }
 
   render() {
-    const { dashboardViewMode, maximizedPanelId, useMargins,  isHomeDashboard } = this.props;
+    const { dashboardViewMode, maximizedPanelId, useMargins,  isHomeDashboard, objectType } = this.props;
     const isViewMode = dashboardViewMode === DashboardViewMode.VIEW;
     return (
       <ResponsiveSizedGrid
@@ -213,6 +217,7 @@ export class DashboardGrid extends React.Component {
         maximizedPanelId={maximizedPanelId}
         useMargins={useMargins}
         isHomeDashboard={isHomeDashboard}
+        objectType={objectType}
       >
         {this.renderDOM()}
       </ResponsiveSizedGrid>
@@ -228,5 +233,6 @@ DashboardGrid.propTypes = {
   onPanelsUpdated: PropTypes.func.isRequired,
   maximizedPanelId: PropTypes.string,
   useMargins: PropTypes.bool.isRequired,
-  isHomeDashboard: PropTypes.bool.isRequired
+  isHomeDashboard: PropTypes.bool.isRequired,
+  objectType: PropTypes.string.isRequired,
 };

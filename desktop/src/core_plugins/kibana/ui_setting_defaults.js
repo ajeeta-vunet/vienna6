@@ -271,6 +271,10 @@ export function getUiSettingDefaults() {
 }`,
       description: 'The timefilter\'s default refresh interval'
     },
+    'storyboard:defaultDarkTheme': {
+      value: false,
+      description: 'New storyboards use dark theme by default'
+    },
     'dashboard:defaultDarkTheme': {
       value: false,
       description: 'New dashboards use dark theme by default'

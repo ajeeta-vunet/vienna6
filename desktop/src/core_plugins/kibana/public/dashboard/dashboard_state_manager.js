@@ -14,6 +14,7 @@ import {
   updateTitle,
   updateDescription,
   updateHidePanelTitles,
+  setObjectType,
 } from './actions';
 import { stateMonitorFactory } from 'ui/state_management/state_monitor_factory';
 import { createPanelState, getPersistedStateId } from './panel';
@@ -60,13 +61,16 @@ export class DashboardStateManager {
    * @param AppState {AppState} The AppState class to use when instantiating a new AppState instance.
    * @param hideWriteControls {boolean} true if write controls should be hidden.
    */
-  constructor(savedDashboard, AppState, hideWriteControls) {
+  constructor(savedDashboard, AppState, hideWriteControls, objectType) {
+
     this.savedDashboard = savedDashboard;
     this.hideWriteControls = hideWriteControls;
 
     this.stateDefaults = getAppStateDefaults(this.savedDashboard, this.hideWriteControls);
 
     this.appState = new AppState(this.stateDefaults);
+    this.appState.panels = this.stateDefaults.panels;
+    this.saveState();
     this.uiState = this.appState.makeStateful('uiState');
     this.isDirty = false;
 
@@ -91,6 +95,7 @@ export class DashboardStateManager {
     store.dispatch(updateIsFullScreenMode(this.getFullScreenMode()));
     store.dispatch(updateTitle(this.getTitle()));
     store.dispatch(updateDescription(this.getDescription()));
+    store.dispatch(setObjectType(objectType));
 
     this.changeListeners = [];
 
@@ -175,7 +180,7 @@ export class DashboardStateManager {
     }
 
     this.changeListeners.forEach(listener => listener({ dirty }));
-    this.saveState();
+    //this.saveState();
   }
 
   getFullScreenMode() {

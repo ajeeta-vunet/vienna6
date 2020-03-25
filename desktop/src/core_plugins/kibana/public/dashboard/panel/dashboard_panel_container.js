@@ -48,6 +48,7 @@ export const DashboardPanelContainer = connect(
 
 DashboardPanelContainer.propTypes = {
   panelId: PropTypes.string.isRequired,
+  objectType: PropTypes.string,
   /**
    * @type {EmbeddableFactory}
    */

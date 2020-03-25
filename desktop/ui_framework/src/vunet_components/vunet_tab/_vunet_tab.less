@@ -1,4 +1,28 @@
 @import '~ui/styles/vunet_variable_theme.less';
+.vunetTabs{
+  .kuiTabs{
+    border-bottom: none;
+  }
+  .kuiTabWrapper{
+    height: 6rem;
+  }
+}
+.vunetTabButtons {
+  height: 6rem;
+  font-family:@roboto-medium!important;
+  border : 0px!important;
+  color : @accent_color!important;
+}
+.vunetTabButtons.kuiTab-isSelected {
+  border-bottom: .4rem solid @accent_color!important;
+  color:@accent_color!important;
+}
+
+.close-tab {
+  padding:0.8rem 0;
+  border: none;
+  background-color: transparent;
+}
 
 .vunetTabButtons {
   font-family:@roboto-medium!important;

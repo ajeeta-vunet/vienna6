@@ -1,6 +1,6 @@
 <div
   ng-switch="mode"
-  ng-init="mode = 'visualization'"
+  ng-init="mode = (opts.objectType === 'dashboard' ?  'visualization' : 'dashboard')"
 >
   <h2 class="kuiLocalDropdownTitle">
     Add Panels
@@ -8,11 +8,23 @@
 
   <div class="kuiTabs">
     <button
+      ng-class="{ 'kuiTab-isSelected': mode == 'dashboard'}"
+      class="kuiTab"
+      ng-click="mode='dashboard'"
+      aria-label="List dashboards"
+      data-test-subj="addDashboardTab"
+      ng-show = "opts.objectType === 'storyboard'"
+    >
+      Dashboard
+    </button>
+
+    <button
       ng-class="{ 'kuiTab-isSelected': mode == 'visualization'}"
       class="kuiTab"
       ng-click="mode='visualization'"
       aria-label="List visualizations"
       data-test-subj="addVisualizationTab"
+      ng-show = "opts.objectType === 'dashboard'"
     >
       Visualization
     </button>
@@ -23,9 +35,19 @@
       ng-click="mode='search'"
       aria-label="List saved searches"
       data-test-subj="addSavedSearchTab"
+      ng-show = "opts.objectType === 'dashboard'"
     >
       Saved Search
     </button>
+  </div>
+
+  <div class="list-group-item list-group-item--noBorder" ng-switch-when="dashboard">
+    <saved-object-finder
+      use-local-management="true"
+      type="dashboards"
+      on-add-new="opts.addNewDash"
+      on-choose="opts.addDash">
+    </saved-object-finder>
   </div>
 
   <div class="list-group-item list-group-item--noBorder" ng-switch-when="visualization">

@@ -65,8 +65,7 @@ VisTypesRegistryProvider.register(function RegionMapProvider(Private, regionmaps
           name: 'metric',
           title: 'Value',
           min: 1,
-          max: 1,
-          aggFilter: ['count', 'avg', 'sum', 'min', 'max', 'cardinality', 'top_hits',
+          aggFilter: ['count', 'avg', 'expression', 'sum', 'min', 'max', 'cardinality', 'top_hits',
             'sum_bucket', 'min_bucket', 'max_bucket', 'avg_bucket'],
           defaults: [
             { schema: 'metric', type: 'count' }
@@ -76,7 +75,7 @@ VisTypesRegistryProvider.register(function RegionMapProvider(Private, regionmaps
           group: 'buckets',
           name: 'segment',
           icon: 'fa fa-globe',
-          title: 'shape field',
+          title: 'shape fields',
           min: 1,
           max: 1,
           aggFilter: ['terms']

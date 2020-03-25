@@ -57,7 +57,7 @@
       ng-model-option="{allowInvalid: true}"
       ng-maxlength="100"
       maxlength="101"
-      placeholder="Dashboard description"
+      placeholder="{{opts.displayName}} description"
     >
   </div>
   <p class="error-highlight" ng-show="saveDashboardForm.saveDashboardDescription.$error.maxlength || saveDashboard.saveDashboardDescription.$invalid" aria-hidden="true">
@@ -80,7 +80,7 @@
     </label>
 
     <div class="kuiLocalDropdownFormNote kuiVerticalRhythmSmall">
-      This changes the time filter to the currently selected time each time this dashboard is loaded.
+      This changes the time filter to the currently selected time each time this {{opts.displayName}} is loaded.
     </div>
   </div>
 
@@ -89,9 +89,7 @@
     allowed-roles="opts.allowedRoles"
     owner="opts.owner">
   </rbac-user-role>
-
-
-  <div>
+  <div ng-if="opts.objectType === 'dashboard'">
     <div class="form-group">
       <p>Category</p>
       <div class="row">
@@ -111,9 +109,9 @@
   <button
     data-test-subj="confirmSaveDashboardButton"
     type="submit"
-    ng-disabled="!(model.title && opts.category.title) && saveDashboardForm.$invalid"
+    ng-disabled="!(model.title && opts.objectType === 'dashboard' ? opts.category.title : true)"
     class="kuiButton kuiButton--primary kuiVerticalRhythm"
-    aria-label="Save dashboard"
+    aria-label="Save {{opts.displayName}}"
   >
     Save
   </button>

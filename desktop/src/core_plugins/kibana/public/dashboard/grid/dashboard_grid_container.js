@@ -6,13 +6,15 @@ import {
   getViewMode,
   getUseMargins,
   getTitle,
+  getObjectType,
 } from '../selectors';
 
 const mapStateToProps = ({ dashboard }) => ({
   panels: getPanels(dashboard),
   dashboardViewMode: getViewMode(dashboard),
   useMargins: getUseMargins(dashboard),
-  isHomeDashboard: (getTitle(dashboard)  === 'Home' ? true : false)
+  isHomeDashboard: (getTitle(dashboard)  === 'Home' ? true : false),
+  objectType: getObjectType(dashboard),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -50,10 +50,10 @@ class sidebarController {
           pageurl: 'URL',
           active: false,
           subgroups: [
-            { id: VunetSidebarConstants.STORY_BOARDS,
+            { id: VunetSidebarConstants.STORYBOARDS,
               description: ' ',
               icon: '',
-              pageurl: baseUrl + '/dashboards',
+              pageurl: baseUrl + '/storyboards',
               isModifyAllowed: true,
               active: false
             },
@@ -91,6 +91,13 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/visualize',
+              isModifyAllowed: true,
+              active: false
+            },
+            { id: VunetSidebarConstants.DASHBOARDS,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + '/dashboards',
               isModifyAllowed: true,
               active: false
             },
@@ -335,7 +342,7 @@ class sidebarController {
     $scope.highlightActiveSidebar = function () {
       const currentRoute = window.location.href;
 
-      if (currentRoute.includes('/dashboard')) {
+      if (currentRoute.includes('/storyboard')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[0].subgroups[0].active = true;
@@ -355,22 +362,26 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[0].active = true;
-      } else if (currentRoute.includes('/alert')) {
+      } else if (currentRoute.includes('/dashboard')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[1].active = true;
-      } else if (currentRoute.includes('/anomaly')) {
+      } else if (currentRoute.includes('/alert')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[2].active = true;
-      } else if (currentRoute.includes('/management')) {
+      } else if (currentRoute.includes('/anomaly')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[3].active = true;
-      } else if (currentRoute.includes('network_configuartion')) {
+      } else if (currentRoute.includes('/management')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[4].active = true;
+      } else if (currentRoute.includes('network_configuartion')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[1].subgroups[5].active = true;
       } else if (currentRoute.includes('/berlin/data_source/vuBlock')) {
         $scope.clearActive();
         $scope.clearParentActive();
@@ -395,18 +406,14 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[3].subgroups[2].active = true;
-      } else if (currentRoute.includes('/berlin/definition')) {
-        $scope.clearActive();
-        $scope.clearParentActive();
-        $scope.data[4].subgroups[0].active = true;
-      } else if (currentRoute.includes('/berlin/image_manager')) {
-        $scope.clearActive();
-        $scope.clearParentActive();
-        $scope.data[4].subgroups[1].active = true;
       } else if (currentRoute.includes('/berlin/preferences')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[4].subgroups[2].active = true;
+      } else if (currentRoute.includes('/berlin/definition')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[4].subgroups[0].active = true;
       } else if (currentRoute.includes('/berlin/user')) {
         $scope.clearActive();
         $scope.clearParentActive();
@@ -415,6 +422,10 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[4].subgroups[4].active = true;
+      } else if (currentRoute.includes('/berlin/image_manager')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[4].subgroups[1].active = true;
       }
     };
 

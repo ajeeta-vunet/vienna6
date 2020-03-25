@@ -6,6 +6,7 @@ import {
   updateUseMargins,
   updateHidePanelTitles,
   updateIsFullScreenMode,
+  setObjectType,
 } from '../actions';
 
 import { DashboardViewMode } from '../dashboard_view_mode';
@@ -35,9 +36,16 @@ export const view = handleActions({
     ...state,
     isFullScreenMode: payload
   }),
+
+  [setObjectType]: (state, { payload }) => ({
+    ...state,
+    objectType: payload
+  }),
+
 }, {
   isFullScreenMode: false,
   viewMode: DashboardViewMode.VIEW,
+  objectType: DashboardViewMode.TYPE,
   maximizedPanelId: undefined,
   useMargins: true,
   hidePanelTitles: false,

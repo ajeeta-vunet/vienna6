@@ -1,0 +1,76 @@
+<storyboard-app
+  class="app-container dashboard-container storyboard-app-container"
+  ng-class="{'dashboard-container-with-margins': model.useMargins}"
+>
+<!-- Local nav. -->
+<kbn-top-nav name="Storyboards" config="topNavMenu">
+  <!-- Transcluded elements. -->
+  <div data-transclude-slots>
+    <!-- Title. -->
+    <div
+      data-transclude-slot="topLeftCorner"
+      class="kuiLocalBreadcrumbs"
+      data-test-subj="breadcrumbs"
+      role="heading"
+      aria-level="1"
+      >
+      <div class="kuiLocalBreadcrumb">
+        <a class="kuiLocalBreadcrumb__link" href="{{landingPageUrl()}}">Storyboard</a>
+        </div>
+        <div class="kuiLocalBreadcrumb  vunet-word-wrap">
+        {{ getDashTitle() }}
+      </div>
+    </div>
+    <!-- Search. -->
+    <div class="fullWidth" data-transclude-slot="bottomRow">
+      <query-bar
+        query="model.query"
+        app-name="'dashboard'"
+        on-submit="updateQueryAndFetch($query)"
+      >
+      </query-bar>
+    </div>
+  </div>
+</kbn-top-nav>
+<!-- Filters. -->
+<div>
+  <filter-bar
+    ng-show="showFilterBar()"
+    state="state"
+    index-patterns="indexPatterns"
+    ng-if="model.query.language === 'lucene'"
+  ></filter-bar>
+  <div
+    ng-show="getShouldShowEditHelp() && dashboards.length === 0"
+    class="text-center start-screen"
+  >
+    <h2 class="kuiTitle kuiVerticalRhythm">
+      This storyboard is empty. Let&rsquo;s fill it up!
+    </h2>
+
+    <p class="kuiText kuiVerticalRhythm">
+      Click the <a kbn-accessible-click class="kuiButton kuiButton--primary kuiButton--small" ng-click="showAddPanel()" aria-label="Add dashboard">Add</a> button in the menu bar above to add a dashboard to the storyboard. <br/>If you haven't set up any dashboards yet, <a class="kuiLink" href="#/dashboard">visit the dashboard app</a> to create your first dashboard.
+    </p>
+  </div>
+
+  <div ng-show="getShouldShowViewHelp() && dashboards.length === 0" class="text-center start-screen">
+    <h2 class="kuiTitle kuiVerticalRhythm">
+      This storyboard is empty. Let&rsquo;s fill it up!
+    </h2>
+
+    <p class="kuiText kuiVerticalRhythm">
+      Click the <a kbn-accessible-click class="kuiButton kuiButton--primary kuiButton--small" ng-click="enterEditMode()">Edit</a> button in the menu bar above to start working on your new storyboard.
+    </p>
+  </div>
+</div>
+<div ng-if="dashboards.length > 0">
+  <storyboard-provider
+    dash-boards="dashboards"
+    landing-tab="landingTab"
+    show-delete = "showDelete";
+    get-container-api="getContainerApi"
+    get-embeddable-factory="getEmbeddableFactory">
+    >
+  </storyboard-provider>
+</div>
+</storyboard>

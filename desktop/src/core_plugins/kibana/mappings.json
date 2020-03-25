@@ -322,6 +322,66 @@
       }
     }
   },
+  "storyboard": {
+    "properties": {
+      "description": {
+        "type": "text"
+      },
+      "hits": {
+        "type": "integer"
+      },
+      "kibanaSavedObjectMeta": {
+        "properties": {
+          "searchSourceJSON": {
+            "type": "text"
+          }
+        }
+      },
+      "allowedRolesJSON": {
+        "type": "text"
+      },
+      "optionsJSON": {
+        "type": "text"
+      },
+      "dashboardsJSON": {
+        "type": "text"
+      },
+      "refreshInterval": {
+        "properties": {
+          "display": {
+            "type": "keyword"
+          },
+          "pause": {
+            "type": "boolean"
+          },
+          "section": {
+            "type": "integer"
+          },
+          "value": {
+            "type": "integer"
+          }
+        }
+      },
+      "timeFrom": {
+        "type": "keyword"
+      },
+      "timeRestore": {
+        "type": "boolean"
+      },
+      "timeTo": {
+        "type": "keyword"
+      },
+      "title": {
+        "type": "text"
+      },
+      "uiStateJSON": {
+        "type": "text"
+      },
+      "version": {
+        "type": "integer"
+      }
+    }
+  },
   "dashboard": {
     "properties": {
       "description": {

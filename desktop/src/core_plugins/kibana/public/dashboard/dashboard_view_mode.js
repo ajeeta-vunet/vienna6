@@ -9,5 +9,11 @@
  */
 export const DashboardViewMode = {
   EDIT: 'edit',
-  VIEW: 'view'
+  VIEW: 'view',
+  TYPE: 'dashboard'
+};
+export const TabbedDashboardViewMode = {
+  EDIT: 'edit',
+  VIEW: 'view',
+  TYPE: 'storyboard'
 };

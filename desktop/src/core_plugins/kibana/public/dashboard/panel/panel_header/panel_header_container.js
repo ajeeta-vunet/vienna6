@@ -21,6 +21,7 @@ import {
   getFullScreenMode,
   getViewMode,
   getHidePanelTitles,
+  getObjectType,
 } from '../../selectors';
 
 const mapStateToProps = ({ dashboard }, { panelId }) => {
@@ -37,7 +38,8 @@ const mapStateToProps = ({ dashboard }, { panelId }) => {
     title: panel.title === undefined ? embeddableTitle : panel.title,
     isExpanded: getMaximizedPanelId(dashboard) === panelId,
     isViewOnlyMode: getFullScreenMode(dashboard) || getViewMode(dashboard) === DashboardViewMode.VIEW,
-    visType: visState.type,
+    visType: visState && visState.type,
+    objectType: getObjectType(dashboard),
     //don't show header if vis type is business metric
     hidePanelTitles: getHidePanelTitles(dashboard) || (visState && visState.type &&
       (visState && visState.type === 'business_metric') && hideBmvTitle(visState)) ||
@@ -53,26 +55,30 @@ const mapDispatchToProps = (dispatch, { panelId }) => ({
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const { isExpanded, isViewOnlyMode, title, hidePanelTitles } = stateProps;
+  const { isExpanded, isViewOnlyMode, title, objectType, hidePanelTitles } = stateProps;
   const { onMaximizePanel, onMinimizePanel } = dispatchProps;
   const { panelId, embeddableFactory } = ownProps;
   let actions;
-
-  if (isViewOnlyMode) {
-    actions = isExpanded ?
-      <PanelMinimizeIcon onMinimize={onMinimizePanel} /> :
-      <PanelMaximizeIcon onMaximize={onMaximizePanel} />;
-  } else {
-    actions = (
-      // <PanelOptionsMenuContainer
-      //   panelId={panelId}
-      //   embeddableFactory={embeddableFactory}
-      // />
-      <PanelEditOptionsContainer
-        panelId={panelId}
-        embeddableFactory={embeddableFactory}
-      />
-    );
+  // Edit, Delete, manimize and maximize buttons are applicable only for dashboard and
+  // not storyboard.
+  if (objectType !== 'storyboard')
+  {
+    if (isViewOnlyMode) {
+      actions = isExpanded ?
+        <PanelMinimizeIcon onMinimize={onMinimizePanel} /> :
+        <PanelMaximizeIcon onMaximize={onMaximizePanel} />;
+    } else {
+      actions = (
+        // <PanelOptionsMenuContainer
+        //   panelId={panelId}
+        //   embeddableFactory={embeddableFactory}
+        // />
+        <PanelEditOptionsContainer
+          panelId={panelId}
+          embeddableFactory={embeddableFactory}
+        />
+      );
+    }
   }
 
   return {

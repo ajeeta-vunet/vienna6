@@ -1,4 +1,4 @@
-import { DashboardViewMode } from '../dashboard_view_mode';
+import { DashboardViewMode, TabbedDashboardViewMode } from '../dashboard_view_mode';
 import { TopNavIds } from './top_nav_ids';
 
 /**
@@ -44,6 +44,34 @@ export function getTopNavConfig(dashboardMode, actions, hideWriteControls) {
   }
 }
 
+export function getTabbedDashboardConfig(dashboardMode, actions, hideWriteControls) {
+  switch (dashboardMode) {
+    case TabbedDashboardViewMode.VIEW:
+      return (
+        hideWriteControls ?
+          [
+            // getFullScreenConfig(actions[TopNavIds.FULL_SCREEN])
+            getRefreshConfig(actions[TopNavIds.REFRESH]), //'Refresh button was needed for view users also.
+          ]
+          : [
+            getHomeConfig(actions[TopNavIds.HOME]),
+            getRefreshConfig(actions[TopNavIds.REFRESH]),
+            getEditConfig(actions[TopNavIds.ENTER_EDIT_MODE]),
+          ]
+      );
+    case TabbedDashboardViewMode.EDIT:
+      return [
+        getHomeConfig(actions[TopNavIds.HOME]),
+        getRefreshConfig(actions[TopNavIds.REFRESH]),
+        getSaveConfig(),
+        getViewConfig(actions[TopNavIds.EXIT_EDIT_MODE]),
+        getAddTabbedDashboardConfig(),
+        getOptionsConfig(),
+      ];
+    default:
+      return [];
+  }
+}
 // function getFullScreenConfig(action) {
 //   return {
 //     key: 'full screen',
@@ -109,6 +137,18 @@ function getAddConfig() {
     key: TopNavIds.ADD,
     description: 'Add a panel to the dashboard',
     testId: 'dashboardAddPanelButton',
+    template: require('plugins/kibana/dashboard/top_nav/add_panel.html')
+  };
+}
+
+/**
+ * @returns {kbnTopNavConfig}
+ */
+function getAddTabbedDashboardConfig() {
+  return {
+    key: TopNavIds.ADD,
+    description: 'Add a dashboard to the storyboard',
+    testId: 'StoryboardAddDashboardButton',
     template: require('plugins/kibana/dashboard/top_nav/add_panel.html')
   };
 }

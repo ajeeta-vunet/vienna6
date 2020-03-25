@@ -161,16 +161,18 @@ input[type="file"]{
   }
 }
 
-.tab-dashboard {
-  height: @view-content-height-dashboard ;
-  overflow-y: auto;
-  dashboard-app{
-    kbn-top-nav{
-      position: fixed;
-      
+.tab-storyboard {
+  storyboard-app{
+    storyboard-provider{
+      .vunet-storyboards-container {
+        height: @view-content-height-storyboard;
+        overflow-y: auto;
+        padding-bottom: 1rem;
+      }
     }
   }
 }
+
 //Bacground color for all views
 .vunet-application{
   // This has been done to make absolute time selector come in one line
@@ -1420,7 +1422,7 @@ button[disabled], {
 }
 
 // Table look and feel for dashboards listing page
-.dashboard-listing-container {
+.storyboard-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
   height: @view-content-height-menubaronly ;

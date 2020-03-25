@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import {
   KuiTabs,
   KuiTab,
@@ -35,33 +36,75 @@ export class VunetTab extends Component {
 
   };
 
+  /*
+   * This function gets called when a tab is removed
+   */
+  onTabRemoved = (id, index) => {
+    const tab = _.last(this.props.tabs);
+    let tabID;
+    // If there is more than 1 tab
+    if (this.props.tabs.length > 1 && this.state.selectedTabId === id) {
+      // If the last tab is deleted then activate the previous tab
+      if (tab.id === id) {
+        tabID = this.props.tabs[index - 1].id;
+      }
+      // else set the next tab active
+      else {
+        tabID = this.props.tabs[index + 1].id;
+      }
+      this.setState({
+        selectedTabId: tabID,
+      });
+      this.props.switchTab(tabID);
+    }
+    this.props.removeTab(index);
+  };
+
   // Display the tabs configured.
+  // Show the close button only when the delete flag is true.
   renderTabs(tabStyle) {
     return this.props.tabs.map((tab, index) => (
-      <KuiTab
-        className="vunetTabButtons"
-        onClick={() => this.onSelectedTabChanged(tab.id)}
-        isSelected={tab.id === this.state.selectedTabId}
-        key={index}
-        style={tabStyle}
-      >
-        {tab.name}
-      </KuiTab>
+      <div style={tabStyle} className="kuiTabWrapper">
+        <KuiTab
+          className="vunetTabButtons"
+          onClick={() => this.onSelectedTabChanged(tab.id)}
+          isSelected={tab.id === this.state.selectedTabId}
+          key={index}
+          data-placement={tab.name}
+          title={tab.name}
+          style={tabStyle}
+        >
+          {tab.name}
+        </KuiTab>
+        {this.props.delete ? (
+          <button
+            type="button"
+            className="close-tab"
+            aria-label="Close"
+            onClick={() => this.onTabRemoved(tab.id, index)}
+          >
+            <span
+              aria-hidden="true"
+            >
+            &times;
+            </span>
+          </button>
+        ) : (''
+        )}
+      </div>
     ));
   }
 
   // Render all the tabs
   render() {
     let tabStyle = {};
-    if(this.props.tabStyle === undefined) {
+    if (this.props.tabStyle === undefined) {
       tabStyle = {
         backgroundColor: '#f1f2f7'
       };
-    } else {
-      tabStyle = this.props.tabStyle;
     }
     return (
-      <KuiTabs style={tabStyle}>
+      <KuiTabs>
         {this.renderTabs(tabStyle)}
       </KuiTabs>
     );
@@ -70,7 +113,9 @@ export class VunetTab extends Component {
 
 VunetTab.propTypes = {
   tabs: PropTypes.array,
-  tabStyle: PropTypes.object,
   landingTab: PropTypes.string,
-  switchTab: PropTypes.func
+  switchTab: PropTypes.func,
+  removeTab: PropTypes.func,
+  delete: PropTypes.bool,
+  tabStyle: PropTypes.object
 };

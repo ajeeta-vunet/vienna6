@@ -83,7 +83,7 @@ app.directive('dashboardApp', function ($injector, $http) {
       // if (dash.id) {
       //   docTitle.change(dash.title);
       // }
-      docTitle.change(VunetSidebarConstants.STORY_BOARDS);
+      docTitle.change(VunetSidebarConstants.DASHBOARDS);
 
       logUserOperation($http, 'GET', 'dashboard', dash.title, dash.id);
 
@@ -107,7 +107,8 @@ app.directive('dashboardApp', function ($injector, $http) {
         dashboardConfig.turnHideWriteControlsOff();
       }
 
-      const dashboardStateManager = new DashboardStateManager(dash, AppState, dashboardConfig.getHideWriteControls());
+      const dashboardStateManager = new DashboardStateManager(dash, AppState,
+        dashboardConfig.getHideWriteControls(), DashboardViewMode.TYPE);
 
       $scope.getDashboardState = () => dashboardStateManager;
       $scope.appState = dashboardStateManager.getAppState();
@@ -181,7 +182,6 @@ app.directive('dashboardApp', function ($injector, $http) {
             }
           }]);
         }
-
         // Apply the filters
         dashboardStateManager.applyFilters(query, filters);
       }
@@ -480,6 +480,7 @@ app.directive('dashboardApp', function ($injector, $http) {
         dashboard: dash,
         category: categoryVal,
         categories: categories,
+        objectType: 'dashboard',
         save: $scope.save,
         addVis: $scope.addVis,
         addNewVis,

@@ -128,7 +128,7 @@ export function VislibVisualizationsColumnChartProvider(Private) {
         if (isTimeScale) {
           return xScale(d.x) + datumWidth(barWidth, d, bars.data()[i + 1], xScale, gutterWidth, groupCount) * groupNum;
         }
-        if (groupNum >= groupCount) {
+        if (groupNum > groupCount) {
           groupNum = groupNum - groupCount;
         }
         return xScale(d.x) + xScale.rangeBand() / groupCount * groupNum;
@@ -200,7 +200,7 @@ export function VislibVisualizationsColumnChartProvider(Private) {
         if (isTimeScale) {
           return xScale(d.x) + datumWidth(barWidth, d, bars.data()[i + 1], xScale, gutterWidth, groupCount) * groupNum;
         }
-        if (groupNum >= groupCount) {
+        if (groupNum > groupCount) {
           groupNum = groupNum - groupCount;
         }
         return xScale(d.x) + xScale.rangeBand() / groupCount * groupNum;

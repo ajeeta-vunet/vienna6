@@ -8,7 +8,7 @@
       ng-repeat="metric in statusData" ng-style="responseData && {'margin-bottom':'0px'}">
       <div class="row status-content-container" ng-class="metric.background">
         <div class="col-sm-3 status-indicator-icon">
-          <img src="{{metric.image}}">
+          <img ng-src="{{metric.image}}">
         </div>
         <div class="col-sm-9 status-icon-and-label-container-wrapper">
           <div class="status-icon-and-label-container">
@@ -35,7 +35,7 @@
       <!-- Vertical Aligned template for KPI -->
       <div class="kpi-vertical-container" ng-if="vis.params.kpiTemplate === 'Vertical Alignment'">
         <div class="kpi-icon">
-          <img src="{{metricImageDict[metric.metricIcon]}}">
+          <img ng-src="{{metricImageDict[metric.metricIcon]}}">
         </div>
         <div
           class="kpi-value"
@@ -62,7 +62,7 @@
       <div class="kpi-horizontal-container" ng-if="vis.params.kpiTemplate === 'Horizontal Alignment'">
         <div class="row">
           <div class="col-sm-4 kpi-icon">
-            <img src="{{metricImageDict[metric.metricIcon]}}">
+            <img ng-src="{{metricImageDict[metric.metricIcon]}}">
           </div>
           <div class="col-sm-8 kpi-horizontal-details-container"
             ng-class="{'center-align-if-no-desc' : !metric.description}">

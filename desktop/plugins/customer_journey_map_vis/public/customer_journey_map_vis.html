@@ -31,7 +31,7 @@
           ng-repeat="stageIcon in stageIcons track by $index" 
           ng-init="indexForStageIcon=$index"
           ng-show="!vis.params.stages[indexForStageIcon].hidestage">
-          <img class="stage-icon" src="{{stageIconsDict[stageIcon]}}">
+          <img class="stage-icon" ng-src="{{stageIconsDict[stageIcon]}}">
         </th>
       </tr>
     </thead>
@@ -51,7 +51,7 @@
             <div 
               class="emoticon-seperator-container col-sm-6" 
               ng-if="metric.emoticon">
-              <img class="cjm-emoticon" src="/ui/vienna_images/{{metric.emoticon}}.svg">
+              <img class="cjm-emoticon" ng-src="/ui/vienna_images/{{metric.emoticon}}.svg">
             </div>
             <div 
               ng-class="{'col-sm-5 emoticon-coming-value':metric.emoticon}" 

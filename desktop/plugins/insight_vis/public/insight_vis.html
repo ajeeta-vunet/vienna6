@@ -14,7 +14,7 @@
     ng-style="(!insight.data.text && {'display':'none'}) || (data.length === 1 && {'margin-bottom':'0px'})"
      class="item-container row">
       <div class="image-container col-sm-3">
-        <img class="item-image" src="{{insight.image}}">
+        <img class="item-image" ng-src="{{insight.image}}">
       </div>
       <div class="text-container col-sm-9">
         <div class="insight-value">{{insight.metadata.value[0]}}</div>

@@ -20,7 +20,7 @@
       <div class="header-node-image-wrapper col-sm-3">
         <div ng-if="selectedNodeParams.borderColor" class="header-node-image-container"
           ng-style='{"border": ".3rem solid" + selectedNodeParams.borderColor}'>
-          <img class="header-node-image" src="{{selectedNodeParams.imagePath}}">
+	  <img class="header-node-image" ng-src="{{selectedNodeParams.imagePath}}">
         </div>
       </div>
       <div class="node-name-container col-sm-9">

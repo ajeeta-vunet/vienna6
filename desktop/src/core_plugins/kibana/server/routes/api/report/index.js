@@ -190,4 +190,25 @@ export function reportDownloadApi(server) {
       });
     }
   });
+
+  server.route({
+    method: 'GET',
+    //the query-parameter file_type=images is  ignored for this url.
+    path: '/vuSmartMaps/api/{tenant_id}/bu/{bu_id}/fgw/',
+    handler: (request, reply) => {
+      const tenantId = request.params.tenant_id;
+      const buId = request.params.bu_id;
+      const fileType = request.query.file_type;
+      Request.get({
+        url: 'https://127.0.0.1/vuSmartMaps/api/' + tenantId + '/bu/' + buId + '/_fgwImagesReport_/',
+      }, function (error, response, body) {
+        if (response.statusCode !== 200) {
+          reply(body).code(response.statusCode);
+        } else {
+          reply(body);
+        }
+      });
+    }
+  })
+
 }

@@ -1,0 +1,1 @@
+export { VunetUserPermissions } from './vunet_user_permissions';

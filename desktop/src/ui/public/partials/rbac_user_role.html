@@ -25,16 +25,23 @@
             </td>
             <td>
               <label class="rbac-label">
-                <input type="radio" ng-model="role.permission" value="modify" ng-dblclick="role.permission=''"
+                <input type="radio" ng-model="role.permission" value="modify"
                   ng-disabled="role.name == owner.role" ng-checked="role.name == owner.role">
                 Modify
               </label>
             </td>
             <td>
               <label class="rbac-label">
-                <input type="radio" ng-model="role.permission" value="view" ng-dblclick="role.permission=''"
+                <input type="radio" ng-model="role.permission" value="view"
                   ng-disabled="role.name == owner.role">
                 View
+              </label>
+            </td>
+            <td>
+              <label class="rbac-label">
+                <input type="radio" ng-model="role.permission" value=""
+                  ng-disabled="role.name == owner.role">
+                None
               </label>
             </td>
           </form>

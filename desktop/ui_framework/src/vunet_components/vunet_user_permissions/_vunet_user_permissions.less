@@ -1,0 +1,86 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.user-permissions-container{
+  .disabledRadioInput{
+    label{
+      cursor: not-allowed !important;
+      opacity: 0.3;
+    }
+  }
+  .user-permission-header{
+    .title-text{
+      font-family: @roboto-medium;
+      color: @grey_dark;
+      font-size: 1.6rem;
+    }
+    .title-icon{
+      padding-left: 1rem;
+      color: @accent_color;
+    }
+  }
+  .user-permission-body{
+    width: 40rem;
+    .permission-container{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .radio-input-container{
+        display: inline-block;
+        padding: 0 6px;
+        margin: 10px 0 0;
+      }
+      .radio-input-container input[type='radio'] {
+        display: none;
+      }      
+      .radio-input-container label {
+        font-size: 1.6rem;
+        font-family: @roboto-regular;
+        color: @grey_dark;
+        display: flex;
+        flex-direction: row;
+        position: relative;
+      }
+      .radio-input-container label:before {
+        content: " ";
+        display: inline-block;
+        position: relative;
+        margin: 0 5px 0 0;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        border: .2rem solid @accent_color;
+        background-color: transparent;
+        @media only screen and (max-width: 1450px) {
+          width: 16px;
+          height: 16px;
+        }
+      }      
+      .radio-input-container input[type=radio]:checked + label:after {
+        border-radius: 50%;
+        width: 1rem;
+        height: 1rem;
+        position: absolute;
+        top: .6rem;
+        left: .5rem;
+        content: " ";
+        display: block;
+        background: @accent_color;
+        @media only screen and (min-width : 1600px){
+          top: .5rem;
+        }
+        @media only screen and (max-width: 1450px) {
+          width: 8px;
+          height: 8px;
+          top: 4px;
+          left : 4px; 
+        }
+        
+      }
+      .radio-title{
+        font-size: 1.6rem;
+        font-family: @roboto-medium;
+        color: @black;
+      }
+    }
+  }
+}

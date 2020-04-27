@@ -1,0 +1,101 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.vunet-help-container{
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 2rem;
+  .help-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid @white;
+    padding: 0rem 2.6rem;
+    .help-icon{
+      color: @accent_color;
+      font-size: 2.8rem;
+      cursor: default !important;
+    }
+    .header-text{
+      padding-left: 2rem;
+      font-size: 1.6rem;
+      color: @grey_light;
+      font-family: @roboto-bold;
+    }
+    .spacer{
+      flex-grow: 1;
+    }
+    .more-info-container{
+      font-size: 1.4rem;    
+      .reference-link-pre-text{
+        color: @grey_light;
+      }
+      .reference-link-text{
+        padding-left: 0.5rem;
+        color: @accent_color;
+        font-family: @roboto-bold;
+      }
+      .external-link-icon{
+        cursor: pointer;
+        padding-left: 1rem;
+        color: @accent_color;
+        font-size: 1.8rem;
+      }
+    }
+    .close-icon{
+      cursor: pointer;
+      padding-left: 2rem;
+      color: @accent_color;
+      font-size: 1.8rem;
+    }
+  }
+  .content-introduction, .content-additional-info{
+    padding: 0rem 0rem 1rem 2rem;
+    color: @grey_light;
+    font-size: 1.5rem;
+    white-space: pre-line;
+  }
+  .help-body{
+    padding: 2rem 0rem 1rem .8rem;
+    margin-bottom: 2rem;
+    ul {
+      list-style: none;
+    }
+    li {
+      padding-bottom: 1rem;
+    }    
+    ul li::before {
+      content: "\2022";
+      color: @accent_color;
+      font-weight: bold;
+      display: inline-block; 
+      width: 1em;
+      font-size: 1.6rem;
+      margin-left: -1em;
+    }
+    .titleText{
+      display: inline-block;
+      font-family: @roboto-medium;
+      font-size: 1.7rem;
+      color: @grey_dark;
+    }
+    .bodyText{
+      font-size: 1.4rem;
+      font-family: @roboto-regular;
+      color: @grey_light;
+      white-space: pre-line;
+    }
+  }
+}
+.vunet-help-container-white{
+  background-color: @white; 
+  .help-header{
+    border-bottom: 1px solid @background_color_light_grey;
+  }
+}
+.vunet-help-container-grey{
+  background-color: @background_color_light_grey;
+  .help-header{
+    border-bottom: 1px solid @white;
+  }
+}

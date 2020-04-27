@@ -1,8 +1,9 @@
-import { capitalize, isArray, isFunction } from 'lodash';
 import $ from 'jquery';
 import chrome from 'ui/chrome';
 import filterTemplate from 'ui/chrome/config/filter.html';
 import intervalTemplate from 'ui/chrome/config/interval.html';
+
+import { capitalize, isArray, isFunction } from 'lodash';
 import { vunetConstants } from 'ui/vunet_constants.js';
 
 export function KbnTopNavControllerProvider($compile) {
@@ -87,7 +88,6 @@ export function KbnTopNavControllerProvider($compile) {
         const dashboardTopMargin = kuiLocalNavHeight + filterHeight;
         const elementToSelect = parent.document;
         if (elementToSelect.fullscreen || elementToSelect.webkitIsFullScreen || elementToSelect.mozFullScreen) {
-          $('.alert-body-container').height(heightToSetOnFullscreenMode - vunetConstants.ALERT_BODY_CONTAINER);
           $('.report-body-container').height(heightToSetOnFullscreenMode);
           $('.menubar-fixed-top-containing-filterbar').height(heightToSetOnFullscreenMode - filterHeight);
           $('.event-container').height(heightToSetOnFullscreenMode);
@@ -96,7 +96,6 @@ export function KbnTopNavControllerProvider($compile) {
             filterHeight - storyboardTabHeight - vunetConstants.STORYBOARD_BODY_CONTAINER);
         }
         else {
-          $('.alert-body-container').height(heightToSet - vunetConstants.ALERT_BODY_CONTAINER);
           $('.report-body-container').height(heightToSet);
           $('.menubar-fixed-top-containing-filterbar').height(heightToSet - filterHeight);
           $('.event-container').height(heightToSet);

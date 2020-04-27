@@ -31,6 +31,9 @@ export class VunetSelect extends Component {
       isOpen: false,
       typed: ''
     };
+
+    // if 'values' is present in prop take it
+    this.state.values = this.props.values ? this.props.values : [];
   }
 
   componentWillReceiveProps(newProps) {

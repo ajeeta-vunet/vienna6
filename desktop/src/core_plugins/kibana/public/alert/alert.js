@@ -1,5 +1,3 @@
-import _ from 'lodash';
-// import 'ui/timefilter';
 import 'plugins/kibana/alert/saved_alert/saved_alerts';
 import 'ui/vis/editors/default/sidebar';
 import 'ui/collapsible_sidebar';
@@ -7,35 +5,37 @@ import 'ui/share';
 import 'ui/query_bar';
 import 'plugins/kibana/alert/filters/alert_filters.js';
 import 'plugins/kibana/alert/styles/main.less';
-import chrome from 'ui/chrome';
-import angular from 'angular';
-import { Notifier } from 'ui/notify/notifier';
-import { DocTitleProvider } from 'ui/doc_title';
-import uiRoutes from 'ui/routes';
-import { uiModules } from 'ui/modules';
+
+import _ from 'lodash';
 import alertTemplate from 'plugins/kibana/alert/alert.html';
 import alertLogsTemplate from 'plugins/kibana/alert/alert_logs.html';
 import AlertLogsCtrl from 'plugins/kibana/alert/alert_logs.controller.js';
-import { AlertConstants, createAlertEditUrl } from './alert_constants';
+import angular from 'angular';
+import chrome from 'ui/chrome';
+import uiRoutes from 'ui/routes';
+import previewMetricTemplate from './preview_metric.html';
+import previewMetricCtrl from './preview_metric.controller.js';
+
+import { AlertDetails } from './components/alert_details.js';
+import { AlertConstants, createAlertEditUrl, NEW_RULE_LIST_ITEM } from './alert_constants';
+import { DocTitleProvider } from 'ui/doc_title';
+import { Notifier } from 'ui/notify/notifier';
+import { uiModules } from 'ui/modules';
 import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
-import { SavedObjectNotFound } from 'ui/errors';
-import previewMetricTemplate from './preview_metric.html';
-import previewMetricCtrl from './preview_metric.controller.js';
-import { getSavedObject, getVisualizationObjectByType, getValueToStoreInKibana } from 'ui/utils/kibana_object.js';
+import { getSavedObject, getVisualizationObjectByType } from 'ui/utils/kibana_object.js';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
-import $ from 'jquery';
-import { vunetConstants } from 'ui/vunet_constants.js';
 
 const Promise = require('bluebird');
+const app = uiModules.get('app/alert');
 
 const url = chrome.getUrlBase();
 
-const defaultValue = {
-  id: '',
-  title: '',
-};
+// Define the alertDetails react component as a angular directive
+app.directive('alertDetails', (reactDirective) => {
+  return reactDirective(AlertDetails);
+});
 
 uiRoutes
   .when(AlertConstants.CREATE_PATH, {
@@ -53,8 +53,7 @@ uiRoutes
       alertcfg: function (savedAlerts) {
         return savedAlerts.get();
       },
-      // This flag indicates if new alert is being
-      // created.
+      // This flag indicates if new alert is being created.
       isNewAlert: function () {
         return true;
       },
@@ -105,76 +104,84 @@ uiModules
   });
 
 function alertAppEditor($scope,
-  $rootScope,
   $timeout,
-  courier,
   $route,
   $routeParams,
-  $location,
   Private,
   AppState,
-  savedAlerts,
-  $filter,
   $http,
   kbnUrl,
   savedVisualizations,
-  timefilter,
   $modal) {
   const notify = new Notifier({
     location: 'Alert'
   });
-  // Initialization of the height for alert page conatiner. Set timeout has been used so the the topbar is formed before the caculations
-  setTimeout(function () {
-    const kuiLocalNavHeight = $('.kuiLocalNav').height();
-    const topbarHeight = $('.topbar-container').height();
-    const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
-    $('.alert-body-container').height(heightToSet - vunetConstants.ALERT_BODY_CONTAINER);
-  }, 10);
-
-  timefilter.enabled = true;
 
   // When the preview button is clicked, this will
   // show all the metrics for the corresponding BMV
   // in a modal pop-up.
   // metrics - All the metrics for the selected BMV.
-  $scope.previewMetric = function (metrics) {
-    $modal.open({
-      animation: true,
-      template: previewMetricTemplate,
-      controller: previewMetricCtrl,
-      windowClass: 'alertBmvPreviewModal',
-      resolve: {
-        metricData: function () {
-          return metrics;
+  $scope.previewMetric = function (metricId) {
+    savedVisualizations.get(metricId).then(function (savedVisualization) {
+      $modal.open({
+        animation: true,
+        template: previewMetricTemplate,
+        controller: previewMetricCtrl,
+        windowClass: 'alertBmvPreviewModal',
+        resolve: {
+          metricData: function () {
+            return savedVisualization;
+          }
         }
-      }
+      });
+    });
+  };
+
+  // Get the list of metrics for a BMV
+  $scope.getMetricsForBmv = (bmvId) => {
+    return savedVisualizations.get(bmvId).then(function (savedVisualization) {
+      return savedVisualization.visState.params.metrics;
     });
   };
 
   $scope.vuMetricList = $route.current.locals.vuMetricList;
   const alertcfg = $scope.alertcfg = $route.current.locals.alertcfg;
-  let isNewAlert = $route.current.locals.isNewAlert;
+
+  let isNewAlert = $scope.isNewAlert = $route.current.locals.isNewAlert;
   logUserOperation($http, 'GET', 'alert', alertcfg.title, alertcfg.id);
   const loadedAlertId = $route.current.locals.loadedAlertId;
 
   $scope.indexPatternList = $route.current.locals.indexPatternIds;
-
   $scope.allReportTitles = $route.current.locals.reports;
+
   // The reusable searchable multiselection supports the following
-  // format [{"id":"report-1","name":"report 1"},{"id":"report-2", "name":"report 2"}] with key "name".
-  // So we need to rename the key from "title" to "name".
+  // format [{"id":"report-1","key":"report 1", "value":"report 1"}] with keys "key" and "value".
+  // So we need to add the keys  "key" and "value".
   $scope.allReportTitles = $scope.allReportTitles.map(function (report) {
-    return { 'id': report.id, 'name': report.title };
+    return { 'id': report.id, 'key': report.title, 'value': report.title };
   });
 
-  $scope.selectReportList = [];
+  // get report object from 'allReportTitles' using reportName
+  const getReportObject = (reportName) => {
+    const reportObject = {};
+    _.forEach($scope.allReportTitles, (allReport) => {
+      if (allReport.value === reportName) {
+        reportObject.id = allReport.id;
+        reportObject.name = allReport.value;
 
-  $scope.selectEmailGroupList = [];
+        // when a match is found we exit the loop
+        return false;
+      }
+    });
+    return reportObject;
+  };
 
-  $scope.allEmailGroups = $route.current.locals.email_groups.attributes;
-
-  // Set the landing page for alerts section
-  $scope.landingPageUrl = () => `#${AlertConstants.LANDING_PAGE_PATH}`;
+  // populate list of email groups
+  const allEmailGroups = $route.current.locals.email_groups.attributes;
+  allEmailGroups.forEach(emailGroup => {
+    emailGroup.key = emailGroup.value = emailGroup.name;
+  });
+  $scope.allEmailGroups = allEmailGroups;
 
   // Populate allowedRoles from alertcfg
   const allowedRoles = alertcfg.allowedRolesJSON ? JSON.parse(alertcfg.allowedRolesJSON) : [];
@@ -182,408 +189,90 @@ function alertAppEditor($scope,
   let userRoleCanModify = false;
   // Get the RBAC stuff here...
   // For an admin used, we always show modify permissions during save..
-  // const userRoleCanModify = false;
   if (chrome.isCurrentUserAdmin()) {
     userRoleCanModify = true;
   } else {
     // Set a flag whether the current user's role can modify this object
     userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
   }
-
   // If user can modify the existing object or is allowed to create an object
-  if (userRoleCanModify && chrome.isModifyAllowed()) {
-    $scope.topNavMenu = [{
-      key: 'save',
-      description: 'Save Alert',
-      template: require('plugins/kibana/alert/panels/save.html'),
-      testId: 'alertSaveButton',
-      disableButton() {
-        return Boolean(!$scope.alertcfgForm.$valid);
-      },
-    }];
-  } else {
-    $scope.topNavMenu = [];
-  }
+  $scope.canUserModifyAlert = userRoleCanModify && chrome.isModifyAllowed();
 
-  // Let us get the ruleList from alertCfg, it will be empty if its a new
-  // alert
+  // Let us get the ruleList from alertCfg, it will be empty if its a new alert
   let ruleList = [];
   if (alertcfg.ruleList) {
     ruleList = JSON.parse(alertcfg.ruleList);
   }
 
+  // it is an existing alert
   if (ruleList.length) {
-    // prepare $scope.ruleList and $scope.operRuleList iterating over the object
-    // created from backend and populate these fields in the front end.
-    $scope.ruleList = [];
-    $scope.operRuleList = [];
-    const defaultRuleObj = {
-      'selectedIndex': '',
-      'ruleType': '',
-      'ruleNameAlias': '',
-      'selectedField': '',
-      'compareType': '',
-      'compareValue': 0,
-      'compareValueStr': '',
-      'ruleTypeDuration': 5,
-      'informationCollector': false,
-      'ruleTypeDurationType': 'minute',
-      'groupByField': [],
-      'additionalField': [],
-      'alertFilter': '',
-      'enableComparisionFields': false,
-      'metricAlias': '',
-    };
-
-    const defaultOperRuleObj = {
-      'outerRuleIndex': 1,
-      'innerRuleIndex': 1,
-      'metrics': [],
-      'indexFields': [],
-      'metricIsSelected': false,
-      'sumOrAverageIsSelected': false,
-      'countIsSelected': false,
-      'targetFieldInvisibility': false,
-      'allowStringInCompareValue': false,
-      'selectedField': undefined,
-      'groupByField': [],
-      'additionalField': [],
-    };
-    // Iterate on rule list and for each rule populate the operRuleList..
-    Promise.map(ruleList, function (alertcfgRule) {
-      //The following code takes care of populating the 'groupByField'
-      // and 'selectedField' form when any alert is loaded
-      // we are using _.clonedeep so that the groupbyField under
-      // newOperRuleObj is not updated in each iteration.
-      const newRuleObj = _.cloneDeep(defaultRuleObj);
-      const newOperRuleObj = _.cloneDeep(defaultOperRuleObj);
-
-      // These conditions are added here so as to handle load operations of
-      // alert. Any changes added here needs to be added under details.js too
-      if (alertcfgRule.ruleType === 'count') {
-        newOperRuleObj.metricIsSelected = true;
-        newOperRuleObj.targetFieldInvisibility = true;
-        newOperRuleObj.countIsSelected = true;
-        alertcfgRule.selectedField = '';
-      } else if (alertcfgRule.ruleType === 'sum' ||
-        alertcfgRule.ruleType === 'average' ||
-        alertcfgRule.ruleType === 'min' ||
-        alertcfgRule.ruleType === 'max') {
-        newOperRuleObj.metricIsSelected = true;
-        newOperRuleObj.sumOrAverageIsSelected = true;
-      } else if (alertcfgRule.ruleType === 'unique_values') {
-        newOperRuleObj.metricIsSelected = true;
-      } else if (alertcfgRule.ruleType === 'state_change' || alertcfgRule.ruleType === 'latest_value') {
-        newOperRuleObj.allowStringInCompareValue = true;
-        newOperRuleObj.metricIsSelected = true;
-        alertcfgRule.ruleTypeDuration = 5;
-        alertcfgRule.ruleTypeDurationType = 'minute';
-      }
-      else if (alertcfgRule.vuMetricsBased === true) {
-        newOperRuleObj.metricIsSelected = true;
-      }
-
-      newRuleObj.ruleType = alertcfgRule.ruleType;
-      newRuleObj.ruleNameAlias = alertcfgRule.ruleNameAlias;
-      newRuleObj.informationCollector = alertcfgRule.informationCollector;
-
-      // Populate the selectedIndex object reference based on what is stored
-      // in alertcfg
-      _.each($scope.indexPatternList, function (indexPattern) {
-        if (indexPattern.id === alertcfgRule.selectedIndex.id) {
-          newRuleObj.selectedIndex = indexPattern;
-          return false;
-        }
-      });
-
-      newRuleObj.enableComparisionFields = alertcfgRule.enableComparisionFields;
-      newRuleObj.metricAlias = alertcfgRule.metricAlias;
-      newRuleObj.compareType = alertcfgRule.compareType;
-      newRuleObj.compareValue = alertcfgRule.compareValue;
-      newRuleObj.compareValueStr = alertcfgRule.compareValueStr;
-      newRuleObj.ruleTypeDuration = alertcfgRule.ruleTypeDuration;
-      newRuleObj.ruleTypeDurationType = alertcfgRule.ruleTypeDurationType;
-      newRuleObj.alertFilter = alertcfgRule.alertFilter;
-
-      // Insert this into the ruleList.. We do this here so that rules are inserted
-      // into the rule and operRule list in order..
-      $scope.ruleList.push(newRuleObj);
-      $scope.operRuleList.push(newOperRuleObj);
-
-      // We need to wait for indexPattern if we use normal rule..
-      if (alertcfgRule.selectedIndex.id !== '') {
-
-        // We return a promise here..
-        return courier.indexPatterns.get(alertcfgRule.selectedIndex.id).then(function (currentIndex) {
-          let fields = currentIndex.fields.raw;
-          fields = $filter('filter')(fields, { aggregatable: true });
-          newOperRuleObj.indexFields = fields.slice(0);
-          _.each(newOperRuleObj.indexFields, function (field) {
-            if (alertcfgRule.selectedField) {
-              if (alertcfgRule.selectedField === field.name) {
-                newOperRuleObj.selectedField = field;
-                newRuleObj.selectedMetric = defaultValue;
-                newOperRuleObj.metrics = [];
-                newRuleObj.vuMetricsBased = alertcfgRule.vuMetricsBased;
-              }
-            }
-          });
-
-          // The indexfields is moved as a inner loop to maintain
-          // the order of the fields under groupByField list.
-          if (alertcfgRule.groupByField.length) {
-            _.each(alertcfgRule.groupByField, function (grpByField) {
-              _.each(newOperRuleObj.indexFields, function (field) {
-                if (grpByField === field.name) {
-                  const dataObj = { data: field };
-                  newOperRuleObj.groupByField.push(dataObj);
-                }
-              });
-            });
-          }
-          // Adding the default object data to groupByField under
-          // newOperRuleObj to display an empty selectbox in the
-          // front end when no groupby field is selected for this rule.
-          else {
-            newOperRuleObj.groupByField.push({ data: '' });
-          }
-
-          // The indexfields is moved as a inner loop to maintain
-          // the order of the fields under additional field list.
-          if (alertcfgRule.additionalField && alertcfgRule.additionalField.length) {
-            _.each(alertcfgRule.additionalField, function (additionalField) {
-              _.each(newOperRuleObj.indexFields, function (field) {
-                if (additionalField === field.name) {
-                  const dataObj = { data: field };
-                  newOperRuleObj.additionalField.push(dataObj);
-                }
-              });
-            });
-          }
-          // Adding the default object data to additionalField under
-          // newOperRuleObj to display an empty selectbox in the
-          // front end when no additional field is selected for this rule.
-          else {
-            newOperRuleObj.additionalField.push({ data: '' });
-          }
-          // Using return will not help here ,
-          // As _each will continue to execute without breaking at any point
-        });
-      } else {
-        // We need to wait for Business metric if alert subrule uses a BM Vis..
-        // Check whether BMV exists. This check needs for existing alerts to
-        // ensure that backward compatibility is working fine.
-        if (alertcfgRule.selectedMetric !== undefined &&
-          alertcfgRule.selectedMetric.id !== '') {
-          newRuleObj.selectedIndex = defaultValue;
-          newRuleObj.vuMetricsBased = alertcfgRule.vuMetricsBased;
-          newRuleObj.selectedMetric = alertcfgRule.selectedMetric;
-
-          // We return a promise here..
-          return savedVisualizations.get(
-            alertcfgRule.selectedMetric.id).then(function (savedVisualization) {
-            // Go thourgh each BMV and find the BMV which is configured in the alert.
-            _.each($scope.vuMetricList, function (vuMetric) {
-              if (vuMetric.id === alertcfgRule.selectedMetric.id) {
-                newRuleObj.selectedMetric = vuMetric;
-              }
-            });
-            // Find the BMV used in the alert which will be used for preview.
-            newOperRuleObj.vis = savedVisualization;
-            // After finding the BMV, get all the metrics for that BMV which
-            // will be used for tooltip.
-            newOperRuleObj.metrics = savedVisualization.visState.params.metrics;
-          })
-            .catch((error) => {
-              if (error instanceof SavedObjectNotFound) {
-                notify.error(
-                  'Problem in loading this alert... The BMV ' + alertcfgRule.selectedMetric.title +
-                  ' used in the alert rule "' + newRuleObj.ruleNameAlias + '" has been already deleted.' +
-                  'Please re-configure this alert');
-              } else {
-                // Display the error message to the user.
-                notify.error(error);
-                throw error;
-              }
-            });
-        } else {
-          // Not sure what kind of configuration this is..
-          return Promise.resolve(false);
-        }
-      }
-    }).then(function () {
-      // Once all promises are resolved.. we resolve the rule numbers..
-      updateVisMetricForAlertRule();
-    });
-    $scope.severity = alertcfg.severity;
-    $scope.summary = alertcfg.summary;
-    $scope.description = alertcfg.description;
-    $scope.enableThrottle = alertcfg.enableThrottle;
-    $scope.throttleDurationType = alertcfg.throttleDurationType;
-    $scope.throttleDuration = alertcfg.throttleDuration;
-    $scope.alertByTicket = alertcfg.alertByTicket;
-    $scope.alertByEmail = alertcfg.alertByEmail;
-    $scope.alertEmailId = alertcfg.alertEmailId;
-    if (alertcfg.alertEmailGroup !== '') {
-      // Here the alertEmailGroup field will contain only name as following.
-      // alertEmailGroup = admin, dba, network
-      // To populate in the multiselect directive the format should be as following
-      // [{"name":"admin", "name":"dba"}]
-      // So we need to build a dictionary from the input
-      const emailGroups = alertcfg.alertEmailGroup.split(',');
-      for (let index = 0; index < emailGroups.length; index++) {
-        $scope.selectEmailGroupList.push({ name: emailGroups[index] });
-      }
-    }
-    $scope.alertEmailBody = alertcfg.alertEmailBody;
-    $scope.advancedConfig = alertcfg.advancedConfiguration;
-    $scope.enableRunBookAutomation = alertcfg.enable_runbook_automation;
-    $scope.runBookScript = alertcfg.runbook_script;
-    $scope.enableAnsiblePlaybook = alertcfg.enable_ansible_playbook;
-    $scope.ansiblePlaybookName = alertcfg.ansible_playbook_name;
-    $scope.ansiblePlaybookOptions = alertcfg.ansible_playbook_options;
-    $scope.alertByReport = alertcfg.alertByReport;
     if (alertcfg.alertReportList !== '') {
-      // Here the alertReportList field will contain only name as following.
-      // alertReportList = report1. report2...
-      // To populate in the multiselect directive the format should be as following
-      // [{"name":"report1", "name":"report2"}]
-      // So we need to build a dictionary from the input
       const reportList = JSON.parse(alertcfg.alertReportList);
       // This will decide whether the report used in this alert is still
       // available or not. Because the same can be already deleted or
       // somebody might have changed the permission of the report.
       let reportExist;
       // Go though each report configured in this alert
-      for (let index = 0; index < reportList.length; index++) {
+      _.forEach(reportList, (report) => {
         // First set the flag to false for every report we fetch
         reportExist = false;
-        let reportIndex = 0;
         // $scope.allReportTitles will have all the reports available
         // Check whether the report still exists in the system
-        for (reportIndex; reportIndex < $scope.allReportTitles.length; reportIndex++) {
+        _.forEach($scope.allReportTitles, (allReport) => {
           // If report exists
-          if (angular.toJson($scope.allReportTitles[reportIndex]) === angular.toJson(reportList[index])) {
+          if (report.id === allReport.id) {
             reportExist = true;
-            break;
+            return false;
           }
-        }
-        // if exists, add this to the selected report list.
-        if (reportExist) {
-          $scope.selectReportList.push($scope.allReportTitles[reportIndex]);
-        }
-        // else show the not available message to the user.
-        else {
-          notify.error('Problem in loading this alert. The report "' + reportList[index] +
+        });
+
+        // if report does not exists, show the not available message to the user.
+        if (!reportExist) {
+          notify.error('Problem in loading this alert. The report "' + report.id +
             '" used in this alert is not available anymore, please reconfigure this alert');
         }
-      }
+      });
     }
-    $scope.activeStartTime = alertcfg.activeStartTime;
-    $scope.activeEndTime = alertcfg.activeEndTime;
-    $scope.enableAlert = alertcfg.enableAlert;
-    $scope.activeAlertCheck = alertcfg.activeAlertCheck;
-    $scope.weekdays = JSON.parse(alertcfg.weekdays);
-    $scope.ruleLevelThreshold = alertcfg.ruleLevelThreshold;
-    $scope.evalCriteria = JSON.parse(alertcfg.evalCriteria);
-    $scope.evalCriteriaAlias = alertcfg.evalCriteriaAlias;
-    $scope.advancedConfig = alertcfg.advancedConfiguration;
+
+    // This will decide whether the bmv used in this alert is still
+    // available or not. Because the same can be already deleted or
+    // somebody might have changed the permission of the bmv.
+    let bmvExist;
+    // Go though each ruleList configured in this alert, and get the bmv configured
+    _.forEach(ruleList, (ruleItem) => {
+      // First set the flag to false for every bmv we fetch
+      bmvExist = false;
+      // $scope.vuMetricList will have all the bmv available
+      // Check whether the bmv still exists in the system
+      _.forEach($scope.vuMetricList, (allBmv) => {
+        // If bmv exists
+        if (ruleItem.selectedMetric.id === allBmv.id) {
+          bmvExist = true;
+          return false;
+        }
+      });
+      // if bmv does not exists, show the not available message to the user.
+      if (!bmvExist) {
+        notify.error('Problem in loading this alert. The vuMetric visualization "' + ruleItem.selectedMetric.id +
+          '" used in this alert is not available anymore, please reconfigure this alert');
+      }
+    });
 
     $scope.$on('$destroy', alertcfg.destroy);
-
-    updateVisMetricForAlertRule();
-
-  } else {
-    $scope.ruleList = [{
-      'selectedIndex': '',
-      'ruleType': '',
-      'ruleNameAlias': '',
-      'informationCollector': false,
-      'metricAlias': '',
-      'selectedField': '',
-      'compareType': '',
-      'compareValue': 0,
-      'compareValueStr': '',
-      'ruleTypeDuration': 5,
-      'ruleTypeDurationType': 'minute',
-      'groupByField': [],
-      'additionalField': [],
-      'alertFilter': '',
-      'enableComparisionFields': false,
-      'vuMetricsBased': false,
-      'selectedMetric': defaultValue,
-    }];
-    $scope.operRuleList = [{
-      'outerRuleIndex': 1,
-      'innerRuleIndex': 1,
-      'metrics': [],
-      'indexFields': [],
-      'metricIsSelected': true,
-      'sumOrAverageIsSelected': false,
-      'countIsSelected': false,
-      'targetFieldInvisibility': false,
-      'allowStringInCompareValue': false,
-      'selectedField': undefined,
-      'groupByField': [{ data: '' }],
-      'additionalField': [{ data: '' }],
-    }];
-    // set the enable alert checkbox to true by default
-    $scope.enableAlert = true;
-
-    // Setting the default time for alert active time
-    $scope.activeStartTime = '00:00:00';
-    $scope.activeEndTime = '23:59:59';
-
-    $scope.weekdays = [
-      { name: 'Monday', selected: true },
-      { name: 'Tuesday', selected: true },
-      { name: 'Wednesday', selected: true },
-      { name: 'Thursday', selected: true },
-      { name: 'Friday', selected: true },
-      { name: 'Saturday', selected: true },
-      { name: 'Sunday', selected: true },
-    ];
-
-    // Initialising the evalCriteria object for a new alert.
-    $scope.evalCriteria = {};
   }
-
-  // Before this step, both ruleList and operruleList are already available.
-  // Go through each alert rule and update the visualization, metrics,
-  // inner rule and outer rule index in the operRuleList.
-  function updateVisMetricForAlertRule() {
-    let innerRuleIndex = 1;
-    for (let index = 0; index < $scope.operRuleList.length; index++) {
-      if ($scope.operRuleList[index].metrics.length > 0) {
-        // If the previous BMV based alert rule contains 4 metrics then it
-        // should be R1-R4. The current BMV based alert should start from R5.
-        // If the current rule contains 3 metrics then it should be R5-R7. If
-        // we don't reduce by 1 then it will become R15-R8(R5+3=-R8) which is
-        // wrong.
-        $scope.operRuleList[index].innerRuleIndex = innerRuleIndex;
-        $scope.operRuleList[index].outerRuleIndex =
-          innerRuleIndex + $scope.operRuleList[index].metrics.length - 1;
-        innerRuleIndex = $scope.operRuleList[index].outerRuleIndex + 1;
-      } else {
-        $scope.operRuleList[index].innerRuleIndex = innerRuleIndex;
-        $scope.operRuleList[index].outerRuleIndex = innerRuleIndex;
-        innerRuleIndex = $scope.operRuleList[index].innerRuleIndex + 1;
-      }
-    }
-    // For some reasons, updating the scope variables are not rendering the
-    // view.. so we are using this to force a re-render
-    $scope.$evalAsync();
+  // it is a new alert.
+  // lets update some default values in alertcfg
+  else {
+    ruleList.push(_.cloneDeep(NEW_RULE_LIST_ITEM));
+    alertcfg.ruleList = angular.toJson(ruleList);
   }
-
-
-
 
   // This function is to validate if all the information collector
   // rules are placed at the end.
-  function isInformationCollectorNotAtTheEnd() {
+  function isInformationCollectorNotAtTheEnd(ruleList) {
     let infoCollectorRuleExists = false;
-    for (let index = 0; index < $scope.ruleList.length; index = index + 1) {
-      const rule = $scope.ruleList[index];
+    for (let i = 0; i < ruleList.length; i++) {
+      const rule = ruleList[i];
       if (rule.informationCollector === true) {
         infoCollectorRuleExists = true;
       }
@@ -636,17 +325,10 @@ function alertAppEditor($scope,
     $http.post(url + '/alertrule/' + alertcfg.title + '/?execute_now=True&from=time&to=time', {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     }).then(function () {
-      $scope.successexecuteLogs = true;
+      notify.info('Successfully triggered the alert execution');
     }).catch(function () {
-      $scope.failureexecuteLogs = true;
-      $scope.errmessage = 'Failed to initiate test execution of alert rule';
+      notify.error('Failed to initiate test execution of alert rule');
     });
-    // Hide the message that comes on clicking execute
-    // button after 3 seconds
-    $timeout(() => {
-      $scope.successexecuteLogs = false;
-      $scope.failureexecuteLogs = false;
-    }, 3000);
   };
 
   // API call to execute alert for a specific time
@@ -709,31 +391,29 @@ function alertAppEditor($scope,
     }, function () {
       // Written this so that unhandled rejection error doesn't appear.
     });
-
-
   };
 
   //calling the save function to save the alert details filled in the alert cfg form
-  $scope.save = function () {
-    $state.title = alertcfg.title;
-
+  $scope.save = function (alertData) {
     // On click of save button clear set debug level drop down
     $scope.setDebug = '';
 
-    const infoCollectorFlag = isInformationCollectorNotAtTheEnd();
-    if (infoCollectorFlag === true) {
-      alert('Please configure the information collection rules at the end.');
+    // validate if all the information collector rules are placed at the end.
+    if (isInformationCollectorNotAtTheEnd(alertData.parsedRuleList)) {
+      notify.error('Please configure the information collection rules at the end.');
       return;
     }
 
     $state.save();
-    alertcfg.allowedRolesJSON = angular.toJson($scope.opts.allowedRoles);
+
     /*eslint-disable */
     Number.prototype.padLeft = function (base, chr) {
       const len = (String(base || 10).length - String(this).length) + 1;
       return len > 0 ? new Array(len).join(chr || '0') + this : this;
     };
     /*eslint-enable */
+
+    // set alert timestamp
     const dateObj = new Date();
     const month = (dateObj.getMonth() + 1).padLeft(); //months from 1-12
     const day = dateObj.getDate().padLeft();
@@ -743,63 +423,123 @@ function alertAppEditor($scope,
     const second = dateObj.getSeconds().padLeft();
     const alertTimestamp = year + '/' + month + '/' + day + ' ' + hour + ':' + minute + ':' + second;
     alertcfg.lastModifiedTime = alertTimestamp;
-    alertcfg.severity = $scope.severity;
-    alertcfg.summary = $scope.summary;
-    alertcfg.description = $scope.description;
-    alertcfg.enableThrottle = $scope.enableThrottle;
-    alertcfg.throttleDurationType = $scope.throttleDurationType;
-    alertcfg.throttleDuration = $scope.throttleDuration;
-    alertcfg.alertByTicket = $scope.alertByTicket;
-    alertcfg.alertByEmail = $scope.alertByEmail;
-    alertcfg.alertEmailId = $scope.alertEmailId;
-    alertcfg.alertEmailGroup = getValueToStoreInKibana($scope.selectEmailGroupList, 'name');
-    alertcfg.alertEmailBody = $scope.alertEmailBody;
-    alertcfg.enable_runbook_automation = $scope.enableRunBookAutomation;
-    alertcfg.runbook_script = $scope.runBookScript;
-    alertcfg.enable_ansible_playbook = $scope.enableAnsiblePlaybook;
-    alertcfg.ansible_playbook_name = $scope.ansiblePlaybookName;
-    alertcfg.ansible_playbook_options = $scope.ansiblePlaybookOptions;
-    alertcfg.alertByReport = $scope.alertByReport;
-    alertcfg.alertReportList = angular.toJson($scope.selectReportList);
-    alertcfg.ruleLevelThreshold = $scope.ruleLevelThreshold;
-    alertcfg.evalCriteria = angular.toJson($scope.evalCriteria);
-    alertcfg.evalCriteriaAlias = $scope.evalCriteriaAlias;
-    _.each($scope.operRuleList, function (operRule, index) {
-      if (operRule.selectedField) {
-        $scope.ruleList[index].selectedField = operRule.selectedField.displayName;
-      } else {
-        $scope.ruleList[index].selectedField = '';
-      }
-      // setting the groupByField of this rule to empty
-      // and fetching the group by fields set in the operRuleList
-      $scope.ruleList[index].groupByField = [];
-      _.each(operRule.groupByField, function (field) {
-        if (operRule.groupByField.length === 1 && field.data === null) {
-          operRule.groupByField = [{ data: '' }];
-        } else if (field.data !== '' && field.data !== null) {
-          $scope.ruleList[index].groupByField.push(field.data.displayName);
-        }
-      });
 
-      // setting the additionalField of this rule to empty
-      // and fetching the additional fields set in the operRuleList
-      $scope.ruleList[index].additionalField = [];
-      _.each(operRule.additionalField, function (field) {
-        if (operRule.additionalField.length === 1 && field.data === null) {
-          operRule.additionalField = [{ data: '' }];
-        } else if (field.data !== '' && field.data !== null) {
-          $scope.ruleList[index].additionalField.push(field.data.displayName);
+    // set allowed roles (user permissions)
+    alertcfg.allowedRolesJSON = angular.toJson(alertData.parsedAllowedRolesJSON);
+
+    // alert status
+    alertcfg.enableAlert = alertData.enableAlert;
+
+    // alert title
+    alertcfg.title = alertData.title;
+
+    // alert about info
+    alertcfg.severity = alertData.severity;
+    alertcfg.summary = alertData.summary;
+    alertcfg.description = alertData.description;
+
+    // set alert condition
+    alertcfg.ruleList = angular.toJson(alertData.parsedRuleList);
+
+    // rule evaluation conditions
+    const evalCriteriaConditionList = alertData.parsedEvalCriteriaConditionList;
+
+    _.forEach(evalCriteriaConditionList, (evalCriteriaConditionItem) => {
+      // if 'expanded' key is present remove it
+      // this should not be stored inside kibana object
+      if (evalCriteriaConditionItem.hasOwnProperty('expanded')) {
+        delete evalCriteriaConditionItem.expanded;
+      }
+
+      // The 'value' in 'channelList' need to be formatted for emailGroup and report
+      _.forEach(evalCriteriaConditionItem.channelList, (channelListItem) => {
+        const channelType = channelListItem.channel;
+        const value = channelListItem.value;
+        let formattedValue = undefined;
+        if (channelType === 'emailGroup') {
+          formattedValue = value.join(',');
+        } else if (channelType === 'report') {
+          formattedValue = [];
+          _.forEach(value, (reportTitle) => {
+            formattedValue.push(getReportObject(reportTitle));
+          });
+        } else {
+          formattedValue = value;
         }
+        channelListItem.value = formattedValue;
       });
     });
 
-    alertcfg.ruleList = angular.toJson($scope.ruleList);
-    alertcfg.activeStartTime = $scope.activeStartTime;
-    alertcfg.activeEndTime = $scope.activeEndTime;
-    alertcfg.enableAlert = $scope.enableAlert;
-    alertcfg.activeAlertCheck = $scope.activeAlertCheck;
-    alertcfg.weekdays = angular.toJson($scope.weekdays);
-    alertcfg.advancedConfiguration = $scope.advancedConfig;
+    alertcfg.evalCriteriaConditionList = angular.toJson(evalCriteriaConditionList);
+
+    // rule evaluation script
+    alertcfg.evalCriteria = angular.toJson(alertData.parsedEvalCriteria);
+
+    // alert advanced configuration
+    alertcfg.enableAdvancedConfig = alertData.enableAdvancedConfig;
+
+    // alert control: alarm mode
+    alertcfg.enableAlarmMode = alertData.enableAlarmMode;
+
+    // alert control: throttling
+    alertcfg.enableThrottle = alertData.enableThrottle;
+    alertcfg.throttleDurationType = alertData.throttleDurationType;
+    alertcfg.throttleDuration = alertData.throttleDuration;
+
+    // alert control: alert duration
+    alertcfg.activeAlertCheck = alertData.activeAlertCheck;
+
+
+    // alert control: start time
+    // add seconds to start time if not present
+    let activeStartTime = alertData.activeStartTime;
+    activeStartTime = activeStartTime.length < 6 ? activeStartTime + ':00' : activeStartTime;
+    alertcfg.activeStartTime = activeStartTime;
+
+
+    // alert control: end time
+    // add seconds to end time if not present
+    let activeEndTime = alertData.activeEndTime;
+    activeEndTime = activeEndTime.length < 6 ? activeEndTime + ':00' : activeEndTime;
+    alertcfg.activeEndTime = activeEndTime;
+
+    alertcfg.weekdays = angular.toJson(alertData.parsedWeekdaysList);
+
+    // alert control: alert advanced configuration
+    alertcfg.advancedConfiguration = alertData.advancedConfiguration;
+
+    // alert channel: ticket
+    alertcfg.alertByTicket = alertData.alertByTicket;
+
+    // alert channel: whatsapp
+    alertcfg.alertByWhatsapp = alertData.alertByWhatsapp;
+    alertcfg.alertWhatsappNumber = alertData.alertWhatsappNumber;
+
+    // alert channel: email
+    alertcfg.alertByEmail = alertData.alertByEmail;
+    alertcfg.alertEmailId = alertData.alertEmailId;
+    alertcfg.alertEmailBody = alertData.alertEmailBody;
+    alertcfg.alertEmailGroup = alertData.alertEmailGroupHandler.toString();
+
+    // alert channel: runbook automation
+    alertcfg.enable_runbook_automation = alertData.enable_runbook_automation;
+    alertcfg.runbook_script = alertData.runbook_script;
+
+    // alert channel: ansible playbook
+    alertcfg.enable_ansible_playbook = alertData.enable_ansible_playbook;
+    alertcfg.ansible_playbook_name = alertData.ansible_playbook_name;
+    alertcfg.ansible_playbook_options = alertData.ansible_playbook_options;
+
+    // alert channel: report
+    alertcfg.alertByReport = alertData.alertByReport;
+    // update alert configuration for report list
+    const alertReportList = [];
+    const selectedValue = alertData.alertReportListHandler;
+    selectedValue.forEach(selectedReport => {
+      // we get its respective report object and push it into our list
+      alertReportList.push(getReportObject(selectedReport));
+    });
+    alertcfg.alertReportList = angular.toJson(alertReportList);
 
     // if an alert is loaded and saved as another
     // alert, It is a new alert. Hence set the flag to true.
@@ -808,8 +548,8 @@ function alertAppEditor($scope,
       isNewAlert = true;
     }
 
+    // perform final save operation
     alertcfg.save(isNewAlert).then(function (id) {
-      $scope.kbnTopNav.close('save');
       if (id) {
         notify.info(`Saved Alert as "${alertcfg.title}"`);
         alertcfg.id = id;
@@ -828,50 +568,5 @@ function alertAppEditor($scope,
     docTitle.change(VunetSidebarConstants.ALERT_RULES);
     $scope.$emit('application.load');
   }
-
-  $scope.getAlertTitle = function () {
-    return alertcfg.title;
-  };
-
-  const currentUser = chrome.getCurrentUser();
-  const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
-
-  // Setup configurable values for config directive, after objects are initialized
-  $scope.opts = {
-    alertcfg: alertcfg,
-    allowedRoles: allowedRoles,
-    userRoleCanModify: userRoleCanModify,
-    doSave: $scope.save,
-    owner: owner
-  };
-
-  // Adds selected email group to the list
-  $scope.addEmailGroup = function (item) {
-    // item = item {"name":"admin"}
-    // To populate in the multiselect directive the format should be as following
-    // item = {"name":"admin"}
-    $scope.selectEmailGroupList.push({ name: item.name });
-  };
-
-  // Removes the selected email group from the list
-  $scope.removeEmailGroup = function (index) {
-    // index is the index of the selected item in the selectEmailGroupList
-    $scope.selectEmailGroupList.splice(index, 1);
-  };
-
-  // Adds selected report to the list
-  $scope.addReport = function (item) {
-    // item = item {"id":"report-1","name":"report 1"}
-    // To populate in the multiselect directive the format should be as following
-    // item = [{"id":"Report-1","name":"Report1"}, {"id":"Report-2","name":"Report2"}]
-    $scope.selectReportList.push({ id: item.id, name: item.name });
-  };
-
-  // Removes the selected report from the list
-  $scope.removeReport = function (index) {
-    // index is the index of the selected item in the selectEmailGroupList
-    $scope.selectReportList.splice(index, 1);
-  };
-
   init();
 }

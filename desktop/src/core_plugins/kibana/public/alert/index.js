@@ -1,6 +1,5 @@
 import 'plugins/kibana/alert/alert';
 import 'plugins/kibana/alert/saved_alert/saved_alerts';
-import 'plugins/kibana/alert/directives/details';
 import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/registry/feature_catalogue';
 import 'plugins/kibana/alert/styles/main.less';
 import uiRoutes from 'ui/routes';

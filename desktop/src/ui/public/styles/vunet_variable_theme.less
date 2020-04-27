@@ -41,6 +41,8 @@
 
 @border_color_table_checkbox : #BEBEBE ;
 @box_shadow_color : rgba(0, 0, 0, 0.06); 
+
+@background_color_light_grey: #f4f5f9;
 @background_color_grey: #e5e7e8;
 
 //FONTS
@@ -51,6 +53,7 @@
 
 // VARIABLES USED FOR HEIGHT CALCULATIONS
 @topbar-height : 6rem;
+@alert-top-header-bar: 10rem;
 @menubar-height-for-listing-pages-and-berlin : 58px; 
 @kbn-top-nav-height : 69px;
 @kbn-top-nav-height-for-vunet-tabs : 6rem;
@@ -67,7 +70,7 @@
 @view-content-height-menubaronly-bigger : ~"calc(100vh - @{kbn-top-nav-height} - @{topbar-height})";
 @view-content-height-menubar-bigger-withsearch : ~"calc(100vh - @{kbn-top-nav-height-with-filterbar-and-searchbar} - @{topbar-height})";
 @view-content-height-single-doc : ~"calc(100vh - @{menubar-height-for-single-docs} - @{topbar-height})";
-
+@view-content-tabs-alert: ~"calc(100vh - @{topbar-height} - @{kbn-top-nav-height-for-vunet-tabs} - @{alert-top-header-bar})";
 //Height variables for viewing content in FullScreen Mode
 // Small defines menubar with less height (eg berlin,listing pages)
 @view-content-fullscreen-height-small:~"calc(100vh - @{menubar-height-for-listing-pages-and-berlin})";
@@ -75,3 +78,5 @@
 @view-content-fullscreen-height-medium:~"calc(100vh - @{kbn-top-nav-height})";
 // Large defines height of menubar with filterbar
 @view-content-fullscreen-height-large:~"calc(100vh - @{kbn-top-nav-height-with-filter})";
+// Height for fullscreen alert deatils page
+@view-content-fullscreen-height-alert:~"calc(100vh - @{kbn-top-nav-height-for-vunet-tabs} - @{alert-top-header-bar})";

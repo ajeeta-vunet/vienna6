@@ -65,6 +65,15 @@
       .management-container{
         height: @view-content-fullscreen-height-medium!important;
       }
+      alert-app{
+        alert-details{
+          .content-body{
+            .alert-condition-tab-wrapper{
+              height:@view-content-fullscreen-height-alert;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -981,443 +990,558 @@ button[disabled], {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-Vega_Plugin:before {
+.icon-dragging-circles:before {
   content: "\e900";
+  color: #fff;
 }
-.icon-kpi:before {
+.icon-bmv-play-background:before {
   content: "\e901";
-}
-.icon-Insights:before {
-  content: "\e902";
-}
-.icon-Bullet_Graph:before {
-  content: "\e903";
-}
-.icon-success_utm_tick:before {
-  content: "\e904";
-  color: #6ac259;
-}
-.icon-Filter-01:before {
-  content: "\e905";
-}
-.icon-Arrow_Expand-02:before {
-  content: "\e906";
   color: @accent_color;
 }
-.icon-Close-01:before {
+.icon-advanced-config:before {
+  content: "\e902";
+  color: @accent_color;
+}
+.icon-cancel-circle:before {
+  content: "\e903";
+  color: @accent_color;
+}
+.icon-discard:before {
+  content: "\e904";
+  color: @accent_color;
+}
+.icon-play-button:before {
+  content: "\e905";
+  color: #fff;
+}
+.icon-refresh:before {
+  content: "\e906";
+  color: #fff;
+}
+.icon-save:before {
   content: "\e907";
   color: @accent_color;
 }
-.icon-Arrow_Expand-01:before {
+.icon-save-file-option:before {
   content: "\e908";
-  color: @accent_color;
+  color: #fff;
 }
-.icon-Notification_Alert_Result:before {
+.icon-no-results-found:before {
   content: "\e909";
-  color: #f4b73b;
+  color: #dd171d;
 }
-.icon-Storage_notification_type:before {
+.icon-help-blue:before {
   content: "\e90a";
   color: @accent_color;
 }
-.icon-Storage_Notification_Result:before {
+.icon-clone:before {
   content: "\e90b";
-  color: #168413;
+  color: @accent_color;
 }
-.icon-Notification_type:before {
+.icon-help-heading:before {
   content: "\e90c";
   color: @accent_color;
 }
-.icon-Notification_Alert_Script_Result:before {
+.icon-redirect:before {
   content: "\e90d";
-  color: #fd7561;
-}
-.icon-Help:before {
-  content: "\e90e";
   color: @accent_color;
 }
-.icon-Verify-Data-01:before {
+.icon-triangle-down:before {
+  content: "\e90e";
+}
+.icon-triangle-up:before {
   content: "\e90f";
 }
-.icon-Remote-Side-Configuration:before {
+.icon-arrow-up:before {
   content: "\e910";
-}
-.icon-Data-Source-Configuration:before {
-  content: "\e911";
-}
-.icon-Analyse-01:before {
-  content: "\e912";
-}
-.icon-maximize:before {
-  content: "\e913";
   color: @accent_color;
 }
-.icon-Instances-Receiving-08:before {
+.icon-arrow-down:before {
+  content: "\e911";
+  color: @accent_color;
+}
+.icon-eye:before {
+  content: "\e912";
+  color: @accent_color;
+}
+.icon-eye-slash:before {
+  content: "\e913";
+  color: #c1c1c9;
+}
+.icon-edit:before {
   content: "\e914";
   color: @accent_color;
 }
-.icon-Archive_Success .path1:before {
+.icon-delete:before {
   content: "\e915";
+  color: #ef4fa6;
+}
+.icon-check:before {
+  content: "\e916";
+  color: @accent_color;
+}
+.icon-add-plus:before {
+  content: "\e917";
+}
+.icon-log-parse:before {
+  content: "\e918";
+}
+.icon-files:before {
+  content: "\e919";
+}
+.icon-field-modify:before {
+  content: "\e91a";
+}
+.icon-Enrich:before {
+  content: "\e91b";
+}
+.icon-data-store:before {
+  content: "\e91c";
+}
+.icon-beat:before {
+  content: "\e91d";
+}
+.icon-Vega_Plugin:before {
+  content: "\e91e";
+}
+.icon-kpi:before {
+  content: "\e91f";
+}
+.icon-Insights:before {
+  content: "\e920";
+}
+.icon-Bullet_Graph:before {
+  content: "\e921";
+}
+.icon-success_utm_tick:before {
+  content: "\e922";
+  color: #6ac259;
+}
+.icon-Filter-01:before {
+  content: "\e923";
+}
+.icon-Arrow_Expand-02:before {
+  content: "\e924";
+  color: @accent_color;
+}
+.icon-Close-01:before {
+  content: "\e925";
+  color: @accent_color;
+}
+.icon-Arrow_Expand-01:before {
+  content: "\e926";
+  color: @accent_color;
+}
+.icon-Notification_Alert_Result:before {
+  content: "\e927";
+  color: #f4b73b;
+}
+.icon-Storage_notification_type:before {
+  content: "\e928";
+  color: @accent_color;
+}
+.icon-Storage_Notification_Result:before {
+  content: "\e929";
+  color: #168413;
+}
+.icon-Notification_type:before {
+  content: "\e92a";
+  color: @accent_color;
+}
+.icon-Notification_Alert_Script_Result:before {
+  content: "\e92b";
+  color: #fd7561;
+}
+.icon-help-white:before {
+  content: "\e92c";
+  color: @accent_color;
+}
+.icon-Verify-Data-01:before {
+  content: "\e92d";
+  color: #dfdeeb;
+}
+.icon-Remote-Side-Configuration:before {
+  content: "\e92e";
+  color: #fff;
+}
+.icon-Data-Source-Configuration:before {
+  content: "\e92f";
+  color: #fff;
+}
+.icon-Analyse-01:before {
+  content: "\e930";
+  color: #dfdeeb;
+}
+.icon-maximize:before {
+  content: "\e931";
+  color: @accent_color;
+}
+.icon-Instances-Receiving-08:before {
+  content: "\e932";
+  color: @accent_color;
+}
+.icon-Archive_Success .path1:before {
+  content: "\e933";
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path2:before {
-  content: "\e916";
+  content: "\e934";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path3:before {
-  content: "\e917";
+  content: "\e935";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path4:before {
-  content: "\e918";
+  content: "\e936";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path5:before {
-  content: "\e919";
+  content: "\e937";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path6:before {
-  content: "\e91a";
+  content: "\e938";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path7:before {
-  content: "\e91b";
+  content: "\e939";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path8:before {
-  content: "\e91c";
+  content: "\e93a";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path9:before {
-  content: "\e91d";
+  content: "\e93b";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path10:before {
-  content: "\e91e";
+  content: "\e93c";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path11:before {
-  content: "\e91f";
+  content: "\e93d";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path12:before {
-  content: "\e920";
+  content: "\e93e";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path13:before {
-  content: "\e921";
+  content: "\e93f";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path14:before {
-  content: "\e922";
+  content: "\e940";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path15:before {
-  content: "\e923";
+  content: "\e941";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path16:before {
-  content: "\e924";
+  content: "\e942";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path17:before {
-  content: "\e925";
+  content: "\e943";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path18:before {
-  content: "\e926";
+  content: "\e944";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path19:before {
-  content: "\e927";
+  content: "\e945";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path20:before {
-  content: "\e928";
+  content: "\e946";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path21:before {
-  content: "\e929";
+  content: "\e947";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path22:before {
-  content: "\e92a";
+  content: "\e948";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path23:before {
-  content: "\e92b";
+  content: "\e949";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path24:before {
-  content: "\e92c";
+  content: "\e94a";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path25:before {
-  content: "\e92d";
+  content: "\e94b";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path26:before {
-  content: "\e92e";
+  content: "\e94c";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path27:before {
-  content: "\e92f";
+  content: "\e94d";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path28:before {
-  content: "\e930";
+  content: "\e94e";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path29:before {
-  content: "\e931";
+  content: "\e94f";
   margin-left: -1em;
   color: rgb(37, 174, 136);
 }
 .icon-Archive_Success .path30:before {
-  content: "\e932";
+  content: "\e950";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
 .icon-Types-Configured-09:before {
-  content: "\e933";
+  content: "\e951";
   color: @accent_color;
 }
 .icon-Open-Indices-02:before {
-  content: "\e934";
+  content: "\e952";
   color: #9e9e9e;
 }
 .icon-Loading-Indices-11:before {
-  content: "\e935";
+  content: "\e953";
   color: #ff8e00;
 }
 .icon-Instances-Configured-07:before {
-  content: "\e936";
+  content: "\e954";
   color: @accent_color;
 }
 .icon-Closed-Indices-01:before {
-  content: "\e937";
+  content: "\e955";
   color: #f33434;
 }
 .icon-Archive:before {
-  content: "\e938";
+  content: "\e956";
   color: #ff8e00;
 }
 .icon-Archive_failure .path1:before {
-  content: "\e939";
+  content: "\e957";
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path2:before {
-  content: "\e93a";
+  content: "\e958";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path3:before {
-  content: "\e93b";
+  content: "\e959";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path4:before {
-  content: "\e93c";
+  content: "\e95a";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path5:before {
-  content: "\e93d";
+  content: "\e95b";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path6:before {
-  content: "\e93e";
+  content: "\e95c";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path7:before {
-  content: "\e93f";
+  content: "\e95d";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path8:before {
-  content: "\e940";
+  content: "\e95e";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path9:before {
-  content: "\e941";
+  content: "\e95f";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path10:before {
-  content: "\e942";
+  content: "\e960";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path11:before {
-  content: "\e943";
+  content: "\e961";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path12:before {
-  content: "\e944";
+  content: "\e962";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path13:before {
-  content: "\e945";
+  content: "\e963";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path14:before {
-  content: "\e946";
+  content: "\e964";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path15:before {
-  content: "\e947";
+  content: "\e965";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path16:before {
-  content: "\e948";
+  content: "\e966";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path17:before {
-  content: "\e949";
+  content: "\e967";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path18:before {
-  content: "\e94a";
+  content: "\e968";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path19:before {
-  content: "\e94b";
+  content: "\e969";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path20:before {
-  content: "\e94c";
+  content: "\e96a";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path21:before {
-  content: "\e94d";
+  content: "\e96b";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path22:before {
-  content: "\e94e";
+  content: "\e96c";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path23:before {
-  content: "\e94f";
+  content: "\e96d";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path24:before {
-  content: "\e950";
+  content: "\e96e";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path25:before {
-  content: "\e951";
+  content: "\e96f";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path26:before {
-  content: "\e952";
+  content: "\e970";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path27:before {
-  content: "\e953";
+  content: "\e971";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path28:before {
-  content: "\e954";
+  content: "\e972";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path29:before {
-  content: "\e955";
+  content: "\e973";
   margin-left: -1em;
   color: rgb(226, 76, 75);
 }
 .icon-Archive_failure .path30:before {
-  content: "\e956";
+  content: "\e974";
   margin-left: -1em;
   color: rgb(209, 64, 63);
 }
 .icon-Archive_failure .path31:before {
-  content: "\e957";
+  content: "\e975";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
 .icon-Data:before {
-  content: "\e958";
+  content: "\e976";
 }
 .icon-Diagnostics:before {
-  content: "\e959";
+  content: "\e977";
 }
 .icon-Notification:before {
-  content: "\e95a";
+  content: "\e978";
   color: @accent_color;
 }
 .icon-user:before {
-  content: "\e95b";
+  content: "\e979";
   color: @accent_color;
 }
 .icon-Menu-Collapse:before {
-  content: "\e95c";
+  content: "\e97a";
   color: #6459f0;
 }
 .icon-down-arrow:before {
-  content: "\e95d";
+  content: "\e97b";
 }
 .icon-Analytics:before {
-  content: "\e95e";
+  content: "\e97c";
   color: @accent_color;
 }
 .icon-Data-Source:before {
-  content: "\e95f";
+  content: "\e97d";
   color: @accent_color;
 }
 .icon-Network:before {
-  content: "\e960";
+  content: "\e97e";
   color: @accent_color;
 }
 .icon-Settings:before {
-  content: "\e961";
+  content: "\e97f";
   color: @accent_color;
 }
 

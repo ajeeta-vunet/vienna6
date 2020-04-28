@@ -73,6 +73,11 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
     'Next 2 Years',
     'Next 5 Years',
     'Next 10 Years',
+    'Same Time Previous Day',
+    'Same Time Day Before Previous Day',
+    'Same Time Previous Week',
+    'Same Time Previous Month',
+    'Same Time Previous Year'
   ];
 
   // If the BMV is built based on the index then the saved search for that BMV should be empty

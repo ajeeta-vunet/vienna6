@@ -2,6 +2,24 @@
   ng-controller="UnifiedTransactionVisParamsController"
   class="utm-metric-sidebar-container">
 
+  <!-- Select Template -->
+  <div class="sidebar-item">
+    <div class="sidebar-item-title">
+      Template
+    </div>
+    <div class="form-group bottom-space add-metric-wrapper">
+      <div class="template-container">
+        <select
+          ng-model="vis.params.utmTemplate"
+          class="form-control" 
+          required
+          name="templateType"
+          ng-options="template as template for template in utmTemplateList">
+        </select>
+      </div>
+    </div>
+  </div>
+
   <!-- For graphs -->
   <div class="sidebar-item">
     <div class="sidebar-item-title">

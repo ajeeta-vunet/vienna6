@@ -18,143 +18,142 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const dashboardContext = Private(dashboardContextProvider);
 
+  // UTM visualisation can be created using different templates
+  // The following are the types of templates
+  const templateTypes = {
+    displayMetricGroups: 'Display Metric Groups',
+    displayMetric: 'Display Metric'
+  };
+
   // Get the first part of the url containing the tenant
   // and bu id to prepare urls for api calls.
   // Example output: /vuSmartMaps/api/1/bu/1/
   const urlBase = chrome.getUrlBase();
 
+  const nodesWithDashboardObj = {};
+  // returns a boolean if a node has a dashboard configured
+  $scope.doesNodeHasDashboard = (nodeId) => {
+    return nodesWithDashboardObj.hasOwnProperty(nodeId);
+  };
+
   // Returns the params for the selected node by mapping the id
   // There are two kinds of nodes. parentNode(node) and childNode (nodeGroup)
   // We also return a boolean to detect if provided nodeId is parentNode or not
-  const getNodeParams = (dataSet, selectedNodeId) => {
+  const getNodeParams = (dataSet, selectedId) => {
     let isParentNode = false;
-    const selectedNodeParams = _.find(dataSet, (node) => {
+    const selectedItemParams = _.find(dataSet, (node) => {
       // If a node is selected we can easily get the nodeParams by mapping the id
-      if (node.id === selectedNodeId) {
+      if (node.id === selectedId) {
         isParentNode = true;
         return true;
       }
-      // If a nodeGroup or nodeGroup is selected we need to iterate over the nodeGroups of
-      // all the nodes to get the nodeParams
+
+      // We need to identify selected-node using Id.
+      // - We first check if its a metric-groups node or the icon node attached to metric groups.
+      // - If we are using metrics template, we check the metric node and the icon nodes attached to the metric.
       return _.find(node.metric_groups, (metricGroup) => {
-        return metricGroup.id === selectedNodeId || metricGroup.statusIcon.id === selectedNodeId;
+
+        // depending on the template we need to iteratre over metricGroups or metrics
+        if ($scope.vis.params.utmTemplate === templateTypes.displayMetricGroups) {
+          // check if selectedId is metricGroup's id or its icon id
+          if (metricGroup.id === selectedId || metricGroup.statusIcon.id === selectedId) {
+            return true;
+          }
+        } else {
+          // check if selectedId is metric's id or metricLabel's id or its icon id
+          return _.find(metricGroup.metricList, (metric) => {
+            return metric.id === selectedId ||
+              metric.statusIcon.id === selectedId ||
+              metric.valueNode.id === selectedId;
+          });
+        }
+
       });
     });
     return {
-      selectedNodeParams,
+      selectedItemParams,
       isParentNode
     };
   };
 
-  // when a node is dragged we select its respective groups as well
-  // when a group is selected we select all groups belonging to that node
-  // All selected items are moved during the drag event
-  $scope.onNodeDragStart = (draggedNodeId) => {
-    const dataSet = $scope.data.nodes;
-    const metricGroupIds = [];
+  // Given two numbers on a number line, we find the centre point
+  // Eg: a = 6, b = 12, centrePoint = 9
+  // Eg: a = -6, b = -12, centrePoint = -9
+  // Eg: a = -6, b = 6, centrePoint = 0
+  const getCenterPoint = (a, b) => {
+    const absoluteDistance = Math.abs(a - b);
+    const absoluteDistanceHalf = absoluteDistance / 2;
+    return a < b ? a + absoluteDistanceHalf : b + absoluteDistanceHalf;
+  };
 
-    // Get the params of the selected node from the dataSet
-    const { selectedNodeParams, isParentNode } = getNodeParams(dataSet, draggedNodeId);
+  // given the data and the type (node/edge),
+  // this function gives the parentNodeId, parentNodeX, parentNodeY and offSet
+  // these are required to align metricGroup/metric below the respective parent node
+  const getParentParamsForAlignemnt = (data, allNodePositions, type) => {
+    let initialOffset = 110;
+    let parentNodeId = undefined;
+    let parentNodeX = undefined;
+    let parentNodeY = undefined;
 
-    if (selectedNodeParams && selectedNodeParams.metric_groups) {
-      _.each(selectedNodeParams.metric_groups, (metricGroup) => {
-        metricGroupIds.push(metricGroup.id);
-        metricGroupIds.push(metricGroup.statusIcon.id);
-      });
-      if (isParentNode) {
-        metricGroupIds.push(selectedNodeParams.id);
-      }
-      return {
-        'action': 'selectNodes',
-        'val': metricGroupIds
-      };
+    if (type === 'node') {
+      const pos = allNodePositions[data.id];
+      parentNodeId = data.id;
+      parentNodeX = pos.x;
+      parentNodeY = pos.y;
+    } else {
+      // initial offset for link is 0
+      initialOffset = 0;
+
+      // link's from node
+      const fromId = data.from;
+      const fromPos = allNodePositions[fromId];
+      const fromNodeX = fromPos.x;
+      const fromNodeY = fromPos.y;
+
+      // link's to node
+      const toId = data.to;
+      const toPos = allNodePositions[toId];
+      const toNodeX = toPos.x;
+      const toNodeY = toPos.y;
+
+      parentNodeId = data.id;
+      parentNodeX = getCenterPoint(fromNodeX, toNodeX);
+      parentNodeY = getCenterPoint(fromNodeY, toNodeY);
     }
+
+    return {
+      parentNodeId,
+      parentNodeX,
+      parentNodeY,
+      initialOffset
+    };
   };
 
-  // Function to update Node's new X and Y values.
-  $scope.onNodeDragEnd = (draggedNodeList, nodePositions) => {
-    // We generate a object containing id, X, Y
-    // position for all nodes which have dragged
-    const updatedNodePositions = [];
-    _.each(draggedNodeList, (nodeId) => {
-      const obj = {};
-      const node = nodePositions[nodeId];
-      if (node) {
-        obj.id = nodeId;
-        obj.x = node.x;
-        obj.y = node.y;
-        updatedNodePositions.push(obj);
-      }
-    });
-
-    // There are two kinds of nodes. parentNode(node) and childNode (nodeGroup)
-    // We append parentId property to ChildNodes to identify their parent
-    // We append parentMetricGroupId property to ChildNode's icon to identify which node's icon they are
-    _.each(updatedNodePositions, (updatedNode) => {
-      const nodeParams = _.find($scope.processedData.nodes, (node) => {
-        return node.id === updatedNode.id;
-      });
-      if (nodeParams && nodeParams.parentId) {
-        updatedNode.parentId = nodeParams.parentId;
-      }
-      if (nodeParams && nodeParams.parentMetricGroupId) {
-        updatedNode.parentMetricGroupId = nodeParams.parentMetricGroupId;
-      }
-    });
-    // Broadcast an event to visParams controller to update node positions
-    $rootScope.$broadcast('vusop:utmUpdateDataOnDrag', updatedNodePositions);
-  };
-
-  $scope.toggleSidebar = false;
-
-  $scope.metricDrillDown = (refLink) => {
-    viewDashboardOrEventForThisMetric(getAppState, Private, timefilter, kbnUrl, refLink);
-  };
-
-  // We align the nodes groups below their respective nodes where required
-  // We obtain the 'X' and 'Y' positions of all nodes and generate an object of the following format
-  // "allNodes" : [
-  //   {
-  //     "id": "n1",
-  //     "x": -203,
-  //     "y": -18,
-  //     "metric_groups": [
-  //       {
-  //         "id": "n1 + BMV_rtt",
-  //         "x": -203,
-  //         "y": 42
-  //         "statusIcon" : {
-  //           "id": "n1 + BMV_rtt" + icon,
-  //           "x": -193,
-  //           "y": 42
-  //         }
-  //       }
-  //     ]
-  //   },
-  // ]
-  // finally allNodes is then saved to visParams
-  $scope.onNetworkStabilized = (nodePositions) => {
-    const dataSet = $scope.data.nodes;
-    const allNodes = [];
-    const nodesToMove = [];
-    const initialOffSet = 110;
-
-    _.each(dataSet, (node) => {
+  // align MetricGroup's textNodes and iconNodes below it's respective node/edge
+  const alignItemsForTemplateDisplayMetricGroups = (dataSet, allNodePositions, type, forceAlignFlag) => {
+    const allItems = [];
+    const itemsToMove = [];
+    _.each(dataSet, (data) => {
       let metricGroupList = [];
-      let offset = initialOffSet;
-      const pos = nodePositions[node.id];
-      const parentNodeId = node.id;
-      const parentNodeX = pos.x;
-      const parentNodeY = pos.y;
+
+      const {
+        parentNodeId,
+        parentNodeX,
+        parentNodeY,
+        initialOffset
+      } = getParentParamsForAlignemnt(data, allNodePositions, type);
+
+      let offset = initialOffset;
+      let numMetricGroupChangeFlag = false;
+      const visParamsAllItem = type === 'node' ? $scope.vis.params.allNodes : $scope.vis.params.allLinks;
 
       // We find out if a existing metricGroup has been removed
       // We do this by checking if the length of the metric_groups array has changed
-      let metricGroupLengthFlag = false;
-      const visParamNode = _.find($scope.vis.params.allNodes, (visParamNode) => {
-        return visParamNode.id === parentNodeId;
+      const visParamData = _.find(visParamsAllItem, (visParamItem) => {
+        return visParamItem.id === parentNodeId;
       });
-      if (visParamNode && visParamNode.metric_groups.length !== node.metric_groups.length) {
-        metricGroupLengthFlag = true;
+      if (visParamData && visParamData.metric_groups && visParamData.metric_groups.length !== data.metric_groups.length) {
+        numMetricGroupChangeFlag = true;
       }
 
       // We align the metricGroups below its node in the following cases
@@ -164,23 +163,30 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
 
       // If none of these conditions are satisfied no algining is done
       // and we take the already existing 'X' and 'Y' positions
-      _.each(node.metric_groups, (metricGroup) => {
-        if ((metricGroup.x === 0 && metricGroup.y === 0) || metricGroupLengthFlag ||
-            (metricGroup.statusIcon.x === 0 && metricGroup.statusIcon.y === 0)) {
+      _.each(data.metric_groups, (metricGroup) => {
+
+        if ((metricGroup.x === 0 && metricGroup.y === 0) || numMetricGroupChangeFlag || forceAlignFlag) {
           metricGroupList = [];
           // If any of above conditions are satisfied we need to reiterate over all the metricGroups
           // and realign all the metricGroups below their node
-          _.each(node.metric_groups, (group) => {
+          _.each(data.metric_groups, (group) => {
+
+            // offset calculations
+            const groupIconOffset = ((group.widthConstraint / 2) + 20);
+
+            // align groupNode below node
             const groupNodeId = group.id;
             const groupNodeX = parentNodeX;
             const groupNodeY = parentNodeY + offset;
 
+            // align groupIcon to the left side of groupNode
             const groupIconId = group.statusIcon.id;
-            const groupIconX = groupNodeX - 120;
+            const groupIconX = groupNodeX - groupIconOffset;
             const groupIconY = groupNodeY;
 
-            nodesToMove.push({ id: groupNodeId, x: groupNodeX, y: groupNodeY });
-            nodesToMove.push({ id: groupIconId, x: groupIconX, y: groupIconY });
+            // after calculating postions push them into 'itemsToMove' array
+            itemsToMove.push({ id: groupNodeId, x: groupNodeX, y: groupNodeY });
+            itemsToMove.push({ id: groupIconId, x: groupIconX, y: groupIconY });
 
             metricGroupList.push({
               'id': groupNodeId,
@@ -204,11 +210,12 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
             'id': metricGroup.statusIcon.id,
             'x': metricGroup.statusIcon.x,
             'y': metricGroup.statusIcon.y
-          }
+          },
+          'metricList': []
         });
       });
 
-      allNodes.push({
+      allItems.push({
         'id': parentNodeId,
         'x': parentNodeX,
         'y': parentNodeY,
@@ -216,94 +223,475 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
       });
     });
 
+    return { allItems, itemsToMove };
+  };
+
+  // align Metric's textNodes and iconNodes below it's respective node/edge
+  const alignItemsForTemplateDisplayMetric = (dataSet, allNodePositions, type, forceAlignFlag) => {
+    const allItems = [];
+    const itemsToMove = [];
+    _.each(dataSet, (data) => {
+      const metricGroupList = [];
+
+      const {
+        parentNodeId,
+        parentNodeX,
+        parentNodeY,
+        initialOffset
+      } = getParentParamsForAlignemnt(data, allNodePositions, type);
+
+      let offset = initialOffset;
+
+      _.each(data.metric_groups, (metricGroup) => {
+        let metricList = [];
+
+        let numMetricChangeFlag = false;
+        const visParamsAllItem = (type === 'node') ? $scope.vis.params.allNodes : $scope.vis.params.allLinks;
+
+        // We find out if a existing metricGroup has been removed
+        // We do this by checking if the length of the metric_groups array has changed
+        const visParamData = _.find(visParamsAllItem, (visParamItem) => {
+          return visParamItem.id === parentNodeId;
+        });
+
+        let visParamNodeGroup = undefined;
+        if (visParamData) {
+          visParamNodeGroup = _.find(visParamData.metric_groups, (visParamMetricGroup) => {
+            return visParamMetricGroup.id === metricGroup.id;
+          });
+        }
+
+        if (visParamNodeGroup && visParamNodeGroup.metricList &&
+          visParamNodeGroup.metricList.length !== metricGroup.metricList.length) {
+          numMetricChangeFlag = true;
+        }
+
+        // We align the metricList below its node in the following cases
+        // 1) If a new node has been added
+        // 2) For an existing node, if a new metric has been added or existing metric has been removed
+        // 3) If new icons have been added
+
+        // If none of these conditions are satisfied no algining is done
+        // and we take the already existing 'X' and 'Y' positions
+        _.each(metricGroup.metricList, (metric) => {
+          if ((metric.x === 0 && metric.y === 0) || numMetricChangeFlag || forceAlignFlag) {
+            // If any of above conditions are satisfied we need to reiterate over the metrics
+            // and realign all the metrics below their node
+            metricList = [];
+            _.each(metricGroup.metricList, (metricItem) => {
+
+              // offset calculations
+              const metricIconOffset = ((metric.widthConstraint / 2) + 20);
+              const metricValueOffset = 80 + (((metric.maxCharacterLength - 10) / 10) * 40);
+
+              // align metric below the node
+              const metricNodeId = metricItem.id;
+              const metricNodeX = parentNodeX;
+              const metricNodeY = parentNodeY + offset;
+
+              // align metric icon to left of the metric
+              const metricIconId = metricItem.statusIcon.id;
+              const metricIconX = metricNodeX - metricIconOffset;
+              const metricIconY = metricNodeY;
+
+              // align metricValue to right of the metric
+              const metricValueId = metricItem.valueNode.id;
+              const metricValueX = metricNodeX + metricValueOffset;
+              const metricValueY = metricNodeY;
+
+              // the three items (metric, metricIcon, metricValue ) needs to be realigned
+              itemsToMove.push({ id: metricNodeId, x: metricNodeX, y: metricNodeY });
+              itemsToMove.push({ id: metricIconId, x: metricIconX, y: metricIconY });
+              itemsToMove.push({ id: metricValueId, x: metricValueX, y: metricValueY });
+
+              // generate metricList array
+              metricList.push({
+                'id': metricNodeId,
+                'x': metricNodeX,
+                'y': metricNodeY,
+                'statusIcon': {
+                  'id': metricIconId,
+                  'x': metricIconX,
+                  'y': metricIconY
+                },
+                'valueNode': {
+                  'id': metricValueId,
+                  'x': metricValueX,
+                  'y': metricValueY
+                }
+              });
+
+              // update offset so each metric comes below one another
+              offset += 35;
+            });
+
+            // we need to exit the '_.each(metricGroup.metricList)' loop
+            return false;
+          }
+
+          metricList.push({
+            'id': metric.id,
+            'x': metric.x,
+            'y': metric.y,
+            'statusIcon': {
+              'id': metric.statusIcon.id,
+              'x': metric.statusIcon.x,
+              'y': metric.statusIcon.y
+            },
+            'valueNode': {
+              'id': metric.valueNode.id,
+              'x': metric.valueNode.x,
+              'y': metric.valueNode.y
+            }
+          });
+        });
+
+        metricGroupList.push({
+          'id': metricGroup.id,
+          'x': 0,
+          'y': 0,
+          'metricList': metricList
+        });
+      });
+
+      allItems.push({
+        'id': parentNodeId,
+        'x': parentNodeX,
+        'y': parentNodeY,
+        'metric_groups': metricGroupList
+      });
+    });
+    return { allItems, itemsToMove };
+  };
+
+  // when a node is dragged we select its respective groups as well
+  // when a group is selected we select all groups belonging to that node
+  // All selected items are moved during the drag event
+  $scope.onNodeDragStart = (draggedNodeId) => {
+    const nodesDataSet = $scope.data.nodes;
+    const edgesDataSet = $scope.data.edges;
+    const itemsToSelect = [];
+
+    // Get the params of the selected node from the dataSet
+    let { selectedItemParams, isParentNode } = getNodeParams(nodesDataSet, draggedNodeId);
+
+    // if 'draggedNodeId' was not found in nodesDataSet lets search for it in edgesDataSet
+    if (!selectedItemParams) {
+      ({ selectedItemParams, isParentNode } = getNodeParams(edgesDataSet, draggedNodeId));
+    }
+
+    // If the selected node has metric_groups, we need to select all metric_groups/metrics
+    if (selectedItemParams && selectedItemParams.metric_groups) {
+      // push items to be selected inside 'pushItemsToSelect' array
+      _.each(selectedItemParams.metric_groups, (metricGroup) => {
+        // if template is 'Display Metric Groups', we select 'group' and 'statusIcon'
+        if ($scope.vis.params.utmTemplate === templateTypes.displayMetricGroups) {
+          itemsToSelect.push(metricGroup.id);
+          itemsToSelect.push(metricGroup.statusIcon.id);
+        }
+        // if template is with 'Display Metric', we select 'metric', 'statusIcon' and 'valueNode'
+        else {
+          _.each(metricGroup.metricList, (metric) => {
+            itemsToSelect.push(metric.id);
+            itemsToSelect.push(metric.statusIcon.id);
+            itemsToSelect.push(metric.valueNode.id);
+          });
+        }
+      });
+    }
+
+    // if parent node is dragged we select that also
+    if (isParentNode) {
+      itemsToSelect.push(selectedItemParams.id);
+    }
+
+    // return nodes to selected back to vis_map
+    return [{
+      action: 'selectNodes',
+      val: itemsToSelect
+    }];
+  };
+
+  // Function to update Node's new X and Y values.
+  $scope.onNodeDragEnd = (draggedItemList, allNodePositions) => {
+    const selectedTemplate = $scope.vis.params.utmTemplate;
+    const nodesDataSet = $scope.data.nodes;
+    const edgesDataSet = $scope.data.edges;
+    let itemsToMove = [];
+
+    // We generate a object containing id, X, Y
+    // position for all nodes which have dragged
+    let updatedItemPositions = [];
+    _.each(draggedItemList, (itemId) => {
+      const obj = {};
+      const item = allNodePositions[itemId];
+      if (item) {
+        obj.id = itemId;
+        obj.x = item.x;
+        obj.y = item.y;
+        updatedItemPositions.push(obj);
+      }
+    });
+
+    // After a node has finished dragging, we need re-align the metricGroup/metrics of the node's edges
+    _.each(updatedItemPositions, (node) => {
+      const { selectedItemParams, isParentNode } = getNodeParams(nodesDataSet, node.id);
+
+      // peform alignment of node's edges metricGroup/metrics only if it is a parent node
+      // textNodes and imageNodes used for displaying metricGroup/metrics are not parentNodes
+      if (selectedItemParams && isParentNode) {
+        // when a parent node is dragged
+        // we find all the edges connected to that node
+        // we drag all textNodes/iconNodes belonging to that edges
+        _.each(edgesDataSet, (edgesData) => {
+          if (edgesData.from === node.id || edgesData.to === node.id) {
+
+            // call respective function depending on template
+            if (selectedTemplate === templateTypes.displayMetricGroups) {
+              // get nodesItemsToMove
+              ({ itemsToMove } = alignItemsForTemplateDisplayMetricGroups(
+                [edgesData],
+                allNodePositions,
+                'edge',
+                true
+              ));
+            } else {
+              // get nodesItemsToMove
+              ({ itemsToMove } = alignItemsForTemplateDisplayMetric(
+                [edgesData],
+                allNodePositions,
+                'edge',
+                true
+              ));
+            }
+          }
+        });
+      }
+    });
+
+    // we need to update the position of items which need to be moved as well
+    updatedItemPositions = updatedItemPositions.concat(itemsToMove);
+
+    // Broadcast an event to visParams controller to update node positions
+    $rootScope.$broadcast('vusop:utmUpdateDataOnDrag', updatedItemPositions);
+
+    // update positons
+    return [{
+      action: 'moveNode',
+      val: itemsToMove
+    }];
+  };
+
+  $scope.toggleSidebar = false;
+
+  $scope.metricDrillDown = (refLink) => {
+    viewDashboardOrEventForThisMetric(getAppState, Private, timefilter, kbnUrl, refLink);
+  };
+
+  // We align all the textNodes and iconNodes below their respective nodes where required
+  // We obtain the 'X' and 'Y' positions of all nodes and generate an object of the following format
+  // this is then stored in allNodes, allLinks and saved to visParams
+  // [
+  //   {
+  //     "id": "n1",
+  //     "x": -203,
+  //     "y": -18,
+  //     "metric_groups": [
+  //       {
+  //         "id": "n1 + BMV_rtt",
+  //         "x": -203,
+  //         "y": 42,
+  //         "statusIcon" : {
+  //           "id": "n1 + BMV_rtt" + icon,
+  //           "x": -193,
+  //           "y": 42
+  //         },
+  //         "metricList": [
+  //           {
+  //             "id": "n1 + BMV_rtt + maxRtt",
+  //             "x": -203,
+  //             "y": 42,
+  //             "statusIcon" : {
+  //               "id": "n1 + BMV_rtt + maxRtt" + icon,
+  //               "x": -193,
+  //               "y": 42
+  //             },
+  //           }
+  //         ]
+  //       }
+  //     ]
+  //   },
+  // ]
+  $scope.onNetworkStabilized = (allNodePositions) => {
+    const selectedTemplate = $scope.vis.params.utmTemplate;
+    let allNodes = [];
+    let allLinks = [];
+    let nodesItemsToMove = [];
+    let edgesItemsToMove = [];
+
+    // generate allNodes, allLinks and items to move
+    // call respective function depending on template
+    if (selectedTemplate === templateTypes.displayMetricGroups) {
+      // get allNodes and nodesItemsToMove
+      const nodeResult = alignItemsForTemplateDisplayMetricGroups(
+        $scope.data.nodes,
+        allNodePositions,
+        'node',
+        false
+      );
+      allNodes = nodeResult.allItems;
+      nodesItemsToMove = nodeResult.itemsToMove;
+
+      // get allLinks and edgesItemsToMove
+      const edgeResult = alignItemsForTemplateDisplayMetricGroups(
+        $scope.data.edges,
+        allNodePositions,
+        'edge',
+        false
+      );
+      allLinks = edgeResult.allItems;
+      edgesItemsToMove = edgeResult.itemsToMove;
+    }
+    else {
+      // get allNodes and nodesItemsToMove
+      const nodeResult = alignItemsForTemplateDisplayMetric(
+        $scope.data.nodes,
+        allNodePositions,
+        'node',
+        false
+      );
+      allNodes = nodeResult.allItems;
+      nodesItemsToMove = nodeResult.itemsToMove;
+
+      // get allLinks and edgesItemsToMove
+      const edgeResult = alignItemsForTemplateDisplayMetric(
+        $scope.data.edges,
+        allNodePositions,
+        'edge',
+        false
+      );
+      allLinks = edgeResult.allItems;
+      edgesItemsToMove = edgeResult.itemsToMove;
+    }
+
     // Broadcast an event to visParams controller to initialise all node's X and Y values
-    $rootScope.$broadcast('vusop:utmInitData', allNodes);
-    return {
-      'action': 'moveNode',
-      'val': nodesToMove
-    };
+    $rootScope.$broadcast('vusop:utmInitData', { allNodes, allLinks });
+
+    // update positons
+    return [{
+      action: 'moveNode',
+      val: nodesItemsToMove.concat(edgesItemsToMove)
+    }];
+  };
+
+  // A generic function which can be caled onNodeSelect or onLinkSelect
+  $scope.onItemSelect = (selectedItemId, imageGroups) => {
+    const nodeDataSet = $scope.data.nodes;
+    const edgeDataSet = $scope.data.edges;
+    const itemsToSelect = [];
+
+    // Get the params of the selected node from the dataSet
+    let type = 'node';
+    let { selectedItemParams } = getNodeParams(nodeDataSet, selectedItemId);
+
+    // if 'draggedNodeId' was not found in nodesDataSet lets search for it in edgesDataSet
+    if (!selectedItemParams) {
+      type = 'edge';
+      ({ selectedItemParams } = getNodeParams(edgeDataSet, selectedItemId));
+    }
+
+    // if template is 'Display Metric Groups' we need to prepare data to be displayed on sidebar
+    if ($scope.vis.params.utmTemplate === templateTypes.displayMetricGroups) {
+      // We generate successCount and failureCount for every metricGroup
+      _.each(selectedItemParams.metric_groups, (metricGroup) => {
+        metricGroup.successCount = 0;
+        metricGroup.failureCount = 0;
+        _.each(metricGroup.metricList, (metric) => {
+          // If metric color is green we increment the success count
+          if (metric.color === colors.green) {
+            metricGroup.successCount++;
+          }
+          else {
+            metricGroup.failureCount++;
+          }
+        });
+      });
+
+      // node specific items
+      if (type === 'node') {
+        // Get image to be displayed on the sidebar
+        if (imageGroups[selectedItemParams.group]) {
+          selectedItemParams.imagePath = imageGroups[selectedItemParams.group].image;
+        }
+        selectedItemParams.borderColor = selectedItemParams.color.border;
+
+        // edge specific items
+      } else {
+        selectedItemParams.imagePath = '/ui/vienna_images/link_image_utm.svg';
+        selectedItemParams.borderColor = selectedItemParams.color;
+      }
+
+      selectedItemParams.isNode = (type === 'node');
+      $scope.selectedNodeParams = selectedItemParams;
+      $scope.toggleSidebar = true;
+      $scope.$apply();
+
+      // If a node is clicked we highlight the clicked node and highlight all metricGroups belonging to that node
+      // If a metricGroup is clicked we identify which node this metricGroup belongs to
+      // and highlight all metricGroups belonging to that node
+
+      // selectedItemParams.id can be a nodeId or edgeId. only push if its a node
+      if (type === 'node') { itemsToSelect.push(selectedItemParams.id); }
+      _.each(selectedItemParams.metric_groups, (metricGroup) => {
+        // select metricGroup and statusIcon
+        itemsToSelect.push(metricGroup.id);
+        itemsToSelect.push(metricGroup.statusIcon.id);
+      });
+    }
+    // if template is 'without sidebar' we don't need to prepare data to be displayed on sidebar
+    else {
+      // If a node is clicked we highlight the clicked node and highlight all metricGroups belonging to that node
+      // If a metricGroup is clicked we identify which node this metricGroup belongs to
+      // and highlight all metricGroups belonging to that node
+
+      // selectedItemParams.id can be a nodeId or edgeId. only push if its a node
+      if (type === 'node') { itemsToSelect.push(selectedItemParams.id); }
+      _.each(selectedItemParams.metric_groups, (metricGroup) => {
+        _.each(metricGroup.metricList, (metric) => {
+
+          // get the metric of the selectedItemId
+          if (metric.valueNode.id === selectedItemId) {
+            // check if drillDown has been configured
+            if (metric.view_more) {
+              $scope.metricDrillDown(metric.view_more);
+            }
+          }
+
+          // select metricLabel, metricValue and statusIcon
+          itemsToSelect.push(metric.id);
+          itemsToSelect.push(metric.statusIcon.id);
+          itemsToSelect.push(metric.valueNode.id);
+        });
+      });
+    }
+    return [{
+      action: 'selectNodes',
+      val: itemsToSelect
+    }];
   };
 
   // On select of node we prepare the required data for displaying the sidebar
   // Sidebar displays node specific details
   $scope.onNodeSelect = (selectedNodeId, nodeImageGroups) => {
-    const dataSet = $scope.data.nodes;
-
-    // Get the params of the selected node from the dataSet
-    const { selectedNodeParams } = getNodeParams(dataSet, selectedNodeId);
-
-    // We generate successCount and failureCount for every metricGroup
-    _.each(selectedNodeParams.metric_groups, (metricGroup) => {
-      metricGroup.successCount = 0;
-      metricGroup.failureCount = 0;
-      _.each(metricGroup.metricList, (metric) => {
-        // If metric color is green we increment the success count
-        if (metric.color === colors.green) {
-          metricGroup.successCount++;
-        }
-        else {
-          metricGroup.failureCount++;
-        }
-      });
-    });
-    // Get image to be displayed on the sidebar
-    if (nodeImageGroups[selectedNodeParams.group]) {
-      selectedNodeParams.imagePath = nodeImageGroups[selectedNodeParams.group].image;
-    }
-    selectedNodeParams.borderColor = selectedNodeParams.color.border;
-    selectedNodeParams.isNode = true;
-    $scope.selectedNodeParams = selectedNodeParams;
-    $scope.toggleSidebar = true;
-    $scope.$apply();
-
-    // If a node is clicked we highlight the clicked node and highlight all metricGroups belonging to that node
-    // If a metricGroup is clicked we identify which node this metricGroup belongs to
-    // and highlight all metricGroups belonging to that node
-    const metricGroupIds = [selectedNodeId];
-    if (selectedNodeParams.id === selectedNodeId) {
-      _.each(selectedNodeParams.metric_groups, (metricGroup) => {
-        metricGroupIds.push(metricGroup.id);
-        metricGroupIds.push(metricGroup.statusIcon.id);
-      });
-    }
-    return {
-      'action': 'selectNodes',
-      'val': metricGroupIds
-    };
+    const actionObj = $scope.onItemSelect(selectedNodeId, nodeImageGroups);
+    return actionObj;
   };
 
   // On select of link we prepare the required data for displaying the sidebar
   // Sidebar displays link specific details
   $scope.onLinkSelect = (selectedEdgeId) => {
-    const dataSet = $scope.data.edges;
-
-    // Get the params of the selected node from the dataSet
-    const selectedEdgePrams = _.find(dataSet, (edge) => {
-      return edge.id === selectedEdgeId;
-    });
-
-    _.each(selectedEdgePrams.metric_groups, (metricGroup) => {
-      metricGroup.successCount = 0;
-      metricGroup.failureCount = 0;
-
-      _.each(metricGroup.metricList, (metric) => {
-        // If metric color is green we increment the success count
-        if (metric.color === colors.green) {
-          metricGroup.successCount++;
-        }
-        else {
-          metricGroup.failureCount++;
-        }
-      });
-
-    });
-
-    selectedEdgePrams.borderColor = selectedEdgePrams.color;
-    selectedEdgePrams.imagePath = '/ui/vienna_images/link_image_utm.svg';
-    selectedEdgePrams.isNode = false;
-    $scope.selectedNodeParams = selectedEdgePrams;
-    $scope.toggleSidebar = true;
-    $scope.$apply();
+    const actionObj = $scope.onItemSelect(selectedEdgeId);
+    return actionObj;
   };
 
   // Update toggleSidebar flag used to show/hide sidebar
@@ -345,6 +733,21 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
   // user entered data and makes a POST call to the
   // back end to get the response data.
   $scope.search = function run() {
+    // If all configuration empty then its a new visualisation
+    $scope.isNewVisualisation = $scope.vis.params.graphs.length === 0 &&
+      $scope.vis.params.customNodes.length === 0 &&
+      $scope.vis.params.customLinks.length === 0;
+
+    // If user hasn't configured anything yet, return
+    // this happens when new a visualisation is oppened for the first time
+    // no needs to make api call for first time
+    if ($scope.isNewVisualisation) {
+      return;
+    }
+
+    // utm template selected by the user
+    const selectedTemplate = $scope.vis.params.utmTemplate;
+
     // Hide the sidebar
     $scope.hideSidebar();
 
@@ -352,32 +755,29 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     // If the visualisation is resized we need the sidebar to be responsive as well
     // We adjust font of sidebar according to size of visualisation
     const utmVisContainerWidth = $('.utm-vis-container').width();
-    if(utmVisContainerWidth >= 500 && utmVisContainerWidth <= 600) {
+    if (utmVisContainerWidth >= 500 && utmVisContainerWidth <= 600) {
       $scope.sidebarFontSize = '10px';
-    } else if(utmVisContainerWidth >= 600 && utmVisContainerWidth <= 700) {
+    } else if (utmVisContainerWidth >= 600 && utmVisContainerWidth <= 700) {
       $scope.sidebarFontSize = '11px';
-    } else if(utmVisContainerWidth >= 700 && utmVisContainerWidth <= 850) {
+    } else if (utmVisContainerWidth >= 700 && utmVisContainerWidth <= 850) {
       $scope.sidebarFontSize = '12px';
-    } else if(utmVisContainerWidth >= 850 && utmVisContainerWidth <= 1000) {
+    } else if (utmVisContainerWidth >= 850 && utmVisContainerWidth <= 1000) {
       $scope.sidebarFontSize = '13px';
-    } else if(utmVisContainerWidth >= 1000 && utmVisContainerWidth <= 1200) {
+    } else if (utmVisContainerWidth >= 1000 && utmVisContainerWidth <= 1200) {
       $scope.sidebarFontSize = '14px';
-    } else if(utmVisContainerWidth >= 1200 && utmVisContainerWidth <= 1300) {
+    } else if (utmVisContainerWidth >= 1200 && utmVisContainerWidth <= 1300) {
       $scope.sidebarFontSize = '15px';
-    } else if(utmVisContainerWidth >= 1300 && utmVisContainerWidth <= 1400) {
+    } else if (utmVisContainerWidth >= 1300 && utmVisContainerWidth <= 1400) {
       $scope.sidebarFontSize = '16.5px';
-    } else if(utmVisContainerWidth >= 1400 && utmVisContainerWidth <= 1550) {
+    } else if (utmVisContainerWidth >= 1400 && utmVisContainerWidth <= 1550) {
       $scope.sidebarFontSize = '17px';
-    } else if(utmVisContainerWidth >= 1550 && utmVisContainerWidth <= 1750) {
+    } else if (utmVisContainerWidth >= 1550 && utmVisContainerWidth <= 1750) {
       $scope.sidebarFontSize = '18px';
     }
 
-    /* To pass node placement type to the vis-map directive.
-     * For custom nodes and links, graph pass physicsAndDragNDrop.
-     */
-
-    // If allnodes defined in visParams is of length 0 then use physicsAndDragNDrop
-    if (!$scope.vis.params.allNodes) {
+    // If allnodes defined in visParams is of length 0 then use withPhysics
+    if ($scope.vis.params.allNodes.length === 0 &&
+      $scope.vis.params.allLinks.length === 0) {
       $scope.nodePlacementType = 'physicsAndDragNDrop';
     } else {
       $scope.nodePlacementType = 'dragNDrop';
@@ -390,7 +790,8 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
 
     const customNodes = $scope.vis.params.customNodes;
     const customLinks = $scope.vis.params.customLinks;
-    const allNodes = $scope.vis.params.allNodes ? $scope.vis.params.allNodes : [];
+    const allNodes = $scope.vis.params.allNodes;
+    const allLinks = $scope.vis.params.allLinks;
     const graphs = $scope.vis.params.graphs;
     const body = {
       customNodes: customNodes || '',
@@ -398,7 +799,8 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
       graphs: graphs || '',
       time: {},
       esFilter: esFilter,
-      allNodes: allNodes
+      allNodes: allNodes,
+      allLinks: allLinks
     };
 
     // get the selected time duration from time filter
@@ -434,10 +836,11 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     //     },
     //     'metric_groups':[
     //       {
+    //         'id':'n2 + BMV_rtt',
     //         'x':-482,
     //         'y':-146,
+    //         statusIcon: { 'id':'n2 + BMV_rtt + icon', 'x':0, 'y':0 }
     //         'success':true,
-    //         'id':'n2 + BMV_rtt',
     //         'group':'metric',
     //         'font':{
     //           'color':'green'
@@ -445,6 +848,11 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     //         'label':'BMV_rtt',
     //         'metricList':[
     //           {
+    //             'id': 'n2 + BMV_rtt + Max RTT',
+    //             'x': 0,
+    //             'y': 0,
+    //             statusIcon: { 'id':'n2 + BMV_rtt + Max RTT + icon', 'x':0, 'y':0 }
+    //             valueNode: { 'id':'n2 + BMV_rtt + Max RTT + valueNode', 'x':0, 'y':0 }
     //             'formattedValue':'125',
     //             'visualization_name':'BMV_rtt',
     //             'value':'N.A.',
@@ -493,10 +901,11 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     //     }    'color':'green',
     //     'metric_groups':[
     //       {
+    //         'id':'n2 + BMV_rtt',
     //         'x':-482,
     //         'y':-146,
+    //         statusIcon: { 'id':'n2 + BMV_rtt + icon', 'x':0, 'y':0 }
     //         'success':true,
-    //         'id':'n2 + BMV_rtt',
     //         'group':'metric',
     //         'font':{
     //           'color':'green'
@@ -504,6 +913,11 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     //         'label':'BMV_rtt',
     //         'metricList':[
     //           {
+    //             'id': 'n2 + BMV_rtt + Max RTT',
+    //             'x': 0,
+    //             'y': 0,
+    //             statusIcon: { 'id':'n2 + BMV_rtt + Max RTT + icon', 'x':0, 'y':0 }
+    //             valueNode: { 'id':'n2 + BMV_rtt + Max RTT + valueNode', 'x':0, 'y':0 }
     //             'formattedValue':'125',
     //             'visualization_name':'BMV_rtt',
     //             'value':'N.A.',
@@ -535,78 +949,135 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
 
     // Perform operation after getting response.
     httpResult.then(function (resp) {
+
+      // Process data for template: 'Display Metric Groups'
       // Process backend response to generate json in required format
       // processed data is fed into visMap to generate graphs
-      const processData = (data) => {
+      const processDataForTemplateDisplayMetricGroups = (dataList, type) => {
         const additionalNodes = [];
-        const processedData = JSON.parse(JSON.stringify(data));
 
-        // Process edge data
-        _.each(data.edges, function (edge) {
-          // labels will not be displayed for edges
-          edge.label = '';
-          // We create a copy of metricGroup label, so later on we can truncate the label string
-          _.each(edge.metric_groups, function (metricGroup) {
-            metricGroup.labelUnformatted = metricGroup.label;
-          });
-        });
+        // Process data
+        _.each(dataList, function (data) {
+          if (type === 'edge') {
+            // labels will not be displayed for edges
+            data.label = '';
+          }
 
-        // Process node data
-        _.each(data.nodes, function (node) {
-          if (node.metric_groups) {
-            _.each(node.metric_groups, function (metricGroup) {
-              const iconNode = {};
+          if (data.metric_groups) {
+            // we iterate over the merticList for first time to find out which
+            // metric.label has the max number of characters
+            let maxCharacterLength = 0;
+            _.each(data.metric_groups, function (metricGroup) {
+              if (metricGroup.label.length > maxCharacterLength) {
+                maxCharacterLength = metricGroup.label.length;
+              }
+            });
+
+            // we calculate the widthConstraint of the textNode based on 'maxCharacterLength'
+            const widthConstraint = (maxCharacterLength * 215) / 20;
+
+            _.each(data.metric_groups, function (metricGroup) {
+              const iconNode = { ...metricGroup.statusIcon };
 
               // We create a copy of metricGroup label, so later on we can truncate the label string
               metricGroup.labelUnformatted = metricGroup.label;
-              // If metricGroup's label is greater than 20 characters we truncate it to 18
-              if (metricGroup.label.length > 20) {
-                metricGroup.label = metricGroup.label.slice(0, 18) + '..';
-              }
 
               // Add required properties for metricGroup
-              metricGroup.parentId = node.id;
-              metricGroup.statusIcon.id = metricGroup.id + ' +' + ' icon';
-
-              // Add required properties for iconNode
-              iconNode.parentId = node.id;
-              iconNode.parentMetricGroupId = metricGroup.id;
-              iconNode.id = metricGroup.statusIcon.id;
-              iconNode.x = metricGroup.statusIcon.x;
-              iconNode.y = metricGroup.statusIcon.y;
-
-              // We display icon for each metricGroup based on its state
-              switch (metricGroup.font.color) {
-                case colors.green:
-                  iconNode.group = 'iconGreen';
-                  break;
-                case colors.yellow:
-                  iconNode.group = 'iconYellow';
-                  break;
-                case colors.orange:
-                  iconNode.group = 'iconOrange';
-                  break;
-                case colors.red:
-                  iconNode.group = 'iconRed';
-                  break;
-                default:
-                  throw 'icon does not exist for the color ' + metricGroup.font.color;
-              }
               metricGroup.font.color = 'black';
+              metricGroup.widthConstraint = widthConstraint;
 
+              // push additional nodes into processedData
               additionalNodes.push(metricGroup);
               additionalNodes.push(iconNode);
             });
           }
         });
-        _.each(additionalNodes, function (node) {
-          processedData.nodes.push(node);
+        return additionalNodes;
+      };
+
+      // Process data for template: 'Display Metric'
+      // Process backend response to generate json in required format
+      // processed data is fed into visMap to generate graphs
+      const processDataForTemplateDisplayMetric = (dataList, type) => {
+        const additionalNodes = [];
+
+        // Process data
+        _.each(dataList, function (data) {
+          if (type === 'edge') {
+            // labels will not be displayed for edges
+            data.label = '';
+          }
+
+          if (data.metric_groups) {
+            let maxCharacterLength = 0;
+
+            _.each(data.metric_groups, function (metricGroup) {
+              if (metricGroup.metricList) {
+                // we iterate over the merticList for first time to find out which
+                // metric.label has the max number of characters
+                _.each(metricGroup.metricList, function (metric) {
+                  if (metric.label.length > maxCharacterLength) {
+                    maxCharacterLength = metric.label.length;
+                  }
+                });
+              }
+            });
+
+            // we calculate the widthConstraint of the textNode based on 'maxCharacterLength'
+            const widthConstraint = (maxCharacterLength * 215) / 20;
+
+            _.each(data.metric_groups, function (metricGroup) {
+              if (metricGroup.metricList) {
+                _.each(metricGroup.metricList, function (metric) {
+                  const iconNode = { ...metric.statusIcon };
+                  const metricValueNode = { ...metric.valueNode };
+
+                  // We create a copy of metric label, so later on we can truncate the label string
+                  metric.labelUnformatted = metric.label;
+                  metric.maxCharacterLength = maxCharacterLength;
+                  metric.widthConstraint = widthConstraint;
+
+                  // if metricValueNode has drillDown available then make it blue color
+                  if (metric.view_more) {
+                    // For nodes which have dashboards configured, we store their id in nodesWithDashboardObj.
+                    // later on, given a nodeId it is easy to figure out if it has bashboard
+                    nodesWithDashboardObj[metricValueNode.id] = metricValueNode.id;
+                    metricValueNode.font.color = 'blue';
+                  }
+                  metricValueNode.widthConstraint = 30;
+
+                  // push all items
+                  additionalNodes.push(metric);
+                  additionalNodes.push(iconNode);
+                  additionalNodes.push(metricValueNode);
+                });
+              }
+            });
+          }
         });
-        return processedData;
+        return additionalNodes;
       };
 
       $scope.data = resp;
-      $scope.processedData = processData(resp);
+
+      // deepClone resp
+      const processedData = JSON.parse(JSON.stringify(resp));
+      let additionalNodeItems = [];
+      let additionalEdgeItems = [];
+
+      // populate additionalEdgeItems and additionalEdgeItems depending on template
+      if (selectedTemplate === templateTypes.displayMetricGroups) {
+        additionalNodeItems = processDataForTemplateDisplayMetricGroups(resp.nodes, 'node');
+        additionalEdgeItems = processDataForTemplateDisplayMetricGroups(resp.edges, 'edge');
+      } else {
+        additionalNodeItems = processDataForTemplateDisplayMetric(resp.nodes, 'node');
+        additionalEdgeItems = processDataForTemplateDisplayMetric(resp.edges, 'edge');
+      }
+
+      processedData.nodes = processedData.nodes.concat(additionalNodeItems, additionalEdgeItems);
+
+      // finally store processedData on scope
+      $scope.processedData = processedData;
     });
   };
 

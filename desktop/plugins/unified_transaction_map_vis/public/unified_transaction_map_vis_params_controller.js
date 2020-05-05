@@ -16,9 +16,18 @@ module.controller('UnifiedTransactionVisParamsController', function ($scope, $ro
   const savedObjectsClient = Private(SavedObjectsClientProvider);
 
   // Gets the list of all business metric visualization configured.
-  getBusinessMetricList(savedObjectsClient).then (function (data) {
+  getBusinessMetricList(savedObjectsClient).then(function (data) {
     $scope.bmvList = data;
   });
+
+  // Template types
+  $scope.utmTemplateList = ['Display Metric Groups', 'Display Metric'];
+
+  // this check is added for backward compatibility
+  // to set default template to 'Display Metric Groups'
+  if (!$scope.vis.params.utmTemplate) {
+    $scope.vis.params.utmTemplate = 'Display Metric Groups';
+  }
 
   // Initializing empty list for all node, link
   // and graph list to perform move operation.
@@ -87,7 +96,7 @@ module.controller('UnifiedTransactionVisParamsController', function ($scope, $ro
 
   // Move a node or link or graph one position above the
   // current position.
-  $scope.moveUp =  function (index, resource) {
+  $scope.moveUp = function (index, resource) {
     if (resource === 'customNodes') {
       move($scope.vis.params.customNodes, $scope.operNodeList, index, index - 1);
     } else if (resource === 'customLinks') {
@@ -99,7 +108,7 @@ module.controller('UnifiedTransactionVisParamsController', function ($scope, $ro
 
   // Move a node or link or graph one position below the
   // current position.
-  $scope.moveDown =  function (index, resource) {
+  $scope.moveDown = function (index, resource) {
     if (resource === 'customNodes') {
       move($scope.vis.params.customNodes, $scope.operNodeList, index, index + 1);
     } else if (resource === 'customLinks') {
@@ -111,56 +120,97 @@ module.controller('UnifiedTransactionVisParamsController', function ($scope, $ro
 
   // Event to initialise 'X' and 'Y' positions of all nodes
   // and respective groups
-  $rootScope.$on('vusop:utmInitData', (event, nodes) => {
+  $rootScope.$on('vusop:utmInitData', (event, obj) => {
+    const nodes = obj.allNodes;
+    const links = obj.allLinks;
+
+    // if nodes have changes update them
     if (!_.isEqual($scope.vis.params.allNodes, nodes)) {
       $scope.vis.params.allNodes = nodes;
+      $scope.$apply();
+    }
+
+    // if links have changes update them
+    if (!_.isEqual($scope.vis.params.allLinks, links)) {
+      $scope.vis.params.allLinks = links;
       $scope.$apply();
     }
   });
 
   // Event to save 'X' and 'Y' position of dragged nodes
   $rootScope.$on('vusop:utmUpdateDataOnDrag', (event, newNodes) => {
+    const allNodes = $scope.vis.params.allNodes;
+    const allLinks = $scope.vis.params.allLinks;
+
     _.each(newNodes, (node) => {
       const id = node.id;
       const x = node.x;
       const y = node.y;
 
-      let visParamsArgsToUpdate = undefined;
+      // updates the items coordinates
+      const updateItem = (item) => {
+        item.x = x;
+        item.y = y;
+      };
 
-      // First we check if dragged node is a parentNode(node) or childNode (nodeGroup)
-      // ChildNodes have a parentId property used to identify who their parent is
+      const updatePosition = (dataList) => {
+        let isSuccessful = false;
+        _.each(dataList, function (data) {
+          // if node metricGroup, update position for it
+          if (data.id === id) {
+            updateItem(data);
+            isSuccessful = true;
+          }
 
-      // If dragged node is childNode, we need to find its parentArgs in vis.params.allNodes using parentId
-      // we iterate over the parentArgs to get the repective metricGroup having same Id as our childNode and update X,Y position
+          // iterate over metric_groups
+          if (data.metric_groups) {
+            _.each(data.metric_groups, function (metricGroup) {
+              // if node metricGroup, update position for it
+              if (metricGroup.id === id) {
+                updateItem(metricGroup);
+                isSuccessful = true;
+              }
 
-      // If dragged node is parentNode, we need to find that node in vis.params.allNodes using Id
-      // update X,Y position
+              // if node metricGroup.statusIcon, update position for it
+              if (metricGroup.statusIcon && metricGroup.statusIcon.id === id) {
+                updateItem(metricGroup.statusIcon);
+                isSuccessful = true;
+              }
 
-      if (node.parentId) {
-        const visParamsNodeArgs = _.find($scope.vis.params.allNodes, (visParamsNode) => {
-          return visParamsNode.id === node.parentId;
+              // iterate over metricList
+              if (metricGroup.metricList) {
+                _.each(metricGroup.metricList, function (metric) {
+                  // if node metric, update position for it
+                  if (metric.id === id) {
+                    updateItem(metric);
+                    isSuccessful = true;
+                  }
+
+                  // if node metric.statusIcon, update position for it
+                  if (metric.statusIcon.id === id) {
+                    updateItem(metric.statusIcon);
+                    isSuccessful = true;
+                  }
+
+                  // if node metric.valueNode, update position for it
+                  if (metric.valueNode.id === id) {
+                    updateItem(metric.valueNode);
+                    isSuccessful = true;
+                  }
+                });
+              }
+            });
+          }
         });
-        visParamsArgsToUpdate = _.find(visParamsNodeArgs.metric_groups, (metricGroup) => {
-          return metricGroup.id === id || metricGroup.statusIcon.id === id;
-        });
-      } else {
-        visParamsArgsToUpdate = _.find($scope.vis.params.allNodes, (visParamsNode) => {
-          return visParamsNode.id === id;
-        });
-      }
+        return isSuccessful;
+      };
 
-      // We update the 'X' and 'Y' positions of all the nodes
-      // We identify iconNodes with the parentMetricGroupId property
-      // Note: ideally we should use a property like 'nodeType: icon' instead of
-      // using parentMetricGroupId to identify if its a icon node
-      if (visParamsArgsToUpdate) {
-        if (node.parentMetricGroupId) {
-          visParamsArgsToUpdate.statusIcon.x = x;
-          visParamsArgsToUpdate.statusIcon.y = y;
-        } else {
-          visParamsArgsToUpdate.x = x;
-          visParamsArgsToUpdate.y = y;
-        }
+      // Get the params of the selected node from the dataSet
+      let isSuccessful = updatePosition(allNodes);
+
+      // if 'draggedNodeId' was not found in nodesDataSet lets search for it in edgesDataSet
+      if (!isSuccessful) {
+        isSuccessful = updatePosition(allLinks);
       }
     });
   });

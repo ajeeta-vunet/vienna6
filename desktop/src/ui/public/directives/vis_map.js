@@ -1,9 +1,11 @@
+import _ from 'lodash';
+
 import { colors } from 'ui/utils/severity_colors.js';
+import { getImages } from 'ui/utils/vunet_image_utils.js';
+import { Network } from 'vis-network/peer/esm/vis-network';
+import { DataSet } from 'vis-data/peer/esm/vis-data';
 
 const module = require('ui/modules').get('kibana/uvmap_vis');
-const _ = require('lodash');
-const vis = require('vis-network');
-import { getImages } from 'ui/utils/vunet_image_utils.js';
 
 module.directive('visMap', function (StateService) {
 
@@ -38,8 +40,7 @@ module.directive('visMap', function (StateService) {
         groups = iconDict;
         // groups[]
         // We populate groups with common properties below
-        _.forOwn(groups, (group) =>
-        {
+        _.forOwn(groups, (group) => {
           group.shape = 'circularImage';
           group.size = 40;
           group.font = {
@@ -96,8 +97,8 @@ module.directive('visMap', function (StateService) {
           }
 
           const visData = {
-            nodes: new vis.DataSet(data.nodes),
-            edges: new vis.DataSet(data.edges)
+            nodes: new DataSet(data.nodes),
+            edges: new DataSet(data.edges)
           };
 
           const options = {
@@ -189,11 +190,11 @@ module.directive('visMap', function (StateService) {
 
           if ($scope.nodePlacementType === 'withPhysics' ||
             $scope.nodePlacementType === 'physicsAndDragNDrop') {
-            network = new vis.Network(element[0], visData, physicsEnableOption);
+            network = new Network(element[0], visData, physicsEnableOption);
           } else if ($scope.nodePlacementType === 'dragNDrop') {
-            network = new vis.Network(element[0], visData, options);
+            network = new Network(element[0], visData, options);
           } else {
-          // Throw an error if nodePlacementType has not passed.
+            // Throw an error if nodePlacementType has not passed.
             throw 'Network will not be created without nodePlacementType';
           }
 
@@ -204,10 +205,10 @@ module.directive('visMap', function (StateService) {
           $scope.first_stable = false;
           // Once network gets stablized, we stop the stablization
           network.on('stabilized', () => {
-            if($scope.nodePlacementType === 'physicsAndDragNDrop') {
-            // check network has stabilized or not
-            // if it is stabilized then stop stabilization
-            // switch options to dragNDrop
+            if ($scope.nodePlacementType === 'physicsAndDragNDrop') {
+              // check network has stabilized or not
+              // if it is stabilized then stop stabilization
+              // switch options to dragNDrop
               if ($scope.first_stable) {
                 network.storePositions();
                 network.setOptions(options);
@@ -220,19 +221,31 @@ module.directive('visMap', function (StateService) {
             }
           });
 
-          const handleCallbackResp = (resp) => {
-            switch (resp.action) {
-              case 'moveNode':
-                _.each(resp.val, (node) => {
-                  network.moveNode(node.id, node.x, node.y);
-                });
-                break;
-              case 'selectNodes':
-                network.selectNodes(resp.val);
-                break;
-              default:
-                throw `action of type ${resp.action} was not found`;
-            }
+          // callback handler
+          const handleCallbackResp = (respList) => {
+
+            _.each(respList, (respListItem) => {
+              switch (respListItem.action) {
+                case 'moveNode':
+                  _.each(respListItem.val, (node) => {
+                    network.moveNode(node.id, node.x, node.y);
+                  });
+                  break;
+
+                case 'selectNodes':
+                  // Note: selectNodes() unselects all other objects before selecting its own objects
+                  network.selectNodes(respListItem.val);
+                  break;
+
+                case 'selectEdges':
+                  // Note: selectEdges() unselects all other objects before selecting its own objects
+                  network.selectEdges(respListItem.val);
+                  break;
+
+                default:
+                  throw `action of type ${respListItem.action} was not found`;
+              }
+            });
           };
 
           // After physics is applied we need to re-align the nodeGroups and icons below the node
@@ -246,12 +259,12 @@ module.directive('visMap', function (StateService) {
                 handleCallbackResp(callbackResp);
               }
             }
-          }, 500);
+          }, 300);
 
           // When a node is selected, we check if there is a dashboard
           // associated with it, if so, we load that dashboard.
           network.on('selectNode', (params) => {
-          // Invoke the passed function
+            // Invoke the passed function
             if (onNodeSelect) {
               const NodeImageGroups = groups;
               // send selectedNodeId
@@ -268,7 +281,7 @@ module.directive('visMap', function (StateService) {
           // A node can be de-selected by clicking outside the node
           network.on('deselectNode', (params) => {
             if (onNodeDeselect) {
-            // send list of deselected nodes
+              // send list of deselected nodes
               onNodeDeselect(params.nodes);
             }
           });
@@ -277,25 +290,30 @@ module.directive('visMap', function (StateService) {
           // An edge can be de-selected by clicking outside the edge
           network.on('deselectEdge', (params) => {
             if (onEdgeDeselect) {
-            // send list of deselected edges
+              // send list of deselected edges
               onEdgeDeselect(params.edges);
             }
           });
 
           // Function is called when an edge clicked
           network.on('selectEdge', (params) => {
-          // Invoke the passed function
+            // Invoke the passed function
             if (onLinkSelect) {
-            // send selectedEdgeId
-              onLinkSelect(params.edges[0]);
+              // send selectedEdgeId
+              const callbackResp = onLinkSelect(params.edges[0]);
+
+              // If a callbackResp is provided, we perform the required action
+              if (callbackResp) {
+                handleCallbackResp(callbackResp);
+              }
             }
           });
 
           if ($scope.doesNodeHasDashboard) {
-          // On hovering a node make cursor as pointer.
+            // On hovering a node make cursor as pointer.
             network.on('hoverNode', function (params) {
-            // send hoveredNodeId
-              if($scope.doesNodeHasDashboard(params.node)) {
+              // send hoveredNodeId
+              if ($scope.doesNodeHasDashboard(params.node)) {
                 network.canvas.body.container.style.cursor = 'pointer';
               }
             });
@@ -309,7 +327,7 @@ module.directive('visMap', function (StateService) {
           // when a node is dragged this function is called once
           network.on('dragStart', (params) => {
             if (onNodeDragStart) {
-            // send draggedNodeId
+              // send draggedNodeId
               const callbackResp = onNodeDragStart(params.nodes[0]);
 
               // If a callbackResp is provided, we perform the required action
@@ -321,25 +339,32 @@ module.directive('visMap', function (StateService) {
 
           // When a node is dragged and released, at the end, this function is called
           network.on('dragEnd', (params) => {
-          //function to update new x and y values in all nodes.
-            if(onNodeDragEnd) {
-            // send draggedNodeList
-              onNodeDragEnd(params.nodes, network.getPositions());
+            //function to update new x and y values in all nodes.
+            if (onNodeDragEnd) {
+              // send draggedNodeList
+              const callbackResp = onNodeDragEnd(params.nodes, network.getPositions());
+
+              // If a callbackResp is provided, we perform the required action
+              if (callbackResp) {
+                handleCallbackResp(callbackResp);
+              }
             }
           });
 
-
           // Default zoomScale used afterd fitting all the nodes
-          const currentZoomScale  = network.getScale();
+          const currentZoomScale = network.getScale();
 
           // We calculate the required offset, 85% of default zoomScale
           const zoomOutLimitOffset = (currentZoomScale * 0.85);
 
-          // If user zooms out too much such that the node disappaers
+          // We calculate the required offset, 300% of default zoomScale
+          const zoomInLimitOffset = (currentZoomScale * 3);
+
+          // If user zooms in or out too much such that the node disappaers
           // then apply default zoom and fit all nodes
           network.on('zoom', () => {
-            if(network.getScale() <= currentZoomScale - zoomOutLimitOffset)
-            {
+            if ((network.getScale() <= currentZoomScale - zoomOutLimitOffset) ||
+              (network.getScale() >= currentZoomScale + zoomInLimitOffset)) {
               network.fit();
             }
           });

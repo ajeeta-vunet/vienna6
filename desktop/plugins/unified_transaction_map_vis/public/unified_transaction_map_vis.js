@@ -25,9 +25,12 @@ function UnifiedTransactionVisProvider(Private) {
     category: CATEGORY.MAPS,
     visConfig: {
       defaults: {
+        utmTemplate: 'Display Metric Groups',
         customNodes: [],
         customLinks: [],
         graphs: [],
+        allNodes: [],
+        allLinks: []
       },
       template: unifiedTransactionVisTemplate,
     },

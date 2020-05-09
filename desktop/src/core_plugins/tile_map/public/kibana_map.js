@@ -111,6 +111,32 @@ export class KibanaMap extends EventEmitter {
 
     let previousZoom = this._leafletMap.getZoom();
     this._leafletMap.on('zoomend', () => {
+      // Here we are checking the current zoom level.
+      // When the zoom level is 2 and below, We are disabling the tooltip explicitly.
+      // Because, the tooltip is hiding the states in the background in the map.
+      const zoomLevel = this._leafletMap.getZoom();
+      if (zoomLevel <= 2) {
+        this._leafletMap.eachLayer(function (l) {
+          if (l.getTooltip) {
+            const toolTip = l.getTooltip();
+            if (toolTip) {
+              l.closeTooltip(toolTip);
+            }
+          }
+        });
+      }
+      // Enable the tooltip when the zoom level is 3 and above.
+      else
+      {
+        this._leafletMap.eachLayer(function (l) {
+          if (l.getTooltip) {
+            const toolTip = l.getTooltip();
+            if (toolTip) {
+              l.openTooltip(toolTip);
+            }
+          }
+        });
+      }
       if (previousZoom !== this._leafletMap.getZoom()) {
         previousZoom = this._leafletMap.getZoom();
         this.emit('zoomchange');
@@ -234,6 +260,7 @@ export class KibanaMap extends EventEmitter {
 
     this._layers.push(kibanaLayer);
     kibanaLayer.addToLeafletMap(this._leafletMap);
+    kibanaLayer.setLeafletMap(this._leafletMap);
     this.emit('layers:update');
 
     this._addAttributions(kibanaLayer.getAttributions());

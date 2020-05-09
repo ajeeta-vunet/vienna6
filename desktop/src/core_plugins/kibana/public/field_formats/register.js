@@ -6,6 +6,7 @@ import { createRelativeDateFormat } from '../../common/field_formats/types/relat
 import { createDurationFormat } from '../../common/field_formats/types/duration';
 import { createIpFormat } from '../../common/field_formats/types/ip';
 import { createNumberFormat } from '../../common/field_formats/types/number';
+import { createDynamicText } from '../../common/field_formats/types/dynamic_text';
 import { createPercentFormat } from '../../common/field_formats/types/percent';
 import { createStringFormat } from '../../common/field_formats/types/string';
 import { createSourceFormat } from '../../common/field_formats/types/source';
@@ -23,6 +24,7 @@ RegistryFieldFormatsProvider.register(createRelativeDateFormat);
 RegistryFieldFormatsProvider.register(createDurationFormat);
 RegistryFieldFormatsProvider.register(createIpFormat);
 RegistryFieldFormatsProvider.register(createNumberFormat);
+RegistryFieldFormatsProvider.register(createDynamicText);
 RegistryFieldFormatsProvider.register(createPercentFormat);
 RegistryFieldFormatsProvider.register(createStringFormat);
 RegistryFieldFormatsProvider.register(createSourceFormat);

@@ -11,6 +11,7 @@ export default class ChoroplethLayer extends KibanaMapLayer {
     super();
 
     this._metrics = null;
+    this.showLabels = false;
     this._joinField = null;
     this._colorRamp = truncatedColorMaps[Object.keys(truncatedColorMaps)[0]];
     this._tooltipFormatter = () => '';
@@ -20,6 +21,24 @@ export default class ChoroplethLayer extends KibanaMapLayer {
     this._geojsonUrl = geojsonUrl;
     this._leafletLayer = L.geoJson(null, {
       onEachFeature: (feature, layer) => {
+        //The onEachFeature function gets called on each feature
+        //before adding it to a GeoJSON layer.
+        //If "show values" option is true and the bucket's field is found in the GeoJSON then
+        //bind the tooltip for that layer. This tooltip will show the
+        // value permanently for the corresponding state in the geo map.
+        const match = this._metrics.find((bucket) => {
+          return bucket.term === feature.properties[this._joinField];
+        });
+        if (match !== undefined && this.showLabels) {
+          layer.bindTooltip(
+            this._metricsAgg.fieldFormatter()(match.value),
+            {
+              permanent: true,
+              direction: 'center',
+              className: 'countryLabel'
+            }
+          );
+        }
         layer.on('click', () => {
           this.emit('select', feature.properties[this._joinField]);
         });
@@ -142,6 +161,10 @@ export default class ChoroplethLayer extends KibanaMapLayer {
     this._setStyle();
   }
 
+  setShowLabels(showLabels) {
+    this.showLabels = showLabels;
+  }
+  
   equalsGeoJsonUrl(geojsonUrl) {
     return this._geojsonUrl === geojsonUrl;
   }

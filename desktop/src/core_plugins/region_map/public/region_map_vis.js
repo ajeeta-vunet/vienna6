@@ -65,6 +65,7 @@ VisTypesRegistryProvider.register(function RegionMapProvider(Private, regionmaps
           name: 'metric',
           title: 'Value',
           min: 1,
+          max: 3,
           aggFilter: ['count', 'avg', 'expression', 'sum', 'min', 'max', 'cardinality', 'top_hits',
             'sum_bucket', 'min_bucket', 'max_bucket', 'avg_bucket'],
           defaults: [

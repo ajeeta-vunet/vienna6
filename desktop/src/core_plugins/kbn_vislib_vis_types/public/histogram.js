@@ -97,6 +97,33 @@ export default function PointSeriesVisType(Private) {
           value: 'histogram',
           text: 'bar'
         }],
+        fontSize: [{
+          value: '8pt',
+          text: 'small'
+        }, {
+          value: '12pt',
+          text: 'normal'
+        }, {
+          value: '16pt',
+          text: 'large'
+        }, {
+          value: '20pt',
+          text: 'huge'
+        }],
+        fontOrientation: [{
+          value: 'horizontal-tb',
+          text: 'horizontal'
+        }, {
+          value: 'vertical-rl',
+          text: 'vertical'
+        }],
+        fontPosition: [{
+          value: 'top',
+          text: 'top'
+        }, {
+          value: 'middle',
+          text: 'middle'
+        }],
         axisModes: ['normal', 'percentage', 'wiggle', 'silhouette'],
         scaleTypes: ['linear', 'log', 'square root'],
         chartModes: ['normal', 'stacked'],

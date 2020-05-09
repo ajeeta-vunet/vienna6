@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import d3 from 'd3';
 import { VislibVisualizationsPointSeriesProvider } from './_point_series';
 
 export function VislibVisualizationsColumnChartProvider(Private) {
@@ -112,6 +113,12 @@ export function VislibVisualizationsColumnChartProvider(Private) {
       const gutterSpacingPercentage = 0.15;
       const groupCount = this.getGroupedCount();
       let groupNum = this.getGroupedNum(this.chartData);
+      const isLabels = this.seriesConfig.showValues;
+      const labelColor = this.seriesConfig.labelColor;
+      const chartData = this.chartData;
+      const fontSize = this.seriesConfig.fontSize;
+      const fontOrientation = this.seriesConfig.fontOrientation;
+      const fontPosition = this.seriesConfig.fontPosition;
       let barWidth;
       let gutterWidth;
 
@@ -141,6 +148,39 @@ export function VislibVisualizationsColumnChartProvider(Private) {
         return yScale(d.y0 + d.y);
       }
 
+      // It returns the X position where the text will be drawn
+      function labelX(d, i) {
+        return x(d, i) + widthFunc(d, i) / 4;
+      }
+
+      // It returns the Y position where the text will be drawn
+      function labelY(d) {
+        if (fontPosition === 'middle') {
+          return y(d) + heightFunc(d) / 2;
+        }
+        if (isHorizontal) {
+          return d.y >= 0 ? y(d) - 4 : y(d) + heightFunc(d) + this.getBBox().height;
+        }
+        return d.y >= 0 ? y(d) + heightFunc(d) + 4 : y(d) - this.getBBox().width - 4;
+      }
+
+      // This function returns the formatted value for the field if formatted in the field formatting section.
+      function formatValue(d) {
+        let agg = d.aggConfig;
+        let formattedvalue = null;
+        const value = d.y;
+        if (agg && agg !== undefined) {
+          if (agg !== d.aggConfigResult.aggConfig) {
+            agg = d.aggConfigResult.aggConfig;
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          else {
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          return formattedvalue;
+        }
+      }
+
       function widthFunc(d, i) {
         if (isTimeScale) {
           return datumWidth(barWidth, d, bars.data()[i + 1], xScale, gutterWidth, groupCount);
@@ -165,6 +205,23 @@ export function VislibVisualizationsColumnChartProvider(Private) {
         .attr('y', isHorizontal ? y : x)
         .attr('height', isHorizontal ? heightFunc : widthFunc);
 
+      // if "show values" option is true for the metric then show the values in the chart
+      if (isLabels) {
+        const layer = d3.select(bars[0].parentNode);
+        const barLabels = layer.selectAll('text').data(chartData.values.filter(function (d) {
+          return !_.isNull(d.y);
+        }));
+
+        barLabels
+          .enter()
+          .append('text')
+          .text(formatValue)
+          .attr('font-size', fontSize)
+          .attr('style', 'fill:' + labelColor  + ';font-weight:Bold;writing-mode:' + fontOrientation)
+          .attr('x', isHorizontal ? labelX : labelY)
+          .attr('y', isHorizontal ? labelY : labelX);
+
+      }
       return bars;
     }
 
@@ -184,6 +241,12 @@ export function VislibVisualizationsColumnChartProvider(Private) {
       const isTimeScale = this.getCategoryAxis().axisConfig.isTimeDomain();
       const isHorizontal = this.getCategoryAxis().axisConfig.isHorizontal();
       const isLogScale = this.getValueAxis().axisConfig.isLogScale();
+      const isLabels = this.seriesConfig.showValues;
+      const labelColor = this.seriesConfig.labelColor;
+      const chartData = this.chartData;
+      const fontSize = this.seriesConfig.fontSize;
+      const fontOrientation = this.seriesConfig.fontOrientation;
+      const fontPosition = this.seriesConfig.fontPosition;
       let barWidth;
       let gutterWidth;
 
@@ -214,6 +277,42 @@ export function VislibVisualizationsColumnChartProvider(Private) {
         return yScale(d.y);
       }
 
+      // It returns the X position where the text will be drawn
+      // We get the width of the bar and devide by 2 to start the
+      // text from the middle of the bar.
+      function labelX(d, i) {
+        return x(d, i) + widthFunc(d, i) / 2;
+      }
+
+      // it returns the Y position where the text will be drawn
+      function labelY(d) {
+        if (fontPosition === 'middle') {
+          return y(d) + heightFunc(d) / 4;
+        }
+        if (isHorizontal) {
+          return d.y >= 0 ? y(d) - 4 : y(d) + heightFunc(d) + this.getBBox().height;
+        }
+        return d.y >= 0 ? y(d) + heightFunc(d) + 4 : y(d) - this.getBBox().width - 4;
+      }
+
+      // This function returns the formatted value for the field if formatted in the field formatting section
+      // else returns the actual value.
+      function formatValue(d) {
+        let agg = d.aggConfig;
+        let formattedvalue = null;
+        const value = d.y;
+        if (!d.agg) {
+          if (agg !== d.aggConfigResult.aggConfig) {
+            agg = d.aggConfigResult.aggConfig;
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          else {
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          return formattedvalue;
+        }
+      }
+
       function widthFunc(d, i) {
         if (isTimeScale) {
           return datumWidth(barWidth, d, bars.data()[i + 1], xScale, gutterWidth, groupCount);
@@ -233,6 +332,24 @@ export function VislibVisualizationsColumnChartProvider(Private) {
         .attr('y', isHorizontal ? y : x)
         .attr('height', isHorizontal ? heightFunc : widthFunc);
 
+      // if "show values" option is true for the metric then show the values in the chart
+      if (isLabels) {
+        const layer = d3.select(bars[0].parentNode);
+        const barLabels = layer.selectAll('text').data(chartData.values.filter(function (d) {
+          return !_.isNull(d.y);
+        }));
+
+        // Applies the font size, orientation, position and color for the value
+        barLabels
+          .enter()
+          .append('text')
+          .text(formatValue)
+          .attr('font-size', fontSize)
+          .attr('dy', '-.4em')
+          .attr('style', 'writing-mode:' + fontOrientation + ';fill:' + labelColor  + ';font-weight:Bold;padding:50px')
+          .attr('x', isHorizontal ? labelX : labelY)
+          .attr('y', isHorizontal ? labelY : labelX);
+      }
       return bars;
     }
 

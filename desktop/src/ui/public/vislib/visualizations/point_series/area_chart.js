@@ -9,6 +9,7 @@ export function VislibVisualizationsAreaChartProvider(Private) {
 
   const defaults = {
     mode: 'normal',
+    showValues: false,
     showCircles: true,
     radiusRatio: 9,
     showLines: true,
@@ -154,10 +155,31 @@ export function VislibVisualizationsAreaChartProvider(Private) {
       const isTooltip = this.handler.visConfig.get('tooltip.show');
       const isOverlapping = this.isOverlapping;
       const isHorizontal = this.getCategoryAxis().axisConfig.isHorizontal();
+      const isLabels = this.seriesConfig.showValues;
+      const labelColor = this.seriesConfig.labelColor;
+      const fontSize = this.seriesConfig.fontSize;
 
       const layer = svg.append('g')
         .attr('class', 'points area')
         .attr('clip-path', 'url(#' + this.baseChart.clipPathId + ')');
+
+      // This function returns the formatted value for the field if formatted in the field formatting section
+      // else returns the actual value.
+      function formatValue(d) {
+        let agg = d.aggConfig;
+        let formattedvalue = null;
+        const value = d.y;
+        if (agg && agg !== undefined) {
+          if (agg !== d.aggConfigResult.aggConfig) {
+            agg = d.aggConfigResult.aggConfig;
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          else {
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          return formattedvalue;
+        }
+      }
 
       // append the circles
       const circles = layer.selectAll('circles')
@@ -169,6 +191,26 @@ export function VislibVisualizationsAreaChartProvider(Private) {
 
       // exit
       circles.exit().remove();
+
+      // if "show values" option is true for the metric then show the values in the chart
+      if (isLabels) {
+        const barLabels = layer
+          .selectAll('text')
+          .data(function appendData() {
+            return data.values.filter(function (d) {
+              return !_.isNull(d.y);
+            });
+          });
+        // Applies the font size, orientation, position and color for the value
+        barLabels
+          .enter()
+          .append('text')
+          .text(formatValue)
+          .attr('font-size', fontSize)
+          .attr('style', 'fill:' + labelColor  + ';font-weight:Bold')
+          .attr('x', cx)
+          .attr('y', cy);
+      }
 
       // enter
       circles
@@ -191,9 +233,9 @@ export function VislibVisualizationsAreaChartProvider(Private) {
       function cy(d) {
         const y = d.y || 0;
         if (isOverlapping) {
-          return yScale(y);
+          return yScale(y) - 5;
         }
-        return yScale(d.y0 + y);
+        return yScale(d.y0 + y) - 5;
       }
 
       // update

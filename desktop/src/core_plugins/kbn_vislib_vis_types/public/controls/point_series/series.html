@@ -79,6 +79,64 @@
           </div>
         </div>
 
+        <div class="kuiSideBarFormRow">
+          <label class="kuiSideBarFormRow__label" for="{{ 'showValues' + $index }}">
+            Show Values
+          </label>
+          <div class="kuiSideBarFormRow__control">
+            <input class="kuiCheckBox" id="{{ 'showValues' + $index }}" type="checkbox" ng-model="chart.showValues">
+          </div>
+        </div>
+        <div class="kuiSideBarFormRow">
+          <label class="kuiSideBarFormRow__label" for="{{ 'fontSize' + $index }}">
+            Font Size
+          </label>
+          <div class="kuiSideBarFormRow__control">
+            <select
+              id="{{ 'fontSize' + $index }}"
+              class="kuiSelect kuiSideBarSelect"
+              ng-model="chart.fontSize"
+              ng-options="size.value as size.text for size in vis.type.editorConfig.collections.fontSize"
+            ></select>
+          </div>
+        </div>
+        <div ng-show="chart.type == 'histogram'">
+          <label class="kuiSideBarFormRow__label" for="{{ 'fontOrientation' + $index }}">
+            Font Orientation
+          </label>
+          <div class="kuiSideBarFormRow__control">
+            <select
+              id="{{ 'fontOrientation' + $index }}"
+              class="kuiSelect kuiSideBarSelect"
+              ng-model="chart.fontOrientation"
+              ng-options="orientation.value as orientation.text for orientation in vis.type.editorConfig.collections.fontOrientation"
+            ></select>
+          </div>
+        </div>
+        <div ng-show="chart.type == 'histogram'">
+          <label class="kuiSideBarFormRow__label" for="{{ 'fontPosition' + $index }}">
+            Font Position
+          </label>
+          <div class="kuiSideBarFormRow__control">
+            <select
+              id="{{ 'fontPosition' + $index }}"
+              class="kuiSelect kuiSideBarSelect"
+              ng-model="chart.fontPosition"
+              ng-options="position.value as position.text for position in vis.type.editorConfig.collections.fontPosition"
+            ></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="scriptFieldColorFont">Font Color</label>
+          <input
+            id="labelColor"
+            ng-model="chart.labelColor"
+            colorpicker
+            type="text"
+            class="form-control"
+          >
+        </div>
+
         <div ng-show="chart.type == 'line' || chart.type == 'area'">
           <div class="kuiSideBarFormRow">
             <label class="kuiSideBarFormRow__label" for="{{ 'lineMode' + $index }}">

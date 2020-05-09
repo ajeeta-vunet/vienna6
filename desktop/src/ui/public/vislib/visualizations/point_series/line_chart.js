@@ -8,6 +8,7 @@ export function VislibVisualizationsLineChartProvider(Private) {
 
   const defaults = {
     mode: 'normal',
+    showValues: false,
     showCircles: true,
     radiusRatio: 9,
     showLines: true,
@@ -43,6 +44,9 @@ export function VislibVisualizationsLineChartProvider(Private) {
       const isTooltip = this.handler.visConfig.get('tooltip.show');
       const isHorizontal = this.getCategoryAxis().axisConfig.isHorizontal();
       const lineWidth = this.seriesConfig.lineWidth;
+      const isLabels = this.seriesConfig.showValues;
+      const labelColor = this.seriesConfig.labelColor;
+      const fontSize = this.seriesConfig.fontSize;
 
       const radii =  this.baseChart.radii;
 
@@ -63,6 +67,12 @@ export function VislibVisualizationsLineChartProvider(Private) {
       circles
         .exit()
         .remove();
+
+      function labelY(d) {
+        const y0 = d.y0 || 0;
+        const y = d.y || 0;
+        return yScale(y0 + y) - 5;
+      }
 
       function cx(d) {
         if (ordered && ordered.date) {
@@ -101,6 +111,44 @@ export function VislibVisualizationsLineChartProvider(Private) {
           const base = circleRadius ? Math.sqrt(circleRadius + baseMagicNumber) + lineWidth : lineWidth;
           return _.min([base, width, height]) + (modifier || 0);
         };
+      }
+
+      // This function returns the formatted value for the field if formatted in the field formatting section
+      // else returns the actual value.
+      function formatValue(d) {
+        let agg = d.aggConfig;
+        let formattedvalue = null;
+        const value = d.y;
+        if (agg && agg !== undefined) {
+          if (agg !== d.aggConfigResult.aggConfig) {
+            agg = d.aggConfigResult.aggConfig;
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          else {
+            formattedvalue = agg.fieldFormatter()(value);
+          }
+          return formattedvalue;
+        }
+      }
+
+      // if "show values" option is true for the metric then show the values in the chart
+      if (isLabels) {
+        const barLabels = layer
+          .selectAll('text')
+          .data(function appendData() {
+            return data.values.filter(function (d) {
+              return !_.isNull(d.y);
+            });
+          });
+        // Applies the font size, orientation, position and color for the value
+        barLabels
+          .enter()
+          .append('text')
+          .text(formatValue)
+          .attr('font-size', fontSize)
+          .attr('style', 'fill:' + labelColor  + ';font-weight:Bold')
+          .attr('x', cx)
+          .attr('y', labelY);
       }
 
       circles

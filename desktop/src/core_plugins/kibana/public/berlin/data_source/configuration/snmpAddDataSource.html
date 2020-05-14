@@ -5,7 +5,7 @@
     <div class="row data-source-configuration-header-row">
         <div class = "
         
-        col-sm-4 col-md-4 
+        col-sm-4 col-md-4
         
         data-source-configuration-header-col" ng-style="{opacity:first_step && 1 || 0.2}">
            <div ng-if="editDataSource==true">
@@ -191,7 +191,42 @@
          </div>
        </div>
         
-       
+       <div class="form-group" ng-class="{'has-error':
+       addDataSourceForm.snmp_timeout.$invalid &&
+       !addDataSourceForm.snmp_timeout.$pristine}">
+         <div class="row">
+           <div class="col-sm-3 col-md-3">
+             <label class="control-label data_source_configuration_attribute_name">Timeout
+             <span class="data-source-field-tooltip">
+             <a href="" uib-tooltip="The duration for which system waits for SNMP response from the device after sending the request. The duration is specified in seconds." 
+                tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+             </label>
+           </div>
+
+
+
+                    <div class="col-sm-6 col-md-6 align-down">
+
+
+
+                                <input type="text"
+
+
+                         class="form-control"
+                         ng-model="snmp_timeout"
+                         required
+
+                         name="snmp_timeout"
+                         ng-pattern="/^([1-9]|[1][0]|10)$/">
+                         <div class="help-block" ng-show="addDataSourceForm.snmp_timeout.$error.pattern">Timeout should be greater than 0 and less than 10</div>
+
+                    </div>
+
+
+
+         </div>
+       </div>
+
        <div class="form-group" ng-class="{'has-error':
        addDataSourceForm.mib_groups.$invalid &&
        !addDataSourceForm.mib_groups.$pristine}">

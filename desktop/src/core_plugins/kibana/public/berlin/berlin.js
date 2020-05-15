@@ -5,6 +5,7 @@ import { VunetDataTable }  from 'ui_framework/src/vunet_components/vunet_table/v
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import { VunetSwitch } from 'ui_framework/src/vunet_components/vunet_switch/vunet_switch';
+import { VunetCronTab } from 'ui_framework/src/vunet_components/vunet_cron_tab/vunet_cron_tab';
 
 
 import DataEnrichmentUtilService from 'plugins/kibana/berlin/data_source/enrichment/data_enrichment.utils.service';
@@ -52,4 +53,9 @@ app.directive('vunetModal', function (reactDirective) {
 app.directive('vunetTab', function (reactDirective) {
 
   return reactDirective(VunetTab);
+});
+
+app.directive('vunetCronTab', function (reactDirective) {
+
+  return reactDirective(VunetCronTab);
 });

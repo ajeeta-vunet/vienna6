@@ -25,6 +25,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import './_vunet_dynamic_form_builder.less';
 import { VunetSelect } from '../vunet_select/vunet_select';
+import { VunetCronTab } from '../vunet_cron_tab/vunet_cron_tab';
 
 export class VunetDynamicFormBuilder extends Component {
 
@@ -78,24 +79,24 @@ export class VunetDynamicFormBuilder extends Component {
 
     let hideElm = [];
 
-    if(initial) {
+    if (initial) {
       this.props.formData.item.forEach(_item => {
-        if(_item.rules) {
+        if (_item.rules) {
           hideElm = this.applyRule(this.props.formData.editData[_item.key], _item.rules, hideElm);
         }
-        if(_item.callback) {
+        if (_item.callback) {
           _item.callback(_item.key, this.props.formData.editData);
         }
       });
     } else {
       this.props.formData.item.forEach(_item => {
-        if(_item.rules) {
+        if (_item.rules) {
           hideElm = this.applyRule(this.state[_item.key], _item.rules, hideElm);
         }
 
         // We should be calling the callback only when a particular item has
         // changed.. we need to enhance this...
-        if(_item.callback) {
+        if (_item.callback) {
           _item.callback(_item.key, this.state);
         }
       });
@@ -124,11 +125,11 @@ export class VunetDynamicFormBuilder extends Component {
   */
   applyRule(value, rules, hideElm) {
     const curRule = this.state.hideElm.find(elm => elm.name === rules.name);
-    if(curRule && curRule.elm) {
+    if (curRule && curRule.elm) {
       curRule.elm = [];
     }
     // @@@
-    if(rules.options.length) {
+    if (rules.options.length) {
       rules.options.forEach(rule => {
         // Check rule.value and value selected from selected box is same or not
         // then update the hideElm for a particular selected field.
@@ -136,7 +137,7 @@ export class VunetDynamicFormBuilder extends Component {
           rule.actions.forEach(action => {
             switch (Object.keys(action)[0]) {
               case 'hide':
-                hideElm =  [...hideElm, { name: rules.name, elm: [...action.hide] } ];
+                hideElm = [...hideElm, { name: rules.name, elm: [...action.hide] }];
                 break;
             }
           });
@@ -187,7 +188,7 @@ export class VunetDynamicFormBuilder extends Component {
   // corresponding formGroup list
   addRowToFormGroup = (parentKey, childKeyList) => {
     const listOperDictCopy = { ...this.state.listOperDict };
-    const formGroupStateKeys = childKeyList.map(chKey => { return parentKey + '$' + chKey;});
+    const formGroupStateKeys = childKeyList.map(chKey => { return parentKey + '$' + chKey; });
     let formGroupData = this.state[parentKey] ? this.state[parentKey] : [];
     const formGroupInnerData = {};
 
@@ -272,7 +273,7 @@ export class VunetDynamicFormBuilder extends Component {
 
     // If we find a '$' in key, we consider it
     // to be a key of a form element under form group.
-    if(key.indexOf('$') > 0) {
+    if (key.indexOf('$') > 0) {
 
       // get the parent and child keys in an array (keys).
       // the string before the $ has the parent key.
@@ -298,14 +299,20 @@ export class VunetDynamicFormBuilder extends Component {
 
     // If we dont find the element we do not
     // validate it.
-    if(elm === undefined) {
+    if (elm === undefined) {
       return;
     }
     // Validate the content to set isValidated flag.. This flag is checked to
     // enable/disable Submit button..
     let validationCallbackValue = false;
-    if(elm.validationCallback) {
-      validationCallbackValue = elm.validationCallback(key, e.target.value);
+    if (elm.validationCallback) {
+
+      // If input is checkbox, the value is available in e.target.checked
+      if (type === 'checkBox') {
+        validationCallbackValue = elm.validationCallback(key, e.target.checked);
+      } else {
+        validationCallbackValue = elm.validationCallback(key, e.target.value);
+      }
     }
 
     if (formGroup) {
@@ -339,11 +346,11 @@ export class VunetDynamicFormBuilder extends Component {
     }
 
 
-    // If element is other than multi-select, check the content by invoking
-    // the validate function.. If element is multi-select, we should just
+    // If element is other than multi-select or cronTab, check the content by invoking
+    // the validate function.. If element is multi-select or cronTab, we should just
     // validate the form and set validated to true if form is valid.
     let eventElement = e;
-    if (type === 'multi') {
+    if (type === 'multi' || type === 'cronTab') {
       eventElement = undefined;
     }
 
@@ -368,19 +375,38 @@ export class VunetDynamicFormBuilder extends Component {
       this.setState({
         [key]: e.target.value
       }, () => this.init(false));
+
+    } else if (type === 'checkBox') {
+      // check for non empty and non zero value then Typecast it to a Number for type number.
+      this.setState({
+        [key]: e.target.checked
+      }, () => {
+        this.init(false);
+      });
+
+    } else if (type === 'cronTab') {
+
+      // Here 'e' is an object with cronString and
+      // schedule frequency.
+      this.setState(
+        {
+          [key]: e.cronString,
+          scheduleFrequency: e.scheduleFrequency,
+        });
+
     } else if (type === 'number') {
       // check for non empty and non zero value then Typecast it to a Number for type number.
       this.setState({
         [key]: e.target.value && Number(e.target.value)
       }, () => this.init(false));
 
-    } else if(type === 'multi') {
+    } else if (type === 'multi') {
       this.setState({
         [key]: e.values
       }, () => this.init(false));
     } else {
       const found = this.state[key] ?
-        this.state[key].find ((d) => d === e.target.value) : false;
+        this.state[key].find((d) => d === e.target.value) : false;
 
       if (found) {
         const data = this.state[key].filter((d) => {
@@ -395,7 +421,6 @@ export class VunetDynamicFormBuilder extends Component {
         }, () => this.init(false));
       }
     }
-
   }
 
   /*
@@ -404,16 +429,15 @@ export class VunetDynamicFormBuilder extends Component {
   validate = (e, validationCallbackValue) => {
     const formEl = this.formEl;
     const formLength = formEl.length;
-
     // @@@ CheckValidity of form element returns False if form itself is not
     // valid..
     if (formEl.checkValidity() === false) {
 
       // Form is not valid.. If this function is called for a specific element
       // let us add the error text for the same..
-      if(e) {
+      if (e) {
         const elem = e.target;
-        const errorLabel = elem.parentNode.parentNode.querySelector('.error-row .invalid');
+        const errorLabel = elem.parentNode.parentNode.parentNode.querySelector('.error-row .invalid');
         if (errorLabel && elem.nodeName.toLowerCase() !== 'button') {
           if (!elem.validity.valid || validationCallbackValue) {
             errorLabel.textContent = elem.dataset.errorText ? elem.dataset.errorText : elem.validationMessage;
@@ -425,7 +449,7 @@ export class VunetDynamicFormBuilder extends Component {
         // @@@
         for (let formElemIndex = 0; formElemIndex < formLength; formElemIndex++) {
           const elem = formEl[formElemIndex];
-          const errorLabel = elem.parentNode.parentNode.querySelector('.error-row .invalid');
+          const errorLabel = elem.parentNode.parentNode.parentNode.querySelector('.error-row .invalid');
 
           if (errorLabel && elem.nodeName.toLowerCase() !== 'button') {
             if (!elem.validity.valid || validationCallbackValue) {
@@ -448,8 +472,7 @@ export class VunetDynamicFormBuilder extends Component {
       if (e) {
 
         const elem = e.target;
-        const errorLabel = elem.parentNode.parentNode.querySelector('.error-row .invalid');
-
+        const errorLabel = elem.parentNode.parentNode.parentNode.querySelector('.error-row .invalid');
         if (errorLabel) {
           if (validationCallbackValue) {
             errorLabel.textContent = elem.dataset.errorText;
@@ -464,7 +487,7 @@ export class VunetDynamicFormBuilder extends Component {
         // element to empty string
         for (let formElemIndex = 0; formElemIndex < formLength; formElemIndex++) {
           const elem = formEl[formElemIndex];
-          const errorLabel = elem.parentNode.parentNode.querySelector('.error-row .invalid');
+          const errorLabel = elem.parentNode.parentNode.parentNode.querySelector('.error-row .invalid');
           if (errorLabel && elem.nodeName.toLowerCase() !== 'button') {
             errorLabel.textContent = '';
           }
@@ -481,7 +504,7 @@ export class VunetDynamicFormBuilder extends Component {
   * If the form element is hidden
   */
   isHidden = (key) => {
-    const allHiddenKey =  this.state.hideElm
+    const allHiddenKey = this.state.hideElm
       .map(hideElm => hideElm.elm)
       .reduce((array1, array2) => array1.concat(array2), []);
 
@@ -554,17 +577,21 @@ export class VunetDynamicFormBuilder extends Component {
 
       // This is default input element.. We update this for type specific
       // input below..
-      let input =  (<input
-        {...props}
-        className="form-input"
-        type={type}
-        key={key}
-        name={name}
-        value={value}
-        disabled={id}
-        onChange={(e)=>{this.onChange(e, target);}}
-        data-error-text={errorText}
-      />);
+      let input = (
+        <div className="text-input-container">
+          <input
+            {...props}
+            className="form-input"
+            type={type}
+            key={key}
+            name={name}
+            value={value}
+            disabled={id}
+            onChange={(e) => { this.onChange(e, target); }}
+            data-error-text={errorText}
+          />
+        </div>
+      );
 
       // We have different form element used for different type of
       // inputs..
@@ -575,17 +602,20 @@ export class VunetDynamicFormBuilder extends Component {
           value = 0;
         }
 
-        input =  (<input
-          {...props}
-          className="form-input"
-          type={type}
-          key={key}
-          name={name}
-          value={value}
-          disabled={id}
-          onChange={(e)=>{this.onChange(e, target, 'number');}}
-          data-error-text={errorText}
-        />);
+        input = (
+          <div className="number-input-container">
+            <input
+              {...props}
+              className="form-input"
+              type={type}
+              key={key}
+              name={name}
+              value={value}
+              disabled={id}
+              onChange={(e) => { this.onChange(e, target, 'number'); }}
+              data-error-text={errorText}
+            />
+          </div>);
       }
 
       if (type === 'radio') {
@@ -601,7 +631,7 @@ export class VunetDynamicFormBuilder extends Component {
                 name={o.name}
                 checked={checked}
                 value={o.value}
-                onChange={(e)=>{this.onChange(e, o.name);}}
+                onChange={(e) => { this.onChange(e, o.name); }}
               />
               <label key={'ll' + o.key}>{o.label}</label>
             </div>
@@ -614,7 +644,7 @@ export class VunetDynamicFormBuilder extends Component {
 
         // Find accessor function if provided for this field..
         const accessor = this.props.formData.accessor &&
-                         this.props.formData.accessor.find(acc => acc.columnName === m.key);
+          this.props.formData.accessor.find(acc => acc.columnName === m.key);
 
         // Create the options for this..
         input = m.options.map((o) => {
@@ -632,22 +662,31 @@ export class VunetDynamicFormBuilder extends Component {
         // if available to convert the value for display purposes
         value = accessor ? accessor.func(m.key, value) : value;
 
-        input = <select className="form-input" value={value} onChange={(e)=>{this.onChange(e, target);}}>{input}</select>;
+        input = (
+          <div className="select-input-container">
+            <select
+              className="form-input"
+              value={value}
+              onChange={(e) => { this.onChange(e, target); }}
+            >
+              {input}
+            </select>
+          </div>);
       }
 
-      if(type === 'multiSelect') {
+      if (type === 'multiSelect') {
 
         const accessor = this.props.formData.accessor && this.props.formData.accessor.find(acc => acc.columnName === m.key);
         let selected = [];
 
         // Create the list of values to be displayed for a
         // multi-select dropdown
-        if(value !== '') {
+        if (value !== '') {
 
           // The value might already be in an array
-          if(Array.isArray(value)) {
+          if (Array.isArray(value)) {
             selected = value;
-          } else if(typeof value === 'string') {
+          } else if (typeof value === 'string') {
 
             // If its in string format, convert this into an array
             try {
@@ -667,71 +706,64 @@ export class VunetDynamicFormBuilder extends Component {
         }
 
         // Use the directive for multi-select dropdown
-        input =  (<VunetSelect
+        input = (<VunetSelect
           placeholder="Select"
           options={m.options}
           values={selected}
-          callback={(e) => {this.onChange(e, m.key, 'multi');}}
+          callback={(e) => { this.onChange(e, m.key, 'multi'); }}
           multiple
         />);
       }
 
       // If a file input is to be taken..
       if (type === 'file') {
-        input =  (
-          <input
-            {...props}
-            className="form-input"
-            key={key}
-            type={type}
-            onChange={(e)=>{this.onChange(e, target, 'file');}}
-          />
+        input = (
+          <div className="file-input-container">
+            <input
+              {...props}
+              className="form-input"
+              key={key}
+              type={type}
+              onChange={(e) => { this.onChange(e, target, 'file'); }}
+            />
+          </div>
         );
       }
 
       // If input is of large size and we use textarea..
-      if(type === 'textarea') {
-        if(Array.isArray(value)) {value = value.join('\n');}
+      if (type === 'textarea') {
+        if (Array.isArray(value)) { value = value.join('\n'); }
         input = (
-          <textarea
-            {...props}
-            rows="5"
-            className="form-input textarea-height"
-            onChange={(e)=>{this.onChange(e, target);}}
-            value={value}
-          />
+          <div className="textarea-container">
+            <teradioxtarea
+              {...props}
+              rows="5"
+              className="form-input textarea-height"
+              onChange={(e) => { this.onChange(e, target); }}
+              value={value}
+            />
+          </div>
         );
       }
 
       // If we need to create a checkbox..
       if (type === 'checkbox') {
 
-        input = m.options.map((o) => {
-
-          let checked = false;
-          if (value && value.length > 0) {
-            checked = value.indexOf(o.value) > -1 ? true : false;
-          }
-
-          return (
-            <div className="col-md-2" key={'cfr' + o.key}>
-              <input
-                {...props}
-                className="form-control form-input"
-                type="checkbox"
-                key={o.key}
-                name={o.name}
-                checked={checked}
-                value={o.value}
-                onChange={(e)=>{this.onChange(e, m.key, 'multiple');}}
-              />
-              <label key={'ll' + o.key}>{o.label}</label>
-            </div>
-          );
-        });
-
-        input = <div className="form-group-checkbox">{input}</div>;
-
+        input = (
+          <div className="checkbox-container">
+            <input
+              {...props}
+              className=""
+              type="checkbox"
+              key={key}
+              name={name}
+              value={value}
+              checked={value}
+              data-error-text={errorText}
+              onChange={(e) => { this.onChange(e, target, 'checkBox'); }}
+            /><span className="checkbox-label">{m.label} </span>
+          </div>
+        );
       }
 
       if (type === 'formGroup') {
@@ -743,14 +775,14 @@ export class VunetDynamicFormBuilder extends Component {
         const tableRows = this.state[m.key] && this.state[m.key].map((row, rowIndex) => {
           return (
             <tr key={rowIndex}>
-              { Object.keys(row)
+              {Object.keys(row)
                 .map((key, index) => <td key={index}> {row[formGroupKeys[index]]} </td>)
               }
               <td>
                 <span onClick={() => { this.editRowInFormGroup(m.key, formGroupKeys, rowIndex); }}>
                   <i className="fa fa-pencil" />
                 </span>
-                <span onClick={() => {this.deleteRowInFormGroup(m.key, rowIndex); }}>
+                <span onClick={() => { this.deleteRowInFormGroup(m.key, rowIndex); }}>
                   <i className="fa fa-trash" />
                 </span>
               </td>
@@ -774,31 +806,31 @@ export class VunetDynamicFormBuilder extends Component {
               <tbody>{tableRows}</tbody>
             </table>
             {this.state.listOperDict[key].showFormGroup &&
-            <div>
-              <fieldset key={key}>
-                {inputGroup}
-              </fieldset>
-              <div
-                className="form-group-buttons-container"
-              >
-                <button
-                  className="kuiButton kuiButton--hollow vunet-button"
-                  type="button"
-                  onClick={() => { this.onCancelFormGroup(key); }}
+              <div>
+                <fieldset key={key}>
+                  {inputGroup}
+                </fieldset>
+                <div
+                  className="form-group-buttons-container"
                 >
-                  Cancel
-                </button>
-                <button
-                  disabled={!this.state.listOperDict[key].isListValidated}
-                  className="kuiButton kuiButton--hollow vunet-button"
-                  type="button"
-                  onClick={() => { this.addRowToFormGroup(key, formGroupKeys); }}
-                >
-                  {this.state.listOperDict[m.key].rowIndex === -1 && 'Add Entry'}
-                  {this.state.listOperDict[m.key].rowIndex > -1 && 'Update Entry'}
-                </button>
+                  <button
+                    className="kuiButton kuiButton--hollow vunet-button"
+                    type="button"
+                    onClick={() => { this.onCancelFormGroup(key); }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    disabled={!this.state.listOperDict[key].isListValidated}
+                    className="kuiButton kuiButton--hollow vunet-button"
+                    type="button"
+                    onClick={() => { this.addRowToFormGroup(key, formGroupKeys); }}
+                  >
+                    {this.state.listOperDict[m.key].rowIndex === -1 && 'Add Entry'}
+                    {this.state.listOperDict[m.key].rowIndex > -1 && 'Update Entry'}
+                  </button>
+                </div>
               </div>
-            </div>
             }
           </div>);
       }
@@ -818,7 +850,7 @@ export class VunetDynamicFormBuilder extends Component {
               className={'btn form-button ' + m.buttonType}
               type="button"
               name={m.name}
-              onClick={(e) => {this.props.formData.buttonCallback(e);}}
+              onClick={(e) => { this.props.formData.buttonCallback(e); }}
             >
               {m.label}
             </button>
@@ -839,6 +871,25 @@ export class VunetDynamicFormBuilder extends Component {
         );
       }
 
+      if (type === 'separator') {
+        input = (
+          <div className="horizontal-separator" />
+        );
+      }
+
+      if (type === 'crontab') {
+        input = (
+          <div key="crontabcontainer" className="crontab-container">
+            <VunetCronTab
+              getCronInfo={this.onChange}
+              jobName={m.key}
+              frequency={this.state.scheduleFrequency}
+              cronString={this.state.cronString}
+            />
+          </div>
+        );
+      }
+
       // if (type === 'stepper') {
       //   input = (
       //     <VunetStepper
@@ -852,33 +903,34 @@ export class VunetDynamicFormBuilder extends Component {
         <div key={'g' + key} className="form-group row">
           {
             (m.type !== 'stepper' &&
-             m.type !== 'html' &&
-             m.type !== 'button' &&
-             m.type !== 'referenceLink' &&
-             m.type !== 'paragraph') &&
-             <div className="row">
-               <label
-                 className="form-label"
-                 key={'l' + key}
-                 htmlFor={key}
-               >
-                 <span>{m.label}</span>
-                 { m.type === 'formGroup' &&
-                 <span
-                   className="add-row-icon"
-                   onClick={() => { this.showFormGroupSection(m.key, m.content.data); }}
-                 >
-                   <i className="fa fa-plus-circle" />
-                 </span>
-                 }
-               </label>
-               { helpText !== '' &&
-               <span className="dynamic-form-tooltip">
-                 <i className="fa fa-question-circle" />
-                 <span className="tooltiptext">{helpText}</span>
-               </span>
-               }
-             </div>
+              m.type !== 'html' &&
+              m.type !== 'button' &&
+              m.type !== 'checkbox' &&
+              m.type !== 'referenceLink' &&
+              m.type !== 'paragraph') &&
+              <div className="row">
+                <label
+                  className="form-label"
+                  key={'l' + key}
+                  htmlFor={key}
+                >
+                  <span>{m.label}</span>
+                  {m.type === 'formGroup' &&
+                    <span
+                      className="add-row-icon"
+                      onClick={() => { this.showFormGroupSection(m.key, m.content.data); }}
+                    >
+                      <i className="fa fa-plus-circle" />
+                    </span>
+                  }
+                </label>
+                {helpText !== '' &&
+                  <span className="dynamic-form-tooltip">
+                    <i className="fa fa-question-circle" />
+                    <span className="tooltiptext">{helpText}</span>
+                  </span>
+                }
+              </div>
           }
           <div className="row">
             {input}
@@ -900,7 +952,7 @@ export class VunetDynamicFormBuilder extends Component {
           name="dynamic-form"
           className={'vunet-dynamic-form ' + (this.state.isValidated ? 'was-validated' : '')}
           noValidate
-          onSubmit={(e)=>{this.onSubmit(e);}}
+          onSubmit={(e) => { this.onSubmit(e); }}
           ref={form => (this.formEl = form)}
         >
           <div className="form-components-wrapper">
@@ -909,7 +961,7 @@ export class VunetDynamicFormBuilder extends Component {
           <div className="row form-actions">
             <button
               className="kuiButton kuiButton--hollow vunet-button"
-              onClick={(e)=>{this.onCancel(e);}}
+              onClick={(e) => { this.onCancel(e); }}
             >
               {this.props.buttonsList[0]}
             </button>

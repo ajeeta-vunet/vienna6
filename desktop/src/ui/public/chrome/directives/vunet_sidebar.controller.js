@@ -214,6 +214,14 @@ class sidebarController {
           active: false,
           subgroups: [
             {
+              id: VunetSidebarConstants.BACKUP,
+              description: ' ',
+              icon: '',
+              pageurl: baseUrl + berlinUrl + 'backup',
+              isModifyAllowed: chrome.isModifyAllowed(),
+              active: false
+            },
+            {
               id: VunetSidebarConstants.DEFINITIONS,
               description: ' ',
               icon: '',
@@ -406,26 +414,30 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[3].subgroups[2].active = true;
-      } else if (currentRoute.includes('/berlin/preferences')) {
-        $scope.clearActive();
-        $scope.clearParentActive();
-        $scope.data[4].subgroups[2].active = true;
-      } else if (currentRoute.includes('/berlin/definition')) {
+      } else if (currentRoute.includes('/berlin/backup')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[4].subgroups[0].active = true;
-      } else if (currentRoute.includes('/berlin/user')) {
-        $scope.clearActive();
-        $scope.clearParentActive();
-        $scope.data[4].subgroups[3].active = true;
-      } else if (currentRoute.includes('/berlin/about')) {
-        $scope.clearActive();
-        $scope.clearParentActive();
-        $scope.data[4].subgroups[4].active = true;
-      } else if (currentRoute.includes('/berlin/image_manager')) {
+      } else if (currentRoute.includes('/berlin/definition')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[4].subgroups[1].active = true;
+      } else if (currentRoute.includes('/berlin/image_manager')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[4].subgroups[2].active = true;
+      } else if (currentRoute.includes('/berlin/preferences')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[4].subgroups[3].active = true;
+      } else if (currentRoute.includes('/berlin/user')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[4].subgroups[4].active = true;
+      } else if (currentRoute.includes('/berlin/about')) {
+        $scope.clearActive();
+        $scope.clearParentActive();
+        $scope.data[4].subgroups[5].active = true;
       }
     };
 

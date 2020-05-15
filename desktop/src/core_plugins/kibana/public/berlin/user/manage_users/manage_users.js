@@ -140,8 +140,8 @@ function manageUsers($scope,
         validationCallback: $scope.validateValue,
         label: 'Username',
         name: 'username',
+        type: 'text',
         props: {
-          type: 'text',
           required: true,
           pattern: '^[a-zA-Z][a-zA-Z0-9_.@-]{2,29}$'
         },

@@ -1,0 +1,41 @@
+<vunet-backup class="vunet-backup-directive">
+  <!-- Local nav. -->
+  <kbn-top-nav name="backup">
+    <!-- Transcluded elements. -->
+    <div data-transclude-slots>
+      <!-- Title. -->
+      <div
+        data-transclude-slot="topLeftCorner"
+        class="kuiLocalTitle"
+        role="heading"
+        aria-level="1"
+      >
+        Schedule vuSmartMaps Backups
+      </div>
+    </div>
+  </kbn-top-nav>
+  <div
+    class="backup-listing-container"
+    data-test-subj="backupLandingPage">
+    <div
+      class=""
+      data-test-subj="userLandingPage">
+
+      <vunet-data-table
+        fetch-items="fetchBackupItems"
+        delete-selected-items="deleteSelectedItems"
+        meta-item="backupMeta"
+        table-action="onTableAction"
+        row-action="onRowAction"
+        on-submit="onSubmit">
+      </vunet-data-table>
+      <vunet-modal
+        show-modal="showModal"
+        on-close="onModalClose"
+        data="modalData"
+        on-submit="onModalSubmit"
+      >
+      </vunet-modal>
+    </div>
+  </div>
+</vunet-backup>

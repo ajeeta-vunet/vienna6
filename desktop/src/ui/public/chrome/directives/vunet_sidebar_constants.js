@@ -20,6 +20,7 @@ export const VunetSidebarConstants = {
   FILES: 'Files',
   DATA_RETENTION_SETTINGS: 'Data Retention Settings',
   SETTINGS: 'Settings',
+  BACKUP: 'Backup',
   PREFERENCES: 'Preferences',
   DEFINITIONS: 'Definitions',
   USER: 'User',

@@ -24,6 +24,18 @@ export class KuiModal extends Component {
 
     const classes = classnames('kuiModal', className);
 
+    // If the props 'clickOutsideToCloseModal' is set to false
+    // we will not close the modal when clicked outside the modal area.
+    let clickOutsideToCloseModal = undefined;
+    if(this.props.clickOutsideToCloseModal === false) {
+      clickOutsideToCloseModal = this.props.clickOutsideToCloseModal;
+
+    // If the props 'clickOutsideToCloseModal' is not set or set to true
+    // we will close the modal when clicked outside the modal area.
+    } else {
+      clickOutsideToCloseModal = true;
+    }
+
     return (
       <FocusTrap
         focusTrapOptions={{
@@ -31,7 +43,7 @@ export class KuiModal extends Component {
           // This is added to close the modal when
           // clicked outside.
           onDeactivate: () => this.props.onClose(),
-          clickOutsideDeactivates: true
+          clickOutsideDeactivates: clickOutsideToCloseModal
         }}
       >
         {
@@ -56,4 +68,7 @@ KuiModal.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   onClose: PropTypes.func.isRequired,
+
+  // Used this to enable or disable close of modal on clicking outside of modal
+  clickOutsideToCloseModal: PropTypes.bool
 };

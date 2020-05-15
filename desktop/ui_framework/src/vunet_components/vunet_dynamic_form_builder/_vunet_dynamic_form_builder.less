@@ -6,12 +6,13 @@
     margin-right: 0rem;
   }
   .form-components-wrapper {
+    padding-right: 3rem;
     max-height: 400px;
     overflow-y: auto;
     // padding-bottom: 1.2rem;
-    .form-group{
+    .form-group {
       .form-input {
-        width: 95%;
+        width: 100%;
         display: block;
         height: 3.5rem;
         padding: .3rem .5rem ;
@@ -29,20 +30,32 @@
         white-space: pre-wrap;
       }
 
+      .checkbox-container {
+        .checkbox-label {
+          vertical-align: top;
+          padding-left: 0.7rem;
+        }
+      }
+
+      .horizontal-separator {
+        border: 1px solid @seperator_color_grey;
+        margin: 2rem 0;
+      }
+
       .html-container {
         white-space: pre-wrap;
       }
 
       .form-group-wrapper {
         font-size: 1.6rem;
-        border: 1px solid #bdbdbd;
+        border: 1px solid @border_color;
         margin: 0.5rem 0;
-        width: 95%;
+        width: 100%;
         padding: 1.5rem;
         border-radius: .5rem;
         .form-group-buttons-container {
           text-align: right;
-          width: 95%;
+          width: 100%;
         }
         .form-button-wrapper {
           padding: 0px 8px;
@@ -54,21 +67,21 @@
       }
 
       .form-button {
-        background: #5a4fef;
-        color: #fff;
+        background: @accent_color;
+        color: @white;
         font-size: 1.75rem;
         border-radius: 0.5rem;
         box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
       }
 
       .form-link {
-        color: #5a4fef;
+        color: @accent_color;
         text-decoration: underline;
         outline: none;
         &:hover,
         &:focus,
         &.active {
-          color: #5a4fef;
+          color: @accent_color;
           text-decoration: underline;
           outline: none;
         }
@@ -116,7 +129,7 @@
         .invalid {
           color:@red;
           margin: .5rem 0rem;
-          width: 95%;
+          width: 100%;
         }
       }
     }

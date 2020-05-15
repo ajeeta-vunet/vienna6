@@ -166,6 +166,7 @@ export class VunetModal extends Component {
             onClose={this.closeModal}
             style={{ width: '800px' }}
             className={this.props.data.class}
+            clickOutsideToCloseModal={this.props.clickOutsideToCloseModal}
           >
             <KuiModalHeader>
               <KuiModalHeaderTitle >
@@ -194,5 +195,6 @@ VunetModal.propTypes = {
   showModal: PropTypes.bool, // to show/hide modal
   onClose: PropTypes.func, // on modal close callback
   onSubmit: PropTypes.func, // on modal submit callback
-  data: PropTypes.object // data, modal used with form expect to be form data, otherwise custom message
+  data: PropTypes.object, // data, modal used with form expect to be form data, otherwise custom message
+  clickOutsideToCloseModal: PropTypes.bool // flag to enable / disable click outside modal to close it
 };

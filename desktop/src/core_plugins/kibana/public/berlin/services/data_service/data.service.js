@@ -176,6 +176,7 @@ class DataService {
    *
    */
   _deleteRequest(url, moduleString, config) {
+
     config = config || {};
     return this.$q((resolve, reject) => {
       this.$http.delete(url, config).then((response) => {
@@ -973,6 +974,31 @@ class DataService {
   getMobileDashboardsDetails(dashboard, startTime, endTime) {
     const url = this.urlBase + '/dashboard/' + dashboard + '/?start_time=' + startTime + '&end_time=' + endTime + '&mobile_kpi=true';
     return this._getRequest(url, 'getting details of mobile dashboards');
+  }
+
+  // Handle add, edit, update and deletion of schedules
+  // related to vusmartmaps backup
+  handleBackupSchedules(method, data) {
+    let url = this.urlBase + '/vuconfig/settings/';
+    if(method === 'GET') {
+      return this._getRequest(url, 'getting list of backup schedules');
+    }
+    else if(method === 'POST') {
+      return this._postRequest(url, data, 'adding new schedule');
+    }
+    else if(method === 'PUT') {
+      return this._putRequest(url, data, 'updating list of backup schedules');
+    }
+    else if(method === 'DELETE') {
+      url = url + data + '/';
+      return this._deleteRequest(url, 'deleting selected backup schedules');
+    }
+  }
+
+  // Initiate backup for selected schedules
+  backupSelectedSchedules(data) {
+    const url = this.urlBase + '/vuconfig/';
+    return this._postRequest(url, data, 'initiate backup for selected schedules');
   }
 
   // Uploads the file information.

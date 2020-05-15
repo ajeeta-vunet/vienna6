@@ -44,6 +44,7 @@ import 'plugins/kibana/berlin/data_source/configuration/urlheartbeatDataSource.d
 import 'plugins/kibana/berlin/data_source/files/files';
 import 'plugins/kibana/berlin/data_source/settings/settings';
 import 'plugins/kibana/berlin/image_manager/image_manager.js';
+import 'plugins/kibana/berlin/backup/backup.js';
 
 import { BerlinConstants } from './berlin_constants';
 import { EnrichmentConstants } from './data_source/enrichment/enrichment_constants';
@@ -59,6 +60,7 @@ import { UserConstants } from './user/user_constants';
 import { FilesConstants } from './data_source/files/files_constants';
 import { DataRetentionSettingsConstants } from './data_source/settings/settings_constants';
 import { ImageManagerInterfaceConstants } from './image_manager/image_manager_constants.js';
+import { BackupConstants } from './backup/backup_constants.js';
 import enrichmentGroupsTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment_groups.html';
 import enrichmentTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment.html';
 import vuBlockTemplate from 'plugins/kibana/berlin/data_source/vublock/vublock_list.html';
@@ -74,7 +76,7 @@ import userTemplate from './user/user.html';
 import filesTemplate from 'plugins/kibana/berlin/data_source/files/files.html';
 import settingsTemplate from 'plugins/kibana/berlin/data_source/settings/settings.html';
 import imageManagerTemplate from 'plugins/kibana/berlin/image_manager/image_manager.html';
-
+import backupTemplate from 'plugins/kibana/berlin/backup/backup.html';
 uiRoutes
   .defaults(/berlin/, {
     requireDefaultIndex: true
@@ -138,8 +140,10 @@ uiRoutes
   })
   .when(BerlinConstants.BERLIN_PATH + ImageManagerInterfaceConstants.IMAGEMANAGER_PATH, {
     template: imageManagerTemplate,
+  })
+  .when(BerlinConstants.BERLIN_PATH + BackupConstants.BACKUP_PATH, {
+    template: backupTemplate,
   });
-
 
 FeatureCatalogueRegistryProvider.register(() => {
   return {

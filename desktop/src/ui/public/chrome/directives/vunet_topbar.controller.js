@@ -383,6 +383,7 @@ class TopbarCtrl {
         StateService.getNotifications().then(function (data) {
         // Declaring the alert notifications count variable.
           let alertCount = 0;
+          let backUpNotificationsLength = 0;
 
           // If few alerts already exists, Get the latest alert
           // object and compare it with incoming alert notification
@@ -423,14 +424,19 @@ class TopbarCtrl {
           // Updating the UI with new alert notifications received
           $scope.notificationResponse = data;
 
-          // Calculating the  count of unified notifications
+          // Calculating the count of unified notifications
           $scope.notificationLength = $scope.notificationLength + alertCount;
           // notificationLength is stored in newNotificationLength to reset
           // the newNotificationLength value after read the alerts.
           $scope.newNotificationLength = $scope.notificationLength;
-          // Notifications count should not exceed 5.
+
+          // alert count should not be more than 5. Once we get the total alert
+          // count we add the backup notifications count to it.
+          backUpNotificationsLength = data['Backup and Storage'].length;
           if ($scope.notificationLength > 5) {
-            $scope.notificationLength = 5;
+            $scope.notificationLength = 5 + backUpNotificationsLength;
+          } else {
+            $scope.notificationLength = $scope.notificationLength + backUpNotificationsLength;
           }
         });
       }

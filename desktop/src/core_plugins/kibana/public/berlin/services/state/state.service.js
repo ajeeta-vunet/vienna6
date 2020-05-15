@@ -511,6 +511,16 @@ class StateService {
     return this._DataService.getMobileDashboardsDetails(dashboard, startTime, endTime);
   }
 
+  // Gets the list of Uploaded file gate way files.
+  handleBackupSchedules(method, data) {
+    return this._DataService.handleBackupSchedules(method, data);
+  }
+
+  // Initiate backup for selected schedules
+  backupSelectedSchedules(data) {
+    return this._DataService.backupSelectedSchedules(data);
+  }
+
   // Uploads the file information.
   uploadFgwFiles(fileName, upload) {
     return this._DataService.uploadFgwFiles(fileName, upload);

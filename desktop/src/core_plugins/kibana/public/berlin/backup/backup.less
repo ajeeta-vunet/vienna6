@@ -1,0 +1,50 @@
+@import "~ui/styles/variables";
+@import '~ui/styles/vunet_variable_theme.less';
+
+.vunet-backup-directive {
+  .kuiLocalNav {
+    .kuiLocalNavRow {
+      .kuiLocalNavRow__section {
+        display: none;
+      }
+    }
+  }
+
+  .backup-listing-container {
+    padding   : 2.7rem 7rem 0rem 7rem;
+    overflow-y: auto;
+    height    : @view-content-height-menubaronly  !important;
+
+    .backup-location-header {
+      font-size  : 1.6rem !important;
+      font-family: @roboto-medium  !important;
+      font-weight: bold;
+    }
+
+    .schedulelist-popup {
+      ul {
+        padding         : .5rem 0rem 0rem 1rem;
+        background-color: rgb(235, 235, 228);
+        height          : 15rem;
+        overflow-y      : auto;
+        border-radius   : 10px;
+        border          : 1px solid rgb(183, 218, 227);
+        width           : 97%;
+        font-size       : 1.6rem;
+      }
+    }
+  }
+
+  /* width for Tooltip */
+  .vunet-dynamic-form-div {
+    .form-components-wrapper {
+      .form-group .dynamic-form-tooltip {
+        .tooltiptext {
+          width  : 40rem;
+          padding: 1rem;
+        }
+      }
+    }
+  }
+
+}

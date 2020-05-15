@@ -2665,7 +2665,7 @@ table {
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
-  padding-bottom: 10vh;
+  /* padding-bottom: 10vh; */
   -webkit-animation: kuiAnimFadeIn 150ms ease-in;
           animation: kuiAnimFadeIn 150ms ease-in; }
 

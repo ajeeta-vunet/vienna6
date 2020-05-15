@@ -37,31 +37,43 @@
                 <div ng-if="data.length > 0" ng-repeat="(header, data) in notificationResponse" class="notification-section">
                   <div class="notification-header">
                     <span>
-                      <i class="notification-heading-icon" ng-class="{'icon-Notification_type': header=='Notifications',
-                                              'icon-Storage_notification_type': header=='Storage'}">
+                      <i
+                        class="notification-heading-icon"
+                        ng-class="{'icon-Notification_type': header=='Notifications',
+                                   'icon-Storage_notification_type': header=='Backup and Storage'}"
+                      >
                       </i>
                     </span> 
                     <span class="notification-heading-text"> {{header}} </span>
                     <i class='fa fa-times close-dropdown' ng-click="closeNotificationDropdown()" uib-tooltip="Close"></i>
                   </div>
                   <div ng-repeat="notification in data track by $index">
-                    <div ng-click="viewNotificationDetails(notification.summary)" class="notification-content" ng-class="{'new-notification': $index < newNotificationLength}">
+                    <div
+                      class="notification-content"
+                      ng-class="{'new-notification': $index < newNotificationLength,
+                                 'disable-click': notification.category==='backup_and_storage'}"
+                      ng-click="viewNotificationDetails(notification.summary)">
                       <div class="notification-subject alert-wrapper row">
                         <span class="col-sm-1 notification-type-icon">
-                          <i class="fa" aria-hidden="true" ng-class="{'fa-warning': notification.type=='warning',
-                                                 'fa-exclamation-circle': notification.type=='error',
-                                                 'fa-info-circle': notification.type=='information',
-                                                 'fa-minus-circle': notification.type=='critical',
-                                                 'fa-archive': notification.type=='archive_success' || notification.type=='archive_failure',
-                                                 'fa-undo': notification.type=='restore_success' || notification.type=='restore_failure'
-                                                 }">
+                          <i class="fa"
+                            aria-hidden="true"
+                            ng-class="{'icon-backup-notifications-error': notification.type=='backup_failure',
+                                       'icon-backup-notifications-disabled': notification.type=='backup_disabled',
+                                       'icon-backup-notifications-started-whitebg': notification.type==='backup_start',
+                                       'icon-backup-notifications-success': notification.type==='backup_success',
+                                       'fa-warning': notification.type=='warning',
+                                       'fa-exclamation-circle': notification.type=='error',
+                                       'fa-info-circle': notification.type=='information',
+                                       'fa-minus-circle': notification.type=='critical',
+                                       'fa-archive': notification.type=='archive_success' || notification.type=='archive_failure',
+                                       'fa-undo': notification.type=='restore_success' || notification.type=='restore_failure'}">
                           </i>
                         </span>
                         <span class="col-sm-9 notification-name" >{{notification.name}}</span>
                         <span uib-tooltip="Notification is of {{notification.category}} type" class="pull-right notification-category-icon-container col-sm-2">
                             <i class="notification-category-icon" 
                                ng-class="{'icon-Notification_Alert_Result': notification.category=='Alert',
-                                           'icon-Storage_Notification_Result': notification.category=='Storage',
+                                           'icon-Storage_Notification_Result': notification.category==='backup_and_storage',
                                            'icon-Notification_Alert_Script_Result': notification.category=='Script'}"
                               aria-hidden="true">
                             </i>
@@ -79,7 +91,10 @@
 
                     </div>
                   </div>
-                  <div class="view-notifications" ng-click="viewNotificationDetails('')">
+                  <div
+                    ng-if="header!=='Backup and Storage'"
+                    class="view-notifications"
+                    ng-click="viewNotificationDetails('')">
                     <p class="view-all-notifications"> View All Notifications</p>
                   </div>
                   <!-- This is needed when we fix redirection to alert dashboards

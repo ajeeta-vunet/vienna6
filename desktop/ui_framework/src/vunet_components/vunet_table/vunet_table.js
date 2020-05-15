@@ -72,7 +72,7 @@ export class VunetDataTable extends Component {
       containerClassName: 'vunet-table', // Specify a parent class for the container
       // holding the table
       showSubTable: 0, // Flag to display sub table for a row.
-      useBoxShadowForTable: true // Set this to false to get rid of shadow effect on table borders
+      useBoxShadowForTable: true, // Set this to false to get rid of shadow effect on table borders
     };
 
     // Run the function inside _.debounce after 200 milli seconds
@@ -1004,6 +1004,7 @@ export class VunetDataTable extends Component {
           data={this.state.formModal}
           onClose={this.onAddEditModalClose}
           onSubmit={this.onAddEditModalSubmit}
+          clickOutsideToCloseModal={this.props.metaItem.clickOutsideToCloseModal}
         />
 
         {/* Render the table */}

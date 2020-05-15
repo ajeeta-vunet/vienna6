@@ -3024,7 +3024,7 @@ input[type="button"] {
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
-  padding-bottom: 10vh;
+  /* padding-bottom: 10vh; */
   background-color: rgba(0, 0, 0, 0.5); }
 
 .kuiModal {

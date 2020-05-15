@@ -1,0 +1,35 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.cron-tab-container {
+  display: flex;
+
+  .time-picker-container {
+    display: flex;
+  }
+
+  .form-control-wrapper {
+    margin: 0rem 0.8rem;
+
+    .form-control {
+      display    : block;
+      padding    : .3rem .5rem;
+      font-size  : 1.6rem;
+      height     : 14rem;
+      width      : 14rem;
+      line-height: 1.5;
+      color      : @text_color1;
+      border     : .1rem solid @border_color;
+      transition : border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .cron-select {
+      width: 14rem;
+      height: 3.5rem;
+      }
+  }
+
+  .supporting-words {
+    margin   : 0 0.8rem;
+    font-size: 1.6rem;
+  }
+}

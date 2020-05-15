@@ -8,7 +8,13 @@
   li{
     padding:0rem 1.7rem;
     .dropdown-menu {
-      min-width:27vw;
+      .row {
+        margin-left: 0rem !important;
+        margin-right: 0rem !important;
+      }
+      max-height: 80vh;
+      overflow-y: scroll;
+      min-width:30vw;
       padding:0px !important;
       box-shadow: 0rem 0rem 1rem 0.4rem @box_shadow_color;
       border-radius: 1rem!important; 
@@ -62,6 +68,21 @@
           .fa-minus-circle {
             color: @red;
           }
+          .icon-backup-notifications-error {
+            color: @red;
+            font-weight: bold;
+          }
+          .icon-backup-notifications-disabled {
+            color: @red;
+          }
+          .icon-backup-notifications-started-whitebg {
+            color: @green;
+            font-weight: bold;
+          }
+          .icon-backup-notifications-success {
+            color: @green;
+            font-weight: bold;
+          }
           .notification-type-icon{
             font-size: 2rem;
             padding-left: 1.85rem;
@@ -92,6 +113,10 @@
           text-align: center;
           
         }
+      }
+      .disable-click {
+        cursor: pointer;
+        pointer-events: none;
       }
     }
     .view-notifications{

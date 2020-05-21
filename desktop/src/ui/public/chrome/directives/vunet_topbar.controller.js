@@ -17,13 +17,21 @@ class TopbarCtrl {
 
     // here we are capture the emit send by manage_users.js for change in admin console access
     $rootScope.$on('adminConsole', function (event, adminConsole) {
-      if(adminConsole === 'Yes') {
+      if (adminConsole === 'Yes') {
         $scope.allow_console_access = true;
       }
       else {
         $scope.allow_console_access = false;
       }
     });
+
+    // When user logs in through vuSmartMaps login(berlin)
+    // The username is set in localStorage and the current user state
+    // is picked from here. In case of third party authentication like
+    // ADFS, the username is not set in local storage, Hence we get it
+    // from chrome and call setUser.
+    const currentUser = chrome.getCurrentUser();
+    StateService.setUser(currentUser[0]);
 
     const currentRouteWhileGeneralSettings = window.location.href;
     $scope.showUserSettingsModal = false;
@@ -265,9 +273,9 @@ class TopbarCtrl {
       // greater than session idle time out, we logout the user.
       const elapsedTime = currentTime.getTime() - lastActiveTime;
       if (elapsedTime >= $scope.session_idle_timeout) {
-      // username becomes empty when the user logout.
-      // If the user already logged out from any other tab, just redirect him
-      // to login page
+        // username becomes empty when the user logout.
+        // If the user already logged out from any other tab, just redirect him
+        // to login page
         if (window.localStorage.username === '') {
           $scope.stopIdleTimerAndGoToLoginPage();
         } else {
@@ -381,7 +389,7 @@ class TopbarCtrl {
       if (!$rootScope.printReport) {
 
         StateService.getNotifications().then(function (data) {
-        // Declaring the alert notifications count variable.
+          // Declaring the alert notifications count variable.
           let alertCount = 0;
           let backUpNotificationsLength = 0;
 
@@ -390,21 +398,21 @@ class TopbarCtrl {
           // response and update the unified notification count.
           if ($scope.notificationResponse) {
 
-          //getting the latest alert object
+            //getting the latest alert object
             const latestAlertObj = $scope.notificationResponse.Notifications[0];
 
             // Iterate over the new alert notification response
             for (let item = 0; item < data.Notifications.length; item++) {
 
-            // Compare the latest alert object and the objects in the
-            // new alert notification response
-            // We use angular.equals to compare two objects which ignores
-            // $$hash_key present in the object
-            /*eslint-disable*/
+              // Compare the latest alert object and the objects in the
+              // new alert notification response
+              // We use angular.equals to compare two objects which ignores
+              // $$hash_key present in the object
+              /*eslint-disable*/
               if (angular.equals(data.Notifications[item], latestAlertObj)) {
                 /*eslint-enable*/
-              // When there is a match update the alert notification
-              // count and come out of the loop
+                // When there is a match update the alert notification
+                // count and come out of the loop
                 break;
               }
 
@@ -415,9 +423,9 @@ class TopbarCtrl {
           }
           else {
 
-          // When alerts are generated for the first time,
-          // The alert notification count is equal to no of alert
-          // notifications received.
+            // When alerts are generated for the first time,
+            // The alert notification count is equal to no of alert
+            // notifications received.
             alertCount = data.Notifications.length;
           }
 

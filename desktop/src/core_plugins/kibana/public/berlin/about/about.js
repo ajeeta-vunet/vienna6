@@ -8,6 +8,7 @@ const app = uiModules.get('app/berlin', ['ngFileUpload']);
 import UploadLicenseTemplate from'./upload_license.html';
 import UploadLicenseCtrl from './upload_license.controller.js';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+import { COMPANY_NAME_HELP_OBJ, EMAIL_HELP_OBJ,  PHONE_HELP_OBJ } from './about_constants';
 
 app.directive('manageAbout', function () {
   return {
@@ -43,7 +44,7 @@ function manageAbout($injector,
       label: 'Company Name',
       //id: true,
       name: 'enterprise_name',
-      helpText: 'Provide the company name',
+      helpObj: COMPANY_NAME_HELP_OBJ,
       props: {
         type: 'text',
         required: true,
@@ -54,7 +55,7 @@ function manageAbout($injector,
     {
       key: 'email',
       label: 'Email',
-      helpText: 'Provide the email id',
+      helpObj: EMAIL_HELP_OBJ,
       name: 'email',
       props: {
         type: 'text',
@@ -66,7 +67,7 @@ function manageAbout($injector,
     {
       key: 'phone_no',
       label: 'Phone Number',
-      helpText: 'Provide the phone number',
+      helpObj: PHONE_HELP_OBJ,
       name: 'phone_no',
       props: {
         type: 'text',

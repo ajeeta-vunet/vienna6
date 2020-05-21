@@ -20,7 +20,14 @@ import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 import { DocTitleProvider } from 'ui/doc_title';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
-import { SCHEDULE_FREQUENCY_CONSTANTS } from '../backup/backup_constants';
+import {
+  SCHEDULE_FREQUENCY_CONSTANTS,
+  OBJECTS_TO_BE_BACKED_UP_HELP_OBJ,
+  BACKUP_LOCATION_HELP_OBJ,
+  SCHEDULE_HELP_OBJ,
+  EMAIL_FOR_BACKUP_STATUS_HELP_OBJ,
+  CREDENTIAL_HELP_OBJ,
+} from '../backup/backup_constants';
 import _ from 'lodash';
 import './backup.less';
 import chrome from 'ui/chrome';
@@ -107,7 +114,7 @@ function vunetBackup($injector,
           key: 'archival_objects',
           label: 'Objects to be backed up',
           type: 'multiSelect',
-          helpText: `Select the types of information objects to be backed up.`,
+          helpObj: OBJECTS_TO_BE_BACKED_UP_HELP_OBJ,
           name: 'objectsToBeBackedUp',
           options: [
             {
@@ -155,8 +162,8 @@ function vunetBackup($injector,
           key: 'backUpLocation',
           label: 'Backup location',
           name: 'backUpLocation',
-          htmlContent: '<div class="backup-location-header">Backup location</div>',
-          type: 'html'
+          helpObj: BACKUP_LOCATION_HELP_OBJ,
+          type: 'header'
         }, {
           key: 'fileServer',
           name: 'fileServer',
@@ -316,15 +323,14 @@ function vunetBackup($injector,
         }, {
           key: 'cronString',
           label: 'Schedule',
-          helpText: `Frequency at which backup should be executed.`,
+          helpObj: SCHEDULE_HELP_OBJ,
           type: 'crontab',
           name: 'schedule',
         }, {
           key: 'credentials',
           label: 'Credential for back up file encryption',
           type: 'select',
-          helpText: `The password from this Credential object is used to encrypt 
-          the backup file created.`,
+          helpObj: CREDENTIAL_HELP_OBJ,
           name: 'securityLevel',
           options: [],
           props: {
@@ -335,8 +341,7 @@ function vunetBackup($injector,
           label: 'Email for back up status',
           type: 'text',
           name: 'email',
-          helpText: `The status of backup activity along with details of errors,
-           if any, are notified to the Email IDs listed here.`,
+          helpObj: EMAIL_FOR_BACKUP_STATUS_HELP_OBJ,
           props: {
             required: true,
             pattern: '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,5})+$'

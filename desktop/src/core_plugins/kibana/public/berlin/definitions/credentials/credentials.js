@@ -1,6 +1,10 @@
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 import './vunet_credentials.less';
+import { CREDENTIALS_SSH_PRIV_PASSWORD_HELP_OBJ,
+  CREDENTIALS_SSH_KEY_FILE_HELP_OBJ,
+  CREDENTIALS_TELNET_PRIV_PASSWORD_HELP_OBJ,
+  CREDENTIALS_SNMP_COMMUNITY_HELP_OBJ } from '../definition_constants';
 
 app.directive('vunetCredentials', function () {
   return {
@@ -77,6 +81,7 @@ function vunetCredentials($scope,
         label: 'Privilege Password',
         type: 'password',
         name: 'privPassword',
+        helpObj: CREDENTIALS_SSH_PRIV_PASSWORD_HELP_OBJ,
         props: {
           required: true,
           autoComplete: 'off',
@@ -89,6 +94,7 @@ function vunetCredentials($scope,
         label: 'Key File',
         type: 'textarea',
         name: 'keyFile',
+        helpObj: CREDENTIALS_SSH_KEY_FILE_HELP_OBJ,
         props: {
         }
       }
@@ -157,6 +163,7 @@ function vunetCredentials($scope,
         label: 'Privilege Password',
         type: 'password',
         name: 'privPassword',
+        helpObj: CREDENTIALS_TELNET_PRIV_PASSWORD_HELP_OBJ,
         props: {
           required: true,
           autoComplete: 'off',
@@ -241,6 +248,7 @@ function vunetCredentials($scope,
         label: 'Community',
         type: 'text',
         name: 'communityString',
+        helpObj: CREDENTIALS_SNMP_COMMUNITY_HELP_OBJ,
         props: {
           required: true,
           pattern: '^(.){1,64}$'

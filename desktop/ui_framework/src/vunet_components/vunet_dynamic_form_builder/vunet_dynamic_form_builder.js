@@ -26,6 +26,7 @@ import _ from 'lodash';
 import './_vunet_dynamic_form_builder.less';
 import { VunetSelect } from '../vunet_select/vunet_select';
 import { VunetCronTab } from '../vunet_cron_tab/vunet_cron_tab';
+import { VunetHelp } from 'ui_framework/src/vunet_components/vunet_help/vunet_help';
 
 export class VunetDynamicFormBuilder extends Component {
 
@@ -45,6 +46,7 @@ export class VunetDynamicFormBuilder extends Component {
     this.state = {
       isValidated: false,
       listOperDict: listOperDictCopy,
+      helpOperationsDict: {},
       hideElm: [],
       operDict: {}
     };
@@ -79,6 +81,10 @@ export class VunetDynamicFormBuilder extends Component {
 
     let hideElm = [];
 
+    // helpOperationsDict is an object which maintains boolean values to
+    // hide / show the help content for a field.
+    const helpOperationsDictCopy = _.cloneDeep(this.state.helpOperationsDict);
+
     if (initial) {
       this.props.formData.item.forEach(_item => {
         if (_item.rules) {
@@ -87,7 +93,26 @@ export class VunetDynamicFormBuilder extends Component {
         if (_item.callback) {
           _item.callback(_item.key, this.props.formData.editData);
         }
+
+        // Set the help contents collapsed for all the fields
+        // on loading the form.
+        if (_item.helpObj) {
+          helpOperationsDictCopy[_item.name] = false;
+        }
+
+        // Set the help contents collapsed for all the fields in form group
+        // on loading the form. This is not in use for now. Lets keep this
+        // commented for now.
+        // if (_item.type === 'formGroup') {
+        //   helpOperationsDictCopy[_item.key] = {};
+        //   _item.content.metaData.forEach((obj) => {
+        //     if (obj.helpObj) {
+        //       helpOperationsDictCopy[_item.key][obj.key] = false;
+        //     }
+        //   });
+        // }
       });
+      this.setState({ helpOperationsDict: helpOperationsDictCopy });
     } else {
       this.props.formData.item.forEach(_item => {
         if (_item.rules) {
@@ -259,6 +284,37 @@ export class VunetDynamicFormBuilder extends Component {
 
     //Set the state again..
     this.setState({ [parentKey]: formGroupData });
+  }
+
+  // This function updates the boolean value of the field
+  // to hide / show the help content when its help icon is
+  // clicked.
+  toggleHelpContent = (target) => {
+
+    // If the field modified is form group, then the
+    // target will have $ in it.
+    const keysList = target.split('$');
+
+    // If the length of the 'keysList' is greater than one,
+    // It means, the target recevied is the key of element
+    // inside a 'formGroup'.
+    if (keysList.length > 1) {
+
+      // Get the parent and child keys
+      const parentKey = keysList && keysList[0];
+      const childKey = keysList && keysList[1];
+      const helpOperationsDictCopy = _.cloneDeep(this.state.helpOperationsDict);
+      helpOperationsDictCopy[parentKey][childKey] = !this.state.helpOperationsDict[parentKey][childKey];
+      this.setState({ helpOperationsDict: helpOperationsDictCopy });
+    } else {
+
+      // Here the key of element is outside the 'formGroup'.
+      // Toggle the help content section for this field and
+      // update the state.
+      const helpOperationsDictCopy = _.cloneDeep(this.state.helpOperationsDict);
+      helpOperationsDictCopy[target] = !this.state.helpOperationsDict[target];
+      this.setState({ helpOperationsDict: helpOperationsDictCopy });
+    }
   }
 
   /*
@@ -547,7 +603,7 @@ export class VunetDynamicFormBuilder extends Component {
   *   type: define the dom type, default to 'text', valid types: text, radio, select, multiselect, file, checkbox, textarea,
   *   name: element name
   *   errorText: validation error mesage
-  *   helpText: tooltip text
+  *   helpObj: help text
   *   value: defualt value
   *   props: extra configuration like css, data-* attributes etc, will be render as it is
   * }
@@ -568,7 +624,6 @@ export class VunetDynamicFormBuilder extends Component {
       const props = m.props || {};
       const name = m.name;
       const errorText = m.errorText ? m.errorText : '';
-      const helpText = m.helpText ? m.helpText : '';
       let value = m.value;
       // If the form element belongs to a form group, we prepend the
       // key with parentKey received as argument with a '$' in the middle.
@@ -839,6 +894,10 @@ export class VunetDynamicFormBuilder extends Component {
         input = <div className="html-container" dangerouslySetInnerHTML={{ __html: m.htmlContent }} />;
       }
 
+      if (type === 'header') {
+        input = <div />;
+      }
+
       if (type === 'paragraph') {
         input = (<div className="paragraph-container">{m.textContent}</div>);
       }
@@ -924,12 +983,39 @@ export class VunetDynamicFormBuilder extends Component {
                     </span>
                   }
                 </label>
-                {helpText !== '' &&
-                  <span className="dynamic-form-tooltip">
-                    <i className="fa fa-question-circle" />
-                    <span className="tooltiptext">{helpText}</span>
+
+                {/* Help icon will be displayed if help obj is passed in metadata */}
+                {m.helpObj &&
+                  <span>
+                    <i
+                      className="help-icon icon-help-blue"
+                      onClick={() => { this.toggleHelpContent(target); }}
+                    />
                   </span>
                 }
+
+                {/* Help component that will be displayed when help icon is clicked */}
+                {m.helpObj && this.state.helpOperationsDict[key] &&
+                  <VunetHelp
+                    metaData={m.helpObj}
+                    onClose={() => { this.toggleHelpContent(target); }}
+                  />
+                }
+
+                {/* Help component for form Group that will be displayed when help icon is clicked.
+                Lets keep this commented as this is not being used as of now */}
+                {/* {m.helpObj && parentKey.length > 0 &&
+                  this.state.helpOperationsDict &&
+                  Object.keys(this.state.helpOperationsDict).length &&
+                  this.state.helpOperationsDict[parentKey] &&
+                  Object.keys(this.state.helpOperationsDict[parentKey]).length &&
+                  this.state.helpOperationsDict[parentKey][key] &&
+                  <VunetHelp
+                    backgroundColor="white"
+                    metaData={m.helpObj}
+                    onClose={() => { this.toggleHelpContent(target); }}
+                  />
+                } */}
               </div>
           }
           <div className="row">

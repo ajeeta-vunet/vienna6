@@ -1,5 +1,7 @@
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
+import { EMAIL_GROUPS_NAME_HELP_OBJ,
+  EMAIL_GROUPS_MEMBER_EMAILS_HELP_OBJ } from '../definition_constants';
 
 app.directive('vunetEmailgroups', function () {
   return {
@@ -82,6 +84,7 @@ function VunetEmailgroups($scope,
         name: 'group name',
         validationCallback: $scope.checkEmailGroupForSameName,
         id: true,
+        helpObj: EMAIL_GROUPS_NAME_HELP_OBJ,
         props: {
           required: true,
           maxLength: '64',
@@ -106,6 +109,7 @@ function VunetEmailgroups($scope,
         label: 'Group Member Emails',
         type: 'text',
         name: 'member emails',
+        helpObj: EMAIL_GROUPS_MEMBER_EMAILS_HELP_OBJ,
         validationCallback: $scope.checkValidityOfRecipientsList,
         props: {
           required: true,

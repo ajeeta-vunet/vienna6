@@ -5,9 +5,11 @@ import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 import { colors } from 'ui/utils/severity_colors.js';
 import { viewDashboardOrEventForThisMetric } from 'ui/utils/view_dashboard_or_event_for_this_metric.js';
+import { Notifier } from 'ui/notify/notifier';
 
 const chrome = require('ui/chrome');
 const _ = require('lodash');
+const notify = new Notifier({ location: 'UTM' });
 
 // get the kibana/unified_transaction_map_vis module, and make sure that it requires the 'kibana' module if it
 // didn't already
@@ -232,6 +234,8 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     const itemsToMove = [];
     _.each(dataSet, (data) => {
       const metricGroupList = [];
+      const allMetrics = [];
+      const metricGroupListObj = {};
 
       const {
         parentNodeId,
@@ -241,117 +245,161 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
       } = getParentParamsForAlignemnt(data, allNodePositions, type);
 
       let offset = initialOffset;
+      let numMetricChangeFlag = false;
 
-      _.each(data.metric_groups, (metricGroup) => {
-        let metricList = [];
+      // get the visParams data depending on 'type'
+      const visParamsAllItem = (type === 'node') ? $scope.vis.params.allNodes : $scope.vis.params.allLinks;
 
-        let numMetricChangeFlag = false;
-        const visParamsAllItem = (type === 'node') ? $scope.vis.params.allNodes : $scope.vis.params.allLinks;
+      // from visParamsAllItem get params for a particular item
+      const { selectedItemParams } = getNodeParams(visParamsAllItem, parentNodeId);
 
-        // We find out if a existing metricGroup has been removed
-        // We do this by checking if the length of the metric_groups array has changed
-        const visParamData = _.find(visParamsAllItem, (visParamItem) => {
-          return visParamItem.id === parentNodeId;
-        });
-
-        let visParamNodeGroup = undefined;
-        if (visParamData) {
-          visParamNodeGroup = _.find(visParamData.metric_groups, (visParamMetricGroup) => {
-            return visParamMetricGroup.id === metricGroup.id;
-          });
-        }
-
-        if (visParamNodeGroup && visParamNodeGroup.metricList &&
-          visParamNodeGroup.metricList.length !== metricGroup.metricList.length) {
-          numMetricChangeFlag = true;
-        }
-
-        // We align the metricList below its node in the following cases
-        // 1) If a new node has been added
-        // 2) For an existing node, if a new metric has been added or existing metric has been removed
-        // 3) If new icons have been added
-
-        // If none of these conditions are satisfied no algining is done
-        // and we take the already existing 'X' and 'Y' positions
-        _.each(metricGroup.metricList, (metric) => {
-          if ((metric.x === 0 && metric.y === 0) || numMetricChangeFlag || forceAlignFlag) {
-            // If any of above conditions are satisfied we need to reiterate over the metrics
-            // and realign all the metrics below their node
-            metricList = [];
-            _.each(metricGroup.metricList, (metricItem) => {
-
-              // offset calculations
-              const metricIconOffset = ((metric.widthConstraint / 2) + 20);
-              const metricValueOffset = 80 + (((metric.maxCharacterLength - 10) / 10) * 40);
-
-              // align metric below the node
-              const metricNodeId = metricItem.id;
-              const metricNodeX = parentNodeX;
-              const metricNodeY = parentNodeY + offset;
-
-              // align metric icon to left of the metric
-              const metricIconId = metricItem.statusIcon.id;
-              const metricIconX = metricNodeX - metricIconOffset;
-              const metricIconY = metricNodeY;
-
-              // align metricValue to right of the metric
-              const metricValueId = metricItem.valueNode.id;
-              const metricValueX = metricNodeX + metricValueOffset;
-              const metricValueY = metricNodeY;
-
-              // the three items (metric, metricIcon, metricValue ) needs to be realigned
-              itemsToMove.push({ id: metricNodeId, x: metricNodeX, y: metricNodeY });
-              itemsToMove.push({ id: metricIconId, x: metricIconX, y: metricIconY });
-              itemsToMove.push({ id: metricValueId, x: metricValueX, y: metricValueY });
-
-              // generate metricList array
-              metricList.push({
-                'id': metricNodeId,
-                'x': metricNodeX,
-                'y': metricNodeY,
-                'statusIcon': {
-                  'id': metricIconId,
-                  'x': metricIconX,
-                  'y': metricIconY
-                },
-                'valueNode': {
-                  'id': metricValueId,
-                  'x': metricValueX,
-                  'y': metricValueY
-                }
-              });
-
-              // update offset so each metric comes below one another
-              offset += 35;
-            });
-
-            // we need to exit the '_.each(metricGroup.metricList)' loop
-            return false;
+      // find the total number of metrics for a particular node in visParam
+      let visParamAllMetricsLength = 0;
+      if (selectedItemParams && selectedItemParams.metric_groups) {
+        _.each(selectedItemParams.metric_groups, (metricGroup) => {
+          if (metricGroup.metricList) {
+            visParamAllMetricsLength += metricGroup.metricList.length;
           }
+        });
+      }
 
-          metricList.push({
-            'id': metric.id,
-            'x': metric.x,
-            'y': metric.y,
-            'statusIcon': {
-              'id': metric.statusIcon.id,
-              'x': metric.statusIcon.x,
-              'y': metric.statusIcon.y
+      // 1) generate a 'metricGroupListObj' object of the following format
+      // "metricGroupListObj": {
+      //   "metric_group_1_id":{
+      //     "metricList":{
+      //       "metric_1_id":{},
+      //       "metric_2_id":{},
+      //     }
+      //   },
+      //   "metric_group_2_id":{
+      //     "metricList":{
+      //       "metric_1_id":{},
+      //       "metric_2_id":{},
+      //     }
+      //   },
+      // }
+      // 2) generate a 'allMetrics' list which has list of all metrics for a node
+      _.each(data.metric_groups, (metricGroup) => {
+        // populate the 'metricGroupListObj' with metricGroup info
+        metricGroupListObj[metricGroup.id] = {
+          id: metricGroup.id,
+          x: metricGroup.x,
+          y: metricGroup.y,
+          statusIcon: metricGroup.statusIcon,
+          metricListObj: {}
+        };
+
+        _.each(metricGroup.metricList, (metric) => {
+          // populate the 'metricGroupListObj' with metric info
+          metricGroupListObj[metricGroup.id].metricListObj[metric.id] = metric;
+
+          // push all metrics of a particular node into a single array 'allMetrics'
+          allMetrics.push({ ...metric, metricGroupId: metricGroup.id });
+
+          // check if metric is a new node
+          if (metric.x === 0 && metric.y === 0) {
+            numMetricChangeFlag = true;
+          }
+        });
+      });
+
+      // if our current 'allMetrics' length is not same as 'visParamAllMetrics' length
+      // that means a new metric got added or a old metric was deleted
+      if (visParamAllMetricsLength !== allMetrics.length) {
+        numMetricChangeFlag = true;
+      }
+
+
+      // We align the metricList below its node in the following cases
+      // 1) If a new node has been added
+      // 2) For an existing node, if a new metric has been added or existing metric has been removed
+      // 3) If forceAlignFlag is true
+      if (numMetricChangeFlag || forceAlignFlag) {
+        // Perform alignment for nodes
+        _.each(allMetrics, (metric) => {
+
+          // offset calculations
+          const metricIconOffset = ((metric.widthConstraint / 2) + 20);
+          const metricValueOffset = 80 + (((metric.maxCharacterLength - 10) / 10) * 40);
+
+          // align metric below the node
+          const metricNodeId = metric.id;
+          const metricNodeX = parentNodeX;
+          const metricNodeY = parentNodeY + offset;
+
+          // align metric icon to left of the metric
+          const metricIconId = metric.statusIcon.id;
+          const metricIconX = metricNodeX - metricIconOffset;
+          const metricIconY = metricNodeY;
+
+          // align metricValue to right of the metric
+          const metricValueId = metric.valueNode.id;
+          const metricValueX = metricNodeX + metricValueOffset;
+          const metricValueY = metricNodeY;
+
+          // the three items (metric, metricIcon, metricValue ) needs to be realigned
+          itemsToMove.push({ id: metricNodeId, x: metricNodeX, y: metricNodeY });
+          itemsToMove.push({ id: metricIconId, x: metricIconX, y: metricIconY });
+          itemsToMove.push({ id: metricValueId, x: metricValueX, y: metricValueY });
+
+          // update respective vals in dict
+          const metricListObj = metricGroupListObj[metric.metricGroupId].metricListObj;
+          const metricListObjItem = metricListObj[metricNodeId];
+          metricListObjItem.x = metricNodeX;
+          metricListObjItem.y = metricNodeY;
+          metricListObjItem.statusIcon.x = metricIconX;
+          metricListObjItem.statusIcon.y = metricIconY;
+          metricListObjItem.valueNode.x = metricValueX;
+          metricListObjItem.valueNode.y = metricValueY;
+
+          // update offset so each metric comes below one another
+          offset += 35;
+        });
+      } else {
+        // Don't perform alignment for nodes
+        // take existing values
+        _.each(allMetrics, (metric) => {
+          // If none of the above conditions are satisfied, no algining is done
+          // We take the already existing 'X' and 'Y' positions
+          const metricListObj = metricGroupListObj[metric.metricGroupId].metricListObj;
+          const metricListObjItem = metricListObj[metric.id];
+          metricListObjItem.x = metric.x;
+          metricListObjItem.y = metric.y;
+          metricListObjItem.statusIcon = metric.statusIcon;
+          metricListObjItem.valueNode = metric.valueNode;
+        });
+      }
+
+      // convert the 'metricGroupListObj' object to a list (metricGroupList)
+      _.forOwn(metricGroupListObj, (value) => {
+        const metricList = [];
+        _.forOwn(value.metricListObj, (value) => {
+          const metricItem = {
+            id: value.id,
+            x: value.x,
+            y: value.y,
+            statusIcon: {
+              id: value.statusIcon.id,
+              x: value.statusIcon.x,
+              y: value.statusIcon.y
             },
-            'valueNode': {
-              'id': metric.valueNode.id,
-              'x': metric.valueNode.x,
-              'y': metric.valueNode.y
+            valueNode: {
+              id: value.valueNode.id,
+              x: value.valueNode.x,
+              y: value.valueNode.y
             }
-          });
+          };
+          metricList.push(metricItem);
         });
 
-        metricGroupList.push({
-          'id': metricGroup.id,
-          'x': 0,
-          'y': 0,
-          'metricList': metricList
-        });
+        const metricGroupItem = {
+          id: value.id,
+          x: 0,
+          y: 0,
+          statusIcon: { id: value.statusIcon.id, x: 0, y: 0 },
+          metricList: metricList
+        };
+        metricGroupList.push(metricGroupItem);
       });
 
       allItems.push({
@@ -945,7 +993,13 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     // ]
     const httpResult = $http.post(urlBase + '/utMap/', body)
       .then(resp => resp.data)
-      .catch(resp => { throw resp.data; });
+      .catch(resp => {
+        // if error string is present display it
+        if (resp.data['error-string']) {
+          notify.error(resp.data['error-string']);
+        }
+        throw resp.data;
+      });
 
     // Perform operation after getting response.
     httpResult.then(function (resp) {
@@ -1044,7 +1098,14 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
                     nodesWithDashboardObj[metricValueNode.id] = metricValueNode.id;
                     metricValueNode.font.color = 'blue';
                   }
-                  metricValueNode.widthConstraint = 30;
+
+                  metricValueNode.widthConstraint = 70;
+
+                  // If metricValueNode.label is greater than 8 characters,
+                  // display only first 8 characters and append '..' to it
+                  if (metricValueNode.label.length > 8) {
+                    metricValueNode.label = metricValueNode.label.slice(0, 8) + '..';
+                  }
 
                   // push all items
                   additionalNodes.push(metric);

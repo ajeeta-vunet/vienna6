@@ -83,11 +83,7 @@ export class VunetTab extends Component {
             aria-label="Close"
             onClick={() => this.onTabRemoved(tab.id, index)}
           >
-            <span
-              aria-hidden="true"
-            >
-            &times;
-            </span>
+            <i className='icon-discard'></i>
           </button>
         ) : (''
         )}

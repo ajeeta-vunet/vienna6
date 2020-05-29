@@ -4,7 +4,6 @@ import filterTemplate from 'ui/chrome/config/filter.html';
 import intervalTemplate from 'ui/chrome/config/interval.html';
 
 import { capitalize, isArray, isFunction } from 'lodash';
-import { vunetConstants } from 'ui/vunet_constants.js';
 
 export function KbnTopNavControllerProvider($compile) {
   return class KbnTopNavController {
@@ -85,23 +84,22 @@ export function KbnTopNavControllerProvider($compile) {
         const storyboardTabHeight = $('.kuiTabWrapper').height();
         const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
         const heightToSetOnFullscreenMode = $(window).height() - kuiLocalNavHeight;
-        const dashboardTopMargin = kuiLocalNavHeight + filterHeight;
         const elementToSelect = parent.document;
         if (elementToSelect.fullscreen || elementToSelect.webkitIsFullScreen || elementToSelect.mozFullScreen) {
           $('.report-body-container').height(heightToSetOnFullscreenMode);
           $('.menubar-fixed-top-containing-filterbar').height(heightToSetOnFullscreenMode - filterHeight);
           $('.event-container').height(heightToSetOnFullscreenMode);
-          $('.dashboard-margin-top').css('margin-top', dashboardTopMargin);
+          $('.dashboard-margin-top').height(heightToSetOnFullscreenMode);
           $('.vunet-storyboards-container').height(heightToSetOnFullscreenMode -
-            filterHeight - storyboardTabHeight - vunetConstants.STORYBOARD_BODY_CONTAINER);
+            filterHeight - storyboardTabHeight);
         }
         else {
           $('.report-body-container').height(heightToSet);
           $('.menubar-fixed-top-containing-filterbar').height(heightToSet - filterHeight);
           $('.event-container').height(heightToSet);
-          $('.dashboard-margin-top').height(heightToSetOnFullscreenMode);
+          $('.dashboard-margin-top').height(heightToSet);
           $('.vunet-storyboards-container').height(heightToSet -
-            filterHeight - storyboardTabHeight - vunetConstants.STORYBOARD_BODY_CONTAINER);
+            filterHeight - storyboardTabHeight);
         }
       }, 100);
     }

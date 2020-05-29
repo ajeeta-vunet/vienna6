@@ -153,34 +153,16 @@ input[type="file"]{
   }
 }
 
-.sidebar-open-width{
-  .tab-dashboard {
-    dashboard-app{
-      kbn-top-nav{
-        width: 86.175%;
-        @media only screen and (max-width: 1450px) {
-          width: 85.175%;
-        }
-      }
-    }
-  }
-}
-
-.sidebar-closed-width{
-  .tab-dashboard {
-    dashboard-app{
-      kbn-top-nav{
-        width: 96%;
-      }
-    }
-  }
-}
-
 .tab-storyboard {
   storyboard-app{
     storyboard-provider{
+      // This is being specifically done as highlight of vunet-tabs was touching the leftmost border
+      .vunetTabs{
+        .kuiTabs{
+          margin-left: 1rem;
+        }
+      }
       .vunet-storyboards-container {
-        height: @view-content-height-storyboard;
         overflow-y: auto;
         padding-bottom: 1rem;
       }
@@ -349,6 +331,7 @@ input[type="file"]{
       height: 100%;
       dashboard-viewport-provider{
         height: 100%;
+        overflow: auto;
         //this has been done to adjust the action buttons of bmv in dashboards
         .react-grid-layout{
           .react-grid-item{
@@ -1570,8 +1553,8 @@ button[disabled], {
 
 
 
-// Table look and feel for dashboards listing page
-.storyboard-listing-container {
+// Table look and feel for storyboard listing page and dashboard listing page
+.storyboard-listing-container, .dashboard-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
   height: @view-content-height-menubaronly ;
@@ -1581,7 +1564,7 @@ button[disabled], {
   }
 }
 
-// Table look and feel for visualizations listing page
+// Table look and feel for visualizations listing page 
 .visualize-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;

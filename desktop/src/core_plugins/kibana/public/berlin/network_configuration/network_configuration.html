@@ -24,7 +24,7 @@
       </div>
       <div class="col-sm-offset-6 col-sm-1">
         <div uib-tooltip="Collect configuration of all devices">
-          <button ng-show="chrome.isModifyAllowed()" class="btn vunet-btn-download" ng-click="collectConfiguration()">
+          <button ng-show="chrome.canManageDataSources()" class="btn vunet-btn-download" ng-click="collectConfiguration()">
             Collect
           </button>
         </div>

@@ -33,7 +33,7 @@ routes.enable();
 
 routes
   .otherwise({
-    redirectTo: `/${chrome.getUserHomeDashboard()}`
+    redirectTo: `/${chrome.userHomePage()}`
   });
 
 chrome.setRootController('kibana', KibanaRootController);

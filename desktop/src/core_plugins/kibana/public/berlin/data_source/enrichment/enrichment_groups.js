@@ -31,7 +31,7 @@ function enrichmentGroups($injector,
   docTitle.change(VunetSidebarConstants.ENRICH);
 
   $scope.file_type = 'xlsx';
-  $scope.isModifyAllowed = chrome.isModifyAllowed();
+  $scope.isModifyAllowed = chrome.canManageDataEnrichment();
 
   //function to import files
   $scope.open_import_modal = function () {

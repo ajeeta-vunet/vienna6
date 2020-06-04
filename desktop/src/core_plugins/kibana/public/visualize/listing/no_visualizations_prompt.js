@@ -11,7 +11,7 @@ import {
 export function NoVisualizationsPrompt() {
   return (
     <KuiEmptyTablePromptPanel>
-      {chrome.isModifyAllowed() ?
+      {chrome.canManageObject() ?
         (
           <KuiEmptyTablePrompt
             actions={

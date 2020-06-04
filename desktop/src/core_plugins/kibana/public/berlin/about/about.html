@@ -9,7 +9,7 @@
       <div data-transclude-slot="topLeftCorner" class="kuiLocalTitle" role="heading" aria-level="1">
         <div class='col-sm-3'>About</div>
         <div class='col-sm-offset-6 col-sm-3 pull-right upload-license-column'>
-          <div ng-show="isCurrentUserAdmin()" class="uploadLicense" ng-click="openLicenseModal()" uib-tooltip="Upload Licence" >
+          <div ng-show="canManageLicense()" class="uploadLicense" ng-click="openLicenseModal()" uib-tooltip="Upload Licence" >
             Upload Licence
             <a  href='' class="uploadLicenseButton">
               <i class="fa fa-upload fa-lg" >

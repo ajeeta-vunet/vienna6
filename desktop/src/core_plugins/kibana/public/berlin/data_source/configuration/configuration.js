@@ -66,7 +66,7 @@ function configuration($scope, StateService, Upload, $compile, HTTP_SUCCESS_CODE
   // $state,
   //Import data to elasticsearch
   $scope.isModifyAllowed = false;
-  if(chrome.isModifyAllowed()) {
+  if(chrome.canManageDataSources()) {
     $scope.isModifyAllowed = true;
   }
   $scope.importDataPopup = () => {

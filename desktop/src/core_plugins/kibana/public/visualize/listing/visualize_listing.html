@@ -29,7 +29,7 @@
       </div>
   
       <visualize-listing-table
-        ng-class="{ 'hideSelectCheckBoxInViewUser': !chrome.isModifyAllowed() }"
+        ng-class="{ 'hideSelectCheckBoxInViewUser': !chrome.canManageObject() }"
         fetch-items="listingController.fetchItems"
         delete-selected-items="listingController.deleteSelectedItems"
       ></visualize-listing-table>

@@ -86,15 +86,12 @@ app.directive('storyboardApp', function ($injector, $http) {
       const allowedRoles = $scope.savedStoryboard.allowedRolesJSON ? JSON.parse($scope.savedStoryboard.allowedRolesJSON) : [];
       // Find out if user can modify, if he/she can't, we hide write controls..
       let userRoleCanModify = false;
-      if (chrome.isCurrentUserAdmin()) {
-        userRoleCanModify = true;
-      } else {
-        // Set a flag whether the current user's role can modify this object
-        userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-      }
+
+      // Set a flag whether the current user's role can modify this object
+      userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
 
       // If user cannot create a new one or modify the current existing one, hide write controls
-      if(!userRoleCanModify || !chrome.isModifyAllowed()) {
+      if(!userRoleCanModify || !chrome.canManageObject()) {
         storyboardConfig.turnHideWriteControlsOn();
       }
 

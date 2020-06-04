@@ -183,7 +183,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // This function is called to disable input elements if the user
   // doesn't have permission to create things
   $scope.disableInputElements = false;
-  if (!chrome.isModifyAllowed()) {
+  if (!chrome.canManageObject()) {
     $scope.disableInputElements = true;
   }
 
@@ -219,17 +219,13 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   if ($scope.recipientsData.length &&
     $scope.recipientsData[0].role !== '') {
     const currentUser = chrome.getCurrentUser();
-    // Display all the
-    if (chrome.isCurrentUserAdmin()) {
-      $scope.recipientsList = $scope.recipientsData;
-    }
-    else {
-      // Display only those recipient configuration
-      // which belongs to logged in user's role
-      $scope.recipientsList = _.filter($scope.recipientsData, function (recipient) {
-        return recipient.role === currentUser[1];
-      });
-    }
+
+    // Display only those recipient configuration
+    // which belongs to logged in user's role
+    $scope.recipientsList = _.filter($scope.recipientsData, function (recipient) {
+      return recipient.role === currentUser[1];
+    });
+
   }
 
   $scope.printReport = $route.current.locals.printReport;
@@ -254,21 +250,14 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
     postCall.then(function (data) {
       $scope.userGroups = [];
-      // Only admin users can select any user role.
-      // All other users will see only their user role.
-      if (chrome.isCurrentUserAdmin()) {
-        $scope.userGroups = data.user_groups;
-      } else {
+      // Get the current logged in user role
+      const currentUser = chrome.getCurrentUser();
 
-        // Get the current logged in user role
-        const currentUser = chrome.getCurrentUser();
-
-        // Display only those user groups
-        // which belongs to logged in user's role
-        $scope.userGroups = _.filter(data.user_groups, function (role) {
-          return role.name === currentUser[1];
-        });
-      }
+      // Display only those user groups
+      // which belongs to logged in user's role
+      $scope.userGroups = _.filter(data.user_groups, function (role) {
+        return role.name === currentUser[1];
+      });
     }).catch(function () {
       $scope.userGroups = [];
       notify.error('Failed to find user roles');
@@ -313,25 +302,17 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // Set whether the current logged in user be allowed to create a new
   // object or not
   $scope.creation_allowed = false;
-  if (chrome.isModifyAllowed()) {
+  if (chrome.canManageObject()) {
     $scope.creation_allowed = true;
   }
 
   let userRoleCanModify = false;
 
-  // Get the RBAC stuff here...
-  // For an admin used, we always show modify permissions during save..
-  // const userRoleCanModify = false;
-  if (chrome.isCurrentUserAdmin()) {
-    userRoleCanModify = true;
-  } else {
-    // Set a flag whether the current user's role can modify this object
-    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-  }
-
+  // Set a flag whether the current user's role can modify this object
+  userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
 
   // If user can modify the existing object or is allowed to create an object
-  if (userRoleCanModify && chrome.isModifyAllowed()) {
+  if (userRoleCanModify && chrome.canManageObject()) {
     $scope.topNavMenu = [{
       key: 'save',
       description: 'Save Report',

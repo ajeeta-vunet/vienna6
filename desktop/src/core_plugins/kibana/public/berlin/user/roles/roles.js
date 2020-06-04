@@ -70,12 +70,93 @@ function manageRoles($scope,
       {
         key: 'permissions',
         label: 'Permission Set',
-        type: 'radio',
+        type: 'multiSelect',
+        multiple: true,
         checked: true,
         options: [
-          { key: 'admin', label: 'Admin', name: 'permissions', value: 'admin' },
-          { key: 'modify', label: 'Modify', name: 'permissions', value: 'modify' },
-          { key: 'view', label: 'View', name: 'permissions', value: 'view' },
+          {
+            key: 'View Object',
+            label: 'View Object',
+            name: 'View Object',
+            value: 'View Object'
+          },
+
+          {
+            key: 'Modify Object',
+            label: 'Modify Object',
+            name: 'Modify Object',
+            value: 'Manage Object'
+          },
+
+          {
+            key: 'Manage Data Sources',
+            label: 'Manage Data Sources',
+            name: 'Manage Data Sources',
+            value: 'Manage Data Sources'
+          },
+
+          {
+            key: 'Manage Data Settings',
+            label: 'Manage Data Settings',
+            name: 'Manage Data Settings',
+            value: 'Manage Data Settings'
+          },
+
+          {
+            key: 'Manage Data Enrichment',
+            label: 'Manage Data Enrichment',
+            name: 'Manage Data Enrichment',
+            value: 'Manage Data Enrichment'
+          },
+
+          {
+            key: 'Manage Files',
+            label: 'Manage Files',
+            name: 'Manage Files',
+            value: 'Manage Files'
+          },
+
+          {
+            key: 'Manage Preferences',
+            label: 'Manage Preferences',
+            name: 'Manage Preferences',
+            value: 'Manage Preferences'
+          },
+
+          {
+            key: 'Manage Users',
+            label: 'Manage Users',
+            name: 'Manage Users',
+            value: 'Manage Users'
+          },
+
+          {
+            key: 'Manage License',
+            label: 'Manage License',
+            name: 'Manage License',
+            value: 'Manage License'
+          },
+
+          {
+            key: 'Manage Agent',
+            label: 'Manage Agent',
+            name: 'Manage Agent',
+            value: 'Manage Agent'
+          },
+
+          {
+            key: 'Data Fetch APIs',
+            label: 'Data Fetch APIs',
+            name: 'Data Fetch APIs',
+            value: 'Data Fetch APIs'
+          },
+
+          {
+            key: 'Manage Diagnostic',
+            label: 'Manage Diagnostic',
+            name: 'Manage Diagnostic',
+            value: 'Manage Diagnostic'
+          },
         ],
         props: {
         },
@@ -145,12 +226,31 @@ function manageRoles($scope,
   // This function is called to fetch all the roles from backend..
   $scope.fetchItems = () => {
     return StateService.getRolesList().then(function (data) {
+      let index = 0;
+      data.user_groups.forEach(element => {
+        data.user_groups[index].permissions = element.permissions.split(',');
+        index++;
+      });
+
       return data.user_groups;
     });
   };
 
   // This is called when a role is either created or edited..
   $scope.onSubmit = (event, userId,  userData) =>   {
+    //Removing the spaces from the permission values. Eg: 'View Object' --> 'ViewObject'
+    let  index = 0;
+    userData.permissions.forEach(function (element) {
+      userData.permissions[index] = element.split(' ').join('');
+      index++;
+    });
+
+    //adding ViewObject permission if its not there and ManageObject claim is present.
+    //By adding ManageObject claim, it is implied that it has ViewObject claim too.
+    if(userData.permissions.includes('ManageObject') && !userData.permissions.includes('ViewObject')) {
+      userData.permissions.unshift('ViewObject');
+    }
+
     if(event  === 'add') {
       const user = { user_group: {
         'name': userData.name,

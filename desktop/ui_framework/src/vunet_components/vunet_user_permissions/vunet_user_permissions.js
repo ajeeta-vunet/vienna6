@@ -75,34 +75,39 @@ export class VunetUserPermissions extends React.Component {
           // current user's role, we automatically set the permission
           // to modify
           _.each(data.user_groups, function (role) {
-            const newRole = { 'name': role.name, 'permission': '' };
-            // If the role is same as current user, mark the
-            // permission as 'modify'
-            if (role.name === currentUser[1]) {
-              newRole.permission = 'modify';
+            //indexOf returns -1 if ViewObject is not found.
+            if(role.permissions.indexOf('ViewObject') > -1) {
+              const newRole = { 'name': role.name, 'permission': '' };
+              // If the role is same as current user, mark the
+              // permission as 'modify'
+              if (role.name === currentUser[1]) {
+                newRole.permission = 'modify';
+              }
+              userRoles.push(newRole);
             }
-            userRoles.push(newRole);
           });
         } else {
-          // Iterate on all roles from backend and check it in current
-          // allowed-roles list, if it exists there, copy it from
+          // Iterate on all roles from backend which has 'ViewObject'
+          // claim and check it in current
           // allowed-roles list otherwise create a new one and push it
           // With this logic, we should finally have the same roles in
           // the allowed roles list as what we have in backend
           _.each(data.user_groups, function (role) {
             let roleFound = false;
-            _.each(allowedRoles, function (allowRole) {
-              if (role.name === allowRole.name) {
-                userRoles.push(allowRole);
-                roleFound = true;
-              }
-            });
+            if(role.permissions.indexOf('ViewObject') > -1) {
+              _.each(allowedRoles, function (allowRole) {
+                if (role.name === allowRole.name) {
+                  userRoles.push(allowRole);
+                  roleFound = true;
+                }
+              });
 
-            // If we didn't found this role in existing allowedRole,
-            // it means this is a newly created role
-            if (!roleFound) {
-              const newRole = { 'name': role.name, 'permission': '' };
-              userRoles.push(newRole);
+              // If we didn't found this role in existing allowedRole,
+              // it means this is a newly created role
+              if (!roleFound) {
+                const newRole = { 'name': role.name, 'permission': '' };
+                userRoles.push(newRole);
+              }
             }
           });
         }

@@ -93,15 +93,12 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
 
   // Find out if user can modify, if he/she can't, we hide write controls..
   let userRoleCanModify = false;
-  if (chrome.isCurrentUserAdmin()) {
-    userRoleCanModify = true;
-  } else {
-    // Set a flag whether the current user's role can modify this object
-    userRoleCanModify = chrome.canCurrentUserModifyPermissions($scope.allowedRoles);
-  }
+
+  // Set a flag whether the current user's role can modify this object
+  userRoleCanModify = chrome.canCurrentUserModifyPermissions($scope.allowedRoles);
 
   // If user can modify the existing object or is allowed to create an object
-  if(userRoleCanModify && chrome.isModifyAllowed()) {
+  if(userRoleCanModify && chrome.canManageObject()) {
     $scope.topNavMenu = [{
       key: 'save',
       description: 'Save Visualization',

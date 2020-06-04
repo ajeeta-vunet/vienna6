@@ -187,16 +187,11 @@ function alertAppEditor($scope,
   const allowedRoles = alertcfg.allowedRolesJSON ? JSON.parse(alertcfg.allowedRolesJSON) : [];
 
   let userRoleCanModify = false;
-  // Get the RBAC stuff here...
-  // For an admin used, we always show modify permissions during save..
-  if (chrome.isCurrentUserAdmin()) {
-    userRoleCanModify = true;
-  } else {
-    // Set a flag whether the current user's role can modify this object
-    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-  }
+
+  // Set a flag whether the current user's role can modify this object
+  userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
   // If user can modify the existing object or is allowed to create an object
-  $scope.canUserModifyAlert = userRoleCanModify && chrome.isModifyAllowed();
+  $scope.canUserModifyAlert = userRoleCanModify && chrome.canManageObject();
 
   // Let us get the ruleList from alertCfg, it will be empty if its a new alert
   let ruleList = [];

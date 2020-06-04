@@ -81,7 +81,7 @@ export function AlertListingController($injector, $scope, $location, $http) {
 
   // Check with chrome if modify permission is allowed for this user or not
   this.hideWriteControls = true;
-  if (chrome.isModifyAllowed()) {
+  if (chrome.canManageObject()) {
     this.hideWriteControls = false;
   }
 

@@ -120,18 +120,12 @@ function anomalyAppEditor($scope,
   const allowedRoles = anomaly.allowedRolesJSON ? JSON.parse(anomaly.allowedRolesJSON) : [];
 
   let userRoleCanModify = false;
-  // Get the RBAC stuff here...
-  // For an admin used, we always show modify permissions during save..
-  // const userRoleCanModify = false;
-  if (chrome.isCurrentUserAdmin()) {
-    userRoleCanModify = true;
-  } else {
-    // Set a flag whether the current user's role can modify this object
-    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-  }
+
+  // Set a flag whether the current user's role can modify this object
+  userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
 
   // If user can modify the existing object or is allowed to create an object
-  if(userRoleCanModify && chrome.isModifyAllowed()) {
+  if(userRoleCanModify && chrome.canManageObject()) {
     $scope.topNavMenu = [{
       key: 'save',
       description: 'Save Anomaly',

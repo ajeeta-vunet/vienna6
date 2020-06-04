@@ -81,7 +81,7 @@ export function StoryboardListingController($injector, $scope, $location, savedS
   this.pager = pagerFactory.create(this.items.length, 10, 1);
 
   // Hide write controls if modify permission is not allowed for this user
-  if (!chrome.isModifyAllowed()) {
+  if (!chrome.canManageObject()) {
     storyboardConfig.turnHideWriteControlsOn();
   }
   this.hideWriteControls = storyboardConfig.getHideWriteControls();

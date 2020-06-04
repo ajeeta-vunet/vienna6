@@ -30,7 +30,7 @@ function networkConfigurationController($injector,
 
   // Local variable to handle the data..
   $scope.selectedConfigInstanceList = [];
-  $scope.isModifyAllowed = chrome.isModifyAllowed();
+  $scope.isModifyAllowed = chrome.canManageDataSources();
 
   // Meta data for network configuration table
   $scope.networkConfiguration = {

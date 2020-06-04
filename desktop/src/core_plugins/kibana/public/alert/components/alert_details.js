@@ -1610,14 +1610,17 @@ export class AlertDetails extends React.Component {
               <span className="alert-name">{savedObject.title}</span>
 
               <div className="header-spacer" />
+              { canUserModifyAlert  &&
+                <div
+                  className="user-permissions-container titlebar-button hover-effect"
+                  onClick={this.onUserPermissions}
+                >
 
-              <div
-                className="user-permissions-container titlebar-button hover-effect"
-                onClick={this.onUserPermissions}
-              >
-                <i className="button-icon icon-advanced-config" />
-                <span className="icon-text">User Permissions</span>
-              </div>
+                  <i className="button-icon icon-advanced-config" />
+                  <span className="icon-text">User Permissions</span>
+                </div>
+              }
+
 
               <div
                 // if isDiscardEnabled flag is false, disable the button
@@ -1735,7 +1738,11 @@ export class AlertDetails extends React.Component {
                 switchTab={this.onTabChange.bind(this)}
               />
             </div>
+
             <div className="header-spacer" />
+            {/* Execute button should not visible for people who doe not have permission
+            to modify the alert rules */}
+            { canUserModifyAlert &&
             <div className="execute-button-container hover-effect">
               <button
                 className="form-control execute-button"
@@ -1744,6 +1751,8 @@ export class AlertDetails extends React.Component {
                 Execute
               </button>
             </div>
+            }
+
             <div className="header-switch-container">
               <VunetSwitch
                 onChange={this.onEnableAlert.bind(this)}

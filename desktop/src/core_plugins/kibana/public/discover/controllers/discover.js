@@ -157,15 +157,12 @@ function discoverController(
 
   // Find out if user can modify, if he/she can't, we hide write controls..
   let userRoleCanModify = false;
-  if (chrome.isCurrentUserAdmin()) {
-    userRoleCanModify = true;
-  } else {
-    // Set a flag whether the current user's role can modify this object
-    userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
-  }
+
+  // Set a flag whether the current user's role can modify this object
+  userRoleCanModify = chrome.canCurrentUserModifyPermissions(allowedRoles);
 
   // If user cannot modify, allow only open
-  if(!userRoleCanModify || !chrome.isModifyAllowed()) {
+  if(!userRoleCanModify || !chrome.canManageObject()) {
     $scope.topNavMenu = [{
       key: 'open',
       description: 'Open Saved Search',

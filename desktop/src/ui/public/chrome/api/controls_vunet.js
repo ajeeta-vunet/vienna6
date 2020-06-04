@@ -11,6 +11,8 @@ export default function (chrome, internals) {
    *   Visible
    *     determines if the Kibana chrome should be displayed
    */
+  let loggedInUserClaimList = [];
+  loggedInUserClaimList = internals.userPermission.split(',');
 
   /*
    * Returns TRUE if the current user belongs to super Tenant and BU
@@ -19,19 +21,7 @@ export default function (chrome, internals) {
     return (internals.tenantId === '1' && internals.buId === '1');
   };
 
-  // Function to check super tenant admin
-  chrome.isUserFromSuperTenantAdmin = function () {
-    return (internals.tenantId === '1' && internals.userPermission === 'admin');
-  };
 
-  // Function to check if admin and modify are allowed
-  chrome.isModifyAllowed = function () {
-    if (internals.userPermission === 'admin' || internals.userPermission === 'modify') {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   // Defining the value of session timeout but later it needs to come in req.headers (internals)
   chrome.getSessionIdleTimeout =  function () {
@@ -57,16 +47,6 @@ export default function (chrome, internals) {
     return [internals.userName, internals.userRole, internals.userPermission];
   };
 
-  /*
-   * Is current user has admin permission
-   */
-  chrome.isCurrentUserAdmin = function () {
-    if (internals.userPermission === 'admin') {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   // Find if the current logged in user can view or modify a object. We figure this out
   // by checking if the current user's user-role is allowed to view or modify the
@@ -172,5 +152,190 @@ export default function (chrome, internals) {
   chrome.getTenantUrlBase = function () {
     const url = '/' + BASE_URL + '/' + internals.tenantId;
     return url;
+  };
+
+  /*
+  * To see if the current user has ViewObject claim
+  */
+  chrome.canViewObject = function () {
+    if(loggedInUserClaimList.indexOf('ViewObject') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageObject' claim
+  */
+  chrome.canManageObject = function () {
+    if(loggedInUserClaimList.indexOf('ManageObject') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageDataSources' claim
+  */
+  chrome.canManageDataSources = function () {
+    if(loggedInUserClaimList.indexOf('ManageDataSources') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageDataSettings' claim
+  */
+  chrome.canManageDataSettings = function () {
+    if(loggedInUserClaimList.indexOf('ManageDataSettings') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageDataEnrichment' claim
+  */
+  chrome.canManageDataEnrichment = function () {
+    if(loggedInUserClaimList.indexOf('ManageDataEnrichment') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageFiles' claim
+  */
+  chrome.canManageFiles = function () {
+    if(loggedInUserClaimList.indexOf('ManageFiles') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManagePreferences' claim
+  */
+  chrome.canManagePreferences = function () {
+    if(loggedInUserClaimList.indexOf('ManagePreferences') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageImages' claim
+  */
+  chrome.canManageImages = function () {
+    if(loggedInUserClaimList.indexOf('ManageImages') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageUsers' claim
+  */
+  chrome.canManageUsers = function () {
+    if(loggedInUserClaimList.indexOf('ManageUsers') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageLicense' claim
+  */
+  chrome.canManageLicense = function () {
+    if(loggedInUserClaimList.indexOf('ManageLicense') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'Manage Agent' claim
+  */
+  chrome.canManageAgent = function () {
+    if(loggedInUserClaimList.indexOf('ManageAgent') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'DataFetchAPIs' claim
+  */
+  chrome.canDataFetchAPIs = function () {
+    if(loggedInUserClaimList.indexOf('DataFetchAPIs') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+  /*
+  * To see if the current user has 'ManageDiagnostic' claim
+  */
+  chrome.canManageDiagnostic = function () {
+    if(loggedInUserClaimList.indexOf('ManageDiagnostic') > -1) {
+      return true;
+    }
+    return false;
+  };
+
+
+  /*
+  * To see if the given sidebar tab should be visible to the current user.
+  */
+  chrome.hideShowSideBarTab = function (tabClaimList) {
+    let show = false;
+
+    tabClaimList.forEach(element => {
+      if(loggedInUserClaimList.indexOf(element) > -1) {
+        show = true;
+      }
+    });
+    if(show === true) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  };
+  //The function will return the corresponding home page
+  //according to the user claims.
+  chrome.userHomePage = function () {
+    switch(true) {
+      case chrome.canViewObject():
+      //ManageObject user will have ViewObject claim by default
+      //Therefore it is not needed to check for ManageObject
+        return chrome.getUserHomeDashboard();
+        break;
+      case chrome.canManageDataSources():
+        return 'berlin/data_source/configuration';
+        break;
+      case chrome.canManageDataSettings():
+        return 'berlin/data_source/storage';
+        break;
+      case chrome.canManageDataEnrichment():
+        return 'berlin/data_source/enrichment/';
+        break;
+      case chrome.canManageFiles():
+        return 'berlin/data_source/files';
+        break;
+      case chrome.canManagePreferences():
+        return 'berlin/preferences';
+        break;
+      case chrome.canManageUsers():
+        return 'berlin/user';
+        break;
+      case chrome.canManageLicense():
+      case chrome.canManageAgent():
+      case chrome.canDataFetchAPIs():
+      case chrome.canManageDiagnostic():
+        return 'berlin/about';
+        break;
+    }
   };
 }

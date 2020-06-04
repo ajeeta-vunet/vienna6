@@ -407,7 +407,7 @@
           <div
             class="row add-recipient-style">
             <button
-              ng-show="recipientsList.length < 65 && userGroups.length > 1"
+              ng-show="recipientsList.length < 65 && userGroups.length > 0 && !disableInputElements"
               class="add-new-field add-field-item"
               type="button"
               ng-click="addRecipients()">

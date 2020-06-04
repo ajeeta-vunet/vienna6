@@ -83,7 +83,7 @@ export function DashboardListingController($injector, $scope, $location, savedDa
   this.pager = pagerFactory.create(this.items.length, 10, 1);
 
   // Hide write controls if modify permission is not allowed for this user
-  if (!chrome.isModifyAllowed()) {
+  if (!chrome.canManageObject()) {
     dashboardConfig.turnHideWriteControlsOn();
   }
   else {

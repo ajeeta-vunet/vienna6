@@ -97,7 +97,7 @@ function manageUsers($scope,
   // This callback is called to check if a particular row should be allowed
   // to delete.. We can not allow user to delete the 'testadmin' user group..
   $scope.deleteIconCheckCallback = (rowIds) => {
-    return rowIds.find(rowId => rowId === 'testadmin') ? true : false;
+    return rowIds.find(rowId => rowId === 'VunetAdmin') ? true : false;
   };
 
   // This callback is called to check if a particular row should be allowed
@@ -109,7 +109,7 @@ function manageUsers($scope,
 
     // Row being edited belongs to 'testadmin' and current user is 'testadmin'
     // we allow edit..
-    if (row.name === 'testadmin' && curUser[0] !== 'testadmin') {
+    if (row.name === 'VunetAdmin' && curUser[0] !== 'VunetAdmin') {
       return true;
     }
 

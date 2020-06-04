@@ -111,7 +111,7 @@ class DetailsCtrl {
           $scope.successfulUpload = true;
           $scope.File = null;
           $scope.showLicenceTab = false;
-          if (chrome.isUserFromSuperTenantAdmin()) {
+          if (chrome.canManageLicense()) {
             $scope.showServerInfoTab = true;
           }
           StateService.getServerInformation().then(function (data) {

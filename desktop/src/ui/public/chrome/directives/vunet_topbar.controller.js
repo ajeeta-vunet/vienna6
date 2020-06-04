@@ -191,10 +191,13 @@ class TopbarCtrl {
     //   }
     // });
 
-    // This function is called to check if the current user is a Super Admin or
-    // not, A user is Super Tenant Admin if its tenant-id is 1 and its user
-    // permissions are 'admin'
-    $scope.isSuperTenantAdmin = chrome.isUserFromSuperTenantAdmin();
+    // This function is called to check if the current user has ManageDiagnostic claim
+    // for Run Diagnostic
+    $scope.canManageDiagnostic = chrome.canManageDiagnostic();
+
+    // This function is called to check if the current user has ViewObject claim
+    // for Alert Notification
+    $scope.notificationAccess = chrome.canViewObject() || chrome.canManageDataSettings();
 
     // Run diagnostics
     $scope.run_diagnostic = () => {
@@ -386,7 +389,7 @@ class TopbarCtrl {
       // };
 
       // Don't call getNotifications for print report.
-      if (!$rootScope.printReport) {
+      if (!$rootScope.printReport && $scope.notificationAccess) {
 
         StateService.getNotifications().then(function (data) {
           // Declaring the alert notifications count variable.

@@ -242,7 +242,7 @@ export class VisualizeListingTable extends Component {
     // Check with chrome if the creation is allowed for this user or not
     // Set whether the current logged in user be allowed to create a new
     // object or not
-    if (chrome.isModifyAllowed()) {
+    if (chrome.canManageObject()) {
       return this.state.selectedRowIds.length > 0 ?
         <KuiListingTableDeleteButton onDelete={this.onDelete} aria-label="Delete selected visualizations" /> :
         <KuiListingTableCreateButton onCreate={this.onCreate} aria-label="Create new visualization" />;

@@ -78,15 +78,16 @@ function manageAbout($injector,
     }]
   };
 
-  // If its a super-tenant admin, edit is allowed
-  if(chrome.isUserFromSuperTenantAdmin()) {
+
+  // Check if current user can upload License in the about tab..
+  $scope.canManageLicense = function () {
+    return chrome.canManageLicense();
+  };
+
+  // If the user has ManageLicense claim edit is allowed
+  if($scope.canManageLicense()) {
     $scope.aboutTenantMeta.edit = true;
   }
-
-  // Check if current user is an admin..
-  $scope.isCurrentUserAdmin = function () {
-    return chrome.isCurrentUserAdmin();
-  };
 
   // Open licence upload Modal
   // $scope.uploadVisible = false;

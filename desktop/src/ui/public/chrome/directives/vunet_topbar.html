@@ -18,7 +18,7 @@
                 <i class="fa icon-maximize" ng-click='toggleFullscreen()' uib-tooltip="View Fullscreen"></i>
               </div>
             </li>
-            <li id="notification-icon" class="uib-dropdown alert-notification" uib-dropdown is-open="dropdownIsOpen"
+            <li ng-if = "canViewObject" id="notification-icon" class="uib-dropdown alert-notification" uib-dropdown is-open="dropdownIsOpen"
               on-toggle="handleDropdownclose()">
               <div class='uib-dropdown-toggle' data-toggle="dropdown" ng-click='showNotificationDropdown()'
                 uib-dropdown-toggle>
@@ -105,7 +105,7 @@
                 </div>
               </ul>
             </li>
-            <li ng-if="isSuperTenantAdmin">
+            <li ng-if="canManageDiagnostic">
               <button class="diagnostic-button" ng-disabled="diagnostic_display_on" href='' aria-expanded='false'
                 ng-click='run_diagnostic()'>
                 <i class='icon-Diagnostics bg-color' uib-tooltip="Run Diagnostics"></i>

@@ -5,6 +5,42 @@ import { VunetSidebarConstants } from './vunet_sidebar_constants';
 class sidebarController {
   constructor($scope, $rootScope) {
 
+    //This is a dictionary which maps the sidebar elements to the correspoding claim.
+    //A user can view a particular sidebar tab only if he has the correspoding claim next to the tab.
+    const sideBarTabsClaim = {
+      [VunetSidebarConstants.ANALYTICS]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.STORYBOARDS]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.DASHBOARDS]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.SEARCH]: ['ManageObject'],
+      [VunetSidebarConstants.EVENTS]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.REPORTS]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.ANALYTICS_CONFIGURATIONS]: ['ViewObject', 'ManageObject', 'ManageDataSources'],
+      [VunetSidebarConstants.VISUALIZATIONS]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.ALERT_RULES]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.ANOMALY_DETECTION]: ['ViewObject', 'ManageObject'],
+      [VunetSidebarConstants.MANAGE_RESOURCES]: ['ManageObject', 'ManageDataSources'],
+      [VunetSidebarConstants.NETWORK_CONFIGURATION]: ['ManageDataSources'],
+      [VunetSidebarConstants.DATA]: ['ManageDataSources', 'ManageDataEnrichment'],
+      [VunetSidebarConstants.SOURCES]: ['ManageDataSources'],
+      [VunetSidebarConstants.VUBLOCK]: [''],
+      [VunetSidebarConstants.ENRICH]: ['ManageDataEnrichment'],
+      [VunetSidebarConstants.DATA_STORE]: ['ManageDataSettings', 'ManageFiles'],
+      [VunetSidebarConstants.STORAGE]: ['ManageDataSettings'],
+      [VunetSidebarConstants.FILES]: ['ManageFiles'],
+      [VunetSidebarConstants.DATA_RETENTION_SETTINGS]: ['ManageDataSettings'],
+      [VunetSidebarConstants.SETTINGS]:
+      ['ViewObject', 'ManageObject', 'ManageDataSources', 'ManageDataEnrichment',
+        'ManageDataSettings', 'ManageFiles', 'ManagePrefrences', 'ManageUsers', 'ManageLicense'],
+      [VunetSidebarConstants.PREFERENCES]: ['ManagePreferences'],
+      [VunetSidebarConstants.DEFINITIONS]: ['ManageDataSources'],
+      [VunetSidebarConstants.USER]: ['ManageUsers'],
+      [VunetSidebarConstants.ABOUT]:
+      ['ViewObject', 'ManageObject', 'ManageDataSources', 'ManageDataEnrichment', 'ManageDataSettings', 'ManageFiles',
+        'ManagePrefrences', 'ManageUsers', 'ManageLicense', 'ManageAgent', 'DataFetchAPIs', 'ManageDiagnostic'],
+      [VunetSidebarConstants.IMAGEMANAGR]: ['ManageFiles'],
+      [VunetSidebarConstants.BACKUP]: ['ManageDataSettings']
+    };
+
     // By default we have side bar open..
     $rootScope.isSideBarOpen = true;
     const baseUrl = '/app/vienna#';
@@ -54,31 +90,31 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/storyboards',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.STORYBOARDS]),
               active: false
             },
             { id: VunetSidebarConstants.SEARCH,
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/discover',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.SEARCH]),
               active: false
             },
             { id: VunetSidebarConstants.EVENTS,
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/event',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.EVENTS]),
               active: false },
             { id: VunetSidebarConstants.REPORTS,
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/reports',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.REPORTS]),
               active: false
             },
           ],
-          isModifyAllowed: true
+          isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.ANALYTICS])
         },
         {
           id: VunetSidebarConstants.ANALYTICS_CONFIGURATIONS,
@@ -91,21 +127,21 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/visualize',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.VISUALIZATIONS]),
               active: false
             },
             { id: VunetSidebarConstants.DASHBOARDS,
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/dashboards',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DASHBOARDS]),
               active: false
             },
             { id: 'Alert Rules',
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/alerts',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.ALERT_RULES]),
               active: false
             },
             {
@@ -113,7 +149,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/anomalys',
-              isModifyAllowed: true,
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.ANOMALY_DETECTION]),
               active: false
             },
             // { id: 'Manage ML Rules', description: ' ', icon: '', pageurl: '' },
@@ -123,7 +159,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + '/management',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.MANAGE_RESOURCES]),
               active: false
             },
             {
@@ -131,11 +167,11 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'network_configuartion',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.NETWORK_CONFIGURATION]),
               active: false
             }
           ],
-          isModifyAllowed: true
+          isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.ANALYTICS_CONFIGURATIONS])
         },
         {
           id: VunetSidebarConstants.DATA,
@@ -149,7 +185,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'data_source/vuBlock',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.VUBLOCK]),
               active: false
             },
             {
@@ -157,7 +193,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'data_source/configuration',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.SOURCES]),
               active: false
             },
             // { id: 'Adapt', description: ' ', icon: '', pageurl: '' },
@@ -166,11 +202,11 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'data_source/enrichment',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.ENRICH]),
               active: false
             }
           ],
-          isModifyAllowed: chrome.isModifyAllowed()
+          isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DATA])
         },
         {
           id: VunetSidebarConstants.DATA_STORE,
@@ -184,7 +220,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'data_source/storage',
-              isModifyAllowed: chrome.isCurrentUserAdmin(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.STORAGE]),
               active: false
             },
             {
@@ -192,7 +228,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'data_source/files',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.FILES]),
               active: false
             },
             {
@@ -200,11 +236,11 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'data_source/settings',
-              isModifyAllowed: chrome.isCurrentUserAdmin(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DATA_RETENTION_SETTINGS]),
               active: false
             },
           ],
-          isModifyAllowed: chrome.isModifyAllowed()
+          isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DATA_STORE])
         },
         {
           id: VunetSidebarConstants.SETTINGS,
@@ -218,7 +254,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'backup',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.BACKUP]),
               active: false
             },
             {
@@ -226,7 +262,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'definition',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DEFINITIONS]),
               active: false
             },
             {
@@ -234,7 +270,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'image_manager',
-              isModifyAllowed: chrome.isCurrentUserAdmin(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.IMAGEMANAGR]),
               active: false
             },
             {
@@ -242,7 +278,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'preferences',
-              isModifyAllowed: chrome.isModifyAllowed(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.PREFERENCES]),
               active: false
             },
             {
@@ -250,7 +286,7 @@ class sidebarController {
               description: ' ',
               icon: '',
               pageurl: baseUrl + berlinUrl + 'user',
-              isModifyAllowed: chrome.isCurrentUserAdmin(),
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.USER]),
               active: false
             },
             {

@@ -1,6 +1,6 @@
 import { uiModules } from 'ui/modules';
 import { assign } from 'lodash';
-import { fixTableHeightForPrintReport } from 'ui/utils/print_report_utils';
+// import { fixTableHeightForPrintReport } from 'ui/utils/print_report_utils';
 
 // get the kibana/table_vis module, and make sure that it requires the "kibana" module if it
 // didn't already
@@ -8,7 +8,7 @@ const module = uiModules.get('kibana/table_vis', ['kibana']);
 
 // add a controller to tha module, which will transform the esResponse into a
 // tabular format that we can pass to the table directive
-module.controller('KbnTableVisController', function ($scope, $element) {
+module.controller('KbnTableVisController', function ($scope) {
   const uiStateSort = ($scope.uiState) ? $scope.uiState.get('vis.params.sort') : {};
   assign($scope.vis.params.sort, uiStateSort);
 
@@ -51,7 +51,13 @@ module.controller('KbnTableVisController', function ($scope, $element) {
     if ($scope.printReport) {
       if ($scope.tableGroups) {
         $scope.vis.params.perPage = $scope.tableGroups.tables[0].rows.length;
-        fixTableHeightForPrintReport($scope, $element);
+
+        /* This has been commented out as some of the last rows were getting cut in print reports. This was because we have
+           taken the height of the row as 31 always but this fails when there is word wrapping in the row because of large
+           amount of content. Hence not we are not calculating the height of the data-table manually, rather whatever is the height
+           of the data-table is being taken dynamically automatically.
+        */
+        // fixTableHeightForPrintReport($scope, $element);
       }
     }
 

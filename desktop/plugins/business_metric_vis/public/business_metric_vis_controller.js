@@ -14,7 +14,7 @@ import AggConfigResult from 'ui/vis/agg_config_result';
 import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
 import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { idealTextColor, colorLuminance } from 'ui/utils/color_filter';
-import { fixBMVHeightForPrintReport } from 'ui/utils/print_report_utils';
+// import { fixBMVHeightForPrintReport } from 'ui/utils/print_report_utils';
 import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 import { SavedObjectNotFound } from 'ui/errors';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
@@ -987,7 +987,13 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           // set the height of the table based on the number of rows
           if ($scope.printReport && $scope.vis.params.aggregations.length &&
               $scope.vis.params.enableTableFormat) {
-            fixBMVHeightForPrintReport($scope, metricRowCount, $element);
+
+            /* This has been commented out as some of the last rows were getting cut in print reports. This was because we have
+              taken the height of the row as 31 always but this fails when there is word wrapping in the row because of large
+              amount of content. Hence not we are not calculating the height of the BMV table manually, rather whatever is the height
+              of the BMV table is being taken dynamically automatically.
+            */
+            // fixBMVHeightForPrintReport($scope, metricRowCount, $element);
           }
         })
           .catch(function (resp) {

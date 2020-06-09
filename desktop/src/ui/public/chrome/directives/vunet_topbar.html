@@ -2,12 +2,22 @@
   <div ng-show="!$root.printReport" class="vunetLocalNav1">
     <div class="kuiLocalNavRowVunet">
       <div class="row">
-        <div class="col-sm-2  button-menu-mobile open-left waves-effect padding-top-for-collapse">
-          <i class="icon-Menu-Collapse" ng-click="$root.openLeftBar()"></i>
-          <!-- <i class="icon-vuNet_Logo_Final-06"></i> -->
-          <!-- <span class="icon-Logo-Image-Color"></span> -->
+        <div class="col-sm-3 flex-container">
+          <div class="button-menu-mobile open-left waves-effect padding-top-for-collapse">
+            <i class="icon-Menu-Collapse" ng-click="$root.openLeftBar()"></i>
+            <!-- <i class="icon-vuNet_Logo_Final-06"></i> -->
+            <!-- <span class="icon-Logo-Image-Color"></span> -->
+          </div>
+          <div
+            ng-if="customerLogoImgPath.length"
+            class="customer-logo-wrapper">
+            <div
+              class="customer-logo"
+              ng-style="{'background-image':'url({{customerLogoImgPath}})'}">
+            </div>
+          </div>
         </div>
-        <div class="col-sm-6 vunet-notifications" ng-class="{'vunet-notifications-borders':$root.notifList.length>0}">
+        <div class="col-sm-5 vunet-notifications" ng-class="{'vunet-notifications-borders':$root.notifList.length>0}">
           <kbn-notifications list=$root.notifList></kbn-notifications>
           <!-- <i class="icon-vuNet_Logo_Final-06"></i> -->
         </div>

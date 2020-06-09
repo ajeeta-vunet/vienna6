@@ -609,7 +609,7 @@ function vunetBackup($injector,
   // This callback is called to check if a particular schedule name already exists
   // or not.. If this returns true, an error is displayed to the user
   $scope.validateValue = (key, value) => {
-    return $scope.scheduleData.find(schedule => schedule[key] === value) ? true : false;
+    return $scope.scheduleData && $scope.scheduleData.find(schedule => schedule[key] === value) ? true : false;
   };
 
   // This is called when add or edit operation is carried out and

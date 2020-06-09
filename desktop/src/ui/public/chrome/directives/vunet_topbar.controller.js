@@ -54,6 +54,17 @@ class TopbarCtrl {
       }
     });
 
+    // Check if customer logo is uploaded and use it.
+    StateService.getUploadedImages().then(function (data) {
+      const tenantBuList = chrome.getTenantBu();
+      if (data && data.logo) {
+        $scope.customerLogoImgPath = '/ui/vienna_images/' + tenantBuList[0] + '/' +
+        tenantBuList[1] + '/logo/' + data.logo[0]['file-name'];
+      } else {
+        $scope.customerLogoImgPath = '';
+      }
+    });
+
     $scope.openAdminConsole = () => {
       const adminConsoleUrl = 'https://' + window.location.hostname + '/admin-console/';
       $window.open(adminConsoleUrl);
@@ -429,7 +440,7 @@ class TopbarCtrl {
             // When alerts are generated for the first time,
             // The alert notification count is equal to no of alert
             // notifications received.
-            alertCount = data.Notifications.length;
+            alertCount = data.Notifications && data.Notifications.length;
           }
 
           // Updating the UI with new alert notifications received
@@ -443,7 +454,8 @@ class TopbarCtrl {
 
           // alert count should not be more than 5. Once we get the total alert
           // count we add the backup notifications count to it.
-          backUpNotificationsLength = data['Backup and Storage'].length;
+          backUpNotificationsLength = data['Backup and Storage'] &&
+            data['Backup and Storage'].length;
           if ($scope.notificationLength > 5) {
             $scope.notificationLength = 5 + backUpNotificationsLength;
           } else {

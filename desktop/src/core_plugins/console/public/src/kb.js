@@ -229,7 +229,8 @@ export function setActiveApi(api) {
   ACTIVE_API = api;
 }
 
-setActiveApi('es_5_0');
+// This can be commented out for VAPT issue 3.8 as this was exposing IPv4 addresses
+//setActiveApi('es_5_0');
 
 export const _test = {
   loadApisFromJson: loadApisFromJson

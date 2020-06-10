@@ -1,5 +1,7 @@
+/*eslint-disable */
 import Boom from 'boom';
 import { resolveApi } from './api_server/server';
+/*eslint-enable */
 import { existsSync } from 'fs';
 import { resolve, join, sep } from 'path';
 import { has, isEmpty } from 'lodash';
@@ -101,19 +103,20 @@ export default function (kibana) {
         }
       }));
 
-      server.route({
-        path: '/api/console/api_server',
-        method: ['GET', 'POST'],
-        handler: function (req, reply) {
-          const { sense_version, apis } = req.query;
-          if (!apis) {
-            reply(Boom.badRequest('"apis" is a required param.'));
-            return;
-          }
+      // This can be commented out for VAPT issue 3.8 as this was exposing IPv4 addresses
+      // server.route({
+      //   path: '/api/console/api_server',
+      //   method: ['GET', 'POST'],
+      //   handler: function (req, reply) {
+      //     const { sense_version, apis } = req.query;
+      //     if (!apis) {
+      //       reply(Boom.badRequest('"apis" is a required param.'));
+      //       return;
+      //     }
 
-          return resolveApi(sense_version, apis.split(','), reply);
-        }
-      });
+      //     return resolveApi(sense_version, apis.split(','), reply);
+      //   }
+      // });
 
       const testApp = kibana.uiExports.apps.hidden.byId['sense-tests'];
       if (testApp) {
@@ -132,9 +135,11 @@ export default function (kibana) {
       hacks: ['plugins/console/hacks/register'],
       devTools: ['plugins/console/console'],
 
-      injectDefaultVars(server) {
+      injectDefaultVars(/*eslint-disable */server/*eslint-enable */) {
         return {
-          elasticsearchUrl: server.config().get('elasticsearch.url')
+
+          // This can be commented out for VAPT issue 3.8 as this was exposing IPv4 addresses
+          //elasticsearchUrl: server.config().get('elasticsearch.url')
         };
       },
 

@@ -120,9 +120,6 @@ module.directive('visMap', function (StateService) {
               }
             },
             nodes: {
-              font: {
-                size: 20,
-              },
               borderWidth: 2,
               physics: false,
               chosen: true,
@@ -163,9 +160,6 @@ module.directive('visMap', function (StateService) {
               }
             },
             nodes: {
-              font: {
-                size: 20,
-              },
               borderWidth: 2,
               physics: true,
               chosen: true,

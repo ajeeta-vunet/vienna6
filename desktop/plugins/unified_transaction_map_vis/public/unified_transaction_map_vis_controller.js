@@ -174,7 +174,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
           _.each(data.metric_groups, (group) => {
 
             // offset calculations
-            const groupIconOffset = ((group.widthConstraint / 2) + 20);
+            const groupIconOffset = ((group.widthConstraint / 2) + 35);
 
             // align groupNode below node
             const groupNodeId = group.id;
@@ -319,8 +319,8 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
         _.each(allMetrics, (metric) => {
 
           // offset calculations
-          const metricIconOffset = ((metric.widthConstraint / 2) + 20);
-          const metricValueOffset = 80 + (((metric.maxCharacterLength - 10) / 10) * 40);
+          const metricIconOffset = ((metric.widthConstraint / 2) + 35);
+          const metricValueOffset = 100 + (((metric.maxCharacterLength - 10) / 10) * 40);
 
           // align metric below the node
           const metricNodeId = metric.id;
@@ -1028,7 +1028,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
             });
 
             // we calculate the widthConstraint of the textNode based on 'maxCharacterLength'
-            const widthConstraint = (maxCharacterLength * 215) / 20;
+            const widthConstraint = ((maxCharacterLength * 215) / 20) + 40;
 
             _.each(data.metric_groups, function (metricGroup) {
               const iconNode = { ...metricGroup.statusIcon };
@@ -1078,7 +1078,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
             });
 
             // we calculate the widthConstraint of the textNode based on 'maxCharacterLength'
-            const widthConstraint = (maxCharacterLength * 215) / 20;
+            const widthConstraint = ((maxCharacterLength * 215) / 20) + 40;
 
             _.each(data.metric_groups, function (metricGroup) {
               if (metricGroup.metricList) {
@@ -1099,13 +1099,18 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
                     metricValueNode.font.color = 'blue';
                   }
 
-                  metricValueNode.widthConstraint = 70;
+                  metricValueNode.widthConstraint = 100;
 
                   // If metricValueNode.label is greater than 8 characters,
                   // display only first 8 characters and append '..' to it
                   if (metricValueNode.label.length > 8) {
                     metricValueNode.label = metricValueNode.label.slice(0, 8) + '..';
                   }
+
+                  // The 'value' attribute is used in vis.js to scale the size of nodes
+                  // we are getting a key with the name 'value' from backend
+                  // we don't need this feature. delete this key
+                  delete metric.value;
 
                   // push all items
                   additionalNodes.push(metric);

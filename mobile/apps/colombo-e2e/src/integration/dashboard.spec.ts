@@ -21,7 +21,7 @@
 describe('Dashboard Test', () => {
   beforeEach(() => {
     window.localStorage.setItem('vu.mobile', 'mobile');
-    cy.visit('https://localhost/mobile/dashboard');
+    cy.visit('https://localhost/vunet/dashboard');
     cy.get('#name').type('testadmin');
     cy.get('#password').type('admin');
     cy.get('.login-btn').click();
@@ -38,18 +38,18 @@ describe('Dashboard Test', () => {
     });
   });
   it('should load first dashboard', () => {
-    cy.url().should('eq', 'https://localhost/mobile/dashboard');
+    cy.url().should('eq', 'https://localhost/vunet/dashboard');
     cy.get(':nth-child(1) > .btn').click();
   });
   it('should change time range dashboard', () => {
-    cy.url().should('eq', 'https://localhost/mobile/dashboard');
-    cy.get('[src="/mobile/assets/Expand.svg"]').click();
+    cy.url().should('eq', 'https://localhost/vunet/dashboard');
+    cy.get('[src="/assets/images/Expand.svg"]').click();
     cy.get(':nth-child(2) > :nth-child(2) > ul > :nth-child(1)').click();
     cy.get(':nth-child(1) > .btn').click();
-    cy.url().should('eq', 'https://localhost/mobile/dashboard/dashboard:HomePage');
+    cy.url().should('eq', 'https://localhost/vunet/dashboard/dashboard:HomePage');
   });
   it('should load', () => {
     cy.get(':nth-child(1) > .btn').click();
-    cy.url().should('eq', 'https://localhost/mobile/dashboard/dashboard:HomePage');
+    cy.url().should('eq', 'https://localhost/vunet/dashboard/dashboard:HomePage');
   });
 });

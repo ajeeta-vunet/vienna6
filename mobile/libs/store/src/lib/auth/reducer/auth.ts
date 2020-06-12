@@ -20,8 +20,7 @@
 
 import { AuthActions, AuthActionTypes } from '../action/types';
 import { Reducer } from 'react';
-import { UserSettingStore } from '@vu/utils';
-import { ALL_DASHBOARDS_URL } from '../../urls';
+import { UserSettingStore, ImageManager } from '@vu/utils';
 
 /**
  * This will prevent user from misspelling the AuthState variable
@@ -37,18 +36,23 @@ export type AuthStore = {
  * @interface AuthState
  */
 export interface AuthState {
+  initialized: boolean;
   isAuthenticated: boolean;
   loggingIn: boolean;
+  /** True: When there is a duplicate session preventing user from Logging In*/
+  duplicateSession?: boolean;
   user: string;
   error: string;
 }
 export const AuthInitialState: AuthState = {
   isAuthenticated: undefined,
   loggingIn: false,
+  initialized: false,
   user: UserSettingStore.UserName,
   error: undefined,
 };
 export const AuthUnauthorizedState: AuthState = {
+  initialized: true,
   isAuthenticated: false,
   loggingIn: false,
   user: '',
@@ -61,20 +65,27 @@ export const AuthUnauthorizedState: AuthState = {
  * @param action The Action Type passed by reducer
  * @returns {AuthState} Auth State
  */
-export const AuthReducer: Reducer<AuthState, AuthActions> = (state = AuthInitialState, action) => {
+export const AuthReducer: Reducer<AuthState, AuthActions> = (state = AuthInitialState, action): AuthState => {
   switch (action.type) {
     case AuthActionTypes.LOGIN:
       return { ...state, loggingIn: true, error: undefined };
+    case AuthActionTypes.LOGIN_CHECKED:
+      return { ...state, initialized: true };
     case AuthActionTypes.LOGIN_SUCCESS:
       UserSettingStore.UserName = action.username;
+      ImageManager.LoadImages();
       return {
         loggingIn: false,
         user: action.username,
         isAuthenticated: true,
+        duplicateSession: false,
+        initialized: true,
         error: undefined,
       };
     case AuthActionTypes.LOGIN_FAILED:
-      return { ...state, loggingIn: false, error: action.error };
+      return { ...state, duplicateSession: false, loggingIn: false, error: action.error };
+    case AuthActionTypes.DUPLICATE_SESSION:
+      return { ...state, loggingIn: false, duplicateSession: true, error: action.error };
     case AuthActionTypes.LOGOUT:
       return { ...state, loggingIn: true, error: undefined };
     // Depreciate Code
@@ -84,8 +95,10 @@ export const AuthReducer: Reducer<AuthState, AuthActions> = (state = AuthInitial
       return {
         loggingIn: false,
         isAuthenticated: false,
+        duplicateSession: false,
         user: undefined,
         error: undefined,
+        initialized: true,
       };
     case AuthActionTypes.LOGOUT_FAILED:
       return { ...state, loggingIn: false, error: action.error };

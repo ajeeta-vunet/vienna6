@@ -18,14 +18,22 @@
  * Use of copyright notice does not imply publication.
 */
 
-import { AlertActionEnum, AlertLoadAction, AlertLoadFailAction, AlertLoadSuccessAction, SeverityValues, ListOfEvent } from './types';
-import { vuHttp } from '@vu/http';
+import {
+  AlertActionEnum,
+  AlertLoadAction,
+  AlertLoadFailAction,
+  AlertLoadSuccessAction,
+  SeverityValues,
+  ListOfEvent,
+} from './types';
+import { vuHttp, getErrorMessage } from '@vu/http';
 import { Dispatch } from 'redux';
 import { UserSettingStore } from '@vu/utils';
 import { TimeRangeStore } from '@vu/store';
 
 export const ALERTS_URL = `vuSmartMaps/api/${UserSettingStore.TenantId}/bu/${UserSettingStore.BuId}/events_of_interest/list_of_events/`;
-export const ALERT_URL = (id: string) => `vuSmartMaps/api/${UserSettingStore.TenantId}/bu/${UserSettingStore.BuId}/events_of_interest/individual_event/${id}/?format=alerts_format`;
+export const ALERT_URL = (id: string) =>
+  `vuSmartMaps/api/${UserSettingStore.TenantId}/bu/${UserSettingStore.BuId}/events_of_interest/individual_event/${id}/?format=alerts_format`;
 export const ALERT_SEVERITY_URL = `vuSmartMaps/api/${UserSettingStore.TenantId}/bu/${UserSettingStore.BuId}/events_of_interest/severity_based_events/?format=alerts_format`;
 export const MAX_ALERTS = 100;
 
@@ -39,27 +47,32 @@ export function LoadAlertsAction(filter: SeverityValues) {
   return async (dispatch: Dispatch, getState: () => TimeRangeStore) => {
     dispatch({ type: AlertActionEnum.LOAD_ALERTS } as AlertLoadAction);
     const timerange = getState().timerange;
-    try {
-      const data = await vuHttp.post<unknown, ListOfEvent>(ALERTS_URL, {
+    vuHttp
+      .post$<unknown, ListOfEvent>(ALERTS_URL, {
         extended: {
           es: {
-            filter: { bool: { must: filter === "*"?[]:[{match_phrase: {severity: {query: filter}}}]
-            , must_not: [] } },
+            filter: {
+              bool: { must: filter === '*' ? [] : [{ match_phrase: { severity: { query: filter } } }], must_not: [] },
+            },
           },
         },
         time: { gte: timerange.start.getTime(), lte: timerange.end.getTime() },
         sample_size: MAX_ALERTS,
-        format: "alerts_format",
-      });
-      dispatch({
-        type: AlertActionEnum.LOAD_ALERTS_SUCCESS,
-        data: data.data.List_of_events,
-      } as AlertLoadSuccessAction);
-    } catch (err) {
-      dispatch({
-        type: AlertActionEnum.LOAD_ALERTS_FAIL,
-        error: JSON.stringify(err),
-      } as AlertLoadFailAction);
-    }
+        format: 'alerts_format',
+      })
+      .subscribe(
+        (data) => {
+          dispatch({
+            type: AlertActionEnum.LOAD_ALERTS_SUCCESS,
+            data: data.List_of_events,
+          } as AlertLoadSuccessAction);
+        },
+        (err) => {
+          dispatch({
+            type: AlertActionEnum.LOAD_ALERTS_FAIL,
+            error: getErrorMessage(err),
+          } as AlertLoadFailAction);
+        },
+      );
   };
 }

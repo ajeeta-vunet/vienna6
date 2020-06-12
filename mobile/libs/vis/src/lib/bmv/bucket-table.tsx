@@ -19,13 +19,12 @@
 */
 
 import React from 'react';
-import { Metrics, Metric, KpiMetric, TableMetric } from '@vu/types';
+import { Metric, KpiMetric, TableMetric } from '@vu/types';
 import _ from 'lodash';
-import { BaseVisualization, ViewDashboardProp, ViewDashboardState } from '../base-component';
+import { BaseVisualization, ViewDashboardProp, ViewDashboardState, ExpandedVisualizationUrl } from '../base-component';
 import { VisShell } from '../shell/shell';
 import { BMV_MAX_ROWS } from './config';
 import { Link } from 'react-router-dom';
-import { ExpandedVisualizationUrl } from '@vu/vis';
 type MetricWithKey = {
   key: string;
 } & (TableMetric | KpiMetric);
@@ -48,7 +47,18 @@ const extractKeys = (data: TableMetric): MetricWithKey[] =>
  * @extends {(BaseVisualization<BucketTableProps & ViewDashboardProp>)}
  */
 export class BucketTable extends BaseVisualization<ViewDashboardProp, ViewDashboardState> {
+  /**
+   * Constructor
+   * @param props Props
+   */
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   render() {
+    if (this.state.error) {
+      return this.errorVis();
+    }
     if (this.props.data.type !== 'table' && this.props.data.type !== 'trend') {
       return null;
     }

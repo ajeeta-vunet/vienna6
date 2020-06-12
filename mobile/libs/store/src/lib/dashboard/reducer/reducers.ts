@@ -69,7 +69,7 @@ export const DashboardReducer: Reducer<DashboardsState, DashboardActions> = (sta
     case DashboardActionTypes.LOAD_DASHBOARDS:
       return { ...state, loading: true, error: null };
     case DashboardActionTypes.LOAD_DASHBOARDS_SUCCESS:
-      return { ...state, loading: false, error: null, dashboards: action.data };
+      return { ...state, loading: false, error: null, dashboards: action.data || [] };
     case DashboardActionTypes.LOAD_DASHBOARDS_FAILED:
       return { ...state, loading: false, error: action.error };
     case DashboardActionTypes.LOAD_DASHBOARD:

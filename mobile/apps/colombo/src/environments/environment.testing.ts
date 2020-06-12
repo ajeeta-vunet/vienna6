@@ -20,7 +20,6 @@
 // Warning: Don't rename this file to environment.test.ts
 
 export const environment = {
-  basePath: '/mobile/',
+  basePath: '/vunet/',
   production: false,
-  // APIURL : 'https://127.0.0.1:7777/'
 };

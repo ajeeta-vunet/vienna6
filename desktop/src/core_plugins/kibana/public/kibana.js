@@ -44,7 +44,7 @@ const kibana = uiModules.get('kibana');
 kibana.factory('responseInterceptor', ($rootScope) => {
   const responseInterceptor = {
     response: (config) => {
-      if(config.status === 474 || config.status === 475) {
+      if (config.status === 474 || config.status === 475) {
         Notifier.showLicence($rootScope);
         $rootScope.licence = true;
       }
@@ -52,13 +52,19 @@ kibana.factory('responseInterceptor', ($rootScope) => {
     },
     responseError: (config) => {
       // 474: Licence invalid
-      if(config.status === 474 || config.status === 475) {
+      if (config.status === 474 || config.status === 475) {
         Notifier.showLicence($rootScope);
         $rootScope.licence = true;
-      } else if(config.status === 401) { // unauthorized
+      } else if (config.status === 401) {
+        // unauthorized
         window.localStorage.clear();
-        window.location.href = window.location.origin + '/vunet.html#/login';
-      }  else if(config.status === 500) { // Server Error
+        window.location.href = window.location.origin + '/vunet/login';
+      } else if (config.status === 403) {
+        // Forbidden
+        const notify = new Notifier();
+        notify.error(config.statusText || 'Access denied!');
+      } else if (config.status === 500) {
+        // Server Error
         const notify = new Notifier();
         notify.error(config.statusText);
       }
@@ -76,11 +82,9 @@ kibana.run(($rootScope, $location, $http) => {
   $rootScope.licence = false;
   Notifier.pullMessageFromUrl($location);
   $rootScope.$watch('licence', function (licence) {
-    if(licence) {
+    if (licence) {
       // if licence page is shown , then discard all the pending request
       $http.pendingRequests.length = 0;
     }
   });
 });
-
-

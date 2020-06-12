@@ -18,12 +18,15 @@
  * Use of copyright notice does not imply publication.
  */
 
-import { AuthActionTypes, LoginSuccessAction, LoginFailed } from './types';
-import { btou } from '@vu/utils';
-import { vuHttp } from '@vu/http';
+import { AuthActionTypes, LoginSuccessAction, LoginFailed, DuplicateSession } from './types';
+import { btou, isMobile, UserSettingStore } from '@vu/utils';
+import { vuHttp, getErrorMessage } from '@vu/http';
 import { LOGOUT_URL, LOGIN_URL } from '../../urls';
 import { LoginFormState } from '../state';
 import { Dispatch } from 'redux';
+import { AxiosResponse } from 'axios';
+
+// Headers added to request
 export const vuApiHeaders = {
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -39,20 +42,11 @@ export const vuApiHeaders = {
 export function LogoutUser() {
   return async (dispatch: Dispatch) => {
     dispatch({ type: AuthActionTypes.LOGOUT });
-    try {
-      await vuHttp.post(LOGOUT_URL, '', vuApiHeaders);
-      dispatch({ type: AuthActionTypes.LOGOUT_SUCCESS });
-    } catch (err) {
-      /**
-       * HACK for 403 is an error
-       * If we get 403 means we are logged out
-       */
-      if (JSON.stringify(err).indexOf('403') !== -1) dispatch({ type: AuthActionTypes.LOGOUT_SUCCESS });
-      dispatch({
-        type: AuthActionTypes.LOGIN_FAILED,
-        error: JSON.stringify(err),
-      } as LoginFailed);
-    }
+    vuHttp.post$(LOGOUT_URL, '', vuApiHeaders).subscribe(
+      () => {
+        dispatch({ type: AuthActionTypes.LOGOUT_SUCCESS });
+      },
+    );
   };
 }
 
@@ -63,22 +57,49 @@ export function LogoutUser() {
  * @param {LoginFormState} { name, password }
  * @returns
  */
-export function LoginUser({ name, password }: LoginFormState) {
+export function LoginUser({ name, password, captchaKey, captchaSolution }: LoginFormState, terminate_active_session: boolean = false) {
   return async function(dispatch: Dispatch) {
     dispatch({ type: AuthActionTypes.LOGIN });
-    try {
-      await vuHttp.post(LOGIN_URL, `name=${name}&password=${btou(password)}`, vuApiHeaders);
-      dispatch({
-        type: AuthActionTypes.LOGIN_SUCCESS,
-        username: name,
-      } as LoginSuccessAction);
-    } catch (err) {
-      // TODO:  Better Message
-      const msg = JSON.stringify(err).indexOf('401') !== -1 ? 'Invalid Username or Password' : err;
-      dispatch({
-        type: AuthActionTypes.LOGIN_FAILED,
-        error: msg,
-      } as LoginFailed);
-    }
+    vuHttp
+      .post$(
+        LOGIN_URL,
+        `name=${name}&password=${btou(password)}${
+          captchaKey !== 'no_captcha' ? `&captcha_key=${captchaKey}&captcha_solution=${captchaSolution}` : ''
+        }${terminate_active_session? '&terminate_active_session=true': ''}`,
+        vuApiHeaders,
+      )
+      .subscribe(
+        (_) => {
+          if (!isMobile()) {
+            UserSettingStore.UserName = name;
+            window.location.href = window.location.origin + '/app/vienna';
+          } else {
+            dispatch({
+              type: AuthActionTypes.LOGIN_SUCCESS,
+              username: name,
+            } as LoginSuccessAction);
+          }
+        },
+        (error: AxiosResponse) => {
+          if (error.status === 409 /**Duplicate Session */) {
+            dispatch({
+              type: AuthActionTypes.DUPLICATE_SESSION,
+              error: getErrorMessage(error)
+            } as DuplicateSession);
+          } else if (error.status === 400 /** Invalid Captcha */) {
+            let msg = getErrorMessage(error);
+            if (msg.indexOf('statusText') !== -1) msg = 'Invalid Captcha';
+            dispatch({
+              type: AuthActionTypes.LOGIN_FAILED,
+              error: msg,
+            } as LoginFailed);
+          } else {
+            dispatch({
+              type: AuthActionTypes.LOGIN_FAILED,
+              error: getErrorMessage(error),
+            } as LoginFailed);
+          }
+        },
+      );
   };
 }

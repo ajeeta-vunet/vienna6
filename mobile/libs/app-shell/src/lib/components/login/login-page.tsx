@@ -19,47 +19,50 @@
  */
 
 import React from 'react';
-import LoginForm from './login-form';
-import { Row, Col, Container } from 'reactstrap';
+import { isMobile } from '@vu/utils';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { AppShellStore } from '../../store';
+import { AuthState } from '@vu/store';
+import { LoginMobile } from './mobile-login';
+import { DesktopLogin } from './desktop-login';
+import queryString from 'query-string';
+import { withRouter, RouteChildrenProps } from 'react-router';
+import { DashboardsUrl } from '@vu/vis';
+import { Redirect } from 'react-router-dom';
 
 /**
- * Will render the login page
- * The UI for login page
- *
- * @export
- * @function LoginPage
+ * Props for login Page
  */
-export const LoginPage = () => (
-  <div className="login-page">
-    <Container fluid={true}>
-      <Row className="vu-login mb-5">
-        <Col>
-          <div className="login-header text-center ">
-            <img className="login_image" src='/mobile/assets/vunet_logo.svg' alt="" />
-            <p className="login_wtsl">Welcome to the Smart life with</p>
-            <h3 className="login_vsm">vuSmartMaps</h3>
-          </div>
-          <LoginForm />
-        </Col>
-      </Row>
-    </Container>
-    <Container fluid={true} className="vu-login-footer-bg text-center">
-      <Row>
-        <Col>
-          <div className="nh mb-2">
-            <a href="https://vunetsystems.com/support/">Need help?</a>
-          </div>
-          {/* <p className="o text-center mb-5">
-            By using vuSmartMaps, you confirm you have read and understood our
-            <Link className="pp" to={'/privacy'}>
-              Privacy policy
-            </Link>
-          </p> */}
-          <p className="cr">Copyright &copy; Team Vunet Systems - {new Date().getFullYear()}, All Rights Reserved</p>
-        </Col>
-      </Row>
-    </Container>
-  </div>
-);
+export type LoginPageProps = {
+  auth: AuthState;
+  isMobile: boolean;
+} & RouteChildrenProps;
+class LoginPageInternal extends React.Component<LoginPageProps> {
+  render() {
+    if (this.props.auth.isAuthenticated && this.props.isMobile) {
+      const returnUrl: string = (queryString.parse(this.props.location.search).return_url as string) || DashboardsUrl();
+      return <Redirect to={returnUrl} />;
+    } else if (this.props.auth.isAuthenticated && !this.props.isMobile) {
+      window.location.href = window.location.origin + '/app/vienna';
+    }
+    if (!this.props.auth.initialized || this.props.auth.isAuthenticated) {
+      return (
+        <div className="kbn-loader-container">
+          <div className="kbn-loader"></div>
+        </div>
+      );
+    } else {
+      // Will switch login page based on device type
+      return this.props.isMobile ? <LoginMobile /> : <DesktopLogin />;
+    }
+  }
+}
 
+const mapStateToProps = (state: AppShellStore) => ({
+  auth: state.auth,
+  isMobile: state.appui.isMobile,
+});
+
+export const LoginPage = compose(withRouter, connect(mapStateToProps))(LoginPageInternal);
 export default LoginPage;

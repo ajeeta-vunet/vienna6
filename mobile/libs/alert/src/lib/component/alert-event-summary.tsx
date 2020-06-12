@@ -63,16 +63,21 @@ export class AlertEventCard extends Component<AlertEventProps, AlertEventState> 
       },
     } = this;
     vuHttp
-      .post<unknown, SeverityApiResponse>(ALERT_SEVERITY_URL, {
+      .post$<unknown, SeverityApiResponse>(ALERT_SEVERITY_URL, {
         extended: {
           es: {
-            filter: { bool: { must: props.displayFilter === "*"?[]:[{match_phrase: {severity: {query: props.displayFilter}}}]  } },
+            filter: {
+              bool: {
+                must:
+                  props.displayFilter === '*' ? [] : [{ match_phrase: { severity: { query: props.displayFilter } } }],
+              },
+            },
           },
         },
         time: { gte: start.getTime(), lte: end.getTime() },
         format: 'alerts_format',
       })
-      .then(({ data: { 'Time-Periods': TimePeriod } }) => {
+      .subscribe(({ 'Time-Periods': TimePeriod }) => {
         this.setState({ data: TimePeriod });
       });
   }
@@ -122,7 +127,7 @@ export class AlertEventCard extends Component<AlertEventProps, AlertEventState> 
             </div>
             <div className="alert-summary-right">
               <Row>
-                {([ 'critical', 'error','warning', 'information'] as SeverityValues[]).map((severity) => (
+                {(['critical', 'error', 'warning', 'information'] as SeverityValues[]).map((severity) => (
                   <Col
                     xs={3}
                     className="text-center"

@@ -83,8 +83,8 @@ export const Header = connect(
     ) : (
       undefined
     )}
-    <NavbarBrand className="w-100 mb-2" href="/mobile/">
-      <img src='/mobile/assets/Logo.svg' alt="" />
+    <NavbarBrand className="w-100 mb-2" href="/vunet/">
+      <img src='/assets/images/Logo.svg' alt="" />
       <span className="brand-name">vuSmartMaps</span>
     </NavbarBrand>
 
@@ -105,13 +105,13 @@ export const Header = connect(
         <div className="ml-auto text-white time-selection-container">
           <div onClick={props.toggleTimeselector}>
             <img
-              src={'/mobile/assets/Time.svg'}
+              src={'/assets/images/Time.svg'}
               alt="Time Selector"
               className={'time-icon ' + (props.dashboard.loading ? 'fa-spin' : '')}
             />
             <span className="px-2">{props.time.display}</span>
             <img
-              src={'/mobile/assets/' + (props.appui.isTimeSelectorOpen ? 'Collapse.svg' : 'Expand.svg')}
+              src={'/assets/images/' + (props.appui.isTimeSelectorOpen ? 'Collapse.svg' : 'Expand.svg')}
               className="time-arrow"
               alt={props.appui.isTimeSelectorOpen ? 'Collapse' : 'Expand'}
             />

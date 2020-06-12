@@ -214,7 +214,7 @@ export const AlertsPage = connect(
           <Container className="py-3" fluid={true}>
             <Card>
               <CardBody className="text-center">
-                <img width="100" src="/mobile/assets/loader.gif" />
+                <img width="100" src="/assets/images/loader.gif" />
               </CardBody>
             </Card>
           </Container>

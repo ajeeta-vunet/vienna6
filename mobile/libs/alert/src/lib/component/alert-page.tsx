@@ -48,8 +48,8 @@ export class AlertPage extends Component<AlertProps, AlertState> {
     this.state = { alert: undefined };
 
     vuHttp
-      .get<AlertDetails>(ALERT_URL(props.match.params.alertId))
-      .then(({ data: alert }) => this.setState({ alert: alert }));
+      .get$<AlertDetails>(ALERT_URL(props.match.params.alertId))
+      .subscribe((alert) => this.setState({ alert }));
   }
   componentDidCatch() {
     this.setState({ error: true });
@@ -70,7 +70,7 @@ export class AlertPage extends Component<AlertProps, AlertState> {
    */
   render() {
     const {
-      state: { alert }
+      state: { alert },
     } = this;
 
     if (!alert)
@@ -78,7 +78,7 @@ export class AlertPage extends Component<AlertProps, AlertState> {
         <Container className="py-3" fluid={true}>
           <Card>
             <CardBody className="text-center">
-              <img width="100" src="/mobile/assets/loader.gif" />
+              <img width="100" src="/assets/images/loader.gif" />
             </CardBody>
           </Card>
         </Container>
@@ -88,7 +88,7 @@ export class AlertPage extends Component<AlertProps, AlertState> {
         <AlertComponent data={alert} />
         <div className="back-container mb-3">
           <Link to={'.'}>
-            <img src="/mobile/assets/Calender_Arrow_Left.svg" alt="" />
+            <img src="/assets/images/Calender_Arrow_Left.svg" alt="" />
             Back
           </Link>
         </div>

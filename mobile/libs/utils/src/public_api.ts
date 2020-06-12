@@ -18,6 +18,7 @@
  * Use of copyright notice does not imply publication.
 */
 export * from './lib/time';
+export * from './lib/captcha';
 export * from './lib/convertKeysToArray';
 export * from './lib/unicode-base64';
 export * from './lib/is-mobile';

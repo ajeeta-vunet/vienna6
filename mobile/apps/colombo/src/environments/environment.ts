@@ -21,9 +21,6 @@
 // When building for production, this file is replaced with `environment.prod.ts`.
 
 export const environment = {
-  basePath: '/mobile/',
-  assetsPath: '/mobile/assets/',
-  production: false,
-  // APIURL: 'https://localhost/',
-  APIURL: 'https://192.168.8.207/',
+  basePath: '/vunet/',
+  production: false
 };

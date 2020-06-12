@@ -29,13 +29,9 @@ import { defaults } from 'chart.js';
 import * as ChartJsConfig from './app/chart-js-config.json';
 import configureStore from './app/store';
 import { routes } from './app/routes';
-import { isMobile } from '@vu/utils';
 
 merge(defaults, (ChartJsConfig as any).default);
 
-if (!isMobile()) {
-  window.location.href = window.location.origin + '/vunet';
-}
 
 /**
  * Will prevent right clicks e.button will give button number,
@@ -51,9 +47,21 @@ document.oncontextmenu = (e) => {
 };
 
 const store = configureStore(environment);
-const routing = (
-  <Provider store={store}>
-    <AppShell config={{ baseUrl: window.location.origin, RouterBaseName: environment.basePath }} appRoutes={routes} />
-  </Provider>
-);
-ReactDOM.render(routing, document.getElementById('root') as HTMLElement);
+
+// We want to redirect some legacy URLs
+// So we'll redirect them before loading application
+
+const redirectPaths = [
+  { from: '/vunet.html', to: '/vunet' },
+];
+const redirectTo = redirectPaths.find((a) => location.pathname.startsWith(a.from));
+if (redirectTo) {
+  window.location.href = redirectTo.to;
+} else {
+  const routing = (
+    <Provider store={store}>
+      <AppShell config={{ baseUrl: window.location.origin, RouterBaseName: environment.basePath }} appRoutes={routes} />
+    </Provider>
+  );
+  ReactDOM.render(routing, document.getElementById('root') as HTMLElement);
+}

@@ -29,8 +29,8 @@ import { AppShellStore } from './store/app-shell-store';
 import { AppUiActionEnum } from './store';
 import { PrivateRoute, AuthorizedRoute, AppRoute } from '@vu/routes';
 import { AddAppSpecificRoutes } from './routes';
-import { ALL_DASHBOARDS_URL, AuthActionTypes, LoginSuccessAction } from '@vu/store';
-import { UserSettingStore } from '@vu/utils';
+import { ALL_DASHBOARDS_URL, AuthActionTypes, LoginSuccessAction, LoginChecked } from '@vu/store';
+import { UserSettingStore, isMobile } from '@vu/utils';
 
 export interface AppShellProps {
   config: {
@@ -39,9 +39,10 @@ export interface AppShellProps {
   };
   appRoutes: AppRoute[];
   isAuthenticated: boolean;
+  isMobile: boolean;
   isStickyHeaderVisible: boolean;
   setNavbarState: (arg0: boolean) => void;
-  setUserIsLoggedIn: (user: string) => void;
+  userIsLoggedIn: (user: string) => void;
 }
 
 /**
@@ -49,13 +50,13 @@ export interface AppShellProps {
  *
  * @returns {Promise<boolean>}
  */
-async function isUserLoggedInHack(): Promise<boolean> {
+async function isUserLoggedIn(): Promise<boolean> {
   try {
-    let ret = undefined;
+    if (!UserSettingStore.UserName) return false;
     const resp = await fetch(ALL_DASHBOARDS_URL());
-    ret = resp.status === 200;
-    return ret;
+    return resp.status === 200;
   } catch (error) {
+    localStorage.clear();
     return false;
   }
 }
@@ -83,8 +84,9 @@ export class AppShellInternal extends Component<AppShellProps, {}> {
     console.error();
   }
   componentDidMount() {
-    isUserLoggedInHack().then((a) => {
-      if (a) this.props.setUserIsLoggedIn(UserSettingStore.UserName);
+    isUserLoggedIn().then((a) => {
+      // Pass Username if session is present Otherwise send null
+      this.props.userIsLoggedIn(a?UserSettingStore.UserName: null);
     });
     window.addEventListener('scroll', this.listenToScroll);
   }
@@ -108,11 +110,11 @@ export class AppShellInternal extends Component<AppShellProps, {}> {
   };
 
   render() {
-    const isAuthenticated = this.props.isAuthenticated;
+    const {isAuthenticated, isMobile} = this.props;
     return (
       <Router basename={this.props.config.RouterBaseName}>
-        {isAuthenticated ? <Header /> : null}
-        {isAuthenticated ? <Sidebar /> : null}
+        {isAuthenticated && isMobile ? <Header /> : null}
+        {isAuthenticated && isMobile? <Sidebar /> : null}
         <Switch>
           {AddAppSpecificRoutes(this.props.appRoutes).map((module: AppRoute, i: number) => {
             switch (module.type) {
@@ -135,7 +137,7 @@ export class AppShellInternal extends Component<AppShellProps, {}> {
             }
           })}
         </Switch>
-        {isAuthenticated ? <Footer /> : null}
+        {isAuthenticated && isMobile ? <Footer /> : null}
       </Router>
     );
   }
@@ -143,6 +145,7 @@ export class AppShellInternal extends Component<AppShellProps, {}> {
 
 const mapStateToProps = (state: AppShellStore) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  isMobile: state.appui.isMobile,
   isStickyHeaderVisible: state.appui.isStickyHeaderVisible,
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -150,10 +153,13 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch({
       type: show ? AppUiActionEnum.STICKY_HEADER_SHOW : AppUiActionEnum.STICKY_HEADER_HIDE,
     }),
-  setUserIsLoggedIn: (user: string) =>
+  userIsLoggedIn: (user: string) =>
+  user?
     dispatch<LoginSuccessAction>({
       type: AuthActionTypes.LOGIN_SUCCESS,
       username: user,
+    }) :  dispatch<LoginChecked>({
+      type: AuthActionTypes.LOGIN_CHECKED,
     }),
 });
 export const AppShell = connect(mapStateToProps, mapDispatchToProps)(AppShellInternal);

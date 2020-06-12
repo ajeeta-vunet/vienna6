@@ -22,10 +22,10 @@ import React from 'react';
 import { CardBody, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretUp, faEquals, faDotCircle } from '@fortawesome/free-solid-svg-icons';
-import { BaseVisualization, ViewDashboardProp } from '../base-component';
+import { BaseVisualization, ViewDashboardProp, ViewDashboardState } from '../base-component';
 import { VisShell } from '../shell/shell';
 import { Colors } from 'globalconst';
-import { ImageManager } from '@vu/utils';
+import { ImageManager, DEFAULT_IMAGEMANAGER_IMAGE } from '@vu/utils';
 
 /**
  * Displays a single metric BMV
@@ -34,13 +34,23 @@ import { ImageManager } from '@vu/utils';
  * @class BMVSingleMetric
  * @extends {(BaseVisualization<BMVProps & ViewDashboardProp>)}
  */
-export class BMVSingleMetric extends BaseVisualization<ViewDashboardProp> {
+export class BMVSingleMetric extends BaseVisualization<ViewDashboardProp, { image: string } & ViewDashboardState> {
+  constructor(props: ViewDashboardProp) {
+    super(props);
+    this.state = { image: DEFAULT_IMAGEMANAGER_IMAGE };
+  }
   render = () => {
+    if (this.state.error) {
+      return this.errorVis();
+    }
     if (this.props.data.type !== 'kpi') {
       return null;
     }
     const metricDataKey = Object.keys(this.props.data.metrics)[0];
     const metricData = this.props.data.metrics[metricDataKey];
+
+    ImageManager.getImage(metricData.metricIcon).subscribe((image) => this.setState({ image }));
+
     return (
       <VisShell {...this.props}>
         <CardBody className="pt-2">
@@ -48,9 +58,7 @@ export class BMVSingleMetric extends BaseVisualization<ViewDashboardProp> {
             <div className={(this.props.full ? 'col-12' : 'col-5') + ' image-half'}>
               <div className="icon-container d-flex">
                 <img
-                  src={
-                    metricData.metricIcon ? ImageManager.getImage(metricData.metricIcon) : '/mobile/assets/Icon_03.svg'
-                  }
+                  src={this.state.image ? this.state.image : DEFAULT_IMAGEMANAGER_IMAGE}
                   alt={metricData.visualization_name}
                 />
               </div>

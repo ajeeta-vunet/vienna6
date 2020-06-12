@@ -30,7 +30,7 @@ import { NavLink } from 'react-router-dom';
 export const FooterIcon = (props: { iconName: string; to: string }) => (
   <Col className={'footerIcon ripple ' + props.iconName}>
     <NavLink to={props.to} activeClassName="active">
-      <img src={'/mobile/assets/' + props.iconName + '.svg'} alt="" />
+      <img src={'/assets/images/' + props.iconName + '.svg'} alt="" />
     </NavLink>
   </Col>
 );

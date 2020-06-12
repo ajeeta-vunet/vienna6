@@ -20,6 +20,7 @@
 
 import { Reducer } from 'react';
 import { AppUiActions, AppUiActionEnum } from '../action';
+import { isMobile } from '@vu/utils';
 
 /**
  * Will provide and interface which we can use set operation on the classes
@@ -51,10 +52,13 @@ export interface AppUiState {
   isStickyHeaderVisible: boolean;
   // title that is displayed in header
   title: AppTitle;
+  // true for Mobile
+  isMobile: boolean;
 }
 export const AppUiInitialState: AppUiState = {
   isSidebarOpen: false,
   isTimeSelectorOpen: false,
+  isMobile: isMobile(),
   isStickyHeaderVisible: false,
   title: { displayLeftArrow: false, displayRightArrow: false, heading: 'Home', subHeading: '' },
 };

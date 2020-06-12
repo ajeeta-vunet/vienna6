@@ -18,8 +18,10 @@
  * Use of copyright notice does not imply publication.
  */
 import { vuHttp } from '@vu/http';
+import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
 
-const images = {
+export const ImageManagerImages = {
   archival_cost: '/ui/vienna_images/archival_cost.svg',
   archival_growth_rate: '/ui/vienna_images/archival_growth_rate.svg',
   archival_volume: '/ui/vienna_images/archival_volume.svg',
@@ -64,6 +66,7 @@ const images = {
   Other: '/ui/vienna_images/other_utm.jpg',
 };
 
+export const DEFAULT_IMAGEMANAGER_IMAGE = '/assets/images/Icon_03.svg';
 export interface fgwImagesResponse {
   visualization: {
     name: string;
@@ -75,42 +78,39 @@ export interface fgwImagesResponse {
   }[];
 }
 
-export class ImageManagerInternal {
-  private static image: fgwImagesResponse = { logo: [], visualization: [] };
-  private static instance: ImageManagerInternal;
-
+export class ImageManager {
+  private static images = new BehaviorSubject<{ [key: string]: string }>(ImageManagerImages);
   /**
-   * The Singleton's constructor should always be private to prevent direct
-   * construction calls with the `new` operator.
+   * Will Load Images and update the
+   * @member images BehaviourSubject
    */
-  private constructor() {}
+  static LoadImages() {
+    vuHttp
+      .get$<fgwImagesResponse>('/vuSmartMaps/api/1/bu/1/fgw/?file_type=images')
+      .pipe(
+        map((a) => {
+          const ret: { [key: string]: string } = ImageManagerImages;
+          a.visualization.forEach((i) => {
+            Object.assign(ret, { [i.name]: i['file-name'] });
+          });
+          return ret;
+        }),
+      )
+      .subscribe((new_images) => this.images.next(new_images));
+  }
+  /**
+   * Will return dictionary of all images
+   */
+  static getDynImages() {
+    return ImageManager.images;
+  }
 
   /**
-   * The static method that controls the access to the singleton instance.
    *
-   * This implementation let you subclass the Singleton class while keeping
-   * just one instance of each subclass around.
+   * @param name Key for Image
+   * This function will return the image path for the name provided
    */
-  static getInstance() {
-    if (!ImageManagerInternal.instance) {
-      ImageManagerInternal.getDynImages().then(_ => _);
-      ImageManagerInternal.instance = new ImageManagerInternal();
-    }
-
-    return ImageManagerInternal.instance;
-  }
-
-  static async getDynImages() {
-    try {
-      let resp = await vuHttp.get<fgwImagesResponse>('/vuSmartMaps/api/1/bu/1/fgw/?file_type=images');
-      ImageManagerInternal.image = resp.data;
-    } catch {}
-  }
-
-  public getImage = (name: string): string => {
-    const retval = ImageManagerInternal.image.visualization.find((a) => a.name === name);
-    return retval ? '/ui/vienna_images/1/1/visualization/' + retval['file-name'] : images[name] || images.Other;
+  public static getImage = (name: string): Observable<string> => {
+    return ImageManager.getDynImages().pipe(map((a) => a[name] || DEFAULT_IMAGEMANAGER_IMAGE));
   };
 }
-
-export const ImageManager = ImageManagerInternal.getInstance();

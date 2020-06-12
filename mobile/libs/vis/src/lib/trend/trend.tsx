@@ -23,7 +23,7 @@ import { BaseVisualization, ViewDashboardProp, ViewDashboardState } from '../bas
 import { VisShell } from '../shell/shell';
 import { Line, ChartData as ChartData2 } from 'react-chartjs-2';
 import { ChartOptions, ChartData } from 'chart.js';
-import { Metrics, KpiMetric, Metric } from '@vu/types';
+import { Metrics, KpiMetric } from '@vu/types';
 import { sortBy } from 'lodash';
 import { BucketTable } from '../bmv/bucket-table';
 
@@ -34,16 +34,25 @@ import { BucketTable } from '../bmv/bucket-table';
  * @class TrendVisualization
  * @extends {(BaseVisualization<{ data: any } & ViewDashboardProp>)}
  */
-export class TrendVisualization extends BaseVisualization<{ data: Metrics } & ViewDashboardProp,ViewDashboardState & {fallBackToTable: boolean}> {
-  constructor(props){
+export class TrendVisualization extends BaseVisualization<
+  { data: Metrics } & ViewDashboardProp,
+  ViewDashboardState & { fallBackToTable: boolean }
+> {
+  constructor(props) {
     super(props);
-    this.state = { fallBackToTable: false}
+    this.state = { fallBackToTable: false };
   }
-  componentDidCatch(){
-    this.setState({ fallBackToTable: true})
+  
+  getDerivedStateFromError() {
+    // Update state so the next render will show the fallback UI.
+    return { fallBackToTable: true };
+  }
+
+  componentDidCatch() {
+    this.setState({ fallBackToTable: true });
   }
   render() {
-    if(this.state.fallBackToTable){
+    if (this.state.fallBackToTable) {
       return <BucketTable {...this.props} />;
     }
     if (this.props.data.type !== 'trend') {
@@ -64,7 +73,7 @@ export class TrendVisualization extends BaseVisualization<{ data: Metrics } & Vi
 
       const dataWithKeys = sortBy(
         Object.entries(this.props.data)
-          .filter((a) => (typeof a[1] !== 'string' && typeof a[1] !== 'number'))
+          .filter((a) => typeof a[1] !== 'string' && typeof a[1] !== 'number')
           .map((key) => Object.assign(key[1] as KpiMetric, { key: key[0] })),
         (a) => a.key,
       );

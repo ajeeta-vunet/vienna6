@@ -29,8 +29,16 @@ export interface LoginFormState {
   name: string;
   // Password provided by end user in LoginForm Component
   password: string;
+  // Captcha Key from backend
+  captchaKey:'no_captcha'| string;
+  // Captcha value solved by user
+  captchaSolution: string;
+  // Captcha value solved by user
+  captchaImage: string;
   // Store error recieved from Backend
   errors: any;
   // Set if user click login button, reset after request complete
   isLoading: boolean;
+  // terminate active session
+  terminate_active_session?: boolean;
 }

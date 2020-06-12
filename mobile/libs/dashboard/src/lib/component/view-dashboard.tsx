@@ -56,7 +56,7 @@ export type ViewDashboardProp = PropsFromMap &
   DispatchFromMap &
   DispatchProp &
   RouteChildrenProps<{ dashboardId: string; visId: string }>;
-export type ViewDashboardState = {};
+export type ViewDashboardState = { error?: string };
 
 const mapStateToProps = (state: DashboardsStore & TimeRangeStore): PropsFromMap => {
   return {
@@ -112,6 +112,7 @@ export const ViewDashboardPage = connect(
      */
     constructor(props: Readonly<ViewDashboardProp>) {
       super(props);
+      this.state = {};
     }
     /**
      * Will be called when any prop is recieved
@@ -161,27 +162,39 @@ export const ViewDashboardPage = connect(
       this.props.reloadData(this.props.match.params.dashboardId, {
         start: this.props.time.start,
         end: this.props.time.end,
-    });
+      });
+    }
+
+    static getDerivedStateFromError(error) {
+      // Update state so the next render will show the fallback UI.
+      return { error: 'Some Visualizations are not supported!' };
+    }
+  
+    componentDidCatch(error, errorInfo) {
+      // Log the error
+      console.error(error, errorInfo);
     }
     render() {
-      if (!this.props.dashboard.current) {
+      if (!this.props.dashboard.current || this.state.error) {
         return (
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col">
+          <Container fluid={true}>
+            <Row>
+              <Col>
                 <Card>
-                  <CardHeader>Loading</CardHeader>
+                  <CardHeader>{this.state.error ? 'Error' : 'Loading'}</CardHeader>
                   <CardBody className="text-center py-5">
-                    {this.props.dashboard.loading ? (
-                      <img width="100" src="/mobile/assets/loader.gif" />
+                    {this.state.error ? (
+                      this.state.error
+                    ) : this.props.dashboard.loading ? (
+                      <img width="100" src="/assets/images/loader.gif" />
                     ) : (
-                      'Dashboard load failed.'
+                      'Dashboard loading.'
                     )}
                   </CardBody>
                 </Card>
-              </div>
-            </div>
-          </div>
+              </Col>
+            </Row>
+          </Container>
         );
       }
       const dashboardId = this.props.match.params.dashboardId;
@@ -195,7 +208,7 @@ export const ViewDashboardPage = connect(
               <Row>{resolve(visToShow, true, { dashboardId: dashboardId, key: visId }, {})}</Row>
               <div className="back-container mb-3">
                 <Link to={'..'}>
-                  <img src={'/mobile/assets/Calender_Arrow_Left.svg'} alt="" />
+                  <img src={'/assets/images/Calender_Arrow_Left.svg'} alt="" />
                   Back
                 </Link>
               </div>
@@ -211,7 +224,10 @@ export const ViewDashboardPage = connect(
                   <Col span={12}>
                     <Card>
                       <CardHeader>No Visualizations</CardHeader>
-                      <CardBody>Visualizations are either not supported or dosn't exist for this dashboard.</CardBody>
+                      <CardBody>No supported visualizations present on this dashboard.
+                        <br />
+                        <strong>Add Some Visualizations from desktop dashboard.</strong>
+                      </CardBody>
                     </Card>
                   </Col>
                 ) : (

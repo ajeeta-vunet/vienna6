@@ -28,7 +28,7 @@ import {
   SetCurrentDashboard,
 } from './types';
 import { MobileKpiResponse, StoryBoard, UserSettings } from '@vu/types';
-import { vuHttp } from '@vu/http';
+import { vuHttp, getErrorMessage } from '@vu/http';
 import { ALL_DASHBOARDS_URL, DASHBOARD_URL } from '../../urls';
 import { Dispatch } from 'redux';
 import { VuStore } from '../../store';
@@ -93,25 +93,28 @@ export function PreviousDasboard() {
 export function LoadDashboardsAction() {
   return async (dispatch: Dispatch) => {
     dispatch({ type: DashboardActionTypes.LOAD_DASHBOARDS } as LoadDashboards);
-    try {
-      const data = await vuHttp.get<UserSettings>(ALL_DASHBOARDS_URL(localStorage.getItem('username')));
+    vuHttp.get$<UserSettings>(ALL_DASHBOARDS_URL(localStorage.getItem('username'))).subscribe(
+      (data) => {
+        UserSettingStore.TenantId = data.tenant_id;
+        UserSettingStore.BuId = data.bu_id;
+        UserSettingStore.UserName = data.name;
+        UserSettingStore.UserGroup = data.user_group;
+        // In some cases mobile_kpi will return empty string, we need to handle that
+        const kpis = data.mobile_kpi.length > 2 ? (JSON.parse(data.mobile_kpi) as MobileKpiResponse[]) : [];
 
-      UserSettingStore.TenantId = data.data.tenant_id;
-      UserSettingStore.BuId = data.data.bu_id;
-      UserSettingStore.UserName = data.data.name;
-      UserSettingStore.UserGroup = data.data.user_group;
+        dispatch({
+          type: DashboardActionTypes.LOAD_DASHBOARDS_SUCCESS,
+          data: kpis,
+        } as LoadDashboardsSuccess);
+      },
 
-      const kpis = JSON.parse(data.data.mobile_kpi) as MobileKpiResponse[];
-      dispatch({
-        type: DashboardActionTypes.LOAD_DASHBOARDS_SUCCESS,
-        data: kpis,
-      } as LoadDashboardsSuccess);
-    } catch (err) {
-      dispatch({
-        type: DashboardActionTypes.LOAD_DASHBOARDS_FAILED,
-        error: JSON.stringify(err),
-      } as LoadDashboardsFailed);
-    }
+      (err) => {
+        dispatch({
+          type: DashboardActionTypes.LOAD_DASHBOARDS_FAILED,
+          error: getErrorMessage(err),
+        } as LoadDashboardsFailed);
+      },
+    );
   };
 }
 
@@ -127,19 +130,20 @@ export function LoadDashboardsAction() {
 export function LoadDashboardAction(dashboardName: string, startTime: Date, endTime: Date) {
   return async (dispatch: Dispatch) => {
     dispatch({ type: DashboardActionTypes.LOAD_DASHBOARD } as LoadDashboard);
-    try {
-      const data = await vuHttp.get(DASHBOARD_URL(dashboardName, startTime, endTime));
-      dispatch({
-        type: DashboardActionTypes.SET_CURRENT_DASHBOARD,
-        data: data.data as StoryBoard,
-        name: dashboardName,
-      } as SetCurrentDashboard);
-    } catch (err) {
-      // TODO:  Better Message
-      dispatch({
-        type: DashboardActionTypes.LOAD_DASHBOARD_FAILED,
-        error: JSON.stringify(err),
-      } as LoadDashboardFailed);
-    }
+    vuHttp.get$(DASHBOARD_URL(dashboardName, startTime, endTime)).subscribe(
+      (data) => {
+        dispatch({
+          type: DashboardActionTypes.SET_CURRENT_DASHBOARD,
+          data: data as StoryBoard,
+          name: dashboardName,
+        } as SetCurrentDashboard);
+      },
+      (err: string | any) => {
+        dispatch({
+          type: DashboardActionTypes.LOAD_DASHBOARD_FAILED,
+          error: getErrorMessage(err),
+        } as LoadDashboardFailed);
+      },
+    );
   };
 }

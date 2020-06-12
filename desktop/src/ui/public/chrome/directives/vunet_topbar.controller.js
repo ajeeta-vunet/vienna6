@@ -272,7 +272,10 @@ class TopbarCtrl {
       // is defined in index.js. This listener checks whether the user is
       // logged in or not and as the user is already logged out, it redirect the
       // user to login page.
-      window.location.href = window.location.origin + '/vunet.html#/login';
+      
+      // Before logging out ensure there is no data left
+      window.localStorage.clear();
+      window.location.href = window.location.origin + '/vunet/login';
     };
 
     // Listener for checkForIdleTimeout event of the session idle timer

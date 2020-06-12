@@ -10,7 +10,7 @@
         "build": {
           "builder": "@nrwl/web:build",
           "options": {
-            "deployUrl": "/mobile/",
+            "deployUrl": "/vunet/",
             "outputPath": "dist/apps/colombo",
             "index": "apps/colombo/src/index.html",
             "main": "apps/colombo/src/main.tsx",

@@ -18,7 +18,7 @@
  * Use of copyright notice does not imply publication.
  */
 
-import { Redirect, Route, RouteProps } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import React from 'react';
 import { LoginUrl, LogoutUrl, HelpUrl } from './config';
 import { LoginPage, LogoutButton, HelpPage, Notfound } from './components';
@@ -27,7 +27,7 @@ import { AppRoute } from '@vu/routes';
 
 export function AddAppSpecificRoutes(routes: AppRoute[]): AppRoute[] {
   return [
-    { type: 'JSX', component: <Redirect key="redirect" exact from="/" to={LoginUrl} />, name: 'Redirect' },
+    { type: 'Route', name: 'Login', routeProps: { component: LoginPage, path: "/", exact: true } },
     { type: 'Route', name: 'Login', routeProps: { component: LoginPage, path: LoginUrl } },
     { type: 'PrivateRoute', name: 'Logout', routeProps: { component: LogoutButton, path: LogoutUrl } },
     { type: 'Route', name: 'Help', routeProps: { component: HelpPage, path: HelpUrl } },

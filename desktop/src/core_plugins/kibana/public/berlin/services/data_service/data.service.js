@@ -209,13 +209,14 @@ class DataService {
     // Need to find a permanent solution.
     if (errorResponse.data && errorResponse.data['error-code']) {
       if (errorResponse.data['error-code'] === '403') {
-        window.localStorage.username = '';
+        const notify = new Notifier();
+        notify.error(errorResponse.data['error-string'] || 'Access denied!');
+      }
+      else if (errorResponse.data['error-code'] === '401') {
+        window.localStorage.clear();
         setTimeout(function () {
           window.location.reload();
         }, 2000);
-      }
-      else if (errorResponse.data['error-code'] === '401') {
-        window.localStorage.username = '';
       }
       // If the user is admin
       else if (errorResponse.data['error-code'] === '474') {

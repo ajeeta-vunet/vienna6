@@ -20,6 +20,8 @@
 
 import { Component } from 'react';
 import { Metrics } from '@vu/types';
+import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
+import React from 'react';
 
 /**
  * Resources file, will store constants used in the app
@@ -29,7 +31,6 @@ export const ViewDashboards = (dashboardId: string = ':dashboardId') => `${Dashb
 export const ExpandedVisualizationUrl = (dashboardId: string = ':dashboardId', visId: string = ':visId') =>
   `${ViewDashboards(dashboardId)}/${visId}`;
 
-  
 type PropsFromMap = {
   data: Metrics;
   VisTitle: string;
@@ -39,7 +40,7 @@ type PropsFromMap = {
 
 type DispatchFromMap = {};
 
-export type ViewDashboardProp = PropsFromMap & DispatchFromMap ;
+export type ViewDashboardProp = PropsFromMap & DispatchFromMap;
 export type ViewDashboardState = { error?: any };
 
 export class BaseVisualization<
@@ -47,6 +48,22 @@ export class BaseVisualization<
   S extends ViewDashboardState = ViewDashboardState,
   SS = any
 > extends Component<P, S, SS> {
-  componentDidCatch(){
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { error: 'Visualizations is not supported!' };
+  }
+  errorVis() {
+    return (
+      <Container fluid={true}>
+        <Row>
+          <Col>
+            <Card>
+              <CardHeader>Error</CardHeader>
+              <CardBody className="text-center py-5">{this.state.error}</CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 }

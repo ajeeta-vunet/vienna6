@@ -4,19 +4,19 @@
   "description": "vunet Smart monitoring",
   "icons": [
     {
-      "src": "/assets/images/login_logo.svg",
-      "type": "image/svg",
+      "src": "/assets/images/vunet_logo_512.png",
+      "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "/mobile/assets/icon.png",
+      "src": "/assets/images/icon.png",
       "type": "image/png",
       "sizes": "400x400"
     }
   ],
-  "start_url": "/mobile/dashboard",
+  "start_url": "/vunet/dashboard",
   "background_color": "#b30984",
   "display": "standalone",
-  "scope": "/mobile/",
+  "scope": "/vunet/",
   "theme_color": "#b30984"
 }

@@ -48,10 +48,11 @@ const mapStateToProps = (state: AppShellStore): DashboardPropsFromMap => ({
 export const DashboardPage = connect(mapStateToProps)((props: DashboardProps) => {
   if (props.dashboard.current && props.dashboard.current.id) {
     return <Redirect to={ViewDashboards(props.dashboard.current.id)} />;
-  } else if (!props.dashboard.loading && props.dashboard.dashboards.length === 0) {
+  } else if (!props.dashboard.loading && props.dashboard.dashboards === undefined) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     props.dispatch<any>(LoadDashboardsAction());
   }
+
   /**
    * Display Otherwise
    */
@@ -60,27 +61,34 @@ export const DashboardPage = connect(mapStateToProps)((props: DashboardProps) =>
     <div className="container-fluid">
       <div className="row">
         <div className="col py-5">
-          {props.dashboard.dashboards && props.dashboard.dashboards.length ? (
-            <Card className="shadow">
-              <CardHeader className="text-center">
-                <h2>Select a Dashboard</h2>
-              </CardHeader>
-              <CardBody>
-                <Row>
-                  {props.dashboard.dashboards.map((value, index) => {
-                    if (index === 0) return <Redirect to={ViewDashboards(value.id)} />;
-                    // This code is useless as it'll not be executed but we may need that in future.
-                    return (
-                      <div className="col-6" key={index}>
-                        <Link className="btn btn-primary btn-block mb-2" to={ViewDashboards(value.id)}>
-                          {value.title}
-                        </Link>
-                      </div>
-                    );
-                  })}
-                </Row>
-              </CardBody>
-            </Card>
+          {props.dashboard.dashboards ? (
+            props.dashboard.dashboards.length > 0 ? (
+              <Card className="shadow">
+                <CardHeader className="text-center">
+                  <h2>Select a Dashboard</h2>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    {props.dashboard.dashboards.map((value, index) => {
+                      if (index === 0) return <Redirect to={ViewDashboards(value.id)} />;
+                      // This code is useless as it'll not be executed but we may need that in future.
+                      return (
+                        <div className="col-6" key={index}>
+                          <Link className="btn btn-primary btn-block mb-2" to={ViewDashboards(value.id)}>
+                            {value.title}
+                          </Link>
+                        </div>
+                      );
+                    })}
+                  </Row>
+                </CardBody>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader>No Dashboards!</CardHeader>
+                <CardBody className="text-center py-5">Please add dashboards.</CardBody>
+              </Card>
+            )
           ) : (
             <div className="text-center">
               <FontAwesomeIcon icon={faSpinner} className="text-white" size="6x" spin />

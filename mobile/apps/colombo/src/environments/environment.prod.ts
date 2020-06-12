@@ -18,7 +18,6 @@
  * Use of copyright notice does not imply publication.
 */
 export const environment = {
-  basePath: '/mobile/',
+  basePath: '/vunet/',
   production: true,
-  // APIURL : # ADD production server url
 };

@@ -18,8 +18,6 @@
  * Use of copyright notice does not imply publication.
 */
 .vu-sidebar {
-  padding: $grid-gutter-width;
-  padding-top: 0.5rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -44,9 +42,6 @@
   }
 
   .sidebar-items {
-    margin-left: -$grid-gutter-width;
-    margin-right: -$grid-gutter-width;
-
     .sidebar-item {
       display: block;
       padding: 0.75rem 1rem;

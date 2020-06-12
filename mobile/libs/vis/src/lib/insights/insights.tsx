@@ -1,31 +1,45 @@
-/** 
- * ------------------------- NOTICE ------------------------------- 
+/**
+ * ------------------------- NOTICE -------------------------------
  *
- *                  CONFIDENTIAL INFORMATION                       
- *                  ------------------------                       
- *    This Document contains Confidential Information or           
- *    Trade Secrets, or both, which are the property of VuNet      
- *    Systems Ltd.  This document may not be copied, reproduced,   
- *    reduced to any electronic medium or machine readable form    
- *    or otherwise duplicated and the information herein may not   
- *    be used, disseminated or otherwise disclosed, except with    
- *    the prior written consent of VuNet Systems Ltd.              
- *                                                                 
- *------------------------- NOTICE ------------------------------- 
+ *                  CONFIDENTIAL INFORMATION
+ *                  ------------------------
+ *    This Document contains Confidential Information or
+ *    Trade Secrets, or both, which are the property of VuNet
+ *    Systems Ltd.  This document may not be copied, reproduced,
+ *    reduced to any electronic medium or machine readable form
+ *    or otherwise duplicated and the information herein may not
+ *    be used, disseminated or otherwise disclosed, except with
+ *    the prior written consent of VuNet Systems Ltd.
+ *
+ *------------------------- NOTICE -------------------------------
  *
  * Copyright 2020 VuNet Systems Ltd.
  * All rights reserved.
  * Use of copyright notice does not imply publication.
  */
 
-
 import React from 'react';
-import { BaseVisualization } from '../base-component';
+import { BaseVisualization, ViewDashboardProp, ViewDashboardState } from '../base-component';
 import { VisShell } from '../shell/shell';
 import { CardBody } from 'reactstrap';
-import { ImageManager } from '@vu/utils';
-export class InsightVisualization extends BaseVisualization {
+import { ImageManager, ImageManagerImages, DEFAULT_IMAGEMANAGER_IMAGE } from '@vu/utils';
+export class InsightVisualization extends BaseVisualization<
+  ViewDashboardProp,
+  ViewDashboardState & { images: { [key: string]: string } }
+> {
+  /**
+   *
+   * @param props
+   */
+  constructor(props: Readonly<ViewDashboardProp>) {
+    super(props);
+    this.state = { images: ImageManagerImages };
+    ImageManager.getDynImages().subscribe((images) => this.setState({ images }));
+  }
   render() {
+    if (this.state.error) {
+      return this.errorVis();
+    }
     if (this.props.data.type !== 'insights') {
       return null;
     }
@@ -38,7 +52,7 @@ export class InsightVisualization extends BaseVisualization {
                 className={this.props.full ? 'col-12 text-center' : 'col-auto'}
                 style={{ width: this.props.full ? 200 : 100 }}
               >
-                <img src={ImageManager.getImage(v.group)} alt={v.group} />
+                <img src={this.state.images[v.group] || DEFAULT_IMAGEMANAGER_IMAGE} alt={v.group} />
               </div>
               <div className={this.props.full ? 'col-12 pt-4 text-center' : 'col'}>
                 <div className="insights-h1">

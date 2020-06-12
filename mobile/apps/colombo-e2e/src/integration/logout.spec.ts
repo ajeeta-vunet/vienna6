@@ -20,7 +20,7 @@
 describe('Logout Test', () => {
   beforeEach(() => {
     window.localStorage.setItem('vu.mobile', 'mobile');
-    cy.visit('https://localhost/mobile/dashboard');
+    cy.visit('https://localhost/vunet/dashboard');
     cy.get('#name').type('testadmin');
     cy.get('#password').type('admin');
     cy.get('.login-btn').click();
@@ -28,6 +28,6 @@ describe('Logout Test', () => {
   it('should logout', () => {
     cy.get('.navbar-toggler').click();
     cy.get('div.sidebar-item > span').click();
-    cy.url().should('eq', 'https://localhost/mobile/login?return_url=/dashboard');
+    cy.url().should('eq', 'https://localhost/vunet/login?return_url=/dashboard');
   });
 });

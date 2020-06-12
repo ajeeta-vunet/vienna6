@@ -21,8 +21,7 @@
 import React from 'react';
 import { Card, CardHeader, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { ViewDashboardProp } from '@vu/vis';
-import { ExpandedVisualizationUrl } from '@vu/vis';
+import { ViewDashboardProp, ExpandedVisualizationUrl } from '../base-component';
 
 import './shell.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

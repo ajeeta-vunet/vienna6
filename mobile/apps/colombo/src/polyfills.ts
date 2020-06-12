@@ -29,3 +29,5 @@ import 'regenerator-runtime/runtime';
 /**
  * This file contains polyfills loaded on all browsers
  **/
+// Due to issue in global is not defined
+(window as any).global = window;

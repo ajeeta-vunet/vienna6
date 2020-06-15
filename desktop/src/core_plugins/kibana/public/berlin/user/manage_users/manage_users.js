@@ -95,21 +95,19 @@ function manageUsers($scope,
   };
 
   // This callback is called to check if a particular row should be allowed
-  // to delete.. We can not allow user to delete the 'testadmin' user group..
+  // to delete.. We can not allow user to delete the 'VunetAdmin' user group..
   $scope.deleteIconCheckCallback = (rowIds) => {
     return rowIds.find(rowId => rowId === 'VunetAdmin') ? true : false;
   };
 
   // This callback is called to check if a particular row should be allowed
-  // to edit.. We allow only testadmin user to edit the 'testadmin' user
+  // to edit.. We do not allow VunetAdmin user to be edited
   $scope.editIconCheckCallback = (row) => {
 
     // Get current logged in user details
     const curUser = chrome.getCurrentUser();
 
-    // Row being edited belongs to 'testadmin' and current user is 'testadmin'
-    // we allow edit..
-    if (row.name === 'VunetAdmin' && curUser[0] !== 'VunetAdmin') {
+    if (row.name === 'VunetAdmin') {
       return true;
     }
 

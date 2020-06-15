@@ -198,7 +198,7 @@ function VisEditor($scope, $route, timefilter, AppState, $window, kbnUrl, courie
     vis.setUiState($scope.uiState);
 
     const currentUser = chrome.getCurrentUser();
-    $scope.owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+    $scope.owner = { 'name': currentUser[0], 'role': currentUser[1], 'permission': currentUser[2] };
 
     $scope.timefilter = timefilter;
     $scope.opts = _.pick($scope, 'doSave', 'savedVis', 'shareData', 'timefilter', 'isAddToDashMode', 'allowedRoles', 'owner');

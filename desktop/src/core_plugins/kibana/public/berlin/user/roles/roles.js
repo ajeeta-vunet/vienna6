@@ -18,21 +18,19 @@ function manageRoles($scope,
 ) {
 
   // This callback is called to check if a particular row should be allowed
-  // to delete.. We can not allow user to delete the 'admin' user group..
+  // to delete.. We can not allow user to delete the 'VunetAdmin' user group..
   $scope.deleteIconCheckCallback = (rowIds) => {
-    return rowIds.find(rowId => rowId === 'admin') ? true : false;
+    return rowIds.find(rowId => rowId === 'VunetAdmin') ? true : false;
   };
 
   // This callback is called to check if a particular row should be allowed
-  // to edit.. We allow only testadmin user to edit the 'admin' role
+  // to edit.. We do not allow VunetAdmin user to be edited.
   $scope.editIconCheckCallback = (row) => {
 
     // Get current logged in user details
     const curUser = chrome.getCurrentUser();
 
-    // Row being edited belongs to 'testadmin' and current user is 'testadmin'
-    // we allow edit..
-    if (row.name === 'admin' && curUser[0] !== 'testadmin') {
+    if (row.name === 'VunetAdmin') {
       return true;
     }
 
@@ -72,90 +70,89 @@ function manageRoles($scope,
         label: 'Permission Set',
         type: 'multiSelect',
         multiple: true,
-        checked: true,
         options: [
           {
-            key: 'View Object',
-            label: 'View Object',
-            name: 'View Object',
-            value: 'View Object'
+            key: 'ViewObject',
+            label: 'ViewObject',
+            name: 'ViewObject',
+            value: 'ViewObject'
           },
 
           {
-            key: 'Modify Object',
-            label: 'Modify Object',
-            name: 'Modify Object',
-            value: 'Manage Object'
+            key: 'ManageObject',
+            label: 'ManageObject',
+            name: 'ManageObject',
+            value: 'ManageObject'
           },
 
           {
-            key: 'Manage Data Sources',
-            label: 'Manage Data Sources',
-            name: 'Manage Data Sources',
-            value: 'Manage Data Sources'
+            key: 'ManageDataSources',
+            label: 'ManageDataSources',
+            name: 'ManageDataSources',
+            value: 'ManageDataSources'
           },
 
           {
-            key: 'Manage Data Settings',
-            label: 'Manage Data Settings',
-            name: 'Manage Data Settings',
-            value: 'Manage Data Settings'
+            key: 'ManageDataSettings',
+            label: 'ManageDataSettings',
+            name: 'ManageDataSettings',
+            value: 'ManageDataSettings'
           },
 
           {
-            key: 'Manage Data Enrichment',
-            label: 'Manage Data Enrichment',
-            name: 'Manage Data Enrichment',
-            value: 'Manage Data Enrichment'
+            key: 'ManageDataEnrichment',
+            label: 'ManageDataEnrichment',
+            name: 'ManageDataEnrichment',
+            value: 'ManageDataEnrichment'
           },
 
           {
-            key: 'Manage Files',
-            label: 'Manage Files',
-            name: 'Manage Files',
-            value: 'Manage Files'
+            key: 'ManageFiles',
+            label: 'ManageFiles',
+            name: 'ManageFiles',
+            value: 'ManageFiles'
           },
 
           {
-            key: 'Manage Preferences',
-            label: 'Manage Preferences',
-            name: 'Manage Preferences',
-            value: 'Manage Preferences'
+            key: 'ManagePreferences',
+            label: 'ManagePreferences',
+            name: 'ManagePreferences',
+            value: 'ManagePreferences'
           },
 
           {
-            key: 'Manage Users',
-            label: 'Manage Users',
-            name: 'Manage Users',
-            value: 'Manage Users'
+            key: 'ManageUsers',
+            label: 'ManageUsers',
+            name: 'ManageUsers',
+            value: 'ManageUsers'
           },
 
           {
-            key: 'Manage License',
-            label: 'Manage License',
-            name: 'Manage License',
-            value: 'Manage License'
+            key: 'ManageLicense',
+            label: 'ManageLicense',
+            name: 'ManageLicense',
+            value: 'ManageLicense'
           },
 
           {
-            key: 'Manage Agent',
-            label: 'Manage Agent',
-            name: 'Manage Agent',
-            value: 'Manage Agent'
+            key: 'ManageAgent',
+            label: 'ManageAgent',
+            name: 'ManageAgent',
+            value: 'ManageAgent'
           },
 
           {
-            key: 'Data Fetch APIs',
-            label: 'Data Fetch APIs',
-            name: 'Data Fetch APIs',
-            value: 'Data Fetch APIs'
+            key: 'DataFetchAPIs',
+            label: 'DataFetchAPIs',
+            name: 'DataFetchAPIs',
+            value: 'DataFetchAPIs'
           },
 
           {
-            key: 'Manage Diagnostic',
-            label: 'Manage Diagnostic',
-            name: 'Manage Diagnostic',
-            value: 'Manage Diagnostic'
+            key: 'ManageDiagnostic',
+            label: 'ManageDiagnostic',
+            name: 'ManageDiagnostic',
+            value: 'ManageDiagnostic'
           },
         ],
         props: {

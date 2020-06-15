@@ -26,21 +26,23 @@
             <td>
               <label class="rbac-label">
                 <input type="radio" ng-model="role.permission" value="modify"
-                  ng-disabled="role.name == owner.role" ng-checked="role.name == owner.role">
+                  ng-disabled=" role.name == owner.role || role.name == vunetAdminRole "
+                  ng-checked= " role.name == owner.role || role.name == vunetAdminRole "
+                >
                 Modify
               </label>
             </td>
             <td>
               <label class="rbac-label">
                 <input type="radio" ng-model="role.permission" value="view"
-                  ng-disabled="role.name == owner.role">
+                  ng-disabled="role.name == owner.role || role.name == vunetAdminRole ">
                 View
               </label>
             </td>
             <td>
               <label class="rbac-label">
                 <input type="radio" ng-model="role.permission" value=""
-                  ng-disabled="role.name == owner.role">
+                  ng-disabled="role.name == owner.role || role.name == vunetAdminRole ">
                 None
               </label>
             </td>

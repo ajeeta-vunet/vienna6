@@ -25,7 +25,8 @@ import chrome from 'ui/chrome';
 
 import { AlertConditionTab } from './alert_condition_tab';
 import { reorderList } from 'ui/utils/vunet_list_utils';
-import { VunetUserPermissions } from 'ui_framework/src/vunet_components/vunet_user_permissions/vunet_user_permissions';
+import { VunetUserPermissions,
+  getDefaultPermission } from 'ui_framework/src/vunet_components/vunet_user_permissions/vunet_user_permissions';
 import { VunetSwitch } from 'ui_framework/src/vunet_components/vunet_switch/vunet_switch';
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
@@ -165,7 +166,7 @@ export class AlertDetails extends React.Component {
     }
 
     // Create a new key 'parsedEvalCriteria' which containts the Rule Evaluation Script object
-    savedObject.parsedEvalCriteria = [];
+    savedObject.parsedEvalCriteria = {};
     if (savedObject.evalCriteria) {
       savedObject.parsedEvalCriteria = JSON.parse(savedObject.evalCriteria);
     }
@@ -178,8 +179,13 @@ export class AlertDetails extends React.Component {
 
     // Create a new key 'parsedAllowedRolesJSON' which containts the user permissions object
     savedObject.parsedAllowedRolesJSON = [];
+
     if (savedObject.allowedRolesJSON) {
       savedObject.parsedAllowedRolesJSON = JSON.parse(savedObject.allowedRolesJSON);
+    } else {
+      getDefaultPermission([]).then((userRoles)=>{
+        savedObject.parsedAllowedRolesJSON = userRoles;
+      });
     }
 
     // generate an error handler object
@@ -1580,7 +1586,7 @@ export class AlertDetails extends React.Component {
 
   getUserPermissionMeta = () => {
     const currentUser = chrome.getCurrentUser();
-    const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+    const owner = { 'name': currentUser[0], 'role': currentUser[1], 'permission': currentUser[2] };
     return { owner };
   }
 

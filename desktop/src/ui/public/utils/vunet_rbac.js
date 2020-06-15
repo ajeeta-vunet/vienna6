@@ -9,7 +9,7 @@ export function rbacCheckForModifyPermission(chrome, type, title, visState, allo
   const currentUser = chrome.getCurrentUser();
 
   // An admin is allowed to load and save everything..
-  if (currentUser[2] === 'admin') {
+  if (currentUser[1] === 'VunetAdmin') {
     return true;
   }
 

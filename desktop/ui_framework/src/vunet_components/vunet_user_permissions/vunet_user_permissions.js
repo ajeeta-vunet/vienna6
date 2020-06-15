@@ -25,6 +25,79 @@ import './_vunet_user_permissions.less';
 const chrome = require('ui/chrome');
 const notify = require('ui/notify');
 
+
+export async function getDefaultPermission(allowedRoles) {
+  // We need to get all the roles available every time someone is
+  // trying to save an object. This is because we need to update the
+  // role list in the object if a new role is created or an existing
+  // one is deleted.
+  // Now get all the roles available
+  const currentUser = chrome.getCurrentUser();
+
+  // Get the first part of the url containing the tenant
+  // and bu id to prepare urls for api calls.
+  // Example output: /vuSmartMaps/api/1/bu/1/
+  const urlBase = chrome.getUrlBase();
+  const url = urlBase + '/user_groups/';
+
+  // perform a get request to get latest userRoles
+  //update the state with latest userRoles
+  const userRoles = await fetch(url)
+    .then(resp => resp.json())
+    .catch(resp => { throw resp.data; })
+    .then((data) => {
+      const userRoles = [];
+      if (allowedRoles.length === 0) {
+        // This seems to be a request for a new object, let us create
+        // roles information for each existing role and add it. For
+        // current user's role, we automatically set the permission
+        // to modify
+        _.each(data.user_groups, function (role) {
+          //indexOf returns -1 if ViewObject is not found.
+          if(role.permissions.indexOf('ViewObject') > -1) {
+            const newRole = { 'name': role.name, 'permission': '' };
+            // If the role is same as current user, mark the
+            // permission as 'modify'
+            if (role.name === currentUser[1] || role.name === 'VunetAdmin') {
+              newRole.permission = 'modify';
+            }
+            userRoles.push(newRole);
+          }
+        });
+      } else {
+        // Iterate on all roles from backend which has 'ViewObject'
+        // claim and check it in current
+        // allowed-roles list otherwise create a new one and push it
+        // With this logic, we should finally have the same roles in
+        // the allowed roles list as what we have in backend
+        _.each(data.user_groups, function (role) {
+          let roleFound = false;
+          if(role.permissions.indexOf('ViewObject') > -1) {
+            _.each(allowedRoles, function (allowRole) {
+              if (role.name === allowRole.name) {
+                userRoles.push(allowRole);
+                roleFound = true;
+              }
+            });
+
+            // If we didn't found this role in existing allowedRole,
+            // it means this is a newly created role
+            if (!roleFound) {
+              const newRole = { 'name': role.name, 'permission': '' };
+              userRoles.push(newRole);
+            }
+          }
+        });
+      }
+      return userRoles;
+    })
+    .catch(function () {
+      notify.error('Failed to find user roles');
+    });
+
+  return userRoles;
+}
+
 // This component provides the RBAC(role based access control) for user roles
 export class VunetUserPermissions extends React.Component {
   constructor(props) {
@@ -49,77 +122,16 @@ export class VunetUserPermissions extends React.Component {
       allowedRoles
     } = this.props;
 
-    // We need to get all the roles available every time someone is
-    // trying to save an object. This is because we need to update the
-    // role list in the object if a new role is created or an existing
-    // one is deleted.
-    // Now get all the roles available
-    const currentUser = chrome.getCurrentUser();
-
-    // Get the first part of the url containing the tenant
-    // and bu id to prepare urls for api calls.
-    // Example output: /vuSmartMaps/api/1/bu/1/
-    const urlBase = chrome.getUrlBase();
-    const url = urlBase + '/user_groups/';
-
-    // perform a get request to get latest userRoles
-    //update the state with latest userRoles
-    fetch(url)
-      .then(resp => resp.json())
-      .catch(resp => { throw resp.data; })
-      .then((data) => {
-        const userRoles = [];
-        if (allowedRoles.length === 0) {
-          // This seems to be a request for a new object, let us create
-          // roles information for each existing role and add it. For
-          // current user's role, we automatically set the permission
-          // to modify
-          _.each(data.user_groups, function (role) {
-            //indexOf returns -1 if ViewObject is not found.
-            if(role.permissions.indexOf('ViewObject') > -1) {
-              const newRole = { 'name': role.name, 'permission': '' };
-              // If the role is same as current user, mark the
-              // permission as 'modify'
-              if (role.name === currentUser[1]) {
-                newRole.permission = 'modify';
-              }
-              userRoles.push(newRole);
-            }
-          });
-        } else {
-          // Iterate on all roles from backend which has 'ViewObject'
-          // claim and check it in current
-          // allowed-roles list otherwise create a new one and push it
-          // With this logic, we should finally have the same roles in
-          // the allowed roles list as what we have in backend
-          _.each(data.user_groups, function (role) {
-            let roleFound = false;
-            if(role.permissions.indexOf('ViewObject') > -1) {
-              _.each(allowedRoles, function (allowRole) {
-                if (role.name === allowRole.name) {
-                  userRoles.push(allowRole);
-                  roleFound = true;
-                }
-              });
-
-              // If we didn't found this role in existing allowedRole,
-              // it means this is a newly created role
-              if (!roleFound) {
-                const newRole = { 'name': role.name, 'permission': '' };
-                userRoles.push(newRole);
-              }
-            }
-          });
-        }
-        // update state with latest userRoles
-        this.setState({
-          ...this.state,
-          userRoles: userRoles
-        });
-      })
-      .catch(function () {
-        notify.error('Failed to find user roles');
+    getDefaultPermission(allowedRoles).then((userRoles)=> {
+      // update state with latest userRoles
+      this.setState({
+        ...this.state,
+        userRoles: userRoles
       });
+
+      // return the updated value using callback
+      this.props.onChange(userRoles);
+    });
   }
 
   // When the user updates the user permission
@@ -171,15 +183,17 @@ export class VunetUserPermissions extends React.Component {
             userRoles.map((role, index) => {
               return (
                 <div
-                  className="permission-container row"
-                  key={role.name + index}
+                  className="permission-container"
+                  key={owner.role + index}
                 >
-                  <span className="radio-title col-sm-3">{role.name.charAt(0).toUpperCase() + role.name.slice(1)}</span>
-                  <div className={'col-sm-3 radio-input-container ' + (role.name === owner.role ? 'disabledRadioInput' : null)}>
+                  <span className="radio-title ">{role.name.charAt(0).toUpperCase() + role.name.slice(1)}</span>
+                  <div className={'radio-input-container ' +
+                  (role.name === owner.role || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
+                  >
                     <input
                       className="form-control radio-input"
                       type="radio"
-                      disabled={role.name === owner.role}
+                      disabled={role.name === owner.role || role.name === 'VunetAdmin'}
                       id={'Modify' + index}
                       value="modify"
                       name={role.name}
@@ -194,11 +208,13 @@ export class VunetUserPermissions extends React.Component {
                       Modify
                     </label>
                   </div>
-                  <div className={'col-sm-3 radio-input-container ' + (role.name === owner.role ? 'disabledRadioInput' : null)}>
+                  <div className={'radio-input-container ' +
+                   (role.name === owner.role || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
+                  >
                     <input
                       className="form-control radio-input"
                       type="radio"
-                      disabled={role.name === owner.role}
+                      disabled={role.name === owner.role || role.name === 'VunetAdmin'}
                       id={'View' + index}
                       value="view"
                       name={role.name}
@@ -213,7 +229,9 @@ export class VunetUserPermissions extends React.Component {
                       View
                     </label>
                   </div>
-                  <div className={'col-sm-3 radio-input-container ' + (role.name === owner.role ? 'disabledRadioInput' : null)}>
+                  <div className={'radio-input-container ' +
+                  (role.name === owner.role || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
+                  >
                     <input
                       className="form-control radio-input"
                       type="radio"

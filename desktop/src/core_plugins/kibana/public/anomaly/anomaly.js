@@ -321,7 +321,7 @@ function anomalyAppEditor($scope,
   $scope.landingPageUrl = () => `#${AnomalyConstants.LANDING_PAGE_PATH}`;
 
   const currentUser = chrome.getCurrentUser();
-  const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+  const owner = { 'name': currentUser[0], 'role': currentUser[1], 'permission': currentUser[2] };
 
   // Setup configurable values for config directive, after objects are initialized
   $scope.opts = {

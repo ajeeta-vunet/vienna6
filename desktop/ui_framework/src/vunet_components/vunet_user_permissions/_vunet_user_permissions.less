@@ -1,6 +1,7 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
 .user-permissions-container{
+  padding-top: 1rem;
   .disabledRadioInput{
     label{
       cursor: not-allowed !important;
@@ -9,7 +10,7 @@
   }
   .user-permission-header{
     .title-text{
-      font-family: @roboto-medium;
+      font-family: @roboto-bold;
       color: @grey_dark;
       font-size: 1.6rem;
     }
@@ -19,7 +20,7 @@
     }
   }
   .user-permission-body{
-    width: 40rem;
+    padding: 1rem 0rem 0rem 2rem;
     .permission-container{
       display: flex;
       flex-direction: row;
@@ -77,9 +78,10 @@
         
       }
       .radio-title{
+        width: 22rem;
         font-size: 1.6rem;
         font-family: @roboto-medium;
-        color: @black;
+        color: @grey_dark;
       }
     }
   }

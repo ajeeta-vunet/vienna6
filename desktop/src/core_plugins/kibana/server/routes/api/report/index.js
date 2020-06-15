@@ -140,7 +140,7 @@ export function reportDownloadApi(server) {
       Request.post({
         url: 'https://127.0.0.1/vuSmartMaps/api/' + tenantId + '/bu/' + buId + '/_utMapReport_/',
         body: JSON.stringify(request.payload),
-        headers: { 'user': 'testadmin' }
+        headers: { 'user': request.headers.username }
       }, function (error, response, body) {
         if (response.statusCode !== 200) {
           reply(body).code(response.statusCode);
@@ -160,7 +160,7 @@ export function reportDownloadApi(server) {
       Request.post({
         url: 'https://127.0.0.1/vuSmartMaps/api/' + tenantId + '/bu/' + buId + '/_cjmReport_/',
         body: JSON.stringify(request.payload),
-        headers: { 'user': 'testadmin' }
+        headers: { 'user': request.headers.username }
       }, function (error, response, body) {
         if (response.statusCode !== 200) {
           reply(body).code(response.statusCode);
@@ -180,7 +180,7 @@ export function reportDownloadApi(server) {
       Request.post({
         url: 'https://127.0.0.1/vuSmartMaps/api/' + tenantId + '/bu/' + buId + '/_insightsReport_/',
         body: JSON.stringify(request.payload),
-        headers: { 'user': 'testadmin' }
+        headers: { 'user': request.headers.username }
       }, function (error, response, body) {
         if (response.statusCode !== 200) {
           reply(body).code(response.statusCode);
@@ -209,6 +209,6 @@ export function reportDownloadApi(server) {
         }
       });
     }
-  })
+  });
 
 }

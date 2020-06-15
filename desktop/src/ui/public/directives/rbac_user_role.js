@@ -20,6 +20,7 @@ module.directive('rbacUserRole', function ($http) {
       // role list in the object if a new role is created or an existing
       // one is deleted.
       // Now get all the roles available
+      $scope.vunetAdminRole = 'VunetAdmin';
       const currentUser = chrome.getCurrentUser();
 
       // Get the first part of the url containing the tenant
@@ -52,7 +53,7 @@ module.directive('rbacUserRole', function ($http) {
               const newRole = { 'name': role.name, 'permission': '' };
               // If the role is same as current user, mark the
               // permission as 'modify'
-              if (role.name === currentUser[1]) {
+              if (role.name === currentUser[1] || role.name === $scope.vunetAdminRole) {
                 newRole.permission = 'modify';
               }
               userRoles.push(newRole);

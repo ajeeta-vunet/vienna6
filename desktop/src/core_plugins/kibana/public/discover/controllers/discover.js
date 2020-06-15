@@ -328,7 +328,7 @@ function discoverController(
   }
 
   const currentUser = chrome.getCurrentUser();
-  const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+  const owner = { 'name': currentUser[0], 'role': currentUser[1], 'permission': currentUser[2] };
 
   $scope.opts = {
     // number of records to fetch, then paginate through

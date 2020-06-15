@@ -324,7 +324,7 @@ export const NEW_EVAL_CRITERIA_CONDITION_LIST_ITEM = {
 
 export const ALERT_CONDITION_TAB_HEADER_TEXT = 'The alert object configuration defines the parameters based on which system' +
   ' will evaluate alert conditions and generate notifications. A typical configuration will include the list of rules to ' +
-  ' be evaluated, contents of notifications to be generated and channels through which notifications should be deliered to users.';
+  ' be evaluated, contents of notifications to be generated and channels through which notifications should be delivered to users.';
 
 // alert about section help data meta
 export const ABOUT_SECTION_HELP_OBJ = {

@@ -397,7 +397,7 @@ app.directive('storyboardApp', function ($injector, $http) {
       $scope.showFilterBar = () => filterBar.getFilters().length > 0 || !dashboardStateManager.getFullScreenMode();
 
       const currentUser = chrome.getCurrentUser();
-      const owner = { 'name': currentUser[0], 'permission': currentUser[1], 'role': currentUser[2] };
+      const owner = { 'name': currentUser[0], 'role': currentUser[1], 'permission': currentUser[2] };
 
       $scope.opts = {
         displayName: storyboard.getDisplayName(),

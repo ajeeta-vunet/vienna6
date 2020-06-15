@@ -28,7 +28,7 @@
                 <i class="fa icon-maximize" ng-click='toggleFullscreen()' uib-tooltip="View Fullscreen"></i>
               </div>
             </li>
-            <li ng-if = "canViewObject" id="notification-icon" class="uib-dropdown alert-notification" uib-dropdown is-open="dropdownIsOpen"
+            <li ng-if = "notificationAccess" id="notification-icon" class="uib-dropdown alert-notification" uib-dropdown is-open="dropdownIsOpen"
               on-toggle="handleDropdownclose()">
               <div class='uib-dropdown-toggle' data-toggle="dropdown" ng-click='showNotificationDropdown()'
                 uib-dropdown-toggle>

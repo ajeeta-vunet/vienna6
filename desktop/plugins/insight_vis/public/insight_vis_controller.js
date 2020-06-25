@@ -21,14 +21,13 @@ module.controller('insightVisController', function ($scope, Private, Notifier, $
   // Example output: /vuSmartMaps/api/1/bu/1/
   const urlBase = chrome.getUrlBase();
 
-
   // This function prepares data sets from the
   // user entered data and makes a POST call to the
   // back end to get the response data.
   $scope.search = function run() {
 
     // If user hasn't configured bmv and insights yet, return
-    if(!$scope.vis.params.bmv && !$scope.vis.params.insights) {
+    if (!$scope.vis.params.bmv && !$scope.vis.params.insights) {
       return;
     }
 
@@ -56,16 +55,19 @@ module.controller('insightVisController', function ($scope, Private, Notifier, $
       'lte': timeDurationEnd
     };
 
+    // THis flag has been used to show loading as api is being called
+    $scope.loadingInsights = true;
+
     // Get the updated iconDict with uploaded images.
     // make API call after iconDict has been populated.
     getImages(StateService).then(function (iconDict) {
-
       const httpResult = $http.post(urlBase + '/insights/', body)
         .then(resp => resp.data)
         .catch(resp => { throw resp.data; });
 
       // Perform operation after getting response.
       httpResult.then(function (resp) {
+        $scope.loadingInsights = false;
         $scope.insightAvailableFlag = false;
         _.each(resp.insights, (insight) => {
           insight.image = iconDict[insight.group];

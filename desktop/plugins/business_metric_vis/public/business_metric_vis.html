@@ -291,6 +291,7 @@
   <!-- Multiple metrics displayed inline -->
   <!--Vertical tabular format Display  -->
   <div
+    class='vertical-table-bmv-container'
     ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'vertical'">
     <table class="bm-table-striped">
       <tr ng-repeat="entry in verticalDatas track by $index"

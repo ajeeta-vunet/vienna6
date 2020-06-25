@@ -152,7 +152,7 @@ function manageAbout($injector,
     ],
     id: 'nodes',
     inverted: true,
-    inverted_title: 'Licence Information '
+    inverted_title: 'License Information '
   };
 
   function init() {

@@ -25,7 +25,7 @@
               class="zero-margin">{{srNumberTitle}}</h6>
           </th> 
           <th scope="col"
-              ng-if="!isMatrix"
+              ng-if="calledFrom === 'table'"
               ng-style="{'font-size': cellFontSize + 'px'}"
               ng-repeat="col in columns"
               ng-click="paginatedTable.sortColumn($index)"
@@ -47,7 +47,29 @@
             </i>
           </th>
           <th scope="col"
-              ng-if="isMatrix"
+              ng-if="calledFrom === 'manageResources'"
+              ng-style="{'font-size': cellFontSize + 'px'}"
+              ng-repeat="col in columns"
+              ng-click="paginatedTable.sortColumn($index)"
+              kbn-accessible-click
+              tabindex="0"
+              class="{{ col.class }}"
+              ng-show="paginatedTable.checkMatrix(col.show)">
+            <span ng-bind="::col.title"></span>
+            <kbn-info ng-if="col.info"
+                      info="{{ col.info }}"
+                      placement="top"></kbn-info>
+            <i ng-if="col.sortable !== false"
+               class="fa"
+               ng-class="{
+              'fa-sort-asc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'asc',
+              'fa-sort-desc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'desc',
+              'fa-sort': paginatedTable.sort.columnIndex !== $index || paginatedTable.sort.direction === null
+              }">
+            </i>
+          </th>
+          <th scope="col"
+              ng-if="calledFrom === 'matrix'"
               ng-repeat="col in columns"
               tabindex="0"
               style="word-wrap:break-word;"
@@ -67,7 +89,7 @@
               </span>
             </h6>
           </th>
-          <th ng-if="isMatrix && cumulativeColumnOperation !== null">
+          <th ng-if="calledFrom === 'matrix' && cumulativeColumnOperation !== null">
             <h6
               ng-style="{'font-size': cellFontSize + 'px'}"
               class="zero-margin">

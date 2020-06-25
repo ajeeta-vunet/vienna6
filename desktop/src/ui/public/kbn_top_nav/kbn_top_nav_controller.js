@@ -81,6 +81,7 @@ export function KbnTopNavControllerProvider($compile) {
         const kuiLocalNavHeight = $('.kuiLocalNav').height();
         const topbarHeight = $('.topbar-container').height();
         const filterHeight = $('.filter-row-in-search').height();
+        const addFilterInDashboardHeight = $('.dashboard-add-filter-container').height();
         const storyboardTabHeight = $('.kuiTabWrapper').height();
         const heightToSet = $(window).height() - topbarHeight - kuiLocalNavHeight;
         const heightToSetOnFullscreenMode = $(window).height() - kuiLocalNavHeight;
@@ -89,7 +90,7 @@ export function KbnTopNavControllerProvider($compile) {
           $('.report-body-container').height(heightToSetOnFullscreenMode);
           $('.menubar-fixed-top-containing-filterbar').height(heightToSetOnFullscreenMode - filterHeight);
           $('.event-container').height(heightToSetOnFullscreenMode);
-          $('.dashboard-margin-top').height(heightToSetOnFullscreenMode);
+          $('.dashboard-margin-top').height(heightToSetOnFullscreenMode - addFilterInDashboardHeight);
           $('.vunet-storyboards-container').height(heightToSetOnFullscreenMode -
             filterHeight - storyboardTabHeight);
         }
@@ -97,7 +98,7 @@ export function KbnTopNavControllerProvider($compile) {
           $('.report-body-container').height(heightToSet);
           $('.menubar-fixed-top-containing-filterbar').height(heightToSet - filterHeight);
           $('.event-container').height(heightToSet);
-          $('.dashboard-margin-top').height(heightToSet);
+          $('.dashboard-margin-top').height(heightToSet - addFilterInDashboardHeight);
           $('.vunet-storyboards-container').height(heightToSet -
             filterHeight - storyboardTabHeight);
         }

@@ -45,14 +45,16 @@
   </kbn-top-nav>
 
   <!-- Filters. -->
-  <div class="dashboard-margin-top">
+
   <filter-bar
+    class="dashboard-add-filter-container"
     ng-show="showFilterBar()"
     state="state"
     index-patterns="indexPatterns"
     ng-if="model.query.language === 'lucene'"
   ></filter-bar>
 
+  <div class="dashboard-margin-top">
   <div
     ng-show="getShouldShowEditHelp()"
     class="text-center start-screen"

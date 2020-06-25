@@ -33,7 +33,8 @@ uiModules
         srNumberTitle: '=?',
         cellFontSize: '=?',
         cumulativeRowOperation: '=?',
-        cumulativeColumnOperation: '=?'
+        cumulativeColumnOperation: '=?',
+        manageResources: '=?'
       },
       controllerAs: 'paginatedTable',
       controller: function ($scope) {
@@ -45,11 +46,23 @@ uiModules
 
         // Show-Hide column only for Matrix
         self.checkMatrix = function (flag) {
-          if($scope.isMatrix) {
+          if ($scope.isMatrix) {
             return flag;
           }
           return true;
         };
+
+        /* This will be used the determine from where the paginated table is being called so that we can take
+           action on the paginated table header row accordingly */
+        if($scope.isMatrix && !$scope.manageResources) {
+          $scope.calledFrom = 'matrix';
+        }
+        else if(!$scope.isMatrix && !$scope.manageResources) {
+          $scope.calledFrom = 'table';
+        }
+        else if($scope.manageResources) {
+          $scope.calledFrom = 'manageResources';
+        }
 
         self.filterColumn = function (colIndex) {
           const col = $scope.columns[colIndex];

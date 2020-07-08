@@ -14,7 +14,7 @@ app.directive('user', function () {
   };
 });
 
-function userController($injector, $scope) {
+function userController($injector, $scope, $rootScope) {
 
   function init() {
 
@@ -31,6 +31,15 @@ function userController($injector, $scope) {
 
     $scope.landingTab = 'user';
     $scope.id = 'user';
+
+    // $rootScope.changeUserTab is set to true only when a new user
+    // role is created. When a new user role is created, it is required to
+    // reload the page and switch to User Role Management Tab.
+    if($rootScope.changeUserTab === true) {
+      $scope.landingTab = 'roles';
+      $scope.id = 'roles';
+      $rootScope.changeUserTab = false;
+    }
   }
 
   // Set the id of the selected tab to display its

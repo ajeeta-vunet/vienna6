@@ -13,6 +13,8 @@ app.directive('manageRoles', function () {
 
 function manageRoles($scope,
   $http,
+  $route,
+  $rootScope,
   StateService,
   Promise
 ) {
@@ -257,6 +259,8 @@ function manageRoles($scope,
         'search_string': userData.search_string
       } };
       return StateService.addRole(user).then(function () {
+        $rootScope.changeUserTab = true;
+        $route.reload();
         return Promise.resolve(true);
       }, function () {
         return Promise.resolve(false);

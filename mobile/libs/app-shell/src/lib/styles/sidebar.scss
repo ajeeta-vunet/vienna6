@@ -47,7 +47,13 @@
       padding: 0.75rem 1rem;
       transition-duration: 0.1s;
       color: $black;
-      
+      &.sidebar-logout{
+        padding: 0;
+        span{
+          padding: 0.75rem 1rem;
+          display: block;
+        }
+      }
       &.active, &:hover {
         background: $smoke;
         text-decoration: none;

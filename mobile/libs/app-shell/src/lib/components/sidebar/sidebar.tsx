@@ -97,7 +97,7 @@ export const Sidebar = connect(
             </NavLink>
           ))}
         <hr />
-        <div className="sidebar-item">
+        <div className="sidebar-item sidebar-logout">
           <LogoutButton />
         </div>
       </div>

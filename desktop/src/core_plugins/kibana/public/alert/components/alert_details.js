@@ -183,8 +183,8 @@ export class AlertDetails extends React.Component {
     if (savedObject.allowedRolesJSON) {
       savedObject.parsedAllowedRolesJSON = JSON.parse(savedObject.allowedRolesJSON);
     } else {
-      getDefaultPermission([]).then((userRoles)=>{
-        savedObject.parsedAllowedRolesJSON = userRoles;
+      getDefaultPermission([]).then((userRolesObj)=>{
+        savedObject.parsedAllowedRolesJSON = userRolesObj.userRoles;
       });
     }
 

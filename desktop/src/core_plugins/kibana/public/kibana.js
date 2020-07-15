@@ -44,7 +44,18 @@ const kibana = uiModules.get('kibana');
 kibana.factory('responseInterceptor', ($rootScope) => {
   const responseInterceptor = {
     response: (config) => {
-      if (config.status === 474 || config.status === 475) {
+      // If the response is 474, the current user is
+      // 'ManageLicense' user and should be shown the license
+      // upload wizard. If it is 475, he should just be shown
+      // error message 'License has expired'
+      if (config.status === 474) {
+        $rootScope.showUploadLicenseWizard = true;
+        Notifier.showLicence($rootScope);
+        $rootScope.licence = true;
+      }
+
+      if (config.status === 475) {
+        $rootScope.showUploadLicenseWizard = false;
         Notifier.showLicence($rootScope);
         $rootScope.licence = true;
       }
@@ -52,10 +63,21 @@ kibana.factory('responseInterceptor', ($rootScope) => {
     },
     responseError: (config) => {
       // 474: Licence invalid
-      if (config.status === 474 || config.status === 475) {
+      // If the response is 474, the current user is
+      // 'ManageLicense' user and should be shown the license
+      // upload wizard. If it is 475, he should just be shown
+      // error message 'License has expired'
+      if (config.status === 474) {
+        $rootScope.showUploadLicenseWizard = true;
         Notifier.showLicence($rootScope);
         $rootScope.licence = true;
-      } else if (config.status === 401) {
+      }
+      else if (config.status === 475) {
+        $rootScope.showUploadLicenseWizard = false;
+        Notifier.showLicence($rootScope);
+        $rootScope.licence = true;
+      }
+      else if (config.status === 401) {
         // unauthorized
         window.localStorage.clear();
         window.location.href = window.location.origin + '/vunet/login';

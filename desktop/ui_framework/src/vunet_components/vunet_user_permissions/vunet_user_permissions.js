@@ -42,17 +42,22 @@ export async function getDefaultPermission(allowedRoles) {
 
   // perform a get request to get latest userRoles
   //update the state with latest userRoles
-  const userRoles = await fetch(url)
+  const { userRoles, userRolePermissionDetails }  = await fetch(url)
     .then(resp => resp.json())
     .catch(resp => { throw resp.data; })
     .then((data) => {
       const userRoles = [];
+      const userRolePermissionDetails = [];
+
       if (allowedRoles.length === 0) {
         // This seems to be a request for a new object, let us create
         // roles information for each existing role and add it. For
         // current user's role, we automatically set the permission
         // to modify
         _.each(data.user_groups, function (role) {
+          const userdetails = { 'name': role.name, 'claims': role.permissions };
+          userRolePermissionDetails.push(userdetails);
+
           //indexOf returns -1 if ViewObject is not found.
           if(role.permissions.indexOf('ViewObject') > -1) {
             const newRole = { 'name': role.name, 'permission': '' };
@@ -71,6 +76,8 @@ export async function getDefaultPermission(allowedRoles) {
         // With this logic, we should finally have the same roles in
         // the allowed roles list as what we have in backend
         _.each(data.user_groups, function (role) {
+          const userdetails = { 'name': role.name, 'claims': role.permissions };
+          userRolePermissionDetails.push(userdetails);
           let roleFound = false;
           if(role.permissions.indexOf('ViewObject') > -1) {
             _.each(allowedRoles, function (allowRole) {
@@ -89,13 +96,13 @@ export async function getDefaultPermission(allowedRoles) {
           }
         });
       }
-      return userRoles;
+      return { userRoles, userRolePermissionDetails };
     })
     .catch(function () {
       notify.error('Failed to find user roles');
     });
 
-  return userRoles;
+  return { userRoles, userRolePermissionDetails };
 }
 
 // This component provides the RBAC(role based access control) for user roles
@@ -107,6 +114,7 @@ export class VunetUserPermissions extends React.Component {
     this.state = {
       rbac_options: false,
       userRoles: [],
+      userRolePermissionDetails: [],
       isUserPermissionCollapsed: false
     };
 
@@ -115,6 +123,18 @@ export class VunetUserPermissions extends React.Component {
     this._init();
   }
 
+  // We need to disable 'modify' permission for users with only ViewObject
+  // permission and no ManageObject permission
+  isModifyDisabled(roleName) {
+    const userRolePermissionDetails = this.state.userRolePermissionDetails;
+    const index = userRolePermissionDetails.findIndex(x => x.name === roleName);
+    if(userRolePermissionDetails[index].claims.indexOf('ManageObject') === -1) {
+      return true;
+    }
+    return false;
+  }
+
+
   // initial processing
   // we perform a get request to get latest userRoles and update the state
   _init = () => {
@@ -122,15 +142,16 @@ export class VunetUserPermissions extends React.Component {
       allowedRoles
     } = this.props;
 
-    getDefaultPermission(allowedRoles).then((userRoles)=> {
+    getDefaultPermission(allowedRoles).then((userRolesObj)=> {
       // update state with latest userRoles
       this.setState({
         ...this.state,
-        userRoles: userRoles
+        userRoles: userRolesObj.userRoles,
+        userRolePermissionDetails: userRolesObj.userRolePermissionDetails
       });
 
       // return the updated value using callback
-      this.props.onChange(userRoles);
+      this.props.onChange(userRolesObj.userRoles);
     });
   }
 
@@ -188,12 +209,12 @@ export class VunetUserPermissions extends React.Component {
                 >
                   <span className="radio-title ">{role.name.charAt(0).toUpperCase() + role.name.slice(1)}</span>
                   <div className={'radio-input-container ' +
-                  (role.name === owner.role || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
+                  (role.name === owner.role || role.name === 'VunetAdmin' || this.isModifyDisabled(role.name) ? 'disabledRadioInput' : null)}
                   >
                     <input
                       className="form-control radio-input"
                       type="radio"
-                      disabled={role.name === owner.role || role.name === 'VunetAdmin'}
+                      disabled={role.name === owner.role || role.name === 'VunetAdmin' || this.isModifyDisabled(role.name)}
                       id={'Modify' + index}
                       value="modify"
                       name={role.name}

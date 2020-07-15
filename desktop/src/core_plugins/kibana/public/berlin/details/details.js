@@ -10,6 +10,7 @@ class DetailsCtrl {
     $scope.showTenantInfo = true;
     $scope.showLicenceComponentInfo = false;
     $scope.showServerInfoTab = false;
+    $scope.showUploadLicenseWizard = $rootScope.showUploadLicenseWizard;
     $scope.tenantData = {};
     StateService.getTenantInfo().then(function (data) {
       $scope.tenantData.name = data.name;

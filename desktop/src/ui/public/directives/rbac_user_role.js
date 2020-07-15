@@ -21,7 +21,19 @@ module.directive('rbacUserRole', function ($http) {
       // one is deleted.
       // Now get all the roles available
       $scope.vunetAdminRole = 'VunetAdmin';
+
+      const userRolePermissionDetails = [];
+
       const currentUser = chrome.getCurrentUser();
+      // We need to disable 'modify' permission for users with only ViewObject
+      // permission and no ManageObject permission
+      $scope.isModifyDisabled = (roleName) => {
+        const index = userRolePermissionDetails.findIndex(x => x.name === roleName);
+        if(userRolePermissionDetails[index].claims.indexOf('ManageObject') === -1) {
+          return true;
+        }
+        return false;
+      };
 
       // Get the first part of the url containing the tenant
       // and bu id to prepare urls for api calls.
@@ -48,6 +60,9 @@ module.directive('rbacUserRole', function ($http) {
           // current user's role, we automatically set the permission
           // to modify
           _.each(data.user_groups, function (role) {
+            // User Roles and Permissions are stored
+            const userdetails = { 'name': role.name, 'claims': role.permissions };
+            userRolePermissionDetails.push(userdetails);
             //indexOf returns -1 if ViewObject is not found.
             if(role.permissions.indexOf('ViewObject') > -1) {
               const newRole = { 'name': role.name, 'permission': '' };
@@ -61,7 +76,6 @@ module.directive('rbacUserRole', function ($http) {
           });
 
         } else {
-
           // Iterate on all roles from backend which has 'ViewObject'
           // claim and check it in current
           // allowed-roles list, if it exists there, copy it from
@@ -69,6 +83,8 @@ module.directive('rbacUserRole', function ($http) {
           // With this logic, we should finally have the same roles in
           // the allowed roles list as what we have in backend
           _.each(data.user_groups, function (role) {
+            const userdetails = { 'name': role.name, 'claims': role.permissions };
+            userRolePermissionDetails.push(userdetails);
             let roleFound = false;
             if(role.permissions.indexOf('ViewObject') > -1) {
               _.each($scope.allowedRoles, function (allowRole) {

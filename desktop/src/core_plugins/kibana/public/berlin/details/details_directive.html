@@ -1,5 +1,10 @@
 <div ng-controller="DetailsCtrl" class="component-details">
-  <div class="details-container">
+  <div class="details-container" ng-if="!showUploadLicenseWizard">
+    <div class="license-modal-header">
+    Your license has expired. Please contact your administrator.
+    </div>
+  </div>
+  <div class="details-container" ng-if="showUploadLicenseWizard">
     <div class="user-onboard-container" ng-show="showTenantInfo">
       <div class="user-onboard-title row">
         <div class="col-md-7">

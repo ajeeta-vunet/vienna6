@@ -126,8 +126,8 @@ export class AlertConditionsSection extends React.Component {
             }
           </div>
           <div
-            className="view-metric-container hover-effect"
-            onClick={() => callbackParams.previewMetric(alertConditionItem.selectedMetric.id)}
+            className={(alertConditionItem.ruleTypeDuration > 0 ? 'view-metric-container hover-effect' : 'view-metric-disabled')}
+            onClick={() => callbackParams.previewMetric(alertConditionItem.selectedMetric.id, alertConditionItem.ruleTypeDuration, alertConditionItem.ruleTypeDurationType)}
           >
             <i className="view-metric-icon icon-eye" />
             <span className="view-metric-text">

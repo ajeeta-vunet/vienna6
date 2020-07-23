@@ -121,18 +121,41 @@ function alertAppEditor($scope,
   // show all the metrics for the corresponding BMV
   // in a modal pop-up.
   // metrics - All the metrics for the selected BMV.
-  $scope.previewMetric = function (metricId) {
+  $scope.previewMetric = function (metricId, durarion, durarionType) {
     savedVisualizations.get(metricId).then(function (savedVisualization) {
-      $modal.open({
+      // This API will give the selected time from the global time selector.
+      // We will update this time in the vumetric preview controller page.
+      // So before updating, get the from and to time from the global time selector and store it in a const.
+      // When the modal is closed, we would update the time in the global time selector
+      // back to this time.
+      const from = savedVisualization.vis.API.timeFilter.time.from;
+      const to = savedVisualization.vis.API.timeFilter.time.to;
+      $scope.previewModalInstance = $modal.open({
         animation: true,
         template: previewMetricTemplate,
         controller: previewMetricCtrl,
         windowClass: 'alertBmvPreviewModal',
         resolve: {
+          // Get the selected vuMetric
           metricData: function () {
             return savedVisualization;
-          }
+          },
+          // Get the selected duration for the vuMetric
+          metricDuration: function () {
+            return durarion;
+          },
+          // Get the selected duration type like minute, day, week for the vuMetric
+          metricDurationType: function () {
+            return durarionType;
+          },
         }
+      });
+      $scope.previewModalInstance.result.then(function () {
+      }, function () {
+        // The modal is closed. So let's update the global time selector
+        // to the previous time.
+        savedVisualization.vis.API.timeFilter.time.from = from;
+        savedVisualization.vis.API.timeFilter.time.to = to;
       });
     });
   };

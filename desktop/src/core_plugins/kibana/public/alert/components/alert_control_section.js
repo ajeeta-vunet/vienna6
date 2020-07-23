@@ -207,7 +207,7 @@ export class AlertControlSection extends React.Component {
               htmlFor="email-body-id"
               className="email-body-title"
             >
-              Email Body*
+              Email Body
             </label>
             <textarea
               className={'email-body form-control ' + (alertEmailBodyErrorText && 'errorInput')}

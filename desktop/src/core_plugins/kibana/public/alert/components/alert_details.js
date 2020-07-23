@@ -997,7 +997,7 @@ export class AlertDetails extends React.Component {
           // for channel we give its defualt value
           channelListItem.value = '';
           if (value === ALERT_CONFIG_DEFAULTS.channelListAdd) {
-            channelListItem.channel = ALERT_CONFIG_DEFAULTS.channelListAddchannel;
+            channelListItem.channel = ALERT_CONFIG_DEFAULTS.channelListAddChannel;
           } else if (value === ALERT_CONFIG_DEFAULTS.channelListUpdate) {
             channelListItem.channel = ALERT_CONFIG_DEFAULTS.channelListUpdateChannel;
           } else if (value === ALERT_CONFIG_DEFAULTS.channelListMute) {
@@ -1058,8 +1058,21 @@ export class AlertDetails extends React.Component {
 
   // 4. alert rule evaluation script section
   alertRuleEvaluationScriptSection = {
+    // Adjust the height of the evaulation criteria textarea
+    // based on the content when an existing alert is reopend.
+    resize: ($event) => {
+      $event.target.style.cssText = 'height:auto; padding:0';
+      $event.target.style.cssText = 'height:' + $event.target.scrollHeight + 'px';
+    },
     // update rule evaluation script
-    updateScript: (value) => {
+    updateScript: (e) => {
+      // Adjust the height of the evaulation criteria textarea
+      // when the text is changed
+      if (e) {
+        e.target.style.cssText = 'height:auto; padding:0';
+        e.target.style.cssText = 'height:' + e.target.scrollHeight + 'px';
+      }
+      const value = e.target.value;
       // shallow clone of savedObject
       const savedObject = { ...this.state.savedObject };
       // deep clone of parsedEvalCriteria

@@ -82,7 +82,8 @@ export class AlertRuleEvaluationScriptSection extends React.Component {
               type="text"
               maxLength="5001"
               placeholder="Evaluation criteria script"
-              onChange={(e) => callbackParams.updateScript(e.target.value)}
+              onChange={(e) => callbackParams.updateScript(e)}
+              onFocus={(e) => callbackParams.resize(e)}
               value={alertConfig.parsedEvalCriteria.expression}
             />
             {evaluationScriptErrorText &&

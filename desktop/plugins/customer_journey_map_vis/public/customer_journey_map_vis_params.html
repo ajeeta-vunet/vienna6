@@ -337,7 +337,7 @@
                     class="col-sm-6 stage_metric_group_bmv_value form-control" 
                     required
                     name="metricForMetricGroupStage"
-                    ng-options="option as option.title for option in bmvList track by option.id"
+                    ng-options="option as option.title for option in bmvList | orderBy:'title' track by option.id"
                     ng-class="{error: visualizeEditor.metricForMetricGroupStage.$error.required}">
                   </select>
                 </div>

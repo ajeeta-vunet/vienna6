@@ -114,7 +114,7 @@
               class="form-control" 
               required
               name="parameterBmv"
-              ng-options="option as option.title for option in bmvList track by option.id"
+              ng-options="option as option.title for option in bmvList | orderBy:'title' track by option.id"
               >
             </select>
             <p

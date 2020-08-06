@@ -26,14 +26,14 @@
 
     <!-- KPI Template -->
 
-    <div ng-class="{'kpi-container-vertical' : vis.params.kpiTemplate === 'Vertical Alignment',
-                 'kpi-container-horizontal' : vis.params.kpiTemplate === 'Horizontal Alignment',
+    <div ng-class="{'kpi-container-vertical' : vis.params.kpiTemplate === 'Basic Vertical KPI',
+                 'kpi-container-horizontal' : vis.params.kpiTemplate === 'Basic Horizontal KPI',
                  'kpi-container-gauge' : vis.params.kpiTemplate === 'Gauge template'
                 }" ng-repeat="(metricName, metric) in responseData.KpiMetrics track by $index"
       ng-if="vis.params.request_type == 'KPI'" ng-style="responseData && {'margin-bottom':'0px'}">
 
       <!-- Vertical Aligned template for KPI -->
-      <div class="kpi-vertical-container" ng-if="vis.params.kpiTemplate === 'Vertical Alignment'">
+      <div class="kpi-vertical-container" ng-if="vis.params.kpiTemplate === 'Basic Vertical KPI'">
         <div class="kpi-icon">
           <img ng-src="{{metricImageDict[metric.metricIcon]}}">
         </div>
@@ -59,7 +59,7 @@
       </div>
 
       <!-- Horizontal Aligned template for KPI -->
-      <div class="kpi-horizontal-container" ng-if="vis.params.kpiTemplate === 'Horizontal Alignment'">
+      <div class="kpi-horizontal-container" ng-if="vis.params.kpiTemplate === 'Basic Horizontal KPI'">
         <div class="row">
           <div class="col-sm-4 kpi-icon">
             <img ng-src="{{metricImageDict[metric.metricIcon]}}">

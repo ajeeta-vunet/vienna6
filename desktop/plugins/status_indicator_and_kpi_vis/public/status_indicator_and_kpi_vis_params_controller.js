@@ -14,7 +14,7 @@ module.controller('statusIndicatorAndKpiVisParamsController', function ($scope, 
 
   $scope.visualizationTypes = ['Status Indicator', 'KPI'];
 
-  $scope.kpiTemplateList = ['Vertical Alignment', 'Horizontal Alignment', 'Gauge template'];
+  $scope.kpiTemplateList = ['Basic Vertical KPI', 'Basic Horizontal KPI', 'Gauge template'];
 
   // This has been done for auto referesh when it is enabled
   $scope.search = function () {

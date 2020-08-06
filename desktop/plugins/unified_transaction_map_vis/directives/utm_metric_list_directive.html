@@ -71,7 +71,7 @@
         <select
           ng-model="opts.name"
           class="form-control"
-          ng-options="option as option.title for option in bmvList track by option.id"
+          ng-options="option as option.title for option in bmvList | orderBy:'title' track by option.id"
           required>
         </select>
       </div>

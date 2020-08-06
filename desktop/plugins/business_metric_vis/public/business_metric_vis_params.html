@@ -142,7 +142,7 @@
           <select
             class="form-control"
             name="search"
-            ng-options="option as option.title for option in savedSearchIds track by option.id"
+            ng-options="option as option.title for option in savedSearchIds | orderBy:'title' track by option.id"
             ng-model="metric.savedSearch"
             ng-change="setSavedSearch($index)"
             required>
@@ -166,7 +166,7 @@
           <select
             class="form-control"
             name="index"
-            ng-options="option as option.title for option in indexPatternIds track by option.id"
+            ng-options="option as option.title for option in indexPatternIds | orderBy:'title' track by option.id"
             ng-model="metric.index"
             ng-change="setIndexPattern($index)"
             required>

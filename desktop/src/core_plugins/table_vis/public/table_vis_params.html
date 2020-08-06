@@ -59,6 +59,12 @@
         Calculate metrics for every bucket/level
       </label>
     </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="vis.params.hideExportOptions" />
+        Disable Export Option
+      </label>
+    </div>
     <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="vis.indexPattern"></metric-link-info>
     <div class="checkbox">
       <label>

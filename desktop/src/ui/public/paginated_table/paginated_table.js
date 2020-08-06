@@ -28,6 +28,7 @@ uiModules
         colorSchema: '=?',
         interval: '=?',
         printReport: '=?',
+        hideExportOptions: '=?',
         isCollapseTimeHeaders: '=?',
         addSrNumber: '=?',
         srNumberTitle: '=?',

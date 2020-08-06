@@ -25,13 +25,13 @@ uiModules
         colorSchema: '=?',
         interval: '=?',
         printReport: '=?',
+        hideExportOptions: '=?',
         isCollapseTimeHeaders: '=?',
         addSrNumber: '=?',
         srNumberTitle: '=?',
         cellFontSize: '=?',
         cumulativeRowOperation: '=?',
-        cumulativeColumnOperation: '=?',
-        printReport: '=?'
+        cumulativeColumnOperation: '=?'
       },
       controllerAs: 'aggTable',
       compile: function ($el) {

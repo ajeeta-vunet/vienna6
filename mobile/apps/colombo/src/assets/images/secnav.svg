@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="64"
+   height="64"
+   id="svg4319">
+  <defs
+     id="defs4321">
+    <linearGradient
+       x1="430.47107"
+       y1="483.75241"
+       x2="430.42142"
+       y2="453.51053"
+       id="linearGradient4300"
+       xlink:href="#linearGradient4892-4-9-0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-22.485172,-606.1261)" />
+    <linearGradient
+       id="linearGradient4892-4-9-0">
+      <stop
+         id="stop4894-9-8-9"
+         style="stop-color:#858585;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop4896-4-6-7"
+         style="stop-color:#d7d7d7;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       x1="430.47107"
+       y1="483.75241"
+       x2="430.42142"
+       y2="453.51053"
+       id="linearGradient4317"
+       xlink:href="#linearGradient4892-4-9-0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.88666106,0,0,1.6864441,-357.89249,-740.84972)" />
+  </defs>
+  <metadata
+     id="metadata4324">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <rect
+       width="62.905556"
+       height="62.882229"
+       x="0.45631358"
+       y="0.74070227"
+       id="rect6428-6-6"
+       style="fill:url(#linearGradient4317);fill-opacity:1;stroke:#62416f;stroke-width:1.22282636;stroke-opacity:1;display:inline" />
+  </g>
+</svg>

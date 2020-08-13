@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg4053"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="server.svg"
+   inkscape:export-filename="/home/bharat/server.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4055" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="375"
+     inkscape:cy="607.60146"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1311"
+     inkscape:window-height="750"
+     inkscape:window-x="49"
+     inkscape:window-y="18"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4058">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4092"
+       transform="matrix(35.433061,0,0,28.346454,-12435.225,-16930.263)">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         y="597.27582"
+         x="354.19669"
+         height="25.672047"
+         width="12.596852"
+         id="rect5435"
+         style="fill:#333333;fill-opacity:1;stroke:none;display:inline" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         sodipodi:nodetypes="cc"
+         id="path3101-6-1"
+         d="m 362.95594,612.28169 0.0715,0"
+         style="fill:#008080;stroke:none;display:inline"
+         inkscape:connector-curvature="0" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="rect4556-7"
+         d="m 369.19669,608.98967 0,3.75091 c -1.58598,3.28256 -11.17848,2.67484 -11.29535,-0.4355 l 0,-3.31541 c 1.73736,2.5541 8.86745,2.86747 11.29535,0 z"
+         style="fill:#008080;fill-opacity:1;stroke:none;display:inline" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         transform="matrix(0.04391624,0,0,0.05419424,380.17668,585.6188)"
+         d="m -250.30977,407.17502 a 128.31245,49.66008 0 1 1 -256.62491,0 128.31245,49.66008 0 1 1 256.62491,0 z"
+         sodipodi:ry="49.66008"
+         sodipodi:rx="128.31245"
+         sodipodi:cy="407.17502"
+         sodipodi:cx="-378.62222"
+         id="path4554-4"
+         style="fill:#00b6c6;fill-opacity:1;stroke:none;display:inline"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="rect4556-7-0"
+         d="m 369.19669,613.65763 0,3.75091 c -1.58598,3.28257 -11.17848,2.67483 -11.29535,-0.4355 l 0,-3.31541 c 1.73736,2.55409 8.86745,2.86747 11.29535,0 z"
+         style="fill:#008080;fill-opacity:1;stroke:none;display:inline" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="rect4556-7-0-9"
+         d="m 369.19669,618.32558 0,3.75091 c -1.58598,3.28257 -11.17848,2.67485 -11.29535,-0.43549 l 0,-3.31542 c 1.73736,2.55411 8.86745,2.86748 11.29535,0 z"
+         style="fill:#008080;fill-opacity:1;stroke:none;display:inline" />
+      <g
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         transform="matrix(0.13603964,0,0,0.16109806,203.37942,504.20424)"
+         id="g5501"
+         style="display:inline">
+        <rect
+           style="fill:#666666;fill-opacity:1;stroke:none"
+           id="rect3173"
+           width="64.517937"
+           height="12.62391"
+           x="1122.4675"
+           y="586.75427" />
+        <rect
+           style="fill:#666666;fill-opacity:1;stroke:none"
+           id="rect3173-1"
+           width="64.517937"
+           height="11.480632"
+           x="1122.4675"
+           y="603.72876" />
+        <path
+           transform="translate(49.863213,279.08651)"
+           sodipodi:type="arc"
+           style="fill:#666666;fill-opacity:1;stroke:none"
+           id="path5481"
+           sodipodi:cx="1078.4277"
+           sodipodi:cy="345.43683"
+           sodipodi:rx="5.8234372"
+           sodipodi:ry="5.8234372"
+           d="m 1084.2512,345.43683 a 5.8234372,5.8234372 0 1 1 -11.6469,0 5.8234372,5.8234372 0 1 1 11.6469,0 z" />
+      </g>
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="D:\Projects\Vunet\Vunet_page\pg1_v1.9_networkicons\webserver.png"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="rect5949"
+         d="m 355.59307,594.27195 9.91488,0 1.25587,2.70047 -12.55885,0 z"
+         style="fill:#999999;fill-opacity:1;stroke:none;display:inline" />
+    </g>
+  </g>
+</svg>

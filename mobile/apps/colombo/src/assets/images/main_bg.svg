@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="64"
+   height="64"
+   id="svg4169">
+  <defs
+     id="defs4171">
+    <linearGradient
+       x1="443.55426"
+       y1="430.63864"
+       x2="443.55426"
+       y2="460.48996"
+       id="linearGradient4140"
+       xlink:href="#linearGradient5950-9-1-4-2"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.07812501,0,0,1.8332923,605.28752,-843.21478)" />
+    <linearGradient
+       id="linearGradient5950-9-1-4-2">
+      <stop
+         id="stop5960-4-5-2-7"
+         style="stop-color:#1b777f;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop5962-8-2-7-2"
+         style="stop-color:#225c60;stop-opacity:1"
+         offset="0.45833334" />
+      <stop
+         id="stop5954-8-7-7-5"
+         style="stop-color:#273336;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       x1="443.55426"
+       y1="430.63864"
+       x2="443.55426"
+       y2="460.48996"
+       id="linearGradient4167"
+       xlink:href="#linearGradient5950-9-1-4-2"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.06250001,0,0,2.1364868,0.18180468,-904.44901)" />
+  </defs>
+  <metadata
+     id="metadata4174">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <rect
+       width="64"
+       height="64.059898"
+       x="0.18181905"
+       y="0.15187036"
+       id="rect3215-2-6-0"
+       style="fill:url(#linearGradient4167);fill-opacity:1;stroke:none;display:inline" />
+  </g>
+</svg>

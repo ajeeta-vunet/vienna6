@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2481"
+   height="2073"
+   id="svg3056"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="Pin.svg"
+   inkscape:export-filename="/home/bharat/Pin.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <metadata
+     id="metadata3071">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Google maps</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3069" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1311"
+     inkscape:window-height="750"
+     id="namedview3067"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="1240.5"
+     inkscape:cy="1036.5"
+     inkscape:window-x="49"
+     inkscape:window-y="18"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3056" />
+  <title
+     id="title3058">Google maps</title>
+  <g
+     id="g3060"
+     transform="matrix(0.01646317,0,0,0.01636743,1081.8712,922.16677)">
+    <title
+       id="title3062">Layer 1</title>
+    <g
+       id="svg_1">
+      <path
+         id="svg_2"
+         d="M 702.02692,1800.7159 C 663.26105,1610.4149 594.91095,1452.0509 512.12396,1305.276 450.71698,1196.4039 379.58002,1095.913 313.75995,990.33807 291.78796,955.09406 272.82599,917.86102 251.71294,881.284 209.497,808.14703 175.26897,723.349 177.44396,613.35199 179.56896,505.879 210.65196,419.66797 255.47392,349.17996 329.19299,233.245 452.67499,138.19099 618.35797,113.211 c 135.46606,-20.423998 262.4751,14.082 352.54297,66.748 73.60016,43.03799 130.59616,100.52699 173.92006,168.27998 45.22,70.71601 76.3591,154.26001 78.971,263.23203 1.337,55.83002 -7.8049,107.53198 -20.684,150.41797 -13.0339,43.40906 -33.9959,79.695 -52.646,118.45404 -36.406,75.659 -82.0489,144.98198 -127.855,214.34598 -136.43702,206.6059 -264.4961,417.3099 -320.58008,706.0269 z"
+         stroke-miterlimit="10"
+         clip-rule="evenodd"
+         inkscape:connector-curvature="0"
+         style="fill:#007fff;fill-rule:evenodd;stroke:#999999;stroke-width:37;stroke-miterlimit:10" />
+      <circle
+         id="svg_4"
+         r="183.33203"
+         cy="612.13397"
+         cx="700.63293"
+         clip-rule="evenodd"
+         sodipodi:cx="700.63293"
+         sodipodi:cy="612.13397"
+         sodipodi:rx="183.33203"
+         sodipodi:ry="183.33203"
+         style="fill:#000000;fill-rule:evenodd;stroke:#999999"
+         d="m 883.96497,612.13397 c 0,101.25149 -82.08055,183.33203 -183.33204,183.33203 -101.25148,0 -183.33203,-82.08054 -183.33203,-183.33203 0,-101.25148 82.08055,-183.33203 183.33203,-183.33203 101.25149,0 183.33204,82.08055 183.33204,183.33203 z" />
+    </g>
+  </g>
+</svg>

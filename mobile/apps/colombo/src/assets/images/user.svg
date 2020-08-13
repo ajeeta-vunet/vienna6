@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="64"
+   height="64"
+   id="svg5664">
+  <defs
+     id="defs5666" />
+  <metadata
+     id="metadata5669">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <g
+       transform="translate(-266.69034,-686.11232)"
+       id="g6180"
+       style="display:inline">
+      <g
+         transform="matrix(1.7759226,0,0,1.7759226,2334.0846,303.94455)"
+         id="g5404"
+         style="fill:#1a1a1a">
+        <path
+           d="m -1134.097,-61.414246 a 12.413002,12.413002 0 1 1 -24.826,0 12.413002,12.413002 0 1 1 24.826,0 z"
+           transform="matrix(0.70590296,0,0,0.70590296,-337.02648,269.31616)"
+           id="path5395"
+           style="fill:#1a1a1a;fill-opacity:1;stroke:none" />
+        <path
+           d="m -1163.1215,240.3357 c 7.0792,-5.68652 29.6173,-5.68652 33.3318,0 -0.027,6.63887 0,8.88849 0,8.88849 l -33.3318,0 c 0,0 -0.9248,-2.56707 0,-8.88849 z"
+           id="rect5401"
+           style="fill:#1a1a1a;fill-opacity:1;stroke:none" />
+      </g>
+      <g
+         transform="matrix(1.8062411,0,0,1.8062411,2370.824,296.87387)"
+         id="g5404-8"
+         style="fill:#4d4d4d;fill-opacity:1">
+        <path
+           d="m -1134.097,-61.414246 a 12.413002,12.413002 0 1 1 -24.826,0 12.413002,12.413002 0 1 1 24.826,0 z"
+           transform="matrix(0.70590296,0,0,0.70590296,-337.02648,269.31616)"
+           id="path5395-4"
+           style="fill:#4d4d4d;fill-opacity:1;stroke:none" />
+        <path
+           d="m -1163.1215,240.3357 c 7.0792,-5.68652 29.6173,-5.68652 33.3318,0 -0.027,6.63887 0,8.88849 0,8.88849 l -33.3318,0 c 0,0 -0.9248,-2.56707 0,-8.88849 z"
+           id="rect5401-9"
+           style="fill:#4d4d4d;fill-opacity:1;stroke:none" />
+      </g>
+    </g>
+  </g>
+</svg>

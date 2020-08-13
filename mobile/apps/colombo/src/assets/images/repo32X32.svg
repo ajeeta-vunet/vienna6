@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="32"
+   height="32"
+   id="svg4512">
+  <defs
+     id="defs4514" />
+  <metadata
+     id="metadata4517">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <rect
+       width="13.111188"
+       height="10.432558"
+       x="10.77329"
+       y="17.241367"
+       id="rect6010"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;display:inline" />
+    <rect
+       width="4.2294154"
+       height="1.1278441"
+       x="15.214208"
+       y="18.651127"
+       id="rect6012"
+       style="fill:#333333;fill-opacity:1;stroke:none;display:inline" />
+    <rect
+       width="13.111188"
+       height="10.432558"
+       x="10.702794"
+       y="6.2448859"
+       id="rect6010-8"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;display:inline" />
+    <rect
+       width="4.2294154"
+       height="1.1278441"
+       x="15.143712"
+       y="7.6546454"
+       id="rect6012-2"
+       style="fill:#333333;fill-opacity:1;stroke:none;display:inline" />
+    <path
+       d="m 8.057925,4.6840636 2.1961,1.35656 0,10.6368304 -2.14167,-1.25661 z"
+       id="rect6010-8-9"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;display:inline" />
+    <path
+       d="m 8.110965,4.3260736 13.17557,0.0511 2.65554,1.58317 -13.32877,-0.1532 z"
+       id="rect6080"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;display:inline" />
+    <path
+       d="m 8.085345,15.896774 2.1961,1.3219 0,10.36508 -2.14167,-1.22451 z"
+       id="rect6010-8-9-4"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;display:inline" />
+  </g>
+</svg>

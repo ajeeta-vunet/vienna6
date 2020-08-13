@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg3930"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="Broadcast_Network.svg">
+  <defs
+     id="defs3932">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path3785"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path3782"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="275"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1311"
+     inkscape:window-height="750"
+     inkscape:window-x="49"
+     inkscape:window-y="18"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3935">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g2991"
+       transform="matrix(1.0143122,0,0,1.0962281,-0.47487352,-58.211475)">
+      <path
+         transform="matrix(1.2170485,0,0,1.8047389,-45.275048,-474.31872)"
+         d="m 605.71429,499.50504 c 0,52.86154 -120.24353,95.71428 -268.57144,95.71428 -148.32791,0 -268.571439,-42.85274 -268.571439,-95.71428 0,-52.86155 120.243529,-95.71429 268.571439,-95.71429 148.32791,0 268.57144,42.85274 268.57144,95.71429 z"
+         sodipodi:ry="95.714287"
+         sodipodi:rx="268.57144"
+         sodipodi:cy="499.50504"
+         sodipodi:cx="337.14285"
+         id="path4790"
+         style="fill:#f6bedb;fill-opacity:1;stroke:#000000;stroke-width:6.74743748;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:13.49487491, 26.98974982;stroke-dashoffset:67.47434938"
+         sodipodi:type="arc" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4792"
+         y="398.07645"
+         x="367.59372"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:sans;-inkscape-font-specification:sans"
+         xml:space="preserve"><tspan
+           style="font-size:90px;text-align:center;text-anchor:middle;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS"
+           y="398.07645"
+           x="367.59372"
+           id="tspan4794"
+           sodipodi:role="line">Broadcast</tspan><tspan
+           id="tspan2989"
+           style="font-size:90px;text-align:center;text-anchor:middle;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS"
+           y="510.57645"
+           x="367.59372"
+           sodipodi:role="line">Network</tspan></text>
+    </g>
+  </g>
+</svg>

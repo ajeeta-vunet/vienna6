@@ -56,6 +56,9 @@ class snmpAddDataSourceCtrl {
          $scope.snmp_device = $uibModalInstance.row.snmp_device;
        
       
+         $scope.enable_device = $uibModalInstance.row.enable_device;
+       
+      
          $scope.credential = $uibModalInstance.row.credential;
 
          $scope.snmp_timeout = $uibModalInstance.row.snmp_timeout;
@@ -97,7 +100,19 @@ class snmpAddDataSourceCtrl {
        
             
               
+                $scope.enable_device = 'No';
+              
+            
+         
+       
+            
+              
                 $scope.credential = 'DUMMY';
+              
+            
+         
+       
+            
               
                 $scope.snmp_timeout = '1';
             
@@ -165,7 +180,10 @@ class snmpAddDataSourceCtrl {
         $scope.data_obj.snmp_device = $scope.snmp_device;
         
         
+        $scope.data_obj.enable_device = $scope.enable_device;
+        
         $scope.data_obj.credential = $scope.credential;
+        
         
         $scope.data_obj.snmp_timeout = $scope.snmp_timeout;
 
@@ -185,6 +203,7 @@ class snmpAddDataSourceCtrl {
                 $uibModalInstance.row.snmp_target = $scope.snmp_target;
                 $uibModalInstance.row.snmp_vendor = $scope.snmp_vendor;
                 $uibModalInstance.row.snmp_device = $scope.snmp_device;
+                $uibModalInstance.row.enable_device = $scope.enable_device;
                 $uibModalInstance.row.credential = $scope.credential;
                 $uibModalInstance.row.snmp_timeout = $scope.snmp_timeout;
                 $uibModalInstance.row.mib_groups = $scope.mib_groups;
@@ -207,6 +226,7 @@ class snmpAddDataSourceCtrl {
                 $uibModalInstance.row.snmp_target = $scope.snmp_target;
                 $uibModalInstance.row.snmp_vendor = $scope.snmp_vendor;
                 $uibModalInstance.row.snmp_device = $scope.snmp_device;
+                $uibModalInstance.row.enable_device = $scope.enable_device;
                 $uibModalInstance.row.credential = $scope.credential;
                 $uibModalInstance.row.snmp_timeout = $scope.snmp_timeout;
                 $uibModalInstance.row.mib_groups = $scope.mib_groups;

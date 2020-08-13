@@ -1,16 +1,17 @@
-import DataService from   'plugins/kibana/berlin/services/data_service/data.service';
+import DataService from 'plugins/kibana/berlin/services/data_service/data.service';
 import StateService from 'plugins/kibana/berlin/services/state/state.service';
 import { uiModules } from 'ui/modules';
-import { VunetDataTable }  from 'ui_framework/src/vunet_components/vunet_table/vunet_table';
+import { VunetDataTable } from 'ui_framework/src/vunet_components/vunet_table/vunet_table';
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import { VunetSwitch } from 'ui_framework/src/vunet_components/vunet_switch/vunet_switch';
 import { VunetCronTab } from 'ui_framework/src/vunet_components/vunet_cron_tab/vunet_cron_tab';
-
+require('datatables');
+require('angular-datatables');
 
 import DataEnrichmentUtilService from 'plugins/kibana/berlin/data_source/enrichment/data_enrichment.utils.service';
 
-const app = uiModules.get('app/berlin', ['react', 'ngFileSaver', 'ui-notification', 'ui.bootstrap']);
+const app = uiModules.get('app/berlin', ['react', 'ngFileSaver', 'ui-notification', 'ui.bootstrap', 'datatables']);
 app
   .constant('SUPER_TENANT_ID', '1')
   .constant('HTTP_SUCCESS_CODE', 200)

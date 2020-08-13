@@ -9,7 +9,9 @@ const module = uiModules.get('kibana', ['kibana']);
 import snmpDataSourceTemplate from './snmpDataSource.html';
 import snmpAddDataSourceTemplate from './snmpAddDataSource.html';
 
-module.directive('snmpDataSource', function (StateService, $uibModal) {
+module.directive('snmpDataSource', function (StateService, $uibModal, Notifier) {
+  const notify = new Notifier();
+
   const snmpDataSource = {
     restrict: 'E',
     requrie: '^ngModel',
@@ -22,6 +24,7 @@ module.directive('snmpDataSource', function (StateService, $uibModal) {
       scope.$parent.current_data_source_scope = scope;
 
       scope.showSnmpModal = false;
+      scope.selectAll = false;
 
       scope.snmpModalData = {
         title: 'Confirm Delete',
@@ -33,12 +36,16 @@ module.directive('snmpDataSource', function (StateService, $uibModal) {
         scope.data = data.data_source_type_list;
         scope.data_receive_list = data.data_receive_list;
         scope.index = data.data_index;
+        scope.selectedIndex = {};
+        for(var i = 0; i < scope.data.length; i++){
+          scope.selectedIndex[scope.data[i].name] = false;
+        }
       });
 
       // Function to add/edit a row in DataEnrichment group
-      scope.editConfig = (row, dataReceived, dataReceivedStep, configurationStep) => {
+      scope.editConfig = (row, data_received, data_received_step, configuration_step) => {
 
-        const modalInstance = $uibModal.open({
+        var modalInstance = $uibModal.open({
           animation: true,
           template: snmpAddDataSourceTemplate,
           controller: 'snmpAddDataSourceCtrl',
@@ -49,7 +56,7 @@ module.directive('snmpDataSource', function (StateService, $uibModal) {
         // populated with these values.
         if (row) {
           modalInstance.row = row;
-          modalInstance.dataReceived = dataReceived;
+          modalInstance.data_received = data_received;
         }
 
         modalInstance.data = scope.data;
@@ -60,14 +67,14 @@ module.directive('snmpDataSource', function (StateService, $uibModal) {
         modalInstance.second_step = false;
 
 
-        if (dataReceivedStep) {
+        if (data_received_step) {
           modalInstance.first_step = false;
 
           modalInstance.third_step = true;
 
         }
 
-        if (configurationStep) {
+        if (configuration_step) {
           modalInstance.first_step = false;
 
           modalInstance.second_step = true;
@@ -96,7 +103,56 @@ module.directive('snmpDataSource', function (StateService, $uibModal) {
       scope.onSnmpModalClose = () => {
         scope.showSnmpModal = false;
       };
-
+      // will toggle between select all and deselect all
+      scope.toggleAll = (clear) => {
+        if(clear === "clear"){
+          scope.selectAll = false;
+        }else{
+          scope.selectAll = !scope.selectAll;
+        }
+        for (var id in scope.selectedIndex) {
+          if (scope.selectedIndex.hasOwnProperty(id)) {
+            scope.selectedIndex[id] = scope.selectAll;
+          }
+        }
+      };
+      // will return true if any selected item is disabled
+      scope.showEnable = () =>{
+        return scope.getSelected().some(a => a.enable_device === "No");
+      }
+      // will return true if any selected item is enabled
+      scope.showDisable = () =>{
+        return scope.getSelected().some(a => a.enable_device === "Yes");
+      }
+      // This method will return selected sources
+      scope.getSelected = () => {
+        let selectedItems = [];
+        _.forEach(scope.selectedIndex, (value, i) => {
+          if (value) {
+            selectedItems.push(scope.data.find(a => a.name === i));
+          }
+        });
+        return selectedItems;
+      };
+      // Will update the selected source
+      // newStatus is a boolean which tells weather to enable or disable source
+      scope.UpdateSelection = (newStatus) => {
+        scope.getSelected().forEach((snmpSource) => {
+          scope.selectedIndex[snmpSource.name] = false;
+          let updatedValue =  {
+            ...snmpSource,
+            enable_device: newStatus ? "Yes" : "No",
+          };
+          StateService.updateDataSources("snmp", snmpSource.name, updatedValue).then((_) => {
+            let data = scope.data ;
+            let indexToUpdate =data.map(a => a.name).indexOf(snmpSource.name);
+            // assignment cause table crash when Multiple selections are made, so use Object.assign
+            Object.assign(data[indexToUpdate], updatedValue);
+          });
+        });
+        scope.toggleAll("clear");
+        notify.info(`Selected SnmpSources will be ` + (newStatus ? "enabled": "disabled"));
+      };
     }
   };
 

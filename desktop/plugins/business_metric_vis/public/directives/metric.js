@@ -110,7 +110,9 @@ app.directive('vudataMetric', function (StateService) {
             scope.opts.showFields = false;
             scope.metric.field = '';
           }
-
+          if (scope.metric.type !== 'percentiles') {
+            scope.metric.metricArg = '';
+          }
           // selectedFields : Only the selected fields in dict format from the add additional fields
           // additionalFields : Only the selected fields with comma separated values
           // like [system.memory.used,system.memory.total] from the add additional fields

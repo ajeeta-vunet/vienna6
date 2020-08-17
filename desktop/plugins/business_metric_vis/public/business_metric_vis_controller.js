@@ -577,7 +577,15 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       const createPayload = function (metric,  metricListIndex, savedSearchQuery) {
         const index = metric.index;
         const fieldType = metric.fieldType;
-
+        let metricType = metric.type;
+        let metricArg = metric.metricArg;
+        // Median is nothing but 50th percentile.
+        // So if the selected metric type is median then
+        // send 50 as percents always
+        if (metric.type === 'median') {
+          metricType = 'percentiles';
+          metricArg = '50';
+        }
         // Build threshold from the configured interval, min, max, insight fields.
         const finalThreshold = [];
         _.each(metric.threshold, function (row) {
@@ -603,10 +611,11 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           label: metric.label,
           metricGroup: metric.groupName,
           // Add the metric along with the threshold to the payload request.
-          metricType: metric.type || '',
+          metricType: metricType || '',
           field: metric.field || '',
           fieldType: fieldType || '',
-          advancedConfig: metric.advancedConfig || '',
+          metricArg: metricArg,
+          advancedConfig: metric.advancedConsfig || '',
           hideMetric: metric.hideMetric || false,
           scripted: metric.scripted || false,
           filter: metric.filter || '*',

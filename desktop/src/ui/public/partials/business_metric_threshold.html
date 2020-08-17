@@ -211,8 +211,17 @@
           <div class="table-color-range-error">{{valueMaxError}}</div>
         </div>
         <div
+          ng-show="showNum && (comparison === '==' || comparison === '!=')">
+          <label class="vudat-color-label">Value</label>
+          <input
+            type="text"
+            ng-model="value"
+            class="form-control"/>
+          <div class="table-color-range-error">{{valueError}}</div>
+        </div>
+        <div
           class="range-compare"
-          ng-show="showNum && comparison !== 'Range'">
+          ng-show="showNum && comparison !== 'Range' && comparison !== '==' && comparison !== '!='">
           <label class="vudat-color-label">Value</label>
           <input
             type="number"

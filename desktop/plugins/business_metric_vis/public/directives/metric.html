@@ -16,6 +16,9 @@
       <option value="min">Min</option>
       <option value="max">Max</option>
       <option value="cardinality">Unique Count</option>
+      <option value="percentiles">Percentiles</option>
+      <option value="median">Median</option>
+      <option value="std_deviation">Standard Deviation</option>
       <option value="latest">Latest value</option>
       <option
         ng-show="metricLength > 1"
@@ -50,12 +53,44 @@
       </select>
     </div>
   </div>
+  <div ng-if="metric.type === 'percentiles'">
+    <div class="form-group bottom-space">
+      <label>
+        Percents
+        <kbn-tooltip
+        text="Percentiles show the point at which a certain percentage of observed values occur. For example, the 95th percentile is the value which is greater than 95% of the observed values."
+        placement="right"
+        append-to-body="1">
+        <span>
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true">
+          </i>
+        </span>
+      </kbn-tooltip>
+      </label>
+      <input
+        class="form-control"
+        type="text"
+        name="metricArg"
+        ng-model="metric.metricArg"
+        ng-pattern="/^([1-9]|[1-9][0-9])$/"
+        ng-required="metric.type === 'percentiles'"
+        ng-class="{error: vudataMetricForm.metricArg.$error.pattern || vudataMetricForm.metricArg.$error.required}"/>
+        <p
+          class="error-highlight"
+          ng-if="vudataMetricForm.metricArg.$error.pattern"
+        >
+          Percents should be between 1 and 99
+        </p>
+    </div>
+  </div>
   <div ng-if="metric.type === 'expression'">
     <div class="form-group bottom-space">
       <label>
         Expression
         <kbn-tooltip
-        text="The expression used for calculating this metric. This can be a full fledged arithemtic expression using +-*/% operators, numbers and brackets. The expression can refer to metrics in this visualization that are defined beffore this metric. Eg: ((M2/M1)*100.0)"
+        text="The expression used for calculating this metric. This can be a either full fledged arithemtic expression using +-*/% operators, numbers and brackets or string expression using conditional operator if-else. Color selection can also be done in the expression itself. The expression can refer to metrics in this visualization that are defined before this metric. Eg: ((M2/M1)*100.0), 'Good' if M1 < 100 else 'Bad', M1 + M2;;'Red' if M1 > 10 else 'Green'"
         placement="right"
         append-to-body="1">
         <span>
@@ -71,7 +106,6 @@
         type="text"
         name="expression"
         ng-model="metric.field"
-        ng-pattern="/[M0-9\+\-\*\/\%\.\(\)\s]+$/"
         ng-required="metric.type === 'expression'"
         ng-class="{error: vudataMetricForm.expression.$error.pattern || vudataMetricForm.expression.$error.required}"/>
         <p

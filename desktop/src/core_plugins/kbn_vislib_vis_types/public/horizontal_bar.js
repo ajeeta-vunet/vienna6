@@ -17,6 +17,8 @@ export default function PointSeriesVisType(Private) {
     visConfig: {
       defaults: {
         type: 'histogram',
+        // Adding subType to resolve horizontal_bar issue
+        subType: 'horizontal_bar',
         grid: {
           categoryLines: false,
           style: {
@@ -153,7 +155,7 @@ export default function PointSeriesVisType(Private) {
         {
           group: 'metrics',
           name: 'metric',
-          title: 'Y-Axis',
+          title: 'X-Axis',
           min: 1,
           aggFilter: ['!geo_centroid', '!geo_bounds'],
           defaults: [
@@ -171,7 +173,7 @@ export default function PointSeriesVisType(Private) {
         {
           group: 'buckets',
           name: 'segment',
-          title: 'X-Axis',
+          title: 'Y-Axis',
           min: 0,
           max: 1,
           aggFilter: ['!geohash_grid', '!filter']

@@ -4,7 +4,8 @@ import dateMath from '@elastic/datemath';
 export function VislibVisualizationsTimeMarkerProvider() {
 
   class TimeMarker {
-    constructor(times, xScale, height) {
+
+    constructor(times, xScale, height, subType = null) {
       const currentTimeArr = [{
         'time': new Date().getTime(),
         'class': 'time-marker',
@@ -14,6 +15,7 @@ export function VislibVisualizationsTimeMarkerProvider() {
       }];
 
       this.xScale = xScale;
+      this.subType = subType;
       this.height = height;
       this.times = (times.length) ? times.map(function (d) {
         return {
@@ -39,13 +41,15 @@ export function VislibVisualizationsTimeMarkerProvider() {
       // return if not time based chart
       if (!self._isTimeBasedChart(selection)) return;
 
+      // Interchanging X and Y coordinates in case of horizontal bar
       selection.each(function () {
-        d3.select(this).selectAll('time-marker')
+        let d3Marker = d3.select(this).selectAll('time-marker')
           .data(self.times)
-          .enter().append('line')
-          .attr('class', function (d) {
-            return d.class;
-          })
+          .enter().append('line');
+
+        d3Marker = d3Marker.attr('class', function (d) {
+          return d.class;
+        })
           .attr('pointer-events', 'none')
           .attr('stroke', function (d) {
             return d.color;
@@ -55,15 +59,27 @@ export function VislibVisualizationsTimeMarkerProvider() {
           })
           .attr('stroke-opacity', function (d) {
             return d.opacity;
-          })
-          .attr('x1', function (d) {
+          });
+
+        if(self.subType && self.subType === 'horizontal_bar') {
+          d3Marker.attr('y1', function (d) {
             return self.xScale(d.time);
           })
-          .attr('x2', function (d) {
+            .attr('y2', function (d) {
+              return self.xScale(d.time);
+            })
+            .attr('x1', self.height)
+            .attr('x2', self.xScale.range()[0]);
+        } else {
+          d3Marker.attr('x1', function (d) {
             return self.xScale(d.time);
           })
-          .attr('y1', self.height)
-          .attr('y2', self.xScale.range()[0]);
+            .attr('x2', function (d) {
+              return self.xScale(d.time);
+            })
+            .attr('y1', self.height)
+            .attr('y2', self.xScale.range()[0]);
+        }
       });
     }
   }

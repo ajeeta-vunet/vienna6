@@ -1,6 +1,9 @@
 <div class="kuiSideBarSection kuiSideBarSection__main">
   <div class="kuiSideBarSectionTitle">
-    <div class="kuiSideBarSectionTitle__text">
+    <div class="kuiSideBarSectionTitle__text" ng-if="vis.params.subType === 'horizontal_bar'">
+      Y-Axis
+    </div>
+    <div class="kuiSideBarSectionTitle__text" ng-if="vis.params.subType !== 'horizontal_bar'">
       X-Axis
     </div>
   </div>

@@ -23,7 +23,10 @@
     <!-- General -->
     <div class="kuiSideBarSection">
       <div class="kuiSideBarFormRow">
-        <label class="kuiSideBarFormRow__label" for="showCategoryLines">
+        <label class="kuiSideBarFormRow__label" for="showCategoryLines" ng-if="vis.params.subType === 'horizontal_bar'">
+          Y-Axis Lines
+        </label>
+        <label class="kuiSideBarFormRow__label" for="showCategoryLines" ng-if="vis.params.subType !== 'horizontal_bar'">
           X-Axis Lines
         </label>
         <div class="kuiSideBarFormRow__control">
@@ -32,7 +35,10 @@
       </div>
 
       <div class="kuiSideBarFormRow">
-        <label class="kuiSideBarFormRow__label" for="gridAxis">
+        <label class="kuiSideBarFormRow__label" for="gridAxis" ng-if="vis.params.subType === 'horizontal_bar'">
+          X-Axis Lines
+        </label>
+        <label class="kuiSideBarFormRow__label" for="gridAxis" ng-if="vis.params.subType !== 'horizontal_bar'">
           Y-Axis Lines
         </label>
         <div class="kuiSideBarFormRow__control">

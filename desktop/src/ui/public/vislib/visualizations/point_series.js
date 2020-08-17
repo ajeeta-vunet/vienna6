@@ -32,6 +32,7 @@ export function VislibVisualizationsPointSeriesProvider(Private) {
       this.chartEl = chartEl;
       this.chartConfig = this.findChartConfig();
       this.handler.pointSeries = this;
+      this.subType = this.handler.vis.visConfigArgs.subType; // wil be received only from horizontal_bar
     }
 
     findChartConfig() {
@@ -242,7 +243,7 @@ export function VislibVisualizationsPointSeriesProvider(Private) {
             const toTime = new Date(xScale.domain()[1].getTime() + 60000);
             const currentTime = new Date();
             if (toTime > currentTime) {
-              new TimeMarker(times, xScale, height).render(svg);
+              new TimeMarker(times, xScale, height, self.subType).render(svg);
             }
           }
 

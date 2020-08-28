@@ -83,6 +83,24 @@ export class SavedObjectsClient {
    * @returns {promise} - { savedObjects: [ SavedObject({ id, type, version, attributes }) ]}
    */
   find(options = {}) {
+    if(options.search && options.search[options.search.length - 1] === '*') {
+
+      //storing options.search in a new term temporarily, as changes cannot be made to options.search directly
+      let newSearchTerm = options.search;
+
+      //removing the * that is appended at the end of search term
+      newSearchTerm = newSearchTerm.substr(0, newSearchTerm.length - 1);
+
+      //trimming any extra spaces
+      newSearchTerm = newSearchTerm.trim();
+
+      //replacing all spaces between words with +
+      newSearchTerm = newSearchTerm.replace(/ /g, '+');
+
+      //re-adding the * at the end of the term
+      newSearchTerm += '*';
+      options.search = newSearchTerm;
+    }
     const url = this._getUrl([], keysToSnakeCaseShallow(options));
 
     return this._request('GET', url).then(resp => {

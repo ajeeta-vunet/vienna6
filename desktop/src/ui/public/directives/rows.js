@@ -78,7 +78,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             }
           }
           contents = createCellContents(contents, getAppState, Private, timefilter, $scope.printReport, cellElement,
-            addBar, addBarValMultiplier);
+            addBar, addBarValMultiplier, $scope.showProgressBar);
         } else {
           cellElement = createCell();
           $cell = $cellContent = $(cellElement);

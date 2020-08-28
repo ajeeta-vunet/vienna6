@@ -83,6 +83,23 @@
         </kbn-tooltip>
       </label>
     </div>
+    <div class="checkbox" ng-show="vis.params.metricsInPercentage">
+      <label>
+        <input
+          type="checkbox"
+          ng-model="vis.params.showProgressBar"
+          ng-required="colorCodeOnPercentageUsed"
+        />
+        Show percentage bar
+        <kbn-tooltip
+          text="Enable this to show progress bar below the percentage value"
+          placement="right"
+          append-to-body="1"
+        >
+          <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
+        </kbn-tooltip>
+      </label>
+    </div>
     <div class="table-color-range-error" ng-show="colorCodeOnPercentageUsed">
       Color schema is configured to use percentage values. Pl note that
       unchecking this field will make Color schema configuration invalid.

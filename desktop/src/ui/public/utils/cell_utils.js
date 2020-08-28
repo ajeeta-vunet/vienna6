@@ -58,7 +58,8 @@ function applyBackgroundImage(backgroundColor) {
 // This function is used to find the content to be displayed in the cells.
 // For the "show metrics in %", this calculates the percentage value based on
 // the value and sum of the row / column. Otherwise, the value is returned.
-export function createCellContents(contents, getAppState, Private, timefilter, printReport, cellElement, addBar, addBarValMultiplier) {
+export function createCellContents(
+  contents, getAppState, Private, timefilter, printReport, cellElement, addBar, addBarValMultiplier, showProgressBar = false) {
   const val = contents.value;
 
   let valInPercentage = 0;
@@ -76,7 +77,7 @@ export function createCellContents(contents, getAppState, Private, timefilter, p
   }
 
   // Do not display the horizontal bars in table cells for reports.
-  if (addBar && !printReport) {
+  if (addBar && !printReport && showProgressBar) {
     valInPercentage = valInPercentage * addBarValMultiplier;
     // We are creating a horizontal bar to represent the %age value..
     const svg = d3.select(cellElement).append('div').append('svg').attr({ width: 100, height: 10 });

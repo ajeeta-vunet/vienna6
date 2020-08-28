@@ -58,6 +58,7 @@ function TableVisTypeProvider(Private) {
         showCumulativeRow: false,
         cumulativeRowOperation: 'sum',
         metricsInPercentage: false,
+        showProgressBar: false
       },
       template: tableVisTemplate,
     },

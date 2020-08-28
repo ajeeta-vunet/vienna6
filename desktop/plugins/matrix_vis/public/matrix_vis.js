@@ -64,7 +64,8 @@ function MatrixVisTypeProvider(Private) {
         cumulativeColumnOperation: 'sum',
         colorCodeOnPercentage: false,
         selectedColumns: [],
-        selectedColumnsActionType: 'exclude' // default exclude to none
+        selectedColumnsActionType: 'exclude', // default exclude to none
+        showProgressBar: false
       },
       template: matrixVisTemplate,
     },

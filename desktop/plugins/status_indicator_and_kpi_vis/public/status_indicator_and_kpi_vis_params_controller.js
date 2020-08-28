@@ -16,6 +16,14 @@ module.controller('statusIndicatorAndKpiVisParamsController', function ($scope, 
 
   $scope.kpiTemplateList = ['Basic Vertical KPI', 'Basic Horizontal KPI', 'Gauge template'];
 
+  // This has been added for backward compatibility
+  if($scope.vis.params.kpiTemplate === 'Vertical Alignment') {
+    $scope.vis.params.kpiTemplate = 'Basic Vertical KPI';
+  }
+  else if($scope.vis.params.kpiTemplate === 'Horizontal Alignment') {
+    $scope.vis.params.kpiTemplate = 'Basic Horizontal KPI';
+  }
+
   // This has been done for auto referesh when it is enabled
   $scope.search = function () {
     $rootScope.$broadcast('courier:searchRefresh');

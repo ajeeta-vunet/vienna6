@@ -35,7 +35,8 @@ uiModules
         cellFontSize: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?',
-        manageResources: '=?'
+        manageResources: '=?',
+        showProgressBar: '=?'
       },
       controllerAs: 'paginatedTable',
       controller: function ($scope) {

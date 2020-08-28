@@ -74,7 +74,7 @@ class LoginFormInternal extends React.Component<LoginFormProps, LoginFormState> 
     this.state.name &&
     this.state.password &&
     this.state.password.length >= 4 &&
-    (this.state.captchaKey === 'no_captcha' || this.state.captchaKey === '' || (this.state.captchaSolution && this.state.captchaSolution.length >= 4));
+    (this.state.captchaKey === 'no_captcha' || this.state.captchaKey === '' || (this.state.captchaSolution && this.state.captchaSolution.length >= 6));
   
   /**
    * Will be used to refreh captcha

@@ -24,6 +24,12 @@ function UVMapVisProvider(Private) {
     category: CATEGORY.MAPS,
     visConfig: {
       template: visTemplate,
+      defaults: {
+        enableCustomErrorMessage: false,
+        customErrorMessage: 'No data to show',
+        enableCustomErrorTooltip: false,
+        customErrorTooltip: 'There is no matching data for the selected time and filter criteria'
+      }
     },
     editorConfig: {
       optionsTemplate: optionsTemplate

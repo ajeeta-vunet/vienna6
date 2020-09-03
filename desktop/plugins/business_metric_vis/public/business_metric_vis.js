@@ -27,6 +27,10 @@ function BusinessMetricVisProvider(Private) {
       defaults: {
         linkInfoValues: false,
         linkInfo: [],
+        enableCustomErrorMessage: false,
+        customErrorMessage: 'No data to show',
+        enableCustomErrorTooltip: false,
+        customErrorTooltip: 'There is no matching data for the selected time and filter criteria'
       },
       template: businessMetricVisTemplate
     },

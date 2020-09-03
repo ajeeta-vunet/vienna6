@@ -57,7 +57,11 @@ function PrelertSwimlaneProvider(Private) {
         unknownThresholdColor: '#e6e6e6',
         tooltipNumberFormat: '0.0',
         showLegend: true,
-        alphabetSortLaneLabels: 'off'
+        alphabetSortLaneLabels: 'off',
+        enableCustomErrorMessage: false,
+        customErrorMessage: 'No data to show',
+        enableCustomErrorTooltip: false,
+        customErrorTooltip: 'There is no matching data for the selected time and filter criteria'
       },
       template,
       intervalOptions: [

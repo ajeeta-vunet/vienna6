@@ -32,7 +32,7 @@
         <select 
           class="form-control"
           name="referenceLinkDashboard"
-          ng-options="option as option.title for option in dashboardList track by option.id"
+          ng-options="option as option.title for option in dashboardList | orderBy:'title' track by option.id"
           ng-model="referenceLink.dashboard"
           ng-required='referenceLink.type=="dashboard"'>
         </select>

@@ -7,6 +7,8 @@ import { ResizeCheckerProvider } from 'ui/resize_checker';
 import visualizationTemplate from 'ui/visualize/visualization.html';
 import { getUpdateStatus } from 'ui/vis/update_status';
 import 'angular-sanitize';
+import 'ui/directives/no_data_message/no_data_message_options';
+import 'ui/directives/no_data_message/no_data_message';
 
 uiModules
   .get('kibana/directive', ['ngSanitize'])

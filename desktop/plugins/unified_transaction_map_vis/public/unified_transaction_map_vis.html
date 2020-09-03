@@ -1,11 +1,12 @@
 <div ng-controller="utmVisController" class="utm-vis-container">
 
   <div ng-if="!data.nodes.length" class="utm-wrapper">
-    <h2 aria-hidden="true">
-      <i aria-hidden="true" class="fa fa-exclamation-triangle">
-      </i>
-    </h2>
-    <h4>No results found</h4>
+    <no-data-message
+      enable-custom-error-message="vis.params.enableCustomErrorMessage"
+      error-message="vis.params.customErrorMessage"
+      enable-custom-error-tooltip="vis.params.enableCustomErrorTooltip"
+      custom-error-tooltip="vis.params.customErrorTooltip"
+    ></no-data-message>
   </div>
   <div ng-if="data.nodes.length || data.customNodes.length" class="utm-wrapper">
     <vis-map map-data="processedData" node-placement-type="nodePlacementType" 

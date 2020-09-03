@@ -6,10 +6,12 @@
     ng-if="!hasSomeRows && hasSomeRows !== null"
     class="table-vis-error"
   >
-    <h2 aria-hidden="true">
-      <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
-    </h2>
-    <h4>No results found</h4>
+    <no-data-message
+      enable-custom-error-message="vis.params.enableCustomErrorMessage"
+      error-message="vis.params.customErrorMessage"
+      enable-custom-error-tooltip="vis.params.enableCustomErrorTooltip"
+      custom-error-tooltip="vis.params.customErrorTooltip"
+    ></no-data-message>
   </div>
   <div ng-if="noOfDays > 31 && vis.params.collapseTimeHeaders == true"
     class="table-vis-error"

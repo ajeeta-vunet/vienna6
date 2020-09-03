@@ -1,0 +1,29 @@
+<span>
+    <h3 ng-if="!enableCustomErrorMessage">No data to show
+        <kbn-tooltip
+            text="There is no matching data for the selected time and filter criteria"
+            placement="bottom"
+            tooltip-append-to-body="true"
+        >
+            <i class="fa fa-info-circle info-hover"></i>
+        </kbn-tooltip>
+    </h3>
+    <h3 ng-if="enableCustomErrorMessage">{{errorMessage}}
+        <kbn-tooltip
+            ng-if= "!enableCustomErrorTooltip"
+            text="There is no matching data for the selected time and filter criteria"
+            placement="bottom"
+            tooltip-append-to-body="true"
+        >
+            <i class="fa fa-info-circle info-hover"></i>
+        </kbn-tooltip>
+        <kbn-tooltip
+            ng-if= "enableCustomErrorTooltip"
+            text="{{customErrorTooltip}}"
+            placement="bottom"
+            tooltip-append-to-body="true"
+        >
+            <i class="fa fa-info-circle info-hover"></i>
+        </kbn-tooltip>
+    </h3>
+</span>

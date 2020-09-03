@@ -58,7 +58,11 @@ function TableVisTypeProvider(Private) {
         showCumulativeRow: false,
         cumulativeRowOperation: 'sum',
         metricsInPercentage: false,
-        showProgressBar: false
+        showProgressBar: false,
+        enableCustomErrorMessage: false,
+        customErrorMessage: 'No data to show',
+        enableCustomErrorTooltip: false,
+        customErrorTooltip: 'There is no matching data for the selected time and filter criteria'
       },
       template: tableVisTemplate,
     },

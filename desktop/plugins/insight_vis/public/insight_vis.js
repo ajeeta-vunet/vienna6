@@ -25,7 +25,11 @@ function InsightVisProvider(Private) {
     visConfig: {
       defaults: {
         insights: [],
-        bmv: []
+        bmv: [],
+        enableCustomErrorMessage: false,
+        customErrorMessage: 'No data to show',
+        enableCustomErrorTooltip: false,
+        customErrorTooltip: 'There is no matching data for the selected time and filter criteria'
       },
       template: insightVisTemplate,
     },

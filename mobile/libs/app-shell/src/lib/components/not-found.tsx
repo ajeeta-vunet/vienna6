@@ -55,7 +55,18 @@ export const NotfoundInternal = (props: { auth: AuthState; isMobile: boolean }) 
           <h4 className="mb-3">
             {isAuthenticated
               ? "The page you are looking isn't available."
-              : 'Something is not working as expected... Please reach out to your support!'}
+              : <div className="error-page-message">
+                  You have arrived at this page because of one of the following reasons:
+                  <br />
+                  <ol className="error-page-message-list">
+                    <li>You were inactive for too long.</li>
+                    <li>You logged in from another session.</li>
+                    <li>You tried to access an invalid URL.</li>
+                  </ol>
+                  <div className="error-page-message-login-again">
+                  Please login again
+                  </div>
+                </div>}
           </h4>
           {!isAuthenticated ? (
             <Link to={LoginUrl}>

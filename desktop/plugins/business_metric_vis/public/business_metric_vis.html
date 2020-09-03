@@ -31,7 +31,7 @@
                   ng-show="vis.params.metrics[outerIndex].description"
                   text="{{vis.params.metrics[outerIndex].description}}"
                   placement="bottom"
-                  append-to-body="1">
+                  tooltip-append-to-body="1">
                   <i
                     class="fa fa-question-circle"
                     ng-class="{'white': vis.params.metrics[outerIndex].bgColorEnabled }"
@@ -58,7 +58,7 @@
                     ng-show="vis.params.metrics[outerIndex].description"
                     text="{{vis.params.metrics[outerIndex].description}}"
                     placement="bottom"
-                    append-to-body="1">
+                    tooltip-append-to-body="1">
                     <i
                       class="fa fa-question-circle"
                       ng-class="{'white': vis.params.metrics[outerIndex].bgColorEnabled }"
@@ -80,14 +80,12 @@
               ng-show="!metricObj.success"
               ng-style="{'padding': (vis.params.fontSize * noDataContainerConstant) +'pt'}"
               class="no-data-section">
-              <i
-                ng-style="{'font-size': (vis.params.fontSize * noDataIconConstant) +'pt'}"
-                aria-hidden="true"
-                class="fa fa-exclamation-triangle">
-              </i>
-              <div class="error-message">
-                No results found
-              </div>
+              <no-data-message
+                enable-custom-error-message="vis.params.enableCustomErrorMessage"
+                error-message="vis.params.customErrorMessage"
+                enable-custom-error-tooltip="vis.params.enableCustomErrorTooltip"
+                custom-error-tooltip="vis.params.customErrorTooltip"
+              ></no-data-message>
             </div>
             <div
               class="goal-label"
@@ -178,7 +176,7 @@
                   ng-if="vis.params.metrics[outerIndex].description"
                   text="{{vis.params.metrics[outerIndex].description}}"
                   placement="bottom"
-                  append-to-body="1">
+                  tooltip-append-to-body="1">
                   <i
                     ng-style="{'font-size': (vis.params.textFontSize * superScriptConstant) +'pt'}"
                     class="fa fa-question-circle"
@@ -204,7 +202,7 @@
                   ng-if="vis.params.metrics[outerIndex].description"
                   text="{{vis.params.metrics[outerIndex].description}}"
                   placement="bottom"
-                  append-to-body="1">
+                  tooltip-append-to-body="1">
                   <i
                     ng-style="{'font-size': (vis.params.textFontSize * superScriptConstant) +'pt'}"
                     class="fa fa-question-circle"
@@ -225,14 +223,12 @@
               ng-show="!metricObj.success"
               ng-style="{'padding': (vis.params.fontSize * noDataContainerConstant) +'pt'}"
               class="no-data-section">
-              <i
-                ng-style="{'font-size': (vis.params.fontSize * noDataIconConstant) +'pt'}"
-                aria-hidden="true"
-                class="fa fa-exclamation-triangle">
-              </i>
-              <div class="error-message">
-                No results found
-              </div>
+              <no-data-message
+                enable-custom-error-message="vis.params.enableCustomErrorMessage"
+                error-message="vis.params.customErrorMessage"
+                enable-custom-error-tooltip="vis.params.enableCustomErrorTooltip"
+                custom-error-tooltip="vis.params.customErrorTooltip"
+              ></no-data-message>
             </div>
             <div
               ng-show="metricObj.success"
@@ -356,7 +352,7 @@
                 ng-if="metric.description !== undefined && metric.description !== ''"
                 text="{{metric.description}}"
                 placement="bottom"
-                append-to-body="1">
+                tooltip-append-to-body="1">
                 <i
                   class="fa fa-question-circle table-metric-icon"
                   aria-hidden="true">
@@ -370,7 +366,7 @@
                   <kbn-tooltip
                     text="View More"
                     placement="right"
-                    append-to-body="1">
+                    tooltip-append-to-body="1">
                     <i
                       class="fa fa-arrow-circle-o-right table-metric-icon"
                       aria-hidden="true">
@@ -431,7 +427,7 @@
                     ng-if="vis.params.metrics[outerIndex].description"
                     text="{{vis.params.metrics[outerIndex].description}}"
                     placement="right"
-                    append-to-body="1">
+                    tooltip-append-to-body="1">
                     <i
                       class="fa fa-question-circle table-metric-icon"
                       aria-hidden="true">
@@ -445,7 +441,7 @@
                       <kbn-tooltip
                         text="View More"
                         placement="right"
-                        append-to-body="1">
+                        tooltip-append-to-body="1">
                         <i
                           class="fa fa-arrow-circle-o-right table-metric-icon"
                           aria-hidden="true">

@@ -2,11 +2,12 @@
   ng-style="data.length === 1 && {'overflow':'hidden'}">
   <div ng-if="(!data.length || !insightAvailableFlag) && !loadingInsights" class="no-data-container-wrapper">
     <div class="insight-vis-no-data-container">
-      <h2 aria-hidden="true">
-        <i aria-hidden="true" class="fa fa-exclamation-triangle">
-        </i>
-      </h2>
-      <h4>No Insights Found</h4>
+      <no-data-message
+        enable-custom-error-message="vis.params.enableCustomErrorMessage"
+        error-message="vis.params.customErrorMessage"
+        enable-custom-error-tooltip="vis.params.enableCustomErrorTooltip"
+        custom-error-tooltip="vis.params.customErrorTooltip"
+      ></no-data-message>
     </div>
   </div>
 

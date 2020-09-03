@@ -22,7 +22,13 @@ function DropdownVisProvider(Private) {
     description: 'Set filters via a dropdown selector',
     category: CATEGORY.BASIC,
     visConfig: {
-      template: dropdownVisTemplate
+      template: dropdownVisTemplate,
+      defaults: {
+        enableCustomErrorMessage: false,
+        customErrorMessage: 'No data to show',
+        enableCustomErrorTooltip: false,
+        customErrorTooltip: 'There is no matching data for the selected time and filter criteria'
+      }
     },
     editorConfig: {
       optionsTemplate: dropdownVisOptionsTemplate,

@@ -1,0 +1,78 @@
+<ng-form name="customErrorForm">
+  <div class="checkbox">
+      <label class="zero-padding-left">
+        <input 
+          type="checkbox"
+          ng-model="vis.params.enableCustomErrorMessage"
+        >
+        Enable custom message for no data scenarios
+        <kbn-tooltip
+          text="Enable for custom message when there is no data"
+          placement="bottom"
+          tooltip-append-to-body="1"
+        >
+          <span class="icon-margin-left">
+            <i class="fa fa-question-circle table-vis-help-hover"></i>
+          </span>
+        </kbn-tooltip>
+      </label>
+  </div>
+  <div class="form-group" ng-if="vis.params.enableCustomErrorMessage">
+    <label for="customErrorMessage">
+      Enter error message
+    </label>
+    <input
+      type="text"
+      name="customErrorMessage"
+      ng-model="vis.params.customErrorMessage"
+      class="form-control"
+      id="customErrorMessage"
+      autocomplete="off"
+      ng-maxlength="40"
+      maxlength="41"
+      required
+    />
+    <p
+      class="error-highlight"
+      ng-show="customErrorForm.customErrorMessage.$error.maxlength">
+      Error message must be less than 40 characters.
+    </p>
+  </div>
+  <div class="checkbox" ng-if="vis.params.enableCustomErrorMessage">
+    <label class="zero-padding-left">
+      <input 
+        type="checkbox"
+        ng-model="vis.params.enableCustomErrorTooltip"
+      >
+      Enable custom tooltip message
+      <kbn-tooltip
+        text="Enable for custom tooltip."
+        placement="bottom"
+        tooltip-append-to-body="1"
+      >
+        <span class="icon-margin-left">
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </span>
+      </kbn-tooltip>
+    </label>
+  </div>
+  <div class="form-group" ng-if="vis.params.enableCustomErrorTooltip && vis.params.enableCustomErrorMessage">
+    <label for="customErrorTooltip">Enter Tooltip Message</label>
+    <input
+      type="text"
+      name="customErrorTooltip"
+      ng-model="vis.params.customErrorTooltip"
+      class="form-control"
+      id="customErrorTooltip"
+      autocomplete="off"
+      ng-maxlength="80"
+      maxlength="81"
+      required
+    />
+    <p
+      class="error-highlight"
+      ng-show="customErrorForm.customErrorTooltip.$error.maxlength">
+      Tooltip message must be less than 80 characters.
+    </p>
+  </div>
+</ng-form>

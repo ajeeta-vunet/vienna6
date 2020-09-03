@@ -8,6 +8,7 @@ import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
 import { addSearchStringForUserRole } from 'ui/utils/add_search_string_for_user_role.js';
 import { viewDashboardOrEventForThisMetric } from 'ui/utils/view_dashboard_or_event_for_this_metric.js';
 import { getImages } from 'ui/utils/vunet_image_utils.js';
+
 const module = uiModules.get('kibana/status_indicator_and_kpi_vis', ['kibana']);
 module.controller('statusIndicatorAndKpiVisController', function ($scope, Private,
   $http, getAppState, timefilter, kbnUrl, StateService) {

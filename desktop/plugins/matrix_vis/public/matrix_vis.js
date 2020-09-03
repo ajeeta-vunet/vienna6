@@ -65,7 +65,11 @@ function MatrixVisTypeProvider(Private) {
         colorCodeOnPercentage: false,
         selectedColumns: [],
         selectedColumnsActionType: 'exclude', // default exclude to none
-        showProgressBar: false
+        showProgressBar: false,
+        enableCustomErrorMessage: false,
+        customErrorMessage: 'No data to show',
+        enableCustomErrorTooltip: false,
+        customErrorTooltip: 'There is no matching data for the selected time and filter criteria'
       },
       template: matrixVisTemplate,
     },

@@ -1,7 +1,11 @@
 <div ng-controller="KbnTableVisController" class="table-vis">
   <div ng-if="!hasSomeRows && hasSomeRows !== null" class="table-vis-error">
-    <h2 aria-hidden="true"><i aria-hidden="true" class="fa fa-warning"></i></h2>
-    <h4>No results found</h4>
+    <no-data-message
+      enable-custom-error-message="vis.params.enableCustomErrorMessage"
+      error-message="vis.params.customErrorMessage"
+      enable-custom-error-tooltip="vis.params.enableCustomErrorTooltip"
+      custom-error-tooltip="vis.params.customErrorTooltip"
+    ></no-data-message>
   </div>
 
   <div ng-if="tableGroups" class="table-vis-container">

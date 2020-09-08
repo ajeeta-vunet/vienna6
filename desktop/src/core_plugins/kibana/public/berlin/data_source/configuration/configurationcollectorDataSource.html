@@ -14,6 +14,8 @@
     	
     	
     	
+    	
+    	
         <table datatable="ng" class="table table-striped table-hover table-bordered table-width table-lightBorder">
             <thead>
     	
@@ -26,6 +28,11 @@
             
 	              
             	     <th>Target</th>
+                
+               
+            
+	              
+            	     <th>Interval</th>
                   
                
             
@@ -39,7 +46,9 @@
                   
                
             
-	              <th>Credential</th>
+                  <th>Credential</th>
+                  
+                  <th>Collector IP</th>
                      
                   
                
@@ -61,6 +70,10 @@
                          <td>{{row.configuration_collector_target}} </td>
                      
                    
+    
+                         <td>{{row.interval}} </td>
+                     
+                   
               
 	                 
                          <td>{{row.configuration_collector_vendor}} </td>
@@ -75,7 +88,7 @@
 	                 <td>{{row.credential}} </td>
                         
                      
-                   
+                     <td>{{row.standalone_shipper}} </td>
               
                 <td>
                     <a href='' ng-if="data_receive_list[$index] == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
@@ -108,6 +121,7 @@
         </table>
     </div>
   </div>
+
   <vunet-modal show-modal="showConfigurationCollectorModal" on-close="onConfigurationCollectorModalClose" data="configurationCollectorModalData" on-submit="onConfigurationCollectorModalSubmit">
   </vunet-modal>
 </div>

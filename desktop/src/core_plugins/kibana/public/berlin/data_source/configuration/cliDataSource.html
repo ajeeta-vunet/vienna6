@@ -14,6 +14,7 @@
     	
     	
     	
+    	
         <table datatable="ng" class="table table-striped table-hover table-bordered table-width table-lightBorder">
             <thead>
     	
@@ -28,7 +29,7 @@
             	     <th>Target</th>
                   
                
-            
+
 	              
             	     <th>Vendor</th>
                   
@@ -39,7 +40,9 @@
                   
                
             
-	              <th>Credential</th>
+                  <th>Credential</th>
+                  
+                  <th>Collector IP</th>
                      
                   
                
@@ -60,8 +63,9 @@
 	                 
                          <td>{{row.cli_target}} </td>
                      
-                   
-              
+                          
+	                 
+                        
 	                 
                          <td>{{row.cli_vendor}} </td>
                      
@@ -72,10 +76,12 @@
                      
                    
               
-	                 <td>{{row.credential}} </td>
-                        
+                     <td>{{row.credential}} </td>
                      
-                   
+
+
+                     <td>{{row.standalone_shipper}} </td>                   
+                                       
               
                 <td>
                     <a href='' ng-if="data_receive_list[$index] == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">

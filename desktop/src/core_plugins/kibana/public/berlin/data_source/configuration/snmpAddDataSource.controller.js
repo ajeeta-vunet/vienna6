@@ -19,6 +19,7 @@ class snmpAddDataSourceCtrl {
     
     
     
+    
     $scope.credential_list = [];
              StateService.getSnmpCredentialNames().then(function(credential_list) {
                  $scope.credential_list = credential_list;
@@ -28,6 +29,8 @@ class snmpAddDataSourceCtrl {
              });
           
        
+    
+    
     
     
 
@@ -60,8 +63,12 @@ class snmpAddDataSourceCtrl {
        
       
          $scope.credential = $uibModalInstance.row.credential;
-
+       
+      
          $scope.snmp_timeout = $uibModalInstance.row.snmp_timeout;
+       
+      
+         $scope.standalone_shipper = $uibModalInstance.row.standalone_shipper;
        
       $scope.mib_groups = angular.copy($uibModalInstance.row.mib_groups);
        
@@ -115,6 +122,14 @@ class snmpAddDataSourceCtrl {
             
               
                 $scope.snmp_timeout = '1';
+              
+            
+         
+       
+            
+              
+                $scope.standalone_shipper = '127.0.0.1';
+              
             
          
        
@@ -135,6 +150,9 @@ class snmpAddDataSourceCtrl {
     }
  
     
+   
+   
+   
    
    
    
@@ -182,11 +200,16 @@ class snmpAddDataSourceCtrl {
         
         $scope.data_obj.enable_device = $scope.enable_device;
         
+        
         $scope.data_obj.credential = $scope.credential;
         
         
         $scope.data_obj.snmp_timeout = $scope.snmp_timeout;
-
+        
+        
+        $scope.data_obj.standalone_shipper = $scope.standalone_shipper;
+        
+        
            $scope.data_obj.mib_groups = $scope.mib_groups = $scope.mib_groups.concat($scope.new_mib_groups);
               $scope.new_mib_groups = [];
            
@@ -206,6 +229,7 @@ class snmpAddDataSourceCtrl {
                 $uibModalInstance.row.enable_device = $scope.enable_device;
                 $uibModalInstance.row.credential = $scope.credential;
                 $uibModalInstance.row.snmp_timeout = $scope.snmp_timeout;
+                $uibModalInstance.row.standalone_shipper = $scope.standalone_shipper;
                 $uibModalInstance.row.mib_groups = $scope.mib_groups;
                 
                 $uibModalInstance.data_receive_list.splice($uibModalInstance.data.indexOf($uibModalInstance.row), 1);
@@ -229,6 +253,7 @@ class snmpAddDataSourceCtrl {
                 $uibModalInstance.row.enable_device = $scope.enable_device;
                 $uibModalInstance.row.credential = $scope.credential;
                 $uibModalInstance.row.snmp_timeout = $scope.snmp_timeout;
+                $uibModalInstance.row.standalone_shipper = $scope.standalone_shipper;
                 $uibModalInstance.row.mib_groups = $scope.mib_groups;
                 
                 $uibModalInstance.data.push($scope.data_obj);

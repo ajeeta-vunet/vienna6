@@ -68,7 +68,7 @@
                    
                       <th>Timeout</th>
                    
-                
+                   <th> Collector IP</th>                
              
                    <th>MIB-Groups (
                          
@@ -126,7 +126,7 @@
                       
                           <td>{{row.snmp_timeout}} </td>
                       
-                    
+                          <td>{{row.standalone_shipper}}</td>
                
                       <td>
                         <div ng-repeat="int_row in row.mib_groups track by $index">

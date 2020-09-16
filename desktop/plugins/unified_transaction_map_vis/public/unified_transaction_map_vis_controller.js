@@ -991,6 +991,10 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
     //     ],
     //   }
     // ]
+
+    // THis flag has been used to show loading as api is being called
+    $scope.isLoading = true;
+
     const httpResult = $http.post(urlBase + '/utMap/', body)
       .then(resp => resp.data)
       .catch(resp => {
@@ -1125,6 +1129,7 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
       };
 
       $scope.data = resp;
+      $scope.isLoading = false;
 
       // deepClone resp
       const processedData = JSON.parse(JSON.stringify(resp));

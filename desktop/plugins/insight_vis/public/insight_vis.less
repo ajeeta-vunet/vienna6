@@ -61,52 +61,6 @@
         margin: auto;
     }
   }
-
-  // This is the CSS defined for loading component for the insights
-  .insights-loading-wrapper{
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    .vunet-bars-loader {
-      display: inline-block;
-      position: relative;
-      width: 80px;
-      height: 80px;
-    }
-     .vunet-bars-loader div {
-      display: inline-block;
-      position: absolute;
-      left: 8px;
-      width: 16px;
-      background: @accent_color;
-      animation: vunet-bars-loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-    }
-     .vunet-bars-loader div:nth-child(1) {
-      left: 8px;
-      animation-delay: -0.24s;
-    }
-     .vunet-bars-loader div:nth-child(2) {
-      left: 32px;
-      animation-delay: -0.12s;
-    }
-     .vunet-bars-loader div:nth-child(3) {
-      left: 56px;
-      animation-delay: 0;
-    }
-    @keyframes vunet-bars-loader {
-      0% {
-        top: 8px;
-        height: 64px;
-      }
-      50%, 100% {
-        top: 24px;
-        height: 32px;
-      }
-    }
-  }
-   
-  
 }
 
 // Remove wordwrap from table body

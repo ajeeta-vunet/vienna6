@@ -22,7 +22,12 @@
     aria-hidden="{{!vis.type.isAccessible}}"
     ng-style="loadingStyle"
     ng-class="{ loading: vis.type.requiresSearch && searchSource.activeFetchCount > 0 }"
-    class="visualize-chart"></div>
+    class="visualize-chart">
+    <!-- The !addLegend condition was added below to take care of viz. that use the legend
+    Without the flag, the loader shifts everytime the legend loads and is displayed -->
+    <loader-animation ng-if="!addLegend && !(vis.type.name === 'calendar' ? vis : false)">
+    </loader-animation>
+  </div>
   <visualize-legend ng-if="addLegend"></visualize-legend>
 </div>
 <visualize-spy ng-if="showSpyPanel"></visualize-spy>

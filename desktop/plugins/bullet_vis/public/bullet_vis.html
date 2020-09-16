@@ -2,6 +2,7 @@
   ng-controller="bulletVisController"
   class="bullet-vis-container-wrapper"
   >
+  <loader-animation  ng-if="!respDict"></loader-animation>
   <!-- Displays if data is not found-->
   <div
     ng-if="reponseLength <= 0"

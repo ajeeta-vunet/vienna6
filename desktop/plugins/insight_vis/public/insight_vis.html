@@ -11,13 +11,7 @@
     </div>
   </div>
 
-  <div class="insights-loading-wrapper" ng-if="loadingInsights && !data.length">
-    <div class="vunet-bars-loader">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
+  <loader-animation ng-if="loadingInsights && !data.length"></loader-animation>
   
   <div ng-if="data.length" class="insight-vis-container">
     <div ng-repeat="insight in data"

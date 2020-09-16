@@ -132,7 +132,7 @@
           <kbn-tooltip
             text="Monitor separately based on these parameters. For example in case of Bandwidth utilization, you would want to monitor separately for each interface of each router. In such a case, you would select data source as 'vunet-1-1-network-health-*' and first value in this field as 'host' and the next field as 'name'"
             placement="right"
-            append-to-body="1"
+            tooltip-append-to-body="1"
           >
             <i class="fa fa-question-circle"></i>
           </kbn-tooltip>
@@ -188,7 +188,6 @@
             Holt: Model that  can be used when there is an underlying trend in the data. For example, when the data has a linear trend, this model will be able to track it.
             Holt_Winters: Model that can track trend as well as seasonality, if present in the data. This model can be used when there is known seasonality present in the data."
             placement="right"
-            append-to-body="1"
           >
             <i class="fa fa-question-circle"></i>
           </kbn-tooltip>
@@ -211,7 +210,7 @@
             <kbn-tooltip
               text="To specify this seasonality, peridocity should be specified.For eg:, if the data has cyclic trends every 7 days, set periodicity as 7."
               placement="right"
-              append-to-body="1"
+              tooltip-append-to-body="1"
             >
               <i class="fa fa-question-circle"></i>
             </kbn-tooltip>
@@ -300,7 +299,6 @@
                   <kbn-tooltip
                     text="This specifies interval to divide the entire time_duration. If the user has specified interval as 1 day and total time_duration is say 1 week, then there will be 7 buckets formation, 1 for each day."
                     placement="right"
-                    append-to-body="1"
                   >
                     <i class="fa fa-question-circle"></i>
                   </kbn-tooltip>
@@ -346,7 +344,7 @@
                   <kbn-tooltip
                     text="This configuration is used as trick in order to compute moving standard deviations for functions other than average(i.e min, max, ount, sum). Consider the user has chosen the time_duration as 1 month. Let's divide 1 month into 30 buckets of 1 day each, so the interval1 is 1 day. Now in order to compute the moving average and moving standard deviation say for a window of length 5 days, we need to have average and standard deviation for each day."
                     placement="right"
-                    append-to-body="1">
+                  >
                     <i class="fa fa-question-circle"
                   ></i>
                   </kbn-tooltip>
@@ -392,7 +390,6 @@
                   <kbn-tooltip
                     text="This configuration sets the duration for which the data will be considered for creating time series model.This is basically the historical data taken into account. It can take value like: '5d' for 5 days, '1M' for 1 Month and so on. This data will be from current time back until the user specified time period"
                     placement="right"
-                    append-to-body="1"
                   >
                     <i class="fa fa-question-circle"></i>
                   </kbn-tooltip>

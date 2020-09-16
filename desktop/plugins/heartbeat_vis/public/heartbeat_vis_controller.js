@@ -38,6 +38,8 @@ module.controller('HeartbeatVisController', function ($scope, Private, Notifier,
     //Get the search string assigned to the logged-in user's role.
     esFilter = addSearchStringForUserRole(esFilter);
 
+    // THis flag has been used to show loading as api is being called
+    $scope.isLoading = true;
     const httpResult = $http.post('../api/heartbeat_vis/run', {
       indexVal: indexVal,
       filterVal: filterVal,
@@ -56,6 +58,7 @@ module.controller('HeartbeatVisController', function ($scope, Private, Notifier,
     httpResult
       .then(function (resp) {
         $scope.data = resp.data;
+        $scope.isLoading = false;
       })
       .catch(function (resp) {
         $scope.data = [];

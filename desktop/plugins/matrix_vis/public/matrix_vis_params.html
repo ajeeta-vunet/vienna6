@@ -31,7 +31,7 @@
           <kbn-tooltip 
             text="Enable this to show percentage along with the values in table. Works only for 'Count', 'Sum' or 'Unique Count' metric." 
             placement="right" 
-            append-to-body="1"
+            tooltip-append-to-body="1"
           >
             <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
           </kbn-tooltip>
@@ -48,7 +48,7 @@
         <kbn-tooltip
           text="Enable this to show progress bar below the percentage value"
           placement="right"
-          append-to-body="1"
+          tooltip-append-to-body="1"
         >
           <i class="fa fa-question-circle vis-metrics-in-percentage"></i>
         </kbn-tooltip>
@@ -68,7 +68,7 @@
         <kbn-tooltip 
           text="Enable this to show an additional column of serial number for each row" 
           placement="right" 
-          append-to-body="1"
+          tooltip-append-to-body="1"
         >
           <i class="fa fa-question-circle table-vis-help-hover"></i>
         </kbn-tooltip>
@@ -77,21 +77,21 @@
     <div ng-show="vis.params.addSrNumber" class="row">
       <div class="col-xs-3">
         Base
-          <kbn-tooltip text="Starting number to be used when showing serial numbers" placement="right" append-to-body="1">
+          <kbn-tooltip text="Starting number to be used when showing serial numbers" placement="right" tooltip-append-to-body="1">
           <i class="fa fa-question-circle table-vis-help-hover"></i>
           </kbn-tooltip>
         <input type="number" ng-model="vis.params.srNumberBase" class="form-control">
       </div>
       <div class="col-xs-3">
         Prefix
-        <kbn-tooltip text="Prefix to be attached to serial numbers" placement="right" append-to-body="1">
+        <kbn-tooltip text="Prefix to be attached to serial numbers" placement="right" tooltip-append-to-body="1">
           <i class="fa fa-question-circle table-vis-help-hover"></i>
         </kbn-tooltip>
         <input type="text" ng-model="vis.params.srNumberPrefix" class="form-control">
       </div>
       <div class="col-xs-6">
         Column Title
-        <kbn-tooltip text="Title for serial number column" placement="right" append-to-body="1">
+        <kbn-tooltip text="Title for serial number column" placement="right" tooltip-append-to-body="1">
           <i class="fa fa-question-circle table-vis-help-hover"></i>
         </kbn-tooltip>
         <input type="text" ng-model="vis.params.srNumberTitle" class="form-control">
@@ -108,7 +108,7 @@
         <kbn-tooltip 
           text="Enable this to show an additional column with cumulative results" 
           placement="right" 
-          append-to-body="1"
+          tooltip-append-to-body="1"
         >
           <i class="fa fa-question-circle table-vis-help-hover"></i>
         </kbn-tooltip>
@@ -137,7 +137,7 @@
         <kbn-tooltip 
           text="Controls the number of columns to be displayed in the matrix table. This is applicable only when Date Histogram is selected in aggregation. Enabling this will have higher priority over the 'interval' field under Data -> Aggregations -> Date Histogram."
           placement="right" 
-          append-to-body="1"
+          tooltip-append-to-body="1"
         >
           <i class="fa fa-question-circle"></i>
         </kbn-tooltip>
@@ -163,7 +163,7 @@
         <kbn-tooltip 
           text="Visualize more data by collapsing the time headers to show data daywise." 
           placement="right" 
-          append-to-body="1"
+          tooltip-append-to-body="1"
         >
           <i class="fa fa-question-circle"></i>
         </kbn-tooltip>

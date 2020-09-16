@@ -155,7 +155,7 @@
     </div>
 
   </div>
-  <div ng-if="!responseData" class="no-data-container-wrapper">
+  <div ng-if="!(responseData || statusData)" class="no-data-container-wrapper">
     <div class="kpi-vis-no-data-container">
       <no-data-message
       ></no-data-message>

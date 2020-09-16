@@ -822,6 +822,9 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           payload.tabularFormat = $scope.vis.params.tabularFormat;
         }
 
+        // THis flag has been used to show loading as api is being called
+        $scope.isLoading = true;
+
         // POST call to the backend to get necessary information and
         // prepare the business metric vis.
         const httpResult = $http.post(urlBase + '/metric/', payload)
@@ -831,6 +834,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         // process the result
         httpResult.then(function (resp) {
           $scope.metricDatas = resp;
+          $scope.isLoading = false;
           $scope.darkShade = '';
           let metricRowCount = 0;
           // The tabularformat for the old BMVs would be undefined. So show old BMVs in horizontal forat by default

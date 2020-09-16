@@ -9,6 +9,7 @@ import { getUpdateStatus } from 'ui/vis/update_status';
 import 'angular-sanitize';
 import 'ui/directives/no_data_message/no_data_message_options';
 import 'ui/directives/no_data_message/no_data_message';
+import 'ui/directives/loader_animation/loader_animation';
 
 uiModules
   .get('kibana/directive', ['ngSanitize'])

@@ -1,3 +1,4 @@
+@import '~ui/styles/vunet_variable_theme.less';
 @import (reference) "~ui/styles/variables";
 
 visualization {
@@ -50,7 +51,11 @@ visualization {
     &.spy-only {
       display: none;
     }
-
+    .visualize-chart {
+      loader-animation {
+        width:100%;
+      }
+    }
   }
 
   .loading {

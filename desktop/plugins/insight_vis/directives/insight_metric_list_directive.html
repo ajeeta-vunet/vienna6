@@ -17,13 +17,13 @@
             </div>
           </td>
           <td>
-            <kbn-tooltip text="Edit this metric" placement="bottom" append-to-body="1">
+            <kbn-tooltip text="Edit this metric" placement="bottom" tooltip-append-to-body="1">
               <a href="" ng-click="editMetric($index)" class="" aria-label="Edit">
                 <i aria-hidden="true" class="fa fa-pencil">
                 </i>
               </a>
             </kbn-tooltip>
-            <kbn-tooltip text="Delete this metric" placement="bottom" append-to-body="1">
+            <kbn-tooltip text="Delete this metric" placement="bottom" tooltip-append-to-body="1">
               <a href="" ng-click="deleteMetric($index)" class="" aria-label="Delete">
                 <i aria-hidden="true" class="fa fa-trash-o">
                 </i>
@@ -45,7 +45,7 @@
     <div ng-if="addMetricFlag == true || editIndex >= 0" class="metric-list-form bottom-space">
       <div class="row metric-element">
         <label>Select Business Metric</label>
-        <kbn-tooltip text="Select Business Metric Visualization to add metric" placement="right" append-to-body="1">
+        <kbn-tooltip text="Select Business Metric Visualization to add metric" placement="right" tooltip-append-to-body="1">
           <i class="fa fa-question-circle"></i>
         </kbn-tooltip>
         <select ng-model="opts.name" class="form-control"

@@ -1,6 +1,6 @@
 <div ng-controller="HeartbeatVisController" class="heartbeat-vis">
   <div 
-    ng-if="(!data.nodes.length && !data.edges.length)" 
+    ng-if="(!data.nodes.length && !data.edges.length) && !isLoading" 
     class="table-vis-error">
     <no-data-message
       enable-custom-error-message="vis.params.enableCustomErrorMessage"

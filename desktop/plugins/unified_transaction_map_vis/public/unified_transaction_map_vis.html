@@ -1,5 +1,7 @@
 <div ng-controller="utmVisController" class="utm-vis-container">
 
+  <loader-animation ng-if="isLoading && !data"></loader-animation>
+
   <div ng-if="!data.nodes.length" class="utm-wrapper">
     <no-data-message
       enable-custom-error-message="vis.params.enableCustomErrorMessage"

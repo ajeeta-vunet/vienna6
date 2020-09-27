@@ -1,4 +1,5 @@
 @import (reference) "~ui/styles/mixins.less";
+@import '~ui/styles/vunet_variable_theme.less';
 
 .inputControlVis {
   width: 100%;
@@ -33,6 +34,40 @@
 
   .actions {
     margin-top: 5px;
+  }
+
+  // This has been done to match the design according to latest UI/UX upliftment
+  .kuiVerticalRhythm{
+    .kuiLabel{
+      font-size: 12px!important;
+      color: @control_vis_label!important;
+    }
+    .kuiVerticalRhythmSmall{
+      margin-top: 2px!important;
+      .Select{
+        .Select-control{
+          .Select-clear-zone{
+            .Select-clear{
+              font-size: 22px;
+            }
+          }
+          .Select-arrow-zone{
+            .Select-arrow{
+              border-width: 7px 7px 2.5px;
+            }
+          }
+        }
+      }
+      .is-open{
+        .Select-control{
+          .Select-arrow-zone{
+            .Select-arrow{
+              border-width: 0px 7px 7px!important;
+            }
+          }
+        }
+      }
+    }
   }
 }
 

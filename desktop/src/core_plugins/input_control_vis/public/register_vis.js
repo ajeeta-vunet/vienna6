@@ -25,7 +25,8 @@ function InputControlVisProvider(Private) {
     visConfig: {
       defaults: {
         controls: [],
-        updateFiltersOnChange: false
+        // By default, 'Update Kibana filters on each change' should be checked.
+        updateFiltersOnChange: true
       },
     },
     editor: 'default',

@@ -88,6 +88,21 @@ export class DashboardPanel extends React.Component {
       dashboardPanelClass = 'dashboard-panel-without-header dashboard-panel';
       panelContentClass = 'panel-content-without-header panel-content';
     }
+
+    // Control Visualization panels also should have no dashboard panel header
+    // So we give the same panel class which is used for BMV for the same reason
+    // and define 2 more classes:
+    // 1. panel-content-for-input-control-to-overflow-options
+    // 2. dashboard-panel-for-input-control-vis
+    // for making the options overflow from the dashboard panel.
+
+    else if (visState && visState.type === 'input_control_vis') {
+      classes = classNames('panel panel-default', this.props.className, {
+        'panel--edit-mode': !viewOnlyMode
+      });
+      dashboardPanelClass = 'dashboard-panel-without-header dashboard-panel dashboard-panel-for-input-control-vis';
+      panelContentClass = 'panel-content-without-header panel-content-for-input-control-to-overflow-options panel-content';
+    }
     else {
       classes = classNames('panel panel-default', this.props.className, {
         'panel--edit-mode': !viewOnlyMode

@@ -40,9 +40,10 @@ const mapStateToProps = ({ dashboard }, { panelId }) => {
     isViewOnlyMode: getFullScreenMode(dashboard) || getViewMode(dashboard) === DashboardViewMode.VIEW,
     visType: visState && visState.type,
     objectType: getObjectType(dashboard),
-    //don't show header if vis type is business metric
+    //don't show header if vis type is business metric or control vis
     hidePanelTitles: getHidePanelTitles(dashboard) || (visState && visState.type &&
       (visState && visState.type === 'business_metric') && hideBmvTitle(visState)) ||
+      (visState && visState.type === 'input_control_vis') ||
       (visState && visState.type === 'html') ||
       (visState && visState.type === 'metric') ||
       (visState && visState.type && (visState.type === 'markdown') && hideMarkdownTitle(visState)),

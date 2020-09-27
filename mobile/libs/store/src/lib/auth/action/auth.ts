@@ -71,6 +71,7 @@ export function LoginUser({ name, password, captchaKey, captchaSolution }: Login
       .subscribe(
         (_) => {
           if (!isMobile()) {
+            window.localStorage.clear();
             UserSettingStore.UserName = name;
             window.location.href = window.location.origin + '/app/vienna';
           } else {

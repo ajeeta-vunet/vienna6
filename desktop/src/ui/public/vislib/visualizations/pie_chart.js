@@ -43,6 +43,11 @@ export function VislibVisualizationsPieChartProvider(Private) {
      */
     _validatePieData(charts) {
       const isAllZeros = charts.every(function (chart) {
+        //The charts array is used to contain all the details about the charts. On first render the children array has an object with two properties,
+        // one of the property is 'size' which results in creating an empty chart. To avoid this we check if the value of 'size' is 0.
+        if(chart.slices.children.length > 0){
+          return chart.slices.children[0].size === 0;
+        }
         return chart.slices.children.length === 0;
       });
 

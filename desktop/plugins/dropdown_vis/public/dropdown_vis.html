@@ -6,7 +6,7 @@
       </ui-select-match>
       <ui-select-choices repeat="item in dropdownValues | filter: $select.search">
         <div>
-          {{item.key|highlight: $select.search}}
+          {{item.key}}
         </div>
       </ui-select-choices>
     </ui-select> 

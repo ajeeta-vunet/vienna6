@@ -24,6 +24,7 @@ function DropdownVisProvider(Private) {
     visConfig: {
       template: dropdownVisTemplate,
       defaults: {
+        allowBlank: true,
         enableCustomErrorMessage: false,
         customErrorMessage: 'No data to show',
         enableCustomErrorTooltip: false,

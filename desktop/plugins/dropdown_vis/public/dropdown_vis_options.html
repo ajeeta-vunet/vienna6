@@ -3,9 +3,25 @@
         <label for="title">Title</label>
         <input type="text" ng-model="vis.params.title" class="form-control">
     </div>
-    <div class="form-group">
-        <label for="title">Allow blank</label>
-        <input type="checkbox" ng-model="vis.params.allowBlank" class="form-control">
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          ng-model="vis.params.allowBlank"
+          class="dropdown-checkbox"/>
+          Allow Blank
+          <kbn-tooltip
+            text="Allows you to have 'None' as a value"
+            placement="bottom"
+            append-to-body="1">
+            <span>
+              <i
+                class="fa fa-question-circle"
+                aria-hidden="true">
+              </i>
+            </span>
+          </kbn-tooltip>
+      </label>
     </div>
     <no-data-message-options
     ></no-data-message-options>

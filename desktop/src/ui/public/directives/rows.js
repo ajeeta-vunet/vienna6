@@ -259,7 +259,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                 }
                 // If we need to show a column containing cumulative
                 // operation on each row
-                if (cell.aggConfig.vis.params.showCumulativeColumn) {
+                // We only include the cell in cumuluative operation if cell is displayed
+                if (cell.aggConfig.vis.params.showCumulativeColumn && cell.show) {
                   if (cell.aggConfig._opts.schema === 'metric') {
                     // There could be empty cells. In that case, we use value 0
                     let value = 0;
@@ -438,6 +439,10 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         // have cumulative data to display
         resultArray.forEach(function (column, i) {
           let columnValue = column;
+          // If certain columns are excluded, we should not display the cumulative data too.
+          if(!columns[i].show) {
+            return;
+          }
           // Pickup the formatter function if any for this data at this
           // index i
           if (formatterArray[i] != null) {

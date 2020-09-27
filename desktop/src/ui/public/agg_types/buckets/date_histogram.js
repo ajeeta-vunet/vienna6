@@ -32,8 +32,8 @@ export function AggTypesBucketsDateHistogramProvider(timefilter, config, Private
     // and the no of columns configured.
     if(agg.vis && agg.vis.type && agg.vis.type.name === 'matrix') {
       if(agg.vis.params.enableNoOfColumns) {
-        const inervalForMatrix = getIntervalByNoOfColumns(timefilter, agg.vis.params.NoOfColumns);
-        return inervalForMatrix;
+        const intervalForMatrix = getIntervalByNoOfColumns(timefilter, agg.vis.params.NoOfColumns);
+        return intervalForMatrix;
       } else {
         // set the interval to 24 hours when the collapse time headers is enabled
         // in matrix visualization.

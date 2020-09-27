@@ -109,8 +109,15 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
     // two groupings and one metric. Beyond that, all aggregations
     // corresponds to additional columns with latest value that we would
     // like to display
-    const topHitsLength = write.aggStack.length - 3;
-
+    let topHitsLength;
+    if(write.aggStack.length < 2) {
+      topHitsLength = write.aggStack.length - 3;
+    }
+    else {
+      // If there is only one metric and one grouping ie. write.aggStack.length < 2
+      // we need not add/delete any columns
+      topHitsLength = 0;
+    }
     // Columns are based on first level of aggregations.. we need to get the
     // key of the first level and that will make the columns
 
@@ -233,16 +240,9 @@ export function matrixifyAggResponseProvider(Private, Notifier, timefilter) {
             key = bucket.key_as_string;
           }
         } else {
-          // Looks like Date() understand the date, lets parse it and
-          // create the proper one
-          const month = monthNames[dateObj.getMonth()];
-          const day = dateObj.getDate();
-          const year = dateObj.getFullYear();
-          const hour = dateObj.getHours();
-          const minute = dateObj.getMinutes();
-          const second = dateObj.getSeconds();
-          const dateString = day + ' ' + month + ' ' + year;
-          const timeString = hour + ':' + minute + ':' + second;
+          // Using moment library to parse the date in right format
+          const dateString = moment(dateObj).format('DD MMM YYYY');
+          const timeString = moment(dateObj).format('HH:mm:SS');
 
           // if collapseTimeHeaders checkbox is enabled then
           // prepare the date headers  in D1, D2... format

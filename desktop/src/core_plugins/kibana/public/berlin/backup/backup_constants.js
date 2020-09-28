@@ -57,7 +57,12 @@ export const OBJECTS_TO_BE_BACKED_UP_HELP_OBJ = {
     title: 'Active Data:',
     description: 'Active Data currently residing in the system. Use this option with caution, ' +
     'as this might result in a large backup file getting created.'
-  }]
+  },
+  {
+    title: 'User Info',
+    description: 'All user and bookkeeping information. Eg: mySQL database backup'
+  }
+]
 };
 
 export const BACKUP_LOCATION_HELP_OBJ = {

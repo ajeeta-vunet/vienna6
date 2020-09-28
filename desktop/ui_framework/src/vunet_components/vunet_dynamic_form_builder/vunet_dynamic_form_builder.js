@@ -535,6 +535,23 @@ export class VunetDynamicFormBuilder extends Component {
             return false;
           } else {
             errorLabel.textContent = '';
+            // Check if error messages are shown for any of the form inputs. If yes,
+            // invalidate the form. This is added to take care of multiple validation
+            // callbacks in a form. For example: schedule name and backup location in
+            // Backup section.
+            for (let formElemIndex = 0; formElemIndex < formLength; formElemIndex++) {
+              const elem = formEl[formElemIndex];
+              const errorLabel = elem.parentNode.parentNode.parentNode.querySelector('.error-row .invalid');
+              if (errorLabel && elem.nodeName.toLowerCase() !== 'button' &&
+                errorLabel.textContent !== null &&
+                errorLabel.textContent.length > 0 && e.target.type !== 'checkbox') {
+                return false;
+              }
+              else {
+                if(errorLabel !== null)
+                  errorLabel.textContent = '';
+              }
+            }
           }
         }
       } else {

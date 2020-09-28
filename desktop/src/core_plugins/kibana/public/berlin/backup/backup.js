@@ -87,7 +87,7 @@ function vunetBackup($injector,
         scheduleFrequency: 'day',
         archival_objects: [
           'vusmartmaps_objects',
-          'data_integration_files',
+          'data_sources_integrations',
           'service_configuration_files',
           'etl_configs',
           'user_info',
@@ -106,7 +106,7 @@ function vunetBackup($injector,
           props: {
             required: true,
             maxLength: '32',
-            pattern: '^[a-zA-Z0-9_.-]+( [a-zA-Z0-9_]+)*$'
+            pattern: '^[a-zA-Z0-9_.-]+([a-zA-Z0-9_]+)*$'
           },
           errorText: `Name should be unique and can have alpha-numeric characters. _ , . and - 
             is also allowed but the name should not exceed 32 characters.`
@@ -127,7 +127,7 @@ function vunetBackup($injector,
               key: 'dataSourcesAndIntegrations',
               name: 'dataSourcesAndIntegrations',
               label: 'Data Sources And Integrations',
-              value: 'data_integration_files'
+              value: 'data_sources_integrations'
             },
             {
               key: 'serviceConfigurationFiles',
@@ -311,16 +311,19 @@ function vunetBackup($injector,
             ]
           }
         },
-        {
-          key: 'vuSmartMapsCloudServer',
-          name: 'vuSmartMapsCloudServer',
-          label: 'vuSmartMaps Cloud Server',
-          type: 'checkbox',
-          validationCallback: $scope.onBackupLocationChange,
-          errorText: `Please select atleast one back up location`,
-          props: {
-          },
-        }, {
+        // The Cloud Server for vuSmartMaps is not supported as of today and will be used in the future.
+        // Please do not remove any code related to the Cloud Server.
+        // {
+        //   key: 'vuSmartMapsCloudServer',
+        //   name: 'vuSmartMapsCloudServer',
+        //   label: 'vuSmartMaps Cloud Server',
+        //   type: 'checkbox',
+        //   validationCallback: $scope.onBackupLocationChange,
+        //   errorText: `Please select atleast one back up location`,
+        //   props: {
+        //   },
+        // }, {
+          {
           key: 'cronString',
           label: 'Schedule',
           helpObj: SCHEDULE_HELP_OBJ,
@@ -419,8 +422,8 @@ function vunetBackup($injector,
   // which is passed as the validation callback to the 3 types of backup location
   $scope.backupLocationsDict = {
     fileServer: false,
-    localDirectory: true,
-    cloudServer: false
+    localDirectory: true
+    // cloudServer: false
   };
 
   // This function is passed as validation callback for the below
@@ -660,12 +663,12 @@ function vunetBackup($injector,
       });
     }
 
-    const cloudServer = {
-      type: 'cloud_server',
-      enabled: data.vuSmartMapsCloudServer || false
-    };
+    // const cloudServer = {
+    //   type: 'cloud_server',
+    //   enabled: data.vuSmartMapsCloudServer || false
+    // };
 
-    scheduleData.destinations.push(cloudServer);
+    // scheduleData.destinations.push(cloudServer);
 
     // For 'Add' operation, we send only the new schedule created
     if (event === 'add') {
@@ -725,9 +728,10 @@ function vunetBackup($injector,
             fileServerObj.credentials = destination.details.cred_name;
             fileServerObj.remotePath = destination.details.remote_path;
             schedule.fileServerConfig = [...schedule.fileServerConfig, fileServerObj];
-          } else if (destination.type === 'cloud_server') {
-            schedule.vuSmartMapsCloudServer = destination.enabled;
-          }
+          } 
+          // else if (destination.type === 'cloud_server') {
+          //   schedule.vuSmartMapsCloudServer = destination.enabled;
+          // }
         });
         if (schedule.localDirectoryConfig.length) {
           schedule.localDirectory = true;

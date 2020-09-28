@@ -1,7 +1,7 @@
 $screen-sm: 768px;
 $screen-md: 768px;
 .login-outer-container{
-    font-family:'Roboto';
+    font-family:'Inter';
     overflow: hidden;
     .mb-vh{
       margin-bottom: 4vh;
@@ -103,7 +103,7 @@ $screen-md: 768px;
         background-repeat: no-repeat;
         .login-text-subheader{
           color:#3f5261;
-          font-family: Roboto;
+          font-family: 'Inter';
           font-weight: 300;
           font-style: italic;
           font-size: 1.56vmax;
@@ -112,14 +112,14 @@ $screen-md: 768px;
         }
         .login-text-header{
           color:#3f5261;
-          font-family:'Roboto';
+          font-family:'Inter';
           font-weight: 700;
           font-size: 5.2vmax;
           margin-left: 12vmax;
         }
         .login-text{
           color:#3f5261;
-          font-family:'Roboto';
+          font-family:'Inter';
           font-weight: 300;
           font-style: italic;
           font-size: .9375vmax;

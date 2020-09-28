@@ -74,7 +74,7 @@
   
     .card-v1,
     .card-v3 {
-      font-family: 'Roboto';
+      font-family: 'Inter';
       font-weight: bold;
       font-size: 1rem;
       color: $gray-600;
@@ -82,7 +82,7 @@
     }
   
     .card-v2 {
-      font-family: 'Roboto';
+      font-family: 'Inter';
       // font-weight: 300;
       font-size: 3.5rem;
       line-height: 4rem;
@@ -90,7 +90,7 @@
     }
   
     .card-v4 {
-      font-family: 'Roboto';
+      font-family: 'Inter';
       font-size: 0.85rem;
       color: $gray-darker;
     }
@@ -116,7 +116,7 @@
         }
   
         .card-v4 {
-          font-family: 'Roboto';
+          font-family: 'Inter';
           font-size: 0.85rem;
           // How user will know its clickable
           // cursor: pointer;
@@ -133,7 +133,7 @@
   
         .his-label,
         .his-value {
-          font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
   
         .his-value {

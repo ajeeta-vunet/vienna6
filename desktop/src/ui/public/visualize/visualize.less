@@ -26,6 +26,8 @@ visualization {
     -webkit-transition: opacity 0.01s;
     transition: opacity 0.01s;
 
+    /* visibility was changed to hidden for scrollback hack */
+    visibility: hidden;
     // IE11 Hack
     //
     // Normally we would just set flex: 1 1 0%, which works as expected in IE11.
@@ -51,11 +53,19 @@ visualization {
     &.spy-only {
       display: none;
     }
+    
     .visualize-chart {
+      /* visibility was added for scrollback hack */
+      visibility: visible;
       loader-animation {
         width:100%;
       }
     }
+  }
+
+  /* below hover change added for scrollback hack */
+  .vis-container:hover {
+    visibility: visible;
   }
 
   .loading {

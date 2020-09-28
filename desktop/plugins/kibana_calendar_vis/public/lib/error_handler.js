@@ -59,8 +59,8 @@ export class CalendarErrorHandler {
       div.append('div')
         .attr('class', `text-center ${errorContainer} visualize-chart`)
         .append('div').attr('class', 'item top')
-        .append('div').attr('class', 'item')
-        .append('h3').html('No data to show');
+        .append('div').attr('class', 'item no-data-message-container')
+        .append('h3').attr('class', 'no-data-message').html('No data to show');
 
       div.append('div').attr('class', 'item bottom');
     } else {

@@ -1,5 +1,5 @@
-<span>
-    <h3 ng-if="!enableCustomErrorMessage">No data to show
+<span class="no-data-message-container">
+    <h3 class="no-data-message" ng-if="!enableCustomErrorMessage">No data to show
         <kbn-tooltip
             text="There is no matching data for the selected time and filter criteria"
             placement="bottom"
@@ -8,7 +8,7 @@
             <i class="fa fa-info-circle info-hover"></i>
         </kbn-tooltip>
     </h3>
-    <h3 ng-if="enableCustomErrorMessage">{{errorMessage}}
+    <h3 class="no-data-message" ng-if="enableCustomErrorMessage">{{errorMessage}}
         <kbn-tooltip
             ng-if= "!enableCustomErrorTooltip"
             text="There is no matching data for the selected time and filter criteria"

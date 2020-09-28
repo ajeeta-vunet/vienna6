@@ -30,8 +30,8 @@
   background-color: @seperator_color; 
 }
 ::-webkit-scrollbar{
-  width: 3px;
-  height: 3px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-thumb{
   background-color: @accent_color;	
@@ -85,7 +85,7 @@
 
 }
 body{
-  font-family:@roboto-regular;
+  font-family:@inter-regular;
 }
 html{
   font-size:10px;
@@ -146,7 +146,7 @@ input[type="file"]{
       &:hover{
         color: @white!important;
         text-decoration: none!important;
-        font-family: @roboto-medium;
+        font-family: @inter-medium;
         box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
       }
     }
@@ -444,7 +444,7 @@ input[type="file"]{
                         th{
                           text-align: center;
                           font-size:1.4rem;
-                          font-family:@roboto-medium;
+                          font-family:@inter-medium;
                         }
                       }
                     }
@@ -519,7 +519,7 @@ input[type="file"]{
       min-height:40px;
       .kuiLocalNavRow{
         .kuiLocalTitle{
-          font-family: @roboto-medium;
+          font-family: @inter-medium;
           font-weight: normal;
           color: @accent_color;
           position: relative;
@@ -605,7 +605,7 @@ input[type="file"]{
   color:@black!important;
   &:hover{
     color: @accent_color!important;
-    font-family: @roboto-bold;
+    font-family: @inter-bold;
     box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
   }
 }
@@ -620,7 +620,7 @@ input[type="file"]{
   color:@black!important;
   &:hover{
     color: @accent_color!important;
-    font-family: @roboto-bold;
+    font-family: @inter-bold;
     box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
   }
 }
@@ -636,7 +636,7 @@ input[type="file"]{
   color: @white;
   &:hover{
     // color: @white;
-    font-family: @roboto-medium;
+    font-family: @inter-medium;
     box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
   }
 }
@@ -650,7 +650,7 @@ input[type="file"]{
   color:@disable_button_text_color!important;
   &:hover{
     box-shadow:none;
-    font-family:@roboto-regular!important;
+    font-family:@inter-regular!important;
     background-color: @disable_button_color!important;
     color:@disable_button_text_color!important;
     // color:@disable_button_text_color!important;
@@ -672,7 +672,7 @@ button[disabled], {
   }
   &:hover{
     box-shadow:none;
-    font-family:@roboto-regular!important;
+    font-family:@inter-regular!important;
     // color:@disable_button_text_color!important;
   }
 }
@@ -697,7 +697,7 @@ button[disabled], {
   &:hover{
     color: @white!important;
     text-decoration: none!important;
-    font-family: @roboto-medium;
+    font-family: @inter-medium;
     box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
   }
 }
@@ -1665,4 +1665,31 @@ button[disabled], {
   .zero-margin {
     margin: 0px;
   }
+}
+
+// This is being added to show the edit and delete buttons of visualizations in 
+// dashboards on hover
+.react-grid-item {
+  .dashboard-panel {
+    .panel {
+      .panel-heading {
+        .kuiMicroButtonGroup {
+          visibility: hidden;
+        }
+      }
+    }
+    .panel:hover {
+      .panel-heading {
+        .kuiMicroButtonGroup {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+// Overwriting Bootstrap headings' font to Inter
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 { 
+  font-family: @inter-regular;
 }

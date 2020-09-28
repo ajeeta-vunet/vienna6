@@ -143,7 +143,7 @@ $grid-gutter-width: 1rem !default;
 // Font, line-height, and color for body text, headings, and more.
 $font-size-base: 0.75rem; // 12px
 
-$font-family-sans-serif: 'Roboto', sans-serif !default;
+$font-family-sans-serif: 'Inter', sans-serif !default;
 $font-weight-light: 300 !default;
 $font-weight-normal: 400 !default;
 $font-weight-medium: 500 !default;
@@ -238,7 +238,7 @@ $collapse-button-size: 3rem;
 $nav-brand-font-size: 1rem;
 $nav-brand-line-height: 1.25 * $nav-brand-font-size;
 $nav-brand-image-size: $nav-brand-line-height;
-$nav-brand-font: bold $nav-brand-font-size 'Roboto';
+$nav-brand-font: bold $nav-brand-font-size 'Inter';
 
 // Footer
 $footer-height: 3.5rem;

@@ -1,6 +1,6 @@
 {
   "global":{
-    "defaultFontFamily": "Roboto",
+    "defaultFontFamily": "Inter",
     "defaultFontColor": "#72748d",
     "defaultFontStyle": "bold",
     "legend": {

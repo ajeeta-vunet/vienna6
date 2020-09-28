@@ -68,7 +68,7 @@
   /* 3 */ }
 
 body {
-  font-family: "Open Sans", Helvetica, Arial, sans-serif; }
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif; }
 
 /**
  * 1. Required for IE11.
@@ -1568,7 +1568,7 @@ input[type="button"] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   padding: 3px 12px 4px;
   font-size: 14px;
   font-weight: 400;
@@ -1614,7 +1614,7 @@ input[type="button"] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   padding: 3px 12px 4px;
   font-size: 14px;
   font-weight: 400;
@@ -1680,7 +1680,7 @@ input[type="button"] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   padding: 3px 12px 4px;
   font-size: 14px;
   font-weight: 400;
@@ -1697,7 +1697,7 @@ input[type="button"] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   padding: 3px 12px 4px;
   font-size: 14px;
   font-weight: 400;
@@ -1746,7 +1746,7 @@ input[type="button"] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   padding: 3px 12px 4px;
   font-size: 14px;
   font-weight: 400;
@@ -2623,7 +2623,7 @@ input[type="button"] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   padding: 3px 12px 4px;
   font-size: 14px;
   font-weight: 400;
@@ -2702,7 +2702,7 @@ input[type="button"] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   padding: 3px 12px 4px;
   font-size: 14px;
   font-weight: 400;
@@ -4033,7 +4033,7 @@ input[type="button"] {
   width: 100%;
   min-width: 200px;
   padding: 4px 12px 5px 28px;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Inter-Regular", "Open Sans", Helvetica, Arial, sans-serif;
   /* 1 */
   background-color: #FFFFFF;
   color: #191E23;

@@ -99,6 +99,7 @@ function vunetBackup($injector,
       table: [
         {
           key: 'name',
+          id: true,
           validationCallback: $scope.validateValue,
           label: 'Name',
           name: 'name',

@@ -1693,3 +1693,16 @@ h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 { 
   font-family: @inter-regular;
 }
+
+// Display the scrollbar of the search table in a dashboard only when the user hovers over it.
+.doc-table-container {
+  overflow: auto;
+  visibility: hidden;
+  div {
+    visibility: visible;
+  }
+}
+.doc-table-container:hover,
+.doc-table-container:focus {
+  visibility: visible;
+}

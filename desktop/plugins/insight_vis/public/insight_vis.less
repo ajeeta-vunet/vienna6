@@ -2,35 +2,30 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .insight-vis-wrapper {
-  width: 100%; 
-  .insight-vis-container {
-    width: 100%;
-    .row {
-      margin-left: 0px;
-      margin-right: 0px;
-    }
-    .col-sm-1, .col-sm-2, .col-sm-3,
-    .col-sm-4, .col-sm-5, .col-sm-6,
-    .col-sm-7, .col-sm-8, .col-sm-9,
-    .col-sm-10, .col-sm-11, .col-sm-12 {
-      padding: 0px;
-    }
+  width: 100%;
+  .insights-container {
     display: flex;
-    flex-flow: row wrap;
+    flex-wrap: wrap;
+    overflow: hidden;
     justify-content: space-evenly;
-    .item-container {
-      width: 40rem;
+    .insight {
+      flex: 40rem 1 0;
       min-width: 200px;
-      max-width: 700px;
-      border-bottom: .1rem solid @seperator_color_grey;
-      margin: 1rem 2rem 4rem 1rem;
-      .image-container {
-        vertical-align: top;
-        margin-bottom: 2rem;
-        .item-image {
+      max-width: 400px;
+      display: flex;
+      padding: 2rem 1px;
+      overflow: hidden;
+      .insight-image {
+        flex: 100px 1 0;
+        max-width: 100px;
+        align-content: center;
+        text-align: center;
+        padding: 0 2rem;
+        img {
           width: 7.2rem;
         }
       }
+      
       .text-container {
         .insight-value {
           font-size: 4.9rem;
@@ -50,6 +45,17 @@
           color: #252525;
           padding-bottom: 2rem;
         }
+        
+      }
+      .insight-content {
+        padding: 0 2rem;
+        flex: 300px 1 0;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .no-data-content{
+        text-align: center;
+        vertical-align: middle;
       }
     }
   }
@@ -70,4 +76,11 @@
       word-wrap: break-word;
     }
   }
+}
+
+[ng-quill-editor] {
+  display: block;
+}
+.ql-editor {
+  min-height: 150px;
 }

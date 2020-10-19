@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { uiModules } from 'ui/modules';
 require('../directives/insight_value_template_directive.js');
 import { getImages } from 'ui/utils/vunet_image_utils.js';
@@ -18,6 +19,11 @@ module.directive('insightValueTemplate', function (StateService) {
     },
     template: require('./insight_value_template_directive.html'),
     link: function (scope) {
+      // For existing visualizations, where insightType is not defined,
+      // set it to 'text'
+      if (!(_.has(scope.visParams, 'insightType'))) {
+        scope.visParams.insightType = 'text';
+      }
       // Get the updated iconList with uploaded images.
       getImages(StateService).then(function (iconDict) {
         scope.iconList =  Object.keys(iconDict);

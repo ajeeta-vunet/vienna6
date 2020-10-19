@@ -9,8 +9,135 @@
       </select>
     </div>
   </div>
-  <div class="form-group bottom-space">
-    <div>
+  <label>Insights type</label>
+  <kbn-tooltip
+    text="Select a insights template"
+    placement="right"
+    append-to-body="1"
+  >
+    <i class="fa fa-question-circle"></i>
+  </kbn-tooltip>
+  <div>
+    <select ng-model="visParams.insightType" class="form-control" required>
+      <option value="text" selected>Text Template</option>
+      <option value="html">HTML Template</option>
+      <option value="md">Markdown Template</option>
+    </select>
+  </div>
+  <div ng-switch="visParams.insightType">
+    <div class="form-group bottom-space" ng-switch-when="html">
+      <label>
+        Script
+        <kbn-tooltip
+          text="Provide advanced configuration for business metric"
+          placement="bottom"
+          append-to-body="1"
+        >
+          <span>
+            <i class="fa fa-question-circle" aria-hidden="true"> </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <textarea
+        ng-model="visParams.script"
+        class="form-control"
+        rows="5"
+        required
+      >
+      </textarea>
+      <label>
+        Template
+        <kbn-tooltip
+          text="Provide mustache based HTML template for business metric"
+          placement="bottom"
+          append-to-body="1"
+        >
+          <span>
+            <i class="fa fa-question-circle" aria-hidden="true"> </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <br />
+      <label for="visualEditor">
+        <input
+          type="checkbox"
+          ng-model="visualEditor"
+          value="1"
+          name="visualEditor"
+          id="visualEditor"
+        />
+        Hide Visual Editor
+      </label>
+      <ng-quill-editor ng-if="!visualEditor" ng-model="visParams.html">
+        <ng-quill-toolbar>
+          <div>
+            <span class="ql-formats">
+              <select class="ql-color"></select>
+              <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-list" value="ordered"></button>
+              <button class="ql-list" value="bullet"></button>
+              <select class="ql-align">
+                <option selected></option>
+                <option value="center"></option>
+                <option value="right"></option>
+                <option value="justify"></option>
+              </select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-link"></button>
+              <button class="ql-image"></button>
+            </span>
+          </div>
+        </ng-quill-toolbar>
+      </ng-quill-editor>
+      <textarea
+        ng-if="visualEditor"
+        ng-model="visParams.html"
+        class="form-control"
+        rows="5"
+        required
+      >
+      </textarea>
+    </div>
+
+    <div class="form-group bottom-space" ng-switch-when="md">
+      <label>
+        Script
+        <kbn-tooltip
+          text="Provide advanced configuration for business metric"
+          placement="bottom"
+          append-to-body="1"
+        >
+          <span>
+            <i class="fa fa-question-circle" aria-hidden="true"> </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <textarea
+        ng-model="visParams.script"
+        class="form-control"
+        rows="5"
+        required
+      >
+      </textarea>
+      <label>
+        Template
+        <kbn-tooltip
+          text="Markdown Template"
+          placement="bottom"
+          append-to-body="1"
+        >
+          <span>
+            <i class="fa fa-question-circle" aria-hidden="true"> </i>
+          </span>
+        </kbn-tooltip>
+      </label>
+      <textarea ng-model="visParams.md" class="form-control" rows="5" required>
+      </textarea>
+    </div>
+    <div class="form-group bottom-space" ng-switch-default>
       <div>
         <label>
           Configuration

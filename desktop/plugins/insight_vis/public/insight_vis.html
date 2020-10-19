@@ -1,6 +1,6 @@
-<div ng-controller="insightVisController" class="insight-vis-wrapper"
-  ng-style="data.length === 1 && {'overflow':'hidden'}">
-  <div ng-if="(!data.length || !insightAvailableFlag) && !loadingInsights" class="no-data-container-wrapper">
+<div ng-controller="insightVisController" class="insight-vis-wrapper">
+
+  <div ng-if="data.length === 0 || validateData(data)" class="no-data-container-wrapper">
     <div class="insight-vis-no-data-container">
       <no-data-message
         enable-custom-error-message="vis.params.enableCustomErrorMessage"
@@ -10,20 +10,31 @@
       ></no-data-message>
     </div>
   </div>
-
   <loader-animation ng-if="loadingInsights && !data.length"></loader-animation>
-  
-  <div ng-if="data.length" class="insight-vis-container">
-    <div ng-repeat="insight in data"
-    ng-style="(!insight.data.text && {'display':'none'}) || (data.length === 1 && {'margin-bottom':'0px'})"
-     class="item-container row">
-      <div class="image-container col-sm-3">
-        <img class="item-image" ng-src="{{insight.image}}">
-      </div>
-      <div class="text-container col-sm-9">
-        <div class="insight-value">{{insight.metadata.value[0]}}</div>
-        <div class="insight-title">{{insight.name}}</div>
-        <div class="insight-data">{{insight.data.text}}</div>
+  <div ng-if="data.length" class="insights-container">
+    <div ng-repeat="insight in data">
+      <div  ng-if="showInsight(insight)" class ="insight">
+        <div class="insight-image">
+          <img ng-src="{{insight.image}}" />
+        </div>
+        <div ng-switch="insight.insightType" class="insight-content">
+          <div ng-switch-when="html" ng-bind-html="render(insight.html, insight.data)"
+            ng-click="viewDashboardForThisMetric(insight.link)"
+            ng-class="!hasLink(insight.link) ? 'cur-initial': ''">
+          </div>
+          <div ng-switch-when="md" ng-bind-html="renderMd(insight.md, insight.data)"
+            ng-click="viewDashboardForThisMetric(insight.link)"
+            ng-class="!hasLink(insight.link) ? 'cur-initial': ''"></div>
+          <div class="text-container" ng-switch-default>
+            <div class="insight-value"
+              ng-click="viewDashboardForThisMetric(insight.link)"
+              ng-class="!hasLink(insight.link) ? 'cur-initial': ''">
+              {{insight.metadata.value[0]}}</div>
+              <div class="insight-title">{{insight.name}}</div>
+              <div class="insight-data">{{insight.data.text}}</div>
+          </div>
+          
+        </div>
       </div>
     </div>
   </div>

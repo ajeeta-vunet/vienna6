@@ -95,7 +95,7 @@ export const AlertComponent = (props: TSProps) => {
         <CardBody>
           <Row className="mb-2">
             <Col
-              className={'col-5 left-content' + ((smallMetric[0].length>7) ? ' smallMetric' : '')}
+              className={'col-5 left-content' + ((smallMetric && smallMetric[0].length>7) ? ' smallMetric' : '')}
               dangerouslySetInnerHTML={{ __html: summary }}
             ></Col>
             <Col className="col-7 right-content">

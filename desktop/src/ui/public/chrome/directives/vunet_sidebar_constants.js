@@ -1,8 +1,9 @@
 
 export const VunetSidebarConstants = {
   ANALYTICS: 'Analytics',
-  STORYBOARDS: 'Storyboards',
-  DASHBOARDS: 'Dashboards',
+  // STORYBOARDS: 'Storyboards',
+  // DASHBOARDS: 'Dashboards',
+  DASHBOARDS: 'Story Boards',
   SEARCH: 'Search',
   EVENTS: 'Events',
   REPORTS: 'Reports',

@@ -9,7 +9,7 @@ class sidebarController {
     //A user can view a particular sidebar tab only if he has the correspoding claim next to the tab.
     const sideBarTabsClaim = {
       [VunetSidebarConstants.ANALYTICS]: ['ViewObject', 'ManageObject'],
-      [VunetSidebarConstants.STORYBOARDS]: ['ViewObject', 'ManageObject'],
+      // [VunetSidebarConstants.STORYBOARDS]: ['ViewObject', 'ManageObject'],
       [VunetSidebarConstants.DASHBOARDS]: ['ViewObject', 'ManageObject'],
       [VunetSidebarConstants.SEARCH]: ['ManageObject'],
       [VunetSidebarConstants.EVENTS]: ['ViewObject', 'ManageObject'],
@@ -86,11 +86,18 @@ class sidebarController {
           pageurl: 'URL',
           active: false,
           subgroups: [
-            { id: VunetSidebarConstants.STORYBOARDS,
+            // { id: VunetSidebarConstants.STORYBOARDS,
+            //   description: ' ',
+            //   icon: '',
+            //   pageurl: baseUrl + '/storyboards',
+            //   isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.STORYBOARDS]),
+            //   active: false
+            // },
+            { id: VunetSidebarConstants.DASHBOARDS,
               description: ' ',
               icon: '',
-              pageurl: baseUrl + '/storyboards',
-              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.STORYBOARDS]),
+              pageurl: baseUrl + '/dashboards',
+              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DASHBOARDS]),
               active: false
             },
             { id: VunetSidebarConstants.SEARCH,
@@ -130,13 +137,13 @@ class sidebarController {
               isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.VISUALIZATIONS]),
               active: false
             },
-            { id: VunetSidebarConstants.DASHBOARDS,
-              description: ' ',
-              icon: '',
-              pageurl: baseUrl + '/dashboards',
-              isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DASHBOARDS]),
-              active: false
-            },
+            // { id: VunetSidebarConstants.DASHBOARDS,
+            //   description: ' ',
+            //   icon: '',
+            //   pageurl: baseUrl + '/dashboards',
+            //   isModifyAllowed: chrome.hideShowSideBarTab(sideBarTabsClaim[VunetSidebarConstants.DASHBOARDS]),
+            //   active: false
+            // },
             { id: 'Alert Rules',
               description: ' ',
               icon: '',
@@ -386,7 +393,8 @@ class sidebarController {
     $scope.highlightActiveSidebar = function () {
       const currentRoute = window.location.href;
 
-      if (currentRoute.includes('/storyboard')) {
+      // if (currentRoute.includes('/storyboard')) {
+      if (currentRoute.includes('/dashboard')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[0].subgroups[0].active = true;
@@ -406,26 +414,28 @@ class sidebarController {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[0].active = true;
-      } else if (currentRoute.includes('/dashboard')) {
+      } 
+      // else if (currentRoute.includes('/dashboard')) {
+      //   $scope.clearActive();
+      //   $scope.clearParentActive();
+      //   $scope.data[1].subgroups[1].active = true;
+      // } 
+      else if (currentRoute.includes('/alert')) {
         $scope.clearActive();
         $scope.clearParentActive();
         $scope.data[1].subgroups[1].active = true;
-      } else if (currentRoute.includes('/alert')) {
-        $scope.clearActive();
-        $scope.clearParentActive();
-        $scope.data[1].subgroups[2].active = true;
       } else if (currentRoute.includes('/anomaly')) {
         $scope.clearActive();
         $scope.clearParentActive();
-        $scope.data[1].subgroups[3].active = true;
+        $scope.data[1].subgroups[2].active = true;
       } else if (currentRoute.includes('/management')) {
         $scope.clearActive();
         $scope.clearParentActive();
-        $scope.data[1].subgroups[4].active = true;
+        $scope.data[1].subgroups[3].active = true;
       } else if (currentRoute.includes('network_configuartion')) {
         $scope.clearActive();
         $scope.clearParentActive();
-        $scope.data[1].subgroups[5].active = true;
+        $scope.data[1].subgroups[4].active = true;
       } else if (currentRoute.includes('/berlin/data_source/vuBlock')) {
         $scope.clearActive();
         $scope.clearParentActive();

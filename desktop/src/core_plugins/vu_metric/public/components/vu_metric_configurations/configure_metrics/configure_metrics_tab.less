@@ -1,0 +1,377 @@
+// ------------------------- NOTICE ------------------------------- //
+//                                                                  //
+//                   CONFIDENTIAL INFORMATION                       //
+//                   ------------------------                       //
+//     This Document contains Confidential Information or           //
+//     Trade Secrets, or both, which are the property of VuNet      //
+//     Systems Ltd.  This document may not be copied, reproduced,   //
+//     reduced to any electronic medium or machine readable form    //
+//     or otherwise duplicated and the information herein may not   //
+//     be used, disseminated or otherwise disclosed, except with    //
+//     the prior written consent of VuNet Systems Ltd.              //
+//                                                                  //
+// ------------------------- NOTICE ------------------------------- //
+
+// Copyright 2020 VuNet Systems Ltd.
+// All rights reserved.
+// Use of copyright notice does not imply publication.
+
+@import "~ui/styles/vunet_variable_theme.less";
+
+.configure-metrics-tab-container{
+  .error-text{
+    color:@red;
+    padding-top: .5rem;
+  }
+  .configure-metrics-description{
+    padding: 0rem 2rem;
+    font-size: 1.6rem;
+    color: @grey_light;
+  }
+  .configure-metrics-header-functions-row{
+    padding: 0rem 2rem;
+    margin: 2rem 0rem;
+    display: flex;  
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    .left-side-functions{
+      display: flex;  
+      flex-direction: row;
+      justify-content: center;
+      font-size: 1.6rem;
+      align-items: baseline;
+      .metric-expander-icon{
+        font-size: 1.6rem;
+      }
+      .dummy-metric-name{
+        padding: 0rem 2.5rem;
+        color: lightgrey;
+        font-size: 3rem;
+        border-right: 1px solid @seperator_color_greyDark;
+      }
+      .metric-name{
+        padding: 0rem 2.5rem;
+        color: @grey_dark;
+        font-size: 3rem;
+        border-right: 1px solid @seperator_color_greyDark;
+      }
+      .vu-metric-icons-container{
+        display: flex;  
+        flex-direction: row;
+        .show-hide-metric-icon{
+          padding: 0rem 2.5rem;
+          border-right: 1px solid @seperator_color_greyDark;
+          i{
+            font-size: 1.6rem;
+          }
+        }
+        .delete-metric{
+          padding: 0rem 2.5rem;
+          border-right: 1px solid @seperator_color_greyDark;
+          i{
+            font-size: 1.6rem;
+          }
+        }
+        .change-metric-priority{
+          padding: 0rem 2.5rem;
+          display: flex;
+          flex-direction: column;
+          border-right: 1px solid @seperator_color_greyDark;
+          i{
+            font-size: 1rem;
+          }
+          .disabled-icon{
+            cursor: not-allowed !important;
+            opacity: 0.3;
+          }
+        }
+        .add-new-metric{
+          padding: 0rem 2.5rem;
+          border-right: 1px solid @seperator_color_greyDark;
+          i{
+            color: @accent_color;
+            font-size: 1.6rem;
+            padding-right: 1rem;
+          }
+        }
+        .clone-new-metric{
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 0rem 2.5rem;
+          i{
+            font-size: 2.5rem;
+            padding-right: 1rem;
+          }
+        }
+      }
+
+    }
+    .vu-metric-advance-config-switch{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding-left: 1.5rem;
+      border-left: 1px solid @seperator_color_greyDark;
+      span{
+        padding-left: 1rem;
+        font-family: @inter-medium;
+      }
+    }
+  }
+  .select-data-sets{
+    position: relative;
+    margin-left: 4rem;
+    padding: 0rem 2rem;
+    &::before {
+      position: absolute;
+      top: 2.65rem;
+      left: 31px;
+      display: block;
+      bottom: -4.5rem;
+      content: ' ';
+      border-right: 2px solid @accent_color;
+      z-index: 2;
+      @media only screen and (max-width: 1450px) {
+        left: 25px;
+      }
+    }
+    .select-data-sets-heading-row{  
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      margin-bottom: 2rem;
+      .select-data-set-heading{
+        display: flex;
+        flex-direction: row;
+        font-size: 2rem;
+        border-right: 1px solid @seperator_color_greyDark;
+        .select-data-header-number{
+          padding-right: 1rem;
+          font-family: @inter-bold;
+          color: @accent_color;
+        }
+        .select-data-header-title-container{
+          .select-data-header-title{
+            color: @grey_dark;
+          }
+          .select-data-sets-help-icon{
+            padding: 0rem 4rem 0rem 1rem;
+            font-size: 1.5rem;
+          }
+        }
+      }
+      .build-metric-from-search{
+        padding-left: 4rem;
+        .build-metric-from-search-title{
+          padding: 0rem 1rem;
+          font-size: 1.6rem;
+          font-family: @inter-bold;
+          color: @grey_dark;
+        }
+      } 
+    }
+    
+    .select-data-sets-content{
+      margin-left: 2.5rem;
+      .border-bottom-row{
+        border-bottom: 1px solid @seperator_color_greyDark;
+      }
+      .row{
+        padding-bottom: 1.25rem;
+        margin-bottom: 2rem;
+      }
+      select, input, textarea {
+        height: 4.2rem;
+      }
+      label{
+        font-size: 1.6rem;
+        color: @grey_dark;
+        font-family: @inter-medium;
+        font-weight: 500;
+      }
+    }
+    
+  }
+
+  .configure-label-and-contents{
+    background-color: @background_color_light_grey;
+    padding: 2.5rem 1.6rem 0rem 5.6rem;
+    margin: 0rem .4rem;
+    position: relative;
+    z-index: 1;
+    &::before {
+      position: absolute;
+      top: 5rem;
+      left: 68px;
+      display: block;
+      bottom: -4.5rem;
+      content: ' ';
+      border-right: 2px solid @accent_color;
+      @media only screen and (max-width: 1450px) {
+        left: 55px;
+      }
+    }
+    .configure-label-and-contents-row{
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      margin-bottom: 2rem;
+      .configure-label-and-contents-heading{
+        display: flex;
+        flex-direction: row;
+        font-size: 2rem;
+        .configure-label-and-contents-header-number{
+          padding-right: 1rem;
+          font-family: @inter-bold;
+          color: @accent_color;
+        }
+        .configure-label-and-contents-title-container{
+          .configure-label-and-contents-header-title{
+            color: @grey_dark;
+          }
+          .configure-label-and-contents-help-icon{
+            padding: 0rem 4rem 0rem 1rem;
+            font-size: 1.5rem;
+          }
+        }
+      }
+    }
+    .configure-label-and-contents-body{
+      margin-left: 2.5rem;
+      .row-without-bottom-margin{
+        margin-bottom: 0px!important;
+      }
+      .additional-fields-multiselect{
+        .select{
+          width: 100%;
+          .selection{
+            padding-top: 4px;
+            padding-bottom: 0px;
+            border-radius: 4px;
+            overflow-y: auto;
+            height: 4.2rem;
+          }
+
+        }
+      }
+      .border-bottom-row{
+        border-bottom: 1px solid @white;
+      }
+      .row{
+        padding-bottom: 1.25rem;
+        margin-bottom: 2rem;
+      }
+      select, input {
+        height: 4.2rem;
+      }
+      label{
+        font-size: 1.6rem;
+        color: @grey_dark;
+        font-family: @inter-medium;
+        font-weight: 500;
+      }
+      .reference-link-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 1rem 15px 2rem 15px;
+        .reference-link-help-icon, .reference-link-text{
+          padding-left: 1rem;
+        }
+      }
+      .filters-while-moving-to-new-page-title{
+        padding-left: 1.5rem;
+        font-size: 1.6rem;
+        color: @grey_dark;
+        font-family: @inter-medium;
+        font-weight: 500;
+      }
+      .retain-currently-applied-filters-container, .apply-filters-from-section1-container{
+        padding-top: 3.5rem;
+        span{
+          font-size: 1.6rem;
+          color: @grey_dark;
+          font-family: @inter-medium;
+          font-weight: 500;
+        }
+        .retain-curerent-filters-switch, .apply-metric-filters-switch{
+          padding: 0rem 1.5rem;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+      .icons{
+        &:required{
+          &:invalid{
+            color:@text_colr_grey;
+          }
+        }
+        option {
+          color:@black;
+        }
+        .empty-select-icon{
+          color: @text_colr_grey;
+        }
+      }
+    }
+  }
+
+  .configure-thresholds{
+    padding: 1rem 1.6rem 0rem 5.6rem;
+    margin: 0rem .4rem;
+    .configure-thresholds-heading-row{
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      margin-bottom: 2rem;
+      .configure-thresholds-heading{
+        display: flex;
+        flex-direction: row;
+        font-size: 2rem;
+        padding-left: 0px;
+      padding-right: 0px;
+        border-right: 1px solid @seperator_color_greyDark;
+        .configure-thresholds-number{
+          padding-right: 1rem;
+          font-family: @inter-bold;
+          color: @accent_color;
+        }
+        .configure-thresholds-title-container{
+          .configure-thresholds-header-title{
+            color: @grey_dark;
+          }
+          .configure-thresholds-help-icon{
+            padding: 0rem 4rem 0rem 1rem;
+            font-size: 1.5rem;
+          }
+        }
+      }
+      .enable-threshold, .enable-background-color, .auto-baselining{
+        margin-top: 1.5rem;
+        span{
+          font-size: 1.6rem;
+          color: @grey_dark;
+          font-family: @inter-medium;
+          font-weight: 500;
+        }
+        .enable-threshold-switch, .enable-background-color-switch, .auto-baselining-switch{
+          padding: 0rem 1.5rem;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+      .enable-threshold, .enable-background-color{
+        border-right: 1px solid @seperator_color_greyDark;
+      }
+      .enable-background-color, .auto-baselining{
+        padding: 0rem 3rem 0rem 1rem;
+      }
+      
+    }
+    .configure-thresholds-table{
+      margin: 4rem;
+    }
+  }
+}

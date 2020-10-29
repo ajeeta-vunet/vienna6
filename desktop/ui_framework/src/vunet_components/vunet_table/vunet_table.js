@@ -145,13 +145,13 @@ export class VunetDataTable extends Component {
     let classnames = 'vunet-table';
 
     // If containerClassName is defined then use it.
-    if(newProps.metaItem.containerClassName !== '' &&
+    if (newProps.metaItem.containerClassName !== '' &&
       newProps.metaItem.containerClassName !== undefined) {
       classnames = ' ' + newProps.metaItem.containerClassName;
     }
 
     // If useBoxShadowForTable is set to false, remove the box shadow on table.
-    if(this.props.metaItem.useBoxShadowForTable !== undefined && !this.props.metaItem.useBoxShadowForTable) {
+    if (this.props.metaItem.useBoxShadowForTable !== undefined && !this.props.metaItem.useBoxShadowForTable) {
       classnames += ' remove-box-shadow';
     }
 
@@ -253,7 +253,7 @@ export class VunetDataTable extends Component {
           // _.isEmpty() returns true for [null, true, 1]
           // for these cases check  value with _.isEmpty() _.isNumber() _.isBoolean()
           if (!_.isArray(item[row]) && !_.isObject(item[row]) && (!_.isEmpty(item[row]) || _.isNumber(item[row]) || _.isBoolean(item[row]))
-          && !_.isUndefined(item[row])) {
+            && !_.isUndefined(item[row])) {
             if (_.isNumber(item[row])) {
               return item[row].toString().indexOf(filter) > -1 ? true : false;
             }
@@ -344,9 +344,9 @@ export class VunetDataTable extends Component {
   */
   renderHeader() {
     if ((this.props.metaItem.edit ||
-        (this.props.metaItem.rowAction &&
-         this.props.metaItem.rowAction.length > 0)) &&
-        !this.props.metaItem.headers.includes('Action')) {
+      (this.props.metaItem.rowAction &&
+        this.props.metaItem.rowAction.length > 0)) &&
+      !this.props.metaItem.headers.includes('Action')) {
       this.props.metaItem.headers.push('Action');
     }
 
@@ -363,7 +363,7 @@ export class VunetDataTable extends Component {
       // This check has done for column having value type Object, sorting on Object
       // is not implementes as of now.
       return (
-        (header !== 'Action' && this.sortableProperties &&  (!this.props.metaItem.noSortColumns ||
+        (header !== 'Action' && this.sortableProperties && (!this.props.metaItem.noSortColumns ||
           !this.props.metaItem.noSortColumns.includes(header))) ?
 
           {
@@ -400,14 +400,15 @@ export class VunetDataTable extends Component {
       if (typeof (item[row]) === 'object' && item[row].image) {
         cells.push({ value: <img src={item[row].image}/> });
       } else {
-        if (this.props.metaItem.columnData) {
-          const columnData = this.props.metaItem.columnData.find(cd => cd.columnName === row);
-          if (columnData) {
-            cells.push({ value: columnData.func(row, item[row]) });
-          } else {
-            cells.push({ value: item[row] });
-          }
+        let columnData, columnDataObj;
+        if (this.props.metaItem.columnData)
+          columnDataObj = this.props.metaItem.columnData.find(cd => cd.columnName === row);
+        columnData = columnDataObj ? columnDataObj.func : undefined;
+        // If we have some resolver data then we'll use that, otherwise we'll show raw value
+        if (columnData) {
+          cells.push({ value: columnData(row, item[row]) });
         } else {
+          // Try to never repeat code, This logic was repeated.
           cells.push({ value: item[row] });
         }
       }
@@ -496,7 +497,7 @@ export class VunetDataTable extends Component {
       //tableType is being sent as the second parameter of deleteSelectedItems
       let tableType = this.props.tableType ? this.props.tableType : '';
       if (this.props.metaItem.isFormWizard &&
-          this.props.metaItem.isFormWizard === true) {
+        this.props.metaItem.isFormWizard === true) {
         const restApiId = this.props.metaItem.restApiId;
         tableType = restApiId;
 
@@ -693,31 +694,30 @@ export class VunetDataTable extends Component {
     const rowsSelect = [];
     let hideDeleteButton = false;
     const isRowsSelected = this.state.selectedRowIds.length > 0 ? true : false;
-
+    let maxRows = this.props.metaItem.maxRows;
     // If atleast one row is selected and if the caller wants us to call a
     // callback to check whether we should show delete button or not, we
     // call the callback here and take its return value and use that to
     // hideDeleteButton
     if (isRowsSelected && this.props.metaItem.deleteIconCheckCallback) {
-      hideDeleteButton = this.props.metaItem.deleteIconCheckCallback(
-        this.state.selectedRowIds);
+      hideDeleteButton = this.props.metaItem.deleteIconCheckCallback(this.state.selectedRowIds);
     }
+    // Contains an array of buttons.
+    addDeleteAction = [(!hideDeleteButton && isRowsSelected
+      ? <KuiListingTableDeleteButton
+        key="delete"
+        onDelete={this.onDelete}
+        aria-label="Delete selected"
+      />
+      : undefined),
+    (this.props.metaItem.add && !isRowsSelected && (maxRows === undefined || maxRows > this.rows.length)
+      ? <KuiListingTableCreateButton
+        key="create"
+        onCreate={this.onCreate.bind(this)}
+        aria-label="Create new"
+      />
+      : undefined)];
 
-    if (this.props.metaItem.add) {
-      if (hideDeleteButton === false) {
-        addDeleteAction = isRowsSelected ?
-          [<KuiListingTableDeleteButton
-            key="delete"
-            onDelete={this.onDelete}
-            aria-label="Delete selected"
-          />] :
-          [<KuiListingTableCreateButton
-            key="create"
-            onCreate={this.onCreate.bind(this)}
-            aria-label="Create new"
-          />];
-      }
-    }
     if (this.props.metaItem.tableAction &&
       this.props.metaItem.tableAction.length) {
       for (let actionIndex = 0; actionIndex < this.props.metaItem.tableAction.length; actionIndex++) {
@@ -913,8 +913,8 @@ export class VunetDataTable extends Component {
             )}
           </KuiTableRow>
           {hasSubTable &&
-           this.state.showSubTable === row.id &&
-           this.subTable(hasSubTable, colSpan, row.id)}
+            this.state.showSubTable === row.id &&
+            this.subTable(hasSubTable, colSpan, row.id)}
         </KuiTableBody>
       );
     });

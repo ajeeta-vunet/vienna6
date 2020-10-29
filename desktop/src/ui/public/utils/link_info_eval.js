@@ -187,8 +187,8 @@ export function preparehtmlInfo(fieldName,
       // Now, add filters specified in link info
       if (linkInfoList[linkIndex].searchString !== '') {
         if ((queryString !== '*') && (queryString !== '')) {
-        // In this case, we add the additional searches to existing ones
-        // using logical AND
+          // In this case, we add the additional searches to existing ones
+          // using logical AND
           queryString = '(' + queryString + ') AND (' + linkInfoList[linkIndex].searchString + ')';
         } else {
           queryString = linkInfoList[linkIndex].searchString;
@@ -237,7 +237,7 @@ export function preparehtmlInfo(fieldName,
 
       // Do not show the cell value as link
       // in reports
-      if(printReport === true) {
+      if (printReport === true) {
         resultLink = formattedValue;
       } else {
         resultLink = '<u> <a href="' + link + '">' + formattedValue + '</a> </u>';

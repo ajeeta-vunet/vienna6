@@ -17,13 +17,10 @@
 // All rights reserved.
 // Use of copyright notice does not imply publication.
 
-import './_vunet_help.less';
-
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import './_vunet_help.less';
 import { htmlIdGenerator } from 'ui_framework/services';
-import { isArray } from 'ui/utils/vunet_type_check_utils.js';
 
 // This component provides a help block. In the help block description we support multi-level bullets.
 // For advanced formatting, html attributes can be provided as a part of the string for the bullet description.
@@ -47,7 +44,7 @@ import { isArray } from 'ui/utils/vunet_type_check_utils.js';
 // {
 //   headerText: 'this is just a title',
 //   referenceLink: 'documentation/moreInfo',
-//   contentIntroduction : 'brief introduction of the contents',
+//   contentIntroduction : 'brief intoduction of the contents'
 //   contentList: [
 //     {
 //       title: 'title 1',
@@ -111,7 +108,7 @@ export function VunetHelp(props) {
       // 1) key is 'nestedContent'
       // 2) object's value is of type array of object,
       // We need to perform a recursion.
-      if (key === 'nestedContent' && isArray(value)) {
+      if (key === 'nestedContent' && Array.isArray(value)) {
         return generateBody(value);
       }
       // if object's value is of type string,

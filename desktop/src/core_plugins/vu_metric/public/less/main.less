@@ -1,0 +1,179 @@
+// ------------------------- NOTICE ------------------------------- //
+//                                                                  //
+//                   CONFIDENTIAL INFORMATION                       //
+//                   ------------------------                       //
+//     This Document contains Confidential Information or           //
+//     Trade Secrets, or both, which are the property of VuNet      //
+//     Systems Ltd.  This document may not be copied, reproduced,   //
+//     reduced to any electronic medium or machine readable form    //
+//     or otherwise duplicated and the information herein may not   //
+//     be used, disseminated or otherwise disclosed, except with    //
+//     the prior written consent of VuNet Systems Ltd.              //
+//                                                                  //
+// ------------------------- NOTICE ------------------------------- //
+
+// Copyright 2020 VuNet Systems Ltd.
+// All rights reserved.
+// Use of copyright notice does not imply publication.
+
+@import "~ui/styles/vunet_variable_theme.less";
+
+.vu-metirc-vis{
+  width: 100%;
+  // overflow-x: hidden;
+
+  .row{
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .vis-editor-hide-for-reporting{
+    .vunet-trapezoid{
+        margin-left: auto;
+        margin-right: auto;
+        position:relative;
+        border-bottom: 101px solid @accent_color;
+        border-right: 40px solid transparent;
+        border-left: 40px solid transparent;
+        z-index: 0;
+        width: 622px;
+        cursor: pointer;
+        &::after{
+          content: ' ';
+          left: -2px;
+          top: -7px;
+          position: absolute;
+          background: @accent_color;
+          border-radius: 150px 150px 0px 0px;
+          width: 545px;
+          height: 14px;
+        }
+        .play-icon-and-name-container, .discard-icon-and-name-container{
+          background-color: @accent_color_dark_shade1;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          top: 20px;
+          left: 30px;
+          justify-content: center;
+          position: absolute;
+          z-index: 1;
+          color: @white; 
+          width: 213px;
+          height: 43px;
+          border-radius: 10px;
+          span{
+            padding-left: 20px;
+            font-size: 22px;
+          }
+          i{
+            font-size: 25px;
+          }
+        }
+        .discard-icon-and-name-container{
+          left:290px;
+          i{
+            font-size: 17px;
+            color: white
+          }
+        }
+        .play-icon-and-name-container-disabled{
+          opacity: .4;
+          cursor: not-allowed;
+        }
+        .resize-trapezoid{
+          position:absolute;
+          border-bottom: 20px solid @accent_color_dark_shade1;
+          border-right: 7px solid transparent;
+          border-left: 7px solid transparent;
+          width: 100px;
+          z-index: 3;
+          top: 81px;
+          left: 220px;
+          cursor: row-resize;
+          &::after{
+            content: ' ';
+            left: -1px;
+            top: -2px;
+            position: absolute;
+            background: @accent_color_dark_shade1;
+            border-radius: 20px 20px 0px 0px;
+            width: 88px;
+            height: 6px;
+          }
+          .icon-dragging-circles{
+            position: absolute;
+            font-size: 35px;
+            top: -8px;
+            left: 26px;
+            z-index: 4;
+          }
+        }  
+    }
+    // .vunet-trapezoid-disabled{
+    //   opacity:.5;
+    //   pointer-events: none;
+    //   .resize-trapezoid{
+    //     opacity: 1;
+    //   }
+    // }
+  }
+  .vis_editor__visualization{
+    overflow: hidden;
+    background-color: @view_background;
+  }
+  // Configuration container CSS for vu-metric
+  .vu-metric-configuration-container{
+    font-family: @inter-regular;
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
+    background: @white;
+    border-radius: 1rem;
+    padding: 2rem 0rem;
+    .vu-metric-vis-name{
+      margin-bottom : .5rem;
+      font-size: 3rem;
+      color: @black;
+      font-family: @inter-medium;
+      padding-left: 2.5rem;
+    }
+    .vu-metric-configuration-tabs{
+      .vu-metric-config-wrapper{
+        .vu-metric-config-header{
+          padding-bottom: 1px;
+          border-bottom: 1px solid @seperator_color_greyDark;
+          .header-tabs{
+            .kuiTabs{
+              border-bottom: none;
+            }
+          }
+        }
+        .vu-metric-config-tabs{
+          padding: 2rem 0rem 0rem 0rem;
+          font-size: 1.6rem;
+          .icon-help-blue{
+            cursor: help;
+          }
+        }
+      }
+    }
+    i{
+      cursor: pointer;
+    }
+  }
+  .vu-metric-horizontal-table-container, .vu-metric-vertical-table-container{
+    margin: 3rem 3rem;
+    background: @white;
+    padding: 3rem;
+    border-radius: 1rem;
+    overflow: auto;
+  }
+  .vu-metric-multi-visualization-container{
+    background: @white;
+    margin: 3rem 4rem;
+    border-radius: 1rem;
+    overflow: auto;
+
+  }
+  
+}

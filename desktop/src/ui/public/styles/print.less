@@ -281,6 +281,101 @@
     }
     
   }
+
+  // This is being done for the new BMV that ie the vu-metric case
+  .vu-metric-single-visualization-container{
+    .single-vu-metric-container-wrapper{
+      .single-vu-metric-container{  
+        margin-left: -50px!important;
+        // The font-sizes given is are the default so that they do not impact on the reports
+        .label-and-value-conatiner{
+          .vu-metric-formatted-value{
+            font-size: 40px!important;
+          }
+          .vu-metric-label-and-description-container{
+            .vu-metric-label{
+              font-size: 18px!important;
+            }
+            
+            // Here are are hiding the help text tooltip of the metrics
+            .description-help-container{
+              display: none;
+            }
+          }
+        }
+        .vu-metric-goal-label{
+          font-size: 15px!important;
+        }
+
+        // Here are are hiding the action buttons of the metrics
+        .vu-metric-action-buttons{
+          display: none;
+        }
+      }
+    }
+  }
+    // We are doing this to dispaly the multi metric vu-metric next to each other and hide action-buttons and help
+  .vu-metric-multi-visualization-container{
+    width: 100%;
+    .multi-vu-metric-with-action-buttons{
+      overflow: hidden;
+      .multi-metric-outer-container{
+        width: 100%;
+        display: block;
+        .single-vu-metric-container{  
+          // float: left!important;
+          padding-bottom: 0px!important;
+          
+          // The font-sizes given is are the default so that they do not impact on the reports
+          .label-and-value-conatiner{
+            .vu-metric-formatted-value{
+              font-size: 40px!important;
+            }
+            .vu-metric-label-and-description-container{
+              .vu-metric-label{
+                font-size: 18px!important;
+              }
+              
+              // Here are are hiding the help text tooltip of the metrics
+              .description-help-container{
+                display: none;
+              }
+            }
+          }
+          .vu-metric-goal-label{
+            font-size: 15px!important;
+          }
+        }
+
+        // THis has been done to hide action buttons in multiple metric scenarios
+        .vu-metric-action-buttons{
+          display: none;
+        }
+
+      }
+    }
+  }
+
+  // THis has been done for horizontal table vu-metric cases to hide action buttons and help text
+  .vu-metric-horizontal-table-container{
+    .vu-metric-horizontal-table{
+      .vu-metric-data-rows{
+
+        // This has been done to hide the help text icon from the table
+        .vu-metric-table-metric-name-td{
+          .metric-description-icon-container{
+            display: none;
+          }
+        }
+
+        // This has been done to hide action buttons 
+        .hide-action-buttons-in-report{
+          display: none;
+        }
+      }
+    }
+  }
+  
   
 }
 

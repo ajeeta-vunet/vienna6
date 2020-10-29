@@ -340,6 +340,10 @@ input[type="file"]{
                 .panel-content{
                   visualize{
                     visualization{
+                      // This has been done to provide scroll to the table vu-metric and multi vu-metric
+                      .vu-metric-horizontal-table-container, .vu-metric-vertical-table-container, .vu-metric-multi-visualization-container{
+                        overflow: auto;
+                      }
                       .vis-container {
                         .business-metric-container-wrapper{
                           .multiple-metric-container{
@@ -1003,15 +1007,14 @@ button[disabled], {
 }
 .icon-advanced-config:before {
   content: "\e906";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-cancel-circle:before {
   content: "\e907";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-discard:before {
   content: "\e908";
-  color: #5a4fef;
 }
 .icon-play-button:before {
   content: "\e909";
@@ -1023,7 +1026,7 @@ button[disabled], {
 }
 .icon-save:before {
   content: "\e90b";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-save-file-option:before {
   content: "\e90c";
@@ -1031,43 +1034,40 @@ button[disabled], {
 }
 .icon-no-results-found:before {
   content: "\e90d";
-  color: #dd171d;
 }
 .icon-help-blue:before {
   content: "\e90e";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-clone:before {
   content: "\e90f";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-help-heading:before {
   content: "\e910";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-redirect:before {
   content: "\e911";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-triangle-down:before {
   content: "\e912";
-  color: #f10d58;
 }
 .icon-triangle-up:before {
   content: "\e913";
-  color: #f10d58;
 }
 .icon-arrow-up:before {
   content: "\e914";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-arrow-down:before {
   content: "\e915";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-eye:before {
   content: "\e916";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-eye-slash:before {
   content: "\e917";
@@ -1075,7 +1075,7 @@ button[disabled], {
 }
 .icon-edit:before {
   content: "\e918";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-delete:before {
   content: "\e919";
@@ -1083,11 +1083,10 @@ button[disabled], {
 }
 .icon-check:before {
   content: "\e91a";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-add-plus:before {
   content: "\e91b";
-  color: #5a4fef;
 }
 .icon-log-parse:before {
   content: "\e91c";
@@ -1128,15 +1127,15 @@ button[disabled], {
 }
 .icon-Arrow_Expand-02:before {
   content: "\e928";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Close-01:before {
   content: "\e929";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Arrow_Expand-01:before {
   content: "\e92a";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Notification_Alert_Result:before {
   content: "\e92b";
@@ -1144,7 +1143,7 @@ button[disabled], {
 }
 .icon-Storage_notification_type:before {
   content: "\e92c";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Storage_Notification_Result:before {
   content: "\e92d";
@@ -1152,7 +1151,7 @@ button[disabled], {
 }
 .icon-Notification_type:before {
   content: "\e92e";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Notification_Alert_Script_Result:before {
   content: "\e92f";
@@ -1160,7 +1159,7 @@ button[disabled], {
 }
 .icon-help-white:before {
   content: "\e930";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Verify-Data-01:before {
   content: "\e931";
@@ -1180,11 +1179,11 @@ button[disabled], {
 }
 .icon-maximize:before {
   content: "\e935";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Instances-Receiving-08:before {
   content: "\e936";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Archive_Success .path1:before {
   content: "\e937";
@@ -1337,7 +1336,7 @@ button[disabled], {
 }
 .icon-Types-Configured-09:before {
   content: "\e955";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Open-Indices-02:before {
   content: "\e956";
@@ -1349,7 +1348,7 @@ button[disabled], {
 }
 .icon-Instances-Configured-07:before {
   content: "\e958";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Closed-Indices-01:before {
   content: "\e959";
@@ -1521,11 +1520,11 @@ button[disabled], {
 }
 .icon-Notification:before {
   content: "\e97c";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-user:before {
   content: "\e97d";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Menu-Collapse:before {
   content: "\e97e";
@@ -1536,22 +1535,20 @@ button[disabled], {
 }
 .icon-Analytics:before {
   content: "\e980";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Data-Source:before {
   content: "\e981";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Network:before {
   content: "\e982";
-  color: #5a4fef;
+  color: @accent_color;
 }
 .icon-Settings:before {
   content: "\e983";
-  color: #5a4fef;
+  color: @accent_color;
 }
-
-
 
 // Table look and feel for storyboard listing page and dashboard listing page
 .storyboard-listing-container, .dashboard-listing-container {

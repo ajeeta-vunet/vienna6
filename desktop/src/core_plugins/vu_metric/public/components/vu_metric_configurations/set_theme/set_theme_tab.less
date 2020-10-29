@@ -1,0 +1,144 @@
+// ------------------------- NOTICE ------------------------------- //
+//                                                                  //
+//                   CONFIDENTIAL INFORMATION                       //
+//                   ------------------------                       //
+//     This Document contains Confidential Information or           //
+//     Trade Secrets, or both, which are the property of VuNet      //
+//     Systems Ltd.  This document may not be copied, reproduced,   //
+//     reduced to any electronic medium or machine readable form    //
+//     or otherwise duplicated and the information herein may not   //
+//     be used, disseminated or otherwise disclosed, except with    //
+//     the prior written consent of VuNet Systems Ltd.              //
+//                                                                  //
+// ------------------------- NOTICE ------------------------------- //
+
+// Copyright 2020 VuNet Systems Ltd.
+// All rights reserved.
+// Use of copyright notice does not imply publication.
+
+@import "~ui/styles/vunet_variable_theme.less";
+
+.set-theme-tab-container{
+  .set-theme-description{
+    padding: 0rem 2rem;
+    font-size: 1.6rem;
+    color: @grey_light;
+  }
+  .set-theme-container{
+
+    .set-theme-header-row{
+      padding: 0rem 2rem;
+      margin: 2rem 0rem;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      .set-theme-expander-icon{
+        font-size: 1.6rem;
+      }
+      .set-theme-heading{
+        padding: 0rem 2.5rem;
+        color: @grey_dark;
+        font-size: 3rem;
+      }
+    }
+
+    .display-format-container{
+      margin-left: 6rem;
+      .tabular-format-switch{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 3rem;
+        .display-metrics-in-table{
+          font-size: 1.6rem;
+          padding-left:1rem;
+          color: @grey_dark;
+          font-family: @inter-medium;
+        }
+      }
+      .disabled-icon{
+        cursor: not-allowed !important;
+        opacity: 0.3;
+      }
+      .tablur-formats-and-fucntions-row{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 3rem;
+        .horizontal-format-switch, .vertical-format-switch{
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          .horizontal-format, .vertical-format{
+            font-size: 1.6rem;
+            padding:0rem 4rem 0rem 1rem;
+            color: @grey_dark;
+            font-family: @inter-medium;
+          }
+        }
+        .vertical-format-switch{
+          position: relative;
+          margin-right: 4rem;
+        }
+      }
+      .enable-link-for-fields{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 3rem;
+        .reference-links-text{
+          font-size: 1.6rem;
+          padding:0rem 1rem 0rem 1rem;
+          color: @grey_dark;
+          font-family: @inter-medium;
+        }
+      }
+      
+    }
+
+    .font-size-settings-row{
+      margin-left: 5rem;
+      .form-group{
+        .icon-help-blue{
+          margin-left: 2rem;
+          margin-bottom: 2rem;
+        }
+      }
+      .vunet-slider {
+        margin-top: 1rem;
+        -webkit-appearance: none;
+        height: 1rem;
+        border-radius: 8px;
+        background: @seperator_color_greyDark;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        &:hover{
+          opacity: 1;
+        }
+      }
+      
+      .vunet-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: @accent_color;
+        cursor: pointer;
+      }
+      
+      .vunet-slider::-moz-range-thumb {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: @accent_color;
+        cursor: pointer;
+      }
+
+      
+    }
+  }
+
+}

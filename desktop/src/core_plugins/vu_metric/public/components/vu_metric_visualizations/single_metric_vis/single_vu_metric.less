@@ -1,0 +1,206 @@
+// ------------------------- NOTICE ------------------------------- //
+//                                                                  //
+//                   CONFIDENTIAL INFORMATION                       //
+//                   ------------------------                       //
+//     This Document contains Confidential Information or           //
+//     Trade Secrets, or both, which are the property of VuNet      //
+//     Systems Ltd.  This document may not be copied, reproduced,   //
+//     reduced to any electronic medium or machine readable form    //
+//     or otherwise duplicated and the information herein may not   //
+//     be used, disseminated or otherwise disclosed, except with    //
+//     the prior written consent of VuNet Systems Ltd.              //
+//                                                                  //
+// ------------------------- NOTICE ------------------------------- //
+
+// Copyright 2020 VuNet Systems Ltd.
+// All rights reserved.
+// Use of copyright notice does not imply publication.
+
+@import "~ui/styles/vunet_variable_theme.less";
+
+.single-vu-metric-container-wrapper{
+  .action-confirmation-modal, .action-confirmation-message-modal{
+    .kuiModalBody{
+      text-align: initial;
+    }
+  }
+  .row{
+    margin: 0px;
+  }
+  text-align: center;
+  .single-vu-metric-container{
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: @white;
+    border-radius: 1rem;
+    font-family: @inter-medium;
+    .vu-metric-formatted-value{
+      text-align: center;
+      font-family: @inter-bold;
+      padding-bottom: .5rem;
+    }
+    .vu-metric-label-and-description-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      .vu-metric-label{
+        color: @grey_light;
+        display: inline-block;
+      }
+      .description-help-container{
+        display: flex;
+        align-items: center;
+        padding-left: 1rem;
+      }
+    }
+    .vu-metric-goal-label{
+      padding-top: .5rem;
+      font-family: @inter-regular;
+    }
+    .no-results-found-container{
+      margin-bottom: 1rem;
+      text-align: center;
+      i{
+        font-size: 2.25rem;
+        color: @red;
+        padding-bottom: .5rem;
+      }
+      .no-results-message{
+        font-family: @inter-regular;
+        font-size: 1.6rem;
+        color: @red;
+      }
+      
+    } 
+    .vu-metric-historical-data{
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 2rem 0rem;
+      .single-historical-data-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0rem 1.5rem;
+        word-break: break-word;
+        color: @grey_light;
+        &:nth-child(3), &:nth-child(2) {
+          &::before {
+            position: absolute;
+            top: 2.75rem;
+            height: 2.5rem;
+            width: 2px;
+            align-self: start;
+            margin-left: -1.5rem;
+            background:@seperator_color_greyDark;
+            display: block;
+            content: ' ';
+          }
+        }
+        .historical-data-label{
+          font-size: 1.3rem;
+          text-transform: uppercase;
+          // color: @grey_light;
+        }
+      }
+    }
+    .vu-metric-action-buttons{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 1rem;
+      .single-action-button{
+        color: @white;
+        width: 9.5rem;
+        max-width: 9.5rem;
+        padding: .4rem 1rem;
+        border-radius: 1.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0rem 1rem;
+        &:focus{
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+.vu-metric-in-dashboard{
+  line-height: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  .single-vu-metric-container{
+    width: 100%;
+  }
+}
+
+.vu-metric-in-config{
+  .single-vu-metric-container{
+    margin: 2rem 0rem;
+    min-width: 15rem;
+    padding: 2rem 2rem 2.5rem 2rem;
+  }
+}
+
+// THis is the scenario of multiple metrics
+.multi-vu-metric-with-action-buttons{
+  background:@white;
+  // margin: 3rem 3rem;
+  border-radius: 1rem;
+  overflow: auto;
+  .multi-metric-outer-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    // justify-content: center;
+    // align-items: center;
+    .single-vu-metric-container{
+      max-width: 50rem;
+      min-width: 48rem;
+      @media only screen and (max-width: 1450px) {
+        max-width: 46rem;
+        min-width: 43rem;
+      }
+    }
+    
+    .vu-metric-action-buttons{
+      display:flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      max-width: 50rem;
+      min-width: 46rem;
+      margin: 2rem 0rem;
+      padding: 2rem 2rem 2.5rem 2rem;
+      @media only screen and (max-width: 1450px) {
+        max-width: 46rem;
+        min-width: 40rem;
+      }
+      .single-action-button{
+        color: @white;
+        width: 9.5rem;
+        max-width: 9.5rem;
+        padding: .4rem 1rem;
+        border-radius: 1.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 2rem;
+        &:focus{
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+

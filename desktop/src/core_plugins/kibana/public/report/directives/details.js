@@ -110,10 +110,10 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
               }
 
               if ((vis.visType === 'metric' && aggregationLength === 0) ||
-                  vis.visType === 'health_metric' ||
-                  (vis.visType === 'business_metric' &&
-                    metricVisLength === 1 &&
-                    aggregationLength === 0)) {
+                vis.visType === 'health_metric' ||
+                (vis.visType === 'business_metric' &&
+                  metricVisLength === 1 &&
+                  aggregationLength === 0)) {
 
                 // If we need to add a new row, we should check for space
                 // availability
@@ -139,29 +139,39 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
                   $rowdiv.appendTo($el);
                 }
 
-                const $visdiv = $compile('<report-panel class=\'col-md-3\'>')(vis.$scope);
-                $visdiv.appendTo($rowdiv);
-
-                vis.$scope.width = '250px';
-                vis.$scope.height = '170px';
                 metricVisCount += 1;
 
+                // Here we are doing this because of the new VU-Metric scenarios
+                if (vis.visType === 'business_metric' && metricVisLength === 1 && aggregationLength === 0) {
+                  // We are overriding the previous height as the new heights are changed
+                  vis.$scope.width = '350px';
+                  vis.$scope.height = '150px';
+                  const $visdiv = $compile('<report-panel class=\'col-md-4\'>')(vis.$scope);
+                  $visdiv.appendTo($rowdiv);
+                }
+                else {
+                  const $visdiv = $compile('<report-panel class=\'col-md-3\'>')(vis.$scope);
+                  $visdiv.appendTo($rowdiv);
+
+                  vis.$scope.width = '250px';
+                  vis.$scope.height = '170px';
+                }
                 // If we are adding a new row... increase the height..
                 if (multiplier) {
                   height += metricHeight;
                 }
               } else if (vis.visType === 'line' ||
-                         vis.visType === 'pie' ||
-                         vis.visType === 'area' ||
-                         vis.visType === 'bar' ||
-                         vis.visType === 'horizontal_bar' ||
-                         vis.visType === 'histogram' ||
-                         vis.visType === 'heatmap' ||
-                         (vis.visType === 'business_metric' &&
-                            metricVisLength > 1 &&
-                            visObj.visState.params.metrics.length <= 5  &&
-                            aggregationLength === 0)) {
-                //  visObj.visState.params.metrics.length <=5  has been added as we will show bmv in half page
+                vis.visType === 'pie' ||
+                vis.visType === 'area' ||
+                vis.visType === 'bar' ||
+                vis.visType === 'horizontal_bar' ||
+                vis.visType === 'histogram' ||
+                vis.visType === 'heatmap' ||
+                (vis.visType === 'business_metric' &&
+                  metricVisLength > 1 &&
+                  visObj.visState.params.metrics.length <= 2 &&
+                  aggregationLength === 0 && visObj.visState.params.enableTableFormat === false)) {
+                //  visObj.visState.params.metrics.length <=4  has been added as we will show bmv in half page
                 // when less than 5 metric are there in multi-metric case
                 // We should reset metric vis count as it must start from scratch again
                 metricVisCount = 0;
@@ -172,13 +182,20 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
                   height = 0;
                 }
 
+                vis.$scope.height = '270px';
+
                 if (vis.visType === 'pie') {
                   vis.$scope.width = '950px';
-                } else {
+                }
+                else if (vis.visType === 'business_metric') {
+                  vis.$scope.width = '100%';
+                  vis.$scope.height = '350px';
+                }
+                else {
                   vis.$scope.width = '1150px';
                 }
 
-                vis.$scope.height = '270px';
+
 
                 const $visdiv = $compile('<report-panel>')(vis.$scope);
                 $visdiv.appendTo($el);
@@ -198,8 +215,8 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
 
                 // We can start it from the earlier ending page
                 if (vis.visType === 'table' || vis.visType === 'business_metric'
-                    ||  vis.visType === 'customer_journey_map'
-                    || vis.visType === 'status_indicator_and_kpi') {
+                  || vis.visType === 'customer_journey_map'
+                  || vis.visType === 'status_indicator_and_kpi') {
                   // Set width to 100% for table visulaization.
                   vis.$scope.height = '100%';
                 } else {

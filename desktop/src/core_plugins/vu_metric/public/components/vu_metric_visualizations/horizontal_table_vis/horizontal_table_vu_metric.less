@@ -1,0 +1,132 @@
+// ------------------------- NOTICE ------------------------------- //
+//                                                                  //
+//                   CONFIDENTIAL INFORMATION                       //
+//                   ------------------------                       //
+//     This Document contains Confidential Information or           //
+//     Trade Secrets, or both, which are the property of VuNet      //
+//     Systems Ltd.  This document may not be copied, reproduced,   //
+//     reduced to any electronic medium or machine readable form    //
+//     or otherwise duplicated and the information herein may not   //
+//     be used, disseminated or otherwise disclosed, except with    //
+//     the prior written consent of VuNet Systems Ltd.              //
+//                                                                  //
+// ------------------------- NOTICE ------------------------------- //
+
+// Copyright 2020 VuNet Systems Ltd.
+// All rights reserved.
+// Use of copyright notice does not imply publication.
+
+@import "~ui/styles/vunet_variable_theme.less";
+
+.vu-metric-horizontal-table{
+  width: 100%;
+  word-break: break-all;
+  border: 1px solid @seperator_color_greyDark;
+  .vu-metric-data-rows{
+    &:nth-child(1){
+      background-color: @seperator_color;
+      color: @grey_dark;
+      font-size: 1.6rem;
+      font-family: @inter-bold;
+      border: none!important;
+      .metric-description-icon-container,.metric-refernce-link-icon-container, .vu-metric-goal-info-container{
+        display: none;
+      }
+      td{
+        // border-right: 1px solid @seperator_color_greyDark;
+        border-bottom: none!important;
+        border-top: none!important;
+        border-left: none!important; 
+        height: 4.5rem;
+
+        .historical-data-values-and-trend-container{
+          color: @grey_dark;
+          font-family: @inter-bold;
+        }
+      }
+    }
+    font-size: 1.5rem;
+    .bucketing-td{
+      border-bottom: 1px solid @seperator_color_greyDark;
+      .bucketing-table{
+        width: 100%;
+        .vu-metric-bucket-key,.vu-metric-bucket-formatted-value-td, .vu-metric-bucket-historical-data-td{
+          // This padding has been changed from padding: 1rem 1rem to padding: 2rem 1rem to fix the boreder issues.
+          padding: 2rem 1rem;
+          border-left: 1px solid @seperator_color_greyDark;
+          border-bottom: 1px solid @seperator_color_greyDark;
+        }
+        .vu-metric-bucket-historical-data-td{
+          color: @grey_light;
+        }
+      }
+    }
+    .action-buttons-td{
+      padding: 1rem 1rem;
+      border-left: 1px solid @seperator_color_greyDark;
+      .single-action-button{
+        margin-bottom: .5rem;
+        &:focus{
+          box-shadow: none;
+        }
+      }
+    }
+    .vu-metric-horizontal-table-td-metric-names{
+      padding: 1rem 1rem;
+      .vu-metric-label-description-and-link-container{
+        .metric-description-icon-container,.metric-refernce-link-icon-container{
+          padding-left: .5rem;
+        }
+      }
+    }
+    .vu-metric-table-metric-name-td{
+      padding: 1rem 1rem;
+      border-bottom: 1px solid @seperator_color_greyDark;
+    }
+    .vu-metric-table-metric-value-td{
+      padding: 1rem 1rem;
+      border-left: 1px solid @seperator_color_greyDark;
+      border-bottom: 1px solid @seperator_color_greyDark;
+    }
+    .action-buttons-td{
+      padding: 1rem 1rem;
+      border-left: 1px solid @seperator_color_greyDark;
+      border-bottom: 1px solid @seperator_color_greyDark;
+      .single-action-button{
+        color: @white;
+        width: 9.5rem;
+        max-width: 9.5rem;
+        padding: .4rem 1rem;
+        border-radius: 1.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 2rem;
+        &:focus{
+          box-shadow: none;
+        }
+      }
+    }
+    .vu-metric-table-historical-data-td{
+      padding: 1rem 1rem;
+      border-left: 1px solid @seperator_color_greyDark;
+      border-bottom: 1px solid @seperator_color_greyDark;
+      color: @grey_light;
+      .historical-data-values-and-trend-container{
+        font-family: @inter-regular;
+        font-size: 1.6rem;
+      }   
+    }
+    .upward-trend-green{
+      color: @bmv_green;
+    }
+    .upward-trend-red{
+      color: @bmv_red;
+    }
+    td{
+      // &:nth-child(1){
+      //   padding-left: 2rem;
+      // }
+    }
+  }
+}

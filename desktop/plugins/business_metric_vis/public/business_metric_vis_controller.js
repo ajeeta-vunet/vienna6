@@ -1,6 +1,6 @@
 require('ui/courier');
 const _ = require('lodash');
-const  angular = require('angular');
+const angular = require('angular');
 const chrome = require('ui/chrome');
 
 import 'plugins/business_metric_vis/directives/metric_table.js';
@@ -22,12 +22,14 @@ import { getFiltersFromSavedSearch } from 'ui/filter_manager/filter_manager.js';
 import moment from 'moment';
 
 const module = uiModules.get('kibana/business_metric_vis', ['kibana']);
-const utcRegex = new RegExp ('\\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+Z\\b');
+const utcRegex = new RegExp('\\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+Z\\b');
 module.controller('BusinessMetricVisController', function ($scope, Private,
   Notifier, $http, $rootScope, getAppState, config,
   timefilter, courier, $filter, kbnUrl, $element, savedSearches, StateService, $timeout, confirmModal) {
 
+
   const timeFormat = config.get('dateFormat');
+
   const notify = new Notifier({
     location: 'Alert'
   });
@@ -125,9 +127,9 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
   // This has been done to disable the action buttons if the visualization is saved.
   const currentRoute = window.location.href;
-  if(currentRoute.includes('/visualize/create?type=business_metric')) {
+  if (currentRoute.includes('/visualize/create?type=business_metric')) {
     $scope.isVisualizationSaved = false;
-  }else{
+  } else {
     $scope.isVisualizationSaved = true;
   }
 
@@ -358,12 +360,12 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     if ($scope.vis.params.historicalData) {
       historicalDataLength = $scope.vis.params.historicalData.length;
     }
-    if($scope.vis.params.actionButtonsData) {
+    if ($scope.vis.params.actionButtonsData) {
       // If action button are configured the length will be 1 as we are calculating the length of columns(Action Buttons will come in 1 column)
       actionButtonsLength = 1;
     }
 
-    // Check whether, more than one metrics are to te displayed.
+    // Check whether, more than one metrics needs to te displayed.
     // If it is only one metric, we would be displaying them
     // with CSS class used for single metric
     let displayedMetrics = 0;
@@ -375,15 +377,15 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     $scope.displayedMetrics = displayedMetrics;
 
     if (aggregationsLength === 0) {
-      // Check whether, more than one metrics are to te displayed.
+      // Check whether, more than one metrics needs to te displayed.
       // If it is only one metric, we would be displaying them
       // with CSS class used for single metric
-    //  let displayedMetrics = 0;
-    //  _.each($scope.vis.params.metrics, function (metric) {
-    //    if (!metric.hideMetric) {
-    //      displayedMetrics += 1;
-    //    }
-    //  });
+      //  let displayedMetrics = 0;
+      //  _.each($scope.vis.params.metrics, function (metric) {
+      //    if (!metric.hideMetric) {
+      //      displayedMetrics += 1;
+      //    }
+      //  });
       $scope.displayedMetrics = displayedMetrics;
     }
 
@@ -393,7 +395,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     //const noOfColumns = aggregationsLength + historicalDataLength + actionButtonsLength + 2;
     const noOfColumns = $scope.vis.params.tabularFormat === 'vertical' ?
       aggregationsLength + (displayedMetrics * (historicalDataLength + 1)) :
-      aggregationsLength + historicalDataLength + actionButtonsLength +  2;
+      aggregationsLength + historicalDataLength + actionButtonsLength + 2;
 
     $scope.columnWidth = (100 / (noOfColumns)) + '%';
 
@@ -409,8 +411,8 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       const metricset = {};
       metricset.formattedValue = fValue;
       // We are pushing the action buttons header name to header meta when action buttons are configured.
-      if(fValue === 'For Selected Time') {
-        metricset.actionButtonsColumnName =  'Actions';
+      if (fValue === 'For Selected Time') {
+        metricset.actionButtonsColumnName = 'Actions';
       }
       metricset.historicalData = [];
 
@@ -574,7 +576,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       };
       // Add the metrics along with the threshold to the payload request which
       // will be sent out to back-end in the next step.
-      const createPayload = function (metric,  metricListIndex, savedSearchQuery) {
+      const createPayload = function (metric, metricListIndex, savedSearchQuery) {
         const index = metric.index;
         const fieldType = metric.fieldType;
         let metricType = metric.type;
@@ -648,7 +650,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         else {
           return (savedSearches.get(metric.savedSearch.id))
             .then(function (savedSearch) {
-            // get the filter query from the saved search
+              // get the filter query from the saved search
               savedSearchQuery = savedSearch.searchSource.get('query').query;
               // Check whether any filter is added to the saved search
               savedSearchFilters = savedSearch.searchSource.get('filter');
@@ -674,9 +676,9 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               if (error instanceof SavedObjectNotFound) {
                 notify.error(
                   'Problem in loading this BMV... The saved search associated with metric "' + metric.label +
-                '" no longer exists. Please re-configure this metric');
+                  '" no longer exists. Please re-configure this metric');
               } else {
-              // Display the error message to the user.
+                // Display the error message to the user.
                 notify.error(error);
                 throw error;
               }
@@ -690,7 +692,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         let formattedValue;
         let color;
         angular.forEach(metricList, function (metricObj) {
-        //for (let index = 0; index < metricList.length; index++) {
+          //for (let index = 0; index < metricList.length; index++) {
           const label = metricObj.label;
           if (metric.label === label) {
             if (metric.value !== undefined) {
@@ -698,7 +700,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               formattedValue = metric.formattedValue;
               color = metric.color;
             }
-            else  {
+            else {
               value = 'N.A.';
               formattedValue = 'N.A.';
               color = 'N.A.';
@@ -709,11 +711,13 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             if (metric.hasOwnProperty('historicalData')) {
               angular.forEach(metric.historicalData, function (hist, index) {
                 const histColor = $scope.setTrendColor(hist.icon, metricList[index].upTrendColor);
-                row[columnName + colIndex] = { value: hist.value,
-			          formattedValue: hist.formattedValue,
-			          color: histColor,
-			          icon: hist.icon,
-			          percentageChange: hist.percentageChange };
+                row[columnName + colIndex] = {
+                  value: hist.value,
+                  formattedValue: hist.formattedValue,
+                  color: histColor,
+                  icon: hist.icon,
+                  percentageChange: hist.percentageChange
+                };
                 colIndex = colIndex + 1;
               });
             }
@@ -758,8 +762,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex);
               destList.push(row);
             }
-            else
-            {
+            else {
               const colIndex = Object.keys(destList[rowIndex]).length;
               let metric = {};
 
@@ -850,7 +853,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
                 if (metricData.hasOwnProperty(key)) {
                   // We test response to the check if this is a timestamp and if so
                   // we would change the format to a standard time format set in Advance Settings under Manage Resources.
-                  if(utcRegex.test(metricData[key].formattedValue)) {
+                  if (utcRegex.test(metricData[key].formattedValue)) {
                     const m = moment(metricData[key].formattedValue);
                     metricData[key].formattedValue = m.local().format(timeFormat);
                   }
@@ -928,8 +931,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
                   }
                 }
               }
-              if (!match)
-              {
+              if (!match) {
                 refLink['plain text'] = '';
               }
               refLink.historicData = false;
@@ -937,7 +939,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               $scope.columnMeta.push(refLink);
             }
             angular.forEach($scope.vis.params.metrics, function (metric, index) {
-            //for (let index = 0; index < $scope.vis.params.metrics.length; index++) {
+              //for (let index = 0; index < $scope.vis.params.metrics.length; index++) {
               const refLink = {};
               const metricIndex = index;
               // Add metric names and historic data names to header
@@ -1018,6 +1020,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           });
       });
     };
+
     // Once the payload is ready make the POST call to back end.
     makePostCall();
 

@@ -725,7 +725,7 @@ export class VunetDynamicFormBuilder extends Component {
               {...props}
               key={o.key}
               value={o.value}
-            >{accessor ? accessor.func(m.key, o.value) : o.value}
+            >{accessor ? accessor.func(m.key, o.value) : o.label}
             </option>
           );
         });
@@ -739,6 +739,7 @@ export class VunetDynamicFormBuilder extends Component {
             <select
               className="form-input"
               value={value}
+              data-error-text={errorText}
               onChange={(e) => { this.onChange(e, target); }}
             >
               {input}

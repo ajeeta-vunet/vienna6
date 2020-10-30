@@ -1,0 +1,212 @@
+@import '~ui/styles/vunet_light_dark.less';
+
+#notificationsPanel {
+  position: fixed;
+  width: 400px;
+  top: 48px;
+  bottom: 0;
+  right: -400px;
+  z-index: 11;
+  -webkit-box-shadow: 16px 0px 24px @notification-panel-shadow;
+  box-shadow: 16px 0px 24px @notification-panel-shadow;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s @notification-panel-animation;
+  &.active {
+      z-index: 11;
+      opacity: 1;
+      visibility: visible;
+      right: 0;
+      // transform: translate(0, 20px);
+      transition: all 0.5s @notification-panel-animation;
+  }
+  .header {
+    display: flex;
+    padding: 14px 14px 0 14px;
+    box-shadow: 0 @item-border-height 2px rgba(0, 0, 0, 0.14);
+    > p {
+      font-weight: 600;
+    }
+  }
+  .notifications-container {
+    .tabs-header {
+      > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        > li {
+          > label {
+            position: relative;
+            display: block;
+            padding: 10px 15px;
+            font-size: 16px !important;
+            // background-color: rgba(90, 79, 239, 0.05);
+            color: @text-color-light;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .tabs-content {
+      > input {
+        position: absolute;
+        width: 0;
+        height: 0;
+        margin: 0;
+        z-index: -100;
+        top: -10000px;
+      }
+
+      > input:checked + .tab-content-item {
+        display: block;
+      }
+      .tab-content-item {
+        display: none;
+        width: 100%;
+        .no-notifications-div {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          > p {
+            color: #7D7D7D;
+            font-size: 16px;
+            font-weight: 700;
+          }
+        }
+      }
+      #alertsContent {
+        // max-height: calc(100vh - 54px - 49px - 45px - 59px);
+        // max-height: calc(100vh - 35px);
+        position: absolute;
+        bottom: 0;
+        top: 0;
+        margin-top: 93px;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        &:hover {
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+      }
+      #backupAndStorageContent {
+        // max-height: calc(100vh - 54px - 49px - 45px - 59px);
+        // max-height: calc(100vh - 35px);
+        position: absolute;
+        bottom: 0;
+        top: 0;
+        margin-top: 93px;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        &:hover {
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+      }
+
+    }
+
+  }
+  &.light-theme {
+    background-color: @notification-panel-bg-light;
+    border-top: @item-border-height solid @popover-border-light;
+    border-left: @item-border-height solid @popover-border-light;
+    .header {
+      background-color: @light-nav-bg;
+      color: @text-color-light;
+      #viewAllNotifications {
+        color: @blue-accent-light;
+        margin-left: 16px;
+      }
+      #closeNotifications {
+        color: @text-color-light;
+        margin-left: auto;
+        cursor: pointer;
+      }
+    }
+    .notifications-container {
+      .tabs-header {
+        > ul {
+          > li {
+            > label {
+              color: @text-color-light;
+              &.notification-tab-active {
+                color: @blue-accent-light !important;
+                border-bottom: solid 2px @blue-accent-light;
+                background-color: transparent !important;
+              }
+              #alertsNotificationsCount {
+                margin-left: 10px;
+                background-color: @text-color-light;
+                color: @notification-panel-bg-light;
+                &.active {
+                  background-color: @blue-accent-light !important;
+                }
+              }
+              #backupsNotificationsCount {
+                margin-left: 10px;
+                background-color: @text-color-light;
+                color: @notification-panel-bg-light;
+                &.active {
+                  background-color: @blue-accent-light !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &.dark-theme {
+    background-color: @notification-panel-bg-dark;
+    border-top: @item-border-height solid @popover-border-dark;
+    border-left: @item-border-height solid @popover-border-dark;
+    .header {
+      background-color: @dark-nav-bg;
+      color: @text-color-dark;
+      #viewAllNotifications {
+        color: @blue-accent-dark;
+        margin-left: 16px;
+      }
+      #closeNotifications {
+        color: @text-color-dark;
+        margin-left: auto;
+        cursor: pointer;
+      }
+    }
+    .notifications-container {
+      .tabs-header {
+        > ul {
+          > li {
+            > label {
+              color: @text-color-dark;
+              &.notification-tab-active {
+                color: @blue-accent-dark !important;
+                border-bottom: solid 2px @blue-accent-dark;
+                background-color: transparent !important;
+              }
+              #alertsNotificationsCount {
+                margin-left: 10px;
+                background-color: @text-color-dark;
+                color: @notification-panel-bg-dark;
+                &.active {
+                  background-color: @blue-accent-dark !important;
+                }
+              }
+              #backupsNotificationsCount {
+                margin-left: 10px;
+                background-color: @text-color-dark;
+                color: @notification-panel-bg-dark;
+                &.active {
+                  background-color: @blue-accent-dark !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

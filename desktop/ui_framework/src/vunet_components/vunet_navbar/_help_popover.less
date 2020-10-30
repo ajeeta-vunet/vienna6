@@ -1,0 +1,128 @@
+.light-theme {
+  #helpPopover {
+    right: -27%;
+    background-color: @popover-bg-light;
+    color: @text-color-light;
+    border: solid @popover-border-light @item-border-height;
+    width: 273px;
+    &:before {
+      left: 89.25%;
+      border-style: solid;
+      border-width: 0 10px 10px 10px;
+      border-color: @popover-border-light transparent;
+    }
+    &:after {
+      left: 89%;
+      border-style: solid;
+      border-width: 0 11px 11px 11px;
+      border-color: @popover-bg-light transparent;
+    }
+    > .input-group {
+      width: 256px;
+      margin-left: 8px;
+      margin-right: 8px;
+      border: solid @item-border-height @popover-border-light;
+      background-color: @popover-bg-light;
+      border-radius: 4px;
+      > input {
+        background-color: @popover-bg-light;
+        color: @text-color-light;
+        border: none !important;
+        padding: 0 !important;
+      }
+    }
+  }
+  #searchHelpInputGroup.focused {
+    border: @item-border-height solid @blue-accent-light !important;
+  }
+  .navbar-popover hr {
+    background-color: @popover-border-light !important;
+    border: none !important;
+  }
+  #searchHelpIcon {
+    color: @search-icon-inactive-light;
+  }
+  #searchHelpIcon.focused {
+    color: @blue-accent-light;
+  }
+}
+
+.dark-theme {
+  #helpPopover {
+    right: -27%;
+    background-color: @popover-bg-dark;
+    color: @text-color-dark;
+    border: solid @popover-border-dark @item-border-height;
+    width: 273px;
+    &:before {
+      left: 89.25%;
+      border-style: solid;
+      border-width: 0 10px 10px 10px;
+      border-color: @popover-border-dark transparent;
+    }
+    &:after {
+      left: 89%;
+      border-style: solid;
+      border-width: 0 11px 11px 11px;
+      border-color: @popover-bg-dark transparent;
+    }
+    > .input-group {
+      width: 256px;
+      margin-left: 8px;
+      margin-right: 8px;
+      border: solid @item-border-height @active-white;
+      background-color: @hover-white;
+      border-radius: 4px;
+      > input {
+        background-color: @hover-white;
+        color: @text-color-dark;
+        border: none !important;
+        padding: 0 !important;
+      }
+    }
+  }
+  .navbar-popover hr {
+    background-color: @active-white !important;
+    border: none !important;
+  }
+
+  #searchHelpInputGroup.focused {
+    border: @item-border-height solid @blue-accent-dark !important;
+  }
+
+  #searchHelpIcon {
+    color: @search-icon-inactive-dark;
+  }
+
+  #searchHelpIcon.focused {
+    color: @blue-accent-dark;
+  }
+}
+
+#helpPopover {
+  .list-item-title {
+    margin-left: 8px;
+  }
+  > p:nth-of-type(1) {
+    margin: 14px 0 0 16px;
+    font-size: 16px;
+  }
+  > p:nth-of-type(2) {
+    margin: 26px 0 8px 16px;
+    font-size: 16px;
+  }
+  > hr:nth-of-type(1) {
+    width: 100% !important;
+    height: @item-border-height !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-top: 10.5px !important;
+    margin-bottom: 8.5px !important;
+    border: none !important;
+  }
+  > .input-group > span {
+    border: none !important;
+    background-color: transparent;
+    padding: 0 12px !important;
+  }
+}

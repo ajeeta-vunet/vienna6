@@ -213,7 +213,8 @@ class DataService {
         notify.error(errorResponse.data['error-string'] || 'Access denied!');
       }
       else if (errorResponse.data['error-code'] === '401') {
-        window.localStorage.clear();
+        window.localStorage.removeItem('lastActiveTime');
+        window.localStorage.removeItem('username');
         setTimeout(function () {
           window.location.reload();
         }, 2000);

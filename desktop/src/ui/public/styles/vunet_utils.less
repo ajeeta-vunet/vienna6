@@ -25,23 +25,23 @@
   }
 }
 
-// CUSTOM SCROLLBAR 
+// CUSTOM SCROLLBAR
 ::-webkit-scrollbar-track {
-  background-color: @seperator_color; 
+  background-color: @seperator_color;
 }
 ::-webkit-scrollbar{
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-thumb{
-  background-color: @accent_color;	
+  background-color: @accent_color;
 }
 
 ::-webkit-scrollbar-track:hover {
-  background-color: @seperator_color; 
+  background-color: @seperator_color;
 }
 
-// This has been done to show fullscreen in full viewport 
+// This has been done to show fullscreen in full viewport
 #kibana-body:fullscreen {
   .fixed-left {
         display:none;
@@ -52,6 +52,7 @@
       display:none;
     }
     .vunet-application{
+      margin-left: 0 !important;
       dashboard-app{
         kbn-top-nav{
           width: 100%!important;
@@ -124,7 +125,7 @@ input[type="file"]{
     padding: 2rem 0rem 2rem 3rem!important;
     .kuiText{
       font-size:1.8rem;
-    } 
+    }
   }
   .kuiModalFooter{
     .kuiButton{
@@ -134,7 +135,7 @@ input[type="file"]{
       -moz-appearance: none;
       appearance: none;
       cursor: pointer;
-      padding:.6rem 3rem .6rem 3rem !important; 
+      padding:.6rem 3rem .6rem 3rem !important;
       font-size: 1.6rem!important;
       height: 3.5rem!important;
       text-decoration: none;
@@ -189,7 +190,7 @@ input[type="file"]{
       }
     }
   }
-  // This has been done to provide white background to to CJM Vis 
+  // This has been done to provide white background to to CJM Vis
   .vis-type-customer_journey_map{
     background: @white!important;
   }
@@ -228,7 +229,7 @@ input[type="file"]{
           }
         }
       }
-    }  
+    }
   //This is done for new visual builder visualization
   .vis-editor{
     visualize{
@@ -237,7 +238,7 @@ input[type="file"]{
   }
   .app-container{
     // this has been added to give this color in fullscreen mode for visualization
-    background-color:@view_background; 
+    background-color:@view_background;
     //this has been added to display cut off label of y-axis on right for visualizations
     .vis-editor-content{
       .vis-editor-canvas{
@@ -256,8 +257,8 @@ input[type="file"]{
         }
       }
     }
-    // why this was done 
-    // this code has been removed as after selecting a dashboard, 
+    // why this was done
+    // this code has been removed as after selecting a dashboard,
     // the whole category list is not visible by clicking on the 'menu button'
     // kbn-top-nav{
     //   z-index:0 !important;
@@ -314,18 +315,18 @@ input[type="file"]{
       overflow-y: auto;
       overflow-x: hidden;
     }
-    
+
     // .kuiLocalNav{
     //   .kuiLocalDropdown{
     //     rbac-user-role{
     //       .rbac{
     //         .rbac_options{
-    //           
+    //
     //         }
-    //       }  
+    //       }
     //     }
     //   }
-    // } 
+    // }
     // this has been done to show fullscreen visualizations in dashboards
     .dashboard-margin-top{
       height: 100%;
@@ -416,7 +417,7 @@ input[type="file"]{
             height:17.5rem;
           }
         }
-      } 
+      }
       //this has been done to provide scroll for user-roles while saving anything.
       .rbac{
         .rbac-table-container{
@@ -430,7 +431,7 @@ input[type="file"]{
     }
   }
   // In Data table Visualization and matrix Visualization --> options, when we enable the color coding,
-  // after adding the range, the action field is coming out of the border line. 
+  // after adding the range, the action field is coming out of the border line.
   // And when we point a cursor on the help icon, the help message is coming out of the border line and due to this the screen is oscillating.
   // below is the fix for this
   .collapsible-sidebar{
@@ -506,13 +507,13 @@ input[type="file"]{
           .kuiVerticalRhythm{
             .list-group{
               overflow-y: auto;
-              height: ~"calc(@{view-content-height-menubar-bigger-withsearch} - 10px)"; 
+              height: ~"calc(@{view-content-height-menubar-bigger-withsearch} - 10px)";
             }
           }
         }
       }
     }
-  } 
+  }
 
   background-color:@view_background;
 
@@ -529,8 +530,8 @@ input[type="file"]{
           position: relative;
           top: 1.25rem;
           padding: 0rem 0rem 0rem 3rem;
-          font-size: 1.9rem;   
-          width:85%;   
+          font-size: 1.9rem;
+          width:85%;
         }
       }
       .kuiLocalDropdown{
@@ -550,7 +551,7 @@ input[type="file"]{
               .btn[disabled]{
                 &:hover{
                   background-color:@view_background;
-                  color:@black; 
+                  color:@black;
                 }
               }
               .active{
@@ -560,7 +561,7 @@ input[type="file"]{
                 }
               }
             }
-          } 
+          }
           .kbn-timepicker-actions{
             padding-top:1rem;
           }
@@ -575,7 +576,7 @@ input[type="file"]{
           overflow-y: auto;
           height: @view-content-height-menubar-bigger-withsearch;
         }
-      }  
+      }
     }
   }
   //This has been done to add scroll to single document
@@ -615,7 +616,7 @@ input[type="file"]{
 }
 
 
-//vunet-@white-buttons 
+//vunet-@white-buttons
 .vunet-btn-collect , .vunet-btn-download ,.vunet-btn-export ,.vunet-btn-import{
   background-color:@white;
   font-size: 1.75rem;
@@ -672,7 +673,7 @@ button[disabled], {
     color:@disable_button_text_color!important;
     &:hover{
       font-weight: normal;
-    }  
+    }
   }
   &:hover{
     box-shadow:none;
@@ -689,7 +690,7 @@ button[disabled], {
   -moz-appearance: none;
   appearance: none;
   cursor: pointer;
-  padding:.6rem 3rem .6rem 3rem !important; 
+  padding:.6rem 3rem .6rem 3rem !important;
   font-size: 1.6rem!important;
   height: 3.5rem!important;
   text-decoration: none;
@@ -723,7 +724,7 @@ button[disabled], {
 // This is given for anylytics seacrh page
 .menubar-fixed-top-containing-filterbar{
   overflow-y: auto;
-  // This has been added to fix the following 
+  // This has been added to fix the following
   // In Analytics -> search --> if we have selected an Index pattern which has more length, the name is crossing the box.
   .sidebar-container{
     .sidebar-list{
@@ -1561,7 +1562,7 @@ button[disabled], {
   }
 }
 
-// Table look and feel for visualizations listing page 
+// Table look and feel for visualizations listing page
 .visualize-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
@@ -1664,7 +1665,7 @@ button[disabled], {
   }
 }
 
-// This is being added to show the edit and delete buttons of visualizations in 
+// This is being added to show the edit and delete buttons of visualizations in
 // dashboards on hover
 .react-grid-item {
   .dashboard-panel {

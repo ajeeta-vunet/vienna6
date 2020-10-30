@@ -92,6 +92,14 @@ const typeToButtonClassMap = {
   info: 'kuiButton--primary',
   banner: 'kuiButton--basic'
 };
+
+const typeToToastContentMap = {
+  danger: 'toast-content-light', // NOTE: `error` type is internally named as `danger`
+  warning: 'toast-content-dark',
+  info: 'toast-content-light',
+  banner: 'toast-content-light'
+};
+
 const buttonHierarchyClass = (index) => {
   if (index === 0) {
     // first action: primary className
@@ -101,10 +109,10 @@ const buttonHierarchyClass = (index) => {
   return 'kuiButton--basic';
 };
 const typeToAlertClassMap = {
-  danger: `alert-danger`,
-  warning: `alert-warning`,
-  info: `alert-info`,
-  banner: `alert-banner`,
+  danger: `alert-danger bg-error toast-content-light`,
+  warning: `alert-warning bg-warning toast-content-dark`,
+  info: `alert-info bg-information toast-content-light`,
+  banner: `alert-banner toast-content-light`,
 };
 
 function add(notif, cb) {
@@ -127,6 +135,9 @@ function add(notif, cb) {
         getButtonClass() {
           const buttonTypeClass = typeToButtonClassMap[notif.type];
           return `${buttonHierarchyClass(index)} ${buttonTypeClass}`;
+        },
+        getContentShadeClass() {
+          return typeToToastContentMap[notif.type];
         }
       };
     });
@@ -140,6 +151,7 @@ function add(notif, cb) {
 
   // decorate the notification with helper functions for the template
   notif.getButtonClass = () => typeToButtonClassMap[notif.type];
+  notif.getContentShadeClass = () => typeToToastContentMap[notif.type];
   notif.getAlertClassStack = () => `toast-stack alert ${typeToAlertClassMap[notif.type]}`;
   notif.getIconClass = () => (notif.type === 'banner') ?  '' : `fa fa-${notif.icon}`;
   notif.getToastMessageClass = ()  => (notif.type === 'banner') ?  'toast-message-banner' : 'toast-message';
@@ -411,7 +423,7 @@ Notifier.prototype.error = function (err, opts, cb) {
   const config = _.assign({
     type: 'danger',
     content: formatMsg(err, this.from),
-    icon: 'warning',
+    icon: 'ban',
     title: 'Error',
     lifetime: Notifier.config.errorLifetime,
     actions: ['report', 'accept'],
@@ -456,7 +468,7 @@ Notifier.prototype.info = function (msg, opts, cb) {
   const config = _.assign({
     type: 'info',
     content: formatMsg(msg, this.from),
-    icon: 'info-circle',
+    icon: 'check-circle',
     title: 'Debug',
     lifetime: _.get(opts, 'lifetime', Notifier.config.infoLifetime),
     actions: ['accept']
@@ -699,4 +711,3 @@ function createGroupLogger(type, opts) {
     return ret;
   };
 }
-

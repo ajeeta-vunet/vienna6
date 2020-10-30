@@ -11,6 +11,15 @@ import {
 import { notify } from 'ui/notify';
 import { SubUrlRouteFilterProvider } from './sub_url_route_filter';
 
+function getDarkThemeStatus() {
+  const theme = localStorage.getItem('dark-theme');
+  if (theme === 'true') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function kbnChromeProvider(chrome, internals) {
 
   uiModules
@@ -34,8 +43,10 @@ export function kbnChromeProvider(chrome, internals) {
         },
 
         controllerAs: 'chrome',
-        controller($scope, $rootScope, $location, $http, Private) {
+        controller($scope, $rootScope, $location, $http, Private, timefilter, kbnUrl) {
           const getUnhashableStates = Private(getUnhashableStatesProvider);
+
+          const darkThemeStatus = getDarkThemeStatus();
 
           // are we showing the embedded version of the chrome?
           if (Boolean($location.search().embed)) {
@@ -43,6 +54,33 @@ export function kbnChromeProvider(chrome, internals) {
           }
 
           const subUrlRouteFilter = Private(SubUrlRouteFilterProvider);
+
+          $rootScope.appProps = {
+            'darkTheme': darkThemeStatus,
+            'private': Private,
+            'timefilter': timefilter,
+            'kbnUrl': kbnUrl
+          };
+
+          $rootScope.toggleDarkTheme = (status) => {
+            if(status) {
+              $rootScope.appProps = {
+                'private': Private,
+                'timefilter': timefilter,
+                'kbnUrl': kbnUrl,
+                'darkTheme': true
+              };
+              localStorage.setItem('dark-theme', true);
+            } else {
+              $rootScope.appProps = {
+                'private': Private,
+                'timefilter': timefilter,
+                'kbnUrl': kbnUrl,
+                'darkTheme': false
+              };
+              localStorage.setItem('dark-theme', false);
+            }
+          };
 
           function updateSubUrls() {
             const urlWithHashes = window.location.href;

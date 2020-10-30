@@ -14,8 +14,8 @@ export function toggleFullscreen() {
     const fullScreenElement = _document.fullscreenElement || _document.msFullscreenElement
                               || _document.mozFullScreenElement || _document.webkitFullscreenElement;
 
+    // If we go to fullscreen we wait fo 100ms and then calculate the height of the container to be shown
     if (fullScreenElement) {
-      // If we go to fullscreen we wait fo 100ms and then calculate the height of the container to be shown
       setTimeout(function () {
         const kuiLocalNavHeight = $('.kuiLocalNav').height();
         const filterHeight = $('.filter-row-in-search').height();
@@ -28,6 +28,7 @@ export function toggleFullscreen() {
         // $('.react-grid-layout').height(heightToSetOnFullscreenMode - 40);
       }, 100);
     }
+
     // If we exit fullscreen we again calculate the height of the container to be shown in different way
     else {
       const kuiLocalNavHeight = $('.kuiLocalNav').height();

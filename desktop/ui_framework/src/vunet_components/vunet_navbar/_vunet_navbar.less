@@ -1,0 +1,381 @@
+@import './_help_popover.less';
+@import './_profile_popover.less';
+@import './_more_popover.less';
+
+@import '~ui/styles/vunet_light_dark.less';
+
+.d-none {
+  display: none;
+}
+
+.vunet-tooltip {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  width: 150px;
+  display: block;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: rgb(94, 94, 94);
+  padding: 3px;
+  font-size: 12px;
+  border: 0.5px solid rgb(55, 58, 60);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.16);
+  z-index: 13;
+}
+
+.list-group-flush {
+  margin-bottom: 0 !important;
+  border-radius: 0 !important;
+}
+
+.list-group-item:first-child {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.list-group-item:last-child {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.list-group-item + list-group-item {
+  border-top-width: 0 !important;
+}
+
+.list-group-flush > .list-group-item {
+  margin-bottom: 0 !important;
+  // border: @item-border-height solid rgba(0, 0, 0, .125);
+  // border-width: 0 0 @item-border-height;
+}
+
+.list-group-flush > .list-group-item:last-child {
+    border-bottom-width: 0;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-danger {
+  background-color: @bg-danger !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+    color: #fff !important;
+    background-color: @bg-danger-hover !important;
+}
+
+#vunetNavbarContainer {
+  position: relative;
+  z-index: 11;
+  .vunet-navbar {
+    > .nav {
+      margin: auto 11.5px auto auto;
+    }
+    .navbar-header {
+      .navbar-logo-container {
+        cursor: pointer;
+        margin-left: 5px;
+        > #vunetLogoImg {
+          width: 24px;
+          height: auto;
+        }
+        > #customerLogoImg {
+          height: 22px;
+          width: auto;
+        }
+      }
+    }
+    .navbar-nav {
+      .nav-item {
+        width: @navbar-item-size;
+        height: @navbar-item-size;
+        margin-right: 8.5px;
+        > button {
+          &:disabled {
+            border-radius: 50%;
+            background-color: #4D4D4D !important;
+          }
+          &:focus {
+            box-shadow: none;
+          }
+        }
+        &:focus {
+          box-shadow: none;
+        }
+        > li > a {
+          width: @navbar-item-size;
+          height: @navbar-item-size;
+          line-height: 1 !important;
+        }
+        .navbar-popover {
+          opacity: 0;
+          visibility: hidden;
+          position: absolute;
+          z-index: 12;
+          margin-top: 35px;
+          border-radius: 3px;
+          -webkit-box-shadow: 4px 4px 5px @popover-shadow;
+          box-shadow: 4px 4px 5px @popover-shadow;
+          -webkit-transition: opacity @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+          transition: all @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+          transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long;
+          transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long, -webkit-transform @popover-animation_long;
+          &:before {
+            position: absolute;
+            z-index: -1;
+            content: "";
+            top: -10px;
+            display: block;
+            width: 0;
+            -webkit-transition: opacity @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+            transition: all @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+            transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long;
+            transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long, -webkit-transform @popover-animation_long;
+          }
+          &:after {
+            position: absolute;
+            z-index: -1;
+            content: "";
+            top: -9px;
+            display: block;
+            width: 0;
+            -webkit-transition: opacity @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+            transition: all @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+            transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long;
+            transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long, -webkit-transform @popover-animation_long;
+          }
+          &.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(0, -20px);
+          }
+          #adminConsoleItem {
+            .disabled-tooltip {
+              top: 40px;
+              left: 34px;
+            }
+            &:hover {
+              .disabled-tooltip {
+                visibility: visible;
+                opacity: 1;
+              }
+            }
+          }
+          #runDiagnosticsItem {
+            .disabled-tooltip {
+              top: 40px;
+              left: 34px;
+            }
+            &:hover {
+              .disabled-tooltip {
+                visibility: visible;
+                opacity: 1;
+              }
+            }
+          }
+        }
+      }
+      #fullscreen {
+        position: relative;
+      }
+      #help {
+        position: relative;
+      }
+      #profile {
+        position: relative;
+      }
+      #more {
+        position: relative;
+        > button {
+          > svg {
+            transform: rotate(90deg);
+          }
+        }
+      }
+      #notifications {
+        position: relative;
+        &:hover {
+          button:disabled {
+            border-radius: 50%;
+            background-color: #4D4D4D !important;
+          }
+          .new-notifications-tooltip {
+            visibility: visible;
+            opacity: 1;
+          }
+          .disabled-tooltip {
+            visibility: visible;
+            opacity: 1;
+          }
+        }
+        .new-notifications-tooltip {
+          right: 0px;
+          top: 40px;
+          width: 126px;
+          p {
+            margin: 0;
+          }
+        }
+        .disabled-tooltip {
+          right: -20px;
+          top: 40px;
+        }
+      }
+    }
+  }
+  &.light-theme {
+    .vunet-navbar {
+      background-color: @light-nav-bg !important;
+      height: @navbar-height;
+      display: flex;
+      border-radius: 0 !important;
+      box-shadow: 1px 0 2px rgba(0, 0, 0, 0.14);
+    }
+
+    .nav-item {
+      .nav-link-btn {
+        background-color: transparent;
+        color: @icon-grey;
+        width: @navbar-item-size;
+        height: @navbar-item-size;
+        line-height: 1 !important;
+        border: none;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+      }
+      &:hover {
+        .nav-link {
+          background-color: @hover-grey !important;
+          border-radius: 50%;
+        }
+      }
+      .nav-link:focus,
+      .nav-link.active {
+        background-color: @active-grey !important;
+        border-radius: 50%;
+      }
+      .new-notifications-badge {
+        position: absolute;
+        background-color: @blue-accent-light;
+        top: 2px;
+        right: 6.5px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        z-index: 20;
+      }
+    }
+
+    .popover-list-item-border {
+      margin: 0 !important;
+      margin: 0 8.5px !important;
+      height: @item-border-height;
+      background-color: @active-grey;
+    }
+
+    .popover-list-item {
+      padding: 0 !important;
+      padding: 8px 0 8px 15px !important;
+      font-size: 14px;
+      background-color: #FFFFFF !important;
+      color: @text-color-light !important;
+      border: none !important;
+      cursor: pointer;
+      &:hover {
+        background-color: @light-nav-bg !important;
+      }
+      &.disabled {
+        cursor: not-allowed !important;
+      }
+    }
+  }
+  &.dark-theme {
+    .vunet-navbar {
+      background-color: @dark-nav-bg !important;
+      height: @navbar-height;
+      display: flex;
+      border-radius: 0 !important;
+      box-shadow: 1px 0 2px rgba(0, 0, 0, 0.14);
+    }
+
+    .nav-item {
+      .nav-link-btn {
+        background-color: transparent;
+        color: @icon-white;
+        width: @navbar-item-size;
+        height: @navbar-item-size;
+        line-height: 1 !important;
+        border: none;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+      }
+      &:hover {
+        .nav-link {
+          background-color: @hover-white !important;
+          border-radius: 50%;
+        }
+      }
+      .nav-link:focus,
+      .nav-link.active {
+        background-color: @active-white !important;
+        border-radius: 50%;
+      }
+      .new-notifications-badge {
+        position: absolute;
+        background-color: @blue-accent-dark;
+        top: 2px;
+        right: 6.5px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        z-index: 20;
+      }
+    }
+
+    .popover-list-item-border {
+      margin: 0 !important;
+      margin: 0 8.5px !important;
+      height: @item-border-height;
+      background-color: @active-white;
+    }
+
+    .popover-list-item {
+      padding: 0 !important;
+      padding: 8px 0 8px 15px !important;
+      font-size: 14px;
+      background-color: @dark-nav-bg !important;
+      color: @text-color-dark !important;
+      border: none !important;
+      cursor: pointer;
+      &:hover {
+        background-color: @active-white !important;
+      }
+      &.disabled {
+        cursor: not-allowed !important;
+      }
+    }
+  }
+}
+
+// Run Diagnostics Modal Overflow fix
+.run-diagnostic-modal-container {
+  max-height: 90vh !important;
+  .kuiModalBody {
+    max-height: 75vh !important;
+    overflow-y: hidden;
+    padding: 0 !important;
+    padding: 1rem 3rem !important;
+    &:hover {
+      overflow-y: auto;
+    }
+  }
+}

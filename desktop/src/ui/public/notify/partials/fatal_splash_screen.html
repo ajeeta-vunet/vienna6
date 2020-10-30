@@ -24,7 +24,7 @@
 
       <button
         class="kuiButton kuiButton--hollow"
-        onclick="localStorage.clear(); sessionStorage.clear(); window.location.hash = ''; window.location.reload();"
+        onclick="localStorage.removeItem('lastActiveTime'); localStorage.removeItem('username'); sessionStorage.clear(); window.location.hash = ''; window.location.reload();"
       >
         Clear your session
       </button>

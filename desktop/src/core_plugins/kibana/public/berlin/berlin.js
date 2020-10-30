@@ -6,6 +6,8 @@ import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import { VunetSwitch } from 'ui_framework/src/vunet_components/vunet_switch/vunet_switch';
 import { VunetCronTab } from 'ui_framework/src/vunet_components/vunet_cron_tab/vunet_cron_tab';
+import { VunetNavbar } from 'ui_framework/src/vunet_components/vunet_navbar/vunet_navbar';
+import { VunetSidebar } from 'ui_framework/src/vunet_components/vunet_sidebar/vunet_sidebar';
 require('datatables');
 require('angular-datatables');
 
@@ -44,6 +46,16 @@ app.directive('vunetSwitch', function (reactDirective) {
 app.directive('vunetDataTable', function (reactDirective) {
 
   return reactDirective(VunetDataTable);
+});
+
+app.directive('vunetNavbar', function (reactDirective) {
+
+  return reactDirective(VunetNavbar);
+});
+
+app.directive('vunetSidebar', function (reactDirective) {
+
+  return reactDirective(VunetSidebar);
 });
 
 app.directive('vunetModal', function (reactDirective) {

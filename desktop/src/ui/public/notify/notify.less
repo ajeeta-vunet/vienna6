@@ -1,11 +1,16 @@
 @import "~ui/styles/mixins";
+@import '~ui/styles/vunet_light_dark.less';
 
 .toaster-container {
   visibility: visible;
   width: 100%;
+  position: absolute;
+  top: 67px;
+  z-index: 10;
 
   .toaster {
-    margin: 0;
+    margin: auto;
+    max-width: 600px;
     padding: 0;
     list-style: none;
   }
@@ -44,6 +49,8 @@
   .toast {
     display: flex;
     align-items: center;
+    border-radius: 4px;
+    margin-bottom: 5px;
 
     > * {
       flex: 0 0 auto;
@@ -61,15 +68,23 @@
   }
 
   .toast-stack {
-    padding-bottom: 10px;
+    padding: 0 3px;
+    margin-top: -5px;
+    background-color: transparent !important;
 
     pre {
       display: inline-block;
       width: 100%;
-      margin: 10px 0;
+      margin: 0;
+      box-shadow: 1px 1px rgba(0, 0, 0, 0.14);
       word-break: normal;
       word-wrap: normal;
       white-space: pre-wrap;
+      height: 200px;
+      overflow: hidden;
+      &:hover {
+        overflow: auto;
+      }
     }
   }
 
@@ -79,16 +94,20 @@
 
   // add darkened background to the different badges
   .alert-success .badge {
-    background: darken(@alert-success-bg, 25%);
+    background: @toast-alert-badge-bg;
+    color: @text-color-light;
   }
   .alert-info .badge {
-    background: darken(@alert-info-bg, 25%);
+    background: @toast-alert-badge-bg;
+    color: @text-color-light;
   }
   .alert-warning .badge {
-    background: darken(@alert-warning-bg, 25%);
+    background: @toast-alert-badge-bg;
+    color: @text-color-light;
   }
   .alert-danger .badge {
-    background: darken(@alert-danger-bg, 25%);
+    background: @toast-alert-badge-bg;
+    color: @text-color-light;
   }
   .alert-banner {
     background-color: white;
@@ -116,4 +135,30 @@
 // not have a flex layout, and the styled element could be any kind of element
 .toast-message-banner {
   display: block;
+}
+
+// New Styling //
+
+.toast-close-btn {
+  cursor: pointer;
+}
+
+.toast-content-light {
+  color: @popover-bg-light !important;
+}
+
+.toast-content-dark {
+  color: @text-color-light !important;
+}
+
+.bg-error {
+  background-color: @toast-alert-bg-failure !important;
+}
+
+.bg-warning {
+  background-color: @toast-alert-bg-warning !important;
+}
+
+.bg-information {
+  background-color: @toast-alert-bg-info !important;
 }

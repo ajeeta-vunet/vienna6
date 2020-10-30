@@ -1,0 +1,168 @@
+@import '~ui/styles/vunet_light_dark.less';
+
+.d-none {
+  display: none;
+}
+
+#vunetSidebarContainer {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: @sidebar-width;
+  top: @navbar-height;
+  bottom: 0;
+  z-index: 11;
+  box-shadow: 1px 0 2px rgba(0, 0, 0, 0.14);
+  &.light-theme {
+    background-color: @light-nav-bg;
+    .nav-container {
+      &.active {
+        .sidebar-btn {
+          background-color: @popover-bg-light;
+          color: @blue-accent-light;
+        }
+        .sidebar-popover {
+          .popover-header {
+            color: @blue-accent-light !important;
+          }
+        }
+      }
+      .sidebar-btn {
+        color: @icon-grey;
+      }
+      .sidebar-popover {
+        .list-group {
+          .list-group-item {
+            background-color: @popover-bg-light;
+            color: @text-color-light;
+            &.active {
+              background-color: #F0F0F0 !important;
+              color: @text-color-light;
+            }
+          }
+          a {
+            &.list-group-item {
+              &:hover {
+                background-color: #F6F6F6;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &.dark-theme {
+    background-color: @dark-nav-bg;
+    .nav-container {
+      &.active {
+        .sidebar-btn {
+          background-color: @popover-border-dark;
+          color: @blue-accent-dark;
+        }
+        .sidebar-popover {
+          .popover-header {
+            color: @blue-accent-dark !important;
+          }
+        }
+      }
+      .sidebar-btn {
+        color: @icon-white;
+      }
+      .sidebar-popover {
+        .list-group {
+          .list-group-item {
+            background-color: @popover-bg-dark;
+            color: @text-color-dark;
+            &.active {
+              background-color: #707070 !important;
+              color: @text-color-dark;
+            }
+          }
+          a {
+            &.list-group-item {
+              &:hover {
+                background-color: @active-white;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .nav-container {
+    &:first-child {
+      margin-top: 20px;
+    }
+    &:hover {
+      .sidebar-popover {
+          opacity: 1;
+          visibility: visible;
+      }
+    }
+    .sidebar-btn {
+      background-color: transparent;
+      width: @sidebar-width;
+      height: 40px;
+      line-height: 1 !important;
+      border: none;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 !important;
+      &:focus {
+        box-shadow: none !important;
+      }
+    }
+    .sidebar-popover {
+      position: absolute;
+      width: 199px;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 12;
+      -webkit-box-shadow: 4px 4px 5px @popover-shadow;
+      box-shadow: 4px 4px 5px @popover-shadow;
+      -webkit-transition: opacity @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+      transition: all @popover-animation_short, visibility @popover-animation_short, -webkit-transform @popover-animation_long;
+      transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long;
+      transition: all @popover-animation_short, visibility @popover-animation_short, transform @popover-animation_long, -webkit-transform @popover-animation_long;
+      .list-group {
+        margin-bottom: 0;
+        .list-group-item {
+          border: none;
+          &:first-child {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+          }
+          &:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+          }
+          &.popover-header {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+    #analyticsPopover {
+      left: 50px;
+      top: 20px;
+    }
+    #analyticsConfigurationPopover {
+      left: 50px;
+      top: 60px;
+    }
+    #dataPopover {
+      left: 50px;
+      top: 100px;
+    }
+    #dataStorePopover {
+      left: 50px;
+      top: 140px;
+    }
+    #settingsPopover {
+      left: 50px;
+      top: 180px;
+    }
+  }
+}

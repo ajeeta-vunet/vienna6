@@ -79,7 +79,8 @@ kibana.factory('responseInterceptor', ($rootScope) => {
       }
       else if (config.status === 401) {
         // unauthorized
-        window.localStorage.clear();
+        window.localStorage.removeItem('lastActiveTime');
+        window.localStorage.removeItem('username');
         window.location.href = window.location.origin + '/vunet/login';
       } else if (config.status === 403) {
         // Forbidden

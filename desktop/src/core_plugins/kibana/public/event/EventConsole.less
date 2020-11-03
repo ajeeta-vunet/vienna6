@@ -1,0 +1,51 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.event-console-wrapper {
+  position: relative;
+  height:100%;
+
+  .events-wrapper {
+    height: 75%;
+    .event-listing-wrapper {
+      font-size: 1.25rem;
+      position: relative;
+      margin-top: 1%;
+      height: 95%;
+      overflow: scroll;
+      padding-right: 0.5%;
+    }
+
+    .pagination-event-console {
+      li {
+        a:hover, a:focus, a:active {
+          background: @event-console-button-background !important;
+        }
+      }
+      .active {
+        background: @event-console-button-background !important;
+        a {
+          background: @event-console-button-background !important;
+        }
+      }
+    }
+  }
+
+  #column-selector-id {
+    display: none;
+  }
+
+  button {
+    box-shadow: none;
+  }
+}
+
+.event-console-button {
+  background: @event-console-button-background;
+  color: @white;
+  border: 0;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 20px;
+}

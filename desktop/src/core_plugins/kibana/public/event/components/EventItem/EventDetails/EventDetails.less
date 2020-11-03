@@ -1,0 +1,174 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.event-details-wrapper {
+  width:100%;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 2%;
+  .details {
+    display: flex;
+    width: 100%;
+
+    .detail {
+      display: inline-block;
+      width: 33%;
+      margin-bottom: 7px;
+      label {
+        width: 35%;
+        text-align: right;
+        padding-right: 10px;
+        font-size: 1.4rem;
+      }
+      input, .status-select {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        width: 55%;
+        margin-right: 10%;
+        border: 1px solid @event-console-border-color;
+      }
+
+      .status-select {
+        padding-left: 7px;
+      }
+      .detail-info {
+        display: inline-block;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        width: 55%;
+        margin-right: 10%;
+        border: 1px solid @event-console-border-color;
+        background-color: @event-console-detail-info-background-color;
+        font-size: 1.4rem;
+      }
+    }
+
+    @media screen and (max-width: 768px) { 
+      .detail {
+        width: 100%;
+      }
+    }
+  }
+
+  .summary {
+    width:100%;
+
+    label {
+      width: 11.55%;
+      text-align: right;
+      padding-right: 10px;
+      vertical-align: top;
+      font-size: 1.4rem;
+    }
+
+    textarea {
+      width: 84.2%;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border: 1px solid @event-console-border-color;
+    }
+
+    @media screen and (max-width: 768px) { 
+      label {
+        width: 35%;
+      }
+
+      textarea {
+        width: 55%;
+        margin-right: 10%;
+      }
+    }
+  }
+
+  .work-notes {
+    width: 84.2%;
+    margin-left: 11.55%;
+    border: 1px solid @event-console-border-color;
+    .work-notes-header {
+      width: 100%;
+      padding-left: 1%;
+      padding-top: 0.5%;
+      padding-bottom: 0.5%;
+      font-size: 1.4rem;
+      font-weight: bold;
+      background: @event-console-detail-info-background-color;
+    }
+
+    .work-notes-body {
+      display: flex;
+      width: 100%;
+      border-top: 1px solid @event-console-border-color;
+
+      .work-notes-list {
+        display: inline-block;
+        width: 50%;
+        border-right: 1px solid @event-console-border-color;
+        padding: 1%;
+        max-height: 20vh;
+        overflow-y: scroll;
+        .note {
+          margin-bottom: 1%;
+          .avatar {
+            display: inline-block;
+            background: @event-console-detail-info-background-color;
+            height: 35px;
+            width: 35px;
+            border: 1px solid @event-console-border-color;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            vertical-align: top;
+            margin-right: 2%;
+            text-transform: uppercase;
+          }
+          .note-body {
+            display: inline-block;
+            width: 88%;
+            .note-author {
+              font-weight: bold;
+              font-size: 1.4rem;
+            }
+  
+            .note-date {
+              text-align: right;
+              font-size: 1.1rem;
+            }
+          }
+        }
+      }
+
+      .work-notes-new-note {
+        display: inline-block;
+        width: 50%;
+        padding: 1%;
+        .work-area-textarea {
+          width: 100%;
+          padding: 1.5%;
+          border: 1px solid @event-console-border-color;
+        }
+      }
+    }
+
+    @media screen and (max-width: 768px) { 
+      width: 100%;
+      margin-left: unset;
+    }
+  }
+
+  .action-buttons-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 4%;
+    margin-bottom: 0.5%;
+    margin-top: 1%;
+    .button-left {
+      margin-right: 0.5%;
+    }
+  }
+}

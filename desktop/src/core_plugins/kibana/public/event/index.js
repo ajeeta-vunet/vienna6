@@ -7,6 +7,7 @@ import { EventConstants } from './event_constants';
 import eventTemplate from 'plugins/kibana/event/event.html';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { findObjectByTitle } from 'ui/saved_objects/find_object_by_title.js';
+import { updateColumnSelectorInfo } from './api_calls';
 
 uiRoutes
   .defaults(/event/, {
@@ -25,6 +26,13 @@ uiRoutes
         return findObjectByTitle(savedObjectsClient, 'index-pattern', indexTitle)
           .then(idx => idx.id)
           .catch(() => '');
+      },
+
+      updateColumnSelector: function ($http, chrome) {
+        const updateColumnSelectorReact = function (fields, hiddenFields) {
+          updateColumnSelectorInfo($http, chrome, fields, hiddenFields);
+        };
+        return updateColumnSelectorReact;
       }
     }
   });

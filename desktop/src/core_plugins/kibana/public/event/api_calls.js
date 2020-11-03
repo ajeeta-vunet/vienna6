@@ -1,0 +1,87 @@
+// This function fetches the count of events segregated into different severities.
+export function fetchSeverityInfo($http, chrome, dashboardContext, timeDurationStart, timeDurationEnd) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest';
+  const httpResult = $http.post(urlBase + '/severity_based_events/', {
+    extended: {
+      es: {
+        filter: dashboardContext()
+      }
+    },
+    time: {
+      gte: timeDurationStart,
+      lte: timeDurationEnd
+    }
+  })
+    .then(resp => resp.data)
+    .catch(resp => { throw resp.data; });
+  return httpResult
+    .then(function (resp) {
+      return resp;
+    })
+    .catch(error => { throw error; });
+}
+
+// This function is used to fetch the list of all events.
+//It takes as its arguments the dashboard context and the time duration start and end values.
+//These are used to fetch events based on the time filter chosen.
+export function fetchListOfEvents($http, chrome, dashboardContext, timeDurationStart, timeDurationEnd) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest';
+
+  const httpListOfEventsResult = $http.post(urlBase + '/list_of_events/', {
+    extended: {
+      es: {
+        filter: dashboardContext()
+      }
+    },
+    time: { 'gte': timeDurationStart, 'lte': timeDurationEnd },
+    sample_size: 100
+  })
+    .then(resp => { return resp.data;})
+    .catch(resp => { throw resp.data; });
+
+  return httpListOfEventsResult
+    .then(function (resp) {
+      return resp;
+    })
+    .catch(error => { throw error; });
+}
+
+//This function is used to fetch the list of columns and hidden fields of the user for the column selector.
+export function fetchColumnSelectorInfo($http, chrome) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest/';
+  const currentUser = chrome.getCurrentUser();
+  const username = currentUser[0];
+  const httpResult = $http.get(urlBase + 'fields/' + username, {})
+    .then(resp => resp.data)
+    .catch(resp => { throw resp.data; });
+
+  return httpResult
+    .then(function (resp) {
+      return resp;
+    })
+    .catch(error => { throw error; });
+}
+
+//This function is used to update a user's preferences for the hidden fields.
+export function updateColumnSelectorInfo($http, chrome, fields, hiddenFields) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest/';
+  const currentUser = chrome.getCurrentUser();
+  const username = currentUser[0];
+
+  $http.put(urlBase + 'fields/' + username, {
+    alert_details: {
+      fields: fields,
+      hidden_fields: hiddenFields
+    },
+    ticket_details: {
+      fields: [],
+      hidden_fields: []
+    }
+  })
+    .then(resp => resp.data)
+    .catch(resp => { throw resp.data; });
+}

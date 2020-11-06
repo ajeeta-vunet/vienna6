@@ -21,12 +21,12 @@ import PropTypes from 'prop-types';
 import Tooltip from '../../lib/tooltip';
 import ReactTooltip from 'react-tooltip';
 import BucketingTable from './components/bucketing_table';
-import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal'
+import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { vuMetricConstants } from '../../lib/vu_metric_constants';
 import { goToReferenceLink } from '../../lib/vu_metric_utils';
 import VuMetricHistoricalData from '../components/historical_data/vu_metric_historical_data';
 import './horizontal_table_vu_metric.less';
-import chrome from 'ui/chrome'
+import chrome from 'ui/chrome';
 import moment from 'moment';
 
 class HorizontalTableVuMetric extends Component {
@@ -36,76 +36,76 @@ class HorizontalTableVuMetric extends Component {
       isVisualizationSaved: false,
       actionConfirmationMessageModal: false,
       actionConfirmationModal: false
-    }
+    };
   }
 
   componentDidMount() {
     // This has been done to disable the action buttons if the visualization is saved.
     // Action button will only be enabled if the visualization is saved.
     const currentRoute = window.location.href;
-    if (!currentRoute.includes('/visualize/create?type=vu_metric')) {
+    if (!currentRoute.includes('/visualize/create?type=business_metric')) {
       this.setState(
         {
           isVisualizationSaved: true
         }
-      )
+      );
     }
   }
 
   // This will be used to set the trend color for historical data. If upward trend is green and coming values have downward
-  // trend then upward trend values will be green and downward trend values will be red and if upward trend is red and coming values   
+  // trend then upward trend values will be green and downward trend values will be red and if upward trend is red and coming values
   // have downward trend then upward trend values will be red and downward trend values will be green and this is the table case so
   // the background color will be achieved using the same logic.
   getHistoricalDataTrendColor = (model, historicalDataObj, indexForMetric) => {
     let style = {};
     if (model.metrics[indexForMetric].bgColorEnabled) {
-      // historicalDataObj.percentageChange != -1 has been done as the backend returns a value of -1 for percentageChange when no 
+      // historicalDataObj.percentageChange != -1 has been done as the backend returns a value of -1 for percentageChange when no
       // precentage value is there.
       if (historicalDataObj.percentageChange != -1) {
         if (historicalDataObj.icon == 'fa-caret-up') {
           if (model.metrics[indexForMetric].upTrendColor == 'green') {
-            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.GREEN, color: vuMetricConstants.COLOR_CONSTANTS.WHITE }
+            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.GREEN, color: vuMetricConstants.COLOR_CONSTANTS.WHITE };
           }
           else {
-            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.RED, color: vuMetricConstants.COLOR_CONSTANTS.WHITE }
+            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.RED, color: vuMetricConstants.COLOR_CONSTANTS.WHITE };
           }
         }
         else if (historicalDataObj.icon == 'fa-caret-down') {
           if (model.metrics[indexForMetric].upTrendColor == 'green') {
-            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.RED, color: vuMetricConstants.COLOR_CONSTANTS.WHITE }
+            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.RED, color: vuMetricConstants.COLOR_CONSTANTS.WHITE };
           }
           else {
-            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.GREEN, color: vuMetricConstants.COLOR_CONSTANTS.WHITE }
+            style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.GREEN, color: vuMetricConstants.COLOR_CONSTANTS.WHITE };
           }
         }
       }
       else {
-        style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY }
+        style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY };
       }
     }
     else {
-      // historicalDataObj.percentageChange != -1 has been done as the backend returns a value of -1 for percentageChange when no 
+      // historicalDataObj.percentageChange != -1 has been done as the backend returns a value of -1 for percentageChange when no
       // precentage value is there.
       if (historicalDataObj.percentageChange != -1) {
         if (historicalDataObj.icon == 'fa-caret-up') {
           if (model.metrics[indexForMetric].upTrendColor == 'green') {
-            style = { color: vuMetricConstants.COLOR_CONSTANTS.GREEN }
+            style = { color: vuMetricConstants.COLOR_CONSTANTS.GREEN };
           }
           else {
-            style = { color: vuMetricConstants.COLOR_CONSTANTS.RED }
+            style = { color: vuMetricConstants.COLOR_CONSTANTS.RED };
           }
         }
         else if (historicalDataObj.icon == 'fa-caret-down') {
           if (model.metrics[indexForMetric].upTrendColor == 'green') {
-            style = { color: vuMetricConstants.COLOR_CONSTANTS.RED }
+            style = { color: vuMetricConstants.COLOR_CONSTANTS.RED };
           }
           else {
-            style = { color: vuMetricConstants.COLOR_CONSTANTS.GREEN }
+            style = { color: vuMetricConstants.COLOR_CONSTANTS.GREEN };
           }
         }
       }
       else {
-        style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY }
+        style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY };
       }
 
     }
@@ -117,31 +117,31 @@ class HorizontalTableVuMetric extends Component {
   // 2. To display 'N.A.' when there is no data for a metric.
   // Based on the input values recieved: 'fValue' and 'metricsetType' we prepare the JSON structure for a table header or metric without any results.
   prepareMetricSetForHeadersAndNoValue = (type, model) => {
-    let metricObj = {}
+    let metricObj = {};
     if (type === 'header') {
-      metricObj = { formattedValue: "For Selected Time", success: true, rowType: 'headerRow' };
+      metricObj = { formattedValue: 'For Selected Time', success: true, rowType: 'headerRow' };
       if (model.actionButtonsData.length) {
-        metricObj.actionButtonsColumnName = "Actions";
+        metricObj.actionButtonsColumnName = 'Actions';
       }
       if (model.historicalData.length) {
         metricObj.historicalData = [];
         model.historicalData.map((historicalDataObj) => {
           metricObj.historicalData.push(
             { formattedValue: historicalDataObj.label, percentageChange: 'header' }
-          )
-        })
+          );
+        });
       }
     }
     // This case will be used when there is no data for the metric and buckets is empty array
     else if (type === 'N.A.') {
-      metricObj = { formattedValue: "N.A." };
+      metricObj = { formattedValue: 'N.A.' };
       if (model.historicalData.length) {
         metricObj.historicalData = [];
         model.historicalData.map((historicalDataObj) => {
           metricObj.historicalData.push(
             { formattedValue: 'N.A.', percentageChange: -1 }
-          )
-        })
+          );
+        });
       }
     }
     return metricObj;
@@ -244,32 +244,32 @@ class HorizontalTableVuMetric extends Component {
   confirmationToStartActionForTableWithoutBuckets = () => {
     this.setState({
       actionConfirmationModal: true
-    })
+    });
   }
 
   // This function will be used to close the modal of confirmation to start the action
   actionConfirmationModalClose = () => {
     this.setState({
       actionConfirmationModal: false
-    })
+    });
   }
 
   actionConfirmationMessageModalClose = () => {
     this.setState({
       actionConfirmationMessageModal: false
-    })
+    });
   }
 
   actionConfirmationMessageModalSubmit = () => {
     this.setState({
       actionConfirmationMessageModal: false
-    })
+    });
   }
 
   // THis function will be used to start the action and then to show the user a popup the action has been started
   actionConfirmationModalSubmit = (actionName, metricKey, metricData) => {
-    let argrumentsToSend = {};
-    let agrsToSendWithoutBuckets = {};
+    const argrumentsToSend = {};
+    const agrsToSendWithoutBuckets = {};
     agrsToSendWithoutBuckets.metricname = metricKey;
     agrsToSendWithoutBuckets.metricValue = metricData.formattedValue;
     agrsToSendWithoutBuckets.historcalData = metricData.historicalData;
@@ -280,7 +280,7 @@ class HorizontalTableVuMetric extends Component {
     // This will return us an array of [username,userrole,userpermissions]
     const userInfo = chrome.getCurrentUser();
     argrumentsToSend.userName = userInfo[0];
-    // Will only be used in tanle and bucketing cases 
+    // Will only be used in tanle and bucketing cases
     argrumentsToSend.args = agrsToSendWithoutBuckets;
 
     fetch(urlBase + '/rba/' + actionName + '/', {
@@ -295,7 +295,7 @@ class HorizontalTableVuMetric extends Component {
         if (response.status === 200) {
           this.setState({
             actionConfirmationMessageModal: true
-          })
+          });
         }
       });
 
@@ -369,7 +369,7 @@ class HorizontalTableVuMetric extends Component {
             // this metric, create a row with 'N.A.'
             // values.
             if ((metricData[key].buckets && metricData[key].buckets.length === 0) || metricData[key].success === false) {
-              let metricObj = this.prepareMetricSetForHeadersAndNoValue('N.A.', model);
+              const metricObj = this.prepareMetricSetForHeadersAndNoValue('N.A.', model);
               this.prepareHeadersAndNoValueForAggregation(metricData[key].buckets, metricObj, 'N.A.', 0, model.aggregations.length);
 
               // If latest value metric is selected , Fill historical data
@@ -397,15 +397,15 @@ class HorizontalTableVuMetric extends Component {
     }, this);
 
     //Here we are populating the header rows to be displayed with respect to the configuration of the table
-    let tableHeaders = {};
+    const tableHeaders = {};
     tableHeaders.Metric = {};
-    tableHeaders.Metric.buckets = []
+    tableHeaders.Metric.buckets = [];
     if (visData.length && model.aggregations.length === 0) {
-      let metricObj = this.prepareMetricSetForHeadersAndNoValue('header', model);
+      const metricObj = this.prepareMetricSetForHeadersAndNoValue('header', model);
       tableHeaders.Metric = metricObj;
     }
     else if (visData.length && model.aggregations.length > 0) {
-      let metricObj = this.prepareMetricSetForHeadersAndNoValue('header', model);
+      const metricObj = this.prepareMetricSetForHeadersAndNoValue('header', model);
       this.prepareHeadersAndNoValueForAggregation(tableHeaders.Metric.buckets,
         metricObj,
         'header',
@@ -417,12 +417,12 @@ class HorizontalTableVuMetric extends Component {
     visData.splice(0, 0, tableHeaders);
 
     // This model will be used for hide metric functionality because the visdata is having 1 more entry than
-    // the number or metrics which is beacuse of the header row. Hence we create a model with 3 entries wherein the 
+    // the number or metrics which is beacuse of the header row. Hence we create a model with 3 entries wherein the
     // 1st entry defines the header row whose hideMetric is always false.
-    let modelForHidingMetric = _.cloneDeep(model.metrics);
+    const modelForHidingMetric = _.cloneDeep(model.metrics);
     modelForHidingMetric.unshift({
       hideMetric: false
-    })
+    });
 
 
     return (
@@ -430,10 +430,10 @@ class HorizontalTableVuMetric extends Component {
         {
           visData.map((metric, index) => {
             for (const [metricKey, metricData] of Object.entries(metric)) {
-              let indexForMetric = index-1;
+              let indexForMetric = index - 1;
               // This has been done because the header row with have index as 0 and index-1 will make indexForMetric -1
               // which will throw us an error hence we make indexForMetric as 0 even when index is -1, but this give rise to
-              // a new problem that if we hide first metric the header row is always mapped to 0 indexForMetric hence hiding the 
+              // a new problem that if we hide first metric the header row is always mapped to 0 indexForMetric hence hiding the
               // metric at 0 index i.e the 1st configured metric will hide the header row
               if (indexForMetric === -1) {
                 indexForMetric = 0;
@@ -441,7 +441,8 @@ class HorizontalTableVuMetric extends Component {
               return (
                 <tr
                   className="vu-metric-data-rows"
-                  key={index}>
+                  key={index}
+                >
                   {/* (!model.metrics[indexForMetric].hideMetric)  */}
                   {(!modelForHidingMetric[index].hideMetric) ?
                     (
@@ -450,7 +451,8 @@ class HorizontalTableVuMetric extends Component {
                           <tr>
                             <td
                               width={columnWidth}
-                              className="vu-metric-horizontal-table-td-metric-names">
+                              className="vu-metric-horizontal-table-td-metric-names"
+                            >
                               <div className="vu-metric-label-description-and-link-container">
                                 <span className="metric-name">{metricKey}</span>
                                 {
@@ -458,9 +460,10 @@ class HorizontalTableVuMetric extends Component {
                                     (
                                       <span className="metric-description-icon-container">
                                         <Tooltip
-                                          placement='right'
-                                          text={model.metrics[indexForMetric].description}>
-                                          <i className="fa fa-question-circle metric-description-icon" ></i>
+                                          placement="right"
+                                          text={model.metrics[indexForMetric].description}
+                                        >
+                                          <i className="fa fa-question-circle metric-description-icon"  />
                                         </Tooltip>
                                       </span>
                                     )
@@ -479,11 +482,12 @@ class HorizontalTableVuMetric extends Component {
                                           model.metrics[indexForMetric].referenceLink,
                                           model.metrics[indexForMetric].filter
                                         )
-                                        }>
+                                        }
+                                      >
                                         <i
                                           className="fa fa-arrow-circle-o-right metric-refernce-link-icon"
-                                          aria-hidden="true">
-                                        </i>
+                                          aria-hidden="true"
+                                        />
                                       </span>
                                     )
                                     :
@@ -510,7 +514,8 @@ class HorizontalTableVuMetric extends Component {
                     (model.aggregations.length > 0 && !modelForHidingMetric[index].hideMetric) ?
                       (
                         <td
-                          className="bucketing-td">
+                          className="bucketing-td"
+                        >
 
                           <BucketingTable
                             model={model}
@@ -559,7 +564,7 @@ class HorizontalTableVuMetric extends Component {
                         metricData.historicalData.map((historicalDataObj) => {
                           return (
                             <td
-                              className='vu-metric-table-historical-data-td'
+                              className="vu-metric-table-historical-data-td"
                               style={this.getHistoricalDataTrendColor(model, historicalDataObj, indexForMetric)}
                               width={columnWidth}
                             >
@@ -569,7 +574,7 @@ class HorizontalTableVuMetric extends Component {
                                 indexForMetric={indexForMetric}
                               />
                             </td>
-                          )
+                          );
                         })
                       )
                       :
@@ -616,7 +621,7 @@ class HorizontalTableVuMetric extends Component {
                                           onSubmit={this.actionConfirmationMessageModalSubmit.bind()}
                                         />
                                       </div>
-                                    )
+                                    );
                                   }
 
                                 })
@@ -632,17 +637,17 @@ class HorizontalTableVuMetric extends Component {
                   }
 
                 </tr>
-              )
+              );
             }
           })
         }
       </table>
-    )
+    );
   }
 }
 
 HorizontalTableVuMetric.propTypes = {
-  model: PropTypes.object, //  This is the parameters object 
+  model: PropTypes.object, //  This is the parameters object
   visData: PropTypes.array, // This is array retured by the api
   title: PropTypes.string, // This represent the name of the visualization
   Private: PropTypes.func, // This will be used for going to reference link to prepare link information

@@ -76,11 +76,10 @@ export const goToReferenceLink = function (Private, getAppState, timefilter, ref
       Private,
       timefilter);
   }
-
   /* we are not using kbnUrl to change the url or to navigate to a page. This is because change of the url change
-   was happening after one more update in the component. The same was seem in UTM aslo where we fixed this by running one 
-   more digest cycle by calling $apply(). But here we did not even use kbnUrl, instead we are using current-route 
-   and window.location.href  
+   was happening after one more update in the component. The same was seem in UTM aslo where we fixed this by running one
+   more digest cycle by calling $apply(). But here we did not even use kbnUrl, instead we are using current-route
+   and window.location.href
   */
 
   // kbnUrl.change('/' + referencePage);
@@ -88,13 +87,13 @@ export const goToReferenceLink = function (Private, getAppState, timefilter, ref
   const currentRoute = window.location.href;
 
   // We are finding the index of vienna#/ in the current url
-  let indexOfVienna = currentRoute.indexOf('vienna#/')
+  const indexOfVienna = currentRoute.indexOf('vienna#/');
 
   // Now we slice the current route string till index found + 8 (+8 so that it consists vienna#/ )
-  let currentRouteWithoutReferencePage = currentRoute.slice(0, indexOfVienna + 8)
+  const currentRouteWithoutReferencePage = currentRoute.slice(0, indexOfVienna + 8);
 
   // Here we add the string slice from current and the reference link string coming from prepareLinkInfo
-  let newRouteWithReferencePage = currentRouteWithoutReferencePage + referencePage
+  const newRouteWithReferencePage = currentRouteWithoutReferencePage + referencePage;
 
   window.location.href = newRouteWithReferencePage;
 

@@ -42,7 +42,7 @@ class SingleAndMultipleVuMetric extends Component {
     // This has been done to disable the action buttons if the visualization is saved.
     // Action button will only be enabled if the visualization is saved.
     const currentRoute = window.location.href;
-    if (!currentRoute.includes('/visualize/create?type=vu_metric')) {
+    if (!currentRoute.includes('/visualize/create?type=business_metric')) {
       this.setState(
         {
           isVisualizationSaved: true
@@ -261,8 +261,51 @@ class SingleAndMultipleVuMetric extends Component {
                     <div
                       className="no-results-message"
                       style={model.metrics[indexForMetric].bgColorEnabled ? { color: vuMetricConstants.COLOR_CONSTANTS.WHITE } : {}}>
-                      No Results Found
-                </div>
+                      {model.enableCustomErrorMessage}
+                      {model.enableCustomErrorMessage ?
+                        (
+                          <div>
+                            <span> {model.customErrorMessage} </span>
+
+                            {
+                              model.enableCustomErrorTooltip ?
+                                (
+                                  <span>
+                                    <i
+                                      className="no-data-message-help-icon icon-help-blue"
+                                      data-tip={model.customErrorTooltip}
+                                    />
+                                    <ReactTooltip />
+                                  </span>
+                                )
+                                :
+                                (
+                                  <span>
+                                    <i
+                                      className="no-data-message-help-icon icon-help-blue"
+                                      data-tip="There is no matching data for the selected time and filter criteria"
+                                    />
+                                    <ReactTooltip />
+                                  </span>
+                                )
+                            }
+
+                          </div>
+
+                        )
+                        :
+                        (
+                          <span>
+                            <span> No Data To Show </span>
+                            <i
+                              className="no-data-message-help-icon icon-help-blue"
+                              data-tip="There is no matching data for the selected time and filter criteria"
+                            />
+                            <ReactTooltip />
+                          </span>
+                        )
+                      }
+                    </div>
                   </div>
                 )
               }
@@ -363,8 +406,20 @@ class SingleAndMultipleVuMetric extends Component {
 
     // This will be rendered if there is single metric scenario
     const generateSingleMetricBlock = () => {
+      let singleMetricBgColor;
+      let bgColorEnabled;
+      visData.map((metric) => {
+        for (const [metricKey, metricData] of Object.entries(metric)) {
+          const indexForMetric = _.indexOf(visData, metric);
+          bgColorEnabled = model.metrics[indexForMetric].bgColorEnabled
+          singleMetricBgColor = metricData.color;
+        }
+      })
       return (
-        <div className={"single-vu-metric-container-wrapper " + (isEditorMode ? 'vu-metric-in-config' : 'vu-metric-in-dashboard')} >
+        <div className={'single-vu-metric-container-wrapper ' + (isEditorMode ? 'vu-metric-in-config' : 'vu-metric-in-dashboard')}
+          style={!isEditorMode && bgColorEnabled ? {
+            backgroundColor: singleMetricBgColor,
+          } : {}}>
           {
             visData.map((metric) => {
               for (const [metricKey, metricData] of Object.entries(metric)) {

@@ -29,8 +29,8 @@ class VisEditor extends Component {
   constructor(props) {
     super(props);
     const { appState } = props;
-    // The reversed and this.state.reversed will be used to detect the dark theme mode in dashboard and make any changes to 
-    // visualization if changes are needed in the dark theme mode. That is why reversed may be seen in the file which is not 
+    // The reversed and this.state.reversed will be used to detect the dark theme mode in dashboard and make any changes to
+    // visualization if changes are needed in the dark theme mode. That is why reversed may be seen in the file which is not
     // used as of now but can be used later for dark theme mode
     const reversed = get(appState, 'options.darkTheme', false);
     this.state = {
@@ -38,23 +38,23 @@ class VisEditor extends Component {
       dirty: true,
       reversed
     };
-    this.errorModel = {}
-    this.isFormValid = true
+    this.errorModel = {};
+    this.isFormValid = true;
     this.sameLabelExists = false;
     this.errorInSavedSearchFound = false;
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.initBackwardCompatibilty();
   }
 
-  // This function will be used to in populate errorHandlerObject and to provide backward compatibilty to support 
+  // This function will be used to in populate errorHandlerObject and to provide backward compatibilty to support
   // all the prevoisly configured objects to support the new Vu-Metric
   initBackwardCompatibilty = () => {
 
 
     // Here we are handling the backward compatibilty, we try to see if there is a value for each key in deafults if the value
-    // is there we dont do anything but if that key is not present  i.e (if the key is undefiend) we intialize the key with 
+    // is there we dont do anything but if that key is not present  i.e (if the key is undefiend) we intialize the key with
     // the default value needed
-    let savedConfigurationModel = _.cloneDeep(this.props.vis.params);
+    const savedConfigurationModel = _.cloneDeep(this.props.vis.params);
 
     // threshold: [],
 
@@ -62,7 +62,7 @@ class VisEditor extends Component {
     savedConfigurationModel.metrics.map((metric) => {
 
       if (metric.threshold === undefined) {
-        metric.threshold = []
+        metric.threshold = [];
       }
       else if (metric.threshold.length) {
         // Adjust the threshold parameters so that they are converted into new
@@ -95,13 +95,13 @@ class VisEditor extends Component {
             threshold.value = threshold.valueStr;
             delete threshold.valueStr;
           }
-          if (threshold.valueStr === '' || threshold.valueStr === undefined || threshold.valueStr ===null) {
+          if (threshold.valueStr === '' || threshold.valueStr === undefined || threshold.valueStr === null) {
             delete threshold.valueStr;
           }
-          if (threshold.valueMin === '' || threshold.valueMin === undefined || threshold.valueMin ===null) {
+          if (threshold.valueMin === '' || threshold.valueMin === undefined || threshold.valueMin === null) {
             delete threshold.valueMin;
           }
-          if (threshold.valueMax === '' || threshold.valueMax === undefined || threshold.valueMax ===null) {
+          if (threshold.valueMax === '' || threshold.valueMax === undefined || threshold.valueMax === null) {
             delete threshold.valueMax;
           }
         });
@@ -154,7 +154,7 @@ class VisEditor extends Component {
         metric.description = '';
       }
       if (metric.intervalMetric === undefined) {
-        metric.intervalMetric = ''
+        metric.intervalMetric = '';
       }
       if (metric.metricListIndex === undefined) {
         metric.metricListIndex = '';
@@ -195,29 +195,29 @@ class VisEditor extends Component {
           metric.referenceLink.dashboard = {
             id: '',
             title: ''
-          }
+          };
         }
         if (metric.referenceLink.searchString === undefined) {
-          metric.referenceLink.searchString = ''
+          metric.referenceLink.searchString = '';
         }
         if (metric.referenceLink.retainFilters === undefined) {
-          metric.referenceLink.retainFilters = false
+          metric.referenceLink.retainFilters = false;
         }
         if (metric.referenceLink.useMetricFilter === undefined) {
-          metric.referenceLink.useMetricFilter = false
+          metric.referenceLink.useMetricFilter = false;
         }
       }
 
 
-    })
+    });
 
-    // This we are doing for the aggreagation as we need to push a collapsed key to aggregation if not present 
+    // This we are doing for the aggreagation as we need to push a collapsed key to aggregation if not present
     if (savedConfigurationModel.aggregations.length > 0) {
       savedConfigurationModel.aggregations.map((aggregation) => {
         if (aggregation.collapsed === undefined) {
           aggregation.collapsed = false;
         }
-      })
+      });
     }
 
     // This has been done to provide backward to backward compatibilty for thresolds are the keys for thresolds have been changed
@@ -258,27 +258,27 @@ class VisEditor extends Component {
 
   initErrorHandler = () => {
     // Here we are intializing the error handler object in case the object is saved
-    let errorHandler = { metrics: [], aggregations: [] }
+    const errorHandler = { metrics: [], aggregations: [] };
     this.state.model.metrics.map((metric) => {
 
       // If the metric type is count or empty we populate the error handler without the field and format errors
       if (metric.type === 'count' || metric.type === '') {
-        errorHandler.metrics.push(vuMetricConstants.METRIC_ERROR_DEFAULTS)
+        errorHandler.metrics.push(vuMetricConstants.METRIC_ERROR_DEFAULTS);
       }
 
       // If the metric type is not count nor expression we populate the error handler with field error
       else if (metric.type !== 'count' && metric.type !== 'expression') {
-        errorHandler.metrics.push(vuMetricConstants.METRIC_ERROR_DEFAULTS_WITH_FIELD)
+        errorHandler.metrics.push(vuMetricConstants.METRIC_ERROR_DEFAULTS_WITH_FIELD);
       }
 
       // If the metric type is expression we populate the error handler with field and format error
       else if (metric.type === 'expression') {
-        errorHandler.metrics.push(vuMetricConstants.METRIC_ERROR_DEFAULTS_WITH_FIELD_AND_FORMAT)
+        errorHandler.metrics.push(vuMetricConstants.METRIC_ERROR_DEFAULTS_WITH_FIELD_AND_FORMAT);
       }
-    })
+    });
 
     this.state.model.aggregations.map((bucket) => {
-      // If the bucket is configured with fieldtype as date and interval field as custom we insert the 
+      // If the bucket is configured with fieldtype as date and interval field as custom we insert the
       // customINterval error field also for that bucket
       if (bucket.interval && bucket.interval === 'custom') {
         errorHandler.aggregations.push(vuMetricConstants.BUCKET_ERROR_DEFAULTS_WITH_CUSTOMINTERVAL);
@@ -286,7 +286,7 @@ class VisEditor extends Component {
       else {
         errorHandler.aggregations.push(vuMetricConstants.BUCKET_ERROR_DEFAULTS);
       }
-    })
+    });
     this.errorModel = _.cloneDeep(errorHandler);
   }
 
@@ -324,13 +324,13 @@ class VisEditor extends Component {
       this.props.vis.dirty = true;
     };
 
-    // This function will be used to handle all the errors if present in the configuration form and 
+    // This function will be used to handle all the errors if present in the configuration form and
     // will update the same in the errorModel so that the error are displayed in the form if needed
     const handleChangeForErrorHandler = (errorPart) => {
       this.errorModel = errorPart;
-      this.isFormValid = getFormValidity(this.errorModel)
+      this.isFormValid = getFormValidity(this.errorModel);
       this.forceUpdate();
-    }
+    };
 
     // This function will be called when the user clicks on the preview button and an api call will
     // be made and the latest data will be fetched and showed in the visualization.
@@ -343,7 +343,7 @@ class VisEditor extends Component {
           {
             dirty: false
           }
-        )
+        );
         this.props.vis.dirty = false;
       }
     };
@@ -356,7 +356,7 @@ class VisEditor extends Component {
       // otherwise to false to enable/disabled the preview button
       this.sameLabelExists = sameLabelArray.includes(true);
       this.props.vis.dirty = true;
-    }
+    };
 
     // This function will be used to set errorInSavedSearchFound if there is an error in search while finding the
     // saved search object or the index for saved search is not found
@@ -366,7 +366,7 @@ class VisEditor extends Component {
       // otherwise to false to enable/disabled the preview button
       this.errorInSavedSearchFound = errorInSavedSearchArray.includes(true);
       this.props.vis.dirty = true;
-    }
+    };
 
     const { model } = this.state;
     // This variable will be used decide whether we need to render only visualization or visualization + editable config.

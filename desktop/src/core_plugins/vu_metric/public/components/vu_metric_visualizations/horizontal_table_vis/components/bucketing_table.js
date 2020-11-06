@@ -19,10 +19,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
-import VuMetricHistoricalData from '../../components/historical_data/vu_metric_historical_data'
-import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal'
+import VuMetricHistoricalData from '../../components/historical_data/vu_metric_historical_data';
+import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { vuMetricConstants } from '../../../lib/vu_metric_constants';
-import chrome from 'ui/chrome'
+import chrome from 'ui/chrome';
 // import './horizontal_table_vu_metric.less'
 
 class BucketingTable extends Component {
@@ -30,50 +30,50 @@ class BucketingTable extends Component {
     super(props);
     this.state = {
       isVisualizationSaved: false
-    }
+    };
   }
 
   componentDidMount() {
     // This has been done to disable the action buttons if the visualization is saved.
     // Action button will only be enabled if the visualization is saved.
     const currentRoute = window.location.href;
-    if (!currentRoute.includes('/visualize/create?type=vu_metric')) {
+    if (!currentRoute.includes('/visualize/create?type=business_metric')) {
       this.setState(
         {
           isVisualizationSaved: true
         }
-      )
+      );
     }
   }
 
   confirmationToStartActionForTableWithBuckets = () => {
     this.setState({
       actionConfirmationModal: true
-    })
+    });
   }
 
   // This function will be used to close the modal of confirmation to start the action
   actionConfirmationModalClose = () => {
     this.setState({
       actionConfirmationModal: false
-    })
+    });
   }
 
   actionConfirmationMessageModalClose = () => {
     this.setState({
       actionConfirmationMessageModal: false
-    })
+    });
   }
 
   actionConfirmationMessageModalSubmit = () => {
     this.setState({
       actionConfirmationMessageModal: false
-    })
+    });
   }
 
   // THis function will be used to start the action and then to show the user a popup the action has been started
   actionConfirmationModalSubmit = (actionName, bucket, metricData, metric) => {
-    let argrumentsToSend = {};
+    const argrumentsToSend = {};
     let subBucketValueToSend = bucket.key;
     let bucketValueToSend = metricData.key;
 
@@ -81,7 +81,7 @@ class BucketingTable extends Component {
       subBucketValueToSend = null;
       bucketValueToSend = bucket.key;
     }
-    let bucketArgsToSend = {};
+    const bucketArgsToSend = {};
     bucketArgsToSend.bucket = bucketValueToSend;
     bucketArgsToSend.subBucket = subBucketValueToSend;
     bucketArgsToSend.metricname = metric.label;
@@ -94,7 +94,7 @@ class BucketingTable extends Component {
     // This will return us an array of [username,userrole,userpermissions]
     const userInfo = chrome.getCurrentUser();
     argrumentsToSend.userName = userInfo[0];
-    // Will only be used in tanle and bucketing cases 
+    // Will only be used in tanle and bucketing cases
     argrumentsToSend.args = bucketArgsToSend;
 
     fetch(urlBase + '/rba/' + actionName + '/', {
@@ -109,7 +109,7 @@ class BucketingTable extends Component {
         if (response.status === 200) {
           this.setState({
             actionConfirmationMessageModal: true
-          })
+          });
         }
       });
 
@@ -121,7 +121,7 @@ class BucketingTable extends Component {
     const metricData = this.props.metricData;
     const metric = this.props.metric;
     const indexForMetric = this.props.indexForMetric;
-    const columnWidth = this.props.columnWidth
+    const columnWidth = this.props.columnWidth;
     const getHistoricalDataTrendColor = this.props.getHistoricalDataTrendColor;
 
     const actionConfirmationModalData = vuMetricConstants.ACTION_CONFIRMATION_MODAL_DATA;
@@ -138,13 +138,15 @@ class BucketingTable extends Component {
 
                   // We have given key to tr as bucket.key assuming that there will be no duplicate bucket keys.
                   <tr
-                    className='single-bucketing-row'
-                    key={index}>
+                    className="single-bucketing-row"
+                    key={index}
+                  >
 
                     {/* This td is for the bucketing key */}
                     <td
                       className="vu-metric-bucket-key"
-                      width={columnWidth}>
+                      width={columnWidth}
+                    >
                       {bucket.key}
                     </td>
 
@@ -152,7 +154,7 @@ class BucketingTable extends Component {
                     {
                       bucket.buckets &&
                       (
-                        <td className='vu-metric-recursive-bucket-table-tb'>
+                        <td className="vu-metric-recursive-bucket-table-tb">
                           <BucketingTable
                             model={model}
                             indexForMetric={indexForMetric}
@@ -172,11 +174,12 @@ class BucketingTable extends Component {
                       (
                         <td
                           width={columnWidth}
-                          className='vu-metric-bucket-formatted-value-td'
-                          // metricData.buckets[0].metric.rowType !== 'headerRow' check has been added to prevent the 
+                          className="vu-metric-bucket-formatted-value-td"
+                          // metricData.buckets[0].metric.rowType !== 'headerRow' check has been added to prevent the
                           // header row from getting the white text color on enable background
                           style={(metric.bgColorEnabled && metricData.buckets[0].metric.rowType !== 'headerRow' && bucket.metric.formattedValue !== 'N.A.')
-                            ? { backgroundColor: bucket.metric.color, color: vuMetricConstants.COLOR_CONSTANTS.WHITE } : { color: bucket.metric.color }}>
+                            ? { backgroundColor: bucket.metric.color, color: vuMetricConstants.COLOR_CONSTANTS.WHITE } : { color: bucket.metric.color }}
+                        >
                           {bucket.metric.formattedValue}
                         </td>
                       )
@@ -191,7 +194,7 @@ class BucketingTable extends Component {
                               <td
                                 width={columnWidth}
                                 key={indexOfHisoricalData}
-                                className='vu-metric-bucket-historical-data-td'
+                                className="vu-metric-bucket-historical-data-td"
                                 style={getHistoricalDataTrendColor(model, historicalDataObj, indexForMetric)}
                               >
                                 <VuMetricHistoricalData
@@ -200,7 +203,7 @@ class BucketingTable extends Component {
                                   indexForMetric={indexForMetric}
                                 />
                               </td>
-                            )
+                            );
                           })
                         )
                         :
@@ -223,7 +226,8 @@ class BucketingTable extends Component {
                                     return (
                                       <div
                                         className=""
-                                        key={indexForActionButton}>
+                                        key={indexForActionButton}
+                                      >
                                         <button
                                           className="single-action-button"
                                           disabled={!this.state.isVisualizationSaved}
@@ -248,7 +252,7 @@ class BucketingTable extends Component {
                                         />
                                       </div>
 
-                                    )
+                                    );
                                   })
                                 )
                                 :
@@ -260,14 +264,14 @@ class BucketingTable extends Component {
                     }
 
                   </tr>
-                )
+                );
               })
             }
           </table>
         )
         :
         null
-    )
+    );
 
 
   }

@@ -129,19 +129,33 @@ const MetricsRequestGeneratorProviderForVuMetric = function (Private, Notifier, 
           let finalMetricsForPayload = [];
 
           metricsForPayload.map((metric) => {
+            let metricArg = metric.metricArg;
+            let metricType = metric.type;
+            // Median is nothing but 50th percentile.
+            // So if the selected metric type is median then
+            // send 50 as percents always
+            if (metric.type === 'median') {
+              metricType = 'percentiles';
+              metricArg = '50';
+            }
+            if (metricType !== 'percentiles') {
+              metricArg = '';
+            }
+
             finalMetricsForPayload.push({
               metricListIndex: metric.metricListIndex,
               index: metric.index,
               label: metric.label,
               metricGroup: metric.groupName || '',
-              metricType: metric.type || '',
+              metricType: metricType || '',
+              metricArg: metricArg || '',
               field: metric.field || '',
               fieldType: metric.fieldType || '',
               advancedConfig: metric.advancedConfig || '',
               hideMetric: metric.hideMetric || false,
               scripted: metric.scripted || false,
               filter: metric.filter || '*',
-              savedSearchFilter: metric.savedSearchQuery,
+              savedSearchFilter: metric.savedSearchFilter,
               enableAutoBaselining: metric.enableAutoBaseLining || false,
               intervalMetric: metric.intervalMetric,
               additionalFields: metric.additionalFields || '',

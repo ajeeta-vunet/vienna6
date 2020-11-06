@@ -21,7 +21,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import { VunetSwitch } from 'ui_framework/src/vunet_components/vunet_switch/vunet_switch';
-import { VunetHelp } from 'ui_framework/src/vunet_components/vunet_help/vunet_help'
+import { VunetHelp } from 'ui_framework/src/vunet_components/vunet_help/vunet_help';
 import { validateInput, validateInputTypes } from 'ui/utils/vunet_form_validator_utils';
 import { getFiltersFromSavedSearch } from 'ui/filter_manager/filter_manager.js';
 import { vuMetricConstants } from '../../lib/vu_metric_constants';
@@ -29,7 +29,7 @@ import createSelectHandler from '../../lib/create_select_handler';
 import createTextHandler from '../../lib/create_text_handler';
 import ConfigureLabelAndContents from './components/configure_label_and_contents';
 import ConfigureThresholds from './components/configure_thresholds';
-import './configure_metrics_tab.less'
+import './configure_metrics_tab.less';
 
 class ConfigureMetricsTab extends Component {
   constructor(props) {
@@ -53,29 +53,29 @@ class ConfigureMetricsTab extends Component {
         }
         , () => {
           if (this.props.model.metrics[0].index.title === '') {
-            this.setSelectedIndexPattern(this.state.indexPatterns[0].attributes.title, 0)
+            this.setSelectedIndexPattern(this.state.indexPatterns[0].attributes.title, 0);
           }
         }
       )
-    )
+    );
     this.getSavedSearches().then(savedSearches =>
       this.setState(
         {
           savedSearches: savedSearches
         }
       )
-    )
+    );
     this.initializeIndexPatternFieldsForSavedObjects();
-  };
+  }
 
   // This function will be used to set index pattern fields for all the metrics for a saved object
   initializeIndexPatternFieldsForSavedObjects = async () => {
 
-    let indexPatternsForAllMetrics = []
+    const indexPatternsForAllMetrics = [];
     this.props.model.metrics.map((metric) => {
-      const indexPatternDeatils = this.props.vis.API.indexPatterns.get(metric.index.id)
+      const indexPatternDeatils = this.props.vis.API.indexPatterns.get(metric.index.id);
       indexPatternsForAllMetrics.push(indexPatternDeatils);
-    })
+    });
     // ALl aaggretable fields of all selected index-patterns are stored in indexPatternsFieldsForAllMetricsResolved
     const indexPatternsFieldsForAllMetricsResolved = [];
     await Promise.all(indexPatternsForAllMetrics).then(resp => {
@@ -85,9 +85,9 @@ class ConfigureMetricsTab extends Component {
             if (field.aggregatable) {
               return field;
             }
-          }))
+          }));
         }
-      })
+      });
     });
 
     this.indexPatternFields = indexPatternsFieldsForAllMetricsResolved;
@@ -103,10 +103,10 @@ class ConfigureMetricsTab extends Component {
     });
 
     // Here we are performing case insenstive comparison for sorting
-    let sortedIndexPatterns = resp.savedObjects.sort(function (a, b) {
+    const sortedIndexPatterns = resp.savedObjects.sort(function (a, b) {
       a = a.attributes.title.toLowerCase();
       b = b.attributes.title.toLowerCase();
-      if (a == b) return 0;
+      if (a === b) return 0;
       if (a > b) return 1;
       return -1;
     });
@@ -123,10 +123,10 @@ class ConfigureMetricsTab extends Component {
     });
 
     // Here we are performing case insenstive comparison for sorting
-    let sortedSavedSearchs = resp.savedObjects.sort(function (a, b) {
+    const sortedSavedSearchs = resp.savedObjects.sort(function (a, b) {
       a = a.attributes.title.toLowerCase();
       b = b.attributes.title.toLowerCase();
-      if (a == b) return 0;
+      if (a === b) return 0;
       if (a > b) return 1;
       return -1;
     });
@@ -137,20 +137,20 @@ class ConfigureMetricsTab extends Component {
   // This fucntion will be used to set the selected indexx patterns
   setSelectedIndexPattern = (indexPatternName, metricIndex) => {
     const savedObjectFound = this.state.indexPatterns.find((indexPattern) => {
-      return indexPattern.attributes.title === indexPatternName
-    })
-    const savedObjIndexPattern = {}
+      return indexPattern.attributes.title === indexPatternName;
+    });
+    const savedObjIndexPattern = {};
     savedObjIndexPattern.index = {
       'id': savedObjectFound.id,
       'title': savedObjectFound.attributes.title
-    }
-    this.getIndexPatternFields(indexPatternName, metricIndex, savedObjIndexPattern)
+    };
+    this.getIndexPatternFields(indexPatternName, metricIndex, savedObjIndexPattern);
   }
 
   // This function will be used to get all the fields for the particular selected index-pattern and then populate
   // the fetched index pattern fields in the Metric Fields dropdown.
   getIndexPatternFields = async (indexPatternName, metricIndex, savedObjIndexPattern) => {
-    await this.setIndexPatternFields(indexPatternName, metricIndex)
+    await this.setIndexPatternFields(indexPatternName, metricIndex);
     const model = _.cloneDeep(this.props.model);
     const metricToChange = this.props.model.metrics[metricIndex];
     const changedMetricWithoutindexFields = _.assign({}, metricToChange, savedObjIndexPattern);
@@ -160,9 +160,10 @@ class ConfigureMetricsTab extends Component {
 
   // This function willl be used to set the index patern fields of the particular index in the array
   setIndexPatternFields = async (indexPatternNameForTheMetric, index) => {
-    var indexPatternResultMeta = this.state.indexPatterns.find(indexPatternMeta => indexPatternMeta.attributes.title === indexPatternNameForTheMetric);
+    const indexPatternResultMeta = this.state.indexPatterns.find(indexPatternMeta =>
+      indexPatternMeta.attributes.title === indexPatternNameForTheMetric);
     const indexPatternDeatils = await this.props.vis.API.indexPatterns.get(indexPatternResultMeta.id);
-    let fields = indexPatternDeatils.fields
+    const fields = indexPatternDeatils.fields
       .sort((a, b) => {
         if (a.name < b.name) return -1;
         if (a.name > b.name) return 1;
@@ -172,7 +173,7 @@ class ConfigureMetricsTab extends Component {
         if (field.aggregatable) {
           return field;
         }
-      })
+      });
 
     if (this.indexPatternFields.length === this.props.model.metrics.length) {
       this.indexPatternFields[index] = fields;
@@ -186,20 +187,20 @@ class ConfigureMetricsTab extends Component {
   // This fucntion will be used to set the selected indexx patterns for search based on index id
   setSelectedIndexPatternForSearch = (indexPatternId, metricIndex) => {
     const savedObjectFound = this.state.indexPatterns.find((indexPattern) => {
-      return indexPattern.id === indexPatternId
-    })
+      return indexPattern.id === indexPatternId;
+    });
 
-    // If we are able to find an object for saved object i.e savedObjectFound we updated the index id and title 
+    // If we are able to find an object for saved object i.e savedObjectFound we updated the index id and title
     // and call a function to fetch the index pattern fields for that index
     if (savedObjectFound) {
-      const savedObjIndexPattern = {}
+      const savedObjIndexPattern = {};
 
       // We preapare an object with index key which has id and title values for that index.
       savedObjIndexPattern.index = {
         'id': savedObjectFound.id,
         'title': savedObjectFound.attributes.title
-      }
-      this.getIndexPatternFields(savedObjIndexPattern.index.title, metricIndex, savedObjIndexPattern)
+      };
+      this.getIndexPatternFields(savedObjIndexPattern.index.title, metricIndex, savedObjIndexPattern);
     }
     else {
       const model = _.cloneDeep(this.props.model);
@@ -207,14 +208,14 @@ class ConfigureMetricsTab extends Component {
       this.errorIfSearchNotFound = [];
 
       // We push false in the array for the number of metric configured
-      model.metrics.map((metric) => {
+      model.metrics.map(() => {
         this.errorIfSearchNotFound.push(false);
       });
 
       // For the metric we are working on and saved object is not found we make the value true at that index.
       this.errorIfSearchNotFound[metricIndex] = true;
 
-      this.props.disablePreviewButtonIfErrorInSavedSearchFound(this.errorIfSearchNotFound)
+      this.props.disablePreviewButtonIfErrorInSavedSearchFound(this.errorIfSearchNotFound);
     }
 
   }
@@ -223,31 +224,30 @@ class ConfigureMetricsTab extends Component {
   setSelectedSavedSearch = (savedSearchName, metricIndex) => {
 
     // This is the $filter used to calcute the filter in the saved search
-    const filterInjector = this.props.filterInjectorForSavedSearch
+    const filterInjector = this.props.filterInjectorForSavedSearch;
 
     const savedSearchFound = this.state.savedSearches.find((savedSearch) => {
-      return savedSearch.attributes.title === savedSearchName
-    })
-    const savedSearchObj = {}
+      return savedSearch.attributes.title === savedSearchName;
+    });
+    const savedSearchObj = {};
     savedSearchObj.savedSearch = {
       'id': savedSearchFound.id,
       'title': savedSearchFound.attributes.title,
       'allowedRolesJSON': savedSearchFound.attributes.allowedRolesJSON
-    }
+    };
     // Here we are processing the savedSearchObj to find out searchSourceJSONObj, savedSearchQuery and savedSearchFilters
-    let searchSourceJSONObj = JSON.parse(savedSearchFound.attributes.kibanaSavedObjectMeta.searchSourceJSON);
+    const searchSourceJSONObj = JSON.parse(savedSearchFound.attributes.kibanaSavedObjectMeta.searchSourceJSON);
 
     // get the filter query from the saved search
     let savedSearchQuery = searchSourceJSONObj.query.query;
-
     // Check whether any filter is added to the saved search
-    let savedSearchFilters = searchSourceJSONObj.filter;
-
+    const savedSearchFilters = searchSourceJSONObj.filter;
+    ('savedSearchFilters', savedSearchFilters);
     // Getting the index to be updated
-    let indexPatternIdToUpdateForSearch = searchSourceJSONObj.index;
+    const indexPatternIdToUpdateForSearch = searchSourceJSONObj.index;
 
     // Now we are calling setSelectedIndexPatternForSearch to update index-pattern in model accordingly
-    this.setSelectedIndexPatternForSearch(indexPatternIdToUpdateForSearch, metricIndex)
+    this.setSelectedIndexPatternForSearch(indexPatternIdToUpdateForSearch, metricIndex);
 
     _.each(savedSearchFilters, function (savedSearchFilter) {
       const filter = _.omit(savedSearchFilter, function (val, key) {
@@ -278,21 +278,21 @@ class ConfigureMetricsTab extends Component {
   // This function will be called when user switches the build metric based on search toggle.
   onBuildMetricFromSearchChange = (metricIndex, checked) => {
     if (!checked) {
-      const savedSearchObj = {}
+      const savedSearchObj = {};
       savedSearchObj.savedSearch = {
         'id': '',
         'title': '',
-      }
+      };
       const model = _.cloneDeep(this.props.model);
 
       // This has been done to update the errorIfSearchNotFound array when user switches back to build metric based on search
       this.errorIfSearchNotFound = [];
 
       // We push false in the array for the number of metric configured
-      model.metrics.map((metric) => {
+      model.metrics.map(() => {
         this.errorIfSearchNotFound.push(false);
       });
-      this.props.disablePreviewButtonIfErrorInSavedSearchFound(this.errorIfSearchNotFound)
+      this.props.disablePreviewButtonIfErrorInSavedSearchFound(this.errorIfSearchNotFound);
 
       const metricToChange = this.props.model.metrics[metricIndex];
       const changedMetric = _.assign({}, metricToChange, savedSearchObj);
@@ -309,10 +309,10 @@ class ConfigureMetricsTab extends Component {
   // This function will be used to show fields dropdown when the metric type is not equal to count
   showFieldDropdownWhenMetricTypeNotCount = (metric, index, handleSelectChange, handleTextChange, errorModel) => {
     if (this.props.model.metrics[index].type !== 'count') {
-      let groupedOptions = {};
-      let selectedIndexFieldsArray = []
+      const groupedOptions = {};
+      const selectedIndexFieldsArray = [];
       if (this.indexPatternFields.length) {
-        if (this.props.model.metrics[index].type == 'cardinality' || this.props.model.metrics[index].type == 'latest') {
+        if (this.props.model.metrics[index].type === 'cardinality' || this.props.model.metrics[index].type === 'latest') {
           this.indexPatternFields[index].map((field) =>
             selectedIndexFieldsArray.push({
               key: field.name,
@@ -324,10 +324,10 @@ class ConfigureMetricsTab extends Component {
         }
         else {
           const filteredFieldsByNumber = this.indexPatternFields[index].filter((field) => {
-            if (field.type == 'number') {
+            if (field.type === 'number') {
               return field;
             }
-          })
+          });
           filteredFieldsByNumber.map((field) =>
             selectedIndexFieldsArray.push({
               key: field.name,
@@ -350,7 +350,7 @@ class ConfigureMetricsTab extends Component {
 
       }
 
-      if (this.props.model.metrics[index].type !== 'expression') {
+      if (this.props.model.metrics[index].type !== 'expression' && this.props.model.metrics[index].type !== 'percentiles') {
         return (
           <div className="col-sm-4 form-group">
             <label htmlFor="metricFieldName"> Field
@@ -363,7 +363,7 @@ class ConfigureMetricsTab extends Component {
               value={metric.field}
               onChange={handleSelectChange('field', index)}
             >
-              <option key='null' value=''></option>
+              <option key="null" value="" />
               {Object.keys(groupedOptions).map((group, index) => {
                 return (
                   <optgroup key={index} label={group}>
@@ -373,21 +373,83 @@ class ConfigureMetricsTab extends Component {
                           <option key={option.value} value={option.value}>
                             {option.value}
                           </option>
-                        )
+                        );
                       })
                     }
                   </optgroup>
                 );
               })}
             </select>
-            {
+            {/* {
               errorModel.metrics[index].field.errorText &&
               (
-                <div className='error-text'>{errorModel.metrics[index].field.errorText}</div>
+                <div className="error-text">{errorModel.metrics[index].field.errorText}</div>
               )
-            }
+            } */}
           </div>
-        )
+        );
+      }
+      else if (this.props.model.metrics[index].type === 'percentiles') {
+        return (
+          <div className="metric-percentile-block-container">
+            <div className="col-sm-2 form-group">
+              <label htmlFor="metricFieldName"> Field
+                <sup> *</sup>
+              </label>
+              <select
+                className="metric-field form-control"
+                id={'metricFieldName' + index}
+                placeholder=""
+                value={metric.field}
+                onChange={handleSelectChange('field', index)}
+              >
+                <option key="null" value="" />
+                {Object.keys(groupedOptions).map((group, index) => {
+                  return (
+                    <optgroup key={index} label={group}>
+                      {
+                        groupedOptions[group].map(option => {
+                          return (
+                            <option key={option.value} value={option.value}>
+                              {option.value}
+                            </option>
+                          );
+                        })
+                      }
+                    </optgroup>
+                  );
+                })}
+              </select>
+              {
+                errorModel.metrics[index].field.errorText &&
+                (
+                  <div className="error-text">{errorModel.metrics[index].field.errorText}</div>
+                )
+              }
+            </div>
+            <div className="col-sm-2 form-group">
+              <label htmlFor="percentileField"> Percents
+                <sup> *</sup>
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="99"
+                className="percentile-field form-control"
+                id={'percentileField' + index}
+                placeholder=""
+                value={metric.metricArg}
+                onChange={handleTextChange('metricArg', index)}
+              />
+              {
+                errorModel.metrics[index].metricArg.errorText &&
+                (
+                  <div className="error-text">{errorModel.metrics[index].metricArg.errorText}</div>
+                )
+              }
+            </div>
+          </div>
+        );
       }
       else {
         return (
@@ -406,7 +468,7 @@ class ConfigureMetricsTab extends Component {
               {
                 errorModel.metrics[index].field.errorText &&
                 (
-                  <div className='error-text'>{errorModel.metrics[index].field.errorText}</div>
+                  <div className="error-text">{errorModel.metrics[index].field.errorText}</div>
                 )
               }
             </div>
@@ -421,7 +483,7 @@ class ConfigureMetricsTab extends Component {
                 value={metric.format}
                 onChange={handleSelectChange('format', index)}
               >
-                <option value=""></option>
+                <option value="" />
                 <option value="bits">Bits</option>
                 <option value="bytes">Bytes</option>
                 <option value="currency">Currency</option>
@@ -432,12 +494,12 @@ class ConfigureMetricsTab extends Component {
               {
                 errorModel.metrics[index].format.errorText &&
                 (
-                  <div className='error-text'>{errorModel.metrics[index].format.errorText}</div>
+                  <div className="error-text">{errorModel.metrics[index].format.errorText}</div>
                 )
               }
             </div>
           </div>
-        )
+        );
       }
     }
   }
@@ -446,14 +508,16 @@ class ConfigureMetricsTab extends Component {
   metricBasedOnIndexOrSearch = (metric, index) => {
     if (!metric.showSavedSearch) {
       const indexPatternsOptions = this.state.indexPatterns.map((indexPattern) =>
-        <option
-          key={indexPattern.id}
-          id={indexPattern.id}
-          value={indexPattern.attributes.title}
-          className="index-pattern-options"
-        >
-          {indexPattern.attributes.title}
-        </option>
+        (
+          <option
+            key={indexPattern.id}
+            id={indexPattern.id}
+            value={indexPattern.attributes.title}
+            className="index-pattern-options"
+          >
+            {indexPattern.attributes.title}
+          </option>
+        )
       );
       return (
         <div className="col-sm-4 form-group" >
@@ -463,24 +527,26 @@ class ConfigureMetricsTab extends Component {
           <select
             className="data-store-index form-control"
             id={'dataStoreIndex' + index}
-            value={metric.index.title != '' ? metric.index.title : this.state.indexPatterns[0]}
+            value={metric.index.title !== '' ? metric.index.title : this.state.indexPatterns[0]}
             onChange={(e) => this.setSelectedIndexPattern(e.target.value, index)}
           >
             {indexPatternsOptions}
           </select>
         </div>
-      )
+      );
     }
     else if (metric.showSavedSearch) {
       const savedSearchOptions = this.state.savedSearches.map((search) =>
-        <option
-          key={search.id}
-          id={search.id}
-          value={search.attributes.title}
-          className="saved-search-options"
-        >
-          {search.attributes.title}
-        </option>
+        (
+          <option
+            key={search.id}
+            id={search.id}
+            value={search.attributes.title}
+            className="saved-search-options"
+          >
+            {search.attributes.title}
+          </option>
+        )
       );
       return (
         <div className="col-sm-4 form-group">
@@ -491,20 +557,20 @@ class ConfigureMetricsTab extends Component {
             className="data-search-index form-control"
             id={'dataSavedSearch' + index}
             placeholder="Example: vunet-1-1-server-health-* "
-            value={metric.savedSearch.title != '' ? metric.savedSearch.title : this.state.savedSearches[0]}
+            value={metric.savedSearch.title !== '' ? metric.savedSearch.title : this.state.savedSearches[0]}
             onChange={(e) => this.setSelectedSavedSearch(e.target.value, index)}
           >
             {savedSearchOptions}
           </select>
           {this.errorIfSearchNotFound[index] &&
             (
-              <div className='error-text'>
+              <div className="error-text">
                 This saved search seems to have some issues. Please fix this saved search or select another one.
               </div>
             )
           }
         </div>
-      )
+      );
     }
   }
 
@@ -513,22 +579,22 @@ class ConfigureMetricsTab extends Component {
     const newModelAfterAddingMetric = _.cloneDeep(this.props.model);
     newModelAfterAddingMetric.metrics.splice(index + 1, 0, vuMetricConstants.METRIC_DEFAULTS);
     this.props.onChange(newModelAfterAddingMetric);
-    this.setSelectedIndexPattern(this.state.indexPatterns[0].attributes.title, index + 1)
+    this.setSelectedIndexPattern(this.state.indexPatterns[0].attributes.title, index + 1);
 
     // This has been done to add the same for the errroModel
-    const newErrorModel = _.cloneDeep(this.props.errorModel)
+    const newErrorModel = _.cloneDeep(this.props.errorModel);
 
     newErrorModel.metrics.splice(index + 1, 0, _.cloneDeep(vuMetricConstants.METRIC_ERROR_DEFAULTS));
     this.props.onErrorChange(newErrorModel);
   }
 
-  // This fucntion will be used to clone a metric 
+  // This fucntion will be used to clone a metric
   cloneConfigureMetricsBlock = (index) => {
     // Here we are cloning the index pattern fields for the cloned metric
-    this.indexPatternFields.splice(index + 1, 0, this.indexPatternFields[index])
+    this.indexPatternFields.splice(index + 1, 0, this.indexPatternFields[index]);
 
     const newModelAfterCloningMetric = _.cloneDeep(this.props.model);
-    let newCloneOfMetric = _.cloneDeep(this.props.model.metrics[index]);
+    const newCloneOfMetric = _.cloneDeep(this.props.model.metrics[index]);
     newCloneOfMetric.label = '';
     newModelAfterCloningMetric.metrics.splice(index + 1, 0, newCloneOfMetric);
     this.props.onChange(newModelAfterCloningMetric);
@@ -541,7 +607,7 @@ class ConfigureMetricsTab extends Component {
   // This fucntion will be used to delete a metric
   deleteConfigureMetricsBlock = (index) => {
     // Here we are deleting the index pattern fields for the deleted metric
-    this.indexPatternFields.splice(index, 1)
+    this.indexPatternFields.splice(index, 1);
 
     const newModelAfterDeletingMetric = _.cloneDeep(this.props.model);
     newModelAfterDeletingMetric.metrics.splice(index, 1);
@@ -556,20 +622,20 @@ class ConfigureMetricsTab extends Component {
   movePriorityUpForMetric = (index) => {
     if (index > 0) {
       // Here we are moving the index pattern fields for the moved metric
-      this.indexPatternFields.splice(index - 1, 0, this.indexPatternFields.splice(index, 1)[0])
+      this.indexPatternFields.splice(index - 1, 0, this.indexPatternFields.splice(index, 1)[0]);
 
-      const newModelAfterMovingMetric = _.cloneDeep(this.props.model)
-      const newErrorModelAfterMovingMetric = _.cloneDeep(this.props.errorModel)
+      const newModelAfterMovingMetric = _.cloneDeep(this.props.model);
+      const newErrorModelAfterMovingMetric = _.cloneDeep(this.props.errorModel);
       newModelAfterMovingMetric.metrics.splice(index - 1, 0, newModelAfterMovingMetric.metrics.splice(index, 1)[0]);
       newErrorModelAfterMovingMetric.metrics.splice(index - 1, 0, newErrorModelAfterMovingMetric.metrics.splice(index, 1)[0]);
 
       // This we are doing to move the priority up for same label exists array accordingly
-      let sameLabelExistsAfterPriorityChange = _.clone(this.sameLabelExists);
+      const sameLabelExistsAfterPriorityChange = _.clone(this.sameLabelExists);
       sameLabelExistsAfterPriorityChange.splice(index - 1, 0, sameLabelExistsAfterPriorityChange.splice(index, 1)[0]);
       this.sameLabelExists = sameLabelExistsAfterPriorityChange;
 
       // This we are doing to move the priority up for saved search not found array accordingly
-      let errorIfSearchNotFoundAfterPriorityChange = _.clone(this.errorIfSearchNotFound);
+      const errorIfSearchNotFoundAfterPriorityChange = _.clone(this.errorIfSearchNotFound);
       errorIfSearchNotFoundAfterPriorityChange.splice(index - 1, 0, errorIfSearchNotFoundAfterPriorityChange.splice(index, 1)[0]);
       this.errorIfSearchNotFound = errorIfSearchNotFoundAfterPriorityChange;
 
@@ -581,20 +647,20 @@ class ConfigureMetricsTab extends Component {
   // This function will be used to the move the metric low in priority along with moving the error handler object
   movePriorityDownForMetric = (index) => {
     // Here we are moving the index pattern fields for the moved metric
-    this.indexPatternFields.splice(index + 1, 0, this.indexPatternFields.splice(index, 1)[0])
+    this.indexPatternFields.splice(index + 1, 0, this.indexPatternFields.splice(index, 1)[0]);
 
-    const newModelAfterMovingMetric = _.cloneDeep(this.props.model)
-    const newErrorModelAfterMovingMetric = _.cloneDeep(this.props.errorModel)
+    const newModelAfterMovingMetric = _.cloneDeep(this.props.model);
+    const newErrorModelAfterMovingMetric = _.cloneDeep(this.props.errorModel);
     newModelAfterMovingMetric.metrics.splice(index + 1, 0, newModelAfterMovingMetric.metrics.splice(index, 1)[0]);
     newErrorModelAfterMovingMetric.metrics.splice(index + 1, 0, newErrorModelAfterMovingMetric.metrics.splice(index, 1)[0]);
 
     // This we are doing to move the priority down for same label exists array accordingly
-    let sameLabelExistsAfterPriorityChange = _.clone(this.sameLabelExists);
+    const sameLabelExistsAfterPriorityChange = _.clone(this.sameLabelExists);
     sameLabelExistsAfterPriorityChange.splice(index + 1, 0, sameLabelExistsAfterPriorityChange.splice(index, 1)[0]);
     this.sameLabelExists = sameLabelExistsAfterPriorityChange;
 
     // This we are doing to move the priority down for saved search not found array accordingly
-    let errorIfSearchNotFoundAfterPriorityChange = _.clone(this.errorIfSearchNotFound);
+    const errorIfSearchNotFoundAfterPriorityChange = _.clone(this.errorIfSearchNotFound);
     errorIfSearchNotFoundAfterPriorityChange.splice(index + 1, 0, errorIfSearchNotFoundAfterPriorityChange.splice(index, 1)[0]);
     this.errorIfSearchNotFound = errorIfSearchNotFoundAfterPriorityChange;
 
@@ -612,16 +678,16 @@ class ConfigureMetricsTab extends Component {
     // Create a new metricLabelList
     model.metrics.map((metric) => {
       metricLabelsList.push(metric.label);
-    })
+    });
 
     // To Check duplicate, We need to remove the current one from this list
-    const indexOfLabelBeingEdited = metricLabelsList.indexOf(customLabel)
+    const indexOfLabelBeingEdited = metricLabelsList.indexOf(customLabel);
     metricLabelsList.splice(indexOfLabelBeingEdited, 1);
 
     // Create the sameLabelExist assuming all metrics don't have duplicate
     this.sameLabelExists = [];
-    model.metrics.map((metric) => {
-      this.sameLabelExists.push(false)
+    model.metrics.map(() => {
+      this.sameLabelExists.push(false);
     });
 
     // Set the current one to True if it already exist in the list-of-labels
@@ -629,22 +695,22 @@ class ConfigureMetricsTab extends Component {
       this.sameLabelExists[index] = true;
     }
 
-    this.props.disablePreviewButtonIfSameLabelExists(this.sameLabelExists)
+    this.props.disablePreviewButtonIfSameLabelExists(this.sameLabelExists);
   }
 
-  // This function will update the field type 
+  // This function will update the field type
   updateFieldTypeForSelectedField = (part, index) => {
     const model = _.cloneDeep(this.props.model);
     const metricToChange = _.cloneDeep(this.props.model.metrics[index]);
     this.indexPatternFields[index].map((field) => {
-      if (field.name == part.field) {
+      if (field.name === part.field) {
         metricToChange.field = part.field;
         metricToChange.fieldType = field.type;
-        metricToChange.scripted = field.scripted
+        metricToChange.scripted = field.scripted;
         model.metrics.splice(index, 1, metricToChange);
         this.props.onChange(model);
       }
-    })
+    });
     // This will be required when the user selects the 1st option with is empty
     if (part.field === '') {
       metricToChange.field = part.field;
@@ -662,7 +728,7 @@ class ConfigureMetricsTab extends Component {
     const key = Object.keys(part);
     // part will always be a single key value pair object
     // This will be used as we need to update field and fieldType whenevr field is updated
-    if (key[0] === 'field' && this.props.model.metrics[index].type != 'expression') {
+    if (key[0] === 'field' && this.props.model.metrics[index].type !== 'expression') {
       this.updateFieldTypeForSelectedField(part, index);
     }
     // Here if we selected type as count we make the field,filetype as empty
@@ -688,7 +754,7 @@ class ConfigureMetricsTab extends Component {
     }
 
 
-    if (key.length == 1 && key[0] === 'label') {
+    if (key.length === 1 && key[0] === 'label') {
       errorModel.metrics[index].label.errorText = validateInput(part.label,
         {
           [validateInputTypes.required]: {
@@ -700,9 +766,9 @@ class ConfigureMetricsTab extends Component {
             errorText: 'Custom label cannot exceed 40 characters.'
           }
         }
-      )
+      );
     }
-    else if (key.length == 1 && key[0] === 'groupName') {
+    else if (key.length === 1 && key[0] === 'groupName') {
       errorModel.metrics[index].groupName.errorText = validateInput(part.groupName,
         {
           [validateInputTypes.maxLength]: {
@@ -710,9 +776,9 @@ class ConfigureMetricsTab extends Component {
             errorText: 'Group name cannot exceed 40 characters.'
           }
         }
-      )
+      );
     }
-    else if (key.length == 1 && key[0] === 'goalLabel') {
+    else if (key.length === 1 && key[0] === 'goalLabel') {
       errorModel.metrics[index].goalLabel.errorText = validateInput(part.goalLabel,
         {
           [validateInputTypes.maxLength]: {
@@ -720,9 +786,9 @@ class ConfigureMetricsTab extends Component {
             errorText: 'Goal label cannot exceed 40 characters.'
           }
         }
-      )
+      );
     }
-    else if (key.length == 1 && key[0] === 'description') {
+    else if (key.length === 1 && key[0] === 'description') {
       errorModel.metrics[index].description.errorText = validateInput(part.description,
         {
           [validateInputTypes.maxLength]: {
@@ -730,14 +796,14 @@ class ConfigureMetricsTab extends Component {
             errorText: 'Description cannot exceed 220 characters.'
           }
         }
-      )
+      );
     }
-    else if (key.length == 1 && key[0] === 'format') {
+    else if (key.length === 1 && key[0] === 'format') {
       if (!errorModel.metrics[index].format) {
         errorModel.metrics[index].format = {
           errorText: '',
           required: true
-        }
+        };
       }
       errorModel.metrics[index].format.errorText = validateInput(part.format,
         {
@@ -746,31 +812,56 @@ class ConfigureMetricsTab extends Component {
             errorText: 'This field is required.'
           }
         }
-      )
+      );
+    }
+
+    else if (key.length === 1 && key[0] === 'metricArg') {
+      if (!errorModel.metrics[index].metricArg) {
+        errorModel.metrics[index].metricArg = {
+          errorText: '',
+          required: true
+        };
+      }
+      errorModel.metrics[index].metricArg.errorText = validateInput(part.metricArg,
+        {
+          [validateInputTypes.required]: {
+            value: true,
+            errorText: 'This field is required.'
+          },
+          [validateInputTypes.minRange]: {
+            value: 1,
+            errorText: 'Percents should be between 1 and 99.'
+          },
+          [validateInputTypes.maxRange]: {
+            value: 99,
+            errorText: 'Percents should be between 1 and 99'
+          }
+        }
+      );
     }
 
 
     // If the change is done on metric type and type is count we are removing the field and format from
-    // errortext if present 
-    if (key.length == 1 && key[0] === 'type' && part.type === 'count') {
+    // errortext if present
+    if (key.length === 1 && key[0] === 'type' && part.type === 'count') {
       if (errorModel.metrics[index].field || errorModel.metrics[index].format) {
         errorModel.metrics[index] = vuMetricConstants.METRIC_ERROR_DEFAULTS;
       }
     }
 
     // If the change is done on metric type and type is expression we need to add field and format errors if they are not present
-    else if (key.length == 1 && key[0] === 'type' && part.type === 'expression') {
+    else if (key.length === 1 && key[0] === 'type' && part.type === 'expression') {
       if (!errorModel.metrics[index].field) {
         errorModel.metrics[index].field = {
           errorText: '',
           required: true
-        }
+        };
       }
       if (!errorModel.metrics[index].format) {
         errorModel.metrics[index].format = {
           errorText: '',
           required: true
-        }
+        };
       }
       if (this.props.model.metrics[index].field !== '') {
         errorModel.metrics[index].field.errorText = validateInput(this.props.model.metrics[index].field,
@@ -778,45 +869,35 @@ class ConfigureMetricsTab extends Component {
             [validateInputTypes.required]: {
               value: true,
               errorText: 'This field is required.'
-            },
-            [validateInputTypes.regex]: {
-              value: RegExp(/[M0-9\+\-\*\/\%\.\(\)\s]+$/),
-              errorText: ' Expression pattern is invalid.'
             }
           }
-        )
+        );
       }
+    }
+
+    // If the change is done on metric type and type is percentiles we need to add field and format errors if they are not present
+    else if (key.length === 1 && key[0] === 'type' && part.type === 'percentiles') {
+      errorModel.metrics[index] = vuMetricConstants.METRIC_ERROR_DEFAULTS_WITH_FIELD_AND_METRICARG;
     }
 
     // If the change is done on metric type and type is neither count nor expression we need to remove format from error and need
     // to add field to error list
-    else if (key.length == 1 && key[0] === 'type' && part.type !== 'expression' && part.type !== 'count') {
-      if (!errorModel.metrics[index].field) {
-        errorModel.metrics[index].field = {
-          errorText: '',
-          required: true
-        }
-      }
-      if (errorModel.metrics[index].format) {
-        errorModel.metrics[index] = vuMetricConstants.METRIC_ERROR_DEFAULTS_WITH_FIELD;
-      }
+    else if (key.length === 1 && key[0] === 'type' && part.type !== 'expression' && part.type !== 'count') {
+      errorModel.metrics[index] = vuMetricConstants.METRIC_ERROR_DEFAULTS_WITH_FIELD;
     }
 
 
-    if (key.length == 1 && key[0] === 'field') {
+    if (key.length === 1 && key[0] === 'field') {
       if (this.props.model.metrics[index].type === 'expression') {
         errorModel.metrics[index].field.errorText = validateInput(part.field,
           {
             [validateInputTypes.required]: {
               value: true,
               errorText: 'This field is required.'
-            },
-            [validateInputTypes.regex]: {
-              value: RegExp(/[M0-9\+\-\*\/\%\.\(\)\s]+$/),
-              errorText: ' Expression pattern is invalid.'
             }
+
           }
-        )
+        );
       }
       else if (this.props.model.metrics[index].type !== 'expression') {
         errorModel.metrics[index].field.errorText = validateInput(part.field,
@@ -826,11 +907,11 @@ class ConfigureMetricsTab extends Component {
               errorText: 'This field is required.'
             }
           }
-        )
+        );
       }
     }
 
-    this.props.onErrorChange(errorModel)
+    this.props.onErrorChange(errorModel);
   }
 
   // this function will be used to handle collapsing and expanding of metric block
@@ -878,7 +959,7 @@ class ConfigureMetricsTab extends Component {
       {
         dataSetsIconHelp: !this.state.dataSetsIconHelp
       }
-    )
+    );
   }
 
   render() {
@@ -914,9 +995,15 @@ class ConfigureMetricsTab extends Component {
           title: 'Advanced Configuration  <i class="icon-no-results-found" title="This configuration is for advanced settings"></i>',
           description: 'Use the Advanced Configuration box to provide additional controls in YAML format. ' +
             'Refer to User Manual to view the full listing directives available.'
+        },
+        {
+          title: 'Expression Format  <i class="icon-no-results-found" title="The format field comes when metric type is expression"></i>',
+          description: 'The expression used for calculating this metric. This can be a either full fledged arithemtic expression using +-*/%' +
+            ' operators, numbers and brackets or string expression using conditional operator if-else. The expression can refer to' +
+            "metrics in this visualization that are defined before this metric. Eg: ((M2/M1)*100.0), 'Good' if M1 < 100 else 'Bad'"
         }
       ]
-    }
+    };
 
     const generateConfigureMetricBlock = (metric, index) => {
       return (
@@ -924,15 +1011,17 @@ class ConfigureMetricsTab extends Component {
           <div className="configure-metrics-header-functions-row">
             <div className="left-side-functions">
               <div className="metric-expander-icon">
-                <i className={(metric.collapsed ? 'icon-arrow-down' : 'icon-arrow-up')}
-                  onClick={() => this.collapseExpandMetricBlock(metric, index)}></i>
+                <i
+                  className={(metric.collapsed ? 'icon-arrow-down' : 'icon-arrow-up')}
+                  onClick={() => this.collapseExpandMetricBlock(metric, index)}
+                />
               </div>
               {metric.label ?
                 <div className="metric-name">
                   {metric.label}
                 </div>
                 :
-                <div className='dummy-metric-name'>
+                <div className="dummy-metric-name">
                   Metric Name
                 </div>
               }
@@ -941,7 +1030,7 @@ class ConfigureMetricsTab extends Component {
                 {(metric.hideMetric && this.props.model.metrics.length > 1) ?
                   (
                     <div className="show-hide-metric-icon">
-                      <i className="icon-eye-slash" onClick={() => this.hideUnhideMetricBlock(metric, index)}></i>
+                      <i className="icon-eye-slash" onClick={() => this.hideUnhideMetricBlock(metric, index)} />
                     </div>
                   )
                   :
@@ -950,7 +1039,7 @@ class ConfigureMetricsTab extends Component {
                 {(!metric.hideMetric && this.props.model.metrics.length > 1) ?
                   (
                     <div className="show-hide-metric-icon">
-                      <i className="icon-eye" onClick={() => this.hideUnhideMetricBlock(metric, index)}></i>
+                      <i className="icon-eye" onClick={() => this.hideUnhideMetricBlock(metric, index)} />
                     </div>
                   )
                   :
@@ -964,13 +1053,13 @@ class ConfigureMetricsTab extends Component {
                           (index === 0 ? 'disabled-icon' : null)
                         }
                         onClick={() => this.movePriorityUpForMetric(index)}
-                      >
-                      </i>
+                      />
                       <i
                         className={'icon-arrow-down ' +
                           (index === this.props.model.metrics.length - 1 ? 'disabled-icon' : null)
                         }
-                        onClick={() => this.movePriorityDownForMetric(index)}></i>
+                        onClick={() => this.movePriorityDownForMetric(index)}
+                      />
                     </div>
                   )
                 }
@@ -978,14 +1067,14 @@ class ConfigureMetricsTab extends Component {
                 {this.props.model.metrics.length > 1 &&
                   (
                     <div className="delete-metric">
-                      <i className="icon-delete" onClick={() => this.deleteConfigureMetricsBlock(index)} ></i>
+                      <i className="icon-delete" onClick={() => this.deleteConfigureMetricsBlock(index)} />
                     </div>
                   )
                 }
                 {this.props.model.metrics.length <= 7 &&
                   (
                     <div className="add-new-metric">
-                      <i className="icon-add-plus" onClick={() => this.addConfigureMetricsBlock(index)}></i>
+                      <i className="icon-add-plus" onClick={() => this.addConfigureMetricsBlock(index)} />
                       <span>Add Metric</span>
                     </div>
 
@@ -994,7 +1083,7 @@ class ConfigureMetricsTab extends Component {
                 {this.props.model.metrics.length <= 7 &&
                   (
                     <div className="clone-new-metric">
-                      <i className="icon-clone" onClick={() => this.cloneConfigureMetricsBlock(index)}></i>
+                      <i className="icon-clone" onClick={() => this.cloneConfigureMetricsBlock(index)} />
                       <span>Clone</span>
                     </div>
                   )
@@ -1020,9 +1109,11 @@ class ConfigureMetricsTab extends Component {
                       </div>
                       <div className="select-data-header-title-container">
                         <span className="select-data-header-title"> Select Data Set For The Metric </span>
-                        <i className="select-data-sets-help-icon icon-help-blue"
+                        <i
+                          className="select-data-sets-help-icon icon-help-blue"
                           onClick={this.showHelpForDataSets}
-                          data-tip="Click the help icon to open the help section block" />
+                          data-tip="Click the help icon to open the help section block"
+                        />
                         <ReactTooltip />
                       </div>
                     </div>
@@ -1078,6 +1169,9 @@ class ConfigureMetricsTab extends Component {
                           <option value="min">Min</option>
                           <option value="max">Max</option>
                           <option value="cardinality">Unique Count</option>
+                          <option value="percentiles">Percentiles</option>
+                          <option value="median">Median</option>
+                          <option value="std_deviation">Standard Deviation</option>
                           <option value="latest">Latest value</option>
                           {this.props.model.metrics.length > 1 &&
                             (
@@ -1096,20 +1190,19 @@ class ConfigureMetricsTab extends Component {
                         </label>
                         <input
                           className="metric-label form-control"
-                          placeholder='Type the metric label.'
+                          placeholder="Type the metric label."
                           id={'metricLabel' + index}
                           value={metric.label}
                           onChange={handleTextChange('label', index)}
-                        >
-                        </input>
+                        />
                         {errorModel.metrics[index].label.errorText &&
                           (
-                            <div className='error-text'>{errorModel.metrics[index].label.errorText}</div>
+                            <div className="error-text">{errorModel.metrics[index].label.errorText}</div>
                           )
                         }
                         {this.sameLabelExists[index] &&
                           (
-                            <div className='error-text'>Label name already exists.</div>
+                            <div className="error-text">Label name already exists.</div>
                           )
                         }
                       </div>
@@ -1121,10 +1214,11 @@ class ConfigureMetricsTab extends Component {
                             <label htmlFor="advancedConfig"> Advanced Configuration</label>
                             <textarea
                               id={'advancedConfig' + index}
-                              placeholder='Type the advanced configurations.'
+                              placeholder="Type the advanced configurations."
                               value={metric.advancedConfig}
                               onChange={handleTextChange('advancedConfig', index)}
-                              className="node-configuration-textarea-normal form-control"></textarea>
+                              className="node-configuration-textarea-normal form-control"
+                            />
                           </div>
                         </div>
                       )
@@ -1155,8 +1249,8 @@ class ConfigureMetricsTab extends Component {
           }
 
         </div>
-      )
-    }
+      );
+    };
 
 
     return (
@@ -1180,13 +1274,13 @@ class ConfigureMetricsTab extends Component {
 }
 
 ConfigureMetricsTab.propTypes = {
-  model: PropTypes.object, //  This is the parameters object 
+  model: PropTypes.object, //  This is the parameters object
   errorModel: PropTypes.object, // This is the errro handler object
   onChange: PropTypes.func, // This is the callback function for form changes to update the latest model to state
   onErrorChange: PropTypes.func, // This is the callback function to update the error handler object
   vis: PropTypes.object, // This will be used for API's like savedObjectsClient to get dashboards,search,index etc.
   disablePreviewButtonIfSameLabelExists: PropTypes.func, // This will be used to check if same label exists and disable preview button
-  disablePreviewButtonIfErrorInSavedSearchFound: PropTypes.func, // This will be used to check if there is an error is search found 
+  disablePreviewButtonIfErrorInSavedSearchFound: PropTypes.func, // This will be used to check if there is an error is search found
   filterInjectorForSavedSearch: PropTypes.func // This is angular $filter injectable which will be used in saved search
 };
 

@@ -87,13 +87,15 @@ export const vuMetricConstants = {
     },
     showSavedSearch: false,
     savedSearch: {
-      title: '',
+      id: '',
+      title: ''
     },
     advancedConfig: '',
     advanceConfigSwitch: false,
     additionalFields: '',
     field: '',
     fieldType: '',
+    metricArg: '',
     filter: '*',
     format: '',
     hideMetric: false,
@@ -120,7 +122,11 @@ export const vuMetricConstants = {
       searchString: '',
       retainFilters: false,
       useMetricFilter: false
-    }
+    },
+    enableCustomErrorMessage: false,
+    customErrorMessage: 'No data to show.',
+    enableCustomErrorTooltip: false,
+    customErrorTooltip: 'There is no matching data for the selected time and filter criteria.'
   },
 
   // These are the default values for the error handler of the metrics
@@ -194,6 +200,35 @@ export const vuMetricConstants = {
       required: true
     }
   },
+
+  // These are the default values for the error handler of the metrics with metricArg and field
+  METRIC_ERROR_DEFAULTS_WITH_FIELD_AND_METRICARG: {
+    label: {
+      errorText: '',
+      required: true
+    },
+    goalLabel: {
+      errorText: '',
+      required: false
+    },
+    groupName: {
+      errorText: '',
+      required: false
+    },
+    description: {
+      errorText: '',
+      required: false
+    },
+    field: {
+      errorText: '',
+      required: true
+    },
+    metricArg: {
+      errorText: '',
+      required: true
+    }
+  },
+
 
 
   // MetaData for action confirmation modal

@@ -21,7 +21,7 @@ import './EventConsole.less';
 import { SeverityWidget } from './components/SeverityWidget/SeverityWidget';
 import { OperationBar } from './components/OperationBar/OperationBar';
 import { EventItem } from './components/EventItem/EventItem';
-import { VunetPagination } from './components/VunetPagination/VunetPagination';
+import Pagination from 'react-js-pagination';
 
 import $ from 'jquery';
 import _ from 'lodash';
@@ -69,6 +69,17 @@ export class EventConsole extends React.Component {
 
   componentDidMount() {
     this.updateFieldDisplay();
+    //this is to avoid redirection to homepage after click of the button in pagination component.
+    $('.pagination li a').on('click', function (e) {
+      e.preventDefault();
+    });
+  }
+
+  componentDidUpdate(){
+    //this is to avoid redirection to homepage after click of the button in pagination component.
+    $('.pagination li a').on('click', function (e) {
+      e.preventDefault();
+    });
   }
 
   componentWillReceiveProps(propsNew) {
@@ -258,12 +269,13 @@ export class EventConsole extends React.Component {
               </div>
             )}
           </div>
-          <VunetPagination
-            currentPage={this.state.currentPage}
-            handlePageChange={this.handlePageChange}
-            events={this.state.filteredEventsList}
-            eventsPerPage={this.state.eventsPerPage}
-          />
+        <Pagination
+          hideDisabled
+          activePage={this.state.currentPage}
+          itemsCountPerPage={this.state.eventsPerPage}
+          totalItemsCount={this.state.filteredEventsList.length}
+          onChange={this.handlePageChange}
+       />
         </div>
       </div>
     );

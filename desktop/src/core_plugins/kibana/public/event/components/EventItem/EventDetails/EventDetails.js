@@ -87,7 +87,7 @@ export class EventDetails extends React.Component {
       <div className="event-details-wrapper">
         <div className="details">
           <div className="detail alert-id">
-            <label htmlFor="alert-id">Alert/Correlated ID: </label>
+            <label htmlFor="alert-id">Alert ID: </label>
             <div className="detail-info"> {correlatedId} </div>
             <br />
           </div>

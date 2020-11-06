@@ -155,7 +155,7 @@ export class EventItem extends React.Component {
             <div className="wrapper">
               <span className="detail-heading" onClick={() => this.handleClickedField('correlated_id')}>
                 <i className="fa fa-sort-amount-desc sort-icon" />
-                Correlated ID:
+                Alert ID:
               </span>
               <span className="detail-content">{eventDisplay.correlated_id}</span>
             </div>
@@ -169,7 +169,7 @@ export class EventItem extends React.Component {
               <span className="detail-content">{eventDisplay.summary}</span>
             </div>
           </div>
-          <div className="detail-item emttr">
+          {/* <div className="detail-item emttr">
             <div className="wrapper">
               <span className="detail-heading" onClick={() => this.handleClickedField('emttr')}>
                 <i className="fa fa-sort-amount-desc sort-icon" />
@@ -177,7 +177,7 @@ export class EventItem extends React.Component {
               </span>
               <span className="detail-content">{this.secondsToHms(eventDisplay.emttr)}</span>
             </div>
-          </div>
+          </div> */}
           <div className="detail-item status">
             <div className="wrapper">
               <span className="detail-heading" onClick={() => this.handleClickedField('status')}>
@@ -205,7 +205,7 @@ export class EventItem extends React.Component {
               <span className="detail-content">{eventDisplay.last_modified_time}</span>
             </div>
           </div>
-          <div className="detail-item confidence_factor">
+          {/* <div className="detail-item confidence_factor">
             <div className="wrapper">
               <span className="detail-heading" onClick={() => this.handleClickedField('confidence_factor')}>
                 <i className="fa fa-sort-amount-desc sort-icon" />
@@ -213,7 +213,7 @@ export class EventItem extends React.Component {
               </span>
               <span className="detail-content">{eventDisplay.confidence_factor}</span>
             </div>
-          </div>
+          </div> */}
           <div className="detail-item active_duration">
             <div className="wrapper">
               <span className="detail-heading" onClick={() => this.handleClickedField('active_duration')}>

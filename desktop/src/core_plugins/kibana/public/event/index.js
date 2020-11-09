@@ -7,7 +7,7 @@ import { EventConstants } from './event_constants';
 import eventTemplate from 'plugins/kibana/event/event.html';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { findObjectByTitle } from 'ui/saved_objects/find_object_by_title.js';
-import { updateColumnSelectorInfo } from './api_calls';
+import { updateColumnSelectorInfo, fetchColumnSelectorInfo, } from './api_calls';
 
 uiRoutes
   .defaults(/event/, {
@@ -27,7 +27,9 @@ uiRoutes
           .then(idx => idx.id)
           .catch(() => '');
       },
-
+      columnSelectorInfo: function ($http, chrome) {
+        return fetchColumnSelectorInfo($http, chrome);
+      },
       updateColumnSelector: function ($http, chrome) {
         const updateColumnSelectorReact = function (fields, hiddenFields) {
           updateColumnSelectorInfo($http, chrome, fields, hiddenFields);

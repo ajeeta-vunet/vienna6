@@ -60,7 +60,7 @@ export class ColumnSelector extends React.Component {
           <div className="column-selector">
             Default Row Attributes
             <div className="column-selector-checkbox-wrapper">
-              {this.state.allFields.map((field) => {
+              {this.state.allFields && this.state.allFields.map((field) => {
                 //let id = 'column-selector-' + field;
                 return (
                   <div className={`field ${field}`} key={field}>

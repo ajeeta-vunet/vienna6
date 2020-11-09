@@ -20,26 +20,43 @@
 import React from 'react';
 import './OperationBar.less';
 import { ColumnSelector } from '../ColumnSelector/ColumnSelector';
+import $ from 'jquery';
 
 export class OperationBar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      events: this.props.events
+    }
   }
 
   handleColumnSelectorDisplay = () => {
     return this.props.handleColumnSelectorDisplay();
+  };
+  //this method is called when the search input box is clicked to hide the placeholder text.
+  hidePlaceholder = () => {
+    $('input,textarea').focus(function () {
+      $(this).removeAttr('placeholder');
+   });
   }
-
+  //this method is called bring back the placeholder text when the user clicks outside search box after clicking inside it once.
+  showPlaceholder = () => {
+    $('input,textarea').blur(function () {
+      $(this).attr('placeholder', 'search');
+   });
+  };
   render() {
     return (
       <div className="operationbar-wrapper">
         <div className="filter-options-container">
-          <div className="search-container">
+          <div className="search-container ">
             <input
-              onChange={e => this.props.onSearch(e)}
+              onChange={(e) => this.props.onSearch(e)}
               type="text"
               id="search-input"
               placeholder="search"
+              onFocus={() => this.hidePlaceholder()}
+              onBlur={() => this.showPlaceholder()}
             />
           </div>
           <div className="edit-button-wrapper">

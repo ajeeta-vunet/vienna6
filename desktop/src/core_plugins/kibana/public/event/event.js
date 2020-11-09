@@ -105,8 +105,10 @@ app.directive("eventApp", function () {
         $scope.search();
       }
 
+
       //passing these to the EventConsole react component
       $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;
+      $scope.columnSelectorInfo =  $route.current.locals.columnSelectorInfo;
 
       // When the time filter changes
       $scope.$listen(timefilter, "fetch", $scope.search);

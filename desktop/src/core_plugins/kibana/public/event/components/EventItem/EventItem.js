@@ -23,6 +23,7 @@ import { EventDetails } from './EventDetails/EventDetails';
 import chrome from 'ui/chrome';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import moment from 'moment-timezone';
+import { EventHistory } from './EventHistory/EventHistory';
 
 export class EventItem extends React.Component {
   constructor(props) {
@@ -43,6 +44,10 @@ export class EventItem extends React.Component {
     this.tabs = [{
       id: 'alert-details',
       name: 'Alert Details'
+    },
+    {
+      id: 'history',
+      name: 'History'
     }];
 
     this.landingTab = 'alert-details';
@@ -364,6 +369,10 @@ export class EventItem extends React.Component {
                 updateEvent={this.handleUpdateEvent}
                 eventId={this.props.event.id}
               />
+            }
+            {this.state.currentTabId === 'history' &&
+              <EventHistory
+                history={this.state.details['History']}/>
             }
           </div>
         </div>}

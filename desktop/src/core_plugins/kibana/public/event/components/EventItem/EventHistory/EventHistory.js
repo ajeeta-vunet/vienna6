@@ -1,4 +1,3 @@
-
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -17,38 +16,39 @@
 // All rights reserved.
 // Use of copyright notice does not imply publication.
 
-import React from 'react';
-import './SeverityWidget.less';
-import { SingleSeverity } from './SingleSeverity/SingleSeverity';
+import React from "react";
+import "./EventHistory.less";
 
-export class SeverityWidget extends React.Component {
+export class EventHistory extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      severityInfo: this.props.severityInfo
-    };
   }
 
   render() {
-    if(this.props.severityInfo && this.props.severityInfo['Time-Periods']){
+    const renderRows = this.props.history && Object.keys(this.props.history).map((key, value) => {
+      return (
+        <div className="row history-row">
+          <div className="col-md-2">{key}</div>
+          <div className="col-md-2">{value}</div>
+        </div>
+      );
+    });
     return (
-      <div className="severity-widget-wrapper">
-        {Object.keys(this.props.severityInfo['Time-Periods'][0]).map(key => {
-          if (key !== 'period' && key !== 'total') {
-            return (
-              <SingleSeverity
-                key={key}
-                type={key}
-                new={this.props.severityInfo['Time-Periods'][0][key].new}
-                wip={this.props.severityInfo['Time-Periods'][0][key].wip}
-              />);
-          }
-        })}
+      <div className="container history-wrapper">
+        <div className="row header-row">
+          <div className="col-md-2">
+            <span className="history-details">
+              History Details
+            </span>
+          </div>
+          <div className="col-md-2">
+            <span className="values">
+              Values
+            </span>
+          </div>
+        </div>
+        {renderRows}
       </div>
     );
-      }
-      else {
-        return null;
-      }
   }
 }

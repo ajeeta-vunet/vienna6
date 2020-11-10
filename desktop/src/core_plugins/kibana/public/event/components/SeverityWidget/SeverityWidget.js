@@ -1,4 +1,3 @@
-
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -25,30 +24,32 @@ export class SeverityWidget extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      severityInfo: this.props.severityInfo
+      severityInfo: this.props.severityInfo,
     };
   }
 
   render() {
-    if(this.props.severityInfo && this.props.severityInfo['Time-Periods']){
-    return (
-      <div className="severity-widget-wrapper">
-        {Object.keys(this.props.severityInfo['Time-Periods'][0]).map(key => {
-          if (key !== 'period' && key !== 'total') {
-            return (
-              <SingleSeverity
-                key={key}
-                type={key}
-                new={this.props.severityInfo['Time-Periods'][0][key].new}
-                wip={this.props.severityInfo['Time-Periods'][0][key].wip}
-              />);
-          }
-        })}
-      </div>
-    );
-      }
-      else {
-        return null;
-      }
+    if (this.props.severityInfo && this.props.severityInfo['Time-Periods']) {
+      return (
+        <div className="severity-widget-wrapper">
+          {Object.keys(this.props.severityInfo['Time-Periods'][0]).map(
+            (key) => {
+              if (key !== 'period') {
+                return (
+                  <SingleSeverity
+                    key={key}
+                    type={key}
+                    new={this.props.severityInfo['Time-Periods'][0][key].new}
+                    wip={this.props.severityInfo['Time-Periods'][0][key].wip}
+                  />
+                );
+              }
+            }
+          )}
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }

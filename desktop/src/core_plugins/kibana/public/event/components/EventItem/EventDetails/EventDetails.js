@@ -29,15 +29,11 @@ export class EventDetails extends React.Component {
       selectedAssignee: this.props.details.alert_details.fields.assignee,
       newComment: ''
     };
-    this.generateMetricText = this.generateMetricText.bind(this);
-    this.secondsToHms = this.secondsToHms.bind(this);
-    this.handleStatus = this.handleStatus.bind(this);
-    this.handleUpdateEvent = this.handleUpdateEvent.bind(this);
   }
 
   //this function picks up the first metric in the entries object, and generates a string
   //using its value. Used to display the metric info.
-  generateMetricText() {
+  generateMetricText = () => {
     const metrics = this.props.details.Metrics.Entries;
     const metricName = Object.keys(metrics)[0];
     const toPrint = `${metricName}: Value: ${metrics[metricName]['Value (Now)']}`;
@@ -45,7 +41,7 @@ export class EventDetails extends React.Component {
   }
 
   //converts the incoming seconds to a string of HMS that can be displayed
-  secondsToHms(d) {
+  secondsToHms = (d) => {
     d = Number(d);
     const h = Math.floor(d / 3600);
     const m = Math.floor(d % 3600 / 60);
@@ -58,7 +54,7 @@ export class EventDetails extends React.Component {
   }
 
   //updates the selectedStatus state variable everytime a different option is chosen
-  handleStatus(e) {
+  handleStatus = (e) => {
     this.setState({ selectedStatus: e.target.value });
   }
 
@@ -74,7 +70,7 @@ export class EventDetails extends React.Component {
 
   //this function is called everytime the save button is clicked.
   //it calls the passed updateEvent function.
-  handleUpdateEvent() {
+  handleUpdateEvent = () => {
     this.props.updateEvent(this.props.eventId, this.state.selectedAssignee, this.state.selectedStatus, this.state.newComment);
   }
 

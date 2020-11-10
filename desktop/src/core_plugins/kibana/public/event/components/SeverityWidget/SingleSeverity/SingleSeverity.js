@@ -1,4 +1,3 @@
-
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -17,14 +16,14 @@
 // All rights reserved.
 // Use of copyright notice does not imply publication.
 
-import React from 'react';
-import './SingleSeverity.less';
+import React from "react";
+import "./SingleSeverity.less";
 
 export class SingleSeverity extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      total: parseInt(this.props.new) + parseInt(this.props.wip)
+      total: parseInt(this.props.new) + parseInt(this.props.wip),
     };
   }
 
@@ -33,17 +32,20 @@ export class SingleSeverity extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div className="single-severity">
         <div className="severity-info">
           <div className="severity-heading">{this.props.type}</div>
           <div className="severity-details">
-              NEW - {this.props.new} | IN PROGRESS - {this.props.wip}
+            NEW - {this.props.new} | IN PROGRESS - {this.props.wip}
           </div>
         </div>
-        <div className={`severity-count ${this.props.type}`}>
-          <div className="count-text">
-            {this.state.total}
+        <div className={`severity-count-wrapper event-${this.props.type}`}>
+          <div className="circle-segment">
+            <img src={`/ui/vienna_images/${this.props.type}_segment.svg`} />
+          </div>
+          <div className="severity-count">
+            <div className="count-text">{this.state.total}</div>
           </div>
         </div>
       </div>

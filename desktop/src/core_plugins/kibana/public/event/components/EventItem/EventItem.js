@@ -1,4 +1,3 @@
-
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -24,6 +23,10 @@ import chrome from 'ui/chrome';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import moment from 'moment-timezone';
 import { EventHistory } from './EventHistory/EventHistory';
+import update from 'immutability-helper';
+import { Notifier } from 'ui/notify';
+
+const notify = new Notifier({ location: 'Event Console' });
 
 export class EventItem extends React.Component {
   constructor(props) {
@@ -31,7 +34,8 @@ export class EventItem extends React.Component {
     this.state = {
       showDetails: false,
       details: {},
-      currentTabId: 'alert-details'
+      currentTabId: 'alert-details',
+      event: this.props.event,
     };
     this.fetchEventDetails = this.fetchEventDetails.bind(this);
     this.handleMoreDetails = this.handleMoreDetails.bind(this);
@@ -41,20 +45,22 @@ export class EventItem extends React.Component {
     this.onTabChange = this.onTabChange.bind(this);
     this.updateEventDetails = this.updateEventDetails.bind(this);
 
-    this.tabs = [{
-      id: 'alert-details',
-      name: 'Alert Details'
-    },
-    {
-      id: 'history',
-      name: 'History'
-    }];
+    this.tabs = [
+      {
+        id: 'alert-details',
+        name: 'Alert Details',
+      },
+      {
+        id: 'history',
+        name: 'History',
+      },
+    ];
 
     this.landingTab = 'alert-details';
   }
 
   //This function is used to update the assignee, status, and add a new note to an event.
-  updateEventDetails(eventId, assignee, status, noteText) {
+  updateEventDetails = (eventId, assignee, status, noteText) => {
     let urlBase = chrome.getUrlBase();
     urlBase = urlBase + '/events_of_interest/individual_event/' + eventId + '/';
     const currentUser = chrome.getCurrentUser();
@@ -63,30 +69,46 @@ export class EventItem extends React.Component {
     const toSend = {
       assignee: assignee,
       status: status,
-      notes: [
+    };
+
+    if (noteText !== '') {
+      const notes = [
         {
           author: username,
           text: noteText,
-          timestamp: d.toLocaleString('en-IN').replace(/\//g, '-')
-        }
-      ]
-    };
+          timestamp: d.toLocaleString('en-IN').replace(/\//g, '-'),
+        },
+      ];
+      toSend.notes = notes;
+    }
 
     fetch(urlBase, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(toSend)
-    }).then(() =>
-      this.fetchEventDetails(eventId)
-    );
-  }
+      body: JSON.stringify(toSend),
+    }).then(() => {
+      const updatedEvent = update(this.state.event, {
+        fields: { assignee: { $set: assignee }, status: { $set: status } },
+      });
+      this.setState({ event: updatedEvent });
+
+      let updatedDetails = '';
+      if (noteText !== '') {
+        updatedDetails = update(this.state.details, {
+          alert_details: { fields: { notes: { $push: [toSend.notes[0]] } } },
+        });
+        this.setState({ details: updatedDetails });
+      }
+      notify.info('Event has been updated successfully');
+    });
+  };
 
   //this function is used to handle the tab changes.
-  onTabChange = id => {
+  onTabChange = (id) => {
     this.setState({
-      currentTabId: id
+      currentTabId: id,
     });
   };
 
@@ -96,59 +118,61 @@ export class EventItem extends React.Component {
   }
 
   //this function is used to fetch the details of an individual event.
-  fetchEventDetails(id) {
+  fetchEventDetails = (id) => {
     let urlBase = chrome.getUrlBase();
     urlBase = urlBase + `/events_of_interest/individual_event/${id}`;
     fetch(urlBase)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         this.setState({ details: data }, () => {
           this.setState({ showDetails: true });
         });
       });
-  }
+  };
 
   //this function is called everytime the more details button is pressed.
   //if showDetails is false, it will call fetchEventDetails,
   //otherwise it will simply toggle showDetails
-  handleMoreDetails() {
-    if(this.state.showDetails === false) {
-      this.fetchEventDetails(this.props.event.id);
-    }
-    else {
+  handleMoreDetails = () => {
+    if (this.state.showDetails === false) {
+      this.fetchEventDetails(this.state.event.id);
+    } else {
       this.setState({ showDetails: !this.state.showDetails });
     }
-  }
+  };
 
   //this function calls the main updateEventDetails function
   //this function is passed to EventDetails.
-  handleUpdateEvent(eventId, assignee, status, comment) {
+  handleUpdateEvent = (eventId, assignee, status, comment) => {
     this.updateEventDetails(eventId, assignee, status, comment);
-  }
+  };
 
   //a simple function to convert time in seconds to hours, minutes and seconds as a string
-  secondsToHms(d) {
+  secondsToHms = (d) => {
     d = Number(d);
     const h = Math.floor(d / 3600);
-    const m = Math.floor(d % 3600 / 60);
-    const s = Math.floor(d % 3600 % 60);
+    const m = Math.floor((d % 3600) / 60);
+    const s = Math.floor((d % 3600) % 60);
 
-    const hDisplay = h > 0 ? h + (h === 1 ? ' hour, ' : ' hours, ') : '0 hours, ';
-    const mDisplay = m > 0 ? m + (m === 1 ? ' minute, ' : ' minutes, ') : '0 minutes, ';
-    const sDisplay = s > 0 ? s + (s === 1 ? ' second' : ' seconds') : '0 seconds';
+    const hDisplay =
+      h > 0 ? h + (h === 1 ? ' hour, ' : ' hours, ') : '0 hours, ';
+    const mDisplay =
+      m > 0 ? m + (m === 1 ? ' minute, ' : ' minutes, ') : '0 minutes, ';
+    const sDisplay =
+      s > 0 ? s + (s === 1 ? ' second' : ' seconds') : '0 seconds';
     return hDisplay + mDisplay + sDisplay;
-  }
+  };
 
   //this function is passed to EventDetails, so that it can set showDetails to false
   //when the cancel button is pressed.
-  handleCancel() {
+  handleCancel = () => {
     this.setState({ showDetails: false });
-  }
+  };
 
   render() {
-    const eventDisplay = this.props.event.fields;
-    const severity = this.props.event.severity;
-    return(
+    const eventDisplay = this.state.event.fields;
+    const severity = this.state.event.severity;
+    return (
       <div className="event-item-wrapper">
         <div className="indicator-checkbox">
           <div className="rectangle-wrapper">
@@ -158,16 +182,24 @@ export class EventItem extends React.Component {
         <div className="details">
           <div className="detail-item correlated_id">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('correlated_id')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('correlated_id')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Alert ID:
               </span>
-              <span className="detail-content">{eventDisplay.correlated_id}</span>
+              <span className="detail-content">
+                {eventDisplay.correlated_id}
+              </span>
             </div>
           </div>
           <div className="detail-item summary">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('summary')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('summary')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Summary:
               </span>
@@ -185,7 +217,10 @@ export class EventItem extends React.Component {
           </div> */}
           <div className="detail-item status">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('status')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('status')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Status
               </span>
@@ -194,7 +229,10 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item region">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('region')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('region')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Region:
               </span>
@@ -203,11 +241,16 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item last_modified_time">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('last_modified_time')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('last_modified_time')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Last Modified Time:
               </span>
-              <span className="detail-content">{eventDisplay.last_modified_time}</span>
+              <span className="detail-content">
+                {eventDisplay.last_modified_time}
+              </span>
             </div>
           </div>
           {/* <div className="detail-item confidence_factor">
@@ -221,16 +264,24 @@ export class EventItem extends React.Component {
           </div> */}
           <div className="detail-item active_duration">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('active_duration')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('active_duration')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Active Duration:
               </span>
-              <span className="detail-content">{eventDisplay.active_duration}</span>
+              <span className="detail-content">
+                {eventDisplay.active_duration}
+              </span>
             </div>
           </div>
           <div className="detail-item assignee">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('assignee')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('assignee')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Assignee:
               </span>
@@ -239,7 +290,10 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item category">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('category')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('category')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Category:
               </span>
@@ -248,7 +302,10 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item created_by">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('created_by')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('created_by')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Created By:
               </span>
@@ -257,16 +314,24 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item created_time">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('created_time')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('created_time')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Created Time:
               </span>
-              <span className="detail-content">{eventDisplay.created_time}</span>
+              <span className="detail-content">
+                {eventDisplay.created_time}
+              </span>
             </div>
           </div>
           <div className="detail-item event_id">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('event_id')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('event_id')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Event ID:
               </span>
@@ -275,7 +340,10 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item impact">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('impact')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('impact')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Impact:
               </span>
@@ -284,7 +352,10 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item ip_address">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('ip_address')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('ip_address')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 IP Address:
               </span>
@@ -293,7 +364,10 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item occurrences">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('occurrences')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('occurrences')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Occurrences:
               </span>
@@ -302,7 +376,10 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item severity">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('severity')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('severity')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Severity:
               </span>
@@ -311,16 +388,24 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item similar_events_count">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('similar_events_count')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('similar_events_count')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Similar Events Count:
               </span>
-              <span className="detail-content">{eventDisplay.similar_events_count}</span>
+              <span className="detail-content">
+                {eventDisplay.similar_events_count}
+              </span>
             </div>
           </div>
           <div className="detail-item source">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('source')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('source')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Source:
               </span>
@@ -329,11 +414,16 @@ export class EventItem extends React.Component {
           </div>
           <div className="detail-item total_duration">
             <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('total_duration')}>
+              <span
+                className="detail-heading"
+                onClick={() => this.handleClickedField('total_duration')}
+              >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Total Duration:
               </span>
-              <span className="detail-content">{eventDisplay.total_duration}</span>
+              <span className="detail-content">
+                {eventDisplay.total_duration}
+              </span>
             </div>
           </div>
         </div>
@@ -349,33 +439,38 @@ export class EventItem extends React.Component {
             </div>
           </div>
           <div className="more-details">
-            <button className="more-details-button" onClick={() => this.handleMoreDetails()}><i className="icon-down-arrow" /></button>
+            <button
+              className="more-details-button"
+              onClick={() => this.handleMoreDetails()}
+            >
+              <i className="icon-down-arrow" />
+            </button>
           </div>
         </div>
-        {this.state.showDetails &&
-        <div className="event-details">
-          <VunetTab
-            tabs={this.tabs}
-            landingTab={this.landingTab}
-            switchTab={this.onTabChange.bind(this)}
-          />
-          {/* Tabs Body */}
-          <div className="content-body">
-            {/* display the respective tab according the id */}
-            {this.state.currentTabId === 'alert-details' &&
-              <EventDetails
-                details={this.state.details}
-                handleCancel={this.handleCancel}
-                updateEvent={this.handleUpdateEvent}
-                eventId={this.props.event.id}
-              />
-            }
-            {this.state.currentTabId === 'history' &&
-              <EventHistory
-                history={this.state.details['History']}/>
-            }
+        {this.state.showDetails && (
+          <div className="event-details">
+            <VunetTab
+              tabs={this.tabs}
+              landingTab={this.landingTab}
+              switchTab={this.onTabChange.bind(this)}
+            />
+            {/* Tabs Body */}
+            <div className="content-body">
+              {/* display the respective tab according the id */}
+              {this.state.currentTabId === 'alert-details' && (
+                <EventDetails
+                  details={this.state.details}
+                  handleCancel={this.handleCancel}
+                  updateEvent={this.handleUpdateEvent}
+                  eventId={this.props.event.id}
+                />
+              )}
+              {this.state.currentTabId === 'history' && (
+                <EventHistory history={this.state.details['History']} />
+              )}
+            </div>
           </div>
-        </div>}
+        )}
       </div>
     );
   }

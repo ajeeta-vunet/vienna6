@@ -32,7 +32,8 @@ uiModules
         cellFontSize: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?',
-        showProgressBar: '=?'
+        showProgressBar: '=?',
+        showWordWrap: '=?'
       },
       controllerAs: 'aggTable',
       compile: function ($el) {
@@ -114,6 +115,12 @@ uiModules
               self.results
             );
           }).join('');
+        };
+
+        $scope.exportPopoverStatus = false;
+
+        $scope.toggleExportPopoverState = function () {
+          $scope.exportPopoverStatus = !$scope.exportPopoverStatus;
         };
 
         $scope.$watch('table', function () {

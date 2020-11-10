@@ -136,6 +136,10 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         }
         // This is to update the font size based on whats configured in the table.
         $cellContent.css('font-size', $scope.cellFontSize);
+        if($cellContent[0].firstElementChild) {
+          $cell.attr({ 'data-toggle': 'tooltip', 'data-placement': 'top',
+            'title': $cellContent[0].firstElementChild.innerText });
+        }
         $tr.append($cell);
       }
 

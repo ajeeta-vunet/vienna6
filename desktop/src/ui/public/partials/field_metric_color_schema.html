@@ -60,7 +60,28 @@
     </select>
     <br />
     <label>Color</label>
-    <input colorpicker colorpicker-parent="true" type="text" ng-model="color" class="form-control" />
+    <input
+      colorpicker
+      colorpicker-parent="true"
+      ng-show="visObj.type.name !== 'table'"
+      type="text"
+      ng-model="color"
+      class="form-control" />
+    <select
+      ng-show="visObj.type.name === 'table'"
+      ng-model="color"
+      class="form-control"
+    >
+      <option value="#dc3545">Red</option>
+      <option value="#fd7e14">Orange</option>
+      <option value="#ffc107">Yellow</option>
+      <option value="#28a745">Green</option>
+      <option value="#007bff">Blue</option>
+      <option value="#e83e8c">Pink</option>
+      <option value="#20c997">Teal</option>
+      <option value="#17a2b8">Cyan</option>
+      <option value="#6c757d">Grey</option>
+    </select>
     <div class="table-color-range-error">{{colorError}}</div>
     <br />
     <div class="string-match" ng-show="isStringField(field)">
@@ -85,7 +106,7 @@
         Enable color coding for percentage value
         <i class="fa fa-question-circle table-vis-help-hover"
         tooltip-append-to-body="true"
-        tooltip-placement="top" 
+        tooltip-placement="top"
         uib-tooltip="Enable this to change the background color of cells based on percentage value."></i>
       </label>
     </div>

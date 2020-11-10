@@ -4,6 +4,22 @@ import { doCumulativeOperation } from 'ui/utils/cumulative_ops.js';
 import { convertToSeconds } from 'ui/utils/interval_utils.js';
 import d3 from 'd3';
 
+// Set of colors that can be selected as background colors for cells
+const tableCellColors = {
+  red: '#dc3545',
+  yellow: '#ffc107',
+  orange: '#fd7e14',
+  green: '#28a745',
+  blue: '#007bff',
+  pink: '#e83e8c',
+  teal: '#20c997',
+  cyan: '#17a2b8',
+  grey: '#6c757d'
+};
+
+// Importing library to find the nearest hex code of a specific color
+const nearestColor = require('nearest-color').from(tableCellColors);
+
 // This function takes the background color of a cell in
 // hexadecimal format and then calculates a value bgDelta
 // using the RGB components in the background color and
@@ -78,15 +94,35 @@ export function createCellContents(
 
   // Do not display the horizontal bars in table cells for reports.
   if (addBar && !printReport && showProgressBar) {
-    valInPercentage = valInPercentage * addBarValMultiplier;
+    // valInPercentage = valInPercentage * addBarValMultiplier;
     // We are creating a horizontal bar to represent the %age value..
-    const svg = d3.select(cellElement).append('div').append('svg').attr({ width: 100, height: 10 });
+    // contents = '<span class="progressbar-percentagevalue" data-toggle="tooltip" title="'+
+    // val + '">'+ valInPercentage.toFixed(2) + '%</span>';
+    contents = '';
+    const div = d3.select(cellElement).append('div')
+      .style('position', 'relative')
+      .style('display', 'flex')
+      .attr({ 'data-toggle': 'tooltip', 'data-placement': 'top', 'title': ('Total : ' + val) });
+
+    // Appending a span to show the percentage text inside the bar
+    div.append('span')
+      .style('position', 'absolute')
+      .style('height', '20px')
+      .style('display', 'flex')
+      .style('align-items', 'center')
+      .style('margin-left', '5px')
+      .append('text')
+      .style('fill', '#373A3C')
+      .text(valInPercentage.toFixed(2) + '%');
+
+    const svg = div.append('svg').attr({ width: '100%', height: 20 });
     // Margin is used to get it exactly on top of the text..
     // This is to show 100% bar with gray color..
-    svg.append('rect').attr({ x: 0, y: 0, width: 100, height: 10, fill: '#d7d9da' });
+    svg.append('rect').attr({ x: 0, y: 0, width: '100%', height: 20, fill: 'transparent' });
     // This is to put the color on part based on the percentage value..
-    svg.append('rect').attr({ x: 0, y: 0, width: valInPercentage, height: 10, fill: '#5a4fef' });
+    svg.append('rect').attr({ x: 0, y: 0, width: (valInPercentage + '%'), height: 20, fill: '#81DCD0' });
   }
+
   return contents;
 }
 
@@ -164,7 +200,11 @@ export function applyColorSchemaForTableVis(val, interval, cell, configObj, scop
         dontAddContent = true;
         $cellContent =  $(applyBackgroundImage(bkColor));// return a valid jQuery object
       } else {
-        changeBackgroundColor(cell, colorRange.color);
+        // Restricting color options to the available colors in case of table visualization
+        if(configObj.vis.type.type === 'table') {
+          bkColor = nearestColor(bkColor).value;
+        }
+        changeBackgroundColor(cell, bkColor);
       }
     }
     $cellContent.appendTo(cell);

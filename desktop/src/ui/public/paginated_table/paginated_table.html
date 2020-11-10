@@ -11,11 +11,12 @@
           cumulative-row-operation="cumulativeRowOperation"
           cumulative-column-operation="cumulativeColumnOperation"
           show-progress-bar="showProgressBar"
+          show-word-wrap="showWordWrap"
           >
   <div class="agg-table-paginated"
-       ng-class="{'show-less-chars':isMatrix && printReport && isCollapseTimeHeaders}">
+       ng-class="{'show-less-chars':isMatrix && printReport && isCollapseTimeHeaders, 'export-option-margin': !hideExportOptions}">
     <table class="table table-condensed"
-           ng-class="{'table-condensed-print-report': printReport}"
+           ng-class="{'table-condensed-print-report': printReport, 'content-word-wrap': showWordWrap, 'content-ellipsis': !showWordWrap}"
            style="page-break-inside:auto">
       <thead data-test-subj="paginated-table-header"
              style="display:table-header-group;">
@@ -25,7 +26,7 @@
             <h6
               ng-style="{'font-size': cellFontSize + 'px'}"
               class="zero-margin">{{srNumberTitle}}</h6>
-          </th> 
+          </th>
           <th scope="col"
               ng-if="calledFrom === 'table'"
               ng-style="{'font-size': cellFontSize + 'px'}"
@@ -41,10 +42,10 @@
                       placement="top"></kbn-info>
             <i ng-if="col.sortable !== false"
                class="fa"
+               style="color: #868686;"
                ng-class="{
-              'fa-sort-asc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'asc',
-              'fa-sort-desc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'desc',
-              'fa-sort': paginatedTable.sort.columnIndex !== $index || paginatedTable.sort.direction === null
+                'fa-chevron-up': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'asc',
+                'fa-chevron-down': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'desc'
               }">
             </i>
           </th>
@@ -63,10 +64,10 @@
                       placement="top"></kbn-info>
             <i ng-if="col.sortable !== false"
                class="fa"
+               style="color: #868686;"
                ng-class="{
-              'fa-sort-asc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'asc',
-              'fa-sort-desc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'desc',
-              'fa-sort': paginatedTable.sort.columnIndex !== $index || paginatedTable.sort.direction === null
+                'fa-chevron-up': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'asc',
+                'fa-chevron-down': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'desc'
               }">
             </i>
           </th>
@@ -82,10 +83,10 @@
               <span  ng-click="paginatedTable.sortColumn($index)" ng-if="!printReport">
                 <i ng-if="col.sortable !== false"
                    class="fa"
+                   style="color: #868686;"
                    ng-class="{
-                  'fa-sort-asc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'asc',
-                  'fa-sort-desc': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'desc',
-                  'fa-sort': paginatedTable.sort.columnIndex !== $index || paginatedTable.sort.direction === null
+                    'fa-chevron-up': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'asc',
+                    'fa-chevron-down': paginatedTable.sort.columnIndex === $index && paginatedTable.sort.direction === 'desc'
                   }">
                 </i>
               </span>

@@ -28,7 +28,8 @@ uiModules
         cellFontSize: '=?',
         cumulativeRowOperation: '=?',
         cumulativeColumnOperation: '=?',
-        showProgressBar: '=?'
+        showProgressBar: '=?',
+        showWordWrap: '=?'
       },
       compile: function ($el) {
       // Use the compile function from the RecursionHelper,

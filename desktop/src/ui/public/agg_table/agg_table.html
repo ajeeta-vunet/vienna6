@@ -19,9 +19,28 @@
   cumulative-row-operation="cumulativeRowOperation"
   cumulative-column-operation="cumulativeColumnOperation"
   show-progress-bar="showProgressBar"
+  show-word-wrap="showWordWrap"
   >
+
+  <div class="export-options" ng-if="!printReport">
+    <button ng-class="{'clicked': exportPopoverStatus}" ng-click="toggleExportPopoverState()">
+      <i class="fa fa-download"></i>
+    </button>
+    <div class="export-popover" ng-if="exportPopoverStatus">
+      <ul className="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action popover-list-item" ng-click="aggTable.exportAsCsv(false)">
+          Export Raw
+        </a>
+        <a class="list-group-item list-group-item-action popover-list-item" ng-click="aggTable.exportAsCsv(true)">
+          Export Formatted
+        </a>
+      </ul>
+    </div>
+  </div>
+
   <div class="agg-table-controls" ng-if="!printReport">
-    <small>Export:</small>&nbsp;&nbsp;
+
+    <!-- <small>Export:</small>&nbsp;&nbsp;
     <a class="small"
        ng-click="aggTable.exportAsCsv(false)">
     Raw <i aria-hidden="true" class="fa fa-download"></i>
@@ -29,7 +48,7 @@
     <a class="small"
        ng-click="aggTable.exportAsCsv(true)">
     Formatted <i aria-hidden="true" class="fa fa-download"></i>
-    </a>
+    </a> -->
     <paginate-controls></paginate-controls>
   </div>
 </paginated-table>

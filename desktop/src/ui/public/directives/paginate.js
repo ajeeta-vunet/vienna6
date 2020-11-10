@@ -44,13 +44,6 @@ uiModules.get('kibana')
         const self = this;
         const ALL = 0;
 
-        self.sizeOptions = [
-          { title: '10', value: 10 },
-          { title: '25', value: 25 },
-          { title: '100', value: 100 },
-          { title: 'All', value: ALL }
-        ];
-
         // setup the watchers, called in the post-link function
         self.init = function () {
 
@@ -87,6 +80,24 @@ uiModules.get('kibana')
             $scope.list = list;
             self.renderList();
           });
+
+          self.sizeOptions = [
+            { title: '5', value: 5 },
+            { title: '10', value: 10 },
+            { title: '20', value: 20 },
+            { title: '25', value: 25 },
+            { title: '50', value: 50 },
+            { title: '100', value: 100 },
+            { title: 'All', value: ALL }
+          ];
+
+          if(![5, 10, 20, 25, 50, 100].includes(self.perPage)) {
+            self.sizeOptions.push({ title: self.perPage, value: self.perPage });
+            self.sizeOptions.sort((a, b) => {
+              return a.value - b.value;
+            });
+          }
+
         };
 
         self.goToPage = function (number) {

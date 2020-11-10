@@ -41,6 +41,7 @@ function TableVisTypeProvider(Private) {
     visConfig: {
       defaults: {
         perPage: 10,
+        cellFontSize: 14,
         showPartialRows: false,
         showMeticsAtAllLevels: false,
         sort: {
@@ -59,6 +60,7 @@ function TableVisTypeProvider(Private) {
         cumulativeRowOperation: 'sum',
         metricsInPercentage: false,
         showProgressBar: false,
+        showWordWrap: false,
         enableCustomErrorMessage: false,
         customErrorMessage: 'No data to show',
         enableCustomErrorTooltip: false,

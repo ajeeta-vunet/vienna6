@@ -1,4 +1,5 @@
 @import (reference) "~ui/styles/variables";
+@import '~ui/styles/variables/visualization_colors.less';
 
 kbn-agg-table,
 kbn-agg-table-group {
@@ -14,12 +15,74 @@ kbn-agg-table-group {
   .agg-table-paginated {
     flex: 1 1 auto;
     overflow: auto;
-
     tr:hover td {
-      background-color: @table-row-hover-bg;
-
+      background-color: @datatable-hover-background-color; // Added for ER-2094
       .table-cell-filter {
-        background-color: @table-row-hover-bg;
+        background-color: @datatable-cell-filter-background-color; // Added for ER-2094
+      }
+    }
+  }
+
+  .export-options {
+    position: absolute;
+    right: 8px;
+    top: 0;
+    > button {
+      background-color: transparent;
+      border: none;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      justify-content: center;
+      padding: 2px;
+      &.clicked {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+      &:focus {
+        box-shadow: none;
+      }
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      > i {
+        color: rgba(0, 0, 0, 0.5);
+      }
+    }
+    > .export-popover {
+      position: absolute;
+      top: 35px;
+      right: 0;
+      width: 160px;
+      background-color: white;
+      border: 1px solid rgba(205, 205, 205, 1);
+      border-radius: 3px;
+      -webkit-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.1);
+      &:before {
+        position: absolute;
+        content: "";
+        top: -10px;
+        display: block;
+        width: 0;
+        left: 80.5%;
+        border-style: solid;
+        border-width: 0 10px 10px 10px;
+        border-color: rgba(205, 205, 205, 1) transparent;
+      }
+      &:after {
+        position: absolute;
+        content: "";
+        top: -9px;
+        display: block;
+        width: 0;
+        left: 79.75%;
+        border-style: solid;
+        border-width: 0 11px 11px 11px;
+        border-color: white transparent;
+      }
+      > ul {
+        padding: 0;
+        margin-bottom: 0;
       }
     }
   }

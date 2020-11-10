@@ -166,7 +166,7 @@ export class VunetSidebar extends Component {
       $('#settingsNavContainer').addClass('active');
       $('#aboutLink').addClass('active');
     } else if(currentRoute.includes('app/vienna')) {
-      $('#analyticsConfigurationNavContainer').addClass('active');
+      $('#analyticsNavContainer').addClass('active');
       $('#dashboardsLink').addClass('active');
     }
   }

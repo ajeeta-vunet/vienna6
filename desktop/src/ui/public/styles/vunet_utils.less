@@ -1,5 +1,6 @@
 @import (reference) "~ui/styles/variables";
 @import '~ui/styles/vunet_variable_theme.less';
+@import '~ui/styles/variables/visualization_colors.less';
 
 @media only screen and (max-width: 1600px) {
   html{
@@ -880,33 +881,63 @@ button[disabled], {
 
 // For tables with grids
 .vunet-grid-table {
+  // Table header background
+  .table-condensed thead tr th {
+    background: @datatable-bg; // Added for ER-2094
+    color: @datatable-headercell-text-color; // Added for ER-2094
+    border-top: none !important; // Added for ER-2094
+    border-bottom: none !important; // Added for ER-2094
+    border-bottom: 1px solid @datatable-headercell-border-color !important; // Added for ER-2094
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .table-condensed tfoot tr th {
+    background: @datatable-bg; // Added for ER-2094
+    color: @datatable-cell-text-color; // Added for ER-2094
+    border-top: none !important; // Added for ER-2094
+    border-bottom: none !important; // Added for ER-2094
+    border-bottom: 1px solid @datatable-footercell-border-color !important; // Added for ER-2094
+    &:focus {
+      box-shadow: none;
+    }
+  }
 
   .table-condensed tr th {
     border-bottom: 1px solid @data-tables-border;
     border-top: 1px solid @data-tables-border !important;
-    padding: 9px 7px 7px 14px;
+    padding: 3px 7px 3px 14px;
     font-size: 14px;
     font-weight: bold;
     color: #000;
   }
 
+  .table-condensed tbody tr {
+    border-bottom: 1px solid @datatable-cell-border-color; // Added for ER-2094
+    &:last-child {
+      border-bottom: 1px solid @datatable-footercell-border-color !important; // Added for ER-2094
+    }
+  }
+
   .table-condensed tbody td {
     border-top: 0px;
-    padding: 9px 7px 7px 14px;
+    padding: 3px 7px 3px 14px; // Added for ER-2094
     font-size: 12px;
-    color: #000;
+    color: @datatable-cell-text-color; // Added for ER-2094
+    vertical-align: middle; // Added for ER-2094
   }
 
   .table-condensed tbody tr td {
-    padding: 9px 7px 7px 14px;
+    padding: 3px 7px 3px 14px; // Added for ER-2094
   }
 
   tbody tr:nth-child(odd) {
-    background-color: @white;
+    background-color: transparent;
   } /*odd*/
 
   tbody tr:nth-child(even) {
-     background-color: @data-tables-even-row-background;
+     background-color: @datatable-even-child-background-color; // Added for ER-2094
   } /* even*/
 }
 
@@ -914,32 +945,75 @@ button[disabled], {
 .vunet-plain-table {
   // Table header background
   .table-condensed thead tr th {
-    background: @white;
+    background: @datatable-bg; // Added for ER-2094
+    color: @datatable-headercell-text-color; // Added for ER-2094
+    border-top: none !important; // Added for ER-2094
+    border-bottom: none !important; // Added for ER-2094
+    border-bottom: 1px solid @datatable-headercell-border-color !important; // Added for ER-2094
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .table-condensed tfoot tr th {
+    background: @datatable-bg; // Added for ER-2094
+    color: @datatable-footercell-text-color; // Added for ER-2094
+    border-top: none !important; // Added for ER-2094
+    border-bottom: none !important; // Added for ER-2094
+    border-bottom: 1px solid @datatable-footercell-border-color !important; // Added for ER-2094
+    &:focus {
+      box-shadow: none;
+    }
   }
 
   .table-condensed tr th {
     border-bottom: 1px solid @data-tables-border;
     border-top: 1px solid @data-tables-border !important;
-    padding: 9px 7px 7px 14px;
+    padding: 3px 7px 3px 14px;
     font-size: 14px;
     font-weight: bold;
     color: rgb(20, 14, 14);
   }
 
+  .table-condensed tbody tr {
+    border-bottom: 1px solid @datatable-cell-border-color; // Added for ER-2094
+    &:last-child {
+      border-bottom: 1px solid @datatable-footercell-border-color !important; // Added for ER-2094
+    }
+  }
+
   .table-condensed tbody td {
     border-top: 0px;
-    padding: 5px 5px;
+    padding: 3px 7px 3px 14px; // Added for ER-2094
     font-size: 12px;
-    color: #000;
+    color: @datatable-cell-text-color; // Added for ER-2094
+    vertical-align: middle; // Added for ER-2094
   }
 
   .table-condensed tbody tr td {
-    padding: 9px 7px 7px 14px;
+    padding: 3px 7px 3px 14px; // Added for ER-2094
   }
 }
 
 .table-condensed-print-report {
   font-family: 'sans-serif' !important;
+}
+
+.export-option-margin {
+  margin-top: 15px;
+}
+
+.content-ellipsis {
+  tbody {
+    td {
+      max-width: 500px;
+      div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
 }
 
 .userCommentSection {
@@ -1632,12 +1706,31 @@ button[disabled], {
 // for index patterns, data table and matrix visualizations.
 .pagination-other-pages-list {
   li {
-    margin: 0px .8rem;
+    margin: 0;
     .kuiLink {
-      width: 3rem;
+      color: #7D7D7D;
+      width: auto;
       height: 3rem;
       outline: none;
       box-shadow: none;
+    }
+    .shortCutLink {
+      border: 1px solid @datatable-pagination-shortcut-border;
+      color: @datatable-pagination-shortcut-text-color;
+      border-radius: 3px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 5px;
+      margin-right: 5px;
+      &:hover {
+        text-decoration: none;
+      }
+      &.disabled {
+        background-color: white !important;
+        color: @datatable-pagination-shortcut-border !important;
+        opacity: 1;
+      }
     }
     &:focus {
       box-shadow: none;
@@ -1645,8 +1738,7 @@ button[disabled], {
     &.active {
       text-decoration: none !important;
       font-weight: bold;
-      border: 1px solid @paginate-page-link-active-color;
-      border-radius: 50% !important;
+      background-color: @datatable-pagination-active-page-bg;
       cursor: default;
       box-shadow: none;
     }
@@ -1688,7 +1780,7 @@ button[disabled], {
 
 // Overwriting Bootstrap headings' font to Inter
 h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 { 
+.h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: @inter-regular;
 }
 

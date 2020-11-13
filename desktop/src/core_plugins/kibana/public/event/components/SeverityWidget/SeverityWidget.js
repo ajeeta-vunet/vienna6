@@ -41,6 +41,8 @@ export class SeverityWidget extends React.Component {
                     type={key}
                     new={this.props.severityInfo['Time-Periods'][0][key].new}
                     wip={this.props.severityInfo['Time-Periods'][0][key].wip}
+                    filterBySeverity={this.props.filterBySeverity}
+                    appliedSeverityList={this.props.appliedSeverityList}
                   />
                 );
               }

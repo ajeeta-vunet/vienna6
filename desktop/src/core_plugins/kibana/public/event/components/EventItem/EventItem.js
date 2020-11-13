@@ -23,7 +23,7 @@ import chrome from 'ui/chrome';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import moment from 'moment-timezone';
 import { EventHistory } from './EventHistory/EventHistory';
-import update from 'immutability-helper';
+import produce from 'immer';
 import { Notifier } from 'ui/notify';
 
 const notify = new Notifier({ location: 'Event Console' });
@@ -60,7 +60,7 @@ export class EventItem extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ event: newProps.event});
+    this.setState({ event: newProps.event });
   }
 
   //This function is used to update the assignee, status, and add a new note to an event.
@@ -93,15 +93,15 @@ export class EventItem extends React.Component {
       },
       body: JSON.stringify(toSend),
     }).then(() => {
-      const updatedEvent = update(this.state.event, {
-        fields: { assignee: { $set: assignee }, status: { $set: status } },
+      const updatedEvent = produce(this.state.event, (draft) => {
+        draft.fields.assignee = assignee;
+        draft.fields.status = status;
       });
       this.setState({ event: updatedEvent });
 
-      let updatedDetails = '';
       if (noteText !== '') {
-        updatedDetails = update(this.state.details, {
-          alert_details: { fields: { notes: { $push: [toSend.notes[0]] } } },
+        const updatedDetails = produce(this.state.details, (draft) => {
+          draft.alert_details.fields.notes.push(toSend.notes[0]);
         });
         this.setState({ details: updatedDetails });
       }

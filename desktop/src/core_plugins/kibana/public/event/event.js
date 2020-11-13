@@ -1,50 +1,50 @@
-import { uiModules } from "ui/modules";
-import { FilterBarQueryFilterProvider } from "ui/filter_bar/query_filter";
-import { dashboardContextProvider } from "plugins/kibana/dashboard/dashboard_context";
-import { DocTitleProvider } from "ui/doc_title";
-import { VunetSidebarConstants } from "ui/chrome/directives/vunet_sidebar_constants";
-import { EventConsole } from "./EventConsole.js";
+import { uiModules } from 'ui/modules';
+import { FilterBarQueryFilterProvider } from 'ui/filter_bar/query_filter';
+import { dashboardContextProvider } from 'plugins/kibana/dashboard/dashboard_context';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+import { EventConsole } from './EventConsole.js';
+import chrome from 'ui/chrome';
+
 import {
   fetchSeverityInfo,
   fetchListOfEvents,
   fetchColumnSelectorInfo,
-  updateColumnSelectorInfo,
   fetchUserList
-} from "./api_calls";
-import chrome from "ui/chrome";
+} from './api_calls';
 
-require("ui/courier");
-require("ui/config");
-require("ui/notify");
-require("plugins/kibana/event/styles/main.less");
-require("angular-moment");
+require('ui/courier');
+require('ui/config');
+require('ui/notify');
+require('plugins/kibana/event/styles/main.less');
+require('angular-moment');
 
-const app = uiModules.get("app/event", [
-  "elasticsearch",
-  "ngRoute",
-  "kibana/courier",
-  "kibana/config",
-  "kibana/notify",
-  "angularMoment",
+const app = uiModules.get('app/event', [
+  'elasticsearch',
+  'ngRoute',
+  'kibana/courier',
+  'kibana/config',
+  'kibana/notify',
+  'angularMoment',
 ]);
 
 //Event react component
-app.directive("eventConsole", (reactDirective) => {
+app.directive('eventConsole', (reactDirective) => {
   return reactDirective(EventConsole, [
-    "severityInfo",
-    "listOfEvents",
-    "updateEvent",
-    "columnSelectorInfo",
-    "updateColumnSelector",
-    "userList",
-    "eventConsoleMandatoryFields"
+    'severityInfo',
+    'listOfEvents',
+    'updateEvent',
+    'columnSelectorInfo',
+    'updateColumnSelector',
+    'userList',
+    'eventConsoleMandatoryFields'
   ]);
 });
 
-app.directive("eventApp", function () {
+app.directive('eventApp', function () {
   return {
-    restrict: "E",
-    controllerAs: "eventApp",
+    restrict: 'E',
+    controllerAs: 'eventApp',
     controller: function ($route, $scope, config, $http, Private, timefilter) {
       timefilter.enabled = true;
 
@@ -56,10 +56,10 @@ app.directive("eventApp", function () {
 
       // Decide the maximum no of events to be shown under
       // event list.
-      $scope.eventSampleSize = config.get("event:sampleSize");
+      $scope.eventSampleSize = config.get('event:sampleSize');
 
       //Decide the fields that needs to be mandatory in Event listing.
-      $scope.eventConsoleMandatoryFields = config.get("eventConsoleMandatoryFields");
+      $scope.eventConsoleMandatoryFields = config.get('eventConsoleMandatoryFields');
 
       //this flag is used to determine whether user has ManageEvents permission or not.
       $scope.fetchUsersListPermission = chrome.canManageEvents();
@@ -119,7 +119,7 @@ app.directive("eventApp", function () {
       function init() {
         const docTitle = Private(DocTitleProvider);
         docTitle.change(VunetSidebarConstants.EVENTS);
-        $scope.$emit("application.load");
+        $scope.$emit('application.load');
         $scope.search();
       }
 
@@ -130,15 +130,15 @@ app.directive("eventApp", function () {
       $scope.userList = $route.current.locals.userList;
 
       // When the time filter changes
-      $scope.$listen(timefilter, "fetch", $scope.search);
+      $scope.$listen(timefilter, 'fetch', $scope.search);
 
       // When a filter is added to the filter bar
-      $scope.$listen(queryFilter, "fetch", $scope.search);
+      $scope.$listen(queryFilter, 'fetch', $scope.search);
 
       // When auto refresh happens
-      $scope.$on("courier:searchRefresh", $scope.search);
+      $scope.$on('courier:searchRefresh', $scope.search);
 
-      $scope.$on("fetch", $scope.search);
+      $scope.$on('fetch', $scope.search);
 
       init();
     },

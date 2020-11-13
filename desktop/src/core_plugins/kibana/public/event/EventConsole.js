@@ -23,40 +23,48 @@ import { SeverityWidget } from './components/SeverityWidget/SeverityWidget';
 
 import _ from 'lodash';
 import { EventList } from './components/EventList/EventList';
+import produce from 'immer';
+
+import { EventConstants } from './event_constants';
 
 export class EventConsole extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
 
-      //activeEventList - Contains all events initially, but will contain only events that are not closed once componentWillReceiveProps method is executed. 
-      activeEventList:
+      //allEventList - constains both closed and open events
+      allEventList:
         this.props.listOfEvents && this.props.listOfEvents.List_of_events,
 
-      //severityInfo - count of all events based on severiy. Passed to SeverityWidget
+      // filteredEventList - List of events with filters applied.
+      filteredEventList:
+        this.props.listOfEvents && this.props.listOfEvents.List_of_events,
+
+      // severityInfo - count of all events based on severiy without any filters.
       severityInfo: this.props.severityInfo,
 
-      //allEventList - constains both closed and open events
-      allEventList: this.props.listOfEvents && this.props.listOfEvents.List_of_events,
+      // filteredSeverityInfo - count of all events with filters.
+      filteredSeverityInfo: this.props.severityInfo,
 
+      // filterStore - An object which holds all the filters based on different fields.
+      filterStore: {},
     };
   }
 
   componentWillReceiveProps(newProps) {
-    //this is done to filter out closed events and keep all other events
-    const listOfEvents = _.filter(newProps.listOfEvents && newProps.listOfEvents.List_of_events,
-      function(o) {
-        return o.fields.status != 'closed'
-    });  
+
     this.setState({
       severityInfo: newProps.severityInfo,
-      activeEventList: _.sortBy(
-        listOfEvents,
+      filteredSeverityInfo: newProps.severityInfo,
+
+      allEventList: _.sortBy(
+        newProps.listOfEvents && newProps.listOfEvents.List_of_events,
         function (o) {
           return o.fields.correlated_id;
         }
       ),
-      allEventList: _.sortBy(
+
+      filteredEventList: _.sortBy(
         newProps.listOfEvents && newProps.listOfEvents.List_of_events,
         function (o) {
           return o.fields.correlated_id;
@@ -65,17 +73,116 @@ export class EventConsole extends React.Component {
     });
   }
 
-  render() {
+  // In this function we use the filterStore object and
+  // update the data passed to 'SeverityWidget' and 'EventList'
+  // components based on filters applied by the user.
+  applySeverityFilters = function () {
+    const appliedSeverityList = this.state.filterStore.severity;
+    if (appliedSeverityList.length) {
+      let newSeverityInfo = {};
 
+      // Update the severity widgets with filters applied by the user.
+      newSeverityInfo = produce(this.state.severityInfo, (draft) => {
+        let totalNew = 0;
+        let totalWip = 0;
+
+        // Update the values of severity widget based on filters
+        // applied by the user.
+        // Example: If severity filter 'critical' is applied, Update
+        // the 'Total' widget count to reflect only 'critial' events count.
+        EventConstants.SEVERITY_TYPES.map((severity) => {
+          if (appliedSeverityList.includes(severity)) {
+            totalNew = totalNew + draft['Time-Periods'][0][severity].new;
+            totalWip = totalWip + draft['Time-Periods'][0][severity].wip;
+            draft['Time-Periods'][0].total.new = totalNew;
+            draft['Time-Periods'][0].total.wip = totalWip;
+          } else {
+            draft['Time-Periods'][0][severity].new = 0;
+            draft['Time-Periods'][0][severity].wip = 0;
+          }
+        });
+      });
+
+      // Update the eventlist with filters applied by the user
+      const newEventList = this.state.allEventList.filter((event) => {
+        return appliedSeverityList.includes(event.severity) > 0;
+      });
+
+      this.setState({
+        filteredSeverityInfo: newSeverityInfo,
+        filteredEventList: newEventList,
+      });
+    } else {
+      this.setState({
+        filteredSeverityInfo: this.state.severityInfo,
+        filteredEventList: this.state.allEventList,
+      });
+    }
+  };
+
+  // This function gets called when user clicks on any of the
+  // severity widgets. In this function we update the filterStore object
+  // with filter field and filter values for the same. Example filterStore
+  // format is as shown below:
+  // {
+  //   severity:['critical', 'warning']
+  // }
+  // Every the user clicks on the severity widgets we update the filterStore
+  // accordingly and save it in EventConsole component's local state.
+  filterBySeverity = (filterValue) => {
+    let updatedfilterStore = {};
+
+    // Check if key 'severity' exists in filterStore.
+    if (_.has(this.state.filterStore, 'severity')) {
+      // Check if filtered value exists in the array of filters for severity
+      const filterValueIndex = this.state.filterStore.severity.indexOf(
+        filterValue
+      );
+
+      // If filterValue exists remove it as user is clicking on the same widget
+      // for the second time.
+      if (filterValueIndex > -1) {
+        updatedfilterStore = produce(this.state.filterStore, (draft) => {
+          draft.severity.splice(filterValueIndex, 1);
+        });
+
+        // If filterValue does not exist, add it as user is clicking on the same widget
+        // for the first time.
+      } else {
+        updatedfilterStore = produce(this.state.filterStore, (draft) => {
+          draft.severity.push(filterValue);
+        });
+      }
+      // If key 'severity' does not exist in filterStore, add it and update the
+      // filterValue in its array.
+    } else {
+      updatedfilterStore.severity = [filterValue];
+    }
+    this.setState({ filterStore: updatedfilterStore }, () => {
+      this.applySeverityFilters();
+    });
+  };
+
+  render() {
     return (
       <div className="event-console-wrapper">
-        <SeverityWidget severityInfo={this.state.severityInfo} />
+        <SeverityWidget
+          severityInfo={this.state.filteredSeverityInfo}
+          filterBySeverity={this.filterBySeverity}
+          appliedSeverityList={this.state.filterStore.severity}
+        />
         <EventList
-          events={this.state.activeEventList}
+          events={this.state.filteredEventList}
           allEventList={this.state.allEventList}
           userList={this.props.userList}
-          allFields={this.props.columnSelectorInfo && this.props.columnSelectorInfo.alert_details.fields}
-          hiddenFields={this.props.columnSelectorInfo && this.props.columnSelectorInfo.alert_details.hidden_fields}
+          allFields={
+            this.props.columnSelectorInfo &&
+            this.props.columnSelectorInfo.alert_details.fields
+          }
+          hiddenFields={
+            this.props.columnSelectorInfo &&
+            this.props.columnSelectorInfo.alert_details.hidden_fields
+          }
           updateColumnSelector={this.props.updateColumnSelector}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
         />

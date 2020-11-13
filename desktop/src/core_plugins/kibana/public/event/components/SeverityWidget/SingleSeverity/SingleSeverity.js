@@ -16,8 +16,9 @@
 // All rights reserved.
 // Use of copyright notice does not imply publication.
 
-import React from "react";
-import "./SingleSeverity.less";
+import React from 'react';
+import { CheckCircleFillIcon } from '@primer/octicons-react';
+import './SingleSeverity.less';
 
 export class SingleSeverity extends React.Component {
   constructor(props) {
@@ -33,7 +34,15 @@ export class SingleSeverity extends React.Component {
 
   render() {
     return (
-      <div className="single-severity">
+      <div
+        className={
+          'single-severity ' + (this.props.type !== 'total' ? 'severity-widget-cursor' : null)
+        }
+        onClick={() => {
+          this.props.type !== 'total' &&
+            this.props.filterBySeverity(this.props.type);
+        }}
+      >
         <div className="severity-info">
           <div className="severity-heading">{this.props.type}</div>
           <div className="severity-details">
@@ -48,6 +57,12 @@ export class SingleSeverity extends React.Component {
             <div className="count-text">{this.state.total}</div>
           </div>
         </div>
+        {this.props.appliedSeverityList &&
+          this.props.appliedSeverityList.includes(this.props.type) && (
+            <div className="applied-severity-tick">
+              <CheckCircleFillIcon />
+            </div>
+          )}
       </div>
     );
   }

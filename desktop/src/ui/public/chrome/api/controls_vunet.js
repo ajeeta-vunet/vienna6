@@ -283,6 +283,7 @@ export default function (chrome, internals) {
     }
     return false;
   };
+
   /*
   * To see if the current user has 'ManageEvents' claim
   */

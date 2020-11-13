@@ -1,6 +1,7 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .single-severity {
+  position        : relative;
   display         : flex;
   width           : 18%;
   height          : 5.5rem;
@@ -59,7 +60,18 @@
     }
   }
 
+  .applied-severity-tick {
+    position     : absolute;
+    right        : -5px;
+    top          : -6px;
+    border-radius: 50%;
 
+    svg {
+      color        : @accent_color;
+      background   : @white;
+      border-radius: 50%;
+    }
+  }
 
   .event-critical {
     background: @event-console-critical-color;
@@ -113,4 +125,8 @@
       padding: 3%;
     }
   }
+}
+
+.severity-widget-cursor {
+  cursor: pointer;
 }

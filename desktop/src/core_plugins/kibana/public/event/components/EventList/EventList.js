@@ -16,9 +16,9 @@
 // All rights reserved.
 // Use of copyright notice does not imply publication.
 
-import React from "react";
-import PropTypes from "prop-types";
-import "./EventList.less";
+import React from 'react';
+import PropTypes from 'prop-types';
+import './EventList.less';
 import { EventItem } from '../EventItem/EventItem';
 import { OperationBar } from '../OperationBar/OperationBar';
 import Pagination from 'react-js-pagination';
@@ -45,13 +45,13 @@ export class EventList extends React.Component {
       sortKey: '',
 
       //lastSortOrder - used to store which order the last sort was done in. ascending/descending
-      lastSortOrder: "",
+      lastSortOrder: '',
 
       //allFields - list of all fields (passed to ColumnSelector)
       allFields: this.props.allFields,
 
       //hiddenFields - list of hidden fields (passed to ColumnSelector)
-      hiddenFields: this.props.hiddenFields
+      hiddenFields: this.props.hiddenFields,
     };
   }
 
@@ -77,7 +77,7 @@ export class EventList extends React.Component {
         return o.fields.correlated_id;
       }),
       allFields: newProps.allFields,
-      hiddenFields: newProps.hiddenFields
+      hiddenFields: newProps.hiddenFields,
     });
   }
 
@@ -112,12 +112,12 @@ export class EventList extends React.Component {
     // column selector UI.
     this.state.allFields &&
       this.state.allFields.map((field) => {
-        if (field !== "@timestamp") {
+        if (field !== '@timestamp') {
           // Get an element from multiple classes. Here
           // we get the element containing the field to be shown
           // and add a class to show the item.
-          const className = ".detail-item." + field;
-          $(className).addClass("detail-item-show");
+          const className = '.detail-item.' + field;
+          $(className).addClass('detail-item-show');
         }
       });
 
@@ -125,13 +125,13 @@ export class EventList extends React.Component {
     // column selector UI.
     this.state.hiddenFields &&
       this.state.hiddenFields.map((field) => {
-        if (field !== "@timestamp") {
+        if (field !== '@timestamp') {
           // Get an element from multiple classes. Here
           // we get the element containing the field to be hidden
           // and add a class to hide the item
-          const className = ".detail-item." + field;
-          $(className).removeClass("detail-item-show");
-          $(className).addClass("detail-item-hide");
+          const className = '.detail-item.' + field;
+          $(className).removeClass('detail-item-show');
+          $(className).addClass('detail-item-hide');
         }
       });
   };
@@ -147,7 +147,7 @@ export class EventList extends React.Component {
       this.state.hiddenFields.map((field) => {
         document.getElementById(field).checked = false;
       });
-    const container = $("#column-selector-id");
+    const container = $('#column-selector-id');
     container.show();
 
     function handleToggle(e) {
@@ -203,8 +203,8 @@ export class EventList extends React.Component {
       //this.props.allEventList is used because it contains all events irrespective of thier status. According to requirement
       // when user performs a search operation the user should be able to see all assigned, closed and open events.
       const filteredEventsList =
-        this.props.allEventList &&
-        this.props.allEventList.filter((event) => {
+        this.state.events &&
+        this.state.events.filter((event) => {
           return this.state.allFields.some((key) => {
             if (event.fields[key]) {
               return event.fields[key]
@@ -223,7 +223,6 @@ export class EventList extends React.Component {
   };
 
   render() {
-
     const { currentPage, eventsPerPage } = this.state;
 
     // Logic for displaying current events

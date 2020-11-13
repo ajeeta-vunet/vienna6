@@ -79,6 +79,7 @@ export class EventDetails extends React.Component {
     const severity = this.props.details.Severity;
     const correlatedId = this.props.details.ID;
     const statuses = ['open', 'assigned', 'closed'];
+    const users = this.props.userList && this.props.userList.users;
     return(
       <div className="event-details-wrapper">
         <div className="details">
@@ -163,7 +164,21 @@ export class EventDetails extends React.Component {
           </div>
           <div className="detail assignee">
             <label htmlFor="alert-id">Assignee: </label>
-            <input type="text" value={this.state.selectedAssignee} onChange={event => this.handleAssignee(event)} /> <br />
+            <select
+              disabled={!users}
+              id="assignee-select"
+              defaultValue={display.assignee}
+              className="assignee-select"
+              name="assignee"
+              onChange={event => this.handleAssignee(event)}
+            >
+              <option key="unassigned" value="Unassigned">Unassigned</option>
+              {users && users.map(user => (
+                <option key={user} value={user}>{user}</option>
+              ))}
+            </select>
+
+            <br />
           </div>
         </div>
         <div className="summary">

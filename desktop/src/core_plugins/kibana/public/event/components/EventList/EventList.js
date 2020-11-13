@@ -82,7 +82,7 @@ export class EventList extends React.Component {
   }
 
   sortByClickedField = (field) => {
-    let newEvents = this.stte.filteedEventsList;
+    let newEvents = this.state.filteredEventsList;
     newEvents = _.sortBy(newEvents, function (o) {
       if (field === 'event_id') {
         return parseInt(o.fields[field]);
@@ -200,9 +200,11 @@ export class EventList extends React.Component {
     if (searchString === '') {
       this.setState({ filteredEventsList: this.state.events });
     } else {
+      //this.props.allEventList is used because it contains all events irrespective of thier status. According to requirement
+      // when user performs a search operation the user should be able to see all assigned, closed and open events.
       const filteredEventsList =
-        this.state.events &&
-        this.state.events.filter((event) => {
+        this.props.allEventList &&
+        this.props.allEventList.filter((event) => {
           return this.state.allFields.some((key) => {
             if (event.fields[key]) {
               return event.fields[key]
@@ -238,6 +240,7 @@ export class EventList extends React.Component {
           <span key={index}>
             <EventItem
               event={event}
+              userList={this.props.userList}
               getClickedField={this.sortByClickedField}
             />
           </span>
@@ -257,6 +260,7 @@ export class EventList extends React.Component {
           handleColumnSelectorChange={this.handleColumnSelectorChange}
           handleUpdateColumnSelector={this.handleUpdateColumnSelector}
           onSearch={this.onSearch}
+          eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
         />
         <div className="events-wrapper">
           <div className="event-listing-wrapper">

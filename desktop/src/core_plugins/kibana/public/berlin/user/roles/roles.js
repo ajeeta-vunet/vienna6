@@ -156,6 +156,13 @@ function manageRoles($scope,
             name: 'ManageDiagnostic',
             value: 'ManageDiagnostic'
           },
+
+          {
+            key: 'ManageEvents',
+            label: 'ManageEvents',
+            name: 'ManageEvents',
+            value: 'ManageEvents'
+          },
         ],
         props: {
         },

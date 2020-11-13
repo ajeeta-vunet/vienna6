@@ -9,6 +9,7 @@ import {
   fetchListOfEvents,
   fetchColumnSelectorInfo,
   updateColumnSelectorInfo,
+  fetchUserList
 } from "./api_calls";
 import chrome from "ui/chrome";
 
@@ -35,6 +36,8 @@ app.directive("eventConsole", (reactDirective) => {
     "updateEvent",
     "columnSelectorInfo",
     "updateColumnSelector",
+    "userList",
+    "eventConsoleMandatoryFields"
   ]);
 });
 
@@ -54,6 +57,12 @@ app.directive("eventApp", function () {
       // Decide the maximum no of events to be shown under
       // event list.
       $scope.eventSampleSize = config.get("event:sampleSize");
+
+      //Decide the fields that needs to be mandatory in Event listing.
+      $scope.eventConsoleMandatoryFields = config.get("eventConsoleMandatoryFields");
+
+      //this flag is used to determine whether user has ManageEvents permission or not.
+      $scope.fetchUsersListPermission = chrome.canManageEvents();
 
       $scope.loadingEvents = true;
 
@@ -98,6 +107,15 @@ app.directive("eventApp", function () {
         });
       };
 
+      if($scope.fetchUsersListPermission) {
+        fetchUserList($http, chrome).then((data) => {
+          $scope.userList = data;
+        });
+      }
+      else{
+        $scope.userList = [];
+      }
+
       function init() {
         const docTitle = Private(DocTitleProvider);
         docTitle.change(VunetSidebarConstants.EVENTS);
@@ -109,6 +127,7 @@ app.directive("eventApp", function () {
       //passing these to the EventConsole react component
       $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;
       $scope.columnSelectorInfo =  $route.current.locals.columnSelectorInfo;
+      $scope.userList = $route.current.locals.userList;
 
       // When the time filter changes
       $scope.$listen(timefilter, "fetch", $scope.search);

@@ -12,32 +12,36 @@
     .detail {
       display: inline-block;
       width: 33%;
-      margin-bottom: 7px;
+      margin-bottom: 0.43rem;
       label {
         width: 35%;
         text-align: right;
-        padding-right: 10px;
+        padding-right: 0.625rem;
         font-size: 1.4rem;
       }
-      input, .status-select {
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+      input, .status-select, .assignee-select {
+        padding-left: 0.625rem;
+        padding-right: 0.625rem;
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
         width: 55%;
         margin-right: 10%;
         border: 1px solid @event-console-border-color;
       }
 
-      .status-select {
-        padding-left: 7px;
+      .status-select, .assignee-select {
+        padding-left: 0.43rem;
+      }
+
+      .assignee-select[disabled] {
+        cursor: not-allowed;
       }
       .detail-info {
         display: inline-block;
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        padding-left: 0.625rem;
+        padding-right: 0.625rem;
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
         width: 55%;
         margin-right: 10%;
         border: 1px solid @event-console-border-color;
@@ -59,17 +63,17 @@
     label {
       width: 11.55%;
       text-align: right;
-      padding-right: 10px;
+      padding-right: 0.625rem;
       vertical-align: top;
       font-size: 1.4rem;
     }
 
     textarea {
       width: 84.2%;
-      padding-left: 10px;
-      padding-right: 10px;
-      padding-top: 5px;
-      padding-bottom: 5px;
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
       border: 1px solid @event-console-border-color;
     }
 
@@ -116,12 +120,12 @@
           .avatar {
             display: inline-block;
             background: @event-console-detail-info-background-color;
-            height: 35px;
-            width: 35px;
+            height: 2.18rem;
+            width: 2.18rem;
             border: 1px solid @event-console-border-color;
             border-radius: 50%;
             text-align: center;
-            line-height: 35px;
+            line-height: 2.18rem;
             vertical-align: top;
             margin-right: 2%;
             text-transform: uppercase;

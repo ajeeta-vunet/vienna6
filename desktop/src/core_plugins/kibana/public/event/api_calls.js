@@ -85,3 +85,21 @@ export function updateColumnSelectorInfo($http, chrome, fields, hiddenFields) {
     .then(resp => resp.data)
     .catch(resp => { throw resp.data; });
 }
+
+//This function is used for fetching Users List for assigning alerts.
+//These fetched users will be used in EventDetails.js in a dropdown as list of users from which the
+//admin user can assign an event to any user from the fetched list.
+export function fetchUserList($http, chrome) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest/' + 'users_list/';
+
+  const httpResult = $http.get(urlBase, {})
+    .then(resp => resp.data)
+    .catch(resp => { throw resp.data; });
+
+  return httpResult
+    .then(function (resp) {
+      return resp;
+    })
+    .catch(error => { throw error; });
+}

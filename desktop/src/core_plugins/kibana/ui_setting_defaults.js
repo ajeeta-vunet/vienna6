@@ -14,6 +14,10 @@ export function getUiSettingDefaults() {
       description: '<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html" target="_blank" rel="noopener noreferrer">Options</a> for the lucene query string parser',
       type: 'json'
     },
+    'eventConsoleMandatoryFields': {
+      value: [""],
+      description: 'List of Fields that are to be disabled under Edit option of Events Console page, so that these fields cannot be removed from Event Details.',
+    },
     'search:queryLanguage': {
       value: 'lucene',
       description: 'Query language used by the query bar. Kuery is an experimental new language built specifically for analytics.',

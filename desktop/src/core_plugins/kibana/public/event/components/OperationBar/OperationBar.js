@@ -72,6 +72,7 @@ export class OperationBar extends React.Component {
             hiddenFields={this.props.hiddenFields}
             handleColumnSelectorChange={this.props.handleColumnSelectorChange}
             handleUpdateColumnSelector={this.props.handleUpdateColumnSelector}
+            eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
           />
         </span>
       </div>

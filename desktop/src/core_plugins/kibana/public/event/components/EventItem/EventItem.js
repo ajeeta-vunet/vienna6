@@ -59,6 +59,10 @@ export class EventItem extends React.Component {
     this.landingTab = 'alert-details';
   }
 
+  componentWillReceiveProps(newProps) {
+    this.setState({ event: newProps.event});
+  }
+
   //This function is used to update the assignee, status, and add a new note to an event.
   updateEventDetails = (eventId, assignee, status, noteText) => {
     let urlBase = chrome.getUrlBase();
@@ -460,6 +464,7 @@ export class EventItem extends React.Component {
               {this.state.currentTabId === 'alert-details' && (
                 <EventDetails
                   details={this.state.details}
+                  userList={this.props.userList}
                   handleCancel={this.handleCancel}
                   updateEvent={this.handleUpdateEvent}
                   eventId={this.props.event.id}

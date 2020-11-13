@@ -283,7 +283,15 @@ export default function (chrome, internals) {
     }
     return false;
   };
-
+  /*
+  * To see if the current user has 'ManageEvents' claim
+  */
+  chrome.canManageEvents = function () {
+    if(loggedInUserClaimList.indexOf('ManageEvents') > -1) {
+      return true;
+    }
+    return false;
+  };
 
   /*
   * To see if the given sidebar tab should be visible to the current user.

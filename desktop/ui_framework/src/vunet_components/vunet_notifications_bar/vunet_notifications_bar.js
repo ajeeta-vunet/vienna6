@@ -358,8 +358,6 @@ export class VunetNotificationsBar extends Component {
                   ))
                 ) : (
                   <div className="no-notifications-div">
-                    <p>Good job! 👏</p>
-                    <br />
                     <p>You have no new notifications.</p>
                   </div>
                 )
@@ -393,8 +391,6 @@ export class VunetNotificationsBar extends Component {
                   ))
                 ) : (
                   <div className="no-notifications-div">
-                    <p>Good job! 👏</p>
-                    <br />
                     <p>You have no new notifications.</p>
                   </div>
                 )

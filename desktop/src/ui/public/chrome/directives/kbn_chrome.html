@@ -18,8 +18,8 @@
   <div id="globalAppWrapper" class="app-wrapper app-wrapper-normal" ng-class="{ 'hidden-chrome': !chrome.getVisible() }">
     <div class="app-wrapper-panel">
       <kbn-loading-indicator></kbn-loading-indicator>
-      <vunet-navbar toggle-dark-theme="toggleDarkTheme" app-props="appProps"></vunet-navbar>
-      <kbn-notifications list="$root.notifList"></kbn-notifications>
+      <vunet-navbar ng-show="!$root.printReport" toggle-dark-theme="toggleDarkTheme" app-props="appProps"></vunet-navbar>
+      <kbn-notifications ng-show="!$root.printReport" list="$root.notifList"></kbn-notifications>
       <div id="ngViewAppDiv" class="application vunet-application" ng-class="'tab-' + chrome.getFirstPathSegment() + ' ' + chrome.getApplicationClasses()"
        ng-view></div>
     </div>

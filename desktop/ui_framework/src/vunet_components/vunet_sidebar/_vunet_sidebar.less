@@ -16,6 +16,9 @@
   &.light-theme {
     background-color: @light-nav-bg;
     .nav-container {
+      &:hover {
+        background-color: @popover-bg-light;
+      }
       &.active {
         .sidebar-btn {
           background-color: @popover-bg-light;
@@ -31,6 +34,7 @@
         color: @icon-grey;
       }
       .sidebar-popover {
+        border-top: 1px solid #B7DAE3;
         .list-group {
           .list-group-item {
             background-color: @popover-bg-light;
@@ -54,6 +58,9 @@
   &.dark-theme {
     background-color: @dark-nav-bg;
     .nav-container {
+      &:hover {
+        background-color: @popover-border-dark;
+      }
       &.active {
         .sidebar-btn {
           background-color: @popover-border-dark;
@@ -90,6 +97,7 @@
     }
   }
   .nav-container {
+    position: relative;
     &:first-child {
       margin-top: 20px;
     }
@@ -116,6 +124,8 @@
     }
     .sidebar-popover {
       position: absolute;
+      left: 50px;
+      top: 0;
       width: 199px;
       opacity: 0;
       visibility: hidden;
@@ -143,26 +153,6 @@
           }
         }
       }
-    }
-    #analyticsPopover {
-      left: 50px;
-      top: 20px;
-    }
-    #analyticsConfigurationPopover {
-      left: 50px;
-      top: 60px;
-    }
-    #dataPopover {
-      left: 50px;
-      top: 100px;
-    }
-    #dataStorePopover {
-      left: 50px;
-      top: 140px;
-    }
-    #settingsPopover {
-      left: 50px;
-      top: 180px;
     }
   }
 }

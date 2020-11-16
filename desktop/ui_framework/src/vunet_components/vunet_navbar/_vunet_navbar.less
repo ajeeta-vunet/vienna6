@@ -87,6 +87,9 @@
           width: auto;
         }
       }
+      #customerLogoContainer {
+        cursor: auto;
+      }
     }
     .navbar-nav {
       display: flex;
@@ -95,10 +98,6 @@
         height: @navbar-item-size;
         margin-right: 8.5px;
         > button {
-          &:disabled {
-            border-radius: 50%;
-            background-color: #4D4D4D !important;
-          }
           &:focus {
             box-shadow: none;
           }
@@ -199,10 +198,6 @@
       #notifications {
         position: relative;
         &:hover {
-          button:disabled {
-            border-radius: 50%;
-            background-color: #4D4D4D !important;
-          }
           .new-notifications-tooltip {
             visibility: visible;
             opacity: 1;
@@ -249,6 +244,11 @@
         align-items: center;
         justify-content: center;
         padding: 0 !important;
+        &:disabled {
+          border-radius: 50%;
+          background-color: @hover-grey !important;
+          color: @icon-disabled-light !important;
+        }
       }
       &:hover {
         .nav-link {
@@ -264,10 +264,10 @@
       .new-notifications-badge {
         position: absolute;
         background-color: @blue-accent-light;
-        top: 2px;
-        right: 6.5px;
-        width: 7px;
-        height: 7px;
+        top: 0;
+        right: 3px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         z-index: 20;
       }
@@ -318,6 +318,11 @@
         align-items: center;
         justify-content: center;
         padding: 0 !important;
+        &:disabled {
+          border-radius: 50%;
+          background-color: @hover-white !important;
+          color: @icon-disabled-dark !important;
+        }
       }
       &:hover {
         .nav-link {
@@ -333,10 +338,10 @@
       .new-notifications-badge {
         position: absolute;
         background-color: @blue-accent-dark;
-        top: 2px;
-        right: 6.5px;
-        width: 7px;
-        height: 7px;
+        top: 0;
+        right: 3px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         z-index: 20;
       }

@@ -29,6 +29,8 @@ export default (props) => {
   const notificationRead = props.read ? 'read' : '';
   const isDarkThemeEnabled = props.darkTheme ? 'dark-theme' : 'light-theme';
 
+  const timestamp = moment.utc(props.timestamp).local().format('YYYY-MM-DD HH:mm:ss');
+
   function getNotificationLink() {
     // If notification summary present, that will be used as search string
     // Also, we do not want any current applied filters/search to
@@ -62,7 +64,7 @@ export default (props) => {
       </div>
 
       <div className="notification_timestamp_container">
-        <p className="notification_time">{moment(props.timestamp).fromNow()}</p>
+        <p className="notification_time">{moment(timestamp).fromNow()}</p>
       </div>
     </a>
   );

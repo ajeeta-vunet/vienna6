@@ -317,6 +317,12 @@ export class VunetNavbar extends Component {
   // Function that updates lastActive time in local storage
   // Called whenever user does some activity in the application tab
   updateLastActiveTime = () => {
+    // If username is not present, that means user has been logged out in another tab
+    // So signing the user out
+    if (!window.localStorage.username || window.localStorage.username === '') {
+      window.localStorage.setItem(VunetNavbarConstants.SESSION_LAST_ACTIVE_TIME_KEY, '');
+      this.apiHelper.stopIdleTimerAndGoToLoginPage();
+    }
     this.lastActiveTime = new Date().getTime();
     window.localStorage.setItem(VunetNavbarConstants.SESSION_LAST_ACTIVE_TIME_KEY, this.lastActiveTime);
   }
@@ -398,6 +404,14 @@ export class VunetNavbar extends Component {
       let lastActiveTime = window.localStorage.getItem(VunetNavbarConstants.SESSION_LAST_ACTIVE_TIME_KEY);
       lastActiveTime = parseInt(lastActiveTime);
 
+      // If the user has by chance logged into a different tab
+      // and logged out from there, we will check for browser Storage
+      // and log the user out if its empty
+      if (!window.localStorage.username || window.localStorage.username === '') {
+        window.localStorage.setItem(VunetNavbarConstants.SESSION_LAST_ACTIVE_TIME_KEY, '');
+        this.apiHelper.stopIdleTimerAndGoToLoginPage();
+      }
+
       // If the difference between current time and last active time is
       // greater than session idle time out, we logout the user.
       const elapsedTime = currentTime.getTime() - lastActiveTime;
@@ -405,7 +419,7 @@ export class VunetNavbar extends Component {
         // username becomes empty when the user logout.
         // If the user already logged out from any other tab, just redirect him
         // to login page
-        if (window.localStorage.username === '') {
+        if (!window.localStorage.username || window.localStorage.username === '') {
           this.apiHelper.stopIdleTimerAndGoToLoginPage();
         } else {
           // If the user is logged in, Log out the user.
@@ -528,7 +542,7 @@ export class VunetNavbar extends Component {
             </a>
             {
               this.customerLogoImgPath &&
-              <a className="navbar-brand navbar-logo-container">
+              <a id="customerLogoContainer" className="navbar-brand navbar-logo-container">
                 <img id="customerLogoImg" alt="Home" src={this.customerLogoImgPath} />
               </a>
             }
@@ -717,7 +731,7 @@ export class VunetNavbar extends Component {
                 ref={node => this.morePopoverNode = node}
               >
                 <ul className="list-group list-group-flush">
-                  <a
+                  {/* <a
                     id="darkThemeTogglerContainer"
                     onClick={this.handleDarkThemeClick}
                     className="list-group-item list-group-item-action popover-list-item"
@@ -732,11 +746,11 @@ export class VunetNavbar extends Component {
                       <span className="slider round" />
                     </label>
                   </a>
-                  <hr className="popover-list-item-border" />
+                  <hr className="popover-list-item-border" /> */}
                   <a
                     id="runDiagnosticsItem"
                     className={
-                      `list-group-item list-group-item-action popover-list-item` +
+                      `list-group-item list-group-item-action popover-list-item ` +
                       `${diagnosticsRunningClassName} ${manageDiagnosticsClassName}`
                     }
                     onClick={canManageDiagnostic && this.runDiagnostic}

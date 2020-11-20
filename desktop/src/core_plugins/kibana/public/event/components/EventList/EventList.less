@@ -1,35 +1,59 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
-  .events-list-wrapper {
-    height: 100%;
+.event-list-container {
+
+  .events-table-container {
+    height: ~"calc(100vh - 34rem)";
+
     .event-listing-wrapper {
-      font-size: 1.25rem;
-      position: relative;
-      margin-top: 1%;
-      height: 95%;
-      overflow: scroll;
+      font-size    : 1.25rem;
+      position     : relative;
+      margin-top   : 1%;
+      height       : 100%;
+      overflow     : scroll;
       padding-right: 0.5%;
     }
 
-    .pagination-event-console {
-      li {
-        a:hover, a:focus, a:active {
-          background: @event-console-button-background !important;
+    .pagination-container {
+      display        : flex;
+      justify-content: flex-end;
+      margin         : 1rem 0px;
+
+      .pagination-count {
+        border-radius: 0.4rem;
+        margin-right : 2rem;
+
+        select {
+          height : 100%;
+          border : 1px solid #efefef;
+          padding: 0 1rem;
         }
       }
-      .active {
-        background: @event-console-button-background !important;
-        a {
-          background: @event-console-button-background !important;
+
+      .pagination {
+        margin       : 0 !important;
+        padding-right: 1rem;
+
+        li a {
+          cursor    : pointer !important;
+          border    : 1px solid #efefef;
+          color     : @event-console-button-background  !important;
+          background: @white;
+
+          &:hover,
+          &:focus,
+          &:active {
+            background: @white;
+          }
+        }
+
+        li.active a,
+        li a:hover,
+        li a:focus {
+          color     : @white  !important;
+          background: @event-console-button-background  !important;
         }
       }
     }
   }
-
-  #column-selector-id {
-    display: none;
-  }
-
-  button {
-    box-shadow: none;
-  }
+}

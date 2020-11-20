@@ -1,4 +1,3 @@
-
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -26,8 +25,8 @@ export class OperationBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: this.props.events
-    }
+      events: this.props.events,
+    };
   }
 
   handleColumnSelectorDisplay = () => {
@@ -37,13 +36,13 @@ export class OperationBar extends React.Component {
   hidePlaceholder = () => {
     $('input,textarea').focus(function () {
       $(this).removeAttr('placeholder');
-   });
-  }
+    });
+  };
   //this method is called bring back the placeholder text when the user clicks outside search box after clicking inside it once.
   showPlaceholder = () => {
     $('input,textarea').blur(function () {
       $(this).attr('placeholder', 'search');
-   });
+    });
   };
   render() {
     return (
@@ -60,9 +59,15 @@ export class OperationBar extends React.Component {
             />
           </div>
           <div className="edit-button-wrapper">
-            <button className="edit-button" onClick={() => this.handleColumnSelectorDisplay()}>
+            <button
+              className="edit-button"
+              onClick={() => this.handleColumnSelectorDisplay()}
+            >
               Edit
-              <i className="fa fa-pencil column-selector-icon" aria-hidden="true" />
+              <i
+                className="fa fa-pencil column-selector-icon"
+                aria-hidden="true"
+              />
             </button>
           </div>
         </div>

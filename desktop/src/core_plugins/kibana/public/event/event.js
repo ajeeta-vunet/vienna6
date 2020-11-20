@@ -33,7 +33,6 @@ app.directive('eventConsole', (reactDirective) => {
   return reactDirective(EventConsole, [
     'severityInfo',
     'listOfEvents',
-    'updateEvent',
     'columnSelectorInfo',
     'updateColumnSelector',
     'userList',

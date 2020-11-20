@@ -196,4 +196,6 @@ EventConsole.propTypes = {
   listOfEvents: PropTypes.object,
   columnSelectorInfo: PropTypes.object,
   updateColumnSelector: PropTypes.func,
+  userList: PropTypes.object,
+  eventConsoleMandatoryFields: PropTypes.array
 };

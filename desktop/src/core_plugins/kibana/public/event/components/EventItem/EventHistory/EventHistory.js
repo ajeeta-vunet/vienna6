@@ -16,39 +16,62 @@
 // All rights reserved.
 // Use of copyright notice does not imply publication.
 
-import React from "react";
-import "./EventHistory.less";
+import React from 'react';
+import PropTypes from 'prop-types';
+import './EventHistory.less';
+import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 
-export class EventHistory extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+// This component displays alert history in a
+// tabular format
+export function EventHistory(props) {
+  const { history } = props;
 
-  render() {
-    const renderRows = this.props.history && Object.keys(this.props.history).map((key, value) => {
-      return (
-        <div className="row history-row">
-          <div className="col-md-2">{key}</div>
-          <div className="col-md-2">{value}</div>
-        </div>
-      );
-    });
+  const requiresCustomDisplayList = [
+    'Today Active For',
+    'Last 7 Days Active For',
+    'Last 1 Month Active For',
+    'Active For',
+    'Duration',
+  ];
+
+  // Iterate on the history object and prepare
+  // rows containing history information.
+  const renderRows = Object.keys(history).map((key, index) => {
     return (
-      <div className="container history-wrapper">
-        <div className="row header-row">
-          <div className="col-md-2">
-            <span className="history-details">
-              History Details
-            </span>
-          </div>
-          <div className="col-md-2">
-            <span className="values">
-              Values
-            </span>
-          </div>
+      <div key={key + index} className="row events-display-table-row">
+        <div className="col-md-2">{key}</div>
+        <div className="col-md-2">
+          {requiresCustomDisplayList.includes(key) > 0
+            ? displayTwoTimeUnits(history[key])
+            : history[key]}
         </div>
-        {renderRows}
       </div>
     );
-  }
+  });
+
+  return (
+    <div className="event-history-container">
+      {Object.keys(history).length ? (
+        <div className="events-display-table">
+          <div className="row events-display-table-header">
+            <div className="col-md-2">
+              <span className="history-details">Name</span>
+            </div>
+            <div className="col-md-2">
+              <span className="values">Details</span>
+            </div>
+          </div>
+          {renderRows}
+        </div>
+      ) : (
+        <div className="event-display-no-data">
+          No event history available for this event
+        </div>
+      )}
+    </div>
+  );
 }
+
+EventHistory.propTypes = {
+  history: PropTypes.object,
+};

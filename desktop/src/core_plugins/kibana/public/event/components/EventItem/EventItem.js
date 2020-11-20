@@ -17,14 +17,15 @@
 // Use of copyright notice does not imply publication.
 
 import React from 'react';
-import './EventItem.less';
-import { EventDetails } from './EventDetails/EventDetails';
-import chrome from 'ui/chrome';
-import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import moment from 'moment-timezone';
-import { EventHistory } from './EventHistory/EventHistory';
 import produce from 'immer';
+import chrome from 'ui/chrome';
 import { Notifier } from 'ui/notify';
+import './EventItem.less';
+import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
+import { EventDetails } from './EventDetails/EventDetails';
+import { EventHistory } from './EventHistory/EventHistory';
+import { RelatedDashboards } from './RelatedDashboards/RelatedDashboards';
 
 const notify = new Notifier({ location: 'Event Console' });
 
@@ -37,13 +38,6 @@ export class EventItem extends React.Component {
       currentTabId: 'alert-details',
       event: this.props.event,
     };
-    this.fetchEventDetails = this.fetchEventDetails.bind(this);
-    this.handleMoreDetails = this.handleMoreDetails.bind(this);
-    this.secondsToHms = this.secondsToHms.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleUpdateEvent = this.handleUpdateEvent.bind(this);
-    this.onTabChange = this.onTabChange.bind(this);
-    this.updateEventDetails = this.updateEventDetails.bind(this);
 
     this.tabs = [
       {
@@ -53,6 +47,10 @@ export class EventItem extends React.Component {
       {
         id: 'history',
         name: 'History',
+      },
+      {
+        id: 'related-dashboards',
+        name: 'Related Dashboards',
       },
     ];
 
@@ -456,7 +454,7 @@ export class EventItem extends React.Component {
             <VunetTab
               tabs={this.tabs}
               landingTab={this.landingTab}
-              switchTab={this.onTabChange.bind(this)}
+              switchTab={this.onTabChange}
             />
             {/* Tabs Body */}
             <div className="content-body">
@@ -472,6 +470,13 @@ export class EventItem extends React.Component {
               )}
               {this.state.currentTabId === 'history' && (
                 <EventHistory history={this.state.details['History']} />
+              )}
+              {this.state.currentTabId === 'related-dashboards' && (
+                <RelatedDashboards
+                  dashboardList={
+                    this.state.details.alert_details.fields.related_dashboards
+                  }
+                />
               )}
             </div>
           </div>

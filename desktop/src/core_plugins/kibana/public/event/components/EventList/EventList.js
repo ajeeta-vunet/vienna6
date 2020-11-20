@@ -33,7 +33,7 @@ export class EventList extends React.Component {
       events: this.props.events,
 
       //eventsPerPage - count of how many events to show per page
-      eventsPerPage: 4,
+      eventsPerPage: 10,
 
       //currentPage - used to store the active page number
       currentPage: 1,
@@ -218,8 +218,17 @@ export class EventList extends React.Component {
     }
   };
 
+  // This function will update the current page
+  // when user changes the page using the pagination
+  // UI
   handlePageChange = (currentPage) => {
     this.setState({ currentPage });
+  };
+
+  // Update the no of events in a page when
+  // user changes the selection.
+  updateEventsPerPage = (e) => {
+    this.setState({ eventsPerPage: e.target.value, currentPage: 1 });
   };
 
   render() {
@@ -251,7 +260,7 @@ export class EventList extends React.Component {
       : 0;
 
     return (
-      <div className="event-list-wrapper">
+      <div className="event-list-container">
         <OperationBar
           allFields={this.state.allFields}
           hiddenFields={this.state.hiddenFields}
@@ -261,7 +270,7 @@ export class EventList extends React.Component {
           onSearch={this.onSearch}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
         />
-        <div className="events-wrapper">
+        <div className="events-table-container">
           <div className="event-listing-wrapper">
             {renderEvents}
             {currentEvents && currentEvents.length === 0 && (
@@ -270,13 +279,29 @@ export class EventList extends React.Component {
               </div>
             )}
           </div>
-          <Pagination
-            hideDisabled
-            activePage={this.state.currentPage}
-            itemsCountPerPage={this.state.eventsPerPage}
-            totalItemsCount={totalItemsCount}
-            onChange={this.handlePageChange}
-          />
+          <div className="pagination-container">
+            <div className="pagination-count">
+              <select
+                onChange={(e) => {
+                  this.updateEventsPerPage(e);
+                }}
+                value={this.state.eventsPerPage}
+              >
+                <option value="5"> 5 </option>
+                <option value="10"> 10 </option>
+                <option value="20"> 20 </option>
+                <option value="50"> 50 </option>
+                <option value={totalItemsCount}> All </option>
+              </select>
+            </div>
+            <Pagination
+              hideDisabled
+              activePage={this.state.currentPage}
+              itemsCountPerPage={this.state.eventsPerPage}
+              totalItemsCount={totalItemsCount}
+              onChange={this.handlePageChange}
+            />
+          </div>
         </div>
       </div>
     );
@@ -284,8 +309,11 @@ export class EventList extends React.Component {
 }
 
 EventList.propTypes = {
-  events: PropTypes.object,
-  allFields: PropTypes.object,
-  hiddenFields: PropTypes.object,
+  events: PropTypes.array,
+  allEventList: PropTypes.array,
+  allFields: PropTypes.array,
+  hiddenFields: PropTypes.array,
+  userList: PropTypes.object,
   updateColumnSelector: PropTypes.func,
+  eventConsoleMandatoryFields: PropTypes.array,
 };

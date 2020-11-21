@@ -412,6 +412,12 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         // Add style to this element for phantomjs for reports
         $tr[0].style['page-break-inside'] = 'avoid';
         $tr[0].style['page-break-after'] = 'auto';
+        // Changing background color to adhere to design for datatable
+        if(visType === 'table') {
+          $tr[0].style['background-color'] = '#F4F4F4';
+        }
+
+
         let headerAdded = false;
 
         const rowHdr = 'Cumulative ( ' + _.startCase(operation) + ' )';
@@ -444,7 +450,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         resultArray.forEach(function (column, i) {
           let columnValue = column;
           // If certain columns are excluded, we should not display the cumulative data too.
-          if(!columns[i].show) {
+          if(visType === 'matrix' && !columns[i].show) {
             return;
           }
           // Pickup the formatter function if any for this data at this

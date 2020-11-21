@@ -1,6 +1,7 @@
 <table ng-if="rows"
        class="table agg-table-group"
-       ng-class="{'vunet-grid-table': useTableGrids, 'vunet-plain-table': !useTableGrids}"
+       ng-class="{'vunet-grid-table': useTableGrids, 'vunet-plain-table': !useTableGrids,
+       'datatable-table': !isMatrix, 'matrix-table': isMatrix}"
        ng-repeat="table in rows">
   <thead>
     <tr>

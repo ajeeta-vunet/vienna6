@@ -279,13 +279,13 @@
         margin:2rem 3rem 0rem 5rem!important;
       }
     }
-    
+
   }
 
   // This is being done for the new BMV that ie the vu-metric case
   .vu-metric-single-visualization-container{
     .single-vu-metric-container-wrapper{
-      .single-vu-metric-container{  
+      .single-vu-metric-container{
         margin-left: -50px!important;
         // The font-sizes given is are the default so that they do not impact on the reports
         .label-and-value-conatiner{
@@ -296,7 +296,7 @@
             .vu-metric-label{
               font-size: 18px!important;
             }
-            
+
             // Here are are hiding the help text tooltip of the metrics
             .description-help-container{
               display: none;
@@ -322,10 +322,10 @@
       .multi-metric-outer-container{
         width: 100%;
         display: block;
-        .single-vu-metric-container{  
+        .single-vu-metric-container{
           // float: left!important;
           padding-bottom: 0px!important;
-          
+
           // The font-sizes given is are the default so that they do not impact on the reports
           .label-and-value-conatiner{
             .vu-metric-formatted-value{
@@ -335,7 +335,7 @@
               .vu-metric-label{
                 font-size: 18px!important;
               }
-              
+
               // Here are are hiding the help text tooltip of the metrics
               .description-help-container{
                 display: none;
@@ -368,14 +368,19 @@
           }
         }
 
-        // This has been done to hide action buttons 
+        // This has been done to hide action buttons
         .hide-action-buttons-in-report{
           display: none;
         }
       }
     }
   }
-  
-  
-}
 
+  .datatable-table {
+    // This has been done to hide the pagination controls in case of datatables
+    .paginate-bottom {
+      display: none;
+    }
+  }
+
+}

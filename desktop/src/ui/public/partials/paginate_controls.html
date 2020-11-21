@@ -10,7 +10,7 @@
 <form class="form-inline pagination-size" ng-if="showSelector">
   <div class="form-group">
     <select
-      class="number-of-pages-dropdown"
+      class="kuiSelect number-of-pages-dropdown"
       ng-model="paginate.perPage"
       ng-options="opt.value as opt.title for opt in paginate.sizeOptions"
       data-test-subj="paginateControlsPageSizeSelect"

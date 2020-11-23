@@ -16,9 +16,25 @@
 
     .pagination-container {
       display        : flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       margin         : 1rem 0px;
 
+      .space-holder {
+        margin: 0;
+        padding: 0;
+      }
+
+      .view-all-events {
+        padding: 0.5rem;
+        font-size: initial;
+        cursor: pointer;
+        font-family: "Inter-Bold";
+        text-decoration: underline;
+      }
+
+      .pagination-component {
+        display: flex;
+      }
       .pagination-count {
         border-radius: 0.4rem;
         margin-right : 2rem;
@@ -55,5 +71,17 @@
         }
       }
     }
+  }
+}
+
+@media screen and (max-height: 685px) and (min-height: 400px) {
+  .event-listing-wrapper {
+    height: 85% !important;
+  }
+}
+
+@media screen and (max-height: 800px) and (min-height: 685px) {
+  .event-listing-wrapper {
+    height: 90% !important;
   }
 }

@@ -40,7 +40,7 @@ export class SingleSeverity extends React.Component {
         }
         onClick={() => {
           this.props.type !== 'total' &&
-            this.props.filterBySeverity(this.props.type);
+            this.props.filterBySeverity('severity', this.props.type);
         }}
       >
         <div className="severity-info">

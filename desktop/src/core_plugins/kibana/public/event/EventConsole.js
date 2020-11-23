@@ -23,9 +23,12 @@ import { SeverityWidget } from './components/SeverityWidget/SeverityWidget';
 
 import _ from 'lodash';
 import { EventList } from './components/EventList/EventList';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { EventConstants } from './event_constants';
+import { Notifier } from 'ui/notify';
+
+const notify = new Notifier({ location: 'Event Console' });
 
 export class EventConsole extends React.Component {
   constructor(props) {
@@ -75,10 +78,49 @@ export class EventConsole extends React.Component {
 
   // In this function we use the filterStore object and
   // update the data passed to 'SeverityWidget' and 'EventList'
-  // components based on filters applied by the user.
-  applySeverityFilters = function () {
-    const appliedSeverityList = this.state.filterStore.severity;
-    if (appliedSeverityList.length) {
+  // components based on filters applied by the user. This function receives filterField and
+  // filterValue. If the corresponding field and value is present in filterStore, it will be removed.
+  // Else it will be added to filterStore.
+  addFilter = (filterField, filterValue) => {
+    let updatedfilterStore = {};
+    // Check if filter with 'filterField' exists in filterStore.
+    if (_.has(this.state.filterStore, filterField)) {
+      // Check if filtered value exists in the array of filters
+      const filterValueIndex = this.state.filterStore[filterField].indexOf(
+        filterValue
+      );
+      // If filterValue exists remove it as user is clicking on the same widget
+      // for the second time.
+      if (filterValueIndex > -1 && filterField === 'severity') {
+        updatedfilterStore = produce(this.state.filterStore, (draft) => {
+          draft[filterField].splice(filterValueIndex, 1);
+          //Delete property if there are no filters to be applied on this property
+          if(draft[filterField].length === 0) delete draft[filterField];
+        });
+        // If filterValue does not exist, add it as user is clicking on the same widget
+        // for the first time.
+      } else {
+        updatedfilterStore = produce(this.state.filterStore, (draft) => {
+          draft[filterField].push(filterValue);
+        });
+      }
+      // If 'filterField' does not exist in filterStore, add it and update the
+      // filterValue in its array.
+    } else {
+      updatedfilterStore[filterField] = [filterValue];
+    }
+    this.setState({ filterStore: updatedfilterStore }, () => {
+      this.applyFilters();
+    });
+  };
+
+  // This function is called when the filterStore is updated by addition or deletion of a filterField.
+  // This will filter the events based on the filterField and it's corresponding values and update the
+  // filteredEventList which will case the EventList component to re-render and show only the filtered events.
+  applyFilters = function () {
+    const filterStore = this.state.filterStore;
+    let newEventList = [];
+    if (!(_.isEmpty(filterStore))) {
       let newSeverityInfo = {};
 
       // Update the severity widgets with filters applied by the user.
@@ -91,7 +133,7 @@ export class EventConsole extends React.Component {
         // Example: If severity filter 'critical' is applied, Update
         // the 'Total' widget count to reflect only 'critial' events count.
         EventConstants.SEVERITY_TYPES.map((severity) => {
-          if (appliedSeverityList.includes(severity)) {
+          if (filterStore.severity && filterStore.severity.includes(severity)) {
             totalNew = totalNew + draft['Time-Periods'][0][severity].new;
             totalWip = totalWip + draft['Time-Periods'][0][severity].wip;
             draft['Time-Periods'][0].total.new = totalNew;
@@ -102,11 +144,15 @@ export class EventConsole extends React.Component {
           }
         });
       });
-
-      // Update the eventlist with filters applied by the user
-      const newEventList = this.state.allEventList.filter((event) => {
-        return appliedSeverityList.includes(event.severity) > 0;
-      });
+      //Filter events based on the filter values present in filterStore.
+      for(const filterField in filterStore) {
+        if(filterStore.hasOwnProperty(filterField)) {
+          const eventList = this.state.allEventList.filter((event) => {
+            return filterStore[filterField].includes(event[filterField]) > 0;
+          });
+          newEventList = newEventList.concat(eventList);
+        }
+      }
 
       this.setState({
         filteredSeverityInfo: newSeverityInfo,
@@ -120,55 +166,23 @@ export class EventConsole extends React.Component {
     }
   };
 
-  // This function gets called when user clicks on any of the
-  // severity widgets. In this function we update the filterStore object
-  // with filter field and filter values for the same. Example filterStore
-  // format is as shown below:
-  // {
-  //   severity:['critical', 'warning']
-  // }
-  // Every the user clicks on the severity widgets we update the filterStore
-  // accordingly and save it in EventConsole component's local state.
-  filterBySeverity = (filterValue) => {
-    let updatedfilterStore = {};
-
-    // Check if key 'severity' exists in filterStore.
-    if (_.has(this.state.filterStore, 'severity')) {
-      // Check if filtered value exists in the array of filters for severity
-      const filterValueIndex = this.state.filterStore.severity.indexOf(
-        filterValue
-      );
-
-      // If filterValue exists remove it as user is clicking on the same widget
-      // for the second time.
-      if (filterValueIndex > -1) {
-        updatedfilterStore = produce(this.state.filterStore, (draft) => {
-          draft.severity.splice(filterValueIndex, 1);
-        });
-
-        // If filterValue does not exist, add it as user is clicking on the same widget
-        // for the first time.
-      } else {
-        updatedfilterStore = produce(this.state.filterStore, (draft) => {
-          draft.severity.push(filterValue);
-        });
-      }
-      // If key 'severity' does not exist in filterStore, add it and update the
-      // filterValue in its array.
-    } else {
-      updatedfilterStore.severity = [filterValue];
-    }
-    this.setState({ filterStore: updatedfilterStore }, () => {
-      this.applySeverityFilters();
-    });
-  };
+  // This function is called to clear all the filters and display all events in Event Console page.
+  showAllEvents = () => {
+    // eslint-disable-next-line no-console
+    window.location.href = '/app/vienna#/event';
+    this.setState({
+      filteredSeverityInfo: this.props.severityInfo,
+      filteredEventList: this.state.allEventList,
+      filterStore: {}
+    }, () => notify.info('Showing all Events'));
+  }
 
   render() {
     return (
       <div className="event-console-wrapper">
         <SeverityWidget
           severityInfo={this.state.filteredSeverityInfo}
-          filterBySeverity={this.filterBySeverity}
+          filterBySeverity={this.addFilter}
           appliedSeverityList={this.state.filterStore.severity}
         />
         <EventList
@@ -185,6 +199,7 @@ export class EventConsole extends React.Component {
           }
           updateColumnSelector={this.props.updateColumnSelector}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
+          showAllEvents={this.showAllEvents}
         />
       </div>
     );

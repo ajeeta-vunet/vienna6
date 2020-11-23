@@ -36,7 +36,7 @@ app.directive('eventConsole', (reactDirective) => {
     'columnSelectorInfo',
     'updateColumnSelector',
     'userList',
-    'eventConsoleMandatoryFields'
+    'eventConsoleMandatoryFields',
   ]);
 });
 
@@ -44,7 +44,7 @@ app.directive('eventApp', function () {
   return {
     restrict: 'E',
     controllerAs: 'eventApp',
-    controller: function ($route, $scope, config, $http, Private, timefilter) {
+    controller: function ($route, $scope, config, $http, Private, timefilter, AppState) {
       timefilter.enabled = true;
 
       const queryFilter = Private(FilterBarQueryFilterProvider);
@@ -122,6 +122,20 @@ app.directive('eventApp', function () {
         $scope.search();
       }
 
+      // Initializing the query value in the event Appstate
+      const stateDefaults = {
+        // Setting title to 'Events' as there are no event
+        // objects created.
+        title: 'Events',
+        query: {
+          'query_string': {
+            'query': '*',
+            'analyze_wildcard': true
+          }
+        }
+      };
+
+      $scope.state = new AppState(stateDefaults);
 
       //passing these to the EventConsole react component
       $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;

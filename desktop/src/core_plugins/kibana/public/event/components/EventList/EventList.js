@@ -280,27 +280,33 @@ export class EventList extends React.Component {
             )}
           </div>
           <div className="pagination-container">
-            <div className="pagination-count">
-              <select
-                onChange={(e) => {
-                  this.updateEventsPerPage(e);
-                }}
-                value={this.state.eventsPerPage}
-              >
-                <option value="5"> 5 </option>
-                <option value="10"> 10 </option>
-                <option value="20"> 20 </option>
-                <option value="50"> 50 </option>
-                <option value={totalItemsCount}> All </option>
-              </select>
+            <div className="space-holder" />
+            <div className="view-all-events-container">
+              <a className="view-all-events" onClick={() => this.props.showAllEvents()}>View all events</a>
             </div>
-            <Pagination
-              hideDisabled
-              activePage={this.state.currentPage}
-              itemsCountPerPage={this.state.eventsPerPage}
-              totalItemsCount={totalItemsCount}
-              onChange={this.handlePageChange}
-            />
+            <div className="pagination-component">
+              <div className="pagination-count">
+                <select
+                  onChange={(e) => {
+                    this.updateEventsPerPage(e);
+                  }}
+                  value={this.state.eventsPerPage}
+                >
+                  <option value="5"> 5 </option>
+                  <option value="10"> 10 </option>
+                  <option value="20"> 20 </option>
+                  <option value="50"> 50 </option>
+                  <option value={totalItemsCount}> All </option>
+                </select>
+              </div>
+              <Pagination
+                hideDisabled
+                activePage={this.state.currentPage}
+                itemsCountPerPage={this.state.eventsPerPage}
+                totalItemsCount={totalItemsCount}
+                onChange={this.handlePageChange}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -223,10 +223,12 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                     if (typeof (cell.value) === 'number') {
                       value = cell.value;
                     }
+                    // Starting the count for index from 1 for each page of the rows.
+                    const indexForCumulativeRow = (serialNumber - 1) % min === 0 ? min : (serialNumber - 1) % min;
                     columnResult[index] = doCumulativeOperation(cell.aggConfig.vis.params.cumulativeRowOperation,
                       columnResult[index],
                       value,
-                      serialNumber - 1);
+                      indexForCumulativeRow);
                     columnValueFormatter[index] = cell.aggConfig.fieldFormatter();
                     cumulativeRowOperation = cell.aggConfig.vis.params.cumulativeRowOperation;
                     showCumulativeRow = true;
@@ -514,7 +516,8 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         if (!Array.isArray(rows)) rows = [];
         const width = rows.reduce(maxRowSize, 0);
 
-        if (isFinite(min) && rows.length < min) {
+        // Block to add empty rows if the number of actual rows is lesser than the rows per page
+        if (visType !== 'table' && isFinite(min) && rows.length < min) {
           // clone the rows so that we can add elements to it without upsetting the original
           rows = _.clone(rows);
           // crate the empty row which will be pushed into the row list over and over

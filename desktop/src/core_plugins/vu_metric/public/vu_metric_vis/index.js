@@ -34,7 +34,7 @@ export default function VuMetricsVisProvider(Private) {
   const metricsRequestHandler = Private(MetricsRequestGeneratorProviderForVuMetric).handler;
 
   return VisFactory.createReactVisualization({
-    name: 'business_metric',
+    name: 'vu_metric',
     title: 'Vu Metric',
     icon: 'fa-briefcase',
     description: 'Create this visualization to display any metric value' +

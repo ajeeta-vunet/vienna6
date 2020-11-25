@@ -78,8 +78,13 @@ export class EventDetails extends React.Component {
     const display = this.props.details.alert_details.fields;
     const severity = this.props.details.Severity;
     const correlatedId = this.props.details.ID;
-    const statuses = ['open', 'assigned', 'closed'];
-    const users = this.props.userList && this.props.userList.users;
+    const statuses = ['assigned', 'closed', 'open'];
+    const users = this.props.userList && this.props.userList.users.sort();
+    //as occurences size is big we display only the first three values and append '...' in the end
+    let occurrences = display.occurrences;
+    if(occurrences.length > 3) {
+      occurrences = occurrences.slice(1, 70) + '...';
+    }
     return(
       <div className="event-details-wrapper">
         <div className="details">
@@ -113,9 +118,9 @@ export class EventDetails extends React.Component {
             <div className="detail-info"> {display.category} </div>
             <br />
           </div>
-          <div className="detail alert-id">
+          <div className="detail occurrence">
             <label htmlFor="alert-id">Occurrence: </label>
-            <div className="detail-info"> Occurrence here </div>
+            <div className="detail-info"> {occurrences} </div>
             <br />
           </div>
           <div className="detail impact">
@@ -135,7 +140,7 @@ export class EventDetails extends React.Component {
           </div>
           <div className="detail last-occurence-date-id">
             <label htmlFor="alert-id">Last Occurrence: </label>
-            <div className="detail-info"> Last Date Here (not provided) </div>
+            <div className="detail-info"> {display.last_occurance} </div>
             <br />
           </div>
           <div className="detail region">

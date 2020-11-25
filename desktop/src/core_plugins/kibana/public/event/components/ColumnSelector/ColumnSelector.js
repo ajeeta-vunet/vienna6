@@ -47,10 +47,18 @@ export class ColumnSelector extends React.Component {
 
   render() {
     //This array contains names of columns that are to be disabled.
-    const disabledColumns = this.props.eventConsoleMandatoryFields;
-    //this filter and concat is done to push disabled columns to the end of array so that it will displayed at the end in the UI.
-    let allFields = this.state.allFields && this.state.allFields.filter((field) => !disabledColumns.includes(field));
-    allFields = allFields.concat(disabledColumns);
+    const disabledColumns = this.props.eventConsoleMandatoryFields.sort();
+    let allFields = [];
+    //check whether disabledColumns array contains an empty string, if it does then skip filtering allFields based on disabledColumns
+    //just sort it and use in in the JSX.
+    if(disabledColumns[0] !== '') {
+      //this filter and concat is done to push disabled columns to the end of array so that it will be displayed at the end in the UI.
+      allFields = this.state.allFields && this.state.allFields.filter((field) => !disabledColumns.includes(field));
+      allFields.sort();
+      allFields = allFields.concat(disabledColumns);
+    } else {
+      allFields = this.state.allFields.sort();
+    }
     return (
       <div className="column-selector-wrapper" id="column-selector-wrapper">
         <div className="column-selector-header">Edit Row Headers</div>
@@ -68,10 +76,13 @@ export class ColumnSelector extends React.Component {
               {allFields && allFields.map((field) => {
                 //let id = 'column-selector-' + field;
                 return (
-                  <div className={`field ${field}`} key={field}>
+                  <div
+                    className={`field ${field === '@timestamp' ? 'timestamp' : field}`}
+                    key={field === '@timestamp' ? 'timestamp' : field}
+                  >
                     <input
                       type="checkbox"
-                      id={field}
+                      id={field === '@timestamp' ? 'timestamp' : field}
                       name={field}
                       onChange={() =>
                         this.props.handleColumnSelectorChange(field)

@@ -51,6 +51,14 @@ export class EventConsole extends React.Component {
 
       // filterStore - An object which holds all the filters based on different fields.
       filterStore: {},
+
+      //allFields - list of all the fields of events that can be displayed in EventItem.
+      allFields:
+        this.props.columnSelectorInfo && this.props.columnSelectorInfo.alert_details.fields,
+
+      //hiddenFields - list of all the variables that are to be hidden in each Event Item UI.
+      hiddenFields:
+        this.props.columnSelectorInfo && this.props.columnSelectorInfo.alert_details.hidden_fields,
     };
   }
 
@@ -73,6 +81,8 @@ export class EventConsole extends React.Component {
           return o.fields.correlated_id;
         }
       ),
+      allFields: newProps.columnSelectorInfo.alert_details.fields,
+      hiddenFields: newProps.columnSelectorInfo.alert_details.hidden_fields
     });
   }
 
@@ -177,6 +187,12 @@ export class EventConsole extends React.Component {
     }, () => notify.info('Showing all Events'));
   }
 
+  //this function is added to sync state variables and put request contents
+  updateColumnSelector = (allFields, hiddenFields) => {
+    this.setState({ allFields: allFields, hiddenFields: hiddenFields });
+    this.props.updateColumnSelector(allFields, hiddenFields);
+  }
+
   render() {
     return (
       <div className="event-console-wrapper">
@@ -189,15 +205,9 @@ export class EventConsole extends React.Component {
           events={this.state.filteredEventList}
           allEventList={this.state.allEventList}
           userList={this.props.userList}
-          allFields={
-            this.props.columnSelectorInfo &&
-            this.props.columnSelectorInfo.alert_details.fields
-          }
-          hiddenFields={
-            this.props.columnSelectorInfo &&
-            this.props.columnSelectorInfo.alert_details.hidden_fields
-          }
-          updateColumnSelector={this.props.updateColumnSelector}
+          allFields={this.state.allFields}
+          hiddenFields={this.state.hiddenFields}
+          updateColumnSelector={this.updateColumnSelector}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
           showAllEvents={this.showAllEvents}
         />

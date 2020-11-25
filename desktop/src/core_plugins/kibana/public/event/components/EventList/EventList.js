@@ -78,7 +78,7 @@ export class EventList extends React.Component {
       }),
       allFields: newProps.allFields,
       hiddenFields: newProps.hiddenFields,
-    });
+    }, () => {this.updateFieldDisplay();});
   }
 
   sortByClickedField = (field) => {
@@ -112,27 +112,31 @@ export class EventList extends React.Component {
     // column selector UI.
     this.state.allFields &&
       this.state.allFields.map((field) => {
-        if (field !== '@timestamp') {
-          // Get an element from multiple classes. Here
-          // we get the element containing the field to be shown
-          // and add a class to show the item.
-          const className = '.detail-item.' + field;
-          $(className).addClass('detail-item-show');
+        if (field === '@timestamp') {
+          field = 'timestamp';
         }
+        // Get an element from multiple classes. Here
+        // we get the element containing the field to be shown
+        // and add a class to show the item.
+        const className = '.detail-item.' + field;
+        $(className).addClass('detail-item-show');
+        // }
       });
 
     // Show the fields that are selected in the
     // column selector UI.
     this.state.hiddenFields &&
       this.state.hiddenFields.map((field) => {
-        if (field !== '@timestamp') {
-          // Get an element from multiple classes. Here
-          // we get the element containing the field to be hidden
-          // and add a class to hide the item
-          const className = '.detail-item.' + field;
-          $(className).removeClass('detail-item-show');
-          $(className).addClass('detail-item-hide');
+        if (field === '@timestamp') {
+          field = 'timestamp';
         }
+        // Get an element from multiple classes. Here
+        // we get the element containing the field to be hidden
+        // and add a class to hide the item
+        const className = '.detail-item.' + field;
+        $(className).removeClass('detail-item-show');
+        $(className).addClass('detail-item-hide');
+        // }
       });
   };
 
@@ -141,11 +145,11 @@ export class EventList extends React.Component {
   handleColumnSelectorDisplay = () => {
     this.state.allFields &&
       this.state.allFields.map((field) => {
-        document.getElementById(field).checked = true;
+        document.getElementById(field === '@timestamp' ? 'timestamp' : field).checked = true;
       });
     this.state.hiddenFields &&
       this.state.hiddenFields.map((field) => {
-        document.getElementById(field).checked = false;
+        document.getElementById(field === '@timestamp' ? 'timestamp' : field).checked = false;
       });
     const container = $('#column-selector-id');
     container.show();
@@ -166,9 +170,12 @@ export class EventList extends React.Component {
   //it will add the hide/show class to clicked field.
   handleColumnSelectorChange = (field) => {
     let newHiddenFields = this.state.hiddenFields;
-    const value = document.getElementById(field).checked;
+    const value = document.getElementById(field === '@timestamp' ? 'timestamp' : field).checked;
     if (value === true) {
       newHiddenFields = newHiddenFields.filter((f) => f !== field);
+      if (field === '@timestamp') {
+        field = 'timestamp';
+      }
       const className = '.detail-item.' + field;
       $(className).removeClass('detail-item-hide');
       $(className).addClass('detail-item-show');
@@ -176,6 +183,9 @@ export class EventList extends React.Component {
       if (!newHiddenFields.includes(field)) {
         newHiddenFields.push(field);
         newHiddenFields.map((field) => {
+          if (field === '@timestamp') {
+            field = 'timestamp';
+          }
           const className = '.detail-item.' + field;
           $(className).addClass('detail-item-hide');
           $(className).removeClass('detail-item-show');

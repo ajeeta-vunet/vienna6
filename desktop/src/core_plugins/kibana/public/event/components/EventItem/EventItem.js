@@ -37,7 +37,6 @@ export class EventItem extends React.Component {
       details: {},
       currentTabId: 'alert-details',
       event: this.props.event,
-      active: false,
     };
 
     this.tabs = [
@@ -59,7 +58,7 @@ export class EventItem extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ event: newProps.event });
+    this.setState({ event: newProps.event, showDetails: false });
   }
 
   //This function is used to update the assignee, status, and add a new note to an event.
@@ -137,10 +136,6 @@ export class EventItem extends React.Component {
   //if showDetails is false, it will call fetchEventDetails,
   //otherwise it will simply toggle showDetails
   handleMoreDetails = () => {
-    const currentState = this.state.active;
-    this.setState({
-      active: !currentState
-    });
     if (this.state.showDetails === false) {
       this.fetchEventDetails(this.state.event.id);
     } else {
@@ -187,17 +182,17 @@ export class EventItem extends React.Component {
           </div>
         </div>
         <div className="details">
-          <div className="detail-item correlated_id">
+          <div className="detail-item alert_id">
             <div className="wrapper">
               <div
                 className="detail-heading"
-                onClick={() => this.handleClickedField('correlated_id')}
+                onClick={() => this.handleClickedField('alert_id')}
               >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 Alert ID:
               </div>
               <div className="detail-content">
-                {eventDisplay.correlated_id}
+                {eventDisplay.alert_id}
               </div>
             </div>
           </div>
@@ -433,6 +428,20 @@ export class EventItem extends React.Component {
               </div>
             </div>
           </div>
+          <div className="detail-item timestamp">
+            <div className="wrapper">
+              <div
+                className="detail-heading"
+                onClick={() => this.handleClickedField('@timestamp')}
+              >
+                <i className="fa fa-sort-amount-desc sort-icon" />
+                @Timestamp:
+              </div>
+              <div className="detail-content">
+                {this.state.event['@timestamp']}
+              </div>
+            </div>
+          </div>
         </div>
         <div className="assigned-actions">
           <div className="assignee">
@@ -450,7 +459,7 @@ export class EventItem extends React.Component {
               className="more-details-button"
               onClick={() => this.handleMoreDetails()}
             >
-              <i className={'fa fa-lg ' + (this.state.active ? 'fa-angle-up' : 'fa-angle-down')} />
+              <i className={'fa fa-lg ' + (this.state.showDetails ? 'fa-angle-up' : 'fa-angle-down')} />
             </button>
           </div>
         </div>

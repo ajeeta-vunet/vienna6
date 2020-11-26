@@ -26,6 +26,7 @@ import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab'
 import { EventDetails } from './EventDetails/EventDetails';
 import { EventHistory } from './EventHistory/EventHistory';
 import { RelatedDashboards } from './RelatedDashboards/RelatedDashboards';
+import _ from 'lodash';
 
 const notify = new Notifier({ location: 'Event Console' });
 
@@ -171,9 +172,42 @@ export class EventItem extends React.Component {
     this.setState({ showDetails: false });
   };
 
+  //this function is used to generate the field heading to be displaced in the UI.
+  //this is done by replacing any character other than aphabets with space and then capitalising
+  //first letter of each word.
+  generateHeading = (key) => {
+    key.replace(/[^a-zA-Z]+/g, ' ');
+    return(_.startCase(key));
+  }
+
+  //this function is used to generate the class name to be used in the JSX tags..
+  generateClassname = (key) => {
+    return key.replace(/[^a-zA-Z-_]+/g, '');
+  }
+
   render() {
     const eventDisplay = this.state.event.fields;
     const severity = this.state.event.severity;
+    const displayEventItemDetails =
+      eventDisplay && Object.entries(eventDisplay).map(([key, value]) => {
+        return (
+          <div key={this.generateClassname(key)} className={'detail-item ' + this.generateClassname(key)}>
+            <div className="wrapper">
+              <div
+                className="detail-heading"
+                onClick={() => this.handleClickedField('alert_id')}
+              >
+                <i className="fa fa-sort-amount-desc sort-icon" />
+                {this.generateHeading(key)}:
+              </div>
+              <div className="detail-content">
+                {value}
+              </div>
+            </div>
+          </div>
+        );
+      });
+
     return (
       <div className="event-item-wrapper">
         <div className="indicator-checkbox">
@@ -182,266 +216,7 @@ export class EventItem extends React.Component {
           </div>
         </div>
         <div className="details">
-          <div className="detail-item alert_id">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('alert_id')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Alert ID:
-              </div>
-              <div className="detail-content">
-                {eventDisplay.alert_id}
-              </div>
-            </div>
-          </div>
-          <div className="detail-item summary">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('summary')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Summary:
-              </div>
-              <div className="detail-content">{eventDisplay.summary}</div>
-            </div>
-          </div>
-          {/* <div className="detail-item emttr">
-            <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('emttr')}>
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                EMTTR:
-              </span>
-              <span className="detail-content">{this.secondsToHms(eventDisplay.emttr)}</span>
-            </div>
-          </div> */}
-          <div className="detail-item status">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('status')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Status
-              </div>
-              <div className="detail-content">{eventDisplay.status}</div>
-            </div>
-          </div>
-          <div className="detail-item region">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('region')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Region:
-              </div>
-              <div className="detail-content">{eventDisplay.region}</div>
-            </div>
-          </div>
-          <div className="detail-item last_modified_time">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('last_modified_time')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Last Modified Time:
-              </div>
-              <div className="detail-content">
-                {eventDisplay.last_modified_time}
-              </div>
-            </div>
-          </div>
-          {/* <div className="detail-item confidence_factor">
-            <div className="wrapper">
-              <span className="detail-heading" onClick={() => this.handleClickedField('confidence_factor')}>
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Confidence Factor:
-              </span>
-              <span className="detail-content">{eventDisplay.confidence_factor}</span>
-            </div>
-          </div> */}
-          <div className="detail-item active_duration">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('active_duration')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Active Duration:
-              </div>
-              <div className="detail-content">
-                {eventDisplay.active_duration}
-              </div>
-            </div>
-          </div>
-          <div className="detail-item assignee">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('assignee')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Assignee:
-              </div>
-              <div className="detail-content">{eventDisplay.assignee}</div>
-            </div>
-          </div>
-          <div className="detail-item category">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('category')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Category:
-              </div>
-              <div className="detail-content">{eventDisplay.category}</div>
-            </div>
-          </div>
-          <div className="detail-item created_by">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('created_by')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Created By:
-              </div>
-              <div className="detail-content">{eventDisplay.created_by}</div>
-            </div>
-          </div>
-          <div className="detail-item created_time">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('created_time')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Created Time:
-              </div>
-              <div className="detail-content">
-                {eventDisplay.created_time}
-              </div>
-            </div>
-          </div>
-          <div className="detail-item event_id">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('event_id')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Event ID:
-              </div>
-              <div className="detail-content">{eventDisplay.event_id}</div>
-            </div>
-          </div>
-          <div className="detail-item impact">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('impact')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Impact:
-              </div>
-              <div className="detail-content">{eventDisplay.impact}</div>
-            </div>
-          </div>
-          <div className="detail-item ip_address">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('ip_address')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                IP Address:
-              </div>
-              <div className="detail-content">{eventDisplay.ip_address}</div>
-            </div>
-          </div>
-          <div className="detail-item occurrences">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('occurrences')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Occurrences:
-              </div>
-              <div className="detail-content">{eventDisplay.occurrences}</div>
-            </div>
-          </div>
-          <div className="detail-item severity">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('severity')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Severity:
-              </div>
-              <div className="detail-content">{eventDisplay.severity}</div>
-            </div>
-          </div>
-          <div className="detail-item similar_events_count">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('similar_events_count')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Similar Events Count:
-              </div>
-              <div className="detail-content">
-                {eventDisplay.similar_events_count}
-              </div>
-            </div>
-          </div>
-          <div className="detail-item source">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('source')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Source:
-              </div>
-              <div className="detail-content">{eventDisplay.source}</div>
-            </div>
-          </div>
-          <div className="detail-item total_duration">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('total_duration')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                Total Duration:
-              </div>
-              <div className="detail-content">
-                {eventDisplay.total_duration}
-              </div>
-            </div>
-          </div>
-          <div className="detail-item timestamp">
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField('@timestamp')}
-              >
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                @Timestamp:
-              </div>
-              <div className="detail-content">
-                {this.state.event['@timestamp']}
-              </div>
-            </div>
-          </div>
+          {displayEventItemDetails}
         </div>
         <div className="assigned-actions">
           <div className="assignee">

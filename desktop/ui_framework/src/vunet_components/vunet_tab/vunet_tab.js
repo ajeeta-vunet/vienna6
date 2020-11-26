@@ -64,7 +64,7 @@ export class VunetTab extends Component {
   // Show the close button only when the delete flag is true.
   renderTabs(tabStyle) {
     return this.props.tabs.map((tab, index) => (
-      <div style={tabStyle} className="kuiTabWrapper">
+      <div key={index} style={tabStyle} className="kuiTabWrapper">
         <KuiTab
           className="vunetTabButtons"
           onClick={() => this.onSelectedTabChanged(tab.id)}

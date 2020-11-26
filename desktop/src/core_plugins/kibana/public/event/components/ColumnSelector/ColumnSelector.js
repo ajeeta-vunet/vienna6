@@ -33,9 +33,12 @@ export class ColumnSelector extends React.Component {
   //this function handles the search functionality (by altering the display attribute)
   handleSearch(event) {
     if (event.target.value !== null) {
-      const searchTerm = event.target.value.toLowerCase().trim();
+      //convert the search string into lowerCase, remove whitespaces at the end(if any) and replace spaces
+      //inbetween words with '_'(underscore). This is done to match the filednames as present in allFields.
+      const searchTerm = event.target.value.toLowerCase().trim().replace(' ', '_');
 
-      this.props.allFields.map((field) => {
+      this.state.allFields.map((field) => {
+        field = field.replace(/[^a-zA-Z-_]+/g, '');
         if (field.toLowerCase().includes(searchTerm)) {
           $(`.field.${field}`).css('display', 'block');
         } else {
@@ -74,15 +77,16 @@ export class ColumnSelector extends React.Component {
             Default Row Attributes
             <div className="column-selector-checkbox-wrapper">
               {allFields && allFields.map((field) => {
+                field = field.replace(/[^a-zA-Z-_]+/g, '');
                 //let id = 'column-selector-' + field;
                 return (
                   <div
-                    className={`field ${field === '@timestamp' ? 'timestamp' : field}`}
-                    key={field === '@timestamp' ? 'timestamp' : field}
+                    className={`field ${field}`}
+                    key={field}
                   >
                     <input
                       type="checkbox"
-                      id={field === '@timestamp' ? 'timestamp' : field}
+                      id={field}
                       name={field}
                       onChange={() =>
                         this.props.handleColumnSelectorChange(field)

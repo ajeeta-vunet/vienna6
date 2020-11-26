@@ -64,6 +64,9 @@ export class EventList extends React.Component {
   }
 
   componentDidUpdate() {
+    //this is added because when any local state variables change we need to hide the fileds in
+    // hiddenFields and updateFieldDisplay method does this.
+    this.updateFieldDisplay();
     //this is to avoid redirection to homepage after click of the button in pagination component.
     $('.pagination li a').on('click', function (e) {
       e.preventDefault();
@@ -112,9 +115,7 @@ export class EventList extends React.Component {
     // column selector UI.
     this.state.allFields &&
       this.state.allFields.map((field) => {
-        if (field === '@timestamp') {
-          field = 'timestamp';
-        }
+        field = field.replace(/[^a-zA-Z-_]+/g, '');
         // Get an element from multiple classes. Here
         // we get the element containing the field to be shown
         // and add a class to show the item.
@@ -127,9 +128,7 @@ export class EventList extends React.Component {
     // column selector UI.
     this.state.hiddenFields &&
       this.state.hiddenFields.map((field) => {
-        if (field === '@timestamp') {
-          field = 'timestamp';
-        }
+        field = field.replace(/[^a-zA-Z-_]+/g, '');
         // Get an element from multiple classes. Here
         // we get the element containing the field to be hidden
         // and add a class to hide the item
@@ -145,11 +144,13 @@ export class EventList extends React.Component {
   handleColumnSelectorDisplay = () => {
     this.state.allFields &&
       this.state.allFields.map((field) => {
-        document.getElementById(field === '@timestamp' ? 'timestamp' : field).checked = true;
+        field = field.replace(/[^a-zA-Z-_]+/g, '');
+        document.getElementById(field).checked = true;
       });
     this.state.hiddenFields &&
       this.state.hiddenFields.map((field) => {
-        document.getElementById(field === '@timestamp' ? 'timestamp' : field).checked = false;
+        field = field.replace(/[^a-zA-Z-_]+/g, '');
+        document.getElementById(field).checked = false;
       });
     const container = $('#column-selector-id');
     container.show();
@@ -170,12 +171,10 @@ export class EventList extends React.Component {
   //it will add the hide/show class to clicked field.
   handleColumnSelectorChange = (field) => {
     let newHiddenFields = this.state.hiddenFields;
-    const value = document.getElementById(field === '@timestamp' ? 'timestamp' : field).checked;
+    field = field.replace(/[^a-zA-Z-_]+/g, '');
+    const value = document.getElementById(field).checked;
     if (value === true) {
       newHiddenFields = newHiddenFields.filter((f) => f !== field);
-      if (field === '@timestamp') {
-        field = 'timestamp';
-      }
       const className = '.detail-item.' + field;
       $(className).removeClass('detail-item-hide');
       $(className).addClass('detail-item-show');
@@ -183,9 +182,7 @@ export class EventList extends React.Component {
       if (!newHiddenFields.includes(field)) {
         newHiddenFields.push(field);
         newHiddenFields.map((field) => {
-          if (field === '@timestamp') {
-            field = 'timestamp';
-          }
+          field  = field.replace(/[^a-zA-Z-_]+/g, '');
           const className = '.detail-item.' + field;
           $(className).addClass('detail-item-hide');
           $(className).removeClass('detail-item-show');

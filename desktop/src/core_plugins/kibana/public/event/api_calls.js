@@ -36,7 +36,7 @@ export function fetchListOfEvents($http, chrome, dashboardContext, timeDurationS
       }
     },
     time: { 'gte': timeDurationStart, 'lte': timeDurationEnd },
-    sample_size: 1000
+    sample_size: 10000
   })
     .then(resp => { return resp.data;})
     .catch(resp => { throw resp.data; });

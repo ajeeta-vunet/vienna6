@@ -112,15 +112,33 @@
       margin: 2px 0 !important;
     }
     .notification_content {
-      max-width: 300px;
+      position: relative;
+      width: 100%;
       padding: 12px 0 12px 8px;
-    }
-  }
-  .notification_timestamp_container {
-    padding: 11px 20px 11px 0;
-    .notification_time {
-      font-size: 12px !important;
-      color: #BABABA !important;
+      .notification_description {
+        width: 360px;
+        height: 48px;
+        line-height: 16px !important;
+        word-break: break-all;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        -ms-box-orient: vertical;
+        box-orient: vertical;
+        -webkit-line-clamp: 5;
+        -moz-line-clamp: 5;
+        -ms-line-clamp: 5;
+        line-clamp: 5;
+        overflow: hidden;
+      }
+      .notification_time {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 12px !important;
+        color: #BABABA !important;
+        padding: 10px 10px 0 0;
+      }
     }
   }
 }

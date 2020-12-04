@@ -731,53 +731,126 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         });
       };
 
-      const iterateResults = function (result, destList, stack, metricList, columnName, metricIndex, rowIndex = 1) {
-        let key;
-        for (key in result) {
-          if (result[key].hasOwnProperty('buckets')) {
-            if (result[key].hasOwnProperty('key')) {
-              stack.push(result[key].key);
+
+      // This function receives each metric from the json response sent by back-end,
+      // iterates through metric's buckets (if used) and store the bucket value and
+      // metric value in an array object for the vertical view.
+
+      // Sample response for a single metric BMV
+      //[{"Total": {"value": 9,"groupName": "Total","label": "Total","severity": null,
+      //"color": "#05a608","formattedValue": "9","description": "","insights": "Looks all fine",
+      //"visualization_name": "Total","success": true,"metricIcon": ""}}]
+
+      //Sample final output
+      //[{"Column0":"Total"},{"Column0":{"value":9,"formattedValue":"9","color":"#05a608"}}]
+
+      // Sample response for a single metric and single bucket BMV
+      //[{"Total":
+        //{"buckets":
+          //[{"fieldName": "channel","key": "Easy Pay","metric": {
+            //"value": 3,"visualization_name": "Total","groupName": "Total","metricIcon": "",
+            //"success": true,"severity": null,"label": "Total","color": "#05a608",
+            //"formattedValue": "3","description": "","insights": "Looks all fine"}}
+          //]
+        //}
+      //}]
+
+      //Sample final output for a single bucket and a single metric would be as following
+      //[{"Column0":"channel","Column1":"Total"},
+      //{"Column0":"Easy Pay","Column1":{"value":3,"formattedValue":"3","color":"#05a608"}}]
+
+      // In the final arry, the first item would be the header info for the table.
+      // The rest of the items are data row.
+
+      const iterateResults = function (result, destList, stack, metricList, columnName, metricIndex, metricName, rowIndex = 1) {
+        angular.forEach(result, function (key, value) {
+          // For each metric, very first time the metric name will be empty
+          // So get the metric name and assign to it. This will be used later.
+          if (metricName === '') metricName = value;
+          // If buckets are used, pick the key (bucket value)
+          // and store it in an stack array
+          if (key.hasOwnProperty('buckets')) {
+            if (key.hasOwnProperty('key')) {
+              stack.push(key.key);
             }
-            iterateResults(result[key].buckets, destList, stack, metricList, columnName, metricIndex, rowIndex);
-            stack.pop(result[key].key);
+            // If more than 1 bukets are used,
+            // pick the next bucket and repeat this process
+            // until we reach the metric part.
+            iterateResults(key.buckets, destList, stack, metricList, columnName, metricIndex, metricName, rowIndex);
+            stack.pop(key.key);
           }
           else {
-            if (metricIndex === 0) {
-              const row = {};
-              let colIndex = 0;
-              angular.forEach(stack, function (key) {
-                row[columnName + colIndex] = key;
-                colIndex = colIndex + 1;
-              });
+            let row = {};
+            let colIndex = 0;
+            // Go through each key in the stack array
+            // and add it to to row json as below
+            //{"Column0":"system","Column1":"process"},,"Column2":"diskio"}]
+            angular.forEach(stack, function (key) {
+              row[columnName + colIndex] = key;
+              colIndex = colIndex + 1;
+            });
+            let metric = {};
+            // If bucket is used then the metric details will be available in the metric key
+            if (key.hasOwnProperty('metric')) {
+              row[columnName + colIndex] = key.key;
+              metric = key.metric;
+            }
+            // If bucket is not used then the metric key will not be available and
+            // we can use the key as metric
+            else {
+              metric = key;
+            }
+            // Always check whether row already exists for the bucket.
+            // if available, pick that data and update it for the upcoming metrics.
 
-              let metric = {};
-              if (result[key].hasOwnProperty('metric')) {
-                row[columnName + colIndex] = result[key].key;
-                colIndex = colIndex + 1;
-                metric = result[key].metric;
+            // if no buckets used then there ll be only 2 objects in the array.
+            // 1. Header 2. data
+            // So get the 2nd object and update it from the 2nd metric
+            let rowExists = {};
+            if ($scope.vis.params.aggregations.length === 0 && metricIndex > 0) {
+              rowExists = destList[1];
+            }
+            // else if bucket is used then row might be already exists...
+            // find the row by the bucket value and update it from the 2nd metric
+            else if (Object.keys(row).length > 0) {
+              rowExists = $filter('filter')(destList, row);
+            }
+            // As mentioned in the previous steps, the first item in the
+            // deslList would be the header containing the bucket name and
+            // metric name. Get the column index for the incoming metric and
+            // update it.
+            let headerIndex = 0;
+            angular.forEach(destList[0], function (header) {
+              if (header === metricName) {
+                colIndex = headerIndex;
+                return;
               }
-              else {
-                metric = result[key];
-              }
+              headerIndex = headerIndex + 1;
+            });
+            // if row exists for the bucket already then update it.
+            if (Object.keys(rowExists).length > 0) {
+              row = rowExists.length > 0 ? rowExists[0] : rowExists;
               updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex);
-              destList.push(row);
             }
             else {
-              const colIndex = Object.keys(destList[rowIndex]).length;
-              let metric = {};
-
-              if (result[key].hasOwnProperty('metric')) {
-                metric = result[key].metric;
-              }
-              else {
-                metric = result[key];
-              }
-              const row = destList[rowIndex];
+              // If not exists add as a new row
+              let index = 0;
+              angular.forEach(destList[0], function (metric, column) {
+                const metric1 = {};
+                if (Object.keys(row).length > 0 && !row.hasOwnProperty(column)) {
+                  metric1.value = 0;
+                  metric1.formattedValue = 0;
+                  metric1.label = metric;
+                  updateMetricAndHistoricalData(metric1, metricList, row, columnName, index);
+                }
+                index = index + 1;
+              });
               updateMetricAndHistoricalData(metric, metricList, row, columnName, colIndex);
-            }
-          }
-          rowIndex = rowIndex + 1;
-        }
+              destList.push(row);
+             }
+           }
+           rowIndex = rowIndex + 1;
+        });
       };
 
 
@@ -907,11 +980,31 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             });
           }
           else if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'vertical') {
+
+            // Here the verticalDatas array will have the actual header and data.
+            // The first item in the array would be column header and the rest are row data.
+            // The sample output for the verticalDatas is below.
+            // [{"Column0":"host","Column1":"type","Column2":"total"},
+            // {"Column0":"127.0.0.1","Column1":"process",
+            // "Column2":{"value":44458,"formattedValue":"44,458","color":"#05a608"}]
             $scope.verticalDatas = [];
+            // Here the columnMeta is the array containing the reference link,
+            // show/hide, back ground color and historical data details for each metric.
+            // The sample output for the columnmeta is below.
+            // [{"Reference Link":{"dashboard":{"allowedRolesJSON":"[{\"name\":\"admin\",\"permission\":\"modify\"},
+            // {\"name\":\"modify\",\"permission\":\"\"},{\"name\":\"view\",\"permission\":\"\"},
+            // {\"name\":\"ANSRadmin\",\"permission\":\"\"}]","id":"42ff5910-33c7-11e9-873d-0d17f41ef83a",
+            // "title":"New Dashboard"},"field":"host","retainFilters":false,"searchString":"",
+            // "useFieldAsFilter":true},"historicData":false},{"plain text":"","historicData":false}]
             $scope.columnMeta = [];
+
             const item = {};
             let colIndex = 0;
             const columnName = 'Column';
+            // go through bucket aggreagtions and check whether reference link
+            // is created for any bucketing field.
+            // If the selected bucketing field is available in the referene link
+            // section then add the reference link details to the column meta array.
             for (let index = 0; index < $scope.vis.params.aggregations.length; index++) {
               // Add bucket names to header
               let label = $scope.vis.params.aggregations[index].customLabel;
@@ -923,7 +1016,10 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               colIndex = colIndex + 1;
               const refLink = {};
               let match = false;
+              // If reference link is configured
               if ($scope.vis.params.linkInfo.length) {
+                // go though the reference links and check whether
+                // the reference link field is used in bucket aggregations.
                 for (const i in $scope.vis.params.linkInfo) {
                   if (field === $scope.vis.params.linkInfo[i].field) {
                     refLink['Reference Link'] = $scope.vis.params.linkInfo[i];
@@ -931,6 +1027,8 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
                   }
                 }
               }
+              // if not found then the corresponding aggregation bucket is just a
+              // normal text and not a reference link.
               if (!match) {
                 refLink['plain text'] = '';
               }
@@ -938,8 +1036,11 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               // Set it to false as the aggregation header should be always visible
               $scope.columnMeta.push(refLink);
             }
+
+            // Go through metrics and get the show/hide metric, background color
+            // and reference link details to the column meta array.
+            // We need to check the reference link only for the latest value metric type.
             angular.forEach($scope.vis.params.metrics, function (metric, index) {
-              //for (let index = 0; index < $scope.vis.params.metrics.length; index++) {
               const refLink = {};
               const metricIndex = index;
               // Add metric names and historic data names to header
@@ -949,6 +1050,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               const type = metric.type;
               // Set it to true/false based on the hideMetric.
               refLink.hide = metric.hideMetric;
+              // Set it to true/false based on the bg color.
               refLink.bgColorEnabled = metric.bgColorEnabled;
               refLink.historicData = false;
               if (type === 'latest') {
@@ -963,29 +1065,28 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               }
               $scope.columnMeta.push(refLink);
 
+              // Go though historical data and get show/hide, bg color, historical data
+              // and add to the column data array
               angular.forEach($scope.vis.params.historicalData, function (hist) {
                 const refLink = {};
                 item[columnName + colIndex] = hist.label;
                 colIndex = colIndex + 1;
                 // We need to hide historical data for the hidden metric also.
-                // So seti it to true/false based on the corrosponding metric's hideMetric.
+                // So set it to true/false based on the corrosponding metric's hideMetric.
                 refLink.hide = $scope.vis.params.metrics[metricIndex].hideMetric;
                 refLink.bgColorEnabled = $scope.vis.params.metrics[metricIndex].bgColorEnabled;
                 refLink.historicData = true;
                 $scope.columnMeta.push(refLink);
               });
             });
-            // it's very complex and difficult to achive show hide metrics if we add to
-            // the existing verticalDatas list.
-            // The existing verticalDatas list will have only the bucket/metric names in the first item.
-            // in the rest items, we have metric value for the buckets.
-            // Format of the verticalDatas  [["Target","memory","IO disk"],
-            //["samson-Vostro-3578","0.92","1930773028.32"],["10.0.2.15",null,null],["127.0.0.1",null,null]]
+            // At this point item json will have only column header info.
+            // Add it to the vertical datas array as the first item.
             $scope.verticalDatas.push(item);
+            // Iterate through the response received from the backend
+            // and add the metric details to the vertical data as row data from the 2nd item.
             angular.forEach(resp, function (metricData, index) {
-              iterateResults(metricData, $scope.verticalDatas, [], $scope.vis.params.metrics, columnName, index);
+              iterateResults(metricData, $scope.verticalDatas, [], $scope.vis.params.metrics, columnName, index, '');
             });
-            // We should not return. need to execute the report related code
             metricRowCount = $scope.verticalDatas.length;
           }
           // Populate the total number of rows in $scope.vis.params.

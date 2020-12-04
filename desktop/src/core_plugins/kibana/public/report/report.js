@@ -194,7 +194,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   if (reportcfg.recipientsList) {
     $scope.recipientsData = JSON.parse(reportcfg.recipientsList);
-
     for (let index = 0; index < $scope.recipientsData.length; index++) {
       if ($scope.recipientsData[index].selectEmailGroupList === undefined || $scope.recipientsData[index].selectEmailGroupList === '') {
         $scope.recipientsData[index].selectEmailGroupList = [];
@@ -220,14 +219,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.recipientsData[0].role !== '') {
     const currentUser = chrome.getCurrentUser();
 
-    // Display only those recipient configuration
-    // which belongs to logged in user's role
-    $scope.recipientsList = _.filter($scope.recipientsData, function (recipient) {
-      return recipient.role === currentUser[1];
-    });
-
+    // Display the recipient configurations
+    $scope.recipientsList = $scope.recipientsData;
   }
-
   $scope.printReport = $route.current.locals.printReport;
 
   // Store $route.current.locals.printReport value in rootScope
@@ -253,11 +247,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
       // Get the current logged in user role
       const currentUser = chrome.getCurrentUser();
 
-      // Display only those user groups
-      // which belongs to logged in user's role
-      $scope.userGroups = _.filter(data.user_groups, function (role) {
-        return role.name === currentUser[1];
-      });
+      // Display only those user groups with ViewObject permissions
+      // All ManageObject user roles will also have Viewobject permissions in them.
+      $scope.userGroups = data.user_groups.filter(role => role.permissions.indexOf('ViewObject')>=0)
     }).catch(function () {
       $scope.userGroups = [];
       notify.error('Failed to find user roles');

@@ -47,14 +47,14 @@ export function displayTwoTimeUnits(timeValue) {
   const sec = String(parseInt(timeUnits[3]));
   let result = '';
   if (day > 0) {
-    result = day + 'd' + ' ' + hr + 'h';
+    result = day + (day === 1 ? 'day' : 'days') + ' ' + hr + (hr === 1 ? 'hour' : 'hours');
   } else if (hr > 0) {
-    result = hr + 'h' + ' ' + min + 'm';
+    result = hr + (hr === 1 ? 'hour' : 'hours') + ' ' + min + (day === 1 ? 'minute' : 'minutes');
   } else if (min > 0) {
-    result = min + 'm' + ' ' + sec + 's';
+    result = min + (min === 1 ? 'minute' : 'minutes') + ' ' + sec + (sec === 1 ? 'second' : 'seconds');
   }
   else {
-    result = sec + 's';
+    result = sec + (sec === 1 ? 'second' : 'seconds');
   }
   return result;
 }

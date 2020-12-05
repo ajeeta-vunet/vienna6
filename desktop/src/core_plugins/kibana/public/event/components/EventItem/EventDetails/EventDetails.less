@@ -33,6 +33,9 @@
         padding-left: 0.43rem;
       }
 
+      .status-select[disabled] {
+        cursor: not-allowed;
+      }
       .assignee-select[disabled] {
         cursor: not-allowed;
       }
@@ -47,6 +50,7 @@
         border: 1px solid @event-console-border-color;
         background-color: @event-console-detail-info-background-color;
         font-size: 1.4rem;
+        min-height: 3rem;
       }
     }
 
@@ -155,6 +159,9 @@
           padding: 1.5%;
           border: 1px solid @event-console-border-color;
         }
+        .work-area-textarea[disabled] {
+          cursor: not-allowed;
+        }
       }
     }
 
@@ -174,5 +181,65 @@
     .button-left {
       margin-right: 0.5%;
     }
+  }
+}
+
+.event-metrics-container {
+  width: 100%;
+  padding-left: 9.5%;
+  padding-right: 2.2%;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: row;
+  .events-metrics-table {
+    width     : 100%;
+    text-align: left;
+    padding   : 2rem 5rem;
+    flex: 4;
+
+    .events-metrics-table-header {
+      background-color: @event-console-detail-info-background-color;
+      font-weight     : bold;
+      line-height     : 3;
+    }
+
+    .events-metrics-table-row {
+      margin-bottom: 0.1rem;
+      line-height  : 3;
+      border       : 0.1rem solid @event-console-detail-info-background-color;
+    }
+
+    .metrics-details-value {
+      padding-right: 0 !important;
+    }
+  }
+
+  .event-metrics-no-data {
+    padding  : 6rem 5rem;
+    font-size: 1.6rem;
+  }
+
+  .events-tags-table {
+    width     : 100%;
+    text-align: left;
+    padding   : 2rem 5rem;
+    flex: 1;
+
+    .events-tags-table-header {
+      background-color: @event-console-detail-info-background-color;
+      font-weight     : bold;
+      line-height     : 3;
+    }
+
+    .events-tags-table-row {
+      margin-bottom: 0.1rem;
+      line-height  : 3;
+      border       : 0.1rem solid @event-console-detail-info-background-color;
+    }
+  }
+
+  .event-tags-no-data {
+    padding  : 6rem 5rem;
+    font-size: 1.6rem;
   }
 }

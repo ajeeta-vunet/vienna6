@@ -26,7 +26,8 @@ import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab'
 import { EventDetails } from './EventDetails/EventDetails';
 import { EventHistory } from './EventHistory/EventHistory';
 import { RelatedDashboards } from './RelatedDashboards/RelatedDashboards';
-import _ from 'lodash';
+import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
+import { generateHeading, generateClassname } from '../../utils/vunet_format_name.js';
 
 const notify = new Notifier({ location: 'Event Console' });
 
@@ -172,36 +173,23 @@ export class EventItem extends React.Component {
     this.setState({ showDetails: false });
   };
 
-  //this function is used to generate the field heading to be displaced in the UI.
-  //this is done by replacing any character other than aphabets with space and then capitalising
-  //first letter of each word.
-  generateHeading = (key) => {
-    key.replace(/[^a-zA-Z]+/g, ' ');
-    return(_.startCase(key));
-  }
-
-  //this function is used to generate the class name to be used in the JSX tags..
-  generateClassname = (key) => {
-    return key.replace(/[^a-zA-Z-_]+/g, '');
-  }
-
   render() {
     const eventDisplay = this.state.event.fields;
     const severity = this.state.event.severity;
     const displayEventItemDetails =
       eventDisplay && Object.entries(eventDisplay).map(([key, value]) => {
         return (
-          <div key={this.generateClassname(key)} className={'detail-item ' + this.generateClassname(key)}>
+          <div key={generateClassname(key)} className={'detail-item ' + generateClassname(key)}>
             <div className="wrapper">
               <div
                 className="detail-heading"
                 onClick={() => this.handleClickedField('alert_id')}
               >
                 <i className="fa fa-sort-amount-desc sort-icon" />
-                {this.generateHeading(key)}:
+                {generateHeading(key)}:
               </div>
               <div className="detail-content">
-                {value}
+                {key === 'active_duration' || key === 'total_duration' ? displayTwoTimeUnits(value) : value}
               </div>
             </div>
           </div>
@@ -255,16 +243,13 @@ export class EventItem extends React.Component {
                   handleCancel={this.handleCancel}
                   updateEvent={this.handleUpdateEvent}
                   eventId={this.props.event.id}
+                  canUpdateEvent={this.props.canUpdateEvent}
                 />
               )}
               {this.state.currentTabId === 'history' && (
-                <EventHistory history={this.state.details.History} />
-              )}
-              {this.state.currentTabId === 'related-dashboards' && (
-                <RelatedDashboards
-                  dashboardList={
-                    this.state.details.alert_details.fields.related_dashboards
-                  }
+                <EventHistory
+                  history={this.state.details.History}
+                  occurrences={this.state.details.occurrences}
                 />
               )}
               {this.state.currentTabId === 'related-dashboards' && (

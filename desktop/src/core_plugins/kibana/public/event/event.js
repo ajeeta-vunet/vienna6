@@ -37,6 +37,7 @@ app.directive('eventConsole', (reactDirective) => {
     'updateColumnSelector',
     'userList',
     'eventConsoleMandatoryFields',
+    'canUpdateEvent',
   ]);
 });
 
@@ -61,7 +62,7 @@ app.directive('eventApp', function () {
       $scope.eventConsoleMandatoryFields = config.get('eventConsoleMandatoryFields');
 
       //this flag is used to determine whether user has ManageEvents permission or not.
-      $scope.fetchUsersListPermission = chrome.canManageEvents();
+      $scope.canUpdateEvent = chrome.canManageEvents();
 
       $scope.loadingEvents = true;
 
@@ -106,7 +107,7 @@ app.directive('eventApp', function () {
         });
       };
 
-      if($scope.fetchUsersListPermission) {
+      if($scope.canUpdateEvent) {
         fetchUserList($http, chrome).then((data) => {
           $scope.userList = data;
         });

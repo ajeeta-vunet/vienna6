@@ -1,21 +1,50 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .event-history-container {
-  .events-display-table {
-    width     : 100%;
-    text-align: left;
-    padding   : 2rem 5rem;
+  display: flex;
+  flex-direction: row;
 
-    .events-display-table-header {
-      background-color: @event-console-detail-info-background-color;
-      font-weight     : bold;
-      line-height     : 3;
+  .history-table-container {
+    flex: 1;
+
+    .events-display-table {
+      width     : 100%;
+      text-align: left;
+      padding   : 2rem 5rem;
+
+      .events-display-table-header {
+        background-color: @event-console-detail-info-background-color;
+        font-weight     : bold;
+        line-height     : 3;
+      }
+
+      .events-display-table-row {
+        margin-bottom: 0.1rem;
+        line-height  : 3;
+        border       : 0.1rem solid @event-console-detail-info-background-color;
+      }
     }
+  }
 
-    .events-display-table-row {
-      margin-bottom: 0.1rem;
-      line-height  : 3;
-      border       : 0.1rem solid @event-console-detail-info-background-color;
+  .occurrences-table-container {
+    flex: 1;
+
+    .occurrences-display-table {
+      width     : 100%;
+      text-align: left;
+      padding   : 2rem 5rem;
+
+      .occurrences-display-table-header {
+        background-color: @event-console-detail-info-background-color;
+        font-weight     : bold;
+        line-height     : 3;
+      }
+
+      .occurrences-display-table-row {
+        margin-bottom: 0.1rem;
+        line-height  : 3;
+        border       : 0.1rem solid @event-console-detail-info-background-color;
+      }
     }
   }
 

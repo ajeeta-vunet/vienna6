@@ -257,6 +257,7 @@ export class EventList extends React.Component {
               event={event}
               userList={this.props.userList}
               getClickedField={this.sortByClickedField}
+              canUpdateEvent={this.props.canUpdateEvent}
             />
           </span>
         );

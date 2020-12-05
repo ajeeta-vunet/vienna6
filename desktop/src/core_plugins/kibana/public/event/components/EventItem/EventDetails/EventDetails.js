@@ -19,6 +19,8 @@
 
 import React from 'react';
 import './EventDetails.less';
+import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
+import { generateHeading, generateClassname } from '../../../utils/vunet_format_name.js';
 
 export class EventDetails extends React.Component {
 
@@ -38,19 +40,6 @@ export class EventDetails extends React.Component {
     const metricName = Object.keys(metrics)[0];
     const toPrint = `${metricName}: Value: ${metrics[metricName]['Value (Now)']}`;
     return toPrint;
-  }
-
-  //converts the incoming seconds to a string of HMS that can be displayed
-  secondsToHms = (d) => {
-    d = Number(d);
-    const h = Math.floor(d / 3600);
-    const m = Math.floor(d % 3600 / 60);
-    const s = Math.floor(d % 3600 % 60);
-
-    const hDisplay = h > 0 ? h + (h === 1 ? ' hour, ' : ' hours, ') : '0 hours, ';
-    const mDisplay = m > 0 ? m + (m === 1 ? ' minute, ' : ' minutes, ') : '0 minutes, ';
-    const sDisplay = s > 0 ? s + (s === 1 ? ' second' : ' seconds') : '0 seconds';
-    return hDisplay + mDisplay + sDisplay;
   }
 
   //updates the selectedStatus state variable everytime a different option is chosen
@@ -75,83 +64,69 @@ export class EventDetails extends React.Component {
   }
 
   render() {
-    const display = this.props.details.alert_details.fields;
-    const severity = this.props.details.Severity;
-    const correlatedId = this.props.details.ID;
+    const details = this.props.details.alert_details.fields;
+    const metrics = this.props.details.Metrics;
     const statuses = ['assigned', 'closed', 'open'];
     const users = this.props.userList && this.props.userList.users.sort();
+    const exceptionDetails = ['status', 'assignee', 'summary', 'notes', 'related_dashboards', 'tenant_id', 'bu_id'];
+
+    const renderDetails =
+      details &&
+        Object.entries(details).map(([key, value]) => {
+
+          if(!exceptionDetails.includes(key)) {
+            return (
+              <div
+                key={generateClassname(key)}
+                className={'detail ' + generateClassname(key)}
+              >
+                <label htmlFor={generateClassname(key)}>
+                  {generateHeading(key)}
+                </label>
+                <div
+                  className="detail-info"
+                >
+                  {key === 'active_duration' || key === 'total_duration' ? displayTwoTimeUnits(value) : value}
+                </div>
+                <br />
+              </div>
+            );
+          }
+        });
+
+    const renderMetricTable = Object.keys(metrics.Entries).map((key) => {
+      return (
+        <div key={key} className="row events-metrics-table-row">
+          <div className="col-md-4 metrics-details-value">{key}</div>
+          {Object.values(metrics.Entries[key]).map((value, index) => {
+            return (
+              <div key={value + index} className="col-md-2 metrics-details-value">
+                {value}
+              </div>
+            );
+          })}
+        </div>
+      );
+    });
+
+    const renderTagsTable = this.props.details.Tags && this.props.details.Tags.map((value) => {
+      return(
+        <div key={value} className="row events-tags-table-row">
+          <div className="col-md-2">{value}</div>
+        </div>
+      );
+    });
+
     return(
       <div className="event-details-wrapper">
         <div className="details">
-          <div className="detail alert-id">
-            <label htmlFor="alert-id">Alert ID: </label>
-            <div className="detail-info"> {correlatedId} </div>
-            <br />
-          </div>
-          <div className="detail active-duration">
-            <label htmlFor="alert-id">Active Duration: </label>
-            <div className="detail-info"> {this.secondsToHms(display.active_duration)} </div>
-            <br />
-          </div>
-          <div className="detail ip">
-            <label htmlFor="alert-id">IP Address: </label>
-            <div className="detail-info"> {display.ip_address} </div>
-            <br />
-          </div>
-          <div className="detail metric">
-            <label htmlFor="alert-id">Metric: </label>
-            <div className="detail-info"> {this.generateMetricText()} </div>
-            <br />
-          </div>
-          <div className="detail total-duration">
-            <label htmlFor="alert-id">Total Duration: </label>
-            <div className="detail-info"> {this.secondsToHms(display.total_duration)} </div>
-            <br />
-          </div>
-          <div className="detail category">
-            <label htmlFor="alert-id">Affected Category:  </label>
-            <div className="detail-info"> {display.category} </div>
-            <br />
-          </div>
-          <div className="detail alarm-state">
-            <label htmlFor="alert-id">Alarm State: </label>
-            <div className="detail-info"> {display.alarm_state} </div>
-            <br />
-          </div>
-          <div className="detail impact">
-            <label htmlFor="alert-id">Business Impact: </label>
-            <div className="detail-info"> {display.impact} </div>
-            <br />
-          </div>
-          <div className="detail first-occurence-date">
-            <label htmlFor="alert-id">First Occurence Date: </label>
-            <div className="detail-info"> {display.created_time} </div>
-            <br />
-          </div>
-          <div className="detail source">
-            <label htmlFor="alert-id">Source: </label>
-            <div className="detail-info"> {display.source} </div>
-            <br />
-          </div>
-          <div className="detail last-occurence-date-id">
-            <label htmlFor="alert-id">Last Occurrence: </label>
-            <div className="detail-info"> {display.last_occurence} </div>
-            <br />
-          </div>
-          <div className="detail region">
-            <label htmlFor="alert-id">Region: </label>
-            <div className="detail-info"> {display.region} </div>
-            <br />
-          </div>
-          <div className="detail severity">
-            <label htmlFor="alert-id">Severity: </label>
-            <div className="detail-info"> {severity} </div>
-          </div>
+          {renderDetails}
           <div className="detail status">
             <label htmlFor="alert-id">Status: </label>
             <select
+              disabled={!this.props.canUpdateEvent}
               id="status-select"
-              defaultValue={display.status}
+              defaultValue={details.status}
               className="status-select"
               name="status"
               onChange={event => this.handleStatus(event)}
@@ -165,9 +140,9 @@ export class EventDetails extends React.Component {
           <div className="detail assignee">
             <label htmlFor="alert-id">Assignee: </label>
             <select
-              disabled={!users}
+              disabled={!this.props.canUpdateEvent}
               id="assignee-select"
-              defaultValue={display.assignee}
+              defaultValue={details.assignee}
               className="assignee-select"
               name="assignee"
               onChange={event => this.handleAssignee(event)}
@@ -183,7 +158,49 @@ export class EventDetails extends React.Component {
         </div>
         <div className="summary">
           <label>Summary: </label>
-          <textarea rows="3" defaultValue={display.summary} disabled />
+          <textarea rows="3" defaultValue={details.summary} disabled />
+        </div>
+        <div className="event-metrics-container">
+          {Object.keys(metrics.Entries).length ? (
+            <div className="events-metrics-table">
+              <div className="row events-metrics-table-header">
+                <div className="col-md-4">
+                  <span className="metric-details-header">Metrics</span>
+                </div>
+                <div className="col-md-2">
+                  <span className="metric-details-header">Value (Event Duration)</span>
+                </div>
+                <div className="col-md-2">
+                  <span className="metric-details-header">Value (Now)</span>
+                </div>
+                <div className="col-md-2">
+                  <span className="metric-details-header">Insights</span>
+                </div>
+                <div className="col-md-2">
+                  <span className="metric-details-header">Threshold</span>
+                </div>
+              </div>
+              {renderMetricTable}
+            </div>
+          ) : (
+            <div className="event-metrics-no-data">
+          No Metric Entries available for this event
+            </div>
+          )}
+          {this.props.details.Tags.length ? (
+            <div className="events-tags-table">
+              <div className="row events-tags-table-header">
+                <div className="col-md-2">
+                  <span className="tags-details">Tags</span>
+                </div>
+              </div>
+              {renderTagsTable}
+            </div>
+          ) : (
+            <div className="event-tags-no-data">
+            No Tags available for this event
+            </div>
+          )}
         </div>
         <div className="work-notes">
           <div className="work-notes-header">
@@ -191,7 +208,7 @@ export class EventDetails extends React.Component {
           </div>
           <div className="work-notes-body">
             <div className="work-notes-list">
-              {display.notes.map(note => (
+              {details.notes.map(note => (
                 <div key={`${note.body}-${note.timestamp}`} className="note">
                   <div className="avatar">
                     {note.author[0]}
@@ -212,6 +229,7 @@ export class EventDetails extends React.Component {
             </div>
             <div className="work-notes-new-note">
               <textarea
+                disabled={!this.props.canUpdateEvent}
                 className="work-area-textarea"
                 rows="5"
                 placeholder="Write the work note here"

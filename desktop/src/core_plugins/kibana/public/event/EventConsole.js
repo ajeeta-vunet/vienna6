@@ -210,6 +210,7 @@ export class EventConsole extends React.Component {
           updateColumnSelector={this.updateColumnSelector}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
           showAllEvents={this.showAllEvents}
+          canUpdateEvent={this.props.canUpdateEvent}
         />
       </div>
     );

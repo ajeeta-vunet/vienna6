@@ -20,11 +20,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './EventHistory.less';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
+import moment from 'moment-timezone';
 
 // This component displays alert history in a
 // tabular format
 export function EventHistory(props) {
-  const { history } = props;
+  const { history, occurrences } = props;
 
   const requiresCustomDisplayList = [
     'Today Active For',
@@ -39,7 +40,7 @@ export function EventHistory(props) {
   const renderRows = Object.keys(history).map((key, index) => {
     return (
       <div key={key + index} className="row events-display-table-row">
-        <div className="col-md-2">{key}</div>
+        <div className="col-md-4">{key}</div>
         <div className="col-md-2">
           {requiresCustomDisplayList.includes(key) > 0
             ? displayTwoTimeUnits(history[key])
@@ -49,25 +50,51 @@ export function EventHistory(props) {
     );
   });
 
+  const renderOccurrences = occurrences && occurrences.map((value) => {
+    return(
+      <div key={value} className="row occurrences-display-table-row">
+        <div className="col-md-5">{moment(value).format('dddd, MMMM Do YYYY, h:mm:ss a')}</div>
+      </div>
+    );
+  });
+
   return (
     <div className="event-history-container">
-      {Object.keys(history).length ? (
-        <div className="events-display-table">
-          <div className="row events-display-table-header">
-            <div className="col-md-2">
-              <span className="history-details">Name</span>
+      <div className="history-table-container">
+        {Object.keys(history).length ? (
+          <div className="events-display-table">
+            <div className="row events-display-table-header">
+              <div className="col-md-4">
+                <span className="history-details">Name</span>
+              </div>
+              <div className="col-md-2">
+                <span className="values">Details</span>
+              </div>
             </div>
-            <div className="col-md-2">
-              <span className="values">Details</span>
-            </div>
+            {renderRows}
           </div>
-          {renderRows}
-        </div>
-      ) : (
-        <div className="event-display-no-data">
+        ) : (
+          <div className="event-display-no-data">
           No event history available for this event
-        </div>
-      )}
+          </div>
+        )}
+      </div>
+      <div className="occurrences-table-container">
+        {occurrences.length ? (
+          <div className="occurrences-display-table">
+            <div className="row occurrences-display-table-header">
+              <div className="col-md-5">
+                <span className="occurrences-details">Occurrences</span>
+              </div>
+            </div>
+            {renderOccurrences}
+          </div>
+        ) : (
+          <div className="event-display-no-data">
+          No previous occurrences available for this event
+          </div>
+        )}
+      </div>
     </div>
   );
 }

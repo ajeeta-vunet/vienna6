@@ -1,11 +1,11 @@
 import _ from 'lodash';
+import moment from 'moment';
 
 // This function is used to export the rows and columns in to a cs
 export function searchExportAsCsv(fileName, config, rows, columns, indexPattern) {
 
   const saveAs = require('@elastic/filesaver').saveAs;
   const filename = fileName;
-
   const csv1 = new Blob([_toCsv(config, rows, columns, indexPattern)], { type: 'text/plain' });
 
   saveAs(csv1, filename);
@@ -69,7 +69,6 @@ function _escape(csv, row, column, indexPattern) {
     // If field formatter is of default.
     else {
       val = column === '_source' ? row._source : indexPattern.flattenHit(row)[column];
-
       if (_.isObject(val)) {
         val = val.valueOf();
         val = JSON.stringify(val);
@@ -77,6 +76,10 @@ function _escape(csv, row, column, indexPattern) {
 
       if (typeof (val) === 'undefined') {
         val = '-';
+      }
+
+      if(column === '@timestamp') {
+        val = moment.utc(val).local().format('MMMM Do YYYY, h:mm:ss.mm.SSS');
       }
       val = String(val);
     }

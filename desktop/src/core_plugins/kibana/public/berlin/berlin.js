@@ -10,10 +10,11 @@ import { VunetNavbar } from 'ui_framework/src/vunet_components/vunet_navbar/vune
 import { VunetSidebar } from 'ui_framework/src/vunet_components/vunet_sidebar/vunet_sidebar';
 require('datatables');
 require('angular-datatables');
+require('angular-smart-table');
 
 import DataEnrichmentUtilService from 'plugins/kibana/berlin/data_source/enrichment/data_enrichment.utils.service';
 
-const app = uiModules.get('app/berlin', ['react', 'ngFileSaver', 'ui-notification', 'ui.bootstrap', 'datatables']);
+const app = uiModules.get('app/berlin', ['react', 'ngFileSaver', 'ui-notification', 'ui.bootstrap', 'datatables', 'smart-table']);
 app
   .constant('SUPER_TENANT_ID', '1')
   .constant('HTTP_SUCCESS_CODE', 200)

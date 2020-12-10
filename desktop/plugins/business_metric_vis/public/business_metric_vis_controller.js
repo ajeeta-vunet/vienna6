@@ -731,6 +731,97 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         });
       };
 
+      // This function updates the historical data for the current metric
+      const updateHistoricalDataForMatrix = function (key, list) {
+        if (key.metric.hasOwnProperty('historicalData')) {
+          angular.forEach(key.metric.historicalData, function (hist) {
+            list[key.key][key.metric.label][hist.label] = {
+              value: hist.formattedValue, color: hist.color,
+              icon: hist.icon,
+              percentageChange: hist.percentageChange
+            };
+          });
+        }
+      };
+
+
+      // This function iterates through buckets for each metric and
+      // collects the column header (colHeader - 1st bucket),
+      // row header (rowHeader - 2nd bucket)
+      // and the final metrics data (destList)
+      const buildHeadersForMatrix = function (result, destList, colHeader, rowHeader, bucketHeader) {
+        angular.forEach(result, function (key) {
+          // Check whether bucket is used...
+          // The first bucket would be the column header. So add the bucket to the column header array.
+          if (key.hasOwnProperty('buckets')) {
+            bucketHeader = key.formattedKey;
+            if (key.hasOwnProperty('key') && !colHeader.includes(key.formattedKey)) {
+              colHeader.push(key.formattedKey);
+            }
+            // Check whether second bucket is used
+            buildHeadersForMatrix(key.buckets, destList, colHeader, rowHeader, bucketHeader);
+          }
+          else {
+            let row = {};
+            let rowExists = false;
+            // The 2nd bucket would be the row header. So add the second bucket to row header array.
+            // Check whether the bucket already exists...
+            if (!rowHeader.includes(key.formattedKey))
+            {
+              rowHeader.push(key.formattedKey);
+            }
+            // Always check whether the incoming bucket already exists.
+            // The incoming bucket might be already added for the previous metric.
+            angular.forEach(destList, function (metric, column) {
+              if (column === (colHeader.length ? bucketHeader : key.formattedKey)) {
+                row = destList[column];
+                rowExists = true;
+              }
+            });
+
+            // If the bucket already exists then add the new metric to the existing bucket
+            // rather than duplicating the bucket.
+            if (rowExists) {
+              // If column header is not empty then it's a 2 buckets matrix.
+              if (colHeader.length) {
+                if (row.hasOwnProperty(key.formattedKey)) {
+                  row[key.formattedKey][key.metric.label] = { value: key.metric.formattedValue, color: key.metric.color };
+                  updateHistoricalDataForMatrix(key, row);
+                }
+                else {
+                  row[key.formattedKey] = { [key.metric.label]: { value: key.metric.formattedValue, color: key.metric.color } };
+                  updateHistoricalDataForMatrix(key, row);
+                }
+              }
+              // If column header is empty then it's single bucket matrix.
+              else {
+                row[key.metric.label] = { value: key.metric.formattedValue, color: key.metric.color };
+                updateHistoricalDataForMatrix(key, row);
+              }
+            }
+            // If the bucket not already exists then add as a new bucket.
+            else {
+              // If column header is not empty then it's a 2 buckets matrix.
+              // We need to add the metric against the column header - row header
+              // for ex; {column header: {row header {value: 0, color: #454433}}}
+              if (colHeader.length) {
+                destList[bucketHeader] = { [key.formattedKey]: { [key.metric.label]:
+                  { value: key.metric.formattedValue, color: key.metric.color } } };
+
+                updateHistoricalDataForMatrix(key, destList[bucketHeader]);
+              }
+              // else it's single bucket matrix.
+              // We need to add the metric against the column header
+              // for ex; {column header: {value: 0, color: #454433}}
+              else {
+                destList[key.formattedKey] = { [key.metric.label]:
+                  { value: key.metric.formattedValue, color: key.metric.color } };
+                updateHistoricalDataForMatrix(key, destList[key.formattedKey]);
+              }
+            }
+          }
+        });
+      };
 
       // This function receives each metric from the json response sent by back-end,
       // iterates through metric's buckets (if used) and store the bucket value and
@@ -747,11 +838,11 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       // Sample response for a single metric and single bucket BMV
       //[{"Total":
         //{"buckets":
-          //[{"fieldName": "channel","key": "Easy Pay","metric": {
-            //"value": 3,"visualization_name": "Total","groupName": "Total","metricIcon": "",
-            //"success": true,"severity": null,"label": "Total","color": "#05a608",
-            //"formattedValue": "3","description": "","insights": "Looks all fine"}}
-          //]
+        //[{"fieldName": "channel","key": "Easy Pay","metric": {
+        //"value": 3,"visualization_name": "Total","groupName": "Total","metricIcon": "",
+        //"success": true,"severity": null,"label": "Total","color": "#05a608",
+        //"formattedValue": "3","description": "","insights": "Looks all fine"}}
+        //]
         //}
       //}]
 
@@ -909,6 +1000,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
         // process the result
         httpResult.then(function (resp) {
+          $scope.resp = resp;
           $scope.metricDatas = resp;
           $scope.isLoading = false;
           $scope.darkShade = '';
@@ -1089,9 +1181,43 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             });
             metricRowCount = $scope.verticalDatas.length;
           }
+          else if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'matrix') {
+            // This list will have the column headers for the matrix from the first bucket
+            $scope.matrixColHeader = [];
+            // This list will have the row headers for the matrix from the second bucket
+            $scope.matrixRowHeader = [];
+            // This json will have the final data for each metric against the buckets
+            // after iterating the backend response
+            $scope.matrixDatas = {};
+            // Let's proceed if there is atleast one bucket aggregation
+            if ($scope.vis.params.aggregations.length > 0)
+            {
+              $scope.matrixMetrics = [];
+              // Lets add the metrics and historical metrics to the above list
+              // which will be used for the nested table
+              angular.forEach($scope.vis.params.metrics, function (metric, index) {
+                $scope.matrixMetrics.push({ label: metric.label, type: 'metric', hide: metric.hideMetric });
+                angular.forEach($scope.vis.params.historicalData, function (hist) {
+                  $scope.matrixMetrics.push({ label: metric.label, histLabel: hist.label, type: 'historical', hide: metric.hideMetric});
+                });
+              });
+              // Iterate each metric in the response and build
+              // column header, row header and metrics
+              angular.forEach(resp, function (metricData) {
+                buildHeadersForMatrix(metricData, $scope.matrixDatas, $scope.matrixColHeader, $scope.matrixRowHeader, '');
+              });
+              // if only one bucket is configured then there is no row header.
+              // Copy row header to column header and add first bucket to the row header
+              // So that only one row will be displayed for single bucket matrix
+              if ($scope.vis.params.aggregations.length === 1) {
+                $scope.matrixColHeader = $scope.matrixRowHeader;
+                $scope.matrixRowHeader = [];
+                $scope.matrixRowHeader.push($scope.vis.params.aggregations[0].label);
+              }
+            }
+          }
           // Populate the total number of rows in $scope.vis.params.
           $scope.vis.params.rowsCount = metricRowCount;
-
           // prepend the table headers for the tabular
           // view of BM.
           if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'horizontal') {

@@ -552,6 +552,134 @@
       </tr>
     </table>
   </div><!--Horizontal tabular format Display ends-->
+  <!-- Matrix format Display starts-->
+
+  <div
+    class='matrix-bmv-container'
+    ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'matrix'">
+    <table
+      class="bm-matrix-striped">
+      <tr class="matrix-rows"
+        ng-init="metricIndex=0">
+        <td
+          ng-if="aggregationsLength === 2"
+          ng-style="{ 'width' : ( 100 / (matrixColHeader.length+1)) +'%'}">
+          <span>
+            {{vis.params.aggregations[1].customLabel ? vis.params.aggregations[1].customLabel:
+              vis.params.aggregations[1].field}}
+          </span>
+        </td>
+        <td
+          ng-repeat="colHeader in matrixColHeader track by $index"
+          ng-style="{ 'width' : ( 100 / (matrixColHeader.length+1)) +'%'}">
+          <span>
+            {{ colHeader }}
+          </span>
+        </th>
+      </tr>
+      <tr class="matrix-rows"
+        ng-repeat="rowHeader in matrixRowHeader track by $index"
+        ng-init="rowHeaderIndex=$index">
+        <td
+          ng-style="{ 'vertical-align': 'bottom', 'padding-bottom': '1rem' }"
+          ng-if="aggregationsLength === 2">
+          <span>
+            {{ rowHeader }}
+          </span>
+        </td>
+        <td
+          ng-repeat="colHeader in matrixColHeader track by $index"
+          ng-style="{ 'vertical-align': 'top' }"
+          ng-init="colHeaderIndex=$index">
+          <table
+            class="bm-matrix-striped">
+            <tr
+              class="matrix-rows"
+              ng-if="rowHeaderIndex === 0">
+              <td
+                ng-style="{ 'width' : ( 100 / matrixMetrics.length) +'%'}"
+                ng-repeat="metric in matrixMetrics track by $index"
+                ng-if="!metric.hide">
+                <span>
+                  {{metric.type === 'metric' ? metric.label : metric.histLabel}}
+                </span>
+              </td>
+            </tr>
+          </table>
+          <table
+            class="bm-matrix-striped">
+            <tr
+              >
+              <td
+                ng-style="{ 'width' : ( 100 / matrixMetrics.length) +'%'}"
+                ng-repeat="metric in matrixMetrics track by $index"
+                ng-if="!metric.hide">
+                <span
+                  ng-if="metric.type === 'metric' && aggregationsLength === 2"
+                  ng-style="{'color': matrixDatas[colHeader][rowHeader][metric.label].color }">
+                    {{ matrixDatas[colHeader][rowHeader][metric.label] ? matrixDatas[colHeader][rowHeader][metric.label].value : 0}}
+                </span>
+                <span
+                  ng-if="metric.type === 'metric' && aggregationsLength === 1"
+                  ng-style="{'color': matrixDatas[colHeader][metric.label].color }">
+                    {{ matrixDatas[colHeader][metric.label] ? matrixDatas[colHeader][metric.label].value : 0}}
+                </span>
+                <span
+                  ng-if="metric.type === 'historical' && aggregationsLength === 2"
+                  ng-style="{'color': matrixDatas[colHeader][rowHeader][metric.label][metric.histLabel].color }">
+                    {{ matrixDatas[colHeader][rowHeader][metric.label] ? matrixDatas[colHeader][rowHeader][metric.label][metric.histLabel].value : 0}}
+                  <i
+                    class="historical-data-value fa"
+                    ng-class="matrixDatas[colHeader][rowHeader][metric.label][metric.histLabel].icon"
+                    aria-hidden="true">
+                  </i>
+                  <!-- Display historical data values in percentage -->
+                  <span ng-show="matrixDatas[colHeader][rowHeader][metric.label][metric.histLabel] &&
+                                (vis.params.enableHistDataPercentage ||
+                                vis.params.enableHistDataValueWithPercentage)">
+                    <historical-data-percentage
+                      obj="matrixDatas[colHeader][rowHeader][metric.label][metric.histLabel]"
+                      vis="vis">
+                    </historical-data-percentage>
+                  </span>
+                  <span ng-show="!matrixDatas[colHeader][rowHeader][metric.label][metric.histLabel] &&
+                                (vis.params.enableHistDataPercentage ||
+                                vis.params.enableHistDataValueWithPercentage)">
+                                {{0}}
+                  </span>
+                </span>
+                <span
+                  ng-if="metric.type === 'historical' && aggregationsLength === 1"
+                  ng-style="{'color': matrixDatas[colHeader][metric.label][metric.histLabel].color }">
+                  {{ matrixDatas[colHeader][metric.label] ? matrixDatas[colHeader][metric.label][metric.histLabel].value : 0}}
+                  <i
+                    class="historical-data-value fa"
+                    ng-class="matrixDatas[colHeader][metric.label][metric.histLabel].icon"
+                    aria-hidden="true">
+                  </i>
+                  <!-- Display historical data values in percentage -->
+                  <span ng-show="matrixDatas[colHeader][metric.label][metric.histLabel] &&
+                                (vis.params.enableHistDataPercentage ||
+                                vis.params.enableHistDataValueWithPercentage)">
+                    <historical-data-percentage
+                      obj="matrixDatas[colHeader][metric.label][metric.histLabel]"
+                      vis="vis">
+                    </historical-data-percentage>
+                  </span>
+                  <span ng-show="!matrixDatas[colHeader][metric.label][metric.histLabel] &&
+                                (vis.params.enableHistDataPercentage ||
+                                vis.params.enableHistDataValueWithPercentage)">
+                                {{0}}
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <!-- Matrix format Display ends-->
   <vunet-modal 
     show-modal="showActionButtonsModal" 
     on-close="onActionButtonsModalClose" 

@@ -65,6 +65,10 @@
     height: 100%;
     overflow: auto;
   }
+  .matrix-bmv-container{
+    height: 100%;
+    overflow: auto;
+  }
   .single-metric-wrapper {
     width: 100%;
     height: 100%;
@@ -467,6 +471,15 @@
 
 .bm-table-striped > tbody >tr:nth-child(even) {background-color: #f2f2f2;}
 
+.bm-matrix-striped > tbody >tr:nth-child(even) {background-color: #f2f2f2;}
+
+.bm-matrix-striped {
+  width:100%;
+  word-wrap: break-word;
+  color: @black;
+  text-align: center;
+}
+
 .bm-table-striped {
   width:100%;
   color: @black;
@@ -495,6 +508,7 @@
         display: -webkit-flex;
         display: -ms-flexbox;
         display: flex;
+        word-wrap: break-word;
         -webkit-flex-direction: row;
         -ms-flex-direction: row;
         flex-direction: row;
@@ -653,6 +667,17 @@
   visibility: collapse;
 }
 // css for tabular view ends
+
+.matrix-rows:first-child {
+  td {
+    background: @gray15;
+    font-size: 1.5rem;
+    color: @black;
+    font-weight: normal;
+    text-align: center;
+    padding: 1rem;
+  }
+}
 
 .data-rows:first-child {
   td {

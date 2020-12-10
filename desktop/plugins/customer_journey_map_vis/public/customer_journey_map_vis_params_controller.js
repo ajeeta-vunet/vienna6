@@ -25,6 +25,7 @@ module.controller('CustomerJourneyMapVisParamsController', function ($scope, $ro
   // Get the updated stageIcons list with uploaded images.
   getImages(StateService).then(function (iconDict) {
     $scope.stageIcons = Object.keys(iconDict);
+    console.log('$scope.stageIcons ', anguler.toJson($scope.stageIcons));
   });
 
   // Extra images specific to clients. Please dont delete the below commeneted code .

@@ -221,7 +221,8 @@
   </div>
   <div class="vis-editor-agg-wide-btn">
     <button
-      ng-show="vis.params.aggregations.length < 4"
+      ng-show="vis.params.tabularFormat !== 'matrix' && vis.params.aggregations.length < 4 ||
+        vis.params.tabularFormat === 'matrix' && vis.params.aggregations.length < 2"
       class="kuiButton kuiButton--secondary kuiButton--small"
       ng-click="addBucket()"
       ng-disabled="vis.params.aggregations.length >= 2 && vis.params.actionButtonsEnabled">
@@ -231,6 +232,18 @@
       </i>
       Add sub buckets
     </button>
+    <kbn-tooltip
+      ng-if="vis.params.aggregations.length > 2 && vis.params.tabularFormat === 'matrix'"
+      text="Maximun of two buckets are allowed when matrix option is enabled."
+      placement="right"
+      tooltip-append-to-body="1">
+      <span>
+        <i
+          class="fa fa-question-circle"
+          aria-hidden="true">
+        </i>
+      </span>
+    </kbn-tooltip>
     <kbn-tooltip
       ng-if="vis.params.aggregations.length >= 2 && vis.params.actionButtonsEnabled"
       text="Maximun of two buckets are allowed when action buttons are enabled."

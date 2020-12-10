@@ -181,7 +181,8 @@
             all-fields="operMetricsList[$index].allFields"
             additional-fields="operMetricsList[$index].additionalFields"
             interval-options="intervalOptions"
-            selected-fields="operMetricsList[$index].selectedFields">
+            selected-fields="operMetricsList[$index].selectedFields"
+            tabular-format="vis.params.tabularFormat">
           </vudata-metric>
         </div>
       </div>
@@ -234,20 +235,27 @@
         ng-disabled="displayOnlyTabularFormat()"
         ng-change="enableHorizontalViewFormat()"
       />
-      <div>
-        <label>
-          <input type="radio" ng-model="vis.params.tabularFormat" value="horizontal" ng-change="setTabularFormat('horizontal')" name="horizontal">
-          Horizontal
-        </label>
-        <label>
-          <input type="radio" ng-model="vis.params.tabularFormat" value="vertical" ng-change="setTabularFormat('vertical')" name="vertical">
-            Vertical
-        </label>
-        <!-- Disabled as this will be done in the future
+      <div class="row">
+        <div class="col-md-4">
           <label>
-          <input type="radio" ng-model="vis.params.tabularFormat" value="Matrix" ng-change="setTabularFormat('matrix')">
-          Matrix
-        </label>-->
+            <input type="radio" ng-model="vis.params.tabularFormat" value="horizontal" ng-change="setTabularFormat('horizontal')" name="horizontal">
+            Horizontal
+          </label>
+        </div>
+        <div class="col-md-4">
+          <label>
+            <input type="radio" ng-model="vis.params.tabularFormat" value="vertical" ng-change="setTabularFormat('vertical')" name="vertical">
+              Vertical
+          </label>
+        </div>
+        <div class="col-md-4">
+          <label>
+            <input type="radio" ng-model="vis.params.tabularFormat" value="matrix"
+              ng-change="setTabularFormat('matrix')" name="matrix"
+              ng-disabled="vis.params.aggregations.length === 0" >
+              Matrix
+          </label>
+        </div>
       </div>
     </div>
     <div ng-show="vis.params.tabularFormat === 'vertical'">
@@ -335,14 +343,16 @@
     <!-- historical data config ends -->
 
     <!-- Action button config starts -->
-    <div class="collapse-header-wrapper">
+    <div class="collapse-header-wrapper"
+      ng-show="vis.params.tabularFormat !== 'matrix'">
       <!-- title -->
       <span class="collapse-header">
         Action Buttons
       </span>
     </div>
 
-    <div class="form-group bottom-space">
+    <div class="form-group bottom-space"
+      ng-show="vis.params.tabularFormat !== 'matrix'">
       <label>
         Enable Action Buttons
         <kbn-tooltip

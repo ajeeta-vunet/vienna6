@@ -18,7 +18,8 @@ app.directive('vudataMetric', function (StateService) {
       additionalFields: '=',
       intervalOptions: '=',
       addAdditionalFields: '&',
-      removeAdditionalFields: '&'
+      removeAdditionalFields: '&',
+      tabularFormat: '=',
     },
     template: require('plugins/business_metric_vis/directives/metric.html'),
     link: function (scope) {

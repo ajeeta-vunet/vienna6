@@ -19,7 +19,7 @@
  */
 
 import { AuthActionTypes, LoginSuccessAction, LoginFailed, DuplicateSession } from './types';
-import { btou, isMobile, UserSettingStore } from '@vu/utils';
+import { btou, aesencrypt, isMobile, UserSettingStore } from '@vu/utils';
 import { vuHttp, getErrorMessage } from '@vu/http';
 import { LOGOUT_URL, LOGIN_URL } from '../../urls';
 import { LoginFormState } from '../state';
@@ -58,12 +58,13 @@ export function LogoutUser() {
  * @returns
  */
 export function LoginUser({ name, password, captchaKey, captchaSolution }: LoginFormState, terminate_active_session: boolean = false) {
+
   return async function(dispatch: Dispatch) {
     dispatch({ type: AuthActionTypes.LOGIN });
     vuHttp
       .post$(
         LOGIN_URL,
-        `name=${name}&password=${btou(password)}${
+        `name=${name}&password=${aesencrypt(name, password)}${
           captchaKey !== 'no_captcha' ? `&captcha_key=${captchaKey}&captcha_solution=${captchaSolution}` : ''
         }${terminate_active_session? '&terminate_active_session=true': ''}`,
         vuApiHeaders,

@@ -1,4 +1,4 @@
-/** 
+/**
  * ------------------------- NOTICE ------------------------------- 
  *
  *                  CONFIDENTIAL INFORMATION                       
@@ -12,18 +12,25 @@
  *    the prior written consent of VuNet Systems Ltd.              
  *                                                                 
  *------------------------- NOTICE ------------------------------- 
- 
  * Copyright 2020 VuNet Systems Ltd.
  * All rights reserved.
  * Use of copyright notice does not imply publication.
-*/
-export * from './lib/time';
-export * from './lib/captcha';
-export * from './lib/convertKeysToArray';
-export * from './lib/unicode-base64';
-export * from './lib/is-mobile';
-export * from './lib/images';
-export * from './lib/user-settings';
-export * from './lib/vibration';
-export * from './lib/title-case';
-export * from './lib/aes';
+ */
+var CryptoJS = require ('crypto-js');
+const BLOCK_SIZE = 16
+
+function generate_key(userName: String){
+    const unpaddedKey = ('dnVTbWydhc' + userName).slice(0, BLOCK_SIZE)
+    const key = unpaddedKey.padEnd(BLOCK_SIZE, (BLOCK_SIZE - unpaddedKey.length).toString())
+    return 	CryptoJS.enc.Utf8.parse(key);
+}
+
+export function aesencrypt(userName: String, msgString: String) {
+       // msgString is expected to be Utf8 encoded
+       var iv = CryptoJS.lib.WordArray.random(16);
+       var key = generate_key(userName)
+       var encrypted = CryptoJS.AES.encrypt(msgString, key, {
+           iv: iv
+       });
+       return (iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64));
+}

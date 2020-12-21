@@ -29,18 +29,18 @@ export class SeverityWidget extends React.Component {
   }
 
   render() {
-    if (this.props.severityInfo && this.props.severityInfo['Time-Periods']) {
+    if (this.props.severityInfo) {
       return (
         <div className="severity-widget-wrapper">
-          {Object.keys(this.props.severityInfo['Time-Periods'][0]).map(
+          {Object.keys(this.props.severityInfo).map(
             (key) => {
               if (key !== 'period') {
                 return (
                   <SingleSeverity
                     key={key}
                     type={key}
-                    new={this.props.severityInfo['Time-Periods'][0][key].new}
-                    wip={this.props.severityInfo['Time-Periods'][0][key].wip}
+                    new={this.props.severityInfo[key].new}
+                    wip={this.props.severityInfo[key].wip}
                     filterBySeverity={this.props.filterBySeverity}
                     appliedSeverityList={this.props.appliedSeverityList}
                   />

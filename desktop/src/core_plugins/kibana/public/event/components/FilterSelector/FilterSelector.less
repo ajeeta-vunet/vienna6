@@ -1,15 +1,16 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
-.column-selector-wrapper {
+.filter-selector-wrapper {
   position: absolute;
+  margin-right: 45rem;
   background-color: @white;
-  margin-top: 65px;
+  margin-top: 3rem;
   right: 0;
-  width: 15vw;
+  width: 12vw;
   z-index: 100;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 
-  .column-selector-header {
+  .filter-selector-header {
     width: 100%;
     padding-left: 2%;
     padding-right: 2%;
@@ -20,62 +21,67 @@
     background: @event-console-detail-info-background-color;
   }
 
-  .column-selector-body {
+  .filter-selector-body {
     display: block;
     width: 100%;
 
-    .column-selector {
+    .filter-selector {
       display: block;
       width: 100%;
-      padding-left: 5px;
-      padding-right: 5px;
-      padding-top: 5px;
-      padding-bottom: 5px;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
 
-      .column-selector-checkbox-wrapper {
+      .filter-selector-checkbox-wrapper {
         border: 1px solid @event-console-border-color;
         height: 25vh;
         overflow-y: scroll;
-        border-radius: 3px;
+        border-radius: 0.3rem;
         padding: 6%;
         margin-top: 3%;
         label {
-          margin-left: 6px;
+          margin-left: 0.6rem;
           text-transform: capitalize;
         }
       }
     }
 
-    .column-selector-buttons {
+    .filter-selector-buttons {
       .event-console-button {
         float: right;
         margin-right: 4%;
         margin-bottom: 2%;
       }
-      
-      .column-selector-button {
+
+      .filter-selector-button {
         font-size: 1.5rem;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 1rem;
+        padding-right: 1rem;
       }
     }
   }
 
-  .column-selector-search {
+  .filter-selector-search {
     padding: 2%;
     input {
       width: 100%;
       border: 1px solid @event-console-border-color;
-      padding-left: 10px;
-      padding-right: 10px;
-      padding-top: 5px;
-      padding-bottom: 5px;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
     }
   }
 }
 
 @media screen and (max-width: 768px) {
-  .column-selector-wrapper {
-    width: 50vw;
+  .filter-selector-wrapper {
+    width: 40vw;
+    margin-right: 25rem;
+  }
+
+  .filter-options-container {
+    flex-wrap: wrap;
   }
 }

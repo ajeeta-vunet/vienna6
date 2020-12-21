@@ -7,10 +7,10 @@ import { EventConsole } from './EventConsole.js';
 import chrome from 'ui/chrome';
 
 import {
-  fetchSeverityInfo,
   fetchListOfEvents,
   fetchColumnSelectorInfo,
-  fetchUserList
+  fetchUserList,
+  fetchFilterFields
 } from './api_calls';
 
 require('ui/courier');
@@ -38,6 +38,7 @@ app.directive('eventConsole', (reactDirective) => {
     'userList',
     'eventConsoleMandatoryFields',
     'canUpdateEvent',
+    'filterFields',
   ]);
 });
 
@@ -66,6 +67,16 @@ app.directive('eventApp', function () {
 
       $scope.loadingEvents = true;
 
+      //this holds the data related to what should be display in teh Top Navigation bar of events console page.
+      $scope.topNavMenu = [{
+        key: 'refresh',
+        description: 'Refresh',
+        run: function () {
+          $scope.refresh();
+        },
+        testId: 'eventConsoleRefreshButton',
+      }];
+
       // We will call this function inside init(). This is
       // done to make the api calls to the backend on load.
       // We also call this function in the following cases:
@@ -80,16 +91,6 @@ app.directive('eventApp', function () {
         const timeDurationStart = timeDuration.min.valueOf();
         const timeDurationEnd = timeDuration.max.valueOf();
         const dashboardContext = Private(dashboardContextProvider);
-
-        fetchSeverityInfo(
-          $http,
-          chrome,
-          dashboardContext,
-          timeDurationStart,
-          timeDurationEnd
-        ).then((data) => {
-          $scope.severityInfo = data;
-        });
 
         fetchListOfEvents(
           $http,
@@ -115,6 +116,11 @@ app.directive('eventApp', function () {
       else{
         $scope.userList = [];
       }
+
+      // API call to fetch the filter fields which will be used to filter events.
+      fetchFilterFields($http, chrome).then((data) => {
+        $scope.filterFields = data;
+      });
 
       function init() {
         const docTitle = Private(DocTitleProvider);
@@ -142,6 +148,7 @@ app.directive('eventApp', function () {
       $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;
       $scope.columnSelectorInfo =  $route.current.locals.columnSelectorInfo;
       $scope.userList = $route.current.locals.userList;
+      $scope.filterFields = $route.current.locals.filterFields;
 
       // When the time filter changes
       $scope.$listen(timefilter, 'fetch', $scope.search);
@@ -153,6 +160,10 @@ app.directive('eventApp', function () {
       $scope.$on('courier:searchRefresh', $scope.search);
 
       $scope.$on('fetch', $scope.search);
+
+      $scope.refresh = function () {
+        $scope.search();
+      };
 
       init();
     },

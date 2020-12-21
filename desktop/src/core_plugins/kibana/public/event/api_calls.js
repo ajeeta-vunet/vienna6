@@ -1,27 +1,3 @@
-// This function fetches the count of events segregated into different severities.
-export function fetchSeverityInfo($http, chrome, dashboardContext, timeDurationStart, timeDurationEnd) {
-  let urlBase = chrome.getUrlBase();
-  urlBase = urlBase + '/events_of_interest';
-  const httpResult = $http.post(urlBase + '/severity_based_events/', {
-    extended: {
-      es: {
-        filter: dashboardContext()
-      }
-    },
-    time: {
-      gte: timeDurationStart,
-      lte: timeDurationEnd
-    }
-  })
-    .then(resp => resp.data)
-    .catch(resp => { throw resp.data; });
-  return httpResult
-    .then(function (resp) {
-      return resp;
-    })
-    .catch(error => { throw error; });
-}
-
 // This function is used to fetch the list of all events.
 //It takes as its arguments the dashboard context and the time duration start and end values.
 //These are used to fetch events based on the time filter chosen.
@@ -94,6 +70,29 @@ export function fetchUserList($http, chrome) {
   urlBase = urlBase + '/events_of_interest/' + 'users_list/';
 
   const httpResult = $http.get(urlBase, {})
+    .then(resp => resp.data)
+    .catch(resp => { throw resp.data; });
+
+  return httpResult
+    .then(function (resp) {
+      return resp;
+    })
+    .catch(error => { throw error; });
+}
+//This function is used for fetching the filter fields that will be used to apply filters
+//on the events. The list of filter fields expected is sent as a object array in the post api call.
+export function fetchFilterFields($http, chrome) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest/' + 'filter_fields/';
+  const filterFields = {
+    field: ['alarm_state', 'severity',
+      'created_by', 'category',
+      'status', 'assignee',
+      'impact', 'ip_address',
+      'region', 'source']
+  };
+
+  const httpResult = $http.post(urlBase, filterFields)
     .then(resp => resp.data)
     .catch(resp => { throw resp.data; });
 

@@ -7,12 +7,31 @@
   font-size      : 1.6rem;
   display        : flex;
   flex-direction : row;
-  justify-content: flex-end;
+  flex-wrap      : wrap;
+
+  .filter-funnel {
+    margin-right: 2rem;
+  }
+
+  .selected-filters-container {
+    display: flex;
+    flex-direction: row;
+    max-width: 58%;
+    flex-wrap: wrap;
+  }
+
+  .selected-filter-container {
+    display        : flex;
+    flex-direction : row;
+    justify-content: space-between !important;
+    flex: 2;
+  }
 
   .filter-options-container {
     display        : flex;
     justify-content: flex-end;
     align-items    : center;
+    flex: 1;
 
     .search-container {
       input {
@@ -26,28 +45,30 @@
         color: @black;
         // padding-right: 1.8rem;
       }
-      .column-selector-icon {
-        margin-left: 10px;
-        font-size  : 1.35rem;
-      }
 
       margin-right: 2rem;
+      margin-left: 2rem;
     }
 
-    .edit-button-wrapper {
-      .edit-button {
-        display         : inline-block;
+    .edit-button-wrapper, .filter-button-wrapper, .report-button-wrapper {
+      .edit-button, .filter-button, .report-button {
+        display         : flex;
         background-color: @white;
         color           : @black;
         border          : 1px solid @event-console-border-color;
         border-radius   : 2px;
         padding         : 0.5rem 2rem;
 
-        .column-selector-icon {
-          margin-left: 10px;
+        .column-selector-icon, .filter-selector-icon {
+          margin-left: 3.5rem;
           font-size  : 1.35rem;
+          padding-top: 0.5rem;
         }
       }
+    }
+
+    .edit-button {
+      margin-right: 2rem;
     }
   }
 }

@@ -86,7 +86,7 @@ export class ColumnSelector extends React.Component {
                   >
                     <input
                       type="checkbox"
-                      id={field}
+                      id={'edit-' + field}
                       name={field}
                       onChange={() =>
                         this.props.handleColumnSelectorChange(field)

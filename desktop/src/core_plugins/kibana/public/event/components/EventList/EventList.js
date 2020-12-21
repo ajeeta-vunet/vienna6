@@ -52,6 +52,7 @@ export class EventList extends React.Component {
 
       //hiddenFields - list of hidden fields (passed to ColumnSelector)
       hiddenFields: this.props.hiddenFields,
+
     };
   }
 
@@ -145,12 +146,13 @@ export class EventList extends React.Component {
     this.state.allFields &&
       this.state.allFields.map((field) => {
         field = field.replace(/[^a-zA-Z-_]+/g, '');
-        document.getElementById(field).checked = true;
+        document.getElementById('edit-' + field).checked = true;
       });
+
     this.state.hiddenFields &&
       this.state.hiddenFields.map((field) => {
         field = field.replace(/[^a-zA-Z-_]+/g, '');
-        document.getElementById(field).checked = false;
+        document.getElementById('edit-' + field).checked = false;
       });
     const container = $('#column-selector-id');
     container.show();
@@ -167,30 +169,22 @@ export class EventList extends React.Component {
     });
   };
 
-  //this receives the field name checked/unchecked by column selector and acts on it.
-  //it will add the hide/show class to clicked field.
-  handleColumnSelectorChange = (field) => {
-    let newHiddenFields = this.state.hiddenFields;
-    field = field.replace(/[^a-zA-Z-_]+/g, '');
-    const value = document.getElementById(field).checked;
-    if (value === true) {
-      newHiddenFields = newHiddenFields.filter((f) => f !== field);
-      const className = '.detail-item.' + field;
-      $(className).removeClass('detail-item-hide');
-      $(className).addClass('detail-item-show');
-    } else {
-      if (!newHiddenFields.includes(field)) {
-        newHiddenFields.push(field);
-        newHiddenFields.map((field) => {
-          field  = field.replace(/[^a-zA-Z-_]+/g, '');
-          const className = '.detail-item.' + field;
-          $(className).addClass('detail-item-hide');
-          $(className).removeClass('detail-item-show');
-        });
+  //this function is called when filetr button is clicked in the UI.
+  //This will hide and un-hide the div under the filter button which contains the filter options.
+  handleFilterSelectorDisplay = () => {
+
+    const container = $('#filter-selector-id');
+    container.show();
+
+    function handleToggle(e) {
+      if ($(e.target).closest('#filter-selector-id').length === 0) {
+        $('#filter-selector-id').hide();
+        $(document).unbind('click');
       }
     }
-    this.setState({
-      hiddenFields: newHiddenFields,
+
+    $(document).on('click', function (e) {
+      handleToggle(e);
     });
   };
 
@@ -273,10 +267,17 @@ export class EventList extends React.Component {
           allFields={this.state.allFields}
           hiddenFields={this.state.hiddenFields}
           handleColumnSelectorDisplay={this.handleColumnSelectorDisplay}
-          handleColumnSelectorChange={this.handleColumnSelectorChange}
+          handleFilterSelectorDisplay={this.handleFilterSelectorDisplay}
+          handleColumnSelectorChange={this.props.handleColumnSelectorChange}
           handleUpdateColumnSelector={this.handleUpdateColumnSelector}
           onSearch={this.onSearch}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
+          filterFields={this.props.filterFields}
+          selectedFilterFields={this.props.selectedFilterFields}
+          handleFilterSelectorChange={this.props.handleFilterSelectorChange}
+          addFilter={this.props.addFilter}
+          filterStore={this.props.filterStore}
+          exportEventsToCsv={this.props.exportEventsToCsv}
         />
         <div className="events-table-container">
           <div className="event-listing-wrapper">

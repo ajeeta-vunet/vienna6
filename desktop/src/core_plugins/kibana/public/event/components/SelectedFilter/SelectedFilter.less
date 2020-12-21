@@ -1,0 +1,79 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.selected-filter-wrapper {
+  position: relative;
+  background-color: @white;
+  right: 0;
+
+  .selected-filter-dropdown {
+    background-color: @white;
+    margin-top: 0.3rem;
+    width: 12vw;
+    z-index: 100;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    display: none;
+
+      .selected-filter-options {
+        display: block;
+        border: 1px solid @event-console-border-color;
+        height: 100%;
+        border-radius: 0.5rem;
+        padding: 5%;
+        margin: 3%;
+        max-height: 12vw;
+        overflow: scroll;
+        .error {
+          text-align: left;
+        }
+        label {
+          margin-left: 0.6rem;
+          text-transform: capitalize;
+        }
+      }
+  }
+  .selected-button-wrapper {
+    padding-right: 0.7rem;
+    font-size: 1.5rem;
+    background-color: white;
+    color: #5A4FEF;
+    border: 1px solid #5A4FEF;
+    border-radius: 9rem 9rem 9rem 9rem;
+    padding-right: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+
+    // .selected-filter-button,
+    .cancel-filter {
+      padding-left: 1.2rem;
+    }
+  }
+
+  .selected-button-wrapper:hover div {
+    background-color: white;
+    color: #5A4FEF;
+  }
+
+  .selected-filter-search {
+    padding: 2%;
+    input {
+      width: 100%;
+      border: 1px solid @event-console-border-color;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .selected-filter-wrapper {
+    width: 30vw;
+  }
+}

@@ -20,18 +20,23 @@ import React from 'react';
 import './OperationBar.less';
 import { ColumnSelector } from '../ColumnSelector/ColumnSelector';
 import $ from 'jquery';
+import { FilterSelector } from '../FilterSelector/FilterSelector';
+import { SelectedFilter } from '../SelectedFilter/SelectedFilter';
+import ReactTooltip from 'react-tooltip';
 
 export class OperationBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      events: this.props.events,
-    };
   }
 
   handleColumnSelectorDisplay = () => {
     return this.props.handleColumnSelectorDisplay();
   };
+
+  handleFilterSelectorDisplay = () => {
+    return this.props.handleFilterSelectorDisplay();
+  };
+
   //this method is called when the search input box is clicked to hide the placeholder text.
   hidePlaceholder = () => {
     $('input,textarea').focus(function () {
@@ -47,7 +52,33 @@ export class OperationBar extends React.Component {
   render() {
     return (
       <div className="operationbar-wrapper">
+        <img className="filter-funnel" src="/ui/vienna_images/filter-funnel-icon.svg" />
+        <div className="selected-filters-container">
+          {this.props.selectedFilterFields && this.props.selectedFilterFields.map((filter) => {
+            return (
+              <SelectedFilter
+                filter={filter}
+                filterFields={this.props.filterFields}
+                addFilter={this.props.addFilter}
+                filterStore={this.props.filterStore}
+              />
+            );
+          })}
+        </div>
         <div className="filter-options-container">
+          <div className="filter-button-wrapper">
+            <button className="filter-button" onClick={() => this.handleFilterSelectorDisplay()}>
+            Filter
+              <img className="filter-selector-icon" src="/ui/vienna_images/filter-icon.svg"/>
+            </button>
+          </div>
+          <span id="filter-selector-id">
+            <FilterSelector
+              filterFields={this.props.filterFields}
+              handleFilterSelectorChange={this.props.handleFilterSelectorChange}
+              selectedFilterFields={this.props.selectedFilterFields}
+            />
+          </span>
           <div className="search-container ">
             <input
               onChange={(e) => this.props.onSearch(e)}
@@ -68,6 +99,12 @@ export class OperationBar extends React.Component {
                 className="fa fa-pencil column-selector-icon"
                 aria-hidden="true"
               />
+            </button>
+          </div>
+          <div className="report-button-wrapper">
+            <button className="report-button" onClick={() => this.props.exportEventsToCsv()}>
+              <i className="fa fa-download" data-tip="Download CSV Report"/>
+              <ReactTooltip />
             </button>
           </div>
         </div>

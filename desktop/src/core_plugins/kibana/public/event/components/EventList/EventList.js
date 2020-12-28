@@ -87,15 +87,21 @@ export class EventList extends React.Component {
 
   sortByClickedField = (field) => {
     let newEvents = this.state.filteredEventsList;
-    newEvents = _.sortBy(newEvents, function (o) {
-      if (field === 'event_id') {
-        return parseInt(o.fields[field]);
-      }
-      if (field === 'created_time' || field === 'last_modified_time') {
-        return Date.parse(o.fields[field]);
-      }
-      return o.fields[field];
-    });
+    //The lodash sortBy does not work properly with aphanumeric text, so we use JS localCompare
+    //to sort the fields with Alphanumeric values.
+    if(field === 'alert_id' || field === 'created_time' || field === 'last_modified_time' || field === 'last_occurence') {
+      newEvents = _.sortBy(newEvents, function (o) {
+        if (field === 'alert_id') {
+          return parseInt(o.fields[field]);
+        }
+        else if (field === 'created_time' || field === 'last_modified_time' || field === 'last_occurence') {
+          return Date.parse(o.fields[field]);
+        }
+        return o.fields[field];
+      });
+    }else {
+      newEvents = newEvents.slice().sort((a, b) => a.fields[field].localeCompare(b.fields[field], undefined, { numeric: true }));
+    }
     if (
       this.state.lastSortOrder === '' ||
       this.state.lastSortOrder === 'Descending'
@@ -229,7 +235,7 @@ export class EventList extends React.Component {
   // Update the no of events in a page when
   // user changes the selection.
   updateEventsPerPage = (e) => {
-    this.setState({ eventsPerPage: e.target.value, currentPage: 1 });
+    this.setState({ eventsPerPage: Number(e.target.value), currentPage: 1 });
   };
 
   render() {

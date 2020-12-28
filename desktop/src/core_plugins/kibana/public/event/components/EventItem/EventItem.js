@@ -183,7 +183,7 @@ export class EventItem extends React.Component {
             <div className="wrapper">
               <div
                 className="detail-heading"
-                onClick={() => this.handleClickedField('alert_id')}
+                onClick={() => this.handleClickedField(key)}
               >
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 {generateHeading(key)}:

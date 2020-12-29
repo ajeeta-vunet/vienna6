@@ -1,5 +1,6 @@
 // This function is used to fetch the list of all events.
 //It takes as its arguments the dashboard context and the time duration start and end values.
+
 //These are used to fetch events based on the time filter chosen.
 export function fetchListOfEvents($http, chrome, dashboardContext, timeDurationStart, timeDurationEnd) {
   let urlBase = chrome.getUrlBase();
@@ -101,4 +102,36 @@ export function fetchFilterFields($http, chrome) {
       return resp;
     })
     .catch(error => { throw error; });
+}
+
+//This function is used for fetching logged-in user preferences.
+export function fetchPreferences($http, chrome) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase.slice(0, -5) + '/preferences/';
+
+  const httpResult = $http.get(urlBase, {})
+    .then(resp => resp.data)
+    .catch(resp => { throw resp.data; });
+
+  return httpResult
+    .then(function (resp) {
+      return resp;
+    })
+    .catch(error => { throw error; });
+}
+
+//This function is used for creating a Ticket with the ITSM preferences setup.
+export function createTicket(chrome, eventId) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest/' + 'ticket/' + eventId + '/';
+
+  return fetch(urlBase, {
+    method: 'POST'
+  })
+    .then(resp => resp.json())
+    .then((resp) => {
+      if(resp.ticket_id) {
+        return resp.ticket_id;
+      }
+    });
 }

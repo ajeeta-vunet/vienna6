@@ -27,6 +27,8 @@ import { produce } from 'immer';
 
 import { Notifier } from 'ui/notify';
 import $ from 'jquery';
+import chrome from 'ui/chrome';
+import { createTicket } from './api_calls';
 
 const notify = new Notifier({ location: 'Event Console' });
 
@@ -345,6 +347,27 @@ export class EventConsole extends React.Component {
     );
   };
 
+  //This function is used to make the API call to create a ticket for the event.
+  //This API call returns the ticket_id which is used to change the Event's ticket_id from the Events list .
+  createTicketMethod = (eventId) => {
+    createTicket(chrome, eventId)
+      .then(resp => {
+        const ticketId = JSON.stringify(resp);
+        if(ticketId) {
+          const updatedEventList = produce(this.state.filteredEventList, (draft) => {
+            draft.map((event) => {
+              if(event.id === eventId) {
+                event.fields.ticket_id = ticketId;
+              }
+            });
+          });
+          this.setState({ filteredEventList: updatedEventList }, () => notify.info('Ticket created'));
+        } else {
+          notify.error('Could not create ticket');
+        }
+      });
+  };
+
   render() {
     return (
       <div className="event-console-wrapper">
@@ -370,6 +393,8 @@ export class EventConsole extends React.Component {
           handleFilterSelectorChange={this.handleFilterSelectorChange}
           selectedFilterFields={this.state.selectedFilterFields}
           exportEventsToCsv={this.exportEventsToCsv}
+          itsmPreferencesEnabled={this.props.itsmPreferencesEnabled}
+          createTicket={this.createTicketMethod}
         />
       </div>
     );

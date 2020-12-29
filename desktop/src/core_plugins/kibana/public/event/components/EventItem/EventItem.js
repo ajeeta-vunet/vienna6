@@ -28,6 +28,7 @@ import { EventHistory } from './EventHistory/EventHistory';
 import { RelatedDashboards } from './RelatedDashboards/RelatedDashboards';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 import { generateHeading, generateClassname } from '../../utils/vunet_format_name.js';
+import ReactTooltip from 'react-tooltip';
 
 const notify = new Notifier({ location: 'Event Console' });
 
@@ -184,7 +185,9 @@ export class EventItem extends React.Component {
               <div
                 className="detail-heading"
                 onClick={() => this.handleClickedField(key)}
+                data-tip={'Sort by ' + generateHeading(key)}
               >
+                <ReactTooltip />
                 <i className="fa fa-sort-amount-desc sort-icon" />
                 {generateHeading(key)}:
               </div>
@@ -215,6 +218,24 @@ export class EventItem extends React.Component {
             <div className="last-time">
               <i className="fa fa-clock-o" aria-hidden="true" />
               {moment(eventDisplay.created_time).fromNow()}
+            </div>
+            <div data-tip={
+              // eslint-disable-next-line no-nested-ternary
+              this.props.canUpdateEvent ? this.props.itsmPreferencesEnabled ?
+                eventDisplay.ticket_id !== 'Unavailable' ? 'Ticket already created' : 'Create Ticket'
+                : 'ITSM preferences should be set to create tickets'
+                : 'User does not have Manage Events Claim'
+            }
+            >
+              <ReactTooltip />
+              <button
+                disabled={!this.props.itsmPreferencesEnabled || eventDisplay.ticket_id !== 'Unavailable' || !this.props.canUpdateEvent}
+                className="create-ticket-button"
+                onClick={() => this.props.createTicket(this.props.event.id)}
+              >
+                Create Ticket
+                <i className="fa fa-ticket fa-ticket-icon" aria-hidden="true" />
+              </button>
             </div>
           </div>
           <div className="more-details">

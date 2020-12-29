@@ -258,6 +258,8 @@ export class EventList extends React.Component {
               userList={this.props.userList}
               getClickedField={this.sortByClickedField}
               canUpdateEvent={this.props.canUpdateEvent}
+              itsmPreferencesEnabled={this.props.itsmPreferencesEnabled}
+              createTicket={this.props.createTicket}
             />
           </span>
         );

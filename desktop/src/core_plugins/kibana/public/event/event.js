@@ -10,7 +10,8 @@ import {
   fetchListOfEvents,
   fetchColumnSelectorInfo,
   fetchUserList,
-  fetchFilterFields
+  fetchFilterFields,
+  fetchPreferences,
 } from './api_calls';
 
 require('ui/courier');
@@ -39,6 +40,7 @@ app.directive('eventConsole', (reactDirective) => {
     'eventConsoleMandatoryFields',
     'canUpdateEvent',
     'filterFields',
+    'itsmPreferencesEnabled',
   ]);
 });
 
@@ -122,6 +124,11 @@ app.directive('eventApp', function () {
         $scope.filterFields = data;
       });
 
+      // API call to fetch the ITSM preferences set by logged-in user.
+      fetchPreferences($http, chrome).then((data) => {
+        $scope.itsmPreferencesEnabled = data.preferences && data.preferences[4].ITSMPreference.Type !== 'None';
+      });
+
       function init() {
         const docTitle = Private(DocTitleProvider);
         docTitle.change(VunetSidebarConstants.EVENTS);
@@ -149,6 +156,7 @@ app.directive('eventApp', function () {
       $scope.columnSelectorInfo =  $route.current.locals.columnSelectorInfo;
       $scope.userList = $route.current.locals.userList;
       $scope.filterFields = $route.current.locals.filterFields;
+      $scope.itsmPreferencesEnabled = $route.current.locals.itsmPreferencesEnabled;
 
       // When the time filter changes
       $scope.$listen(timefilter, 'fetch', $scope.search);

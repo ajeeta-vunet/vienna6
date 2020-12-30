@@ -109,6 +109,7 @@ class VuMetricPanelConfig extends Component {
           model={this.props.model}
           onChange={this.props.onChange}
           savedObjectsProvider={this.props.vis.API.savedObjectsClient}
+          vis={this.props.vis}
         />
       )
     }

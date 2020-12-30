@@ -15,3 +15,76 @@
 // Copyright 2020 VuNet Systems Ltd.
 // All rights reserved.
 // Use of copyright notice does not imply publication.
+
+@import "~ui/styles/vunet_variable_theme.less";
+
+.vu-metric-vertical-table{
+  width: 100%;
+  word-break: break-all;
+  border: 1px solid @seperator_color_greyDark;
+   font-size: 1.5rem;
+  .vu-metric-data-rows{
+    border-bottom: 1px solid @seperator_color_greyDark;  
+    &:nth-child(1){
+      background-color: @seperator_color;
+      color: @grey_dark;
+      font-size: 1.6rem;
+      font-family: @inter-bold;
+      border: none!important;
+      td{
+        border-bottom: none!important;
+        border-top: none!important;
+        border-left: none!important; 
+        height: 4.5rem;
+        
+      }
+    }
+   
+    .vunet-table-td-metric-names{
+        border-right: 1px solid @seperator_color_greyDark; 
+        position: relative;
+        .td-inner-div{
+            padding: 1rem 1rem;
+            .vertical-table-sort-icons{
+                padding: 0rem .5rem;;
+            }
+            .vertical-table-description-and-link{
+              .vertical-table-description-icon{
+                padding-right: .5rem; 
+              } 
+            }
+            a{
+              u{
+                cursor: pointer;
+              }
+            }
+        }
+        .vumetric-vertical-table-goal-info{
+            font-family: @inter-regular!important;
+            padding-bottom: .75rem;
+        }
+        .vunet-vertical-table-cell-filter{
+            position: absolute;
+            white-space: nowrap;
+            right: 0;
+            top: 50%; /* 1 */
+            transform: translateY(-50%); /* 1 */
+            display: none;
+            .fa{
+              cursor: pointer;
+            }
+        }
+        &:hover{
+            .vunet-vertical-table-cell-filter{
+                display: inline;
+                .fa-search-plus{
+                  padding-right: .4rem;
+                }
+            }
+        }
+    }
+    .vertical-table-historical-data-value-icon {
+      padding-right: .5rem;
+    }
+  }
+}

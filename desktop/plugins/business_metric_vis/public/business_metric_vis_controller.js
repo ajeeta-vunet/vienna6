@@ -1228,7 +1228,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           // If we are printing the report and we have multiple aggregation,
           // set the height of the table based on the number of rows
           if ($scope.printReport && $scope.vis.params.aggregations.length &&
-              $scope.vis.params.enableTableFormat) {
+            $scope.vis.params.enableTableFormat) {
 
             /* This has been commented out as some of the last rows were getting cut in print reports. This was because we have
               taken the height of the row as 31 always but this fails when there is word wrapping in the row because of large

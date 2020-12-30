@@ -19,11 +19,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
-import VuMetricHistoricalData from '../../components/historical_data/vu_metric_historical_data';
+import VuMetricHistoricalDataPercentage from '../../components/historical_data_percentage/vu_metric_historical_data_percentage'
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { vuMetricConstants } from '../../../lib/vu_metric_constants';
 import chrome from 'ui/chrome';
-// import './horizontal_table_vu_metric.less'
 
 class BucketingTable extends Component {
   constructor(props) {
@@ -197,11 +196,33 @@ class BucketingTable extends Component {
                                 className="vu-metric-bucket-historical-data-td"
                                 style={getHistoricalDataTrendColor(model, historicalDataObj, indexForMetric)}
                               >
-                                <VuMetricHistoricalData
-                                  model={model}
-                                  historicalDataObj={historicalDataObj}
-                                  indexForMetric={indexForMetric}
-                                />
+                                {/* Display formatted values */}
+                                {
+                                  (!model.enableHistDataPercentage || model.enableHistDataValueWithPercentage) ?
+                                    (
+                                      <span className="vumetric-horizontal-table-historical-data-value">
+                                        <i
+                                          className={"vumetric-horizontal-table-historical-data-value-icon fa " + historicalDataObj.icon}
+                                          aria-hidden="true">
+                                        </i>
+                                        <span>{historicalDataObj.formattedValue}</span>
+                                      </span>
+                                    )
+                                    :
+                                    null
+                                }
+                                {/* Display historical data values in percentage */}
+                                {
+                                  (model.enableHistDataPercentage || model.enableHistDataValueWithPercentage) ?
+                                    (
+                                      <VuMetricHistoricalDataPercentage
+                                        model={model}
+                                        historicalDataObj={historicalDataObj}
+                                      />
+                                    )
+                                    :
+                                    null
+                                }
                               </td>
                             );
                           })

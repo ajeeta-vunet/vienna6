@@ -82,6 +82,11 @@ class VuMetricVisualization extends Component {
       <VerticalTableVuMetric
         model={model}
         visData={visData}
+        Private={this.props.Private}
+        getAppState={this.props.getAppState}
+        timefilter={this.props.timefilter}
+        config={this.props.config}
+        filterInjectorForVerticalTable={this.props.filterInjectorForVerticalTable}
       />
     )
   });
@@ -175,6 +180,7 @@ VuMetricVisualization.propTypes = {
   getAppState: PropTypes.func, // This will be used for going to reference link to prepare link information
   timefilter: PropTypes.object, // This will be used for going to reference link to prepare link information
   config: PropTypes.object, // This will be used to all the configurations from Manage Resources -> Advanced Settings
+  filterInjectorForVerticalTable: PropTypes.func // This is angular $filter injectable which will be used in vertical table
 };
 
 export default VuMetricVisualization;

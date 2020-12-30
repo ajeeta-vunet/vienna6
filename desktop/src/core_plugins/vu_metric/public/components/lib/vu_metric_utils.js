@@ -46,7 +46,8 @@ export const goToReferenceLink = function (Private, getAppState, timefilter, ref
     fieldName = refLink.field;
     fieldValue = value;
   }
-  if (refLink.type === 'dashboard') {
+  // This check has been made to see if reference link is of type dashboard and the dashboard is present
+  if (refLink.type === 'dashboard' || refLink.dashboard) {
     referencePage = prepareLinkInfo(
       'dashboard/',
       refLink.dashboard.id,
@@ -81,7 +82,6 @@ export const goToReferenceLink = function (Private, getAppState, timefilter, ref
    more digest cycle by calling $apply(). But here we did not even use kbnUrl, instead we are using current-route
    and window.location.href
   */
-
   // kbnUrl.change('/' + referencePage);
 
   const currentRoute = window.location.href;

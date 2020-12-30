@@ -24,7 +24,7 @@ import BucketingTable from './components/bucketing_table';
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { vuMetricConstants } from '../../lib/vu_metric_constants';
 import { goToReferenceLink } from '../../lib/vu_metric_utils';
-import VuMetricHistoricalData from '../components/historical_data/vu_metric_historical_data';
+import VuMetricHistoricalDataPercentage from '../components/historical_data_percentage/vu_metric_historical_data_percentage'
 import './horizontal_table_vu_metric.less';
 import chrome from 'ui/chrome';
 import moment from 'moment';
@@ -57,11 +57,10 @@ class HorizontalTableVuMetric extends Component {
   // have downward trend then upward trend values will be red and downward trend values will be green and this is the table case so
   // the background color will be achieved using the same logic.
   getHistoricalDataTrendColor = (model, historicalDataObj, indexForMetric) => {
+    console.log('historicalDataObj', historicalDataObj)
     let style = {};
-    if (model.metrics[indexForMetric].bgColorEnabled) {
-      // historicalDataObj.percentageChange != -1 has been done as the backend returns a value of -1 for percentageChange when no
-      // precentage value is there.
-      if (historicalDataObj.percentageChange != -1) {
+    if (historicalDataObj.percentageChange !== 'header') {
+      if (model.metrics[indexForMetric].bgColorEnabled) {
         if (historicalDataObj.icon == 'fa-caret-up') {
           if (model.metrics[indexForMetric].upTrendColor == 'green') {
             style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.GREEN, color: vuMetricConstants.COLOR_CONSTANTS.WHITE };
@@ -78,15 +77,11 @@ class HorizontalTableVuMetric extends Component {
             style = { backgroundColor: vuMetricConstants.COLOR_CONSTANTS.GREEN, color: vuMetricConstants.COLOR_CONSTANTS.WHITE };
           }
         }
+        else {
+          style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY };
+        }
       }
       else {
-        style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY };
-      }
-    }
-    else {
-      // historicalDataObj.percentageChange != -1 has been done as the backend returns a value of -1 for percentageChange when no
-      // precentage value is there.
-      if (historicalDataObj.percentageChange != -1) {
         if (historicalDataObj.icon == 'fa-caret-up') {
           if (model.metrics[indexForMetric].upTrendColor == 'green') {
             style = { color: vuMetricConstants.COLOR_CONSTANTS.GREEN };
@@ -103,12 +98,16 @@ class HorizontalTableVuMetric extends Component {
             style = { color: vuMetricConstants.COLOR_CONSTANTS.GREEN };
           }
         }
-      }
-      else {
-        style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY };
-      }
+        else {
+          style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY };
+        }
 
+      }
     }
+    else if(historicalDataObj.percentageChange === 'header'){
+      style = { color: vuMetricConstants.COLOR_CONSTANTS.GREY_DARK };
+    }
+
     return style;
   }
 
@@ -568,11 +567,33 @@ class HorizontalTableVuMetric extends Component {
                               style={this.getHistoricalDataTrendColor(model, historicalDataObj, indexForMetric)}
                               width={columnWidth}
                             >
-                              <VuMetricHistoricalData
-                                model={model}
-                                historicalDataObj={historicalDataObj}
-                                indexForMetric={indexForMetric}
-                              />
+                              {/* Display formatted values */}
+                              {
+                                (!model.enableHistDataPercentage || model.enableHistDataValueWithPercentage) ?
+                                  (
+                                    <span className="vumetric-horizontal-table-historical-data-value">
+                                      <i
+                                        className={"vumetric-horizontal-table-historical-data-value-icon fa " + historicalDataObj.icon}
+                                        aria-hidden="true">
+                                      </i>
+                                      <span>{historicalDataObj.formattedValue}</span>
+                                    </span>
+                                  )
+                                  :
+                                  null
+                              }
+                              {/* Display historical data values in percentage */}
+                              {
+                                (model.enableHistDataPercentage || model.enableHistDataValueWithPercentage) ?
+                                  (
+                                    <VuMetricHistoricalDataPercentage
+                                      model={model}
+                                      historicalDataObj={historicalDataObj}
+                                    />
+                                  )
+                                  :
+                                  null
+                              }
                             </td>
                           );
                         })

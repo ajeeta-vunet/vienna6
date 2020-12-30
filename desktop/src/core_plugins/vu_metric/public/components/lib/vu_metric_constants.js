@@ -27,7 +27,8 @@ export const vuMetricConstants = {
     YELLOW: '#fecc2f',
     ORANGE: '#f46f0c',
     WHITE: '#fff',
-    GREY: '#656565'
+    GREY: '#656565',
+    GREY_DARK: '#353535'
   },
 
   // This is the bucketing size constant

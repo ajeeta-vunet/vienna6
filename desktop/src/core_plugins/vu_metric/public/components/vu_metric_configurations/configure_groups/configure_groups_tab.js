@@ -44,8 +44,14 @@ class ConfigureGroupsTab extends Component {
     const newModelAfterAddingBucket = _.cloneDeep(this.props.model)
     const newErrorModel = _.cloneDeep(this.props.errorModel)
     newModelAfterAddingBucket.aggregations.splice(index + 1, 0, vuMetricConstants.BUCKET_DEFAULTS);
-    newModelAfterAddingBucket.enableTableFormat = true;
-    newModelAfterAddingBucket.tabularFormat = 'horizontal';
+    // This has been added so that whenever user adds a bucket the view will automaticcaly change to 
+    // tabular horizontal view
+    if(!newModelAfterAddingBucket.enableTableFormat){
+      newModelAfterAddingBucket.enableTableFormat = true;
+      if(!newModelAfterAddingBucket.tabularFormat){
+        newModelAfterAddingBucket.tabularFormat = 'horizontal';
+      }
+    }
     this.props.onChange(newModelAfterAddingBucket);
 
     // we are populating the errorHandler object here

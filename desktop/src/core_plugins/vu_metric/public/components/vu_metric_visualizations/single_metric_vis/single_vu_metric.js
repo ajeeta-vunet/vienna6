@@ -93,7 +93,6 @@ class SingleAndMultipleVuMetric extends Component {
     return (
       <div
         key={historicalDataObj.label}
-        // + (model.metrics[indexForMetric].upTrendColor == 'green' ? 'upward-trend-green' : 'upward-trend-red')
         className="single-historical-data-container"
         style={this.getHistoricalDataTrendColor(model, historicalDataObj, indexForMetric)}
       >

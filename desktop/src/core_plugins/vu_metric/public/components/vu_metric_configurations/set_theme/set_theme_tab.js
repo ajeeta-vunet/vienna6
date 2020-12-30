@@ -43,7 +43,7 @@ class SetThemeTab extends Component {
         }
       )
     );
-    // this.getIntersectionList();
+    this.getIntersectionList();
   }
 
   // This will fetch a list of the dahboards
@@ -54,28 +54,44 @@ class SetThemeTab extends Component {
     });
     return resp.savedObjects;
   }
-
+  
   // This function will be used to get the interesection list of all the fields
   // in all the configured index pattterns
-  // This has been commented out as this will be used with reference to vertical table
-  // getIntersectionList = () => {
-  //   let intersectionList = this.props.model.metrics[0].indexPatternFields;
-  //   this.props.model.metrics.map((metric) => {
-  //     intersectionList = intersectionList.filter(function (x) {
-  //       let flag = false;
-  //       metric.indexPatternFields.map((field) => {
-  //         if (field.name == x.name) {
-  //           flag = true;
-  //         }
-  //       })
-  //       return flag
-  //     });
-  //   })
-  //   this.setState({
-  //     intersectionList: intersectionList
-  //   });
-  // }
+  getIntersectionList = async () => {
+    let indexPatternsForAllMetrics = []
+    this.props.model.metrics.map((metric) => {
+      const indexPatternDeatils = this.props.vis.API.indexPatterns.get(metric.index.id)
+      indexPatternsForAllMetrics.push(indexPatternDeatils);
+    })
+    // ALl aaggretable fields of all selected index-patterns are stored in indexPatternsFieldsForAllMetricsResolved
+    const indexPatternsFieldsForAllMetricsResolved = [];
+    await Promise.all(indexPatternsForAllMetrics).then(resp => {
+      resp.map((res) => {
+        indexPatternsFieldsForAllMetricsResolved.push(res.fields.filter(function (field) {
+          if (field.aggregatable) {
+            return field;
+          }
+        }))
+      })
+    });
 
+    // Here we are taking an intersection of all the comon fields in all the fields in selcted index patterns
+    let intersectionList = indexPatternsFieldsForAllMetricsResolved[0];
+    indexPatternsFieldsForAllMetricsResolved.map((singleIndexPatternFields) => {
+      intersectionList = intersectionList.filter((field) => {
+        let flag = false;
+        singleIndexPatternFields.map((singlePatternField) => {
+          if (singlePatternField.name == field.name) {
+            flag = true;
+          }
+        })
+        return flag
+      })
+    })
+    this.setState({
+      intersectionList: intersectionList
+    });
+  }
   // This function will be used to show set theme
   showHideSetTheme = () => {
     if (this.state.showSetTheme) {
@@ -114,17 +130,16 @@ class SetThemeTab extends Component {
       model.tabularFormat = 'horizontal';
       this.props.onChange(model);
     }
-    // else if (!checked) {
-    //   this.setState(
-    //     {
-    //       horizontalFormat: checked,
-    //       verticalFormat: true
-    //     }
-    //   )
-    //   model.tabularFormat = 'vertical';
-    //   this.props.onChange(model);
-    // }
-
+    else if (!checked) {
+      this.setState(
+        {
+          horizontalFormat: checked,
+          verticalFormat: true
+        }
+      )
+      model.tabularFormat = 'vertical';
+      this.props.onChange(model);
+    }
   }
 
   // This function will be called when user switches the enable vertical format switch
@@ -240,10 +255,10 @@ class SetThemeTab extends Component {
     if (event === 'add') {
       const newLinkInfo = {
         field: linkInfoData.field,
-        searchString: linkInfoData.searchString,
+        searchString: linkInfoData.searchString ? linkInfoData.searchString : '',
         dashboard: dashboardObject,
-        retainFilters: linkInfoData.retainFilters,
-        useFieldAsFilter: linkInfoData.useFieldAsFilter,
+        retainFilters: linkInfoData.retainFilters === 'Yes' ? true : false,
+        useFieldAsFilter: linkInfoData.useFieldAsFilter === 'Yes' ? true : false,
         field: linkInfoData.field,
       };
       model.linkInfo.push(newLinkInfo);
@@ -261,10 +276,10 @@ class SetThemeTab extends Component {
 
       const changedLinkInfo = {
         field: linkInfoData.field,
-        searchString: linkInfoData.searchString,
+        searchString: linkInfoData.searchString ? linkInfoData.searchString : '',
         dashboard: dashboardObject,
-        retainFilters: linkInfoData.retainFilters,
-        useFieldAsFilter: linkInfoData.useFieldAsFilter,
+        retainFilters: linkInfoData.retainFilters === 'Yes' ? true : false,
+        useFieldAsFilter: linkInfoData.useFieldAsFilter === 'Yes' ? true : false,
         field: linkInfoData.field,
       };
 
@@ -282,6 +297,7 @@ class SetThemeTab extends Component {
 
   render() {
 
+    console.log(' this.state.intersectionList', this.state.intersectionList)
     const linkInfoMeta = {
       headers: ['Field', 'Dashboard', 'Search String', 'Reatin Filters', 'Use Field As Filter'],
       rows: ['field', 'dashboard', 'searchString', 'retainFilters', 'useFieldAsFilter'],
@@ -291,7 +307,7 @@ class SetThemeTab extends Component {
       title: 'Enable Reference Link for Fields',
       selection: true,
       search: false,
-      default: { retainFilters: 'Yes', useFieldAsFilter: 'Yes' },
+      default: { retainFilters: 'No', useFieldAsFilter: 'Yes' },
       table:
         [
           {
@@ -300,7 +316,7 @@ class SetThemeTab extends Component {
             type: 'select',
             name: 'field',
             validationCallback: this.validateFieldName,
-            options: [],
+            options: [{ key: '', label: '', name: 'field', value: '' }],
             props: {
               required: true,
             },
@@ -311,7 +327,7 @@ class SetThemeTab extends Component {
             label: 'Dashboard Name',
             type: 'select',
             name: 'dashboard',
-            options: [],
+            options: [{ key: '', label: '', name: 'dashboard', value: '' }],
             props: {
               required: true
             }
@@ -409,23 +425,29 @@ class SetThemeTab extends Component {
                           />
                           <span className="horizontal-format"> Horizontal </span>
                         </div>
-                        {/* <div className="vertical-format-switch">
+                        <div className="vertical-format-switch">
                           <VunetSwitch
                             onChange={this.onShowVerticalTableSwitchChange.bind(this)}
                             checked={this.state.verticalFormat}
                           />
                           <span className="vertical-format"> Vertical </span>
-                        </div> */}
+                        </div>
                       </div>
-                      {/* <div className="row enable-link-for-fields">
-                        <VunetSwitch
-                          onChange={this.onShowEnableReferanceLinksSwitchChange.bind(this)}
-                          checked={this.props.model.linkInfoValues}
-                        />
-                        <span className="reference-links-text"> Enable Reference Link for Fields </span>
-                        <i className="vertical-format-ref-links-help-icon icon-help-blue" data-tip="qwertyui-awsertyuiop-awertyuiop" />
-                        <ReactTooltip />
-                      </div> */}
+                      {
+                        this.state.verticalFormat &&
+                        (
+                          <div className="row enable-link-for-fields">
+                            <VunetSwitch
+                              onChange={this.onShowEnableReferanceLinksSwitchChange.bind(this)}
+                              checked={this.props.model.linkInfoValues}
+                            />
+                            <span className="reference-links-text"> Enable Reference Link for Fields </span>
+                            <i className="vertical-format-ref-links-help-icon icon-help-blue" data-tip="qwertyui-awsertyuiop-awertyuiop" />
+                            <ReactTooltip />
+                          </div>
+                        )
+                      }
+
                     </div>
                   )
                 }
@@ -557,7 +579,8 @@ class SetThemeTab extends Component {
 SetThemeTab.propTypes = {
   model: PropTypes.object, //  This is the parameters object
   onChange: PropTypes.func, // This is the callback function for form changes to update the latest model to state
-  savedObjectsProvider: PropTypes.object // This will be used for the API like get saved dashboards
+  savedObjectsProvider: PropTypes.object, // This will be used for the API like get saved dashboards
+  vis: PropTypes.object,
 };
 
 export default SetThemeTab;

@@ -407,6 +407,7 @@ class VisEditor extends Component {
             getAppState={this.props.vis.angularInjectables.getAppState}
             timefilter={this.props.vis.angularInjectables.timefilter}
             config={this.props.config}
+            filterInjectorForVerticalTable={this.props.vis.angularInjectables.filter}
           />
 
           <div className="vu-metric-configuration-container">

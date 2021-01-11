@@ -1,16 +1,7 @@
 <div class="form-group">
-  <div>
-    <label>Select icon</label>
-    <kbn-tooltip text="Select insight icon" placement="right" tooltip-append-to-body="1">
-      <i class="fa fa-question-circle"></i>
-    </kbn-tooltip>
-    <div>
-      <select ng-model="visParams.group" class="form-control" ng-options="option for option in iconList | orderBy:option" required>
-      </select>
-    </div>
-  </div>
-  <label>Insights type</label>
+  <label ng-if="visParams.cardType === 'default'">Insights type</label>
   <kbn-tooltip
+    ng-if="visParams.cardType === 'default'"
     text="Select a insights template"
     placement="right"
     append-to-body="1"
@@ -18,7 +9,7 @@
     <i class="fa fa-question-circle"></i>
   </kbn-tooltip>
   <div>
-    <select ng-model="visParams.insightType" class="form-control" required>
+    <select ng-if="visParams.cardType === 'default'" ng-model="visParams.insightType" class="form-control" required>
       <option value="text" selected>Text Template</option>
       <option value="html">HTML Template</option>
       <option value="md">Markdown Template</option>

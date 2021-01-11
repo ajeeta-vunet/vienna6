@@ -43,6 +43,7 @@ const mapStateToProps = ({ dashboard }, { panelId }) => {
     //don't show header if vis type is business metric or control vis
     hidePanelTitles: getHidePanelTitles(dashboard) || (visState && visState.type &&
       (visState && visState.type === 'business_metric') && hideBmvTitle(visState)) ||
+      (visState && visState.type === 'insight_vis' && visState.params.insights && visState.params.insights.length > 0) ||
       (visState && visState.type === 'input_control_vis') ||
       (visState && visState.type === 'html') ||
       (visState && visState.type === 'metric') ||

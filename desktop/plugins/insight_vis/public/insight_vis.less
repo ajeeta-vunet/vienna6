@@ -5,13 +5,12 @@
   width: 100%;
   .insights-container {
     display: flex;
-    flex-wrap: wrap;
-    overflow: hidden;
     justify-content: space-evenly;
+    overflow: hidden;
     .insight {
       flex: 40rem 1 0;
       min-width: 200px;
-      max-width: 400px;
+      max-width: 600px;
       display: flex;
       padding: 2rem 1px;
       overflow: hidden;
@@ -27,35 +26,237 @@
       }
       
       .text-container {
+        .header-container {
+          display: flex;
+          justify-content: space-between !important;
+          .insight-title {
+            display: inline-block;
+            background-color: #FFE8C6;
+            padding: 0.125rem 0.5rem;
+            color: #EF5700;
+            font-size: 18px;
+            font-weight: 800;
+            border-radius: 4px;
+          }
+          .insight-timestamp {
+            display: flex;
+            align-items: center;
+            color: #A2A2A2;
+            font-size: 14px;
+          }
+        }
         .insight-value {
-          font-size: 4.9rem;
-          font-family: @inter-bold;
-          color: #004a98;
+          font-size: 36px;
+          color: #373A3C;
+          font-weight: 400;
           word-break: break-word;
         }
-        .insight-title {
-          font-size: 1.6rem;
-          font-family: @inter-medium;
-          color: #004a98;
-          padding: .5rem 0rem;
-        }
         .insight-data {
-          font-size: 1.5rem;
+          font-size: 14px;
           font-family: @inter-regular;
-          color: #252525;
+          color: #373A3C;
           padding-bottom: 2rem;
         }
         
       }
       .insight-content {
         padding: 0 2rem;
-        flex: 300px 1 0;
-        max-height: 300px;
+        flex: 200px 1 0;
+        min-width: 200px;
+        max-height: 500px;
         overflow-y: auto;
       }
       .no-data-content{
         text-align: center;
         vertical-align: middle;
+      }
+      .advanced-insight {
+        min-width: 200px;
+        .proactive-header {
+          background-image: linear-gradient(to right, #4031b7, #4a40c2, #5753d0, #686ce2);
+          color: white;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between !important;
+          span:first-child {
+            font-size: 18px;
+            font-weight: 800;
+          }
+          span:last-child {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+          }
+        }
+        .predictive-header {
+          background-image: linear-gradient(to right, #008c8c, #009e9e, #03b2b2, #00c1c1);
+          color: white;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between !important;
+          span:first-child {
+            font-size: 18px;
+            font-weight: 800;
+          }
+          span:last-child {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+          }
+        }
+        .advanced-content {
+          background-color: transparent;
+          border-radius: 12px 12px 0 0;
+          padding: 10px 0;
+          .severity_tag {
+            background-color: #fce5e5;
+            padding: 5px 10px;
+            color: #dc0000;
+            border-radius: 0 4px 4px 0;
+            font-size: 16px;
+            font-weight: 900;
+            display: inline-block;
+            &.severity-good {
+              background-color: rgba(21, 175, 56, 0.14);
+              color: #29A746;
+            }
+            &.severity-moderate {
+              background-color: rgba(220, 0, 0, 0.1);
+              color: #DC0000;
+            }
+            &.severity-bad {
+              background-color: rgba(217, 158, 0, 0.15);
+              color: #CE9600;
+            }
+          }
+          .insight-overview {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            padding: 5px 0px;
+            margin: 0 10px;
+            font-size: 14px;
+            &.text-valued-overview {
+              flex-direction: column;
+            }
+            .value-container {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              .value {
+                font-size: 36px;
+                color: #373A3C;
+                font-weight: 400;
+                padding-right: 3px;
+              }
+              .indicator {
+                font-size: 36px;
+                color: #4E15A4;
+                &.indicator-success {
+                  color: #5cb85c;
+                }
+                &.indicator-failure {
+                  color: #D61817;
+                }
+              }
+            }
+            .line-chart {
+              flex-grow: 1 !important;
+              display: flex;
+              justify-content: center;
+              .primary-line {
+                fill: none;
+                stroke: #4E15A4;
+                stroke-width: 3px;
+              }
+              .secondary-line {
+                fill: none;
+                stroke: #a3dede;
+                stroke-width: 3px;
+              }
+            }
+          }
+          .insight-description {
+            padding: 10px 20px;
+            font-size: 16px;
+          }
+          .insight-stamps {
+            display: flex;
+            flex-wrap: wrap;
+            .stamp {
+              margin: 1rem;
+              background-color: #ffedd2;
+              border-radius: 4px;
+              padding: 12px;
+              flex: 0 40%;
+              p {
+                margin: 0;
+                color: #373a3c;
+              }
+              .stamp-title {
+                font-weight: 700;
+              }
+              .stamp-value {
+                font-size: 22px;
+              }
+              .stamp-description {
+                color: #86817b;
+              }
+            }
+          }
+          .bar-chart {
+            .insight-bar {
+              fill: #4246BF;
+            }
+            .insight-bar-axis {
+              font-size: 14px;
+              color: #373A3C;
+              text {
+                font-size: 12px;
+              }
+            }
+            .insight-bar-axis path,
+            .insight-bar-axis line {
+              fill: none;
+              display: none;
+            }
+            .insight-bar-label {
+              font-size: 14px;
+              color: #373A3C;
+            }
+          }
+        }
+        .advanced-footer {
+          background-color: transparent;
+          display: flex;
+          padding: 0 0 15px 15px;
+          .confidence-bar {
+            display: flex;
+            position: relative;
+            .progress-bar {
+              fill: #20D626;
+            }
+            .progress-bar-bg {
+              fill: #e9e9e9;
+            }
+            .gaugeicon {
+              position: absolute;
+              width: 20px;
+              height: 20px;
+              margin: 8px 0 0 8px;
+            }
+          }
+          .confidence {
+            display: flex;
+            align-items: center;
+            padding-left: 5px;
+            color: #5E5E5E;
+            font-size: 16px;
+            font-weight: bold;
+          }
+        }
       }
     }
   }

@@ -11,30 +11,87 @@
     </div>
   </div>
   <loader-animation ng-if="loadingInsights && !data.length"></loader-animation>
+
   <div ng-if="data.length" class="insights-container">
-    <div ng-repeat="insight in data">
+    <div ng-repeat="insight in data track by $index">
       <div  ng-if="showInsight(insight)" class ="insight">
-        <div class="insight-image">
-          <img ng-src="{{insight.image}}" />
-        </div>
-        <div ng-switch="insight.insightType" class="insight-content">
+        <!-- DEFAULT CARD TYPE -->
+        <div 
+          ng-if="!vis.params.insights[$index].cardType || vis.params.insights[$index].cardType === 'default'"
+          ng-switch="insight.insightType" class="insight-content">
           <div ng-switch-when="html" ng-bind-html="render(insight.html, insight.data)"
             ng-click="viewDashboardForThisMetric(insight.link)"
             ng-class="!hasLink(insight.link) ? 'cur-initial': ''">
           </div>
           <div ng-switch-when="md" ng-bind-html="renderMd(insight.md, insight.data)"
             ng-click="viewDashboardForThisMetric(insight.link)"
-            ng-class="!hasLink(insight.link) ? 'cur-initial': ''"></div>
+            ng-class="!hasLink(insight.link) ? 'cur-initial': ''">
+          </div>
           <div class="text-container" ng-switch-default>
+            <div class="header-container">
+              <div class="insight-title">{{insight.name}}</div>
+              <div class="insight-timestamp">{{insight.metadata.value[1]}}</div>
+            </div>
             <div class="insight-value"
               ng-click="viewDashboardForThisMetric(insight.link)"
               ng-class="!hasLink(insight.link) ? 'cur-initial': ''">
               {{insight.metadata.value[0]}}</div>
-              <div class="insight-title">{{insight.name}}</div>
               <div class="insight-data">{{insight.data.text}}</div>
           </div>
-          
         </div>
+
+        <!-- ADVANCED CARD TYPE - PROACTIVE / PREDICTIVE -->
+        <div ng-if="vis.params.insights[$index].cardType && vis.params.insights[$index].cardType != 'default'" class="advanced-insight">
+          <div ng-class="{ 'proactive-header': vis.params.insights[$index].cardType === 'proactive',
+            'predictive-header': vis.params.insights[$index].cardType === 'predictive' }">
+            <span>{{insight.name}}</span>
+            <span>{{insight.metadata.advanced['time']}}<span>
+          </div>
+          <div class="advanced-content">
+            <div ng-if="insight.metadata.advanced['severity']" class="severity_tag" ng-class="{'severity-good': insight.metadata.advanced['severity'] === 'Good',
+                                'severity-moderate': insight.metadata.advanced['severity'] === 'Bad',
+                                'severity-bad': insight.metadata.advanced['severity'] === 'Warning',
+                              }">
+              <i ng-if="['Good', 'Warning', 'Bad'].includes(insight.metadata.advanced['severity'])" ng-class="{'fa fa-check-circle': insight.metadata.advanced['severity'] === 'Good',
+                                  'fa fa-exclamation-triangle': insight.metadata.advanced['severity'] === 'Bad',
+                                  'fa fa-exclamation-circle': insight.metadata.advanced['severity'] === 'Warning'}">
+              </i>
+              {{insight.metadata.advanced['severity']}}
+            </div>
+            <div class="insight-overview">
+              <div ng-if="insight.metadata.advanced['value']" class="value-container">
+                <span class="value"
+                  ng-click="viewDashboardForThisMetric(insight.link)"
+                  ng-class="!hasLink(insight.link) ? 'cur-initial': ''">
+                  {{insight.metadata.advanced['value']}}
+                </span>
+                <i ng-if="insight.metadata.advanced['arrow'] && insight.metadata.advanced['arrow'] === 'up'" ng-class="{'indicator-success': insight.metadata.advanced['arrow_color'] === 'green',
+                                    'indicator-failure': insight.metadata.advanced['arrow_color'] === 'red'}"
+                  class="fa fa-arrow-up indicator"></i>
+                <i ng-if="insight.metadata.advanced['arrow'] && insight.metadata.advanced['arrow'] === 'down'" ng-class="{'indicator-success': insight.metadata.advanced['arrow_color'] === 'green',
+                                    'indicator-failure': insight.metadata.advanced['arrow_color'] === 'red'}"
+                  class="fa fa-arrow-down indicator"></i>
+              </div>
+              <div ng-attr-id="trend-chart-{{insight.id}}" class="line-chart">
+              </div>
+            </div>
+            <div ng-attr-id="description-{{insight.id}}" class="insight-description"></div>
+            <div ng-attr-id="bar-chart-{{insight.id}}" class="bar-chart"></div>
+            <div ng-if="insight.metadata.advanced['stamps'] && insight.metadata.advanced['stamps'].length > 0" class="insight-stamps">
+              <div class="stamp" ng-repeat="insight_stamp in insight.metadata.advanced['stamps']">
+                <p class="stamp-title">{{insight_stamp.title}}</p>
+                <p class="stamp-value">{{insight_stamp.value}}</p>
+                <p class="stamp-description">{{insight_stamp.description}}</p>
+              </div>
+            </div>
+          </div>
+          <div ng-if="insight.metadata.confidence" class="advanced-footer">
+            <div ng-attr-id="confidence-{{insight.id}}" class="confidence-bar">
+            </div>
+            <span class="confidence">{{insight.metadata.confidence}}%</span>
+          </div>
+        </div>
+        
       </div>
     </div>
   </div>

@@ -18,6 +18,18 @@ module.directive('insightConfigContainer', function () {
     template: require('./insight_config_container_directive.html'),
     link: function (scope) {
       scope.visParams.type = 'evaluation';
+      // When there is no cardType param, set it to default
+      // Required for backward compatibility
+      if(!scope.visParams.cardType) {
+        scope.visParams.cardType = 'default';
+      }
+
+      // Function when card type is changed
+      scope.changeCardType = function () {
+        if(scope.visParams.cardType === 'proactive' || scope.visParams.cardType === 'predictive') {
+          scope.visParams.insightType = 'text';
+        }
+      };
     }
   };
 });

@@ -68,7 +68,8 @@
           </insight-config-container>
         </div>
       </div>
-      <div ng-show="vis.params.insights.length<5" class="vis-editor-agg-wide-btn add-button-placement">
+      <!-- Limiting the user to add only one insight in one visualization -->
+      <div ng-show="vis.params.insights.length<1" class="vis-editor-agg-wide-btn add-button-placement">
         <div class="kuiButton kuiButton--secondary kuiButton--small" ng-click="addInsight()">
           <i aria-hidden="true" class="fa fa-plus">
           </i>

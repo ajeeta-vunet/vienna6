@@ -28,6 +28,9 @@ export const VunetSidebarConstants = {
   USER: 'User',
   ABOUT: 'About',
   IMAGEMANAGR: 'Manage Images',
+  NETWORK: 'Network',
+  DISCOVERY: 'Discovery',
+  ASSETS: 'Assets',
   PERMISSION_VIEW_OBJECT: 'ViewObject',
   PERMISSION_MANAGE_OBJECT: 'ManageObject',
   PERMISSION_MANAGE_DATA_SOURCES: 'ManageDataSources',
@@ -39,5 +42,6 @@ export const VunetSidebarConstants = {
   PERMISSION_MANAGE_LICENSE: 'ManageLicense',
   PERMISSION_MANAGE_AGENT: 'ManageAgent',
   PERMISSION_DATA_FETCH_APIS: 'DataFetchAPIs',
-  PERMISSION_MANAGE_DIAGNOSTIC: 'ManageDiagnostic'
+  PERMISSION_MANAGE_DIAGNOSTIC: 'ManageDiagnostic',
+  PERMISSION_MANAGE_NETWORK: 'ManageNetwork'
 };

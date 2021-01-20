@@ -15,6 +15,7 @@ import 'plugins/kibana/visualize/index';
 import 'plugins/kibana/storyboard/index';
 import 'plugins/kibana/dashboard/index';
 import 'plugins/kibana/event/index';
+import 'plugins/kibana/discovery/index';
 import 'plugins/kibana/berlin/index';
 import 'plugins/kibana/management/index';
 import 'plugins/kibana/doc';

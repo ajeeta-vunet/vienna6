@@ -163,6 +163,13 @@ function manageRoles($scope,
             name: 'ManageEvents',
             value: 'ManageEvents'
           },
+
+          {
+            key: 'ManageNetwork',
+            label: 'ManageNetwork',
+            name: 'ManageNetwork',
+            value: 'ManageNetwork'
+          },
         ],
         props: {
         },

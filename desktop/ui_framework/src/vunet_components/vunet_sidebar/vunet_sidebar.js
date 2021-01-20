@@ -18,7 +18,7 @@
 // Use of copyright notice does not imply publication.
 
 import React, { Component } from 'react';
-import { GraphIcon, FileBinaryIcon, DatabaseIcon, ToolsIcon, GearIcon } from '@primer/octicons-react';
+import { GraphIcon, FileBinaryIcon, DatabaseIcon, ToolsIcon, GearIcon, ShareAndroidIcon } from '@primer/octicons-react';
 
 import './_vunet_sidebar.less';
 import $ from 'jquery';
@@ -84,7 +84,10 @@ export class VunetSidebar extends Component {
       VunetSidebarConstants.PERMISSION_MANAGE_AGENT, VunetSidebarConstants.PERMISSION_DATA_FETCH_APIS,
       VunetSidebarConstants.PERMISSION_MANAGE_DIAGNOSTIC],
     [VunetSidebarConstants.IMAGEMANAGR]: [VunetSidebarConstants.PERMISSION_MANAGE_FILES],
-    [VunetSidebarConstants.BACKUP]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SETTINGS]
+    [VunetSidebarConstants.BACKUP]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SETTINGS],
+    [VunetSidebarConstants.NETWORK]: [VunetSidebarConstants.PERMISSION_MANAGE_NETWORK],
+    [VunetSidebarConstants.DISCOVERY]: [VunetSidebarConstants.PERMISSION_MANAGE_NETWORK],
+    [VunetSidebarConstants.ASSETS]: [VunetSidebarConstants.PERMISSION_MANAGE_NETWORK],
   };
 
   constructor(props) {
@@ -102,6 +105,12 @@ export class VunetSidebar extends Component {
     if (currentRoute.includes('/storyboard')) {
       $('#analyticsNavContainer').addClass('active');
       $('#storyboardsLink').addClass('active');
+    } else if (currentRoute.includes('/discovery')) {
+      $('#networkNavContainer').addClass('active');
+      $('#discoveryLink').addClass('active');
+    } else if (currentRoute.includes('/assets')) {
+      $('#networkNavContainer').addClass('active');
+      $('#assetsLink').addClass('active');
     } else if (currentRoute.includes('/discover')) {
       $('#analyticsNavContainer').addClass('active');
       $('#searchLink').addClass('active');
@@ -408,6 +417,44 @@ export class VunetSidebar extends Component {
                     onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
                   >
                     {VunetSidebarConstants.DATA_RETENTION_SETTINGS}
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        {
+          chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.NETWORK]) &&
+
+          <div id="networkNavContainer" className="nav-container">
+            <button id="networkSideNavBtn" className="sidebar-btn">
+              <ShareAndroidIcon aria-label={VunetSidebarConstants.NETWORK} />
+            </button>
+
+            <div id="networkPopover" className="sidebar-popover">
+              <div className="list-group">
+                <li className="list-group-item popover-header">{VunetSidebarConstants.NETWORK}</li>
+                {
+                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.DISCOVERY]) &&
+                  <a
+                    id="discoveryLink"
+                    href="/app/vienna#/discovery"
+                    className="list-group-item"
+                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                  >
+                    {VunetSidebarConstants.DISCOVERY}
+                  </a>
+                }
+                {
+                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.ASSETS]) &&
+                  <a
+                    id="assetsLink"
+                    href="/app/vienna#/assets"
+                    className="list-group-item"
+                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                  >
+                    {VunetSidebarConstants.ASSETS}
                   </a>
                 }
               </div>

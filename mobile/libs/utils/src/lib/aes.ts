@@ -16,7 +16,8 @@
  * All rights reserved.
  * Use of copyright notice does not imply publication.
  */
-var CryptoJS = require ('crypto-js');
+import CryptoJS from 'crypto-js';
+
 const BLOCK_SIZE = 16
 
 function generate_key(userName: String){
@@ -25,7 +26,7 @@ function generate_key(userName: String){
     return 	CryptoJS.enc.Utf8.parse(key);
 }
 
-export function aesencrypt(userName: String, msgString: String) {
+export function aesencrypt(userName: String, msgString: any) {
        // msgString is expected to be Utf8 encoded
        var iv = CryptoJS.lib.WordArray.random(16);
        var key = generate_key(userName)

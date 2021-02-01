@@ -49,8 +49,50 @@
     </div>
     <div class="page-break"></div>
   </div>
-
-  <report-details  ng-if="printReport"> </report-details>
+  <!-- Go through each section-->
+  <div ng-repeat="sec in sections track by $index"
+    ng-init="sectionId=$index+1" ng-if="printReport">
+    <!-- Go through each dashboard/visualization/search added to incoming section -->
+    <div ng-repeat="obj in sec.visuals track by $index"
+      ng-init="objPosition=$index+1">
+      <!-- if the incoming object is a visualization or search then
+        1. section - current section
+        2. obj - current object (dashboard/vis/search)
+        3. objPosition - Index position of the object
+        4. objID - Id of the object
+        5. sectionId - Id of the section
+        6. uiState - uiState
+      -->
+      <report-details ng-if="obj.type ==='visualization' || obj.type ==='search'"
+        section="sec"
+        obj="obj"
+        obj-position="objPosition"
+        obj-id="obj.id"
+        section-id="sectionId"
+        ui-state="uiState"
+      >
+      </report-details>
+      <!-- if the incoming object is a dashboard then -->
+      <report-storyboard ng-if="obj.type ==='dashboard'">
+        <!-- Go through the dashboards added to the report
+          and send the dashboard one by one to the storyboard
+          provider directive to be rendered in the pdf.
+          1. Dashboards - Empty list as we are not going to render tabbed dashboard
+          2. Landing tab - The actual dashboard to be rendered in the pdf
+        -->
+        <span
+          class="panel-dashboard-title">
+          {{sectionId}}.{{objId}} {{obj.title}}
+        </span>
+        <storyboard-provider
+          dash-boards="dashboards"
+          landing-tab="obj.id"
+          get-container-api="getContainerApi"
+          get-embeddable-factory="getEmbeddableFactory">
+        </storyboard-provider>
+      </report-storyboard>
+    </div>
+  </div>
 
   <div class="container-fluid report-body-container" role="main" ng-if="!printReport">
     <form name="forms.reportcfgForm">
@@ -107,7 +149,7 @@
             <div class="row">
               <div class="col-md-2">
                 <p class="report-component-label">
-                  Visualizations:
+                  Dashboards/Visualizations:
                 </p>
               </div>
 
@@ -172,7 +214,7 @@
                     class="add-vis-button"
                     aria-label="Add Visualization"
                     ng-click="addVisToSection(section);">
-                    Add visualization
+                    Add Dashboard/visualization
                     <i aria-hidden="true" class="fa fa-plus-circle">
                     </i>
                   </span>
@@ -180,7 +222,7 @@
                     ng-if="showVisForSection(section)"
                     ng-switch
                     on="mode"
-                    ng-init="mode = 'visualization'"
+                    ng-init="mode = 'dashboard'"
                     class="report-panel-picker">
                     <button
                       style="float:right"
@@ -189,6 +231,11 @@
                       </span>
                     </button>
                     <ul class="nav nav-tabs">
+                      <li ng-class="{active: mode == 'dashboard'}">
+                        <a ng-click="mode='dashboard'" title="Dashboards">
+                          Dashboards
+                        </a>
+                      </li>
                       <li ng-class="{active: mode == 'visualization'}">
                         <a ng-click="mode='visualization'" title="Visualizations">
                           Visualizations
@@ -200,7 +247,13 @@
                         </a>
                       </li>
                     </ul>
-
+                    <div class="list-group-item" ng-switch-when="dashboard">
+                      <saved-object-finder
+                        title="Choose a Dashboard"
+                        type="dashboards"
+                        on-choose="opts.addDashboard">
+                      </saved-object-finder>
+                    </div>
                     <div class="list-group-item" ng-switch-when="visualization">
                       <saved-object-finder
                         title="Choose a visualization"
@@ -208,7 +261,6 @@
                         on-choose="opts.addVis">
                       </saved-object-finder>
                     </div>
-
                     <div class="list-group-item" ng-switch-when="search">
                       <saved-object-finder
                         title="Choose a search"

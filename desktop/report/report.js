@@ -17,21 +17,22 @@ if (system.args.length < 11 || system.args.length > 13) {
   address = system.args[1];
   output = system.args[2];
   duration = system.args[8];
-  page.viewportSize = { width: 1260, height: 835 };
-  page.paperSize = { width: 1250,
-    height: 825,
+  page.viewportSize = { width: 1920, height: 1080 };
+  page.paperSize = {
+    width: 1920,
+    height: 1080,
     orientation: 'landscape',
     margin: '1cm',
     header: {
       height: "1cm",
       contents: phantom.callback(function (pageNum, numPages) {
-        return "<div style='border-bottom:1px solid; height:1px;color:#01b5d5;font-size:14px;width:1100px;font-weight:bold'></div>";
+        return "<div style='border-bottom:1px solid; height:1px;color:#01b5d5;font-size:14px;width:1765px;font-weight:bold;margin-left:15px'></div>";
       })
     },
     footer: {
       height: "0.97cm",
       contents: phantom.callback(function (pageNum, numPages) {
-      return "<div style='border-bottom:1px solid; height:1px;color:#01b5d5;font-size:14px;width:1100px;font-weight:bold'><div style='padding-top:5px;'><span style='display:inline-block;margin-left:5px'> vuSmartMaps</span><span style='margin-left:910px'>" + pageNum + " / " + numPages + "</span></div></div>";
+      return "<div style='border-bottom:1px solid; height:1px;color:#01b5d5;font-size:14px;width:1765px;font-weight:bold;margin-left:15px'><div style='padding-top:5px;'><span style='display:inline-block;margin-left:5px'> vuSmartMaps</span><span style='margin-left:910px'>" + pageNum + " / " + numPages + "</span></div></div>";
       })
     }
   };

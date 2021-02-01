@@ -1,6 +1,7 @@
 import 'plugins/kibana/report/report';
 import 'plugins/kibana/report/saved_report/saved_reports';
 import 'plugins/kibana/report/directives/details';
+import 'plugins/kibana/report/directives/dashboard_details';
 import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/registry/feature_catalogue';
 import 'plugins/kibana/report/styles/main.less';
 import uiRoutes from 'ui/routes';

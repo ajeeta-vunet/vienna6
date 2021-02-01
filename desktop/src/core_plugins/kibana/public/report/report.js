@@ -445,7 +445,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   courier.setRootSearchSource(reportcfg.searchSource);
 
   function init() {
-
     // update model.query to $scope
     if ($state.query) {
       $scope.model = {
@@ -680,6 +679,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   // This function is called to print a report. Backend returns the pdf report
   $scope.downloadReport = function () {
+
     $scope.kbnTopNav.close('download');
     $scope.reportDate = new Date();
     let url = reportcfg.id;
@@ -847,6 +847,11 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: hit.type.name, type: 'visualization' });
   };
 
+  // called by the saved-object-finder when a user clicks a dashboard
+  $scope.addDashboard = function (hit) {
+    $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: 'dashboard', type: 'dashboard' });
+  };
+
   // called by the saved-object-finder when a user clicks a vis
   $scope.addSearch = function (hit) {
     $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: 'search', type: 'search' });
@@ -866,6 +871,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     userRoleCanModify: userRoleCanModify,
     save: $scope.save,
     addVis: $scope.addVis,
+    addDashboard: $scope.addDashboard,
     addSearch: $scope.addSearch,
     owner: $scope.owner,
     reportEmailBody: reportEmailBody

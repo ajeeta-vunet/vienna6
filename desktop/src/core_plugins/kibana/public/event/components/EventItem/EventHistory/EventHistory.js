@@ -37,7 +37,7 @@ export function EventHistory(props) {
 
   // Iterate on the history object and prepare
   // rows containing history information.
-  const renderRows = Object.keys(history).map((key, index) => {
+  const renderRows = history && Object.keys(history).map((key, index) => {
     return (
       <div key={key + index} className="row events-display-table-row">
         <div className="col-md-4">{key}</div>
@@ -61,7 +61,7 @@ export function EventHistory(props) {
   return (
     <div className="event-history-container">
       <div className="history-table-container">
-        {Object.keys(history).length ? (
+        {history && Object.keys(history).length ? (
           <div className="events-display-table">
             <div className="row events-display-table-header">
               <div className="col-md-4">

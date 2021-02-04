@@ -89,9 +89,13 @@ export class EventList extends React.Component {
     let newEvents = this.state.filteredEventsList;
     //The lodash sortBy does not work properly with aphanumeric text, so we use JS localCompare
     //to sort the fields with Alphanumeric values.
-    if(field === 'alert_id' || field === 'created_time' || field === 'last_modified_time' || field === 'last_occurence') {
+    if(field === 'alert_id' || field === 'created_time'
+        || field === 'last_modified_time' || field === 'last_occurence'
+        || field === 'similar_events_count' || field === 'active_duration'
+        || field === 'total_duration') {
       newEvents = _.sortBy(newEvents, function (o) {
-        if (field === 'alert_id') {
+        if (field === 'alert_id' || field === 'active_duration'
+        || field === 'total_duration') {
           return parseInt(o.fields[field]);
         }
         else if (field === 'created_time' || field === 'last_modified_time' || field === 'last_occurence') {

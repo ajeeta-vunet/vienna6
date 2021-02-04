@@ -1,4 +1,5 @@
 @import '~ui/styles/vunet_light_dark.less';
+@import "~ui/styles/vunet_variable_theme.less";
 
 .notification_item {
   display: flex;
@@ -58,19 +59,19 @@
       margin: 2px 0 !important;
     }
     .severity-error {
-      background-color: @notification-medium-bg;
+      background-color: @event-console-error-color;
       width: 6px;
       border-radius: 0 2px 2px 0;
       margin: 2px 0 !important;
     }
     .severity-warning {
-      background-color: @notification-information-bg;
+      background-color: @event-console-warning-color;
       width: 6px;
       border-radius: 0 2px 2px 0;
       margin: 2px 0 !important;
     }
     .severity-information {
-      background-color: @notification-success-bg;
+      background-color: @event-console-information-color;
       width: 6px;
       border-radius: 0 2px 2px 0;
       margin: 2px 0 !important;

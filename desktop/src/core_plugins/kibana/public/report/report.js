@@ -683,6 +683,19 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     $scope.kbnTopNav.close('download');
     $scope.reportDate = new Date();
     let url = reportcfg.id;
+    // Check whether any dashboard is added to the report.
+    // Send this argument to phantomjs. Because based on this argument, we are
+    // calculating the waiting time and page size for the dashboard.
+    $scope.isDashboardUsed = 'false';
+    $scope.sections.forEach(function (sec) {
+      sec.visuals.forEach(function (vis) {
+        if (vis.visType === 'dashboard') {
+          $scope.isDashboardUsed = 'true';
+          return;
+        }
+      })
+    });
+
 
     // Get query parameters for downloading report.
     const queryParams = getQueryParamsForReportUrl();
@@ -708,7 +721,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
         tenantId: tenantBu[0],
         buId: tenantBu[1],
         shipperUrl: $scope.shipperAddress,
-        searchString: searchString
+        searchString: searchString,
+        isDashboardUsed: $scope.isDashboardUsed
       },
       responseType: 'blob'
     })

@@ -59,9 +59,11 @@ app.directive('reportDetails', function ($compile, savedVisualizations, Promise)
           // (line, pie, bar, area etc..), everything else starts from
           // a new page
           let height = 0;
-
-          // Add page break for each section
-          if (sectionId > 1) {
+          // if the previous object is a dashboard then add a page break
+          // before rendering the incoming visualization.
+          // or it's a completely new section then add page break.
+          if (sectionId > 1 || (visId > 1 &&
+              $scope.section.visuals[visId-2].visType === 'dashboard')) {
             addPageBreak($el);
           }
 

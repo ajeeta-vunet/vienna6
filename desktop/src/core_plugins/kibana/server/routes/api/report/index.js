@@ -64,7 +64,6 @@ export function reportDownloadApi(server) {
       const binPath = '/opt/kibana/node_modules/phantomjs/lib/phantom/bin/phantomjs';
       const time = Date.now();
       const childProcess = require('child_process');
-
       // As there is time information as a query parameter, report-name is
       // only till ?
       const onlyReportName = req.payload.reportName.split('?')[0];
@@ -81,6 +80,7 @@ export function reportDownloadApi(server) {
       const tenantId = req.payload.tenantId;
       const buId = req.payload.buId;
       const shipperUrl = req.payload.shipperUrl;
+      const isDashboardUsed = req.payload.isDashboardUsed;
       server.log(['info'], 'Search string is ' + searchString);
       server.log(['info'], 'Request payload is ' +  req.payload);
       const childArgs = [
@@ -94,7 +94,8 @@ export function reportDownloadApi(server) {
         buId,
         duration,
         shipperUrl,
-        searchString
+        searchString,
+        isDashboardUsed
       ];
 
       // Debug output..

@@ -32,7 +32,7 @@
 
     </div>
   </kbn-top-nav>
-
+  {{isDashboardUsed}}
   <div class="report-main-page" ng-if="printReport">
     <div class="report-company">
       <!-- <h1 class="report-company-name">{{reportcfg.company_name}}</h1> -->
@@ -63,6 +63,7 @@
         5. sectionId - Id of the section
         6. uiState - uiState
       -->
+
       <report-details ng-if="obj.type ==='visualization' || obj.type ==='search'"
         section="sec"
         obj="obj"
@@ -72,6 +73,7 @@
         ui-state="uiState"
       >
       </report-details>
+
       <!-- if the incoming object is a dashboard then -->
       <report-storyboard ng-if="obj.type ==='dashboard'">
         <!-- Go through the dashboards added to the report
@@ -82,7 +84,7 @@
         -->
         <span
           class="panel-dashboard-title">
-          {{sectionId}}.{{objId}} {{obj.title}}
+          {{sectionId}}.{{objPosition}} {{obj.title}}
         </span>
         <storyboard-provider
           dash-boards="dashboards"

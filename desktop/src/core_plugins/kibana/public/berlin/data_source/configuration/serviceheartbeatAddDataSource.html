@@ -62,9 +62,11 @@
    
       
       
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.name.$invalid &&
-       !addDataSourceForm.name.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.name.$invalid &&
+            !addDataSourceForm.name.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Name
@@ -95,9 +97,11 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.port.$invalid &&
-       !addDataSourceForm.port.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.port.$invalid &&
+            !addDataSourceForm.port.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Port
@@ -111,7 +115,8 @@
                     <div class="col-sm-6 col-md-6 align-down">
                       
                          
-                            <input type="text"
+                            <input type="number"
+                            
                          
                          class="form-control"
                          ng-model="port"
@@ -129,9 +134,11 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.run_in_shipper.$invalid &&
-       !addDataSourceForm.run_in_shipper.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.run_in_shipper.$invalid &&
+            !addDataSourceForm.run_in_shipper.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Run in Shipper
@@ -140,12 +147,47 @@
              </label>
            </div>
            <div class="col-sm-6 col-md-6 align-down">
-                <select class="form-control" ng-model="run_in_shipper" name="run_in_shipper" required>
+                <select class="form-control"
+                 ng-model="run_in_shipper"
+                 name="run_in_shipper" required>
                 <option value="No">No</option>
-                <option value="Yes">Yes</option>
-                
+                   <option value="Yes">Yes</option>
+                   
+                 
                 </select>
              </div>
+           
+         </div>
+       </div>
+        
+       
+         <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.standalone_shipper.$invalid &&
+            !addDataSourceForm.standalone_shipper.$pristine}"
+            ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
+         
+         <div class="row">
+           <div class="col-sm-3 col-md-3">
+             <label class="control-label data_source_configuration_attribute_name">Collector IP
+             <span class="data-source-field-tooltip">
+             <a href="" uib-tooltip="IP Address of the standalone shipper,if configuring for main shipper add 127.0.0.1" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+             </label>
+           </div>
+           
+              
+                  
+                    <div class="col-sm-6 col-md-6 align-down">
+                      <select class="form-control"
+                         ng-model="standalone_shipper"
+                         name="standalone_shipper"
+                         ng-options="standalone_shipper for
+                         standalone_shipper in
+                         standalone_shipper_list">
+                         </select>
+                      
+                    </div>
+                  
+              
            
          </div>
        </div>
@@ -172,7 +214,7 @@
             
             
             
-                  
+            
           <div class="form-group" ng-class="{'has-error':
                  addDataSourceForm.sh_heartbeatsh_interval.$invalid &&
                  !addDataSourceForm.sh_heartbeatsh_interval.$pristine}">
@@ -186,7 +228,9 @@
                                  
                                  <div class="col-sm-6 col-md-6">
                                    
-                                      <input type="text"
+                                      
+                                          <input type="text"
+                                      
                                     
                                     <input type="text" class="form-control"
                                     ng-model="sh_heartbeat.sh_interval"
@@ -217,7 +261,9 @@
                                  
                                  <div class="col-sm-6 col-md-6">
                                    
-                                      <input type="text"
+                                      
+                                          <input type="text"
+                                      
                                     
                                     <input type="text" class="form-control"
                                     ng-model="sh_heartbeat.sh_count"
@@ -248,7 +294,9 @@
                                  
                                  <div class="col-sm-6 col-md-6">
                                    
-                                      <input type="text"
+                                      
+                                          <input type="text"
+                                      
                                     
                                     <input type="text" class="form-control"
                                     ng-model="sh_heartbeat.sh_timeout"
@@ -279,7 +327,9 @@
                                  
                                  <div class="col-sm-6 col-md-6">
                                    
-                                      <input type="text"
+                                      
+                                          <input type="text"
+                                      
                                     
                                     <input type="text" class="form-control"
                                     ng-model="sh_heartbeat.sh_size"
@@ -310,7 +360,9 @@
                                  
                                  <div class="col-sm-6 col-md-6">
                                    
-                                      <input type="text"
+                                      
+                                          <input type="text"
+                                      
                                     
                                     <input type="text" class="form-control"
                                     ng-model="sh_heartbeat.sh_overall_timeout"
@@ -339,6 +391,7 @@
                                        <thead>
                                            <tr>
                                              
+                                                
                                                 <th>
                                                             Device Address
                                                             </th>
@@ -347,7 +400,6 @@
                                                             </th>
                                                       
                                                    
-                                                
                                                 
                                              
                                              <th>
@@ -358,6 +410,7 @@
                                        <tbody>
                                           <tr ng-repeat="row in sh_heartbeat.sh_service track by $index">
                                              
+                                                
                                                 <td>
                                                          {{row.sh_device_address}}
                                                       </td>
@@ -366,7 +419,6 @@
                                                       </td>
                                                       
                                                    
-                                                
                                                 
                                              
                                              <td>
@@ -378,6 +430,7 @@
                                            </tr>
                                            <tr ng-repeat="row in new_sh_service track by $index">
                                              
+                                                
                                                 <td>
                                              <div
                                              ng-form="sh_serviceFormsh_device_address"
@@ -406,7 +459,9 @@
                                              &&
                                              !sh_serviceFormsh_service_port.sh_service_port.$pristine}">
                                                 
-                                                   <input type="text"
+                                                    
+                                                        <input type="text"
+                                                    
                                                 
                                                  class="form-control"
                                                  ng-model="new_sh_service[$index]['sh_service_port']"
@@ -421,7 +476,6 @@
                                              </td>
                                                       
                                                    
-                                                
                                                 
                                              
                                              <td>
@@ -442,6 +496,7 @@
                            
                         
                      
+                  
                   
                
             
@@ -476,10 +531,10 @@
      <div class="modal-body">
          <div class="add_data_source_configuration_tab">
         <div class="form-group" ng-class="{'has-error': addDataSourceForm.vendor.$invalid && !addDataSourceForm.vendor.$pristine}">
-            <h4 class="add_data_source_dataReceived_text">
+            <h4 class="add_data_source_data_received_text">
              Verify if data has been received from this data source. Data from
              this data source will be indexed and ready for your use.</h4>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
              <div class="col-sm-3 col-md-3">
                   <label>Index Name:</label>
@@ -488,7 +543,7 @@
                  {{index}}
              </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
                <div class="col-sm-1 col-md-1"> </div>
                <div class="col-sm-3 col-md-3">
                  <label>Interval:</label>
@@ -505,21 +560,21 @@
                  <button class="btn btn-primary" ng-click="refreshDataSource()">Refresh</button>
                </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
-             <div class="col-sm-3 col-md-3 add_data_source_dataReceived_row_label">
+             <div class="col-sm-3 col-md-3 add_data_source_data_received_row_label">
                   <label>Data Received:</label>
              </div>
              <div class="col-sm-6 col-md-6 align-down">
-                    <a href='' ng-if="dataReceived" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                    <a href='' ng-if="data_received == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
                         <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon add_data_source_dataReceived_icon_green"></i>
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon add_data_source_data_received_icon_green"></i>
                         </span>
                     </a>
-                    <a href='' ng-if="!dataReceived" uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
+                    <a href='' ng-if="data_received == false" uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
                         <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon"></i>
-                            <i class="fa fa-ban fa-stack-2x add_data_source_dataReceived_icon_red"></i>
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon"></i>
+                            <i class="fa fa-ban fa-stack-2x add_data_source_data_received_icon_red"></i>
                         </span>
                     </a>
              </div>

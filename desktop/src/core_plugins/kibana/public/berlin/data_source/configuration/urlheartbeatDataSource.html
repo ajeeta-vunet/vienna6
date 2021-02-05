@@ -11,11 +11,11 @@
     	
     	
     	
+    	
 
     		 	
  			 	
  			 	
-                  
                   
                         	
                         
@@ -24,6 +24,7 @@
                         	
                         
                      
+                  
                   
     		   
     		 
@@ -44,6 +45,10 @@
 		             	    <th rowspan="2">Run in Shipper</th>
 		                
 		            
+		        <th rowspan="2" ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''">Collector IP</th>
+		                    
+                        
+		            
 		        
 		        
 		        <th rowspan="1" colspan=3 class="text-center">Heartbeat</th>
@@ -55,7 +60,7 @@
 	            
 	            
 	            
-	                  
+	            
 	                  
 	                             <th>Interval
                                      
@@ -79,6 +84,7 @@
 	                        
 	                     
 	                  
+	                  
 	            	
 	            
             </tr>
@@ -87,7 +93,9 @@
             <tbody>
             <tr ng-repeat="row in data track by $index">
               
-	                 <td>{{row.name}} </td>
+	                 
+                              <td>{{row.name}} </td>
+                           
                         
                      
                    
@@ -102,8 +110,16 @@
                      
                    
               
+	                 <td
+                                 ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''">
+                                 {{row.standalone_shipper}} 
+                              </td>
+                           
+                        
                      
-                       
+                   
+              
+                     
                        <td>
                                  
 	                               
@@ -121,6 +137,7 @@
                              <td>
                                  <div ng-repeat="int_row in row.uh_heartbeat.uh_url track by $index">
                                    
+                                      
                                       {{int_row.uh_url_address}}
                                                     
                                                  
@@ -128,13 +145,13 @@
                                             
                                          
                                       
-                                      
                                    
                                    </div>
                                  
                                 </td>
                              
                           
+                       
                        
                      
                    
@@ -170,6 +187,6 @@
         </table>
     </div>
   </div>
-  <vunet-modal show-modal="showUrlheartbeatModal" on-close="onUrlheartbeatModalClose" data="urlheartbeatModalData" on-submit="onUrlheartbeatModalSubmit">
+  <vunet-modal show-modal="showurlheartbeatModal" on-close="onurlheartbeatModalClose" data="urlheartbeatModalData" on-submit="onurlheartbeatModalSubmit">
   </vunet-modal>
 </div>

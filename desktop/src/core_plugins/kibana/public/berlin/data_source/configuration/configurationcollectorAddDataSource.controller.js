@@ -29,7 +29,15 @@ class configurationcollectorAddDataSourceCtrl {
              });
           
        
-    
+    $scope.standalone_shipper_list = [];
+             StateService.getStandaloneShipperList().then(function(standalone_shipper_list) {
+                 $scope.standalone_shipper_list = standalone_shipper_list;
+                 if (!$scope.editDataSource && standalone_shipper_list.length > 0) {
+                     $scope.standalone_shipper = standalone_shipper_list[0];
+                 }
+             });
+          
+       
     
 
     $scope.vendorList = [];

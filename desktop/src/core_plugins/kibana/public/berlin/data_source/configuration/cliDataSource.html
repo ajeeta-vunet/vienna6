@@ -20,7 +20,9 @@
     	
         	<tr>
             
-	              <th>Name</th>
+	              
+                           <th>Name</th>
+                        
                      
                   
                
@@ -29,7 +31,7 @@
             	     <th>Target</th>
                   
                
-
+            
 	              
             	     <th>Vendor</th>
                   
@@ -40,9 +42,17 @@
                   
                
             
-                  <th>Credential</th>
+	              
+                           <th>Credential</th>
+                        
+                     
                   
-                  <th>Collector IP</th>
+               
+            
+	              <th
+                              ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''">Collector IP
+                           </th>
+                        
                      
                   
                
@@ -55,7 +65,9 @@
             <tbody>
             <tr ng-repeat="row in data track by $index">
               
-	                 <td>{{row.name}} </td>
+	                 
+                              <td>{{row.name}} </td>
+                           
                         
                      
                    
@@ -63,9 +75,8 @@
 	                 
                          <td>{{row.cli_target}} </td>
                      
-                          
-	                 
-                        
+                   
+              
 	                 
                          <td>{{row.cli_vendor}} </td>
                      
@@ -76,12 +87,21 @@
                      
                    
               
-                     <td>{{row.credential}} </td>
+	                 
+                              <td>{{row.credential}} </td>
+                           
+                        
                      
-
-
-                     <td>{{row.standalone_shipper}} </td>                   
-                                       
+                   
+              
+	                 <td
+                                 ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''">
+                                 {{row.standalone_shipper}} 
+                              </td>
+                           
+                        
+                     
+                   
               
                 <td>
                     <a href='' ng-if="data_receive_list[$index] == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
@@ -114,7 +134,6 @@
         </table>
     </div>
   </div>
-
-  <vunet-modal show-modal="showCliModal" on-close="onCliModalClose" data="cliModalData" on-submit="onCliModalSubmit">
+  <vunet-modal show-modal="showcliModal" on-close="oncliModalClose" data="cliModalData" on-submit="oncliModalSubmit">
   </vunet-modal>
 </div>

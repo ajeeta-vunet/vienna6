@@ -418,6 +418,10 @@ class StateService {
     return this._DataService.getVendorAndDeviceList();
   }
 
+  // get standalone shipper list
+  getStandaloneShipperList() {
+    return this._DataService.getStandaloneShipperList();
+  }
   // Import data enrichment file
   importDataEnrichment(fileData, upload) {
     return this._DataService.importDataEnrichment(fileData, upload);

@@ -827,6 +827,12 @@ class DataService {
     return this._getRequest(url, 'getting vendor device information');
   }
 
+  // get standalone shipper list
+  getStandaloneShipperList() {
+    const url = this.urlBase + '/data_source/get_collector_ip/';
+    return this._getRequest(url, 'getting standalone shipper list');
+  }
+
   // Importing data enrichment file.
   importDataEnrichment(fileData, upload) {
     const url = this.urlBase + '/data_enrich_config/';

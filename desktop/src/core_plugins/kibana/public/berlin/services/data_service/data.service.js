@@ -202,7 +202,6 @@ class DataService {
       errorString = 'Error in ' + moduleString;
     }
     const notify = new Notifier();
-    notify.error(errorString);
     this.$log.error(errorResponse);
 
     // If user session times out, refresh and take him back to login page.

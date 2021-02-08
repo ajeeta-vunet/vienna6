@@ -26,20 +26,25 @@ class UploadFilesCtrl {
 
     // function to upload file
     $scope.uploadFiles = (File) => {
-
-      return StateService.uploadFgwFiles(File, Upload).then(function (response) {
+      return StateService.uploadFgwFiles(File, Upload)
+      .then(function (response) {
         if (response.status === HTTP_SUCCESS_CODE) {
           $modalInstance.close();
-
           // Notify  success message for successful upload.
           notify.info(`File successfully Uploaded`);
 
-        } else {
+        }
+        else {
           $scope.fileUploadError = true;
           // To print error string to the user.
           $scope.fileUploadErrorMessage = response.data['error-string'];
         }
-      });
+      })
+      .catch(function (response) {
+          $scope.fileUploadError = true;
+          // To print error string to the user.
+          $scope.fileUploadErrorMessage = response.data['error-string'];
+      })
     };
 
     // To close a modal.

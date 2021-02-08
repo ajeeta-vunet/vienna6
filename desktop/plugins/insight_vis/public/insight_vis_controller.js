@@ -351,6 +351,18 @@ module.controller('insightVisController', function (
       .text(function (d) {
         return d.value;
       });
+
+    // Responsiveness
+    const aspect = width / height;
+    d3.select(window)
+      .on('resize', function () {
+        if(barChartItem) {
+          const targetWidth = barChartItem.offsetWidth - margin.left - margin.right;
+          const targetHeight = (targetWidth / aspect) - margin.top - margin.bottom;
+          svg.attr('width', targetWidth);
+          svg.attr('height', targetHeight);
+        }
+      });
   }
 
   // Get the first part of the url containing the tenant
@@ -550,7 +562,7 @@ module.controller('insightVisController', function (
       _.each(resp.insights, function (insight, index) {
         const idGenerator = htmlIdGenerator(); // Generating a unique ID to assign to the HTML elements for d3 to target
         insight.id = idGenerator();
-        insight.cardType = body.insights[index].cardType;
+        insight.cardType = body.insights[index].cardType || 'default';
         // Calling the functions to draw charts and bars after a delay to make sure
         // the element is present when d3 starts execution
         setTimeout(function () {

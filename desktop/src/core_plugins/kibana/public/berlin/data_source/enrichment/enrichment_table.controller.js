@@ -132,7 +132,8 @@ class DataEnrichmentCtrl {
         const modalInstance = $uibModal.open({
           animation: true,
           template: template,
-          controller: controller
+          controller: controller,
+          windowClass: 'enrichment-configuration-modal',
         });
 
         // Send the value of the edited row to modal so that the modal gets

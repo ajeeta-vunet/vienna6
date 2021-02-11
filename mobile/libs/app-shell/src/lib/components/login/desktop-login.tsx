@@ -25,7 +25,7 @@ export const DesktopLogin = () => (
           </div>
         </Col>
         <Col md="7" className="vunet-login-right-bg-container d-none d-md-block">
-          <Container className="vunet-login-right-bg">
+          <div className="vunet-login-right-bg">
             <Row>
               <div className="col-md-9 login-text-subheader">Welcome to Smarter Operations with</div>
             </Row>
@@ -39,7 +39,7 @@ export const DesktopLogin = () => (
                 and correlate in one place
               </div>
             </Row>
-          </Container>
+          </div>
         </Col>
       </Row>
     </Container>

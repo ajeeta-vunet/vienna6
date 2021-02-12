@@ -19,7 +19,7 @@ import { UserSettingStore } from '@vu/utils';
  * All rights reserved.
  * Use of copyright notice does not imply publication.
 */
-export const LOGIN_URL = 'api/default/session/';
+export const LOGIN_URL = 'api/default/session/?client_type=BROWSER_CLIENT';
 export const LOGOUT_URL = 'api/default/session/logout/';
 
 export const ALL_DASHBOARDS_URL = (username: string = UserSettingStore.UserName) => `api/default/users/${username}/`;

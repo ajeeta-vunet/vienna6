@@ -4,9 +4,10 @@ import $ from 'jquery';
 export function VislibLibAxisTitleProvider() {
 
   class AxisTitle {
-    constructor(axisConfig) {
+    constructor(axisConfig, chartSubType = null) {
       this.axisConfig = axisConfig;
       this.elSelector = this.axisConfig.get('title.elSelector').replace('{pos}', this.axisConfig.get('position'));
+      this.chartSubType = chartSubType;
     }
 
     render() {
@@ -19,6 +20,7 @@ export function VislibLibAxisTitleProvider() {
 
     draw() {
       const config = this.axisConfig;
+      const subType = this.chartSubType;
 
       return function (selection) {
         selection.each(function () {
@@ -34,7 +36,13 @@ export function VislibLibAxisTitleProvider() {
           const svg = div.append('svg')
             .attr('width', width)
             .attr('height', height)
-            .attr('class', `axis-title ${axisPrefix}-axis-title`);
+            .attr('class', function () {
+              // Add the class 'revamped' in case of horizontal / vertical bar
+              if (subType && ['horizontal_bar', 'vertical_bar'].includes(subType)) {
+                return  `axis-title ${axisPrefix}-axis-title revamped`;
+              }
+              return  `axis-title ${axisPrefix}-axis-title`;
+            });
 
           const bbox = svg.append('text')
             .attr('transform', function () {

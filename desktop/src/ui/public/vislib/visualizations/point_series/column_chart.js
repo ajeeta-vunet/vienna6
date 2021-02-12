@@ -67,9 +67,15 @@ export function VislibVisualizationsColumnChartProvider(Private) {
       bars
         .enter()
         .append('rect')
+        .on('mouseover', function () {
+          d3.select(this).classed('hover', true);
+        })
+        .on('mouseout', function () {
+          d3.select(this).classed('hover', false);
+        })
         .attr('data-label', data.label)
         .attr('fill', () => color(data.label))
-        .attr('stroke', () => color(data.label));
+        .attr('stroke', () => '#000');
 
       self.updateBars(bars);
 

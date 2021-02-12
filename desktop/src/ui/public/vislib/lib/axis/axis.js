@@ -29,6 +29,16 @@ export function VislibLibAxisProvider(Private) {
       this.axisTitle = new AxisTitle(this.axisConfig);
       this.axisLabels = new AxisLabels(this.axisConfig, this.axisScale);
 
+      // We are passing the subType (Horizontal Bar / Vertical Bar)
+      // to the title and labels for the revamped theming
+      if (visConfig && ['horizontal_bar', 'vertical_bar'].includes(visConfig._values.subType)) {
+        this.axisTitle = new AxisTitle(this.axisConfig, visConfig._values.subType);
+        this.axisLabels = new AxisLabels(this.axisConfig, this.axisScale, visConfig._values.subType);
+      } else {
+        this.axisTitle = new AxisTitle(this.axisConfig);
+        this.axisLabels = new AxisLabels(this.axisConfig, this.axisScale);
+      }
+
       this.stack = d3.layout.stack()
         .x(d => {
           return d.x;

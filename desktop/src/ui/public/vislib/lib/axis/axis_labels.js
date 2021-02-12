@@ -4,9 +4,10 @@ import { truncateLabel } from '../../components/labels/truncate_labels';
 
 export function VislibAxisLabelsProvider() {
   class AxisLabels {
-    constructor(axisConfig, scale) {
+    constructor(axisConfig, scale, chartSubType = null) {
       this.axisConfig = axisConfig;
       this.axisScale = scale;
+      this.chartSubType = chartSubType;
     }
 
     render(selection) {
@@ -99,13 +100,16 @@ export function VislibAxisLabelsProvider() {
     draw() {
       const self = this;
       const config = this.axisConfig;
+      // Custom font color styling for horizontal and vertical bar (ER-2170)
+      const fontColorStyle = (this.chartSubType && ['horizontal_bar', 'vertical_bar'].includes(this.chartSubType)) ? 'fill: #5E5E5E;' : '';
 
       return function (selection) {
         selection.each(function () {
           selection.selectAll('text')
             .attr('style', function () {
+              // Adding the style using a callback function
               const currentStyle = d3.select(this).attr('style');
-              return `${currentStyle} font-size: ${config.get('labels.fontSize')};`;
+              return `${currentStyle} font-size: ${config.get('labels.fontSize')}; ${fontColorStyle}`;
             });
           if (!config.get('labels.show')) selection.selectAll('text').attr('style', 'display: none;');
 

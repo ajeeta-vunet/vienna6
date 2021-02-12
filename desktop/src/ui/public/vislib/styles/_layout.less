@@ -1,3 +1,5 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
 .vis-container {
   flex: 1 1 0; /* 1 */
   display: flex;
@@ -85,10 +87,18 @@
   min-width: 0;
 }
 
-.y-axis-title text, .x-axis-title text {
-  font-size: 9pt;
-  fill: @vis-axis-title-color;
-  font-weight: bold;
+.y-axis-title, .x-axis-title {
+  &.revamped {
+    // This will be applied only for horizontal / vertical bar
+    text {
+      fill: @trend-revamp-text-color;
+    }
+  }
+  text {
+    font-size: 9pt;
+    fill: @vis-axis-title-color;
+    font-weight: bold;
+  }
 }
 
 .chart-title {

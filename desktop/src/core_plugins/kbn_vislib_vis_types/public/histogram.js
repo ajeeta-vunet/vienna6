@@ -17,6 +17,7 @@ export default function PointSeriesVisType(Private) {
     visConfig: {
       defaults: {
         type: 'histogram',
+        subType: 'vertical_bar',
         grid: {
           categoryLines: false,
           style: {

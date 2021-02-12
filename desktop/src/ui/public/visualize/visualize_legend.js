@@ -117,6 +117,7 @@ uiModules.get('kibana')
 
         function refresh() {
           const vislibVis = $scope.vis.vislibVis;
+          const seriesParams = $scope.vis.params.seriesParams;
           if (!vislibVis || !vislibVis.visConfig) {
             $scope.labels = [{ label: 'loading ...' }];
             return;
@@ -139,6 +140,14 @@ uiModules.get('kibana')
 
           if (vislibVis.visConfig) {
             $scope.getColor = vislibVis.visConfig.data.getColorFunc();
+          }
+
+          // Iterating the list of charts
+          if(seriesParams && seriesParams.length > 0) {
+            seriesParams.forEach((seriesParam, index) => {
+              // Adding the chartType to the labels object for legend shapes
+              $scope.labels[index].chartType = seriesParam.type;
+            });
           }
         }
 

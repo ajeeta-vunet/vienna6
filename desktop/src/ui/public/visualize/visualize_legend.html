@@ -33,9 +33,28 @@
           aria-label="{{legendData.label}}, toggle options"
           data-test-subj="legend-{{legendData.label}}"
         >
+          <div
+            class="custom-icon-square"
+            ng-if="legendData.chartType === 'histogram'"
+            ng-style="{background: getColor(legendData.label)}"
+            data-test-subj="legendSelectedColor-{{getColor(legendData.label)}}"
+          ></div>
+          <div
+            class="custom-icon-triangle"
+            ng-if="legendData.chartType === 'area'"
+            ng-style="{borderBottomColor: getColor(legendData.label)}"
+            data-test-subj="legendSelectedColor-{{getColor(legendData.label)}}"
+          ></div>
+          <div
+            class="custom-icon-rectangle"
+            ng-if="legendData.chartType === 'line'"
+            ng-style="{background: getColor(legendData.label)}"
+            data-test-subj="legendSelectedColor-{{getColor(legendData.label)}}"
+          ></div>
           <i
             class="fa fa-circle"
             ng-style="{color: getColor(legendData.label)}"
+            ng-if="!legendData.chartType || !['line', 'area', 'histogram'].includes(legendData.chartType)"
             data-test-subj="legendSelectedColor-{{getColor(legendData.label)}}"
           ></i>
           {{legendData.label}}

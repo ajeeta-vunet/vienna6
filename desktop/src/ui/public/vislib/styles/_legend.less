@@ -1,5 +1,6 @@
 @import "~ui/styles/mixins";
 @import "~ui/styles/variables";
+@import '~ui/styles/vunet_variable_theme.less';
 
 visualize-legend {
   display: flex;
@@ -81,9 +82,35 @@ visualize-legend {
 
   .legend-value-title {
     padding: 3px;
+    display: flex;
+    align-items: center;
+    color: @trend-revamp-text-color;
 
     &:hover {
       background-color: @sidebar-hover-bg;
+    }
+
+    .custom-icon-square {
+      width: 10px;
+      height: 10px;
+      margin-right: 2px;
+    }
+    .custom-icon-rectangle {
+      width: 10px;
+      height: 3px;
+      margin-right: 2px;
+    }
+    .custom-icon-triangle {
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom-width: 10px;
+      border-bottom-style: solid;
+      margin-right: 2px;
+    }
+    i {
+      margin-right: 2px;
     }
   }
 

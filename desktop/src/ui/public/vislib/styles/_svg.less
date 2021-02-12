@@ -61,11 +61,19 @@ circle {
   opacity: 0.8;
 }
 
-.series > path,
+.series > path {
+  fill-opacity: 0.8;
+  stroke-opacity: 1;
+  stroke-width: 0;
+}
+
 .series > rect {
   fill-opacity: 0.8;
   stroke-opacity: 1;
   stroke-width: 0;
+  &:hover {
+    stroke-width: 1;
+  }
 }
 
 .blur_shape {

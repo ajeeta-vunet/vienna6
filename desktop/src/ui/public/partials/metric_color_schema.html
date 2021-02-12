@@ -51,16 +51,7 @@
     ng-show="(visObj.params.colorSchema.length < 5) || (editIndex >= 0)"
   >
     <label>Color</label>
-    <input
-      ng-show="visObj.type.name !== 'table'"
-      colorpicker
-      colorpicker-parent="true"
-      type="text"
-      ng-model="color"
-      class="form-control"
-    />
     <select
-      ng-show="visObj.type.name === 'table'"
       ng-model="color"
       class="form-control"
     >

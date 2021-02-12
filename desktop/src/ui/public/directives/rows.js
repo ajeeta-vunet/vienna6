@@ -415,7 +415,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         $tr[0].style['page-break-inside'] = 'avoid';
         $tr[0].style['page-break-after'] = 'auto';
         // Changing background color to adhere to design for datatable
-        if(visType === 'table') {
+        if(visType === 'table' || visType === 'matrix') {
           $tr[0].style['background-color'] = '#F4F4F4';
         }
 
@@ -517,7 +517,7 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
         const width = rows.reduce(maxRowSize, 0);
 
         // Block to add empty rows if the number of actual rows is lesser than the rows per page
-        if (visType !== 'table' && isFinite(min) && rows.length < min) {
+        if (visType !== 'table' && visType !== 'matrix' && isFinite(min) && rows.length < min) {
           // clone the rows so that we can add elements to it without upsetting the original
           rows = _.clone(rows);
           // crate the empty row which will be pushed into the row list over and over

@@ -200,8 +200,8 @@ export function applyColorSchemaForTableVis(val, interval, cell, configObj, scop
         dontAddContent = true;
         $cellContent =  $(applyBackgroundImage(bkColor));// return a valid jQuery object
       } else {
-        // Restricting color options to the available colors in case of table visualization
-        if(configObj.vis.type.type === 'table') {
+        // Restricting color options to the available colors in case of table or matrix visualization
+        if(configObj.vis.type.type === 'table' || configObj.vis.type.type === 'matrix') {
           bkColor = nearestColor(bkColor).value;
         }
         changeBackgroundColor(cell, bkColor);

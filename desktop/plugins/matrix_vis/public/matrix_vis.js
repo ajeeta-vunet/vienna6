@@ -37,6 +37,7 @@ function MatrixVisTypeProvider(Private) {
     visConfig: {
       defaults: {
         perPage: 10,
+        cellFontSize: 14,
         linkInfoValues: false,
         linkInfo: [],
         enableNoOfColumns: false,
@@ -66,6 +67,7 @@ function MatrixVisTypeProvider(Private) {
         selectedColumns: [],
         selectedColumnsActionType: 'exclude', // default exclude to none
         showProgressBar: false,
+        showWordWrap: false,
         enableCustomErrorMessage: false,
         customErrorMessage: 'No data to show',
         enableCustomErrorTooltip: false,

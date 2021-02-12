@@ -22,7 +22,7 @@
   show-word-wrap="showWordWrap"
   >
 
-  <div class="export-options" ng-if="!printReport && !isMatrix">
+  <div class="export-options" ng-if="!printReport">
     <button ng-class="{'clicked': exportPopoverStatus}" ng-click="toggleExportPopoverState()">
       <i class="fa fa-download"></i>
     </button>
@@ -37,19 +37,5 @@
       </ul>
     </div>
   </div>
-
-<div class="agg-table-controls" ng-if="!printReport && isMatrix">
-  <small>Export:</small>&nbsp;&nbsp;
-  <a class="small"
-    ng-click="aggTable.exportAsCsv(false)">
-    Raw <i aria-hidden="true" class="fa fa-download"></i>
-  </a>&nbsp;&nbsp;&nbsp;
-  <a class="small"
-    ng-click="aggTable.exportAsCsv(true)">
-    Formatted <i aria-hidden="true" class="fa fa-download"></i>
-  </a>
-  <paginate-controls></paginate-controls>
-</div>
-
 
 </paginated-table>

@@ -57,6 +57,19 @@
     <div class="table-color-range-error" ng-show="colorCodeOnPercentageUsed">
       Color schema is configured to use percentage values. Pl note that unchecking this field will make Color schema configuration invalid.
     </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="vis.params.hideExportOptions" />
+        Disable Export Option
+      </label>
+    </div>
+    <br />
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="vis.params.showWordWrap" />
+        Enable word-wrapping for cell content
+      </label>
+    </div>
     <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="vis.indexPattern"></metric-link-info>
     <div class="checkbox">
       <label>

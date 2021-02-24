@@ -32,7 +32,6 @@ const app = uiModules.get('app/event', [
 //Event react component
 app.directive('eventConsole', (reactDirective) => {
   return reactDirective(EventConsole, [
-    'severityInfo',
     'listOfEvents',
     'columnSelectorInfo',
     'updateColumnSelector',
@@ -127,7 +126,7 @@ app.directive('eventApp', function () {
       // API call to fetch the ITSM preferences set by logged-in user.
       fetchPreferences($http, chrome).then((data) => {
         $scope.itsmPreferencesEnabled = data.preferences
-                                        && data.preferences.ITSMPreference
+                                        && data.preferences[4].ITSMPreference
                                         && data.preferences[4].ITSMPreference.Type !== 'None';
       });
 

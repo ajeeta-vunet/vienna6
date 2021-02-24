@@ -549,7 +549,7 @@ export class VunetDynamicFormBuilder extends Component {
               }
               else {
                 if(errorLabel !== null)
-                  errorLabel.textContent = '';
+                {errorLabel.textContent = '';}
               }
             }
           }

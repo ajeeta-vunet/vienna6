@@ -1,0 +1,138 @@
+.newAssetModal-wrapper {
+    width: 800px;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
+    font-size: 1.6rem !important;
+
+    .title {
+        text-align: left !important;
+        font-family: 'Inter-Medium';
+        border: none;
+        color: #5a4fef;
+        padding: 2rem 0rem 0rem 2.5rem;
+    }
+    .asset-form {
+        padding: 1rem 0rem 1rem 3rem;
+        margin-left: 0rem;
+        margin-right: 0rem;
+
+        .form-body {
+            padding-right: 3rem;
+            max-height: 400px;
+            overflow-y: auto;
+
+            input, select {
+                width: 95%;
+                display: block;
+                height: 3.5rem;
+                padding: .3rem .5rem;
+                font-size: 1.6rem;
+                line-height: 1.5;
+                color: #323232;
+                border-radius: 1rem;
+                border: 0.1rem solid #b7dae3;
+            }
+
+            label{
+                margin-top: 1.5rem;
+            }
+
+            .fa-plus-circle {
+                color: #5a4fef;
+                margin-left: 5px;
+            }
+
+            .interface-input {
+                input {
+                    width: 100%;
+                }
+            }
+
+            .interface-actions {
+                display: flex;
+                height: 4rem;
+                position: relative;
+                text-align: right;
+            }
+        }
+    }
+
+    .interface-wrapper {
+        font-size: 1.6rem;
+        border: 1px solid #b7dae3;
+        margin: 0.5rem 0;
+        width: 95%;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        padding-right: 3rem;
+    }
+
+    .actions {
+        padding: 2rem 3.7em;
+        position: relative;
+        text-align: right;
+    }
+}
+
+.interface-heading{
+    display: flex;
+    justify-content: space-between;
+}
+.interface-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.interface-list {
+    margin-right: 10rem;
+}
+
+.edit-button, .delete-button, .add-interface-button, .edit-interface-button {
+    border: none;
+    background-color: white;
+}
+
+.asset-button {
+    display: inline-block;                    
+    appearance: none;
+    cursor: pointer;
+    border: none;
+    padding: .6rem 3rem .6rem 3rem !important;
+    font-size: 1.6rem!important;
+    height: 3.5rem!important;
+    background-color: #5a4fef;
+    color: #ffffff !important;
+    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+    border-radius: 2rem !important;
+    margin-left: 1rem;
+}
+
+input:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.65;
+    background-color: #e8e7ee!important;
+    color: #ababb1!important;
+    box-shadow: none;
+    border: none;
+    border-radius: 2rem;
+}
+
+.asset-button:hover {
+    font-size: 1.8rem;
+}
+
+.error {
+    text-align: left;
+    color: #f33434;
+    margin-top: .5rem;
+    margin-left: .3rem;
+}
+
+.interfaceName-label, .interfaceIP-label, .interfaceActions-label {
+    flex: 0 0 15rem;
+}
+
+.interface-name, .interface-ip {
+    flex: 0 0 15rem;
+}

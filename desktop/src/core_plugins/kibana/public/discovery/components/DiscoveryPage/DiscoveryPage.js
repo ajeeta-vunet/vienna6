@@ -20,23 +20,23 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
-import { Topologies } from './Topologies';
-import { store } from '../store';
+import { Topology } from '../Topology/Topology';
+import { store } from '../../../store';
 import { Provider } from 'react-redux';
+import './DiscoveryPage.less';
 
 export class DiscoveryPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      listOfScans: this.props.listOfScans,
-      currentTabId: 'topologies',
+      currentTabId: 'topology',
       showDetails: false,
     };
 
     this.tabs = [
       {
-        id: 'topologies',
-        name: 'Topologies',
+        id: 'topology',
+        name: 'Topology',
       },
       {
         id: 'scheduled_scan',
@@ -44,13 +44,7 @@ export class DiscoveryPage extends React.Component {
       }
     ];
 
-    this.landingTab = 'topologies';
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      listOfScans: newProps.listOfScans
-    });
+    this.landingTab = 'topology';
   }
 
   //this function is used to handle the tab changes.
@@ -64,7 +58,7 @@ export class DiscoveryPage extends React.Component {
 
     return (
       <Provider store={store}>
-        <div className="event-details">
+        <div className="discovery-details">
           <div className="discovery-tabs-wrapper">
             <VunetTab
               tabs={this.tabs}
@@ -75,8 +69,8 @@ export class DiscoveryPage extends React.Component {
           {/* Tabs Body */}
           <div className="content-body">
             {/* display the respective tab according the id */}
-            {this.state.currentTabId === 'topologies' && (
-              <Topologies
+            {this.state.currentTabId === 'topology' && (
+              <Topology
                 credList={this.props.credList}
                 sourceIpAddressList={this.props.sourceIpAddressList}
               />

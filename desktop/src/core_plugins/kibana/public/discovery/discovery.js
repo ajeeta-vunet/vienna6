@@ -1,7 +1,7 @@
 import { uiModules } from 'ui/modules';
 import { DocTitleProvider } from 'ui/doc_title';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
-import { DiscoveryPage } from './DiscoveryPage';
+import { DiscoveryPage } from './components/DiscoveryPage/DiscoveryPage';
 
 require('plugins/kibana/discovery/discovery.less');
 
@@ -10,11 +10,8 @@ const app = uiModules.get('app/discovery', []);
 //Discovery react component
 app.directive('discoveryPage', (reactDirective) => {
   return reactDirective(DiscoveryPage, [
-    'listOfScans',
     'credList',
     'sourceIpAddressList',
-    'createNewScanMethod',
-    'deleteScanMethod',
   ]);
 });
 

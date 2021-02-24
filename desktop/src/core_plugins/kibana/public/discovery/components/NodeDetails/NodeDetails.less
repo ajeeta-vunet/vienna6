@@ -1,0 +1,148 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.nodeDetails {
+  padding: 2.7rem 7rem 0rem 7rem;
+
+  .top-bar {
+    height: 6vh;
+    min-height: 5rem;
+    max-height: 10rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border: none;
+    padding-top: 1.3rem;
+    font-size: 1.6rem;
+    color: @network-top-bar-color !important;
+
+    .topologyID {
+      padding-left: 2.5rem;
+    }
+  }
+
+  .nodeDetails-wrapper{
+    display: flex;
+
+    .assets-summary{
+      margin-right: 2rem;
+      width: 25rem;
+      box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+      border-radius: 1rem;
+      border-collapse: collapse;
+      background-color: @network-white-color;
+    }
+  }
+
+    .title {
+        text-align: center;
+    }
+
+    td {
+      border: none;
+  }
+
+  .nodeDetails-table{
+    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+    border-radius: 1rem;
+    border-collapse: collapse;
+    background-color: @network-white-color;
+    flex: 2;
+    height: 100%;
+
+    .table-toolbar{
+      height: 7.5rem;
+      min-height: 5rem;
+      max-height: 10rem;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+      background-color: @network-white-color;
+      border: none;
+
+      .toolbar-search{
+        margin-left: 20rem;
+        padding-top: 2rem;
+
+        .toolbar-searchbox {
+          font-family: 'Inter-Regular';
+          width: 50%;
+          transition: width 2s;
+          border-radius: 2rem;
+          font-size: 1.6rem;
+          padding: .4rem 1.2rem .5rem 1.8rem;
+          border: 1px solid @network-toobar-searchbox;
+
+          .search-icon {
+            top: 0.7rem;
+            left: 1.3rem;
+            font-size: 1.6rem;
+            color: @serach-icon-color;
+          }
+
+          .search-input {
+            border: none;
+          }
+        }
+      }
+    }
+  }
+  
+    .nodes {
+      text-align: center;
+      border-collapse: collapse;
+      border: 3px solid @network-nodes-border;
+      width: 100%;
+      border: none;
+    }
+
+    .nodes td, .nodes th {
+      border: none;
+      padding: 0.5rem 3rem 0.5rem 2rem;
+      font-size: 1.5rem;
+      padding: 7px 8px 8px;
+      line-height: 1.5;
+    }
+
+    .nodes th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: center;
+    }
+    .nodes thead tr {
+      border-top: 0.1rem solid @network-border-color;
+      border-bottom: 0.1rem solid @network-border-color;
+    }
+}
+
+.tableRowCell {
+  padding: 7px 8px 8px;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pagination {
+  padding-right: 1rem;
+  margin: 1rem 0rem !important;
+  display: flex;
+  justify-content: flex-end;
+
+  li a {
+    cursor    : pointer !important;
+    border    : 1px solid @network-table-list;
+    color     : @event-console-button-background !important;
+    background: @white;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: @white;
+    }
+  }
+
+  li.active a,
+  li a:hover,
+  li a:focus {
+    color     : @white  !important;
+    background: @event-console-button-background  !important;
+  }
+}

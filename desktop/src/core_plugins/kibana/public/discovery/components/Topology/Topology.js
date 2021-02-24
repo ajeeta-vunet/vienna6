@@ -17,15 +17,15 @@
 // Use of copyright notice does not imply publication.
 
 import React from 'react';
-import { VunetDataTable } from '../../../../../ui_framework/src/vunet_components/vunet_table/vunet_table';
-import { NodeDetails } from './components/NodeDetails';
+import { VunetDataTable } from '../../../../../../../ui_framework/src/vunet_components/vunet_table/vunet_table';
+import { NodeDetails } from '../NodeDetails/NodeDetails';
 import { connect } from 'react-redux';
-import { updateViewDetails, fetchNewScanList } from './actions/topologyActions';
+import { updateViewDetails, fetchNewScanList } from '../../actions/topologyActions';
 import chrome from 'ui/chrome';
-import { createNewScan, deleteScan } from './api_calls';
+import { createNewScan, deleteScan, fetchNodesList, fetchNodeDetailsSummary } from '../../api_calls';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 import moment from 'moment-timezone';
-import './Topologies.less';
+import './Topology.less';
 
 const mapStateToProps = state => {
   return {
@@ -54,16 +54,14 @@ class TopologyComponent extends React.Component {
     super(props);
     this.state = {
       viewDetails: this.props.viewDetails,
-      nodeDetails: {
-        systemIP: 1,
-        systemName: 'Test',
-        additionType: 'TestAddition',
-        credentialName: 'CredentialTest',
-        credentialType: 'SNMP',
-        enrichedData: 'SNMPData'
-      },
+      nodeList: [],
       multiSelectCredentialsArray: [],
       multiSelectSourceIpArray: [],
+      currentPage: 1,
+      rowId: 0,
+      scrollId: 0,
+      totalNumberOfNodes: 0,
+      nodeDetailsSummary: {},
     };
   }
 
@@ -73,8 +71,22 @@ class TopologyComponent extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    if(this.props.viewDetails) {
+      this.props.swapViewDetails();
+    }
     this.setState({ viewDetails: newProps.viewDetails });
   }
+
+  // This function will update the current page
+  // when user changes the page using the pagination
+  // UI
+  handlePageChange = (currentPage) => {
+    fetchNodesList(this.state.rowId, (currentPage - 1) * 10, 10)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ nodeList: data.topology.nodes, currentPage: currentPage, totalNumberOfNodes: data.topology.no_of_nodes });
+      });
+  };
 
   // this function will be used to the fetch the values for ScanList
   fetchItemsForScanList = async () => {
@@ -125,7 +137,7 @@ class TopologyComponent extends React.Component {
        'end_ip': '',
        'source_ip': scanData.sourceIp,
        'excluded_ip': scanData.excludedIp,
-       'seed_ip': '192.168.43.0/24',
+       'seed_ip': scanData.seedIp,
        'cred_list': scanData.credentials,
        'schedule_name': '',
        'schedule_string': '',
@@ -139,9 +151,20 @@ class TopologyComponent extends React.Component {
    }
 
    onRowAction = (e, rowId) => {
-     //call API to fecth node details - in phase-2
-     //  this.props.swapViewDetails();
-     return Promise.resolve(false);
+     //call API to fecth node details and node details summery to be passed to NodeDetails Component.
+     return fetchNodesList(rowId, 0, 10)
+       .then(response => response.json())
+       .then(data => {
+         fetchNodeDetailsSummary(rowId)
+           .then(nodeDetailsSummary => {
+             this.setState({ rowId: rowId,
+               nodeList: data.topology.nodes,
+               totalNumberOfNodes: data.topology.no_of_nodes,
+               nodeDetailsSummary: nodeDetailsSummary });
+             this.props.swapViewDetails();
+             return Promise.resolve(false);
+           });
+       });
    };
 
    goBack = () => {
@@ -166,8 +189,8 @@ class TopologyComponent extends React.Component {
          value: credential,
        });
      });
-     sourceIpList.replace(/ /g, '');
-     sourceIpList = sourceIpList.split(',');
+     sourceIpList && sourceIpList.replace(/ /g, '');
+     sourceIpList = sourceIpList && sourceIpList.split(',');
      sourceIpList && sourceIpList.map((sourceIp) => {
        multiSelectSourceIpArray.push({
          key: sourceIp,
@@ -186,10 +209,9 @@ class TopologyComponent extends React.Component {
    render() {
 
      const scanListingMeta = {
-       headers: ['Topology ID', 'Name', 'Node Count', 'Start Time', 'Duration', 'Discovery Status'],
-       rows: ['topology_id', 'name', 'no_of_nodes_discovered', 'start_time', 'duration', 'discovery_status'],
-       //  rowAction: [{ name: 'View More', icon: 'fa-arrow-circle-right', toolTip: 'Click here to see Scan Details' }],
-       rowAction: [{ name: 'View More', icon: 'fa-arrow-circle-right', toolTip: 'Yet to be implemented' }],
+       headers: ['Topology ID', 'Name', 'Node Count', 'Seed IP', 'Start Time', 'Duration', 'Discovery Status'],
+       rows: ['topology_id', 'name', 'no_of_nodes_discovered', 'seed_ip', 'start_time', 'duration', 'discovery_status'],
+       rowAction: [{ name: 'View More', icon: 'fa-arrow-circle-right', toolTip: 'Click here to see Scan Details' }],
        id: 'topology_id',
        add: true,
        edit: false,
@@ -270,11 +292,15 @@ class TopologyComponent extends React.Component {
        return (
          <NodeDetails
            goBack={this.goBack}
-           nodeDetails={this.state.nodeDetails}
+           nodeDetails={this.state.nodeList}
+           currentPage={this.state.currentPage}
+           handlePageChange={this.handlePageChange}
+           totalNumberOfNodes={this.state.totalNumberOfNodes}
+           summaryDetails={this.state.nodeDetailsSummary}
          />
        );
      }
    }
 }
 
-export const Topologies = connect(mapStateToProps, mapDispatchToProps) (TopologyComponent);
+export const Topology = connect(mapStateToProps, mapDispatchToProps) (TopologyComponent);

@@ -69,6 +69,9 @@ function manageUsers($scope,
         // Get dashboard for the passed user-group, tenant-id and bu-id combination..
         StateService.getDashboards(state[key], tenantId, buId).then(function (dashboards) {
 
+          // To sort the "Home Page" dropdown values under Settings->User->User Management->Edit
+          dashboards.sort((a,b) => (a.title < b.title) ? -1 : 1);
+
           // Check if API call gets succeed then populate homePage
           // and mobileKpi options.
           dashboards.forEach(dashboard => {
@@ -258,6 +261,10 @@ function manageUsers($scope,
   // Init function is called during initialization..
   function init() {
     StateService.getRolesList().then(roles => {
+
+      // To sort the "Group" dropdown values under Settings->User->User Management->Edit
+      roles.user_groups.sort((a,b) => (a.name < b.name) ? -1 : 1);
+
       const userGroup = $scope.userMeta.table.find(_table => _table.key === 'user_group');
       userGroup.options = [];
       userGroup.options.push({ key: 'select', label: 'select', name: 'group', value: '' });

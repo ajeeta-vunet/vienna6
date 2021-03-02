@@ -1,10 +1,7 @@
 <div>
   <div class="checkbox">
     <label>
-      <input
-        type="checkbox"
-        ng-model="linkInfoValues"
-      />
+      <input type="checkbox" ng-model="linkInfoValues" />
       Enable reference link for fields
       <kbn-tooltip
         text="Enable this to configure reference links to other dashboards or Events page from cells. The reference links will override the URL formatting configuration done on corresponding fields."
@@ -15,17 +12,14 @@
       </kbn-tooltip>
     </label>
   </div>
-  <div
-    class="link-info-form"
-    ng-show="linkInfoValues"
-    >
+  <div class="link-info-form" ng-show="linkInfoValues">
     <label>
       Field
       <kbn-tooltip
         text="Select the field on which the link is to be shown."
         placement="right"
         tooltip-append-to-body="1"
-        >
+      >
         <i class="fa fa-question-circle"></i>
       </kbn-tooltip>
     </label>
@@ -36,49 +30,54 @@
       ng-show="indexPattern.fields.length"
       auto-select-if-only-one="field"
       ng-options="field as field.name group by field.type for field in indexPattern.fields | orderBy:'name'"
-      >
+    >
       <option value=""></option>
     </select>
     <div class="checkbox">
       <label>
-        <input
-          type="checkbox"
-          ng-model="useFieldAsFilter"
-        />
+        <input type="checkbox" ng-model="useFieldAsFilter" />
         Use this field value as filter when moving to dashboard
         <kbn-tooltip
           text="Enable this to use this field value as filter when moving to target dashboard"
           placement="right"
-          tooltip-append-to-body="1">
+          tooltip-append-to-body="1"
+        >
           <i class="fa fa-question-circle table-vis-help-hover"></i>
         </kbn-tooltip>
       </label>
     </div>
-    <br/>
+    <br />
     <label>Dashboard</label>
     <select
       class="form-control"
       name="dashboard"
       ng-options="option as option.title for option in dashboardList track by option.id"
-      ng-model="dashboard">
-    </select>
+      ng-model="dashboard"
+    ></select>
     <label>Search String</label>
-    <input
-      type="text"
-      ng-model="searchString"
-      class="form-control"
-    />
+    <input type="text" ng-model="searchString" class="form-control" />
     <div class="checkbox">
       <label>
-        <input
-          type="checkbox"
-          ng-model="retainFilters"
-        />
+        <input type="checkbox" ng-model="retainFilters" />
         Retain currently applied filters when using this link
         <kbn-tooltip
           text="Enable this to ensure that currently present filters are maintained when using this reference link."
           placement="right"
-          tooltip-append-to-body="1">
+          tooltip-append-to-body="1"
+        >
+          <i class="fa fa-question-circle table-vis-help-hover"></i>
+        </kbn-tooltip>
+      </label>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="openInNewWindow" ng-model="openInNewWindow" />
+        Open the link in a new window.
+        <kbn-tooltip
+          text="Enable this to open the configured refernce link in a new window"
+          placement="right"
+          tooltip-append-to-body="1"
+        >
           <i class="fa fa-question-circle table-vis-help-hover"></i>
         </kbn-tooltip>
       </label>
@@ -92,9 +91,7 @@
         class="form-control"
       />
     </div>
-    <div ng-show="editIndex >= 0"
-      class="row"
-      >
+    <div ng-show="editIndex >= 0" class="row">
       <div class="col-xs-6">
         <input
           type="button"
@@ -113,10 +110,7 @@
       </div>
     </div>
   </div>
-  <div
-    class="vis-link-info"
-    ng-show="linkInfoValues && (linkInfo.length > 0)"
-    >
+  <div class="vis-link-info" ng-show="linkInfoValues && (linkInfo.length > 0)">
     <table class="link-info-table">
       <thead>
         <tr>
@@ -136,31 +130,19 @@
               class="link-info-action-button"
               ng-click="editLink($index)"
               class="form-control"
-              >
-            <a
-              href=""
-              aria-label="Edit"
-              >
-            <i
-              aria-hidden="true"
-              class="fa fa-pencil"
-              ></i>
-            </a>
+            >
+              <a href="" aria-label="Edit">
+                <i aria-hidden="true" class="fa fa-pencil"></i>
+              </a>
             </button>
             <button
               class="link-info-action-button"
               ng-click="deleteLink($index)"
               class="form-control"
-              >
-            <a
-              href=""
-              aria-label="Delete"
-              >
-            <i
-              aria-hidden="true"
-              class="fa fa-trash-o"
-              ></i>
-            </a>
+            >
+              <a href="" aria-label="Delete">
+                <i aria-hidden="true" class="fa fa-trash-o"></i>
+              </a>
             </button>
           </td>
         </tr>

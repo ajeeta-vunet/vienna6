@@ -293,6 +293,32 @@
       <tr ng-repeat="entry in verticalDatas track by $index"
         ng-init="outerIndex=$index"
         class="data-rows">
+        <td
+          ng-show="outerIndex === 0 && vis.params.actionButtonsData.length>0"
+          width="{{ columnWidth }}"
+          class="action-buttons-border hide-action-buttons-in-report"
+          >
+          Actions
+        </td>
+        <td
+          ng-show="outerIndex !== 0 && vis.params.actionButtonsData.length>0"
+          width="{{ columnWidth }}"
+          class="action-buttons-border hide-action-buttons-in-report"
+          >
+          <div
+            class="table-metric-action-buttons-container">
+            <div
+              ng-repeat="actionbutton in vis.params.actionButtonsData"
+              ng-disabled="!isVisualizationSaved"
+              ng-style="{'background-color': actionbutton.actionColor, color: idealTextColor(actionbutton.actionColor)}"
+              class="table-metric-action-button"
+              ng-click="confirmationToStartActionForVerticalTableDirective(actionbutton.actionName, entry)"
+              uib-tooltip="{{actionbutton.actionName}}"
+              tooltip-placement="top">
+              {{actionbutton.actionName}}
+            </div>
+          </div>
+        </td>
         <td width="{{ columnWidth }}" class="bm-table-td-metric-names"
           ng-repeat="(colName, value) in verticalDatas[outerIndex] track by $index"
           ng-init="colIndex=$index"
@@ -411,7 +437,7 @@
 
   <!--Horizontal tabular format Display  -->
   <div
-    ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'horizontal'">
+    ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'horizontal'" class="horizontal-bmv-table">
     <table class="bm-table-striped">
       <tr
         class="data-rows"

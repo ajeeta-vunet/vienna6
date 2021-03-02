@@ -21,6 +21,7 @@ define(function (require) {
         scope.selectedLinkColumns = [];
         scope.useFieldAsFilter = true;
         scope.retainFilters = false;
+        scope.openInNewWindow = false;
         scope.dashboard = '';
         scope.searchString = '';
         // Get all the dashboards
@@ -47,6 +48,7 @@ define(function (require) {
             scope.dashboard = linkInfo.dashboard;
             scope.searchString = linkInfo.searchString;
             scope.retainFilters = linkInfo.retainFilters;
+            scope.openInNewWindow = linkInfo.openInNewWindow;
             scope.useFieldAsFilter = linkInfo.useFieldAsFilter;
           }
         };
@@ -65,6 +67,7 @@ define(function (require) {
             'dashboard': dashboard,
             'searchString': scope.searchString,
             'retainFilters': scope.retainFilters,
+            'openInNewWindow': scope.openInNewWindow,
             'useFieldAsFilter': scope.useFieldAsFilter
           };
 
@@ -87,6 +90,7 @@ define(function (require) {
           scope.dashboard = '';
           scope.searchString = '';
           scope.retainFilters = false;
+          scope.openInNewWindow = false;
           scope.useFieldAsFilter = true;
         };
 

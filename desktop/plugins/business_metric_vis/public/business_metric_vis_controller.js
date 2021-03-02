@@ -87,6 +87,50 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       });
   };
 
+  // This function will be called when the action button is clicked in the vertical tabular format
+  // It creates the arguments to be sent to the backend api call.
+  // actionName - Name of the action button
+  // data - Bucketing and metric details in json format. Sample format is given below.
+  // {"Column0":"SBI","Column1":"9002","Column1":{"value":Down,"formattedValue":"Down","color":"#05a608"}
+  // The above sample format for 2 buckets (Bank, port) and a metric (status).
+  $scope.confirmationToStartActionForVerticalTableDirective = function (actionName, data) {
+    // By default create an empty json argument
+    // as there might be no bucket aggregation involved.
+    $scope.bucketArgsToSend = {};
+    $scope.actionToSendOnSubmit = actionName;
+    // Action button will support maximum 2 buckets
+    // If no bucket is configured then only make the metrics
+    // If there is only one bucket then make only the main bucket
+    if ($scope.vis.params.aggregations.length === 1) {
+      $scope.bucketArgsToSend.bucket = data.Column0;
+    }
+    // If there are two buckets then make both main and sub buckets
+    else if ($scope.vis.params.aggregations.length === 2) {
+      $scope.bucketArgsToSend.bucket = data.Column0;
+      $scope.bucketArgsToSend.subBucket = data.Column1;
+    }
+    // Go though each metric and check whether the metric is enabled or not
+    // If the metric is hidden then don't send it
+    let metricIndex = $scope.vis.params.aggregations.length;
+    angular.forEach($scope.vis.params.metrics, function (metric, index) {
+      if (!metric.hideMetric) {
+        $scope.bucketArgsToSend['metricName' + index] = metric.label;
+        $scope.bucketArgsToSend['metricValue' + index] = data['Column' + metricIndex].formattedValue;
+        metricIndex = metricIndex + 1;
+      }
+    });
+
+    confirmModal(
+      'Are you sure you want to initiate the action ' + $scope.actionToSendOnSubmit + '?',
+      {
+        title: 'Initiate Action',
+        onConfirm: onActionButtonsModalSubmit,
+        onCancel: noop,
+        confirmButtonText: 'Yes, Initiate action',
+        cancelButtonText: 'No, Go back',
+      });
+  };
+
   // This function will be called in the case of table without buckets and will make the arguments to be sent to api call accordingly.
   $scope.confirmationToStartActionForTableWithoutBuckets = function (actionName, metric, item) {
     const metricValueToSend = item.formattedValue;
@@ -279,7 +323,12 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     // will not add it to the browser's history
     // kbnUrl.change(url): will navigate to the new url
     // and add this url to the browser's history
-    kbnUrl.change('/' + referencePage);
+    if(!refLink.openInNewWindow) {
+      kbnUrl.change('/' + referencePage);
+    }
+    else if(refLink.openInNewWindow && refLink.openInNewWindow === true) {
+      window.open('/app/vienna#/' + referencePage, '_blank', 'location=yes,fullscreen=yes,scrollbars=yes,status=yes');
+    }
   };
 
   // This function is used to set the historical
@@ -394,7 +443,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
     // 'For selected time'.
     //const noOfColumns = aggregationsLength + historicalDataLength + actionButtonsLength + 2;
     const noOfColumns = $scope.vis.params.tabularFormat === 'vertical' ?
-      aggregationsLength + (displayedMetrics * (historicalDataLength + 1)) :
+      aggregationsLength + actionButtonsLength + (displayedMetrics * (historicalDataLength + 1)) :
       aggregationsLength + historicalDataLength + actionButtonsLength + 2;
 
     $scope.columnWidth = (100 / (noOfColumns)) + '%';

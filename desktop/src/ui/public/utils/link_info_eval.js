@@ -17,7 +17,7 @@ export function prepareLinkInfo(
   getAppState,
   Private,
   timefilter) {
-  
+
   const queryFilter = Private(FilterBarQueryFilterProvider);
   const filters = queryFilter.getFilters();
   let baseLink = '';

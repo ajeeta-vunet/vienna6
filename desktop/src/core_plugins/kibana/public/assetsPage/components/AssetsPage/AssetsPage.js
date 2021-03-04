@@ -25,7 +25,7 @@ import './AssetsPage.less';
 import chrome from 'ui/chrome';
 import $ from 'jquery';
 import { produce } from 'immer';
-import { fetchListOfAssets, fetchAssetDetailsSummary } from '../../api_calls';
+import { fetchListOfAssets, fetchAssetDetailsSummary, searchAssetDetails } from '../../api_calls';
 import { Summary } from '../summary/summary';
 import ReactTooltip from 'react-tooltip';
 import { Notifier } from 'ui/notify';
@@ -187,28 +187,34 @@ export class AssetsPage extends React.Component {
   //this function is called to delete a asset.
   deleteAssets = () => {
 
-    this.state.deleteIdList && this.state.deleteIdList.map((id) => {
-      let urlBase = chrome.getUrlBase();
-      urlBase = urlBase + '/asset/' + id + '/';
+    const deletePromise = Promise.all(
 
-      fetch(urlBase, {
-        method: 'DELETE'
-      });
-    });
+      this.state.deleteIdList && this.state.deleteIdList.map((id) => {
+        let urlBase = chrome.getUrlBase();
+        urlBase = urlBase + '/asset/' + id + '/';
 
-    fetchListOfAssets(0, 10)
-      .then(data => {
-        fetchAssetDetailsSummary()
-          .then(assetDetailsSummary => {
-            this.setState({
-              assets: data.assets,
-              currentPage: 1,
-              totalNumberOfAssets: data.no_of_nodes,
-              selectedFlag: false,
-              assetDetailsSummary: assetDetailsSummary,
-              deleteIdList: []
-            }, () => notify.info('Asset deleted succesfully.')
-            );
+        fetch(urlBase, {
+          method: 'DELETE'
+        });
+      })
+    );
+
+    deletePromise
+      .then(() => {
+        fetchListOfAssets(0, 10)
+          .then(data => {
+            fetchAssetDetailsSummary()
+              .then(assetDetailsSummary => {
+                this.setState({
+                  assets: data.assets,
+                  currentPage: 1,
+                  totalNumberOfAssets: data.no_of_nodes,
+                  selectedFlag: false,
+                  assetDetailsSummary: assetDetailsSummary,
+                  deleteIdList: []
+                }, () => notify.info('Asset deleted succesfully.')
+                );
+              });
           });
       });
   }
@@ -242,20 +248,6 @@ export class AssetsPage extends React.Component {
     }
     this.setState({ selectedFlag: e.target.checked, deleteIdList: deleteIdList });
   }
-
-  //This method is called when the suer interacts with the pagination component and changes the page.
-  //In this method we calculate the scoll-id which will be used to fetch the next 10 assets from the backend
-  //API call.
-  handlePageChange = (currentPage) => {
-    fetchListOfAssets((currentPage - 1) * 10, 10)
-      .then(data => {
-        this.setState({
-          assets: data.assets,
-          currentPage: currentPage,
-          totalNumberOfAssets: data.no_of_nodes
-        });
-      });
-  };
 
   //this is used to cancel the add new asset action and remove the input elements from UI by setting addNewAsset to false
   //and editAssetDetails to empty asset.
@@ -310,6 +302,67 @@ export class AssetsPage extends React.Component {
     }
   }
 
+  //This method is called when the user wants to search for a ceratin asset based on fields displayed
+  //on in the Assets page. The search string will be sent in the post body of the API call which returns
+  //a list of matching assets.
+  onSearch = (e) => {
+    if(e.target.value !== '') {
+      const postBody = {
+        scroll_id: 0,
+        size: 10,
+        search_string: e.target.value
+      };
+      const data = searchAssetDetails(postBody);
+      data.then((details) => {
+        this.setState({
+          assets: details.assets,
+          totalNumberOfAssets: details.no_of_assets,
+          currentPage: 1
+        });
+      });
+    }else {
+      this.setState({
+        assets: this.props.assetList.assets,
+        totalNumberOfAssets: this.props.assetList.no_of_nodes,
+        currentPage: 1,
+        selectedFlag: false,
+      });
+    }
+  }
+
+  //This method is called when the suer interacts with the pagination component and changes the page.
+  //In this method we calculate the scoll-id which will be used to fetch the next 10 assets from the backend
+  //API call.
+  handlePageChange = (currentPage) => {
+    const searchString = $('.search-input').val();
+    if(searchString !== '') {
+      const postBody = {
+        scroll_id: (currentPage - 1) * 10,
+        size: 10,
+        search_string: searchString
+      };
+      const data = searchAssetDetails(postBody);
+      data.then((details) => {
+        this.setState({
+          assets: details.assets,
+          currentPage: currentPage,
+          totalNumberOfAssets: details.no_of_assets,
+          selectedFlag: false,
+        });
+      });
+    }else {
+      fetchListOfAssets((currentPage - 1) * 10, 10)
+        .then(data => {
+          this.setState({
+            assets: data.assets,
+            currentPage: currentPage,
+            totalNumberOfAssets: data.no_of_nodes,
+            selectedFlag: false,
+          });
+        });
+    }
+  }
+
   render() {
 
     return (
@@ -325,8 +378,10 @@ export class AssetsPage extends React.Component {
               <div className="toolbar-searchbox">
                 <div className="search-icon fa fa-search" />
                 <input
+                  type="text"
                   className="search-input"
                   placeholder="Search"
+                  onChange={(e) => this.onSearch(e)}
                 />
               </div>
             </div>

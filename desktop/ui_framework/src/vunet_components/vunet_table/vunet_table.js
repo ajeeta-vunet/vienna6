@@ -164,7 +164,11 @@ export class VunetDataTable extends Component {
     if (this.props.metaItem.search !== undefined && !this.props.metaItem.search) {
       classnames += ' vunetHideSearch';
     }
-    this.setState({ containerClassName: classnames });
+
+    if (this.props.metaItem.wrapTableCellContents !== undefined && this.props.metaItem.wrapTableCellContents) {
+      classnames += ' wrap-table-cell-contents';
+    }
+    {this.setState({ containerClassName: classnames });}
   }
 
   /**
@@ -402,7 +406,7 @@ export class VunetDataTable extends Component {
       } else {
         let columnData, columnDataObj;
         if (this.props.metaItem.columnData)
-          columnDataObj = this.props.metaItem.columnData.find(cd => cd.columnName === row);
+        {columnDataObj = this.props.metaItem.columnData.find(cd => cd.columnName === row);}
         columnData = columnDataObj ? columnDataObj.func : undefined;
         // If we have some resolver data then we'll use that, otherwise we'll show raw value
         if (columnData) {
@@ -694,7 +698,7 @@ export class VunetDataTable extends Component {
     const rowsSelect = [];
     let hideDeleteButton = false;
     const isRowsSelected = this.state.selectedRowIds.length > 0 ? true : false;
-    let maxRows = this.props.metaItem.maxRows;
+    const maxRows = this.props.metaItem.maxRows;
     // If atleast one row is selected and if the caller wants us to call a
     // callback to check whether we should show delete button or not, we
     // call the callback here and take its return value and use that to
@@ -710,13 +714,13 @@ export class VunetDataTable extends Component {
         aria-label="Delete selected"
       />
       : undefined),
-    (this.props.metaItem.add && !isRowsSelected && (maxRows === undefined || maxRows > this.rows.length)
-      ? <KuiListingTableCreateButton
-        key="create"
-        onCreate={this.onCreate.bind(this)}
-        aria-label="Create new"
-      />
-      : undefined)];
+      (this.props.metaItem.add && !isRowsSelected && (maxRows === undefined || maxRows > this.rows.length)
+        ? <KuiListingTableCreateButton
+          key="create"
+          onCreate={this.onCreate.bind(this)}
+          aria-label="Create new"
+        />
+        : undefined)];
 
     if (this.props.metaItem.tableAction &&
       this.props.metaItem.tableAction.length) {

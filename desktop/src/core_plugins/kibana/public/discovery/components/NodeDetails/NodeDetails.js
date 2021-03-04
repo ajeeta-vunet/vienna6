@@ -26,6 +26,8 @@ import { updateViewDetails } from '../../actions/topologyActions';
 import { generateHeading } from '../../../event/utils/vunet_format_name';
 import './NodeDetails.less';
 import { Summary } from '../../../assetsPage/components/summary/summary';
+import { searchNodeDetails, fetchNodesList } from '../../api_calls';
+import ReactTooltip from 'react-tooltip';
 
 const mapStateToProps = state => {
   return {
@@ -47,7 +49,8 @@ class NodeDetailsCmmponent extends React.Component {
       // currentPage: 1,
       viewDetails: this.props.viewDetails,
       totalNumberOfNodes: this.props.totalNumberOfNodes,
-      currentPage: this.props.currentPage
+      currentPage: this.props.currentPage,
+      nodeDetails: this.props.nodeDetails
     };
   }
 
@@ -62,7 +65,8 @@ class NodeDetailsCmmponent extends React.Component {
     this.setState({
       viewDetails: newProps.viewDetails,
       totalNumberOfNodes: newProps.totalNumberOfNodes,
-      currentPage: newProps.currentPage
+      currentPage: newProps.currentPage,
+      nodeDetails: newProps.nodeDetails
     });
   }
   componentWillUnmount() {
@@ -86,7 +90,7 @@ class NodeDetailsCmmponent extends React.Component {
   }
 
   renderTableData() {
-    return this.props.nodeDetails && this.props.nodeDetails.map((node, index) => {
+    return this.state.nodeDetails && this.state.nodeDetails.map((node, index) => {
       const { system_ip, device_name, device_type, credential_name, cred_type, vendor_name } = node; //destructuring
       return (
         <tr key={'row-' + index}>
@@ -125,13 +129,72 @@ class NodeDetailsCmmponent extends React.Component {
     });
   }
 
+  onSearch = (e) => {
+    if(e.target.value !== '') {
+      const postBody = {
+        scroll_id: 0,
+        size: 10,
+        search_string: e.target.value
+      };
+      const data = searchNodeDetails(this.props.nodeDetails[0].topology_id, postBody);
+      data.then((details) => {
+        this.setState({
+          nodeDetails: details.nodes,
+          totalNumberOfNodes: details.no_of_nodes,
+          currentPage: 1
+        });
+      });
+    }else {
+      this.setState({
+        nodeDetails: this.props.nodeDetails,
+        totalNumberOfNodes: this.props.totalNumberOfNodes,
+        currentPage: 1
+      });
+    }
+  }
+
+  handlePageChange = (currentPage) => {
+    const searchString = $('.search-input').val();
+    if(searchString !== '') {
+      const postBody = {
+        scroll_id: (currentPage - 1) * 10,
+        size: 10,
+        search_string: searchString
+      };
+      const data = searchNodeDetails(this.props.nodeDetails[0].topology_id, postBody);
+      data.then((details) => {
+        this.setState({
+          nodeDetails: details.nodes,
+          totalNumberOfNodes: details.no_of_nodes,
+          currentPage: currentPage
+        });
+      });
+    }else {
+      fetchNodesList(this.state.nodeDetails[0].topology_id, (currentPage - 1) * 10, 10)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            nodeDetails: data.topology.nodes,
+            currentPage: currentPage,
+            totalNumberOfNodes: data.topology.no_of_nodes });
+        });
+    }
+  }
+
   render() {
 
     return (
       <div className="nodeDetails">
         <div className="top-bar">
-          <i className="fa fa-arrow-left" onClick={() => this.props.goBack()} aria-hidden="true" />
-          <span className="topologyID">Topology ID : {this.props.nodeDetails && this.props.nodeDetails[0].topology_id}</span>
+          <span data-tip={'Go Back to Topology'}>
+            <ReactTooltip />
+            <i
+              className="fa fa-arrow-circle-o-left fa-lg display-right-topologyID"
+              onClick={() => this.props.goBack()}
+              aria-hidden="true"
+            />
+          </span>
+          <span className="topologyID">Topology ID : {this.state.nodeDetails && this.state.nodeDetails[0].topology_id}</span>
         </div>
         <div className="nodeDetails-wrapper">
           <div className="assets-summary">
@@ -145,8 +208,10 @@ class NodeDetailsCmmponent extends React.Component {
                 <div className="toolbar-searchbox">
                   <div className="search-icon fa fa-search" />
                   <input
+                    type="text"
                     className="search-input"
                     placeholder="Search"
+                    onChange={(e) => this.onSearch(e)}
                   />
                 </div>
               </div>
@@ -165,7 +230,7 @@ class NodeDetailsCmmponent extends React.Component {
                 activePage={this.state.currentPage}
                 itemsCountPerPage={10}
                 totalItemsCount={this.state.totalNumberOfNodes}
-                onChange={this.props.handlePageChange}
+                onChange={this.handlePageChange}
               />
             </div>
           </div>

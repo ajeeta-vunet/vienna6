@@ -97,7 +97,6 @@ export class VunetCronTab extends Component {
 
           // Show the date time pickers as per the schedule frequency
           // selected.
-          console.log('selected frq', this.state.selectedFrequency);
           this.updateCronSelection(this.state.selectedFrequency);
         });
 

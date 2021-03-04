@@ -324,7 +324,7 @@ function vunetBackup($injector,
         //   props: {
         //   },
         // }, {
-          {
+        {
           key: 'cronString',
           label: 'Schedule',
           helpObj: SCHEDULE_HELP_OBJ,

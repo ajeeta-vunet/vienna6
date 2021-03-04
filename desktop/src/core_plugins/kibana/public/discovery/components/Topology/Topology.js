@@ -77,17 +77,6 @@ class TopologyComponent extends React.Component {
     this.setState({ viewDetails: newProps.viewDetails });
   }
 
-  // This function will update the current page
-  // when user changes the page using the pagination
-  // UI
-  handlePageChange = (currentPage) => {
-    fetchNodesList(this.state.rowId, (currentPage - 1) * 10, 10)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ nodeList: data.topology.nodes, currentPage: currentPage, totalNumberOfNodes: data.topology.no_of_nodes });
-      });
-  };
-
   // this function will be used to the fetch the values for ScanList
   fetchItemsForScanList = async () => {
     let urlBase = chrome.getUrlBase();
@@ -213,7 +202,7 @@ class TopologyComponent extends React.Component {
        rows: ['topology_id', 'name', 'no_of_nodes_discovered', 'seed_ip', 'start_time', 'duration', 'discovery_status'],
        rowAction: [{ name: 'View More', icon: 'fa-arrow-circle-right', toolTip: 'Click here to see Scan Details' }],
        id: 'topology_id',
-       add: true,
+       add: false,
        edit: false,
        title: 'New Scan',
        selection: true,
@@ -294,7 +283,6 @@ class TopologyComponent extends React.Component {
            goBack={this.goBack}
            nodeDetails={this.state.nodeList}
            currentPage={this.state.currentPage}
-           handlePageChange={this.handlePageChange}
            totalNumberOfNodes={this.state.totalNumberOfNodes}
            summaryDetails={this.state.nodeDetailsSummary}
          />

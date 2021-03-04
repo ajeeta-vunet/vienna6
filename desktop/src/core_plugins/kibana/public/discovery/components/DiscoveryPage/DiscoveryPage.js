@@ -24,27 +24,28 @@ import { Topology } from '../Topology/Topology';
 import { store } from '../../../store';
 import { Provider } from 'react-redux';
 import './DiscoveryPage.less';
+import { ScheduledScan } from '../ScheduledScan/ScheduledScan';
 
 export class DiscoveryPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTabId: 'topology',
+      currentTabId: 'scan',
       showDetails: false,
     };
 
     this.tabs = [
       {
-        id: 'topology',
-        name: 'Topology',
+        id: 'scan',
+        name: 'Scan',
       },
       {
-        id: 'scheduled_scan',
-        name: 'Scheduled Scan',
+        id: 'topology',
+        name: 'Topology',
       }
     ];
 
-    this.landingTab = 'topology';
+    this.landingTab = 'scan';
   }
 
   //this function is used to handle the tab changes.
@@ -69,14 +70,17 @@ export class DiscoveryPage extends React.Component {
           {/* Tabs Body */}
           <div className="content-body">
             {/* display the respective tab according the id */}
+            {this.state.currentTabId === 'scan' && (
+              <ScheduledScan
+                credList={this.props.credList}
+                sourceIpAddressList={this.props.sourceIpAddressList}
+              />
+            )}
             {this.state.currentTabId === 'topology' && (
               <Topology
                 credList={this.props.credList}
                 sourceIpAddressList={this.props.sourceIpAddressList}
               />
-            )}
-            {this.state.currentTabId === 'scheduled_scan' && (
-              <div>Yet to be implemented.</div>
             )}
           </div>
         </div>

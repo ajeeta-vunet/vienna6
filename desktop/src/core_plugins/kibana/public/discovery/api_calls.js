@@ -144,3 +144,104 @@ export function fetchNodeDetailsSummary(topologyId) {
   })
     .then(response => response.json());
 }
+
+//Fetch list of scheduled scans.
+export async function fetchListOfScheduledScans() {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/asset/schedule/';
+
+
+  const response = await fetch(urlBase, {
+    method: 'GET'
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  return await response.json()
+    .then(data => {
+      return data.schedules;
+    });
+}
+
+//Create a new Scan
+export async function createNewScheduledScan(newScheduleScanDetails) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/asset/schedule/';
+
+
+  const response = await fetch(urlBase, {
+    method: 'POST',
+    body: JSON.stringify(newScheduleScanDetails)
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  return response;
+}
+
+//This method is called to edit an existing scheduled scan.
+export async function editScheduleScan(configId, scheduleScanData) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/asset/schedule/' + configId + '/';
+
+
+  const response = await fetch(urlBase, {
+    method: 'PUT',
+    body: JSON.stringify(scheduleScanData)
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  return response;
+}
+
+//this method is used to search the database for Node details of a particular
+//topology with search string present in postBody.
+export async function searchNodeDetails(topologyId, postBody) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/asset/topology/' + topologyId + '/nodes/search/';
+  // const postBody = {
+  //   scroll_id: 0,
+  //   size: 10,
+  //   search_string: searchString
+  // };
+
+  const response = await fetch(urlBase, {
+    method: 'POST',
+    body: JSON.stringify(postBody)
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  return await response.json()
+    .then(data => {
+      return data;
+    });
+}
+
+//this method is called to delete a scheduled scan.
+export async function deleteScheduledScan(configId) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/asset/schedule/' + configId + '/';
+
+  const response = await fetch(urlBase, {
+    method: 'DELETE'
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+}

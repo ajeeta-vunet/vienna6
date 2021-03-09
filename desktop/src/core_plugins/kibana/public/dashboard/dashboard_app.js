@@ -68,14 +68,16 @@ app.directive('dashboardApp', function ($injector, $http) {
       $compile,
       dashboardConfig,
       savedVisualizations,
-      Promise) {
+      Promise,
+      savedSearches,
+      $uibModal,
+      savedDashboards) {
       const filterManager = Private(FilterManagerProvider);
       const filterBar = Private(FilterBarQueryFilterProvider);
       const docTitle = Private(DocTitleProvider);
       const notify = new Notifier({ location: 'Dashboard' });
       const embeddableFactories = Private(EmbeddableFactoriesRegistryProvider);
       $scope.getEmbeddableFactory = panelType => embeddableFactories.byName[panelType];
-
       const dash = $scope.dash = $route.current.locals.dash;
       const categories = $route.current.locals.categories;
 
@@ -348,7 +350,7 @@ app.directive('dashboardApp', function ($injector, $http) {
         }
         const oldCategory = dashboardStateManager.getCategory();
         dashboardStateManager.setCategory($scope.opts.category);
-        return saveDashboard(angular.toJson, timefilter, dashboardStateManager)
+        return saveDashboard(angular.toJson, timefilter, dashboardStateManager, savedVisualizations, savedSearches, $uibModal, savedDashboards)
           .then(function (id) {
             $scope.kbnTopNav.close('save');
             if (id) {

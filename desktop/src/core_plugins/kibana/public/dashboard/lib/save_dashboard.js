@@ -10,15 +10,24 @@ import { updateSavedDashboard } from './update_saved_dashboard';
  * @returns {Promise<string>} A promise that if resolved, will contain the id of the newly saved
  * dashboard.
  */
-export function saveDashboard(toJson, timeFilter, dashboardStateManager) {
+export async function saveDashboard(toJson, timeFilter, dashboardStateManager, savedVisualizations, savedSearches, $uibModal, savedDashboards) {
 
   dashboardStateManager.saveState();
 
   const savedDashboard = dashboardStateManager.savedDashboard;
   const appState = dashboardStateManager.appState;
 
-  updateSavedDashboard(savedDashboard, appState, dashboardStateManager.uiState, timeFilter, toJson);
-
+  await Promise.resolve(updateSavedDashboard(
+    savedDashboard,
+    savedVisualizations,
+    savedSearches,
+    appState,
+    dashboardStateManager.uiState,
+    timeFilter,
+    toJson,
+    $uibModal,
+    savedDashboards
+  ));
   return savedDashboard.save()
     .then((id) => {
       dashboardStateManager.lastSavedDashboardFilters = dashboardStateManager.getFilterState();

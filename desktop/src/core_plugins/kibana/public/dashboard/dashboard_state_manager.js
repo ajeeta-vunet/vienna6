@@ -70,7 +70,6 @@ export class DashboardStateManager {
 
     this.appState = new AppState(this.stateDefaults);
     this.appState.panels = this.stateDefaults.panels;
-    this.saveState();
     this.uiState = this.appState.makeStateful('uiState');
     this.isDirty = false;
 

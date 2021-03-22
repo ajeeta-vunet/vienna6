@@ -49,7 +49,23 @@ export class Summary extends React.Component {
       if(Object.keys(this.props.summaryDetails.individual_unique_count_per_field[key]).length > 0) {
         return this.props.summaryDetails.individual_unique_count_per_field &&
         Object.entries(this.props.summaryDetails.individual_unique_count_per_field[key]).map(([key1, value]) => {
-          return (<div className="row-item" key={key1}>{key1 + ' (' + value + ')'}</div>);
+          return (
+            <div
+              className="row-item-div"
+              key={key1}
+            >
+              <input
+                className="row-item-checkbox"
+                type="checkbox"
+                key={key1}
+                name={key1}
+                value={key1}
+                onClick={() => this.props.handleFilter(key1, key)}
+                checked={this.props.filterObject[key] && this.props.filterObject[key].indexOf(key1) > -1 ? true : false}
+              />
+              <label>{key1 + ' (' + value + ')'}</label>
+            </div>
+          );
         });
       }else {
         return (<div className="row-item">No details on this type.</div>);
@@ -82,6 +98,14 @@ export class Summary extends React.Component {
     });
     return(
       <div className="summary-wrapper">
+        {this.props.topologyName &&
+          <div className="heading-row">
+            <div
+              className="heading-title topology-name"
+            >{this.props.topologyName + ' (' + this.props.summaryDetails.total_nodes + ')'}
+            </div>
+          </div>
+        }
         {renderHeading}
       </div>
     );

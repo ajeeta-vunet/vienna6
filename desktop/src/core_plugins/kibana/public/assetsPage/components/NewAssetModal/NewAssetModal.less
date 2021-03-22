@@ -1,6 +1,8 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
 .newAssetModal-wrapper {
     width: 800px;
-    background-color: white;
+    background-color: @white;
     border-radius: 1rem;
     box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
     font-size: 1.6rem !important;
@@ -9,7 +11,7 @@
         text-align: left !important;
         font-family: 'Inter-Medium';
         border: none;
-        color: #5a4fef;
+        color: @accent_color;
         padding: 2rem 0rem 0rem 2.5rem;
     }
     .asset-form {
@@ -19,8 +21,7 @@
 
         .form-body {
             padding-right: 3rem;
-            max-height: 400px;
-            overflow-y: auto;
+            height: fit-content;
 
             input, select {
                 width: 95%;
@@ -29,9 +30,9 @@
                 padding: .3rem .5rem;
                 font-size: 1.6rem;
                 line-height: 1.5;
-                color: #323232;
+                color: @text_color1;
                 border-radius: 1rem;
-                border: 0.1rem solid #b7dae3;
+                border: 0.1rem solid @border_color;
             }
 
             label{
@@ -39,7 +40,7 @@
             }
 
             .fa-plus-circle {
-                color: #5a4fef;
+                color: @accent_color;
                 margin-left: 5px;
             }
 
@@ -60,7 +61,7 @@
 
     .interface-wrapper {
         font-size: 1.6rem;
-        border: 1px solid #b7dae3;
+        border: 1px solid @border_color;
         margin: 0.5rem 0;
         width: 95%;
         padding: 1.5rem;
@@ -90,7 +91,7 @@
 
 .edit-button, .delete-button, .add-interface-button, .edit-interface-button {
     border: none;
-    background-color: white;
+    background-color: @white;
 }
 
 .asset-button {
@@ -101,8 +102,8 @@
     padding: .6rem 3rem .6rem 3rem !important;
     font-size: 1.6rem!important;
     height: 3.5rem!important;
-    background-color: #5a4fef;
-    color: #ffffff !important;
+    background-color: @accent_color;
+    color: @white !important;
     box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
     border-radius: 2rem !important;
     margin-left: 1rem;
@@ -111,8 +112,8 @@
 input:disabled {
     cursor: not-allowed !important;
     opacity: 0.65;
-    background-color: #e8e7ee!important;
-    color: #ababb1!important;
+    background-color: @disable_button_color !important;
+    color: @disable_button_text_color !important;
     box-shadow: none;
     border: none;
     border-radius: 2rem;
@@ -122,9 +123,9 @@ input:disabled {
     font-size: 1.8rem;
 }
 
-.error {
+.error-message {
     text-align: left;
-    color: #f33434;
+    color: @red;
     margin-top: .5rem;
     margin-left: .3rem;
 }

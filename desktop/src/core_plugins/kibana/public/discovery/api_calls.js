@@ -245,3 +245,26 @@ export async function deleteScheduledScan(configId) {
     throw new Error(message);
   }
 }
+
+//this method is called to fetch list of nodes with applied filters.
+export async function filteredListOfNodes(topologyId, scrollId, filter) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/asset/topology/' + topologyId + '/';
+  const postBody = {
+    scroll_id: scrollId,
+    size: 10,
+    filter: filter
+  };
+
+  const response = await fetch(urlBase, {
+    method: 'POST',
+    body: JSON.stringify(postBody)
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  return response;
+}

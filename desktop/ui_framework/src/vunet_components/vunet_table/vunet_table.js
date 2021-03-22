@@ -130,10 +130,17 @@ export class VunetDataTable extends Component {
 
     // Create SortableProperties instance only column header is available
     if (newProps.metaItem.rows.length > 0) {
-      this.sortableProperties = new SortableProperties(
-        this.createSortablePropertiesList(),
-        newProps.metaItem.rows[0]
-      );
+      if(newProps.metaItem.sortOn) {
+        this.sortableProperties = new SortableProperties(
+          this.createSortablePropertiesList(),
+          newProps.metaItem.sortOn
+        );
+      }else{
+        this.sortableProperties = new SortableProperties(
+          this.createSortablePropertiesList(),
+          newProps.metaItem.rows[0]
+        );
+      }
     }
 
     if (!_.isUndefined(_.difference(newProps.metaItem.headers, this.props.metaItem.headers)[0]) ||
@@ -168,6 +175,7 @@ export class VunetDataTable extends Component {
     if (this.props.metaItem.wrapTableCellContents !== undefined && this.props.metaItem.wrapTableCellContents) {
       classnames += ' wrap-table-cell-contents';
     }
+
     {this.setState({ containerClassName: classnames });}
   }
 
@@ -220,7 +228,7 @@ export class VunetDataTable extends Component {
             return item[header] !== null ? item[header] : '';
           }
         },
-        isAscending: true,
+        isAscending: this.props.metaItem.isDescending !== 'undefined' ? !this.props.metaItem.isDescending : true,
       }, header);
     });
 

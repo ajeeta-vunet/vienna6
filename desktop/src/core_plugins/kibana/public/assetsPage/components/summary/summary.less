@@ -1,5 +1,7 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
 .assets-summary {
-    background-color: #f2f3f4 !important;
+    background-color: @summary-background-color !important;
     height: 100%;
 }
 
@@ -10,27 +12,35 @@
 }
 
 .summary-detail {
-    border-bottom: 0.1rem solid #dde0e2 !important;
+    border-bottom: 0.1rem solid @summary-border-color !important;
 }
 .more-details {
     cursor: pointer;
     // font-size: 1.8rem;
     border: none;
-    color: #5a4fef !important;
+    color: @accent_color !important;
     outline: none !important;
 }
 
 .heading-row {
     font-weight: 600;
-    border-bottom: 0.1rem solid #dde0e2 !important;
+    border-bottom: 0.1rem solid @summary-border-color !important;
 }
 
 .more-details-rows {
     max-height: 18vh;
     overflow: auto;
 }
-.row-item {
+
+.row-item-div {
     padding: 1rem;
-    background-color: #F8F8F8;
-    margin: 0;
+}
+
+.row-item-checkbox {
+    margin-right: 1rem !important;
+}
+
+.topology-name {
+    font-size: 2.5rem;
+    word-break: break-word;
 }

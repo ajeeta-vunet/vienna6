@@ -21,9 +21,6 @@ import React from 'react';
 import chrome from 'ui/chrome';
 import { produce } from 'immer';
 import './NewAssetModal.less';
-import { Notifier } from 'ui/notify';
-
-const notify = new Notifier({ location: 'Assets' });
 
 export class NewAssetModal extends React.Component {
   constructor(props) {
@@ -93,13 +90,11 @@ export class NewAssetModal extends React.Component {
     });
   }
 
-  //method called when the New Asset Modal form is submitted after entering details
-  //or after editing the details of existing asset.
   handleSubmit = (e) => {
-
     let urlBase = chrome.getUrlBase();
     let method;
 
+    e.preventDefault();
     if(!this.state.assetObject.node_id || this.state.assetObject.node_id === '') {
       urlBase = urlBase + '/asset/';
       method = 'POST';
@@ -107,39 +102,8 @@ export class NewAssetModal extends React.Component {
       urlBase = urlBase + '/asset/' + this.state.assetObject.node_id;
       method = 'PUT';
     }
-
-    fetch(urlBase, {
-      method: method,
-      body: JSON.stringify(this.state.assetObject)
-    })
-      .then(response => {
-        if(response.ok) {
-          return response.json();
-        }else {
-          if(method === 'POST') {
-            notify.error('Failed to add asset.');
-          }else {
-            notify.error('Failed to edit asset.');
-          }
-        }
-      })
-      .then(data => {
-        if(data) {
-          if(method === 'POST') {
-            notify.info('Asset added successfully.');
-          }else {
-            notify.info('Asset edit successful.');
-          }
-        }
-        this.props.cancelNewAsset();
-        return data;
-      })
-      .catch(() => {
-        notify.error('Asset add/edit failure.');
-      });
-
-    e.preventDefault();
-  };
+    this.props.handleAssetSubmit(method, urlBase, this.state.assetObject);
+  }
 
   //this method is called when any input field in the asset modal changes,
   //based on the value of the field necessary state variable is changed.
@@ -169,6 +133,7 @@ export class NewAssetModal extends React.Component {
           errorType = produce(this.state.errorType, (draft) => {
             draft.systemIP = false;
             draft.systemIPRequired = false;
+            draft.deviceNameRequired = false;
           });
         }
         asset = produce(this.state.assetObject, (draft) => {
@@ -190,6 +155,7 @@ export class NewAssetModal extends React.Component {
           errorType = produce(this.state.errorType, (draft) => {
             draft.deviceNameRequired = false;
             draft.deviceName = false;
+            draft.systemIPRequired = false;
           });
         }
         asset = produce(this.state.assetObject, (draft) => {
@@ -548,32 +514,28 @@ export class NewAssetModal extends React.Component {
       }else {
         return(
           <div className="interface-row" key={o.interfaceName}>
-            {/* <label htmlFor="interfaceName">Interface Name:</label> */}
             <div>
               <input
                 type="text"
                 id="interfaceName"
                 name="interfaceName"
                 value={this.state.interfaceList[index].interfaceName}
-                // value={o.interfaceName}
                 onChange={(e) => this.handleInterfaceChange(e, 'interfaceName', index)}
               />
-              <div className="error">
+              <div className="error-message">
                 {this.state.errorType.interfaceName && <span>Invalid Interface name.</span>}
                 {this.state.errorType.interfaceNameRequired && <span>Interface name cannot be empty.</span>}
               </div>
             </div>
             <div>
-              {/* <label htmlFor="interfaceIp">Interface IP:</label> */}
               <input
                 type="text"
                 id="interfaceIp"
                 name="interfaceIp"
                 value={this.state.interfaceList[index].interfaceIp}
-                // value={o.interfaceIp}
                 onChange={(e) => this.handleInterfaceChange(e, 'interfaceIp', index)}
               />
-              <div className="error">
+              <div className="error-message">
                 {this.state.errorType.interfaceIp && <span>Invalid Interface IP.</span>}
                 {this.state.errorType.interfaceIPRequired && <span>Interface IP cannot be empty.</span>}
               </div>
@@ -609,7 +571,6 @@ export class NewAssetModal extends React.Component {
         <form
           id="asset-form"
           name="asset-form"
-          // noValidate
           className="asset-form"
           onSubmit={this.handleSubmit}
         >
@@ -622,7 +583,7 @@ export class NewAssetModal extends React.Component {
               value={this.state.assetObject.system_ip}
               onChange={(e) => this.onChange(e, 'systemIP')}
             />
-            <div className="error">
+            <div className="error-message">
               {this.state.errorType.systemIP && <span>Invalid IP format.</span>}
               {this.state.errorType.systemIPRequired && <span>Either System IP or Device Name is required.</span>}
             </div>
@@ -634,7 +595,7 @@ export class NewAssetModal extends React.Component {
               value={this.state.assetObject.device_name}
               onChange={(e) => this.onChange(e, 'deviceName')}
             />
-            <div className="error">
+            <div className="error-message">
               {this.state.errorType.deviceName && <span>Invalid device name.</span>}
               {this.state.errorType.deviceNameRequired && <span>Either System IP or Device Name is required.</span>}
             </div>
@@ -675,30 +636,26 @@ export class NewAssetModal extends React.Component {
                 {displayInterfaceList}
                 {this.state.displayInterfaceInput && (
                   <div className="interface-row">
-                    {/* <label htmlFor="interfaceName">Interface Name:</label> */}
                     <div>
                       <input
                         type="text"
                         id="newInterfaceName"
                         name="newInterfaceName"
-                        // value={this.state.interfaceObject.interfaceName}
                         onChange={(e) => this.handleNewInterface(e, 'interfaceName')}
                       />
-                      <div className="error">
+                      <div className="error-message">
                         {this.state.errorType.interfaceName && <span>Invalid Interface name.</span>}
                         {this.state.errorType.interfaceNameRequired && <span>Interface name cannot be empty.</span>}
                       </div>
                     </div>
                     <div>
-                      {/* <label htmlFor="interfaceIp">Interface IP:</label> */}
                       <input
                         type="text"
                         id="newInterfaceIp"
                         name="newInterfaceIp"
-                        // value={this.state.interfaceObject.interfaceIp}
                         onChange={(e) => this.handleNewInterface(e, 'interfaceIp')}
                       />
-                      <div className="error">
+                      <div className="error-message">
                         {this.state.errorType.interfaceIp && <span>Invalid Interface IP.</span>}
                         {this.state.errorType.interfaceIPRequired && <span>Interface IP cannot be empty.</span>}
                       </div>
@@ -732,7 +689,7 @@ export class NewAssetModal extends React.Component {
               value={this.state.assetObject.port_list}
               onChange={(e) => this.onChange(e, 'portList')}
             />
-            <div className="error">
+            <div className="error-message">
               {this.state.errorType.portListInvalid && <span>Port List Invalid. Comma separated numbers only.</span>}
             </div>
             <label htmlFor="location">Location:</label>
@@ -776,7 +733,7 @@ export class NewAssetModal extends React.Component {
               value={this.state.assetObject.tags}
               onChange={(e) => this.onChange(e, 'tags')}
             />
-            <div className="error">
+            <div className="error-message">
               {this.state.errorType.tagsInvalid && <span>Tags List Invalid. Comma separated values only.</span>}
             </div>
           </div>

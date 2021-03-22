@@ -22,7 +22,7 @@ import { NodeDetails } from '../NodeDetails/NodeDetails';
 import { connect } from 'react-redux';
 import { updateViewDetails, fetchNewScanList } from '../../actions/topologyActions';
 import chrome from 'ui/chrome';
-import { createNewScan, deleteScan, fetchNodesList, fetchNodeDetailsSummary } from '../../api_calls';
+import { createNewScan, deleteScan, fetchNodesList, fetchNodeDetailsSummary, filteredListOfNodes } from '../../api_calls';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 import moment from 'moment-timezone';
 import './Topology.less';
@@ -62,6 +62,7 @@ class TopologyComponent extends React.Component {
       scrollId: 0,
       totalNumberOfNodes: 0,
       nodeDetailsSummary: {},
+      topologyNames: {},
     };
   }
 
@@ -105,11 +106,14 @@ class TopologyComponent extends React.Component {
 
   //this function is used to convert certains field in topologies object to displayable format.
   prepareData = (topologies) => {
+
+    const topologyNames = {};
     topologies && topologies.map(topology => {
       topology.duration = displayTwoTimeUnits(topology.duration);
-      topology.start_time = moment(topology.start_time).format('ddd, Do MMM YYYY, h:mm:ss a');
+      topologyNames[topology.topology_id] = topology.name;
     });
 
+    this.setState({ topologyNames: topologyNames });
     return topologies;
   }
 
@@ -156,6 +160,18 @@ class TopologyComponent extends React.Component {
        });
    };
 
+   applyFilters = (topologyId, scrollId, filters) => {
+     filteredListOfNodes(topologyId, scrollId, filters)
+       .then(response => response.json())
+       .then(data => {
+         this.setState({
+           rowId: topologyId,
+           nodeList: data.topology.nodes,
+           totalNumberOfNodes: data.topology.no_of_nodes
+         });
+       });
+   }
+
    goBack = () => {
      this.props.swapViewDetails();
    }
@@ -198,17 +214,19 @@ class TopologyComponent extends React.Component {
    render() {
 
      const scanListingMeta = {
-       headers: ['Topology ID', 'Name', 'Node Count', 'Seed IP', 'Start Time', 'Duration', 'Discovery Status'],
-       rows: ['topology_id', 'name', 'no_of_nodes_discovered', 'seed_ip', 'start_time', 'duration', 'discovery_status'],
+       headers: ['Name', 'Node Count', 'Seed IP', 'Start Time', 'Duration', 'Discovery Status'],
+       rows: ['name', 'no_of_nodes_discovered', 'seed_ip', 'start_time', 'duration', 'discovery_status'],
        rowAction: [{ name: 'View More', icon: 'fa-arrow-circle-right', toolTip: 'Click here to see Scan Details' }],
        id: 'topology_id',
        add: false,
        edit: false,
+       sortOn: 'start_time',
+       isDescending: true,
        title: 'New Scan',
        selection: true,
        search: true,
        forceUpdate: false,
-       wrapTableCellContents: true,
+      //  wrapTableCellContents: true,
        table:
             [
               {
@@ -281,10 +299,12 @@ class TopologyComponent extends React.Component {
        return (
          <NodeDetails
            goBack={this.goBack}
+           topologyName={this.state.topologyNames[this.state.rowId] ? this.state.topologyNames[this.state.rowId] : ''}
            nodeDetails={this.state.nodeList}
            currentPage={this.state.currentPage}
            totalNumberOfNodes={this.state.totalNumberOfNodes}
            summaryDetails={this.state.nodeDetailsSummary}
+           applyFilters={this.applyFilters}
          />
        );
      }

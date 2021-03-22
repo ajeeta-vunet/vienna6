@@ -19,10 +19,11 @@
 
 import React, { Component } from 'react';
 import './_vunet_notifications_bar.less';
-import { BellIcon, DatabaseIcon, XIcon } from '@primer/octicons-react';
+import { BellIcon, DatabaseIcon, XIcon, ShareAndroidIcon } from '@primer/octicons-react';
 import VunetNotificationItem from '../vunet_notification_item/VunetNotificationItem';
 import { prepareLinkInfo } from 'ui/utils/link_info_eval.js';
 import $ from 'jquery';
+import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 
 const _ = require('lodash');
 const APIHelper = require('../utils/api_helper');
@@ -40,9 +41,11 @@ export class VunetNotificationsBar extends Component {
       // notificationsFetched: true,
       alertCount: 0, // denotes unread alert notifications count
       backupCount: 0,  // denotes unread backup notifications count
+      discoveryCount: 0,
       notificationsResults: null,  // denotes the notifications that the user has received during an active session
       alertNotifications: [], // list of alert notifications
-      backupNotifications: [] // list of backup notifications
+      backupNotifications: [], // list of backup notifications
+      discoveryNotifications: [] // list of discovery notifications
     };
     this.onTabChange = this.onTabChange.bind(this);
     this.fetchNotifications = this.fetchNotifications.bind(this);
@@ -76,9 +79,14 @@ export class VunetNotificationsBar extends Component {
       return !notification.read;
     });
 
+    const unreadDiscoveryNotifications = this.state.discoveryNotifications.filter(function (notification) {
+      return !notification.read;
+    });
+
     this.setState({
       alertCount: unreadAlertNotifications.length,
-      backupCount: unreadBackupNotifications.length
+      backupCount: unreadBackupNotifications.length,
+      discoveryCount: unreadDiscoveryNotifications
     });
 
     this.props.updateUnreadAlertCount(unreadAlertNotifications.length, unreadBackupNotifications.length);
@@ -122,6 +130,10 @@ export class VunetNotificationsBar extends Component {
             });
           }
 
+          //this is done to figure out whether the notifications are read or not.
+          //we compare last received backup notification data that was present in
+          //components state variable with the latest backup notification data received.
+          //if both are same, then we set read flag to true or we set it to false.
           if(this.state.notificationsResults['Backup and Storage'].length > 0) {
             const lastBackupNotification = this.state.notificationsResults['Backup and Storage'][0];
 
@@ -148,6 +160,37 @@ export class VunetNotificationsBar extends Component {
               backupNotifications: backupNotifications
             });
           }
+
+          //this is done to figure out whether the notifications are read or not.
+          //we compare last received discovery notification data that was present in
+          //components state variable with the latest discovery notification data received.
+          //if both are same, then we set read flag to true or we set it to false.
+          if(this.state.notificationsResults.Discovery.length > 0) {
+            const lastDiscoveryNotification = this.state.notificationsResults.Discovery[0];
+
+            for (lastReceivedNotificationIndex = 0; lastReceivedNotificationIndex < data.Discovery.length;
+              lastReceivedNotificationIndex++) {
+              const latestDiscoveryNotification = data.Discovery[lastReceivedNotificationIndex];
+              if (_.isEqual(latestDiscoveryNotification, lastDiscoveryNotification)) {
+                break;
+              }
+              const latestDiscoveryNotificationCopy = { ...latestDiscoveryNotification };
+              latestDiscoveryNotificationCopy.read = false;
+              this.setState({
+                discoveryNotifications: [latestDiscoveryNotificationCopy].concat(this.state.discoveryNotifications)
+              });
+            }
+          } else {
+            const discoveryNotifications = data.Discovery.map(function (item) {
+              const updatedNotificationObject = { ...item };
+              updatedNotificationObject.read = false;
+              return updatedNotificationObject;
+            });
+
+            this.setState({
+              discoveryNotifications: discoveryNotifications
+            });
+          }
         } else {
           // When no notifications are present previously
           // Add new key 'read' and set it to false to denote unread
@@ -163,9 +206,16 @@ export class VunetNotificationsBar extends Component {
             return updatedNotificationObject;
           });
 
+          const discoveryNotifications = data.Discovery.map(function (item) {
+            const updatedNotificationObject = { ...item };
+            updatedNotificationObject.read = false;
+            return updatedNotificationObject;
+          });
+
           this.setState({
             alertNotifications: notificationsData,
-            backupNotifications: backupNotifications
+            backupNotifications: backupNotifications,
+            discoveryNotifications: discoveryNotifications
           });
         }
 
@@ -226,6 +276,17 @@ export class VunetNotificationsBar extends Component {
         });
         this.setState({
           backupNotifications: oldBackupNotifications
+        });
+      } else if(category === 'discovery') {
+        let oldDiscoveryNotifications = [...this.state.discoveryNotifications];
+        oldDiscoveryNotifications = oldDiscoveryNotifications.map((notification) => {
+          if(!notification.read) {
+            notification.read = true;
+          }
+          return notification;
+        });
+        this.setState({
+          discoveryNotifications: oldDiscoveryNotifications
         });
       }
     }
@@ -326,6 +387,24 @@ export class VunetNotificationsBar extends Component {
                   }
                 </label>
               </li>
+              <li>
+                <label
+                  id="discoveryNotificationsLabel"
+                  htmlFor="discoveryRadio"
+                  className={this.state.activeTab === 'discovery' ? 'notification-tab-active' : ''}
+                >
+                  <ShareAndroidIcon aria-label="Discovery" /> Discovery
+                  {
+                    this.state.discoveryCount > 0 &&
+                    <span
+                      id="discoveryNotificationsCount"
+                      className={this.state.activeTab === 'discovery' ? 'badge active' : 'badge'}
+                    >
+                      { this.state.discoveryCount }
+                    </span>
+                  }
+                </label>
+              </li>
             </ul>
           </div>
 
@@ -344,6 +423,7 @@ export class VunetNotificationsBar extends Component {
                 this.state.alertNotifications.length > 0 ? (
                   this.state.alertNotifications.map((notification, index) => (
                     <VunetNotificationItem
+                      notificationFor="events"
                       darkTheme={this.props.darkTheme}
                       name={notification.name}
                       summary={notification.summary}
@@ -377,11 +457,46 @@ export class VunetNotificationsBar extends Component {
                 this.state.backupNotifications.length > 0 ? (
                   this.state.backupNotifications.map((notification, index) => (
                     <VunetNotificationItem
+                      notificationFor="backup"
                       darkTheme={this.props.darkTheme}
                       name={notification.name}
                       summary={notification.summary}
                       type={notification.type}
                       timestamp={notification.timestamp}
+                      key={index}
+                      read={notification.read}
+                      private={this.props.private}
+                      timefilter={this.props.timefilter}
+                      kbnUrl={this.props.kbnUrl}
+                    />
+                  ))
+                ) : (
+                  <div className="no-notifications-div">
+                    <p>You have no new notifications.</p>
+                  </div>
+                )
+              }
+            </div>
+            <input
+              id="discoveryRadio"
+              type="radio"
+              name="notificationsRadio"
+              className="notifications-radio"
+              value="discovery"
+              checked={this.state.activeTab === 'discovery'}
+              onChange={this.onTabChange}
+            />
+            <div id="discoveryContent" className="tab-content-item">
+              {
+                this.state.discoveryNotifications.length > 0 ? (
+                  this.state.discoveryNotifications.map((notification, index) => (
+                    <VunetNotificationItem
+                      notificationFor="discovery"
+                      darkTheme={this.props.darkTheme}
+                      name={notification.name}
+                      summary={`Scan ` + notification.discovery_status + ` in ` + displayTwoTimeUnits(notification.duration) + `.`}
+                      type={notification.type}
+                      timestamp={notification.end_time}
                       key={index}
                       read={notification.read}
                       private={this.props.private}

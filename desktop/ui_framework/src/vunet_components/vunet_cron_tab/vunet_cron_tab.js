@@ -62,6 +62,44 @@ export class VunetCronTab extends Component {
     this.yearRef = undefined;
   }
 
+  componentDidMount() {
+    if (this.props.cronString !== undefined &&
+      this.props.cronString !== '') {
+
+      // cron string will be in the following format:
+      // < * * * * * >.
+      // Here the first star represents minute values
+      // second represents hour values.
+      // third represents day values.
+      // fourth represents month values.
+      // fifth represents week values.
+      // Example cron expressions:
+      // schedule job daily at 12 PM:  0 0 * * *
+      // schedule job every sunday at 9 AM and 6PM : 0 9,18 * * 0
+      const cronString = this.props.cronString;
+
+      // Get the values from cron expression and populate them
+      // in state
+      const cronValues = cronString && cronString.split(' ');
+      this.setState({
+        selectedFrequency: this.props.frequency,
+        minuteSelectedList: cronValues && cronValues[0].split(',') || [],
+        hourSelectedList: cronValues && cronValues[1].split(',') || [],
+        daySelectedList: cronValues && cronValues[2].split(',') || [],
+        monthSelectedList: cronValues && cronValues[3].split(',') || [],
+        weekSelectedList: cronValues && cronValues[4].split(',') || []
+      }, () => {
+
+        // Show the date time pickers as per the schedule frequency
+        // selected.
+        this.updateCronSelection(this.state.selectedFrequency);
+      });
+
+      // When no cron expression is provided to the component,
+      // Use schedule frequency as 'day' by default.
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.frequency !== nextProps.frequency) {
 
@@ -544,6 +582,7 @@ export class VunetCronTab extends Component {
   }
 
   render() {
+
     return (
       <div className="cron-tab-container">
         <div className="supporting-words"> Every </div>

@@ -52,18 +52,50 @@ export default (props) => {
     return ('/app/vienna#/' + referencePage);
   }
 
-  return (
-    <a href={getNotificationLink()} className={`notification_item ${notificationRead} ${isDarkThemeEnabled}`}>
+  if(props.notificationFor === 'events') {
+    return (
+      <a href={getNotificationLink()} className={`notification_item ${notificationRead} ${isDarkThemeEnabled}`}>
 
-      <div className="notification_body">
-        <div className={'severity-' + props.type} />
-        <div className="notification_content">
-          <p className="notification_title">{props.name}</p>
-          <p className="notification_description">{props.summary}</p>
-          <p className="notification_time">{moment(timestamp).fromNow()}</p>
+        <div className="notification_body">
+          <div className={'severity-' + props.type} />
+          <div className="notification_content">
+            <p className="notification_title">{props.name}</p>
+            <p className="notification_description">{props.summary}</p>
+            <p className="notification_time">{moment(timestamp).fromNow()}</p>
+          </div>
         </div>
-      </div>
 
-    </a>
-  );
+      </a>
+    );
+  } else if(props.notificationFor === 'discovery') {
+    return (
+      <a href={'/app/vienna#/discovery'} className={`notification_item ${notificationRead} ${isDarkThemeEnabled}`}>
+
+        <div className="notification_body">
+          <div className={'severity-' + props.type} />
+          <div className="notification_content">
+            <p className="notification_title">{props.name}</p>
+            <p className="notification_description">{props.summary}</p>
+            <p className="notification_time">{moment(timestamp).fromNow()}</p>
+          </div>
+        </div>
+
+      </a>
+    );
+  } else if(props.notificationFor === 'backup') {
+    return (
+      <a href={'/app/vienna#/berlin/backup'} className={`notification_item ${notificationRead} ${isDarkThemeEnabled}`}>
+
+        <div className="notification_body">
+          <div className={'severity-' + props.type} />
+          <div className="notification_content">
+            <p className="notification_title">{props.name}</p>
+            <p className="notification_description">{props.summary}</p>
+            <p className="notification_time">{moment(timestamp).fromNow()}</p>
+          </div>
+        </div>
+
+      </a>
+    );
+  }
 };

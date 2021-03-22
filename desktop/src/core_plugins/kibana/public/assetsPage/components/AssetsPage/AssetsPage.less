@@ -1,112 +1,119 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
-.assetsPage {
-  display: flex;
-  justify-content: flex-start;
+.assetsPage-wrapper{
   padding: 2.7rem 7rem 0rem 2rem;
 
-    .topologyID {
-      padding-left: 2.5rem;
+  .assetsPage {
+    display: flex;
+    justify-content: flex-start;
+
+      .topologyID {
+        padding-left: 2.5rem;
+      }
+
+      .title {
+          text-align: center;
+      }
+
+      td {
+        border: none;
     }
 
-    .title {
-        text-align: center;
+    .assets-summary{
+      margin-right: 2rem;
+      width: 25rem;
+      box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+      border-radius: 1rem;
+      border-collapse: collapse;
+      background-color: @network-white-color;
     }
 
-    td {
-      border: none;
-  }
+    .assets-table{
+      box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+      border-radius: 1rem;
+      border-collapse: collapse;
+      background-color: @network-white-color;
+      flex: 2;
+      height: fit-content;
 
-  .assets-summary{
-    margin-right: 2rem;
-    width: 25rem;
-    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-    border-radius: 1rem;
-    border-collapse: collapse;
-    background-color: @network-white-color;
-  }
+      .table-toolbar{
+        display: flex;
+        justify-content: space-between;
+        height: 7.5rem;
+        min-height: 5rem;
+        max-height: 10rem;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        background-color: white;
+        border: none;
+        margin-right: 4rem;
 
-  .assets-table{
-    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-    border-radius: 1rem;
-    border-collapse: collapse;
-    background-color: @network-white-color;
-    flex: 2;
+        .toolbar-search{
+          margin-left: 15rem;
+          padding-top: 2rem;
+          width: 50%;
 
-    .table-toolbar{
-      display: flex;
-      justify-content: space-between;
-      height: 7.5rem;
-      min-height: 5rem;
-      max-height: 10rem;
-      border-top-left-radius: 1rem;
-      border-top-right-radius: 1rem;
-      background-color: white;
-      border: none;
-      margin-right: 4rem;
-
-      .toolbar-search{
-        margin-left: 15rem;
-        padding-top: 2rem;
-        width: 50%;
-
-        .toolbar-searchbox {
-          font-family: 'Inter-Regular';
-          transition: width 2s;
-          border-radius: 2rem;
-          font-size: 1.6rem;
-          padding: .4rem 1.2rem .5rem 1.8rem;
-          border: 1px solid @network-toobar-searchbox;
-
-          .search-icon {
-            top: 0.7rem;
-            left: 1.3rem;
+          .toolbar-searchbox {
+            font-family: 'Inter-Regular';
+            transition: width 2s;
+            border-radius: 2rem;
             font-size: 1.6rem;
-            color: @serach-icon-color;
-          }
+            padding: .4rem 1.2rem .5rem 1.8rem;
+            border: 1px solid @network-toobar-searchbox;
 
-          .search-input {
-            border: none;
+            .search-icon {
+              top: 0.7rem;
+              left: 1.3rem;
+              font-size: 1.6rem;
+              color: @serach-icon-color;
+            }
+
+            .search-input {
+              border: none;
+            }
           }
         }
       }
     }
+
+      .assets {
+        text-align: left;
+        border-collapse: collapse;
+        border: 3px solid @network-nodes-border;
+        width: 100%;
+        border: none;
+        border-bottom: 0.1rem solid @network-border-color !important;
+      }
+
+      .assets td, .assets th {
+        border: none;
+        padding: 0.5rem 3rem 0.5rem 2rem;
+        font-size: 1.5rem;
+        padding: 7px 8px 8px;
+        line-height: 1.5;
+        text-align: left;
+        width: auto;
+        margin: 0 auto;
+      }
+
+      .assets th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+      }
+
+      .assets td {
+        padding: 7px 8px 8px;
+        line-height: 1.5;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .assets thead tr {
+        border-top: 0.1rem solid @network-border-color;
+        border-bottom: 0.1rem solid @network-border-color;
+      }
   }
-  
-    .assets {
-      text-align: center;
-      border-collapse: collapse;
-      border: 3px solid @network-nodes-border;
-      width: 100%;
-      border: none;
-      border-bottom: 0.1rem solid @network-border-color !important;
-    }
-
-    .assets td, .assets th {
-      border: none;
-      padding: 0.5rem 3rem 0.5rem 2rem;
-      font-size: 1.5rem;
-      padding: 7px 8px 8px;
-      line-height: 1.5;
-    }
-
-    .assets th {
-      padding-top: 12px;
-      padding-bottom: 12px;
-      text-align: center;
-    }
-    .assets thead tr {
-      border-top: 0.1rem solid @network-border-color;
-      border-bottom: 0.1rem solid @network-border-color;
-    }
-}
-
-.tableRowCell {
-  padding: 7px 8px 8px;
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .pagination {
@@ -162,7 +169,7 @@
   box-shadow: 0rem 0rem 1rem 0.7rem rgba(0, 0, 0, 0.06);
 }
 
-.newAssetModal {
+.newAssetModal, .import-asset-modal {
   position: fixed;
   z-index: 1000;
   top: 0;
@@ -195,4 +202,21 @@
   display: flex;
   justify-content: center;
   margin-top: 3rem;
+}
+
+.report-button-wrapper {
+  .report-button {
+    display         : flex;
+    background-color: @white;
+    color           : @black;
+    border          : 1px solid @event-console-border-color;
+    border-radius   : 2px;
+    padding         : 0.5rem 2rem;
+  }
+}
+
+.import-button-wrapper {
+  .vunet-btn-import {
+    border: none;
+  }
 }

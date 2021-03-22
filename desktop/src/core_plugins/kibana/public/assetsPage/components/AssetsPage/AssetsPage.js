@@ -25,10 +25,18 @@ import './AssetsPage.less';
 import chrome from 'ui/chrome';
 import $ from 'jquery';
 import { produce } from 'immer';
-import { fetchListOfAssets, fetchAssetDetailsSummary, searchAssetDetails } from '../../api_calls';
+import { fetchListOfAssets,
+  fetchAssetDetailsSummary,
+  searchAssetDetails,
+  downloadAssets,
+  fetchFilteredListOfAssets,
+  importAssets } from '../../api_calls';
 import { Summary } from '../summary/summary';
 import ReactTooltip from 'react-tooltip';
 import { Notifier } from 'ui/notify';
+import { FilterBar } from '../../../discovery/components/FilterBar/FilterBar';
+import _ from 'lodash';
+import { ImportAsset } from '../ImportAsset/ImportAsset';
 
 const notify = new Notifier({ location: 'Assets' });
 
@@ -56,7 +64,9 @@ export class AssetsPage extends React.Component {
       currentPage: 1,
       totalNumberOfAssets: this.props.assetList.no_of_nodes,
       editAssetDetails: emptyAsset,
-      assetDetailsSummary: this.props.assetDetailsSummary
+      assetDetailsSummary: this.props.assetDetailsSummary,
+      filterObject: {},
+      importAssetFlag: false
     };
   }
 
@@ -81,7 +91,7 @@ export class AssetsPage extends React.Component {
   //this function is used to render the headers of the table.
   renderTableHeader() {
     const header = ['device_name', 'system_ip', 'device_type', 'vendor_name', 'addition_method',
-      'topology_name', 'contact_details', 'last_modified_time',  'actions'];
+      'topology_name', 'last_modified_time',  'actions'];
     return header.map((key, index) => {
       return <th key={'head-' + index}>{generateHeading(key)}</th>;
     });
@@ -91,57 +101,36 @@ export class AssetsPage extends React.Component {
   renderTableData() {
     return this.state.assets && this.state.assets.map((asset) => {
       const { node_id, topology_name, last_modified_time, addition_method, vendor_name, device_name,
-        device_type, system_ip, contact_details } = asset; //destructuring
+        device_type, system_ip } = asset; //destructuring
       return (
         <tr key={node_id} className={'row-' + node_id}>
           <td>
-            <div className="tableRowCell">
-              <input
-                type="checkbox"
-                className="checkSingle"
-                onClick={(e) => this.checked(e, node_id)}
-              />
-            </div>
+            <input
+              type="checkbox"
+              className="checkSingle"
+              onClick={(e) => this.checked(e, node_id)}
+            />
           </td>
           <td>
-            <div className="tableRowCell">
-              {device_name}
-            </div>
+            {device_name}
           </td>
           <td>
-            <div className="tableRowCell">
-              {system_ip}
-            </div>
+            {system_ip}
           </td>
           <td>
-            <div className="tableRowCell">
-              {device_type}
-            </div>
+            {device_type}
           </td>
           <td>
-            <div className="tableRowCell">
-              {vendor_name}
-            </div>
+            {vendor_name}
           </td>
           <td>
-            <div className="tableRowCell">
-              {addition_method}
-            </div>
+            {addition_method}
           </td>
           <td>
-            <div className="tableRowCell">
-              {topology_name}
-            </div>
+            {topology_name}
           </td>
           <td>
-            <div className="tableRowCell">
-              {contact_details}
-            </div>
-          </td>
-          <td>
-            <div className="tableRowCell">
-              {last_modified_time}
-            </div>
+            {last_modified_time}
           </td>
           <td>
             <button
@@ -187,7 +176,7 @@ export class AssetsPage extends React.Component {
   //this function is called to delete a asset.
   deleteAssets = () => {
 
-    const deletePromise = Promise.all(
+    Promise.all(
 
       this.state.deleteIdList && this.state.deleteIdList.map((id) => {
         let urlBase = chrome.getUrlBase();
@@ -197,11 +186,9 @@ export class AssetsPage extends React.Component {
           method: 'DELETE'
         });
       })
-    );
-
-    deletePromise
+    )
       .then(() => {
-        fetchListOfAssets(0, 10)
+        fetchFilteredListOfAssets(0, this.state.filterObject)
           .then(data => {
             fetchAssetDetailsSummary()
               .then(assetDetailsSummary => {
@@ -351,7 +338,7 @@ export class AssetsPage extends React.Component {
         });
       });
     }else {
-      fetchListOfAssets((currentPage - 1) * 10, 10)
+      fetchFilteredListOfAssets((currentPage - 1) * 10, this.state.filterObject)
         .then(data => {
           this.setState({
             assets: data.assets,
@@ -363,40 +350,217 @@ export class AssetsPage extends React.Component {
     }
   }
 
+  // In this function we use the filterStore object and
+  // update the data passed to 'FilterBar' and 'Summary'
+  // components based on filters applied by the user. This function receives filterField and
+  // filterValue. If the corresponding field and value is present in filterStore, it will be removed.
+  // Else it will be added to filterStore.
+  handleFilter = (filterValue, filterField) => {
+    let updatedfilterObject = this.state.filterObject;
+    // Check if filter with 'filterField' exists in filterObject and filterValue received is not empty.
+    //If filterValue is empty then the 'cancel' filter button is clicked.
+    if (_.has(this.state.filterObject, filterField) && filterValue !== '') {
+      // Check if filtered value exists in the array of filters
+      const filterValueIndex = this.state.filterObject[filterField].indexOf(
+        filterValue
+      );
+
+      // If filterValue exists remove it as user is clicking on the same widget
+      // for the second time.
+      if (filterValueIndex > -1) {
+        updatedfilterObject = produce(this.state.filterObject, (draft) => {
+          draft[filterField].splice(filterValueIndex, 1);
+          //Delete property if there are no filters to be applied on this property
+          if (draft[filterField].length === 0) delete draft[filterField];
+        });
+        // If filterValue does not exist, add it as user is clicking on the same widget
+        // for the first time.
+      } else {
+        updatedfilterObject = produce(this.state.filterObject, (draft) => {
+          draft[filterField].push(filterValue);
+        });
+      }
+      // If 'filterField' does not exist in filterObject, add it and update the
+      // filterValue in its array.
+    } else if(filterValue !== '') {
+      updatedfilterObject = produce(this.state.filterObject, (draft) => {
+        draft[filterField] = [filterValue];
+      });
+    }
+    this.setState({ filterObject: updatedfilterObject }, () => {
+      this.applyFilters(0, this.state.filterObject);
+    });
+  }
+
+  // this method will be called to fetch the list of assets
+  //based on the filter applied whose value is store in
+  //filterStore.
+  applyFilters = (scrollId, filters) => {
+    fetchFilteredListOfAssets(scrollId, filters)
+      .then(data => {
+        this.setState({
+          assets: data.assets,
+          totalNumberOfAssets: data.no_of_nodes
+        });
+      });
+  }
+
+  //this method will be called to clear all filters
+  //and fetch the list of assets without any filters applied.
+  clearAllFilter = () => {
+    fetchListOfAssets(0, 10)
+      .then(data => {
+        this.setState({
+          filterObject: {},
+          assets: data.assets,
+          currentPage: 1,
+          totalNumberOfAssets: data.no_of_nodes,
+        });
+      });
+  }
+
+  //this method will be called to set the importAssetFlag to true,
+  //so that the importAsset component will be displayed
+  displayImportModal = () => {
+    this.setState({ importAssetFlag: true });
+  }
+
+  //this method will be called to set the importAssetFlag to false,
+  //so that the importAsset component will not be displayed.
+  cancelAssetImport = () => {
+    this.setState({ importAssetFlag: false });
+  }
+
+  //this method will be called when the user uploads an xls file
+  //with the list of assets.
+  handleAssetImport = (formData) => {
+    importAssets(formData)
+      .then(() => {
+        fetchListOfAssets(0, 10)
+          .then(data => {
+            fetchAssetDetailsSummary()
+              .then(assetDetailsSummary => {
+                this.setState({
+                  assets: data.assets,
+                  currentPage: 1,
+                  totalNumberOfAssets: data.no_of_nodes,
+                  selectedFlag: false,
+                  assetDetailsSummary: assetDetailsSummary,
+                  deleteIdList: [],
+                  filterObject: {}
+                }, () => {
+                  notify.info('Assets Imported succesfully.');
+                  this.cancelAssetImport();
+                }
+                );
+              });
+          });
+      });
+  }
+
+  //method called when the New Asset Modal form is submitted after entering details
+  //or after editing the details of existing asset.
+  handleAssetSubmit = (method, urlBase, assetObject) => {
+
+    fetch(urlBase, {
+      method: method,
+      body: JSON.stringify(assetObject)
+    })
+      .then(response => {
+        if(response.ok) {
+          return response.json();
+        }else {
+          if(method === 'POST') {
+            notify.error('Failed to add asset.');
+          }else {
+            notify.error('Failed to edit asset.');
+          }
+        }
+      })
+      .then(data => {
+        if(data) {
+          if(method === 'POST') {
+            notify.info('Asset added successfully.');
+          }else {
+            notify.info('Asset edit successful.');
+          }
+        }
+        fetchFilteredListOfAssets(0, this.state.filterObject)
+          .then(assetDetails => {
+            fetchAssetDetailsSummary()
+              .then(assetDetailsSummary => {
+                this.setState({
+                  assets: assetDetails.assets,
+                  currentPage: 1,
+                  totalNumberOfAssets: assetDetails.no_of_nodes,
+                  selectedFlag: false,
+                  assetDetailsSummary: assetDetailsSummary,
+                  deleteIdList: []
+                }, () => this.cancelNewAsset());
+              });
+          });
+      })
+      .catch(() => {
+        notify.error('Asset add/edit failure.');
+      });
+  };
+
   render() {
 
     return (
-      <div className="assetsPage">
-        <div className="assets-summary">
-          <Summary
-            summaryDetails={this.state.assetDetailsSummary}
+      <div className="assetsPage-wrapper">
+        <div className="filters">
+          <FilterBar
+            filterObject={this.state.filterObject}
+            handleFilter={this.handleFilter}
+            clearAllFilter={this.clearAllFilter}
           />
         </div>
-        <div className="assets-table">
-          <div className="table-toolbar">
-            <div className="toolbar-search">
-              <div className="toolbar-searchbox">
-                <div className="search-icon fa fa-search" />
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="Search"
-                  onChange={(e) => this.onSearch(e)}
-                />
+        <div className="assetsPage">
+          <div className="assets-summary">
+            <Summary
+              summaryDetails={this.state.assetDetailsSummary}
+              handleFilter={this.handleFilter}
+              filterObject={this.state.filterObject}
+            />
+          </div>
+          <div className="assets-table">
+            <div className="table-toolbar">
+              <div className="toolbar-search">
+                <div className="toolbar-searchbox">
+                  <div className="search-icon fa fa-search" />
+                  <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Search"
+                    onChange={(e) => this.onSearch(e)}
+                  />
+                </div>
+              </div>
+              <div className="kuiToolBarSection">
+                <div className="import-button-wrapper">
+                  <button
+                    className="vunet-btn-import"
+                    onClick={() => this.displayImportModal()}
+                  >
+                  Import
+                  </button>
+                </div>
+                <div className="report-button-wrapper">
+                  <button className="report-button" onClick={() => downloadAssets()}>
+                    <i className="fa fa-download" data-tip="Download CSV Report"/>
+                    <ReactTooltip />
+                  </button>
+                </div>
+                {this.renderAddOrDeleteIcon()}
               </div>
             </div>
-            <div className="kuiToolBarSection">
-              {this.renderAddOrDeleteIcon()}
-            </div>
-          </div>
-          {this.state.assets.length > 0 &&
+            {this.state.assets.length > 0 &&
             <table className="assets">
               <thead>
                 <tr>
                   <td>
-                    <div className="tableRowCell">
-                      <input type="checkbox" className="checkAll" onChange={(e) => this.selectAll(e)}/>
-                    </div>
+                    <input type="checkbox" className="checkAll" onChange={(e) => this.selectAll(e)}/>
                   </td>
                   {this.renderTableHeader()}
                 </tr>
@@ -405,30 +569,40 @@ export class AssetsPage extends React.Component {
                 {this.renderTableData()}
               </tbody>
             </table>
-          }
-          {this.state.assets.length <= 0 &&
+            }
+            {this.state.assets.length <= 0 &&
             <div className="no-asset">Looks like there are no assets found.</div>
-          }
-          <div className="pagination">
-            <Pagination
-              hideDisabled
-              activePage={this.state.currentPage}
-              itemsCountPerPage={10}
-              totalItemsCount={this.state.totalNumberOfAssets}
-              onChange={this.handlePageChange}
+            }
+            <div className="pagination">
+              <Pagination
+                hideDisabled
+                activePage={this.state.currentPage}
+                itemsCountPerPage={10}
+                totalItemsCount={this.state.totalNumberOfAssets}
+                onChange={this.handlePageChange}
+              />
+            </div>
+          </div>
+          {this.state.addNewAsset &&
+          <div className="newAssetModal">
+            <NewAssetModal
+              editAssetDetails={this.state.editAssetDetails}
+              vendorList={this.props.vendorList}
+              deviceType={this.props.deviceTypeList}
+              handleAssetSubmit={this.handleAssetSubmit}
+              cancelNewAsset={this.cancelNewAsset}
             />
           </div>
+          }
+          {this.state.importAssetFlag &&
+          <div className="import-asset-modal">
+            <ImportAsset
+              cancelAssetImport={this.cancelAssetImport}
+              handleAssetImport={this.handleAssetImport}
+            />
+          </div>
+          }
         </div>
-        {this.state.addNewAsset &&
-        <div className="newAssetModal">
-          <NewAssetModal
-            editAssetDetails={this.state.editAssetDetails}
-            vendorList={this.props.vendorList}
-            deviceType={this.props.deviceTypeList}
-            cancelNewAsset={this.cancelNewAsset}
-          />
-        </div>
-        }
       </div>
     );
   }

@@ -954,7 +954,7 @@ export class VunetDynamicFormBuilder extends Component {
         );
       }
 
-      if (type === 'crontab') {
+      if (type === 'crontab' && this.state && this.state.scheduleFrequency) {
         input = (
           <div key="crontabcontainer" className="crontab-container">
             <VunetCronTab

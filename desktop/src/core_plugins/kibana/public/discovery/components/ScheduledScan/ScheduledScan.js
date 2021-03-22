@@ -35,7 +35,7 @@ export class ScheduledScan extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      listOfScheduledScans: {},
+      listOfScheduledScans: [],
       multiSelectCredentialsArray: [],
       multiSelectSourceIpArray: [],
     };
@@ -219,17 +219,24 @@ export class ScheduledScan extends React.Component {
     return Promise.resolve(false);
   };
 
+  validateValue = (key, value) => {
+    return this.state.listOfScheduledScans && this.state.listOfScheduledScans.find(schedule => schedule[key] === value) ? true : false;
+  };
+
   render() {
+
     const scheduleScanMeta = {
       // headers: ['Config ID', 'Schedule Name', 'Schedule At', 'Seed IP', 'Start IP', 'End IP'],
       // rows: ['config_id', 'schedule_name', 'frequency', 'seed_ip', 'start_ip', 'end_ip'],
-      headers: ['Config ID', 'Schedule Name', 'Frequency', 'Seed IP', 'Source IP'],
+      headers: ['Scan ID', 'Schedule Name', 'Frequency', 'Seed IP', 'Source IP'],
       rows: ['config_id', 'schedule_name', 'frequency', 'seed_ip', 'source_ip'],
-      rowAction: [{ name: 'Scan Now', icon: 'fa-play', toolTip: 'Click here to run this Scan now.' }],
+      rowAction: [{ name: 'Scan Now', icon: 'fa-play', toolTip: 'Scan Now.' }],
       id: 'config_id',
       add: true,
       edit: true,
-      title: 'New Scheduled Scan',
+      isDescending: true,
+      ascendingOrder: false,
+      title: 'Scan',
       selection: true,
       search: true,
       forceUpdate: false,
@@ -244,30 +251,41 @@ export class ScheduledScan extends React.Component {
         user_details: '',
         source_ip: [],
         cronString: '0 0 * * *',
-        scheduleAt: true,
+        scheduleAt: false,
         scheduleFrequency: 'day',
+        schedule_now: true
       },
       table:
              [
                {
                  key: 'schedule_name',
+                 id: true,
+                 validationCallback: this.validateValue,
                  label: 'Schedule Name *',
                  type: 'text',
                  helpObj: SCHEDULE_NAME_HELP_OBJ,
                  name: 'scheduleName',
                  props: {
-                   required: true
-                 }
+                   required: true,
+                   maxLength: '32',
+                   pattern: '^[a-zA-Z0-9_.-]+([a-zA-Z0-9_]+)*$'
+                 },
+                 errorText: `Name should be unique and can have alpha-numeric characters. _ , . and - 
+                is also allowed but the name should not exceed 32 characters.`
                },
                {
                  key: 'seed_ip',
+                 id: true,
                  label: 'Seed IP *',
                  type: 'text',
                  helpObj: SEED_IP_HELP_OBJ,
                  name: 'seedIp',
                  props: {
-                   required: true
-                 }
+                   required: true,
+                   // eslint-disable-next-line max-len
+                   pattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
+                 },
+                 errorText: `Please enter a Seed IP that matches this pattern: '256.256.256.128/24'.`
                }, {
                  key: 'source_ip',
                  label: 'Source IP *',
@@ -278,8 +296,7 @@ export class ScheduledScan extends React.Component {
                  props: {
                    required: true
                  }
-               },
-               {
+               }, {
                  key: 'cred_list',
                  label: 'Credentials *',
                  type: 'multiSelect',
@@ -295,15 +312,13 @@ export class ScheduledScan extends React.Component {
                  name: 'schedule_info',
                  helpObj: SCHEDULE_INFO_HELP_OBJ,
                  type: 'header'
-               },
-               {
+               }, {
                  key: 'schedule_now',
                  name: 'schedule_now',
                  label: 'Run Now',
                  helpObj: SCHEDULE_NOW_HELP_OBJ,
                  type: 'checkbox',
-               },
-               {
+               }, {
                  key: 'scheduleAt',
                  name: 'scheduleAt',
                  label: 'Schedule it at',
@@ -323,10 +338,8 @@ export class ScheduledScan extends React.Component {
                      }
                    ]
                  }
-               },
-               {
+               }, {
                  key: 'cronString',
-                 //  label: 'Schedule *',
                  type: 'crontab',
                  name: 'schedule',
                  props: {

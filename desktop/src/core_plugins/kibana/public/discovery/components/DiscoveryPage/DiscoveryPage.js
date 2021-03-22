@@ -30,14 +30,14 @@ export class DiscoveryPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTabId: 'scan',
+      currentTabId: 'scanDetails',
       showDetails: false,
     };
 
     this.tabs = [
       {
-        id: 'scan',
-        name: 'Scan',
+        id: 'scanDetails',
+        name: 'Scan Details',
       },
       {
         id: 'topology',
@@ -45,7 +45,7 @@ export class DiscoveryPage extends React.Component {
       }
     ];
 
-    this.landingTab = 'scan';
+    this.landingTab = 'scanDetails';
   }
 
   //this function is used to handle the tab changes.
@@ -70,7 +70,7 @@ export class DiscoveryPage extends React.Component {
           {/* Tabs Body */}
           <div className="content-body">
             {/* display the respective tab according the id */}
-            {this.state.currentTabId === 'scan' && (
+            {this.state.currentTabId === 'scanDetails' && (
               <ScheduledScan
                 credList={this.props.credList}
                 sourceIpAddressList={this.props.sourceIpAddressList}

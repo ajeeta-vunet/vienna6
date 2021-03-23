@@ -319,8 +319,9 @@
             </div>
           </div>
         </td>
-        <td width="{{ columnWidth }}" class="bm-table-td-metric-names"
+        <td class="bm-table-td-metric-names"
           ng-repeat="(colName, value) in verticalDatas[outerIndex] track by $index"
+          width="{{ $index === 0 ? verticalTableFirstColWidth : verticalTableColWidth }}"
           ng-init="colIndex=$index"
           ng-style="columnMeta[colIndex]['bgColorEnabled'] ?
                           {'background': value.color, color: idealTextColor(value.color)}:
@@ -330,16 +331,16 @@
           <div ng-style="colIndex >= aggregationsLength && (outerIndex !== 0 || outerIndex == 0) ? {'text-align' : 'center'} : {'text-align' : 'left'}">
             <span ng-if="outerIndex !== 0 && columnMeta[colIndex]['Reference Link']">
                 <a ng-click="viewDashboardForThisMetric(columnMeta[colIndex]['Reference Link'],
-                  undefined,value.formattedValue !== undefined? value.formattedValue : value)"
+                  undefined,value.formattedValue !== undefined? value.formattedValue : value.key)"
                   ng-style="columnMeta[colIndex]['bgColorEnabled'] ?
                           {'background': value.color, color: idealTextColor(value.color)}:
-			  {'color': value.color }">
-                  <u> {{value.formattedValue !== undefined? value.formattedValue : value}} </u>
+        {'color': value.color }">
+                  <u> {{value.formattedValue !== undefined? value.formattedValue : value.formattedKey}} </u>
                 </a>
             </span>
             <span ng-if="outerIndex === 0 || (outerIndex !== 0 && columnMeta[colIndex]['Reference Link'] === undefined) &&
               columnMeta[colIndex]['historicData'] !== true">
-              {{value.formattedValue !== undefined? value.formattedValue : value}}
+              {{value.formattedValue !== undefined? value.formattedValue : outerIndex === 0? value : value.formattedKey}}
             </span>
                 <span
                   ng-if="outerIndex !== 0 && columnMeta[colIndex]['historicData'] === true &&
@@ -415,14 +416,14 @@
               >
                 <span class="table-cell-filter">
                   <span
-                    ng-click="onFilterClick(agg.field, value, agg.index, false)"
+                    ng-click="onFilterClick(agg.field, value.key, agg.index, false)"
                     class="fa fa-search-plus"
                     tooltip="Filter for value"
                     tooltip-append-to-body="1"
                   ></span>
 
                   <span
-                    ng-click="onFilterClick(agg.field, value, agg.index, true)"
+                    ng-click="onFilterClick(agg.field, value.key, agg.index, true)"
                     class="fa fa-search-minus"
                     tooltip="Filter out value"
                     tooltip-append-to-body="1"
@@ -437,7 +438,8 @@
 
   <!--Horizontal tabular format Display  -->
   <div
-    ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'horizontal'" class="horizontal-bmv-table">
+    ng-if="vis.params.enableTableFormat && vis.params.tabularFormat === 'horizontal'" 
+    class="horizontal-bmv-table">
     <table class="bm-table-striped">
       <tr
         class="data-rows"

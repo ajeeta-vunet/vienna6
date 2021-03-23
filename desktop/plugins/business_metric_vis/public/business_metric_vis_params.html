@@ -187,9 +187,10 @@
         </div>
       </div>
     </div>
+    <!-- Previously we were allowing 8 metrics now increased to 15 metric on request of NPCI -->
     <div class="vis-editor-agg-wide-btn">
       <div
-        ng-show="vis.params.metrics.length < 8"
+        ng-show="vis.params.metrics.length < 15"
         class="kuiButton kuiButton--secondary kuiButton--small"
         ng-click="addMetric()">
         <i

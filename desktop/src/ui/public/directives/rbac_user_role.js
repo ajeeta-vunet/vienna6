@@ -29,7 +29,8 @@ module.directive('rbacUserRole', function ($http) {
       // permission and no ManageObject permission
       $scope.isModifyDisabled = (roleName) => {
         const index = userRolePermissionDetails.findIndex(x => x.name === roleName);
-        if(userRolePermissionDetails[index].claims.indexOf('ManageObject') === -1) {
+        if(userRolePermissionDetails && userRolePermissionDetails.length &&
+          userRolePermissionDetails[index].claims.indexOf('ManageObject') === -1) {
           return true;
         }
         return false;

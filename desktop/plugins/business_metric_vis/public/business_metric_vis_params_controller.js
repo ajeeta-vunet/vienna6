@@ -19,6 +19,18 @@ module.controller('BusinessMetricVisParamsController', function ($scope, $rootSc
   $scope.savedSearchIds = [];
   $scope.indexPatternIds = [];
   $scope.intersectionList = [];
+  $scope.vis.params.sortColumn = {};
+  $scope.vis.params.sortColumn.colIndex = '';
+  $scope.vis.params.sortColumn.colName = '';
+  $scope.vis.params.sortColumn.direction = '';
+
+  $rootScope.$on('vusop:sortBmvCols', (event, obj) => {
+    $scope.vis.params.sortColumn = {};
+    $scope.vis.params.sortColumn.colIndex = obj.colIndex;
+    $scope.vis.params.sortColumn.colName = obj.colName;
+    $scope.vis.params.sortColumn.sortDirection = obj.direction;
+  });
+
   // Initializing the options for interval
   // metric
   $scope.intervalOptions = [

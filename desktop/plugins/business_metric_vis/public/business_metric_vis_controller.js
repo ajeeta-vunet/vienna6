@@ -209,17 +209,29 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
   $scope.noDataContainerConstant = 0.30;
   $scope.noDataIconConstant = 0.55;
 
-  $scope.sort = {
-    columnIndex: null,
-    columnName: null,
-    direction: null
-  };
-
-  self.sort = {
-    columnIndex: null,
-    columnName: null,
-    direction: null
-  };
+  if($scope.vis.params.sortColumn) {
+    $scope.sort = {
+      columnIndex: $scope.vis.params.sortColumn.colIndex,
+      columnName: $scope.vis.params.sortColumn.colName,
+      direction: $scope.vis.params.sortColumn.sortDirection
+    };
+    self.sort = {
+      columnIndex: $scope.vis.params.sortColumn.colIndex,
+      columnName: $scope.vis.params.sortColumn.colName,
+      direction: $scope.vis.params.sortColumn.sortDirection
+    };
+  } else {
+    $scope.sort = {
+      columnIndex: null,
+      columnName: null,
+      direction: null
+    };
+    self.sort = {
+      columnIndex: null,
+      columnName: null,
+      direction: null
+    };
+  }
 
   $scope.sortColumn = function (colIndex, colName, sortDirection = 'asc') {
     if (self.sort.columnIndex === colIndex) {
@@ -230,6 +242,21 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       };
       sortDirection = directions[self.sort.direction];
     }
+
+    //If sorting details exist in visualization then use the same
+    //otherwise use the first column
+    const sortObj = {};
+    if($scope.vis.params.sortColumn) {
+      sortObj.colIndex = colIndex;
+      sortObj.colName = colName;
+      sortObj.direction = sortDirection;
+    } else {
+      sortObj.colIndex = 0;
+      sortObj.colName = 'column0';
+      sortObj.direction = sortDirection;
+    }
+    $rootScope.$broadcast('vusop:sortBmvCols', sortObj);
+
     self.sort.columnIndex = colIndex;
     self.sort.columnName = colName;
     self.sort.direction = sortDirection;
@@ -447,6 +474,8 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       aggregationsLength + historicalDataLength + actionButtonsLength + 2;
 
     $scope.columnWidth = (100 / (noOfColumns)) + '%';
+    $scope.verticalTableColWidth = (83 / (noOfColumns)) + '%';
+    $scope.verticalTableFirstColWidth = '17%';
 
     // This function is used to prepare the inner most part of the
     // JSON similar to output of BMV with aggregations.
@@ -745,13 +774,13 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           const label = metricObj.label;
           if (metric.label === label) {
             if (metric.value !== undefined) {
-              value = metric.value;
-              formattedValue = metric.formattedValue;
+              value = metric.value === 'N.A.' ? 0 : metric.value;
+              formattedValue = metric.formattedValue === 'N.A.' ? 0 : metric.formattedValue;
               color = metric.color;
             }
             else {
-              value = 'N.A.';
-              formattedValue = 'N.A.';
+              value = 0;
+              formattedValue = 0;
               color = 'N.A.';
             }
             row[columnName + colIndex] = { value: value, formattedValue: formattedValue, color: color };
@@ -911,13 +940,13 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
           // and store it in an stack array
           if (key.hasOwnProperty('buckets')) {
             if (key.hasOwnProperty('key')) {
-              stack.push(key.key);
+              stack.push({ key: key.key, formattedKey: key.formattedKey });
             }
             // If more than 1 bukets are used,
             // pick the next bucket and repeat this process
             // until we reach the metric part.
             iterateResults(key.buckets, destList, stack, metricList, columnName, metricIndex, metricName, rowIndex);
-            stack.pop(key.key);
+            stack.pop({ key: key.key, formattedKey: key.formattedKey });
           }
           else {
             let row = {};
@@ -932,7 +961,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             let metric = {};
             // If bucket is used then the metric details will be available in the metric key
             if (key.hasOwnProperty('metric')) {
-              row[columnName + colIndex] = key.key;
+              row[columnName + colIndex] = { key: key.key, formattedKey: key.formattedKey };
               metric = key.metric;
             }
             // If bucket is not used then the metric key will not be available and
@@ -1229,6 +1258,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
               iterateResults(metricData, $scope.verticalDatas, [], $scope.vis.params.metrics, columnName, index, '');
             });
             metricRowCount = $scope.verticalDatas.length;
+            resortRows();
           }
           else if ($scope.vis.params.enableTableFormat && $scope.vis.params.tabularFormat === 'matrix') {
             // This list will have the column headers for the matrix from the first bucket
@@ -1299,7 +1329,6 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
 
     // Once the payload is ready make the POST call to back end.
     makePostCall();
-
   };
 
   $scope.$watchMulti(['[]sort'], resortRows);

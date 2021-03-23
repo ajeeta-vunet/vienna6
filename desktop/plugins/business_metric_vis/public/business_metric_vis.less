@@ -678,7 +678,6 @@
 .matrix-rows:first-child {
   td {
     background: @gray15;
-    font-size: 1.5rem;
     color: @black;
     font-weight: normal;
     text-align: center;
@@ -689,7 +688,6 @@
 .data-rows:first-child {
   td {
     background: @gray15;
-    font-size: 1.5rem;
     color: @black;
     font-weight: normal;
     text-align: center;
@@ -723,5 +721,19 @@
     margin-bottom: 0;
     font-weight: normal;
     cursor: pointer;
+  }
+}
+
+.vertical-table-bmv-container {
+  .bm-table-striped {
+    .data-rows {
+      td:nth-child(3) {
+        word-break: break-word;
+        u {
+          text-decoration: none;
+          color: #1a0dab;
+        }
+      }
+    }
   }
 }

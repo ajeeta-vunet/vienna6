@@ -348,6 +348,12 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
             let cumulativeRowResult = -1;
             let sumForPercentage = -1;
             const params = rows[0][0].aggConfig.vis.params;
+
+            if (params.metricsInPercentage) {
+              // We add 1 to account for the dummy -1 in the first column
+              sumForPercentage = columnResult.reduce(add, 0) + 1;
+            }
+
             if (showCumulativeColumn) {
               // In this case, we have to show a cumulative column for
               // cumulative row
@@ -361,11 +367,11 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
                   cumulativeRowResult += value;
                 } else if (params.cumulativeColumnOperation === 'min') {
                   if (cumulativeRowResult > value) {
-		    cumulativeRowResult = value;
+            		    cumulativeRowResult = value;
                   }
                 } else if (params.cumulativeColumnOperation === 'max') {
                   if (cumulativeRowResult < value) {
-		    cumulativeRowResult = value;
+            		    cumulativeRowResult = value;
                   }
                 }
               });
@@ -376,11 +382,6 @@ module.directive('kbnRows', function ($compile, $rootScope, getAppState, Private
               columnResult.push(cumulativeRowResult);
               // No special formatting required for the final cell
               columnValueFormatter.push(null);
-            }
-
-            if (params.metricsInPercentage) {
-              // We add 1 to account for the dummy -1 in the first column
-              sumForPercentage = columnResult.reduce(add, 0) + 1;
             }
 
             function add(a, b) {

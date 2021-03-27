@@ -30,7 +30,6 @@ import { Notifier } from 'ui/notify/notifier';
 import 'leaflet';
 import { KibanaRootController } from './kibana_root_controller';
 
-
 routes.enable();
 
 routes

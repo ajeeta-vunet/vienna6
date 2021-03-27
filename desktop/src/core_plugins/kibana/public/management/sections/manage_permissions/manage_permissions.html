@@ -1,0 +1,24 @@
+<kbn-management-app section="kibana">
+	<manage-permissions-app class="app-container">
+	  <!-- Warning -->
+	  <div class="kuiInfoPanel kuiInfoPanel--warning kuiVerticalRhythm manage-permissions-warning">
+	      <div class="kuiInfoPanelBody">
+	        <div class="kuiInfoPanelBody__message">
+	          Be careful in here, these permissions will be applicable for dashboards along with the visualizations and saved searches associated with them. The dashboard permissions will be upgraded or degraded as per user actions but visualizations and saved searches will only be upgraded. 
+		    </div>
+		  </div>
+	  </div>
+	  <div class="app-container">
+	    <manage-permissions-page
+	      style="height: 100%"
+	      dashboards-list='dashboardsList'
+	      user-roles-list='userRolesList'
+	      permissions-list='permissionsList'
+	      saved-dashboard-service='savedDashboardService'
+	      saved-visualization-service='savedVisualizationService'
+	      saved-searche-service='savedSearcheService'
+	      notify='notify'
+	    ></manage-permissions-page>
+	  </div>
+	</manage-permissions-app>
+</kbn-management-app>

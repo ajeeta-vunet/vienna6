@@ -111,8 +111,8 @@ function manageAbout($injector,
 
   // Meta data for software release
   $scope.aboutSwReleaseMeta = {
-    headers: ['Version', 'Berlin', 'Vienna', 'Cairo'],
-    rows: ['platformVersion', 'berlinVersion', 'viennaVersion', 'cairoVersion'],
+    headers: ['Version', 'Vienna', 'Cairo'],
+    rows: ['platformVersion', 'viennaVersion', 'cairoVersion'],
     id: 'platformVersion',
     inverted: true,
     inverted_title: 'Software Release'
@@ -169,8 +169,8 @@ function manageAbout($injector,
       const prodRelease = data.platform_info.version.match(/[r]/i);
       if (prodRelease) {
         $scope.aboutSwReleaseMeta = {
-          headers: ['Version', 'Berlin', 'Vienna', 'Cairo'],
-          rows: ['platformVersion', 'berlinVersion', 'viennaVersion', 'cairoVersion'],
+          headers: ['Version', 'Vienna', 'Cairo'],
+          rows: ['platformVersion', 'viennaVersion', 'cairoVersion'],
           id: 'platformVersion',
           inverted: true,
           inverted_title: 'Software Release'
@@ -178,7 +178,6 @@ function manageAbout($injector,
         return [{
           platformVersion: data.platform_info.version,
           cairoVersion: data.platform_info.component_version.cairo,
-          berlinVersion: data.platform_info.component_version.berlin,
           viennaVersion: data.platform_info.component_version.vienna
         }];
       } else {

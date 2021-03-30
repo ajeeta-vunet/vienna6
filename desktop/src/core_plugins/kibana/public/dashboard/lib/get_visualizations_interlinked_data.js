@@ -8,7 +8,7 @@ export async function getVisualizationInterlinkedData(
   savedSearchIds) {
 
   //This is to store inter linked saved seaches id's
-  const interlinkedSavedSearcheIds = [];
+  const interlinkedSavedSearchIds = [];
 
   //This is to store inter linked BMV's id's
   const interlinkedBMVIds = [];
@@ -30,7 +30,7 @@ export async function getVisualizationInterlinkedData(
         const bmvMetrics = eachVisualization.vis.params.metrics;
         bmvMetrics.map((eachMetric) => {
           if (eachMetric.savedSearch && eachMetric.savedSearch.id !== '') {
-            interlinkedSavedSearcheIds.push(eachMetric.savedSearch.id);
+            interlinkedSavedSearchIds.push(eachMetric.savedSearch.id);
           }
         });
       } else if(eachVisualization.vis.type.name === 'status_indicator_and_kpi') {
@@ -111,8 +111,8 @@ export async function getVisualizationInterlinkedData(
       }
     } else {
       //If any visualizations are created using saved searches getting those inter linked id's
-      if (!interlinkedSavedSearcheIds.includes(eachVisualization.savedSearchId)) {
-        interlinkedSavedSearcheIds.push(eachVisualization.savedSearchId);
+      if (!interlinkedSavedSearchIds.includes(eachVisualization.savedSearchId)) {
+        interlinkedSavedSearchIds.push(eachVisualization.savedSearchId);
       }
     }
   });
@@ -126,8 +126,8 @@ export async function getVisualizationInterlinkedData(
     result.visualizations.map((eachBMVviz) => {
       const bmvMetrics = eachBMVviz.vis.params.metrics;
       bmvMetrics.map((eachMetric) => {
-        if (eachMetric.savedSearch && eachMetric.savedSearch.id !== '' && !interlinkedSavedSearcheIds.includes(eachMetric.savedSearch.id)) {
-          interlinkedSavedSearcheIds.push(eachMetric.savedSearch.id);
+        if (eachMetric.savedSearch && eachMetric.savedSearch.id !== '' && !interlinkedSavedSearchIds.includes(eachMetric.savedSearch.id)) {
+          interlinkedSavedSearchIds.push(eachMetric.savedSearch.id);
         }
       });
     });
@@ -142,14 +142,14 @@ export async function getVisualizationInterlinkedData(
   });
   //To remove duplicate savedsearch id's
   //we may have directly linked saved searches which may be also inter linked to any BMV and for multiple BMV's same saved search may be linked so here we are removing duplicates
-  interlinkedSavedSearcheIds.map((eachSavedSearchId) => {
+  interlinkedSavedSearchIds.map((eachSavedSearchId) => {
     if (!savedSearchIds.includes(eachSavedSearchId) && !savedSearchesIdsWithoutDuplicates.includes(eachSavedSearchId)) {
       savedSearchesIdsWithoutDuplicates.push(eachSavedSearchId);
     }
   });
 
   allInterlinkedIdsOfDashboard.linkedBmvIds = bmvIdsWithoutDuplicates;
-  allInterlinkedIdsOfDashboard.linkedSavedSearcheIds = savedSearchesIdsWithoutDuplicates;
+  allInterlinkedIdsOfDashboard.linkedSavedSearchIds = savedSearchesIdsWithoutDuplicates;
 
   return allInterlinkedIdsOfDashboard;
 }

@@ -24,6 +24,7 @@ import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_
 import { updateVisualizationPermissions } from '../../../dashboard/lib/update_visualization_permissions';
 import { updateSavedsearchPermissions } from '../../../dashboard/lib/update_savedsearch_permissions';
 import { getVisualizationInterlinkedData } from '../../../dashboard/lib/get_visualizations_interlinked_data';
+import { produce } from 'immer';
 
 export class ManagePermissionsPage extends React.Component {
   constructor(props) {
@@ -75,22 +76,23 @@ export class ManagePermissionsPage extends React.Component {
     const { name } = e.target;
     let changedPermission = '';
 
-    //stores the list of permissions
-    const permisions = this.props.permissionsList;
-
-    //updating the permissionsList with latest values, like which is selected make that value as true
-    //and making remaining permissions value as fasle.
-    //changedPermission holds the latest selected permission value.
-    permisions.map((each) => {
-      if (each.name === name) {
-        each.value = !each.value;
-        changedPermission = each.key;
-      } else {
-        each.value = false;
-      }
+    // Taking a deep copy of permissions list and updating the permissionsList with latest values,
+    // i.e which is selected make that value as true
+    // and making remaining permissions value as fasle.
+    // changedPermission holds the latest selected permission value.
+    const permissions = produce(this.props.permissionsList, (draft) => {
+      draft.map((each) => {
+        if (each.name === name) {
+          each.value = true;
+          changedPermission = each.key;
+        } else {
+          each.value = false;
+        }
+      });
     });
+
     this.setState({
-      permissionsList: permisions,
+      permissionsList: permissions,
       selectedPermission: changedPermission,
     });
   }
@@ -115,6 +117,9 @@ export class ManagePermissionsPage extends React.Component {
 
   //This method will be executed when we click on save button
   onSave = async () => {
+    //This is notify service
+    const notify = this.props.notify;
+
     this.setState({
       submitted: true,
     });
@@ -173,16 +178,22 @@ export class ManagePermissionsPage extends React.Component {
           selectedDashboardsLinkedData[selectedBoard] = eachDashboardData;
         });
       }));
-      //updating state varibles to update/degrade dashbaord permisisons based on user confirmation
-      this.setState({
-        showDashboardUpdateModal: showDashboardUpdateModal,
-        selectedDashboardsUpdatedData: selectedDashboardsUpdatedData,
-        selectedDashboardsLinkedData: selectedDashboardsLinkedData,
-      });
+
+      if (showDashboardUpdateModal) {
+        //updating state varibles to update/degrade dashbaord permisisons based on user confirmation
+        this.setState({
+          showDashboardUpdateModal: showDashboardUpdateModal,
+          selectedDashboardsUpdatedData: selectedDashboardsUpdatedData,
+          selectedDashboardsLinkedData: selectedDashboardsLinkedData,
+        });
+      } else {
+        //notifying the user when the selected dashabords already have the same permissions for the selected roles
+        notify.info('The selected dashboards already have the same permissions for the selected roles');
+      }
     }
   }
 
-  // Update dashboard,visualizations and saved searches permissions
+  //Update dashboard,visualizations and saved searches permissions
   updatePermissions = (dashboardsListToUpdate, dashboardLinkedData) => {
     //This is savedvisualizations service
     const savedVisualizations = this.props.savedVisualizationService;
@@ -192,14 +203,6 @@ export class ManagePermissionsPage extends React.Component {
 
     //This is notify service
     const notify = this.props.notify;
-
-    //This is to store the updated interlinked visualizations
-    //(EX : Linked BMV's for KPI)
-    let interlinkedUpdatedVisualizations = [];
-
-    //This is to store the inter linked saved searches
-    //(EX : If any visualization is created using a saved search)
-    let interlinkedUpdatedSavedSearches = [];
 
     //Updating selected dashboards for the selected user roles with the selected permission
     dashboardsListToUpdate.map((eachUpdatedDashboard) => {
@@ -211,6 +214,14 @@ export class ManagePermissionsPage extends React.Component {
       const dashboardPermissions = JSON.stringify(dashboardLinkedData[eachDashboard].dashboardPermisisons);
       const visualizationIds = dashboardLinkedData[eachDashboard].visualizationIds;
       const savedSearchIds = dashboardLinkedData[eachDashboard].savedSearchIds;
+
+      //This is to store the updated interlinked visualizations
+      //(EX : Linked BMV's for KPI)
+      let interlinkedUpdatedVisualizations = [];
+
+      //This is to store the inter linked saved searches
+      //(EX : If any visualization is created using a saved search)
+      let interlinkedUpdatedSavedSearches = [];
 
       //Getting updated visualization objects
       const selectedVisualizationsData = Promise.resolve(
@@ -241,7 +252,7 @@ export class ManagePermissionsPage extends React.Component {
           );
           //Getting updated interlinked savedsearch objects
           const interlinledSavedSearchesData = Promise.resolve(
-            updateSavedsearchPermissions(dashboardPermissions, result.linkedSavedSearcheIds, savedSearches)
+            updateSavedsearchPermissions(dashboardPermissions, result.linkedSavedSearchIds, savedSearches)
           );
           await interLinkedVizsData.then(function (result) {
             interlinkedUpdatedVisualizations = result.visualizations;
@@ -274,6 +285,18 @@ export class ManagePermissionsPage extends React.Component {
     });
     //notifying the user once after updating dashboards,visualizations and saved searches with a success message
     notify.info('Dashboards,Visualizations,Saved searches are updated successfully');
+  }
+
+  //Clear all selected data
+  clearSelectedData = () => {
+    this.setState({
+      showDashboardUpdateModal: false,
+      selectedDashboards: [],
+      selectedRoles: [],
+      selectedPermission: '',
+      permissionsList: this.props.permissionsList,
+      submitted: false,
+    });
   }
 
   render() {
@@ -352,6 +375,7 @@ export class ManagePermissionsPage extends React.Component {
             }}
             onClose={() => {
               this.setState({ showDashboardUpdateModal: false });
+              this.clearSelectedData();
             }}
             onSubmit={() => {
               this.setState({ showDashboardUpdateModal: false });
@@ -365,9 +389,9 @@ export class ManagePermissionsPage extends React.Component {
 }
 
 ManagePermissionsPage.propTypes = {
-  dashboardsList: PropTypes.array, //contains the list od dashboards
-  userRolesList: PropTypes.array, //contains the list ok user roles
-  permissionsList: PropTypes.array, //contails the list of permisions
+  dashboardsList: PropTypes.array, //contains the list of dashboards
+  userRolesList: PropTypes.array, //contains the list of user roles
+  permissionsList: PropTypes.array, //contails the list of permissions
   savedDashboardService: PropTypes.object,
   savedVisualizationService: PropTypes.object,
   savedSearcheService: PropTypes.object,

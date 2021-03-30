@@ -110,7 +110,7 @@ export async function updateSavedDashboard(
         );
         //Getting updated interlinked savedsearch objects
         const interlinkedSavedSearchesData = Promise.resolve(
-          updateSavedsearchPermissions(dashboardPermissions, result.linkedSavedSearcheIds, savedSearches)
+          updateSavedsearchPermissions(dashboardPermissions, result.linkedSavedSearchIds, savedSearches)
         );
         await interLinkedVizsData.then(function (result) {
           interlinkedUpdatedVisualizations = result.visualizations;

@@ -56,7 +56,7 @@ uiRoutes
           },
           {
             id: 3,
-            key: 'none',
+            key: '',
             name: 'None',
             value: 1
           }
@@ -74,7 +74,7 @@ uiRoutes
       },
       notify: function ($injector) {
         const Notifier = $injector.get('Notifier');
-        const notify = new Notifier({ location: 'Dashboard' });
+        const notify = new Notifier({ location: 'ManagePermissions' });
         return notify;
       },
 

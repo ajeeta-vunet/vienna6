@@ -31,11 +31,16 @@
   background-color: @seperator_color;
 }
 ::-webkit-scrollbar{
-  width: 6px;
-  height: 6px;
+  width: 16px;
+  height: 16px;
 }
+
+// Added background color of scroll bar as black color with opacity,
+// So it will display as light grey color
 ::-webkit-scrollbar-thumb{
-  background-color: @accent_color;
+  background: rgba(0, 0, 0, 0.2);
+  margin: 0px 4px 0px 4px;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-track:hover {

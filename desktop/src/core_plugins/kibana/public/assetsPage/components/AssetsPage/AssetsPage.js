@@ -69,7 +69,8 @@ export class AssetsPage extends React.Component {
       filterObject: {},
       importAssetFlag: false,
       singleAssetDetails: {},
-      singleAssetDetailsFlag: false
+      singleAssetDetailsFlag: false,
+      searchString: ''
     };
   }
 
@@ -320,18 +321,20 @@ export class AssetsPage extends React.Component {
   //on in the Assets page. The search string will be sent in the post body of the API call which returns
   //a list of matching assets.
   onSearch = (e) => {
-    if(e.target.value !== '') {
+    const search_string = e.target.value;
+    if(search_string !== '') {
       const postBody = {
         scroll_id: 0,
         size: 10,
-        search_string: e.target.value
+        search_string: search_string
       };
       const data = searchAssetDetails(postBody);
       data.then((details) => {
         this.setState({
           assets: details.assets,
           totalNumberOfAssets: details.no_of_assets,
-          currentPage: 1
+          currentPage: 1,
+          searchString: search_string
         });
       });
     }else {
@@ -340,6 +343,7 @@ export class AssetsPage extends React.Component {
         totalNumberOfAssets: this.props.assetList.no_of_nodes,
         currentPage: 1,
         selectedFlag: false,
+        searchString: search_string
       });
     }
   }
@@ -442,7 +446,7 @@ export class AssetsPage extends React.Component {
           assets: data.assets,
           currentPage: 1,
           totalNumberOfAssets: data.no_of_nodes,
-        });
+        }, () => notify.info('All filters cleared.'));
       });
   }
 
@@ -484,7 +488,7 @@ export class AssetsPage extends React.Component {
           });
       })
       .catch((error) => {
-        notify.info(error);
+        notify.error(error);
         this.cancelAssetImport();
       });
   }
@@ -572,6 +576,7 @@ export class AssetsPage extends React.Component {
                       type="text"
                       className="search-input"
                       placeholder="Search"
+                      value={this.state.searchString}
                       onChange={(e) => this.onSearch(e)}
                     />
                   </div>
@@ -585,9 +590,9 @@ export class AssetsPage extends React.Component {
                   Import
                     </button>
                   </div>
-                  <div className="report-button-wrapper">
-                    <button className="report-button" onClick={() => downloadAssets()}>
-                      <i className="fa fa-download" data-tip="Download CSV Report"/>
+                  <div className="export-button-wrapper">
+                    <button className="vunet-btn-export" data-tip="Download CSV Report" onClick={() => downloadAssets()}>
+                      Export
                       <ReactTooltip />
                     </button>
                   </div>

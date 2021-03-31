@@ -48,13 +48,14 @@ export const SCHEDULE_HELP_OBJ = {
 export const CREDENTIAL_HELP_OBJ = {
   headerText: 'The list of credentials that should be used while scanning the network.',
   referenceLink: '',
-  contentIntroduction: 'List of credential specify the credentials that shoudl be used while scanning the network for devices.'
+  contentIntroduction: 'List of credential specify the credentials that should be used while scanning the network for devices.'
 };
 
 export const SOURCE_IP_HELP_OBJ = {
   headerText: 'The IP address from where the packets for scan should be sent.',
   referenceLink: '',
-  contentIntroduction: 'Source IP indicated the device from which the packets for Network Discovery are sent.'
+  contentIntroduction: 'Source IP indicates the device from which the packets for Network Discovery are sent.' +
+  'The options that are seen here are configured under Settings -> Preferences.'
 };
 
 export const IP_SOURCE_HELP_OBJ = {
@@ -62,7 +63,7 @@ export const IP_SOURCE_HELP_OBJ = {
   referenceLink: '',
   contentIntroduction: 'User can either enter the seed IP of the network to be scanned or upload a xls' +
   ' file containing IP addresses that need to be scanned.'
-}
+};
 
 export const HOP_COUNT_HELP_OBJ = {
   headerText: 'The number of hops to be taken during the Network Scan.',

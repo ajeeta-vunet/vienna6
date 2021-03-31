@@ -491,6 +491,9 @@ export class NewAssetModal extends React.Component {
     const assetObject = produce(this.state.assetObject, (draft) => {
       draft.interface_list.splice(interfaceIndex, 1);
     });
+    if(!Object.values(this.state.errorType).includes('true')) {
+      document.getElementById('submitButton').disabled = false;
+    }
     this.setState({ assetObject });
   }
 

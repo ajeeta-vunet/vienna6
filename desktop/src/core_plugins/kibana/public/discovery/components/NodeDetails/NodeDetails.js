@@ -32,6 +32,9 @@ import { FilterBar } from '../FilterBar/FilterBar';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { SingleAssetDetails } from '../../../assetsPage/components/SingleAssetDetails/SingleAssetDetails';
+import { Notifier } from 'ui/notify';
+
+const notify = new Notifier({ location: 'Node Details' });
 
 const mapStateToProps = state => {
   return {
@@ -257,15 +260,22 @@ class NodeDetailsCmmponent extends React.Component {
   //this method is called to clear all filters
   //and fetch the list of nodes without any filters applied.
   clearAllFilter = () => {
-    fetchNodesList(this.state.nodeDetails[0].topology_id, 0, 10)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          filterObject: {},
-          nodeDetails: data.topology.nodes,
-          currentPage: 1,
-          totalNumberOfNodes: data.topology.no_of_nodes });
-      });
+    if(this.state.nodeDetails[0]) {
+      fetchNodesList(this.state.nodeDetails[0].topology_id, 0, 10)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            filterObject: {},
+            nodeDetails: data.topology.nodes,
+            currentPage: 1,
+            totalNumberOfNodes: data.topology.no_of_nodes }, () => notify.info('All filters cleared.'));
+        });
+    }else {
+      this.setState({
+        filterObject: {},
+        currentPage: 1
+      }, () => notify.info('All filters cleared.'));
+    }
   }
 
   //this method is called to change the singleAssetDetailsFlag which controls the

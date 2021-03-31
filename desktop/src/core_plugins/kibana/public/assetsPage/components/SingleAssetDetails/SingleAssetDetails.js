@@ -124,7 +124,7 @@ export class SingleAssetDetails extends React.Component {
         <div className="top-bar">
           <div
             className="back-button"
-            data-tip={'Go Back to Topology'}
+            data-tip={'Go Back'}
           >
             <ReactTooltip />
             <i

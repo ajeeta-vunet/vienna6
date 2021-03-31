@@ -179,6 +179,7 @@ export class ScheduledScan extends React.Component {
       'schedule_string': '',
       'user_details': '',
       'name': scanData.schedule_name,
+      'run_now': scanData.run_now
     };
 
     if(scanData.source_file) {
@@ -190,7 +191,7 @@ export class ScheduledScan extends React.Component {
     }
 
     scanNowFormData.append('json', JSON.stringify(scanNowData));
-    if (scanData.schedule_now) {
+    if (scanData.run_now) {
       createNewScan(chrome, scanNowFormData);
     }
 
@@ -206,6 +207,7 @@ export class ScheduledScan extends React.Component {
       user_details: '',
       source_ip: typeof scanData.source_ip === 'string' ? scanData.source_ip.split(',') : scanData.source_ip,
       name: scanData.schedule_name,
+      run_now: scanData.run_now
     };
 
     if(scanData.source_file) {
@@ -216,7 +218,10 @@ export class ScheduledScan extends React.Component {
       scheduleScanData.hop_count = scanData.hop_count;
     }
 
-    if(event === 'edit') delete scheduleScanData.seed_ip;
+    if(event === 'edit') {
+      delete scheduleScanData.seed_ip;
+      scheduleScanData.run_now = scanData.run_now;
+    }
 
     formData.append('json', JSON.stringify(scheduleScanData));
     if (event === 'add' && scanData.scheduleAt) {
@@ -269,7 +274,7 @@ export class ScheduledScan extends React.Component {
         enterSeedIP: false,
         enterSourceFile: false,
         scheduleFrequency: 'day',
-        schedule_now: true,
+        run_now: true,
         hop_count: 100,
         selectIPSource: 'seedIP'
       },
@@ -390,9 +395,9 @@ export class ScheduledScan extends React.Component {
                  helpObj: SCHEDULE_INFO_HELP_OBJ,
                  type: 'header'
                }, {
-                 key: 'schedule_now',
+                 key: 'run_now',
                  id: true,
-                 name: 'schedule_now',
+                 name: 'run_now',
                  label: 'Run Now',
                  helpObj: SCHEDULE_NOW_HELP_OBJ,
                  type: 'checkbox',

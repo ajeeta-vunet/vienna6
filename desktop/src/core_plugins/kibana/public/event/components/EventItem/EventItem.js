@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -104,9 +105,10 @@ export class EventItem extends React.Component {
         const updatedDetails = produce(this.state.details, (draft) => {
           draft.alert_details.fields.notes.push(toSend.notes[0]);
         });
-        this.setState({ details: updatedDetails });
+        this.setState({ details: updatedDetails }, () => {
+          notify.info('Event has been updated successfully');
+        });
       }
-      notify.info('Event has been updated successfully');
     });
   };
 
@@ -174,29 +176,99 @@ export class EventItem extends React.Component {
     this.setState({ showDetails: false });
   };
 
+  //this method is called to modify the likes and dislike count displayed in Event List view after
+  //the user has given/changed his feedback to the event under UserFeedback component.
+  addOrRemoveReaction = (reaction) => {
+    let updatedEvent = this.state.event;
+    if(updatedEvent.fields.user_reaction === 'Like') {
+      if(reaction === 'Dislike') {
+        updatedEvent = produce(this.state.event, draft => {
+          draft.fields.likes--;
+          draft.fields.dislikes++;
+          draft.fields.user_reaction = 'Dislike';
+        });
+      } else if(reaction === 'No Reaction') {
+        updatedEvent = produce(this.state.event, draft => {
+          draft.fields.likes--;
+          draft.fields.user_reaction = 'No Reaction';
+        });
+      }
+    }else if(updatedEvent.fields.user_reaction === 'Dislike') {
+      if(reaction === 'Like') {
+        updatedEvent = produce(this.state.event, draft => {
+          draft.fields.likes++;
+          draft.fields.dislikes--;
+          draft.fields.user_reaction = 'Like';
+        });
+      } else if(reaction === 'No Reaction') {
+        updatedEvent = produce(this.state.event, draft => {
+          draft.fields.dislikes--;
+          draft.fields.user_reaction = 'No Reaction';
+        });
+      }
+    } else {
+      if(reaction === 'Dislike') {
+        updatedEvent = produce(this.state.event, draft => {
+          draft.fields.dislikes++;
+          draft.fields.user_reaction = 'Dislike';
+        });
+      } else if(reaction === 'Like') {
+        updatedEvent = produce(this.state.event, draft => {
+          draft.fields.likes++;
+          draft.fields.user_reaction = 'Like';
+        });
+      }
+    }
+
+    this.setState({ event: updatedEvent }, () => {
+      notify.info('Event feedback updated successfully');
+    });
+  }
+
   render() {
     const eventDisplay = this.state.event.fields;
     const severity = this.state.event.severity;
     const displayEventItemDetails =
       eventDisplay && Object.entries(eventDisplay).map(([key, value]) => {
-        return (
-          <div key={generateClassname(key)} className={'detail-item ' + generateClassname(key)}>
-            <div className="wrapper">
-              <div
-                className="detail-heading"
-                onClick={() => this.handleClickedField(key)}
-                data-tip={'Sort by ' + generateHeading(key)}
-              >
-                <ReactTooltip />
-                <i className="fa fa-sort-amount-desc sort-icon" />
-                {generateHeading(key)}:
-              </div>
-              <div className="detail-content">
-                {key === 'active_duration' || key === 'total_duration' ? displayTwoTimeUnits(value) : value}
+        if(key !== 'likes' && key !== 'dislikes' && key !== 'user_reaction') {
+          return (
+            <div key={generateClassname(key)} className={'detail-item ' + generateClassname(key)}>
+              <div className="wrapper">
+                <div
+                  className="detail-heading"
+                  onClick={() => this.handleClickedField(key)}
+                  data-tip={'Sort by ' + generateHeading(key)}
+                >
+                  <ReactTooltip />
+                  <i className="fa fa-sort-amount-desc sort-icon" />
+                  {generateHeading(key)}:
+                </div>
+                <div className="detail-content">
+                  {key === 'active_duration' || key === 'total_duration' ? displayTwoTimeUnits(value) : value}
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
+        }else if(key !== 'user_reaction') {
+          return (
+            <div key={generateClassname(key)} className={'detail-item ' + generateClassname(key)}>
+              <div className="wrapper">
+                <div
+                  className="detail-heading"
+                  onClick={() => this.handleClickedField(key)}
+                  data-tip={'Sort by ' + generateHeading(key)}
+                >
+                  <ReactTooltip />
+                  <i className="fa fa-sort-amount-desc sort-icon" />
+                  {key === 'likes' ? <i className="fa fa-thumbs-o-up like-icon" /> : <i className="fa fa-thumbs-o-down dislike-icon" />}
+                </div>
+                <div className="detail-content">
+                  {value}
+                </div>
+              </div>
+            </div>
+          );
+        }
       });
 
     return (
@@ -265,6 +337,8 @@ export class EventItem extends React.Component {
                   updateEvent={this.handleUpdateEvent}
                   eventId={this.props.event.id}
                   canUpdateEvent={this.props.canUpdateEvent}
+                  userReactionData={this.state.userReactionData}
+                  addOrRemoveReaction={this.addOrRemoveReaction}
                 />
               )}
               {this.state.currentTabId === 'history' && (

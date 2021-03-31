@@ -46,7 +46,7 @@ export class FilterSelector extends React.Component {
       const filterFieldKeys = this.state.filterFieldKeys;
       filterFieldKeys.map((field) => {
         if (field.toLowerCase().includes(searchTerm)) {
-          $(`.field.${field}`).css('display', 'block');
+          $(`.field.filter-${field}`).css('display', 'block');
         } else {
           $(`.field.${field}`).css('display', 'none');
         }

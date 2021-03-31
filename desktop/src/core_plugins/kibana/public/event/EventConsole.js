@@ -28,7 +28,7 @@ import { produce } from 'immer';
 import { Notifier } from 'ui/notify';
 import $ from 'jquery';
 import chrome from 'ui/chrome';
-import { createTicket } from './api_calls';
+import { createTicket, getSavedFilters, saveFilters } from './api_calls';
 
 const notify = new Notifier({ location: 'Event Console' });
 
@@ -52,7 +52,7 @@ export class EventConsole extends React.Component {
 
       // filterStore - An object which holds all the filters based on different fields.
       //{ status: ['assigned', 'open'] } is assigned as we do not want to show closed events by default.
-      filterStore: { status: ['assigned', 'open'] },
+      filterStore: {},
 
       //allFields - list of all the fields of events that can be displayed in EventItem.
       allFields:
@@ -65,28 +65,34 @@ export class EventConsole extends React.Component {
         this.props.columnSelectorInfo.alert_details.hidden_fields,
 
       //selectedFilterFields - list of selected filter fields.
-      //'status' is added to support the status added in 'filterStore'.
-      selectedFilterFields: ['status'],
+      selectedFilterFields: [],
     };
   }
 
+  componentDidMount() {
+    //this get the saved filters for the current logged-in user from backend.
+    getSavedFilters()
+      .then(data => {
+        this.setState({
+          filterStore: data.filter,
+          selectedFilterFields: Object.keys(data.filter),
+        });
+      });
+  }
+
   componentWillReceiveProps(newProps) {
+
+    const listOfEvents = _.sortBy(
+      newProps.listOfEvents && newProps.listOfEvents.List_of_events,
+      function (o) {
+        return Date.parse(o.fields.last_occurence);
+      }
+    ).reverse();
+
     this.setState(
       {
-
-        allEventList: _.sortBy(
-          newProps.listOfEvents && newProps.listOfEvents.List_of_events,
-          function (o) {
-            return o.fields.correlated_id;
-          }
-        ),
-
-        filteredEventList: _.sortBy(
-          newProps.listOfEvents && newProps.listOfEvents.List_of_events,
-          function (o) {
-            return o.fields.correlated_id;
-          }
-        ),
+        allEventList: listOfEvents,
+        filteredEventList: listOfEvents,
         allFields: newProps.columnSelectorInfo.alert_details.fields,
         hiddenFields: newProps.columnSelectorInfo.alert_details.hidden_fields,
       },
@@ -152,9 +158,19 @@ export class EventConsole extends React.Component {
         delete draft[filterField];
       });
     }
-    this.setState({ filterStore: updatedfilterStore }, () => {
-      this.applyFilters();
-    });
+
+    saveFilters(updatedfilterStore)
+      .then(() => {
+        getSavedFilters()
+          .then(data => {
+            this.setState({
+              filterStore: updatedfilterStore,
+              selectedFilterFields: Object.keys(data.filter),
+            }, () => {
+              this.applyFilters();
+            });
+          });
+      });
   };
 
   // This function is called when the filterStore is updated by addition or deletion of a filterField.

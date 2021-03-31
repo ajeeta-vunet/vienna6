@@ -1,0 +1,49 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.dropdown-select-wrapper {
+    .dropdown-select-header {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+
+        .dropdown-icon {
+
+            background-color: none;
+            border: none;
+        }
+    }
+
+    .dropdown-select-header:hover {
+        cursor: pointer;
+    }
+
+    .dropdown-container {
+        position: absolute;
+        background-color: @white;
+        border: 1px solid @event-console-border-color;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        width: 22%;
+        padding: 1rem;
+        z-index: 100;
+
+        .filter-selector-search {
+            width: 100%;
+            padding-bottom: 0.5rem;
+
+            input {
+                width: 100%;
+            }
+        }
+
+        .field {
+            width: 100%;
+            padding-bottom: 0.5rem;
+        }
+
+        .field:hover {
+            background-color: @event-console-multi-select-color;
+            color: @white;
+            cursor: pointer;
+        }
+    }
+}

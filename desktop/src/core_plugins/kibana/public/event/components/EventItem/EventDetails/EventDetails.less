@@ -94,9 +94,11 @@
   }
 
   .work-notes {
+    display: flex;
     width: 84.2%;
     margin-left: 11.55%;
-    border: 1px solid @event-console-border-color;
+    padding-bottom: 2rem;
+
     .work-notes-header {
       width: 100%;
       padding-left: 1%;
@@ -110,12 +112,10 @@
     .work-notes-body {
       display: flex;
       width: 100%;
-      border-top: 1px solid @event-console-border-color;
 
       .work-notes-list {
         display: inline-block;
         width: 50%;
-        border-right: 1px solid @event-console-border-color;
         padding: 1%;
         max-height: 20vh;
         overflow-y: scroll;
@@ -151,13 +151,14 @@
       }
 
       .work-notes-new-note {
-        display: inline-block;
+        display: flex;
         width: 50%;
         padding: 1%;
+        border-right: 1px solid @event-console-border-color;
         .work-area-textarea {
-          width: 100%;
-          padding: 1.5%;
           border: 1px solid @event-console-border-color;
+          width: 67%;
+          margin-left: 0.8%;
         }
         .work-area-textarea[disabled] {
           cursor: not-allowed;
@@ -191,6 +192,12 @@
   margin-bottom: 2rem;
   display: flex;
   flex-direction: row;
+  .additional-information-header {
+    background-color: @event-console-detail-info-background-color;
+    font-weight     : bold;
+    line-height     : 3;
+    padding-left    : 15px;
+  }
   .events-metrics-table {
     width     : 100%;
     text-align: left;
@@ -241,5 +248,81 @@
   .event-tags-no-data {
     padding  : 6rem 5rem;
     font-size: 1.6rem;
+  }
+}
+
+.select-assignee-dropdown {
+  display: flex !important;
+}
+
+.user-feedback {
+  width: 84.2%;
+  margin-left: 11.55%;
+  border: 1px solid @event-console-border-color;
+  margin-bottom: 4rem;
+
+  .user-feedback-header {
+    width: 100%;
+    padding-left: 1%;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    font-size: 1.4rem;
+    font-weight: bold;
+    background: @event-console-detail-info-background-color;
+  }
+}
+
+.status-assignee-info-container {
+  width: 84.2%;
+  margin-left: 11.55%;
+  border: 1px solid @event-console-border-color;
+  margin-bottom: 1rem;
+
+  .status-assignee-info-header {
+    width: 100%;
+    padding-left: 1%;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    font-size: 1.4rem;
+    font-weight: bold;
+    background: @event-console-detail-info-background-color;
+  }
+
+  .status, .select-assignee-dropdown {
+    display: inline-block;
+    width: 50%;
+    padding: 1%;
+    max-height: 20vh;
+
+    .select-assignee-dropdown {
+      border: none !important;
+    }
+
+    label {
+      width: 35%;
+      text-align: right;
+      padding-right: 0.625rem;
+      font-size: 1.4rem;
+    }
+    input, .status-select, .assignee-select {
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+      width: 55%;
+      margin-right: 10%;
+      border: 1px solid @event-console-border-color;
+    }
+
+    .status-select, .assignee-select {
+      padding-left: 0.43rem;
+    }
+
+    .status-select[disabled] {
+      cursor: not-allowed;
+    }
+    .assignee-select[disabled] {
+      cursor: not-allowed;
+    }
   }
 }

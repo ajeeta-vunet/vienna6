@@ -21,6 +21,8 @@ import React from 'react';
 import './EventDetails.less';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 import { generateHeading, generateClassname } from '../../../utils/vunet_format_name.js';
+import { DropDownSelect } from '../../../../../../../../ui_framework/src/vunet_components/DropDownSelect/DropDownSelect';
+import { UserFeedback } from '../../UserFeedback/UserFeedback';
 
 export class EventDetails extends React.Component {
 
@@ -48,8 +50,8 @@ export class EventDetails extends React.Component {
   }
 
   //updates the selectedAssignee status variable
-  handleAssignee(e) {
-    this.setState({ selectedAssignee: e.target.value });
+  handleAssignee = (assignee) => {
+    this.setState({ selectedAssignee: assignee });
   }
 
   //updates the newComment status variable
@@ -66,8 +68,8 @@ export class EventDetails extends React.Component {
   render() {
     const details = this.props.details.alert_details.fields;
     const metrics = this.props.details.Metrics;
-    const statuses = ['assigned', 'closed', 'open'];
-    const users = this.props.userList && this.props.userList.users.sort();
+    const statuses = [ 'assigned', 'closed', 'open'];
+    const users = this.props.userList && this.props.userList.users && this.props.userList.users.sort();
     const exceptionDetails = ['status', 'assignee', 'summary', 'notes', 'related_dashboards', 'tenant_id', 'bu_id'];
 
     const renderDetails =
@@ -121,127 +123,136 @@ export class EventDetails extends React.Component {
       <div className="event-details-wrapper">
         <div className="details">
           {renderDetails}
-          <div className="detail status">
-            <label htmlFor="alert-id">Status: </label>
-            <select
-              disabled={!this.props.canUpdateEvent}
-              id="status-select"
-              defaultValue={details.status}
-              className="status-select"
-              name="status"
-              onChange={event => this.handleStatus(event)}
-            >
-              {statuses.map(status => (
-                <option key={status} value={status}>{status}</option>
-              ))}
-            </select>
-            <br />
+          <div className="summary">
+            <label>Summary: </label>
+            <textarea rows="3" defaultValue={details.summary} disabled />
           </div>
-          <div className="detail assignee">
-            <label htmlFor="alert-id">Assignee: </label>
-            <select
-              disabled={!this.props.canUpdateEvent}
-              id="assignee-select"
-              defaultValue={details.assignee}
-              className="assignee-select"
-              name="assignee"
-              onChange={event => this.handleAssignee(event)}
-            >
-              <option key="unassigned" value="Unassigned">Unassigned</option>
-              {users && users.map(user => (
-                <option key={user} value={user}>{user}</option>
-              ))}
-            </select>
-
-            <br />
-          </div>
-        </div>
-        <div className="summary">
-          <label>Summary: </label>
-          <textarea rows="3" defaultValue={details.summary} disabled />
-        </div>
-        <div className="event-metrics-container">
-          {Object.keys(metrics.Entries).length ? (
-            <div className="events-metrics-table">
-              <div className="row events-metrics-table-header">
-                <div className="col-md-4">
-                  <span className="metric-details-header">Metrics</span>
+          <div className="event-metrics-container">
+            {Object.keys(metrics.Entries).length ? (
+              <div className="events-metrics-table">
+                <div className="row additional-information-header">
+                  Additional Information
                 </div>
-                <div className="col-md-2">
-                  <span className="metric-details-header">Value (Event Duration)</span>
+                <div className="row events-metrics-table-header">
+                  <div className="col-md-4">
+                    <span className="metric-details-header">Metrics</span>
+                  </div>
+                  <div className="col-md-2">
+                    <span className="metric-details-header">Value (Event Duration)</span>
+                  </div>
+                  <div className="col-md-2">
+                    <span className="metric-details-header">Value (Now)</span>
+                  </div>
+                  <div className="col-md-2">
+                    <span className="metric-details-header">Insights</span>
+                  </div>
+                  <div className="col-md-2">
+                    <span className="metric-details-header">Threshold</span>
+                  </div>
                 </div>
-                <div className="col-md-2">
-                  <span className="metric-details-header">Value (Now)</span>
-                </div>
-                <div className="col-md-2">
-                  <span className="metric-details-header">Insights</span>
-                </div>
-                <div className="col-md-2">
-                  <span className="metric-details-header">Threshold</span>
-                </div>
+                {renderMetricTable}
               </div>
-              {renderMetricTable}
-            </div>
-          ) : (
-            <div className="event-metrics-no-data">
+            ) : (
+              <div className="event-metrics-no-data">
           No Metric Entries available for this event
+              </div>
+            )}
+            {this.props.details.Tags.length ? (
+              <div className="events-tags-table">
+                <div className="row events-tags-table-header">
+                  <div className="col-md-2">
+                    <span className="tags-details">Tags</span>
+                  </div>
+                </div>
+                {renderTagsTable}
+              </div>
+            ) : (
+              <div className="event-tags-no-data">
+            No Tags available for this event
+              </div>
+            )}
+          </div>
+          <div className="status-assignee-info-container">
+            <div className="status-assignee-info-header">
+            Alert Management
             </div>
-          )}
-          {this.props.details.Tags.length ? (
-            <div className="events-tags-table">
-              <div className="row events-tags-table-header">
-                <div className="col-md-2">
-                  <span className="tags-details">Tags</span>
+            <div className="status">
+              <label htmlFor="status-select">Status: </label>
+              <select
+                disabled={!this.props.canUpdateEvent}
+                id="status-select"
+                value={this.state.selectedStatus}
+                className="status-select"
+                name="status"
+                onChange={event => this.handleStatus(event)}
+              >
+                {statuses.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
+              <br />
+            </div>
+            <div className="select-assignee-dropdown">
+              <label htmlFor="alert-id">Assignee: </label>
+              <div className="assignee-select">
+                <DropDownSelect
+                  isDisabled={!this.props.canUpdateEvent}
+                  options={users}
+                  value={this.state.selectedAssignee}
+                  handleAssignee={this.handleAssignee}
+                />
+              </div>
+              <br />
+            </div>
+            <div className="work-notes">
+              <div className="work-notes-body">
+                <div className="work-notes-new-note">
+                  <label>Work Note: </label>
+                  <textarea
+                    disabled={!this.props.canUpdateEvent}
+                    className="work-area-textarea"
+                    rows="5"
+                    placeholder="Write the work note here"
+                    value={this.state.newComment}
+                    onChange={event => this.handleComment(event)}
+                  />
+                </div>
+                <div className="work-notes-list">
+                  {details.notes.map(note => (
+                    <div key={`${note.body}-${note.timestamp}`} className="note">
+                      <div className="avatar">
+                        {note.author[0]}
+                      </div>
+                      <div className="note-body">
+                        <div className="note-author">
+                          {note.author}
+                        </div>
+                        <div className="note-body">
+                          {note.text}
+                        </div>
+                        <div className="note-date">
+                          {note.timestamp}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              {renderTagsTable}
-            </div>
-          ) : (
-            <div className="event-tags-no-data">
-            No Tags available for this event
-            </div>
-          )}
-        </div>
-        <div className="work-notes">
-          <div className="work-notes-header">
-            Work Note
-          </div>
-          <div className="work-notes-body">
-            <div className="work-notes-list">
-              {details.notes.map(note => (
-                <div key={`${note.body}-${note.timestamp}`} className="note">
-                  <div className="avatar">
-                    {note.author[0]}
-                  </div>
-                  <div className="note-body">
-                    <div className="note-author">
-                      {note.author}
-                    </div>
-                    <div className="note-body">
-                      {note.text}
-                    </div>
-                    <div className="note-date">
-                      {note.timestamp}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="work-notes-new-note">
-              <textarea
-                disabled={!this.props.canUpdateEvent}
-                className="work-area-textarea"
-                rows="5"
-                placeholder="Write the work note here"
-                value={this.state.newComment}
-                onChange={event => this.handleComment(event)}
-              />
             </div>
           </div>
-        </div>
-        <div className="action-buttons-wrapper">
-          <button className="event-console-button button-left" onClick={() => this.handleUpdateEvent()}>Save</button>
-          <button className="event-console-button" onClick={() => this.props.handleCancel()}>Cancel</button>
+          <div className="action-buttons-wrapper">
+            <button className="event-console-button button-left" onClick={() => this.props.handleCancel()}>Cancel</button>
+            <button className="event-console-button" onClick={() => this.handleUpdateEvent()}>Save</button>
+          </div>
+          <div className="user-feedback">
+            <div className="user-feedback-header">
+            User Feedback Information
+            </div>
+            <UserFeedback
+              alertId={this.props.details.alert_details.fields.alert_id}
+              addOrRemoveReaction={this.props.addOrRemoveReaction}
+            />
+          </div>
         </div>
       </div>
     );

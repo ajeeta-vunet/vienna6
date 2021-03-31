@@ -68,7 +68,7 @@ export class DiscoveryPage extends React.Component {
             />
           </div>
           {/* Tabs Body */}
-          <div className="content-body">
+          <div className="discovery-content-body">
             {/* display the respective tab according the id */}
             {this.state.currentTabId === 'scanDetails' && (
               <ScheduledScan

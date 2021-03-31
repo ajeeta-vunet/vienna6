@@ -124,11 +124,12 @@ app.directive('eventApp', function () {
       });
 
       // API call to fetch the ITSM preferences set by logged-in user.
-      fetchPreferences($http, chrome).then((data) => {
-        $scope.itsmPreferencesEnabled = data.preferences
-                                        && data.preferences[4].ITSMPreference
-                                        && data.preferences[4].ITSMPreference.Type !== 'None';
-      });
+      fetchPreferences($http, chrome).then(() => {
+        $scope.itsmPreferencesEnabled = true;
+      })
+        .catch((err) => {
+          $scope.itsmPreferencesEnabled = false;
+        });
 
       function init() {
         const docTitle = Private(DocTitleProvider);

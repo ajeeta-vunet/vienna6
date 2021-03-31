@@ -1,3 +1,5 @@
+import chrome from 'ui/chrome';
+
 // This function is used to fetch the list of all events.
 //It takes as its arguments the dashboard context and the time duration start and end values.
 
@@ -107,7 +109,7 @@ export function fetchFilterFields($http, chrome) {
 //This function is used for fetching logged-in user preferences.
 export function fetchPreferences($http, chrome) {
   let urlBase = chrome.getUrlBase();
-  urlBase = urlBase.slice(0, -5) + '/preferences/';
+  urlBase = urlBase.slice(0, -4) + '/check_preferences/ITSMPreference/';
 
   const httpResult = $http.get(urlBase, {})
     .then(resp => resp.data)
@@ -134,4 +136,93 @@ export function createTicket(chrome, eventId) {
         return resp.ticket_id;
       }
     });
+}
+
+//This function is used to get the user reaction of the user for the event.
+export function getUserReaction(eventId) {
+  let urlBase = chrome.getUrlBase();
+  const userData = chrome.getCurrentUser();
+  urlBase += '/events_of_interest/reaction/' + eventId + '/?username=' + userData[0];
+
+  return fetch(urlBase, {
+    method: 'GET'
+  })
+    .then(resp => resp.json());
+}
+
+//This function is called to add a like/dislike to an alert along with comments.
+export function postReaction(eventId, reaction, comments) {
+  let urlBase = chrome.getUrlBase();
+  urlBase += '/events_of_interest/reaction/' + eventId + '/';
+  const userData = chrome.getCurrentUser();
+  const postBody = {
+    'username': userData[0],
+    'user_reaction': reaction,
+    'additional_comment': comments
+  };
+
+  return fetch(urlBase, {
+    method: 'POST',
+    body: JSON.stringify(postBody)
+  })
+    .then(resp => resp);
+}
+
+//This function is called to update a like/dislike to an alert along with comments.
+export function updateReaction(eventId, reaction, comments) {
+  let urlBase = chrome.getUrlBase();
+  urlBase += '/events_of_interest/reaction/' + eventId + '/';
+  const userData = chrome.getCurrentUser();
+  const postBody = {
+    'username': userData[0],
+    'user_reaction': reaction,
+    'additional_comment': comments
+  };
+
+  return fetch(urlBase, {
+    method: 'PUT',
+    body: JSON.stringify(postBody)
+  })
+    .then(resp => resp);
+}
+
+//This function is used to get all the reactions & comments for the event.
+export function getAllReactions(eventId) {
+  let urlBase = chrome.getUrlBase();
+  urlBase += '/events_of_interest/reaction/comments/' + eventId + '/';
+
+  return fetch(urlBase, {
+    method: 'GET'
+  })
+    .then(resp => resp.json())
+    .then(data => data);
+}
+
+//this function is used to get the saved filters of user under Event Console.
+export function getSavedFilters() {
+  let urlBase = chrome.getUrlBase();
+  const userData = chrome.getCurrentUser();
+  urlBase += '/events_of_interest/filter/' + userData[0] + '/';
+
+  return fetch(urlBase, {
+    method: 'GET'
+  })
+    .then(resp => resp.json())
+    .then(data => data);
+}
+
+//this function is used to save the filters of user under Event Console.
+export function saveFilters(filters) {
+  let urlBase = chrome.getUrlBase();
+  const userData = chrome.getCurrentUser();
+  urlBase += '/events_of_interest/filter/' + userData[0] + '/';
+  const postBody = {
+    filter: filters
+  };
+
+  return fetch(urlBase, {
+    method: 'POST',
+    body: JSON.stringify(postBody)
+  })
+    .then(resp => resp);
 }

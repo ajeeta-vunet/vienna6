@@ -102,7 +102,9 @@ function VunetEmailgroups($scope,
         name: 'group description',
         props: {
           required: true,
-        }
+		      pattern:'[a-zA-z0-9]+',
+        },
+		    errorText: 'Group description should contain only alpha numeric characters.'
       },
       {
         key: 'recipients',

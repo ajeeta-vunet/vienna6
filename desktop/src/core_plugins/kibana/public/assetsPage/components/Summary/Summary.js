@@ -17,11 +17,9 @@
 // Use of copyright notice does not imply publication.
 
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { generateHeading } from '../../../event/utils/vunet_format_name';
 import { produce } from 'immer';
-import './summary.less';
-// import _ from 'lodash';
+import './Summary.less';
 
 export class Summary extends React.Component {
   constructor(props) {

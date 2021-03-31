@@ -797,6 +797,7 @@ export class VunetDynamicFormBuilder extends Component {
               className="form-input"
               key={key}
               type={type}
+              disabled={id}
               onChange={(e) => { this.onChange(e, target, 'file'); }}
             />
           </div>
@@ -832,6 +833,7 @@ export class VunetDynamicFormBuilder extends Component {
               name={name}
               value={value}
               checked={value}
+              disabled={id}
               data-error-text={errorText}
               onChange={(e) => { this.onChange(e, target, 'checkBox'); }}
             /><span className="checkbox-label">{m.label} </span>

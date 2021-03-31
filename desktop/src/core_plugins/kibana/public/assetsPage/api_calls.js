@@ -139,8 +139,11 @@ export async function importAssets(postBody) {
   });
 
   if (!response.ok) {
-    const message = `An error has occured: ${response.status}`;
-    throw new Error(message);
+    //when there is an error in the uploaded file
+    //the backend responds with a 500 error code and an error message.
+    //this will be used to notify the user with the error.
+    const data = await response.json();
+    throw new Error(JSON.stringify(data['error-string']));
   }
   return response;
 }

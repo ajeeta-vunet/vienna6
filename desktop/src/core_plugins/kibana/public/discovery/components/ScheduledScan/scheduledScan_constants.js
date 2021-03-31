@@ -5,7 +5,7 @@ export const SCHEDULE_NAME_HELP_OBJ = {
 };
 
 export const SEED_IP_HELP_OBJ = {
-  headerText: 'The seed ip of network that needs to be scanned.',
+  headerText: 'The seed IP of network that needs to be scanned.',
   referenceLink: '',
   contentIntroduction: 'Seed IP indicates the range of IP addresses that should be scanned in the network.'
 };
@@ -52,9 +52,28 @@ export const CREDENTIAL_HELP_OBJ = {
 };
 
 export const SOURCE_IP_HELP_OBJ = {
-  headerText: 'The IP address from where Scan should be initiated.',
+  headerText: 'The IP address from where the packets for scan should be sent.',
   referenceLink: '',
-  contentIntroduction: 'Source IP indicates the IP address of the system from which Scan was started.'
+  contentIntroduction: 'Source IP indicated the device from which the packets for Network Discovery are sent.'
+};
+
+export const IP_SOURCE_HELP_OBJ = {
+  headerText: 'Select the type of IP source input. The options are Seed IP or through a xls file.',
+  referenceLink: '',
+  contentIntroduction: 'User can either enter the seed IP of the network to be scanned or upload a xls' +
+  ' file containing IP addresses that need to be scanned.'
+}
+
+export const HOP_COUNT_HELP_OBJ = {
+  headerText: 'The number of hops to be taken during the Network Scan.',
+  referenceLink: '',
+  contentIntroduction: 'Hop count refers to the number of devices that a piece of data travels through.'
+};
+
+export const SOURCE_IP_FILE_HELP_OBJ = {
+  headerText: `An '.xls' file containing the list of IP addressess that needs to be scanned.`,
+  referenceLink: '',
+  contentIntroduction: 'Upload a xls file containing list of Source IP address that needs to scanned during network discovery.'
 };
 
 // A dict to get more user intuitive values for

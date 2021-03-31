@@ -18,7 +18,7 @@
 
 import React from 'react';
 import { VunetDataTable } from '../../../../../../../ui_framework/src/vunet_components/vunet_table/vunet_table';
-import { createNewScheduledScan, editScheduleScan, deleteScheduledScan, createNewScan } from '../../api_calls';
+import { createNewScheduledScan, editScheduleScan, deleteScheduledScan, createNewScan, reScan } from '../../api_calls';
 import './ScheduledScan.less';
 import chrome from 'ui/chrome';
 import { SCHEDULE_NAME_HELP_OBJ,
@@ -28,7 +28,10 @@ import { SCHEDULE_NAME_HELP_OBJ,
   SOURCE_IP_HELP_OBJ,
   SCHEDULE_INFO_HELP_OBJ,
   SCHEDULE_NOW_HELP_OBJ,
-  SCHEDULE_FREQUENCY_CONSTANTS
+  SCHEDULE_FREQUENCY_CONSTANTS,
+  IP_SOURCE_HELP_OBJ,
+  HOP_COUNT_HELP_OBJ,
+  SOURCE_IP_FILE_HELP_OBJ
 } from './scheduledScan_constants';
 
 export class ScheduledScan extends React.Component {
@@ -99,14 +102,24 @@ export class ScheduledScan extends React.Component {
         cronToString = 'Weekly';
       }else if(dayOfMonth !== '*' && month === '*' && dayOfWeek === '*') {
         cronToString = 'Monthly';
+      }else if(schedule.schedule_string === '') {
+        cronToString = 'Not Scheduled';
       }
       schedule.frequency = cronToString;
       //this is done to convert data fetched form backend to be matched with data
       //expected form vunet_dynamic_form_builder.js
-      schedule.cronString = schedule.schedule_string;
+      if(schedule.schedule_string === '') {
+        schedule.cronString = '* * * * *';
+        schedule.schedule_string = '* * * * *';
+        schedule.scheduleAt = false;
+      }else {
+        schedule.cronString = schedule.schedule_string;
+        schedule.scheduleAt = true;
+      }
       schedule.cred_list = schedule.cred_list && schedule.cred_list.split(',');
       schedule.scheduleFrequency = Object.keys(SCHEDULE_FREQUENCY_CONSTANTS)
         .find(key => SCHEDULE_FREQUENCY_CONSTANTS[key] === schedule.frequency);
+      if(schedule.scheduleFrequency === undefined) schedule.scheduleFrequency = 'day';
     });
     return schedules;
   }
@@ -151,6 +164,9 @@ export class ScheduledScan extends React.Component {
     const tenantId = url.substring(url.indexOf('api/') + 4, url.indexOf('/bu/'));
     const buId = url.substring(url.indexOf('bu/') + 3, url.length);
 
+    const formData = new FormData();
+    const scanNowFormData = new FormData();
+
     const scanNowData = {
       'tenant_id': tenantId,
       'bu_id': buId,
@@ -158,64 +174,62 @@ export class ScheduledScan extends React.Component {
       'end_ip': '',
       'source_ip': typeof scanData.source_ip === 'string' ? scanData.source_ip.split(',') : scanData.source_ip,
       'excluded_ip': scanData.excluded_ip.length > 0 ? scanData.excluded_ip.split(',') : [],
-      'seed_ip': scanData.seed_ip,
       'cred_list': scanData.cred_list ? scanData.cred_list : [],
-      'schedule_name': '',
+      'schedule_name': scanData.schedule_name,
       'schedule_string': '',
       'user_details': '',
-      'name': scanData.schedule_name
+      'name': scanData.schedule_name,
     };
 
+    if(scanData.source_file) {
+      scanNowData.hop_count = 1;
+      scanNowFormData.append('file', scanData.source_file, scanData.source_file.name);
+    }else {
+      scanNowData.seed_ip = scanData.seed_ip;
+      scanNowData.hop_count = scanData.hop_count;
+    }
+
+    scanNowFormData.append('json', JSON.stringify(scanNowData));
     if (scanData.schedule_now) {
-      createNewScan(chrome, scanNowData);
+      createNewScan(chrome, scanNowFormData);
     }
 
     const scheduleScanData = {
+      tenant_id: tenantId,
+      bu_id: buId,
       start_ip: '',
       end_ip: '',
       excluded_ip: scanData.excluded_ip.length > 0 ? scanData.excluded_ip.split(',') : [],
-      seed_ip: scanData.seed_ip,
       cred_list: scanData.cred_list ? scanData.cred_list : [],
       schedule_name: scanData.schedule_name,
       schedule_string: scanData.cronString,
       user_details: '',
-      source_ip: typeof scanData.source_ip === 'string' ? scanData.source_ip.split(',') : scanData.source_ip
+      source_ip: typeof scanData.source_ip === 'string' ? scanData.source_ip.split(',') : scanData.source_ip,
+      name: scanData.schedule_name,
     };
 
-    if (event === 'add') {
-      return createNewScheduledScan(scheduleScanData);
+    if(scanData.source_file) {
+      scheduleScanData.hop_count = 1;
+      formData.append('file', scanData.source_file, scanData.source_file.name);
+    }else {
+      scheduleScanData.seed_ip = scanData.seed_ip;
+      scheduleScanData.hop_count = scanData.hop_count;
+    }
+
+    if(event === 'edit') delete scheduleScanData.seed_ip;
+
+    formData.append('json', JSON.stringify(scheduleScanData));
+    if (event === 'add' && scanData.scheduleAt) {
+      return createNewScheduledScan(formData);
     }else if(event === 'edit') {
-      return editScheduleScan(configId, scheduleScanData);
+      return editScheduleScan(configId, formData);
+    }else {
+      return Promise.resolve(true);
     }
   }
 
   onRowAction = (e, configId) => {
-    //fetch details of a single scan using configId and use the details fetched to call the scan now API.
-
-    const selectedScan = this.state.listOfScheduledScans &&
-            this.state.listOfScheduledScans.find((scheduledScan) => {
-              return scheduledScan.config_id === configId;
-            });
-
-    const url = chrome.getUrlBase();
-    const tenantId = url.substring(url.indexOf('api/') + 4, url.indexOf('/bu/'));
-    const buId = url.substring(url.indexOf('bu/') + 3, url.length);
-    const scanNowDate = {
-      'tenant_id': tenantId,
-      'bu_id': buId,
-      'start_ip': selectedScan.start_ip,
-      'end_ip': selectedScan.end_ip,
-      'source_ip': selectedScan.source_ip,
-      'excluded_ip': selectedScan.excluded_ip,
-      'seed_ip': selectedScan.seed_ip,
-      'cred_list': selectedScan.cred_list,
-      'schedule_name': '',
-      'schedule_string': '',
-      'user_details': '',
-      'name': selectedScan.schedule_name
-    };
-
-    createNewScan(chrome, scanNowDate);
+    reScan(configId);
     return Promise.resolve(false);
   };
 
@@ -240,7 +254,7 @@ export class ScheduledScan extends React.Component {
       selection: true,
       search: true,
       forceUpdate: false,
-      wrapTableCellContents: true,
+      // wrapTableCellContents: true,
       default: {
         start_ip: '',
         end_ip: '',
@@ -252,8 +266,12 @@ export class ScheduledScan extends React.Component {
         source_ip: [],
         cronString: '0 0 * * *',
         scheduleAt: false,
+        enterSeedIP: false,
+        enterSourceFile: false,
         scheduleFrequency: 'day',
-        schedule_now: true
+        schedule_now: true,
+        hop_count: 100,
+        selectIPSource: 'seedIP'
       },
       table:
              [
@@ -272,8 +290,46 @@ export class ScheduledScan extends React.Component {
                  },
                  errorText: `Name should be unique and can have alpha-numeric characters. _ , . and - 
                 is also allowed but the name should not exceed 32 characters.`
-               },
-               {
+               }, {
+                 key: 'selectIPSource',
+                 id: true,
+                 label: 'Select IP Source *',
+                 type: 'select',
+                 helpObj: IP_SOURCE_HELP_OBJ,
+                 name: 'select_ip_source',
+                 options: [
+                   {
+                     key: 'seedIP',
+                     label: 'Seed IP',
+                     name: 'seedIP',
+                     value: 'seedIP',
+                   },
+                   {
+                     key: 'sourceIPFile',
+                     label: 'Source IP File',
+                     name: 'sourceIPFile',
+                     value: 'sourceIPFile',
+                   }
+                 ],
+                 props: {
+                   required: true
+                 },
+                 rules: {
+                   name: 'IP_rule',
+                   options: [{
+                     value: 'seedIP',
+                     actions: [{
+                       hide: ['source_file']
+                     }]
+                   },
+                   {
+                     value: 'sourceIPFile',
+                     actions: [{
+                       hide: ['seed_ip', 'hop_count']
+                     }]
+                   }]
+                 }
+               }, {
                  key: 'seed_ip',
                  id: true,
                  label: 'Seed IP *',
@@ -286,6 +342,27 @@ export class ScheduledScan extends React.Component {
                    pattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
                  },
                  errorText: `Please enter a Seed IP that matches this pattern: '256.256.256.128/24'.`
+               }, {
+                 key: 'source_file',
+                 id: true,
+                 label: 'IP File *',
+                 type: 'file',
+                 helpObj: SOURCE_IP_FILE_HELP_OBJ,
+                 name: 'ipFile',
+                 props: {
+                   required: true,
+                 },
+               }, {
+                 key: 'hop_count',
+                 label: 'Hop Count *',
+                 type: 'text',
+                 helpObj: HOP_COUNT_HELP_OBJ,
+                 name: 'hopCount',
+                 props: {
+                   required: true,
+                   pattern: `^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$`
+                 },
+                 errorText: `Please enter a number that is >0 or <=255`
                }, {
                  key: 'source_ip',
                  label: 'Source IP *',
@@ -314,6 +391,7 @@ export class ScheduledScan extends React.Component {
                  type: 'header'
                }, {
                  key: 'schedule_now',
+                 id: true,
                  name: 'schedule_now',
                  label: 'Run Now',
                  helpObj: SCHEDULE_NOW_HELP_OBJ,

@@ -76,7 +76,7 @@ export class ImportAsset extends React.Component {
           </div>
           <div className="help-block">
             <p>Only file type with *.xls is supported. Download sample xls file from
-              <a href="/ui/vienna_data/asset_import.xls"><i className="data-source-import-template-link"> here</i></a>
+              <a href="/ui/vienna_data/assets_import.xls"><i className="data-source-import-template-link"> here</i></a>
             </p>
           </div>
           <div className="actions">

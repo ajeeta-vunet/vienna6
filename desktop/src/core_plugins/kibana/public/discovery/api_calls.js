@@ -9,7 +9,7 @@ export async function createNewScan(chrome, newScanDetails) {
 
   const response = await fetch(urlBase, {
     method: 'POST',
-    body: JSON.stringify(newScanDetails)
+    body: newScanDetails
   });
 
   if (!response.ok) {
@@ -174,7 +174,7 @@ export async function createNewScheduledScan(newScheduleScanDetails) {
 
   const response = await fetch(urlBase, {
     method: 'POST',
-    body: JSON.stringify(newScheduleScanDetails)
+    body: newScheduleScanDetails
   });
 
   if (!response.ok) {
@@ -193,7 +193,7 @@ export async function editScheduleScan(configId, scheduleScanData) {
 
   const response = await fetch(urlBase, {
     method: 'PUT',
-    body: JSON.stringify(scheduleScanData)
+    body: scheduleScanData
   });
 
   if (!response.ok) {
@@ -259,6 +259,23 @@ export async function filteredListOfNodes(topologyId, scrollId, filter) {
   const response = await fetch(urlBase, {
     method: 'POST',
     body: JSON.stringify(postBody)
+  });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
+  return response;
+}
+
+//this method is called to rescan a topology.
+export async function reScan(scanId) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/asset/scan/again/' + scanId + '/';
+
+  const response = await fetch(urlBase, {
+    method: 'POST'
   });
 
   if (!response.ok) {

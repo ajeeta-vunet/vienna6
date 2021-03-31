@@ -24,7 +24,6 @@ import { updateViewDetails, fetchNewScanList } from '../../actions/topologyActio
 import chrome from 'ui/chrome';
 import { createNewScan, deleteScan, fetchNodesList, fetchNodeDetailsSummary, filteredListOfNodes } from '../../api_calls';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
-import moment from 'moment-timezone';
 import './Topology.less';
 
 const mapStateToProps = state => {
@@ -226,7 +225,6 @@ class TopologyComponent extends React.Component {
        selection: true,
        search: true,
        forceUpdate: false,
-      //  wrapTableCellContents: true,
        table:
             [
               {

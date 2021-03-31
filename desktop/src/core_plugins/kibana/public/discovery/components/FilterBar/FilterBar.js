@@ -43,7 +43,6 @@ export class FilterBar extends React.Component {
             </div>
           </div>
         );
-        // });
       });
     });
   }

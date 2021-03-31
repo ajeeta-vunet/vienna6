@@ -31,12 +31,13 @@ import { fetchListOfAssets,
   downloadAssets,
   fetchFilteredListOfAssets,
   importAssets } from '../../api_calls';
-import { Summary } from '../summary/summary';
+import { Summary } from '../Summary/Summary';
 import ReactTooltip from 'react-tooltip';
 import { Notifier } from 'ui/notify';
 import { FilterBar } from '../../../discovery/components/FilterBar/FilterBar';
 import _ from 'lodash';
 import { ImportAsset } from '../ImportAsset/ImportAsset';
+import { SingleAssetDetails } from '../SingleAssetDetails/SingleAssetDetails';
 
 const notify = new Notifier({ location: 'Assets' });
 
@@ -66,7 +67,9 @@ export class AssetsPage extends React.Component {
       editAssetDetails: emptyAsset,
       assetDetailsSummary: this.props.assetDetailsSummary,
       filterObject: {},
-      importAssetFlag: false
+      importAssetFlag: false,
+      singleAssetDetails: {},
+      singleAssetDetailsFlag: false
     };
   }
 
@@ -91,7 +94,7 @@ export class AssetsPage extends React.Component {
   //this function is used to render the headers of the table.
   renderTableHeader() {
     const header = ['device_name', 'system_ip', 'device_type', 'vendor_name', 'addition_method',
-      'topology_name', 'last_modified_time',  'actions'];
+      'topology_name', 'last_modified_time', 'actions'];
     return header.map((key, index) => {
       return <th key={'head-' + index}>{generateHeading(key)}</th>;
     });
@@ -141,10 +144,32 @@ export class AssetsPage extends React.Component {
               <ReactTooltip />
               <span className="fa fa-pencil" />
             </button>
+            <button
+              className="more-details-button"
+              onClick={() => this.handleMoreDetails(node_id)}
+              data-tip={'More Details'}
+            >
+              <ReactTooltip />
+              <span className="fa fa-arrow-circle-right" />
+            </button>
           </td>
         </tr>
       );
     });
+  }
+
+  //when the action button to display more details of an asset is clicked this mehod is called.
+  //this method receives the nodeId of asset cliked on, using this the asset Details of that nodeId is determined
+  //and stored in singleAssetDetails state variable. We also set the singleAssetDetailsFlag to true to display
+  //SingleAssetDetails component.
+  handleMoreDetails = (nodeId) => {
+    let singleAssetDetails;
+    this.state.assets && this.state.assets.map((asset) => {
+      if(asset.node_id === nodeId) {
+        singleAssetDetails = asset;
+      }
+    });
+    this.setState({ singleAssetDetails, singleAssetDetailsFlag: true });
   }
 
   //this function is used to select all the assets displayed on the page.
@@ -176,34 +201,34 @@ export class AssetsPage extends React.Component {
   //this function is called to delete a asset.
   deleteAssets = () => {
 
-    Promise.all(
+    // Promise.all(
 
-      this.state.deleteIdList && this.state.deleteIdList.map((id) => {
-        let urlBase = chrome.getUrlBase();
-        urlBase = urlBase + '/asset/' + id + '/';
+    const promises = this.state.deleteIdList && this.state.deleteIdList.map((id) => {
+      let urlBase = chrome.getUrlBase();
+      urlBase = urlBase + '/asset/' + id + '/';
 
-        fetch(urlBase, {
-          method: 'DELETE'
-        });
-      })
-    )
-      .then(() => {
-        fetchFilteredListOfAssets(0, this.state.filterObject)
-          .then(data => {
-            fetchAssetDetailsSummary()
-              .then(assetDetailsSummary => {
-                this.setState({
-                  assets: data.assets,
-                  currentPage: 1,
-                  totalNumberOfAssets: data.no_of_nodes,
-                  selectedFlag: false,
-                  assetDetailsSummary: assetDetailsSummary,
-                  deleteIdList: []
-                }, () => notify.info('Asset deleted succesfully.')
-                );
-              });
-          });
+      return fetch(urlBase, {
+        method: 'DELETE'
       });
+    });
+    // )
+    Promise.all(promises).then(() => {
+      fetchFilteredListOfAssets(0, this.state.filterObject)
+        .then(data => {
+          fetchAssetDetailsSummary()
+            .then(assetDetailsSummary => {
+              this.setState({
+                assets: data.assets,
+                currentPage: 1,
+                totalNumberOfAssets: data.no_of_nodes,
+                selectedFlag: false,
+                assetDetailsSummary: assetDetailsSummary,
+                deleteIdList: []
+              }, () => notify.info('Asset deleted succesfully.')
+              );
+            });
+        });
+    });
   }
 
   //this function is called when a asset is selected.
@@ -255,6 +280,8 @@ export class AssetsPage extends React.Component {
     this.setState({ editAssetDetails, addNewAsset: true });
   }
 
+  //this method is used to render the Add or Delete icon based on
+  //whether a record is selected or not.
   renderAddOrDeleteIcon = () => {
 
     if(!this.state.selectedFlag && this.state.deleteIdList.length <= 0) {
@@ -455,6 +482,10 @@ export class AssetsPage extends React.Component {
                 );
               });
           });
+      })
+      .catch((error) => {
+        notify.info(error);
+        this.cancelAssetImport();
       });
   }
 
@@ -505,104 +536,122 @@ export class AssetsPage extends React.Component {
       });
   };
 
+  //this method is called to change the singleAssetDetailsFlag which controls the
+  //display of Single Asset Details component.
+  goBackToDetails = () => {
+    this.setState({ singleAssetDetailsFlag: !this.state.singleAssetDetailsFlag });
+  }
+
   render() {
 
     return (
       <div className="assetsPage-wrapper">
-        <div className="filters">
-          <FilterBar
-            filterObject={this.state.filterObject}
-            handleFilter={this.handleFilter}
-            clearAllFilter={this.clearAllFilter}
-          />
-        </div>
-        <div className="assetsPage">
-          <div className="assets-summary">
-            <Summary
-              summaryDetails={this.state.assetDetailsSummary}
-              handleFilter={this.handleFilter}
+        {!this.state.singleAssetDetailsFlag &&
+        <div>
+          <div className="filters">
+            <FilterBar
               filterObject={this.state.filterObject}
+              handleFilter={this.handleFilter}
+              clearAllFilter={this.clearAllFilter}
             />
           </div>
-          <div className="assets-table">
-            <div className="table-toolbar">
-              <div className="toolbar-search">
-                <div className="toolbar-searchbox">
-                  <div className="search-icon fa fa-search" />
-                  <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Search"
-                    onChange={(e) => this.onSearch(e)}
-                  />
-                </div>
-              </div>
-              <div className="kuiToolBarSection">
-                <div className="import-button-wrapper">
-                  <button
-                    className="vunet-btn-import"
-                    onClick={() => this.displayImportModal()}
-                  >
-                  Import
-                  </button>
-                </div>
-                <div className="report-button-wrapper">
-                  <button className="report-button" onClick={() => downloadAssets()}>
-                    <i className="fa fa-download" data-tip="Download CSV Report"/>
-                    <ReactTooltip />
-                  </button>
-                </div>
-                {this.renderAddOrDeleteIcon()}
-              </div>
-            </div>
-            {this.state.assets.length > 0 &&
-            <table className="assets">
-              <thead>
-                <tr>
-                  <td>
-                    <input type="checkbox" className="checkAll" onChange={(e) => this.selectAll(e)}/>
-                  </td>
-                  {this.renderTableHeader()}
-                </tr>
-              </thead>
-              <tbody>
-                {this.renderTableData()}
-              </tbody>
-            </table>
-            }
-            {this.state.assets.length <= 0 &&
-            <div className="no-asset">Looks like there are no assets found.</div>
-            }
-            <div className="pagination">
-              <Pagination
-                hideDisabled
-                activePage={this.state.currentPage}
-                itemsCountPerPage={10}
-                totalItemsCount={this.state.totalNumberOfAssets}
-                onChange={this.handlePageChange}
+          <div className="assetsPage">
+            <div className="assets-summary">
+              <Summary
+                summaryDetails={this.state.assetDetailsSummary}
+                handleFilter={this.handleFilter}
+                filterObject={this.state.filterObject}
               />
             </div>
+            <div className="assets-table">
+              <div className="table-toolbar">
+                <div className="toolbar-search">
+                  <div className="toolbar-searchbox">
+                    <div className="search-icon fa fa-search" />
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="Search"
+                      onChange={(e) => this.onSearch(e)}
+                    />
+                  </div>
+                </div>
+                <div className="kuiToolBarSection">
+                  <div className="import-button-wrapper">
+                    <button
+                      className="vunet-btn-import"
+                      onClick={() => this.displayImportModal()}
+                    >
+                  Import
+                    </button>
+                  </div>
+                  <div className="report-button-wrapper">
+                    <button className="report-button" onClick={() => downloadAssets()}>
+                      <i className="fa fa-download" data-tip="Download CSV Report"/>
+                      <ReactTooltip />
+                    </button>
+                  </div>
+                  {this.renderAddOrDeleteIcon()}
+                </div>
+              </div>
+              {this.state.assets.length > 0 &&
+              <table className="assets">
+                <thead>
+                  <tr>
+                    <td>
+                      <input type="checkbox" className="checkAll" onChange={(e) => this.selectAll(e)}/>
+                    </td>
+                    {this.renderTableHeader()}
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.renderTableData()}
+                </tbody>
+              </table>
+              }
+              {this.state.assets.length <= 0 &&
+              <div className="no-asset">Looks like there are no assets found.</div>
+              }
+              <div className="pagination">
+                <Pagination
+                  hideDisabled
+                  activePage={this.state.currentPage}
+                  itemsCountPerPage={10}
+                  totalItemsCount={this.state.totalNumberOfAssets}
+                  onChange={this.handlePageChange}
+                />
+              </div>
+            </div>
+            {this.state.addNewAsset &&
+            <div className="newAssetModal">
+              <NewAssetModal
+                editAssetDetails={this.state.editAssetDetails}
+                vendorList={this.props.vendorList}
+                deviceType={this.props.deviceTypeList}
+                handleAssetSubmit={this.handleAssetSubmit}
+                cancelNewAsset={this.cancelNewAsset}
+              />
+            </div>
+            }
+            {this.state.importAssetFlag &&
+            <div className="import-asset-modal">
+              <ImportAsset
+                cancelAssetImport={this.cancelAssetImport}
+                handleAssetImport={this.handleAssetImport}
+              />
+            </div>
+            }
           </div>
-          {this.state.addNewAsset &&
-          <div className="newAssetModal">
-            <NewAssetModal
-              editAssetDetails={this.state.editAssetDetails}
-              vendorList={this.props.vendorList}
-              deviceType={this.props.deviceTypeList}
-              handleAssetSubmit={this.handleAssetSubmit}
-              cancelNewAsset={this.cancelNewAsset}
-            />
-          </div>
-          }
-          {this.state.importAssetFlag &&
-          <div className="import-asset-modal">
-            <ImportAsset
-              cancelAssetImport={this.cancelAssetImport}
-              handleAssetImport={this.handleAssetImport}
-            />
-          </div>
-          }
         </div>
+        }
+        {this.state.singleAssetDetailsFlag &&
+          <div className="single-asset-details">
+            <SingleAssetDetails
+              singleAssetDetails={this.state.singleAssetDetails}
+              goBackToDetails={this.goBackToDetails}
+            />
+          </div>
+        }
       </div>
     );
   }

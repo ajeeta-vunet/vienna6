@@ -90,6 +90,7 @@ export class NewAssetModal extends React.Component {
     });
   }
 
+  //this method is called when the submit button is clicked.
   handleSubmit = (e) => {
     let urlBase = chrome.getUrlBase();
     let method;
@@ -449,12 +450,20 @@ export class NewAssetModal extends React.Component {
       const editInterfaceList = produce(this.state.editInterfaceList, (draft) => {
         draft[index] = false;
       });
-      this.setState({ assetObject: assetObject, editInterfaceList: editInterfaceList, displayInterfaceInput: false });
+      this.setState({ assetObject: assetObject, editInterfaceList: editInterfaceList, displayInterfaceInput: false }, () => {
+        if(this.state.assetObject.node_id !== '') {
+          document.getElementById('submitButton').disabled = false;
+        }
+      });
     }else {
       const assetObject = produce(this.state.assetObject, (draft) => {
         draft.interface_list.push(this.state.interfaceObject);
       });
-      this.setState({ assetObject: assetObject, displayInterfaceInput: false, interfaceList: assetObject.interface_list });
+      this.setState({ assetObject: assetObject, displayInterfaceInput: false, interfaceList: assetObject.interface_list }, () => {
+        if(this.state.assetObject.node_id !== '') {
+          document.getElementById('submitButton').disabled = false;
+        }
+      });
     }
     e.preventDefault();
   }

@@ -25,12 +25,13 @@ import { connect } from 'react-redux';
 import { updateViewDetails } from '../../actions/topologyActions';
 import { generateHeading } from '../../../event/utils/vunet_format_name';
 import './NodeDetails.less';
-import { Summary } from '../../../assetsPage/components/summary/summary';
+import { Summary } from '../../../assetsPage/components/Summary/Summary';
 import { searchNodeDetails, fetchNodesList, filteredListOfNodes } from '../../api_calls';
 import ReactTooltip from 'react-tooltip';
 import { FilterBar } from '../FilterBar/FilterBar';
 import { produce } from 'immer';
 import _ from 'lodash';
+import { SingleAssetDetails } from '../../../assetsPage/components/SingleAssetDetails/SingleAssetDetails';
 
 const mapStateToProps = state => {
   return {
@@ -48,13 +49,13 @@ class NodeDetailsCmmponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //currentPage - used to store the active page number
-      // currentPage: 1,
       viewDetails: this.props.viewDetails,
       totalNumberOfNodes: this.props.totalNumberOfNodes,
       currentPage: this.props.currentPage,
       nodeDetails: this.props.nodeDetails,
-      filterObject: {}
+      filterObject: {},
+      singleAssetDetails: {},
+      singleAssetDetailsFlag: false
     };
   }
 
@@ -87,7 +88,7 @@ class NodeDetailsCmmponent extends React.Component {
   }
 
   renderTableHeader() {
-    const header = [ 'system_ip', 'device_name', 'device_type', 'credential_name', 'credential_type', 'vendor_name' ];
+    const header = [ 'system_ip', 'device_name', 'device_type', 'credential_name', 'credential_type', 'vendor_name', 'actions' ];
     return header.map((key, index) => {
       return <th key={index}>{generateHeading(key)}</th>;
     });
@@ -95,7 +96,7 @@ class NodeDetailsCmmponent extends React.Component {
 
   renderTableData() {
     return this.state.nodeDetails && this.state.nodeDetails.map((node, index) => {
-      const { system_ip, device_name, device_type, credential_name, cred_type, vendor_name } = node; //destructuring
+      const { node_id, system_ip, device_name, device_type, credential_name, cred_type, vendor_name } = node; //destructuring
       return (
         <tr key={'row-' + index}>
           <td>
@@ -128,11 +129,36 @@ class NodeDetailsCmmponent extends React.Component {
               {vendor_name}
             </div>
           </td>
+          <td>
+            <button
+              className="more-details-button"
+              onClick={() => this.handleMoreDetails(node_id)}
+              data-tip={'More Details'}
+            >
+              <ReactTooltip />
+              <span className="fa fa-arrow-circle-right" />
+            </button>
+          </td>
         </tr>
       );
     });
   }
 
+  //when the action button to display more details of an asset is clicked this mehod is called.
+  //this method receives the nodeId of asset cliked on, using this the asset Details of that nodeId is determined
+  //and stored in singleAssetDetails state variable. We also set the singleAssetDetailsFlag to true to display
+  //SingleAssetDetails component.
+  handleMoreDetails = (nodeId) => {
+    let singleAssetDetails;
+    this.state.nodeDetails && this.state.nodeDetails.map((node) => {
+      if(node.node_id === nodeId) {
+        singleAssetDetails = node;
+      }
+    });
+    this.setState({ singleAssetDetails, singleAssetDetailsFlag: true });
+  }
+
+  //this method is called when the user types anything in the search bar abd triggers a search.
   onSearch = (e) => {
     if(e.target.value !== '') {
       const postBody = {
@@ -157,6 +183,7 @@ class NodeDetailsCmmponent extends React.Component {
     }
   }
 
+  //this method is called when the user interacts with the Pagination component.
   handlePageChange = (currentPage) => {
     const searchString = $('.search-input').val();
     if(searchString !== '') {
@@ -241,70 +268,87 @@ class NodeDetailsCmmponent extends React.Component {
       });
   }
 
+  //this method is called to change the singleAssetDetailsFlag which controls the
+  //display of Single Asset Details component.
+  goBackToDetails = () => {
+    this.setState({ singleAssetDetailsFlag: !this.state.singleAssetDetailsFlag });
+  }
+
   render() {
 
     return (
       <div className="nodeDetails">
-        <div className="top-bar">
-          <span data-tip={'Go Back to Topology'}>
-            <ReactTooltip />
-            <i
-              className="fa fa-arrow-circle-o-left fa-lg display-right-topologyID"
-              onClick={() => this.props.goBack()}
-              aria-hidden="true"
-            />
-          </span>
-          {/* <span className="topologyID">Topology Name : {this.state.nodeDetails && this.state.nodeDetails[0].name}</span> */}
-        </div>
-        <div className="filters">
-          <FilterBar
-            filterObject={this.state.filterObject}
-            handleFilter={this.handleFilter}
-            clearAllFilter={this.clearAllFilter}
-          />
-        </div>
-        <div className="nodeDetails-wrapper">
-          <div className="assets-summary">
-            <Summary
-              summaryDetails={this.props.summaryDetails}
-              topologyName={this.props.topologyName}
-              handleFilter={this.handleFilter}
+        {!this.state.singleAssetDetailsFlag &&
+        <div>
+          <div className="top-bar">
+            <span data-tip={'Go Back to Topology'}>
+              <ReactTooltip />
+              <i
+                className="fa fa-arrow-circle-o-left fa-lg display-right-topologyID"
+                onClick={() => this.props.goBack()}
+                aria-hidden="true"
+              />
+            </span>
+          </div>
+          <div className="filters">
+            <FilterBar
               filterObject={this.state.filterObject}
+              handleFilter={this.handleFilter}
+              clearAllFilter={this.clearAllFilter}
             />
           </div>
-          <div className="nodeDetails-table">
-            <div className="table-toolbar">
-              <div className="toolbar-search">
-                <div className="toolbar-searchbox">
-                  <div className="search-icon fa fa-search" />
-                  <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Search"
-                    onChange={(e) => this.onSearch(e)}
-                  />
-                </div>
-              </div>
-            </div>
-            <table className="nodes">
-              <thead>
-                <tr>{this.renderTableHeader()}</tr>
-              </thead>
-              <tbody>
-                {this.renderTableData()}
-              </tbody>
-            </table>
-            <div className="pagination">
-              <Pagination
-                hideDisabled
-                activePage={this.state.currentPage}
-                itemsCountPerPage={10}
-                totalItemsCount={this.state.totalNumberOfNodes}
-                onChange={this.handlePageChange}
+          <div className="nodeDetails-wrapper">
+            <div className="assets-summary">
+              <Summary
+                summaryDetails={this.props.summaryDetails}
+                topologyName={this.props.topologyName}
+                handleFilter={this.handleFilter}
+                filterObject={this.state.filterObject}
               />
             </div>
+            <div className="nodeDetails-table">
+              <div className="table-toolbar">
+                <div className="toolbar-search">
+                  <div className="toolbar-searchbox">
+                    <div className="search-icon fa fa-search" />
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="Search"
+                      onChange={(e) => this.onSearch(e)}
+                    />
+                  </div>
+                </div>
+              </div>
+              <table className="nodes">
+                <thead>
+                  <tr>{this.renderTableHeader()}</tr>
+                </thead>
+                <tbody>
+                  {this.renderTableData()}
+                </tbody>
+              </table>
+              <div className="pagination">
+                <Pagination
+                  hideDisabled
+                  activePage={this.state.currentPage}
+                  itemsCountPerPage={10}
+                  totalItemsCount={this.state.totalNumberOfNodes}
+                  onChange={this.handlePageChange}
+                />
+              </div>
+            </div>
           </div>
         </div>
+        }
+        {this.state.singleAssetDetailsFlag &&
+        <div className="single-asset-details">
+          <SingleAssetDetails
+            singleAssetDetails={this.state.singleAssetDetails}
+            goBackToDetails={this.goBackToDetails}
+          />
+        </div>
+        }
       </div>
     );
   }

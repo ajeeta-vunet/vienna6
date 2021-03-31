@@ -25,7 +25,7 @@
     class="visualize-chart">
     <!-- The !addLegend condition was added below to take care of viz. that use the legend
     Without the flag, the loader shifts everytime the legend loads and is displayed -->
-    <loader-animation ng-if="!addLegend && !(vis.type.name === 'calendar' ? vis : false)">
+    <loader-animation ng-if="!addLegend && !((vis.type.name === 'calendar' || vis.type.name === 'tile_map' || vis.type.name === 'region_map') ? vis : false)">
     </loader-animation>
   </div>
   <visualize-legend ng-if="addLegend"></visualize-legend>

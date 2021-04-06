@@ -371,12 +371,19 @@ function vunetBackup($injector,
             const optionObj = {};
             optionObj.key = cred.name;
             optionObj.name = cred.name;
+            optionObj.label = cred.name;
             optionObj.value = cred.name;
             obj.options.push(optionObj);
           });
 
-          $scope.backupMeta.default.credentials = obj.options &&
+          //this is done to add a placeholder option for the dropdown when no option is selected.
+          if(obj.options.length > -1) {
+            obj.options.unshift({
+              key: 'select', label: 'Select', name: 'select', value: ''
+            });
+            $scope.backupMeta.default.credentials = obj.options &&
             obj.options[0].value;
+          }
         }
 
         // Use user crendential values in select option
@@ -388,11 +395,19 @@ function vunetBackup($injector,
                 const optionObj = {};
                 optionObj.key = cred.name;
                 optionObj.name = cred.name;
+                optionObj.label = cred.name;
                 optionObj.value = cred.name;
                 fileConfigObj.options.push(optionObj);
               });
-              obj.content.data.credentials = fileConfigObj.options &&
+
+              //this is done to add a placeholder option for the dropdown when no option is selected.
+              if(fileConfigObj.options.length > -1) {
+                fileConfigObj.options.unshift({
+                  key: 'select', label: 'Select', name: 'select', value: ''
+                });
+                obj.content.data.credentials = fileConfigObj.options &&
                 fileConfigObj.options[0].value;
+              }
             }
           });
         }

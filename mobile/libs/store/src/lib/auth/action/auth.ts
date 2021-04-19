@@ -74,7 +74,15 @@ export function LoginUser({ name, password, captchaKey, captchaSolution }: Login
           if (!isMobile()) {
             window.localStorage.clear();
             UserSettingStore.UserName = name;
-            window.location.href = window.location.origin + '/app/vienna';
+            // If the url has the next parameter, we should redirect to url
+            // after login.
+            const params = new URLSearchParams(window.location.search);
+            if(window.location.search.indexOf('next') > -1) {
+              window.location.href = window.location.origin + params.get('next');
+            }
+            else {
+              window.location.href = window.location.origin + '/app/vienna';
+            }
           } else {
             dispatch({
               type: AuthActionTypes.LOGIN_SUCCESS,

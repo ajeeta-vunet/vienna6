@@ -54,9 +54,10 @@ const store = configureStore(environment);
 const redirectPaths = [
   { from: '/vunet.html', to: '/vunet' },
 ];
+
 const redirectTo = redirectPaths.find((a) => location.pathname.startsWith(a.from));
 if (redirectTo) {
-  window.location.href = redirectTo.to;
+  window.location.href = redirectTo.to + window.location.search;
 } else {
   const routing = (
     <Provider store={store}>

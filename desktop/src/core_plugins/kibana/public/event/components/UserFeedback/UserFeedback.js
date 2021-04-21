@@ -103,9 +103,16 @@ export class UserFeedback extends React.Component {
 
   //this method is called when the user clicks on the submit button.
   handleSubmit = () => {
-    const comments = this.state.userReactionData.user_reaction === 'Dislike' ? this.state.dislikeComments : [];
+    // eslint-disable-next-line prefer-const
+    let comments = this.state.reaction === 'Dislike' ? this.state.dislikeComments : [];
     if(this.state.additionalComments !== '') {
-      comments.push(this.state.additionalComments);
+      if(this.state.reaction === 'Dislike') {
+        comments = produce(this.state.dislikeComments, (draft) => {
+          draft.push(this.state.additionalComments);
+        });
+      }else{
+        comments.push(this.state.additionalComments);
+      }
     }
 
     //if there is no reaction then there is no database entry of reaction for this event by this user
@@ -133,10 +140,12 @@ export class UserFeedback extends React.Component {
         draft.splice(index, 1);
       });
     }else {
-      dislikeComments.push(dislikeComment);
+      dislikeComments = produce(this.state.dislikeComments, (draft) => {
+        draft.push(dislikeComment);
+      });
     }
 
-    this.setState({ dislikeComments });
+    this.setState({ dislikeComments: dislikeComments });
   }
 
   //this method is called when the user clicks on 'rect; reaction and we have to display the
@@ -198,16 +207,16 @@ export class UserFeedback extends React.Component {
   //this method is called to render the user feedback if there is any.
   renderUserFeedback = () => {
     return(
-      this.state.allReactions && this.state.allReactions.map((reaction) => {
+      this.state.allReactions && this.state.allReactions.map((reaction, reactionIndex) => {
         if(reaction.user_reaction === 'Like') {
           return (
-            <div className="like-reaction-details">
+            <div key={reactionIndex} className="like-reaction-details">
               <div className="like-icon-div">
                 <i className="fa fa-3x fa-thumbs-o-up like-icon" />
               </div>
               <div className="like-comments">
-                {reaction.additional_comment.map((comment) => {
-                  return(<div>{comment}</div>);
+                {reaction.additional_comment.map((comment, commentIndex) => {
+                  return(<div key={commentIndex}>{comment}</div>);
                 })}
                 <div className="like-user-details">
                   <div
@@ -227,8 +236,8 @@ export class UserFeedback extends React.Component {
                 <i className="fa fa-3x fa-thumbs-o-down dislike-icon" />
               </div>
               <div className="like-comments">
-                {reaction.additional_comment.map((comment) => {
-                  return(<div>{comment}</div>);
+                {reaction.additional_comment.map((comment, commentIndex) => {
+                  return(<div key={commentIndex}>{comment}</div>);
                 })}
                 <div className="dislike-user-details">
                   <div

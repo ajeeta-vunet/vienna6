@@ -99,15 +99,15 @@ export class EventItem extends React.Component {
         draft.fields.assignee = assignee;
         draft.fields.status = status;
       });
-      this.setState({ event: updatedEvent });
+      this.setState({ event: updatedEvent }, () => {
+        notify.info('Event has been updated successfully');
+      });
 
       if (noteText !== '') {
         const updatedDetails = produce(this.state.details, (draft) => {
           draft.alert_details.fields.notes.push(toSend.notes[0]);
         });
-        this.setState({ details: updatedDetails }, () => {
-          notify.info('Event has been updated successfully');
-        });
+        this.setState({ details: updatedDetails });
       }
     });
   };
@@ -220,7 +220,7 @@ export class EventItem extends React.Component {
       }
     }
 
-    this.setState({ event: updatedEvent }, () => {
+    this.setState({ event: updatedEvent, showDetails: true }, () => {
       notify.info('Event feedback updated successfully');
     });
   }

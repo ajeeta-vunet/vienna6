@@ -24,6 +24,10 @@ import { OperationBar } from '../OperationBar/OperationBar';
 import Pagination from 'react-js-pagination';
 import $ from 'jquery';
 import _ from 'lodash';
+import { generateHeading } from '../../utils/vunet_format_name';
+import { Notifier } from 'ui/notify';
+
+const notify = new Notifier({ location: 'Event Console' });
 
 export class EventList extends React.Component {
   constructor(props) {
@@ -115,8 +119,11 @@ export class EventList extends React.Component {
       newEvents.reverse();
       this.setState({ lastSortOrder: 'Descending' });
     }
-    this.setState({ filteredEventsList: newEvents });
-    this.setState({ sortKey: field });
+    this.setState({
+      filteredEventsList: newEvents,
+      sortKey: field
+    }, () => notify.info(`Events sorted based on - ` + generateHeading(field)));
+    // this.setState({ sortKey: field });
   };
 
   //This function traverses through the allFields and hiddenFields arrays

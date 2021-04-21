@@ -122,7 +122,9 @@ export class EventDetails extends React.Component {
     return(
       <div className="event-details-wrapper">
         <div className="details">
-          {renderDetails}
+          <div className="non-table-details">
+            {renderDetails}
+          </div>
           <div className="summary">
             <label>Summary: </label>
             <textarea rows="3" defaultValue={details.summary} disabled />

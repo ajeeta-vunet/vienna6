@@ -54,9 +54,10 @@ export class OperationBar extends React.Component {
       <div className="operationbar-wrapper">
         <img className="filter-funnel" src="/ui/vienna_images/filter-funnel-icon.svg" />
         <div className="selected-filters-container">
-          {this.props.selectedFilterFields && this.props.selectedFilterFields.map((filter) => {
+          {this.props.selectedFilterFields && this.props.selectedFilterFields.map((filter, index) => {
             return (
               <SelectedFilter
+                key={index}
                 filter={filter}
                 filterFields={this.props.filterFields}
                 addFilter={this.props.addFilter}

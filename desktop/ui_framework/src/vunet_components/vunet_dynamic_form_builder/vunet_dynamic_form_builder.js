@@ -485,6 +485,8 @@ export class VunetDynamicFormBuilder extends Component {
   validate = (e, validationCallbackValue) => {
     const formEl = this.formEl;
     const formLength = formEl.length;
+    const multiSelect = document.getElementsByClassName('selection');
+    let errorFlag = false;
     // @@@ CheckValidity of form element returns False if form itself is not
     // valid..
     if (formEl.checkValidity() === false) {
@@ -520,6 +522,19 @@ export class VunetDynamicFormBuilder extends Component {
       return false;
       // @@@
     } else {
+
+      //Form is valid.. but we check to see whether the multi-select
+      //elements validity fails or not.
+      if(multiSelect.length > 0) {
+        for(let i = 0; i < multiSelect.length; i++) {
+          if(multiSelect[i].ariaRequired && multiSelect[i].innerText === 'Select') {
+            errorFlag = true;
+            multiSelect[i].parentNode.parentNode.nextSibling.childNodes[0].innerText = 'Please select a value for this field';
+          }else {
+            multiSelect[i].parentNode.parentNode.nextSibling.childNodes[0].innerText = '';
+          }
+        }
+      }
 
       // Form is valid.. but the element might have a validity check which
       // might have failed... In such a case, we should still return an
@@ -566,6 +581,9 @@ export class VunetDynamicFormBuilder extends Component {
           }
         }
       }
+
+      //return false if the multi-select type fails validation.
+      if(errorFlag) return false;
 
       // If we reached here, it means form is valid and all fields are also
       // valid
@@ -785,6 +803,8 @@ export class VunetDynamicFormBuilder extends Component {
           values={selected}
           callback={(e) => { this.onChange(e, m.key, 'multi'); }}
           multiple
+          disabled={id}
+          required={props.required}
         />);
       }
 

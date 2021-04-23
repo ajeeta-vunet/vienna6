@@ -113,6 +113,7 @@ function vunetBackup($injector,
             is also allowed but the name should not exceed 32 characters.`
         }, {
           key: 'archival_objects',
+          id: true,
           label: 'Objects to be backed up',
           type: 'multiSelect',
           helpObj: OBJECTS_TO_BE_BACKED_UP_HELP_OBJ,

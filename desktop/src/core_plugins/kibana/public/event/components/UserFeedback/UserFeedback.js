@@ -98,7 +98,7 @@ export class UserFeedback extends React.Component {
       $('.dislike-button').addClass('selected-reaction');
       $('.like-button').removeClass('selected-reaction');
     }
-    this.setState({ reaction: reaction });
+    this.setState({ reaction: reaction, dislikeComments: [], additionalComments: '' });
   }
 
   //this method is called when the user clicks on the submit button.

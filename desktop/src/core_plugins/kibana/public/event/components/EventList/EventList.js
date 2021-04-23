@@ -96,13 +96,14 @@ export class EventList extends React.Component {
     if(field === 'alert_id' || field === 'created_time'
         || field === 'last_modified_time' || field === 'last_occurence'
         || field === 'similar_events_count' || field === 'active_duration'
-        || field === 'total_duration') {
+        || field === 'total_duration' || field === 'likes' || field === 'dislikes' || field === 'ticket_creation_time') {
       newEvents = _.sortBy(newEvents, function (o) {
         if (field === 'alert_id' || field === 'active_duration'
-        || field === 'total_duration') {
+        || field === 'total_duration' || field === 'likes' || field === 'dislikes') {
           return parseInt(o.fields[field]);
         }
-        else if (field === 'created_time' || field === 'last_modified_time' || field === 'last_occurence') {
+        else if (field === 'created_time' || field === 'last_modified_time' ||
+        field === 'last_occurence' || field === 'ticket_creation_time') {
           return Date.parse(o.fields[field]);
         }
         return o.fields[field];

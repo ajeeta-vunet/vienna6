@@ -386,7 +386,16 @@ export class VunetSelect extends Component {
         onBlur={this.onBlur}
         onKeyDown={this.onKeyDown}
       >
-        <div className="selection" onClick={this.onClick}>
+        <div
+          className="selection"
+          aria-required={this.props.required}
+          onClick={this.onClick}
+          style={this.props.disabled ? {
+            pointerEvents: 'none',
+            opacity: '0.4',
+            backgroundColor: '#e8e7ee'
+          } : {}}
+        >
           { this.renderValues() }
           <span className="arrow">
             { isOpen ? <ChevronUp /> : <ChevronDown /> }

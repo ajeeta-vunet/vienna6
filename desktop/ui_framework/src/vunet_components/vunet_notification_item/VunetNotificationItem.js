@@ -76,7 +76,7 @@ export default (props) => {
           <div className="notification_content">
             <p className="notification_title">{props.name}</p>
             <p className="notification_description">{props.summary}</p>
-            <p className="notification_time">{moment(timestamp).fromNow()}</p>
+            <p className="notification_time">{moment(props.timestamp).fromNow()}</p>
           </div>
         </div>
 

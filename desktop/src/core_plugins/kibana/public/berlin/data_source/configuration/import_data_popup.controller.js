@@ -1,4 +1,6 @@
 import { getSavedObject } from 'ui/utils/kibana_object.js';
+import { Notifier } from 'ui/notify';
+
 const XLSX = require('xlsx');
 class importPopupCtrl {
   constructor($scope, $injector, $uibModalInstance, StateService, Upload, HTTP_SUCCESS_CODE, chrome) {
@@ -7,6 +9,7 @@ class importPopupCtrl {
     $scope.successfulUpload = false;
     const tentantInfo = chrome.getTenantBu();
     $scope.indexStringInfo = tentantInfo[0] + '-' + tentantInfo[1];
+    const notify = new Notifier();
 
     $scope.exportExcel = function (event) {
 
@@ -16,7 +19,7 @@ class importPopupCtrl {
         $scope.uniqueHeaders = [];
         $scope.indexPatternList = [];
         $scope.indexPattern = {};
-        $scope.indexPattern.name = ''
+        $scope.indexPattern.name = '';
         $scope.doc_type = '';
         $scope.custom_field = '';
         $scope.isEmptyHeaderPresent = false;
@@ -52,8 +55,8 @@ class importPopupCtrl {
 
         Promise.resolve(getSavedObject('index-pattern', ['title', 'userVisibleName'], 10000, Private))
           .then(function (response) {
-            angular.forEach(response, function(indexPattern){
-              let index_name = indexPattern.userVisibleName
+            angular.forEach(response, function (indexPattern) {
+              let index_name = indexPattern.userVisibleName;
               // if name is not specified for the index pattern and pattern not started with dot (.)
               // then remove the prefix (vunet-1-1-) and suffix (-*) from the title and show
               // For ex; there is no name defined for vunet-1-1-server-health-* index pattern.
@@ -62,30 +65,30 @@ class importPopupCtrl {
               if (index_name === undefined && indexPattern.title.charAt(0) !== '.')
               {
                 // Remove vunet-1-1- from the index pattern first
-                const index_arg = indexPattern.title.replace('vunet-' + $scope.indexStringInfo + '-','').split('-')
+                const index_arg = indexPattern.title.replace('vunet-' + $scope.indexStringInfo + '-', '').split('-');
                 // Remove the prefix from the index. I mean "-*".
                 if (index_arg.length > 1)
-                  index_arg.pop();
+                {index_arg.pop();}
 
                 // Now build the index name again by concatenating all the arguments from the array.
                 if (index_arg[0] != 'vunet') {
-                  angular.forEach(index_arg, function(item){
+                  angular.forEach(index_arg, function (item) {
                     if (index_name === undefined)
-                      index_name = item
+                    {index_name = item;}
                     else
-                      index_name = index_name + '-' + item;
-                  })
+                    {index_name = index_name + '-' + item;}
+                  });
                 }
               }
-              $scope.indexPatternList.push(index_name)
-            })
+              $scope.indexPatternList.push(index_name);
+            });
           });
 
         // If data needs to be loaded into a new index other than the existing from the list
         // this will do the job.
         $scope.addUserIndex = function ($select) {
-          var search = $select.search;
-          var Indiceslist = angular.copy($select.items);
+          const search = $select.search;
+          const Indiceslist = angular.copy($select.items);
 
           if (!search) {
             //use the predefined list
@@ -93,7 +96,7 @@ class importPopupCtrl {
           }
           else {
             //manually add new index and set selection
-            var userInputIndex = search;
+            const userInputIndex = search;
             $select.items = [userInputIndex].concat(Indiceslist);
             $select.selected = userInputIndex;
           }
@@ -213,21 +216,24 @@ class importPopupCtrl {
       }
 
       if ($scope.advancedFields === false) {
-        $scope.time_format = ''
-        $scope.custom_field = ''
-        $scope.doc_type = ''
+        $scope.time_format = '';
+        $scope.custom_field = '';
+        $scope.doc_type = '';
       }
 
-      StateService.importData($scope.File, $scope.indexPattern.name, $scope.doc_type, isTimeSeriesData, $scope.time_field, $scope.time_format, $scope.custom_field, Upload).then((response) => {
-        if (response.status === HTTP_SUCCESS_CODE) {
-          $scope.successfulUpload = true;
-          // // We remove the succes message after 4 sec
-          setTimeout(function () {
-            $scope.cancel();
-          }, 3000);
-        }
-      });
-
+      StateService.importData($scope.File, $scope.indexPattern.name, $scope.doc_type, isTimeSeriesData, $scope.time_field, $scope.time_format, $scope.custom_field, Upload)
+        .then((response) => {
+          if (response.status === HTTP_SUCCESS_CODE) {
+            $scope.successfulUpload = true;
+            // We remove the succes message after 4 sec
+            setTimeout(function () {
+              $scope.cancel();
+            }, 3000);
+          }
+        }).catch(function (response) {
+        // To print error string to the user.
+          notify.error(response.data['error-string']);
+        });
       $scope.cancel();
     };
 

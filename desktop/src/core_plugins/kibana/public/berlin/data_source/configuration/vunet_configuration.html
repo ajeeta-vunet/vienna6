@@ -17,13 +17,17 @@
     </div>
   </div>
   <div ng-show="open_import">
-    <form name="myForm">
-      <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select ng-model="File" name="file"
+    <form name="myForm" class="importForm">
+      <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select="onSelect($file)" ng-model="File" name="file"
         ngf-multiple="false" required>
       <div class="help-block help-text">Only file types with *.xlsx and *.xls are supported. Download template xlsx
         file from
-        <a href="/ui/vienna_data/data_source.xlsx" target="_blank"><i class="data-source-import-template-link">here</i></a></div>
-      <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid" ng-click="upload_data_source_file(File)">Submit</button>
+        <a href="/ui/vienna_data/data_source.xlsx" target="_blank"><i class="data-source-import-template-link">here</i></a>
+      </div>
+      <div class="error-block" ng-show="fileUploadError">
+        {{fileUploadErrorMessage}}
+      </div>
+      <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid || fileUploadError" ng-click="upload_data_source_file(File)">Submit</button>
     </form>
     <div class="data-source-import-close-button" ng-click="close_import_file()"><i class="fa fa-angle-up data-source-import-close-font-awesome"></i></div>
     <hr>

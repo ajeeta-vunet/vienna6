@@ -202,13 +202,28 @@ class DataService {
       errorString = 'Error in ' + moduleString;
     }
     const notify = new Notifier();
+    notify.error(errorString);
     this.$log.error(errorResponse);
+    this.commonErrorHandlingCode(errorResponse);
+  }
 
+  // Function to handle error response for uploads.
+  /**
+   * This function uses error-string sent by backend and if that is not available,
+   * it uses module-string.
+   */
+  _handleErrorResponseForFileUpload(errorResponse) {
+    this.$log.error(errorResponse);
+    this.commonErrorHandlingCode(errorResponse);
+  }
+
+  //This method holds the common required error code
+  commonErrorHandlingCode(errorResponse) {
     // If user session times out, refresh and take him back to login page.
     // Need to find a permanent solution.
+    const notify = new Notifier();
     if (errorResponse.data && errorResponse.data['error-code']) {
       if (errorResponse.data['error-code'] === '403') {
-        const notify = new Notifier();
         notify.error(errorResponse.data['error-string'] || 'Access denied!');
       }
       else if (errorResponse.data['error-code'] === '401') {
@@ -770,7 +785,7 @@ class DataService {
       upload.upload({ url: url, file: fileData }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'importing file. Please check the file type.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'importing file. Please check the file type.');
         reject(errorResponse);
       });
     });
@@ -783,7 +798,7 @@ class DataService {
       upload.upload({ url: url, file: fileData }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'updating licence.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'updating licence.');
         reject(errorResponse);
       });
     });
@@ -814,7 +829,7 @@ class DataService {
       upload.upload({ url: url, file: fileData }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'importing data sources. Please check the file.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'importing data sources. Please check the file.');
         reject(errorResponse);
       });
     });
@@ -839,7 +854,7 @@ class DataService {
       upload.upload({ url: url, file: fileData }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'importing data enrichment. Please check the file.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'importing data enrichment. Please check the file.');
         reject(errorResponse);
       });
     });
@@ -863,7 +878,7 @@ class DataService {
       }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'Importing data. Please check the file.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'Importing data. Please check the file.');
         reject(errorResponse);
       });
     });
@@ -1015,7 +1030,7 @@ class DataService {
       upload.upload({ url: url, file: fileName }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'updating file.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'updating file.');
         reject(errorResponse);
       });
     });
@@ -1064,7 +1079,7 @@ class DataService {
       upload.upload({ url: url, file: File }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'updating file.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'updating file.');
         reject(errorResponse);
       });
     });

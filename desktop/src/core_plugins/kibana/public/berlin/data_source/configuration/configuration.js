@@ -69,6 +69,7 @@ function configuration($scope, StateService, Upload, $compile, HTTP_SUCCESS_CODE
   if(chrome.canManageDataSources()) {
     $scope.isModifyAllowed = true;
   }
+
   $scope.importDataPopup = () => {
     $uibModal.open({
       animation: true,
@@ -173,23 +174,39 @@ function configuration($scope, StateService, Upload, $compile, HTTP_SUCCESS_CODE
     $scope.addDataSourceType();
   });
 
+  // fileUploadError Flag
+  $scope.fileUploadError = false;
+
   $scope.upload_data_source_file = function (uploadFile) {
-    StateService.importDataSources(uploadFile, Upload).then((response) => {
-      if (response.status === HTTP_SUCCESS_CODE) {
-        $scope.successfulUpload = true;
-        // We reload the page after 400 msec as it takes some time
-        // for ES to index the documents
-        setTimeout(function () {
+    StateService.importDataSources(uploadFile, Upload)
+      .then((response) => {
+        if (response.status === HTTP_SUCCESS_CODE) {
+          $scope.successfulUpload = true;
+          // We reload the page after 400 msec as it takes some time
+          // for ES to index the documents
+          setTimeout(function () {
           // $state.go($state.current, {}, {
           //   reload: true
           // });
-        }, 200);
-      }
-    });
+          }, 200);
+        }
+      })
+      .catch(function (response) {
+        $scope.fileUploadError = true;
+        // To print error string to the user.
+        $scope.fileUploadErrorMessage = response.data['error-string'];
+      });
+
     // This is to reset the variable after the upload is done
     $scope.successfulUpload = false;
   };
 
+  //This method is to enable submit button when we change any selected file
+  $scope.onSelect = (file) => {
+    if(file) {
+      $scope.fileUploadError = false;
+    }
+  };
 
   $scope.gotoDataSourceType = (dataSourceName, dataSourceVarName) => {
     // Now replace list of data source type with details of a specific

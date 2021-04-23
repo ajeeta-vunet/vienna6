@@ -11,6 +11,9 @@
       required>
       <div class="size-limit-error-message" ng-show="fileUploadError">{{imageUploadErrorMessage}}</div>
       <div class="upload-message" ng-show="File && !fileUploadError">By uploading this image to vuSmartMaps, you certify that either this image is owned by your company or your company has the copyright. Your company will hold harmless, defend, and indemnify VuNet against any and all third-party claims or liabilities arising due to this image in our product.</div>
+      <div class="size-limit-error-message" ng-show="fileUploadError">
+        {{fileUploadErrorMessage}}
+      </div>
       <div class="file-type-wrapper">
         <label>Image Purpose</label>
         <select
@@ -33,7 +36,7 @@
         <button class="btn btn-vunet-cancel" ng-click="closeModal()">Cancel</button>
       </div>
       <div class='col-sm-2'>
-        <button type="submit" class="btn btn-vunet-submit" ng-disabled="!uploadFileForm.$valid || fileUploadError" ng-click="uploadImageFiles(File, fileUsage, imageName)">Submit</button>
+        <button type="submit" class="btn btn-vunet-submit" ng-disabled="!uploadFileForm.$valid" ng-click="uploadImageFiles(File, fileUsage, imageName)">Submit</button>
       </div>
     </div>
   </form>

@@ -12,6 +12,7 @@ import {
   fetchUserList,
   fetchFilterFields,
   fetchPreferences,
+  getCorrelatedAlerts,
 } from './api_calls';
 
 require('ui/courier');
@@ -40,6 +41,7 @@ app.directive('eventConsole', (reactDirective) => {
     'canUpdateEvent',
     'filterFields',
     'itsmPreferencesEnabled',
+    'fetchRawEvents',
   ]);
 });
 
@@ -52,6 +54,9 @@ app.directive('eventApp', function () {
 
       const queryFilter = Private(FilterBarQueryFilterProvider);
       const dashboardContext = Private(dashboardContextProvider);
+      const timeDuration = timefilter.getBounds();
+      const timeDurationStart = timeDuration.min.valueOf();
+      const timeDurationEnd = timeDuration.max.valueOf();
 
       //for api call
       $scope.dashboardContext = dashboardContext;
@@ -88,10 +93,6 @@ app.directive('eventApp', function () {
         // This is used to get the start time and end time
         // from the time filter which is used to prepare the
         // data for POST call to the backend.
-        const timeDuration = timefilter.getBounds();
-        const timeDurationStart = timeDuration.min.valueOf();
-        const timeDurationEnd = timeDuration.max.valueOf();
-        const dashboardContext = Private(dashboardContextProvider);
 
         fetchListOfEvents(
           $http,
@@ -149,6 +150,18 @@ app.directive('eventApp', function () {
             'analyze_wildcard': true
           }
         }
+      };
+
+      //used to fetch list of correlated event under a correlation id
+      $scope.fetchRawEvents = (correlationId) => {
+        return getCorrelatedAlerts(
+          $http,
+          chrome,
+          dashboardContext,
+          timeDurationStart,
+          timeDurationEnd,
+          correlationId
+        );
       };
 
       $scope.state = new AppState(stateDefaults);

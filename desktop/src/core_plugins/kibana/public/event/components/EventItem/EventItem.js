@@ -30,6 +30,7 @@ import { RelatedDashboards } from './RelatedDashboards/RelatedDashboards';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 import { generateHeading, generateClassname } from '../../utils/vunet_format_name.js';
 import ReactTooltip from 'react-tooltip';
+import { CorrelatedAlerts } from './CorrelatedAlerts/CorrelatedAlerts';
 
 const notify = new Notifier({ location: 'Event Console' });
 
@@ -56,13 +57,18 @@ export class EventItem extends React.Component {
         id: 'related-dashboards',
         name: 'Related Dashboards',
       },
+      {
+        id: 'correlated-alerts',
+        name: 'Correlated Alerts',
+      },
     ];
 
     this.landingTab = 'alert-details';
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ event: newProps.event, showDetails: false });
+    const showDetails = this.state.showDetails ? true : false;
+    this.setState({ event: newProps.event, showDetails });
   }
 
   //This function is used to update the assignee, status, and add a new note to an event.
@@ -303,7 +309,7 @@ export class EventItem extends React.Component {
               <button
                 disabled={!this.props.itsmPreferencesEnabled || eventDisplay.ticket_id !== 'Unavailable' || !this.props.canUpdateEvent}
                 className="create-ticket-button"
-                onClick={() => this.props.createTicket(this.props.event.id)}
+                onClick={() => this.props.createTicket(this.state.event.fields.corelation_id)}
               >
                 Create Ticket
                 <i className="fa fa-ticket fa-ticket-icon" aria-hidden="true" />
@@ -352,6 +358,13 @@ export class EventItem extends React.Component {
                   dashboardList={
                     this.state.details.alert_details.fields.related_dashboards
                   }
+                />
+              )}
+              {this.state.currentTabId === 'correlated-alerts' && (
+                <CorrelatedAlerts
+                  correlationId={this.state.details.alert_details.fields.corelation_id}
+                  fetchRawEvents={this.props.fetchRawEvents}
+                  allFields={this.props.allFields}
                 />
               )}
             </div>

@@ -123,9 +123,9 @@ export function fetchPreferences($http, chrome) {
 }
 
 //This function is used for creating a Ticket with the ITSM preferences setup.
-export function createTicket(chrome, eventId) {
+export function createTicket(chrome, correlationId) {
   let urlBase = chrome.getUrlBase();
-  urlBase = urlBase + '/events_of_interest/' + 'ticket/' + eventId + '/';
+  urlBase = urlBase + '/events_of_interest/' + 'ticket/' + correlationId + '/';
 
   return fetch(urlBase, {
     method: 'POST'
@@ -139,10 +139,10 @@ export function createTicket(chrome, eventId) {
 }
 
 //This function is used to get the user reaction of the user for the event.
-export function getUserReaction(eventId) {
+export function getUserReaction(correlationId) {
   let urlBase = chrome.getUrlBase();
   const userData = chrome.getCurrentUser();
-  urlBase += '/events_of_interest/reaction/' + eventId + '/?username=' + userData[0];
+  urlBase += '/events_of_interest/reaction/' + correlationId + '/?username=' + userData[0];
 
   return fetch(urlBase, {
     method: 'GET'
@@ -151,9 +151,9 @@ export function getUserReaction(eventId) {
 }
 
 //This function is called to add a like/dislike to an alert along with comments.
-export function postReaction(eventId, reaction, comments) {
+export function postReaction(correlationId, reaction, comments) {
   let urlBase = chrome.getUrlBase();
-  urlBase += '/events_of_interest/reaction/' + eventId + '/';
+  urlBase += '/events_of_interest/reaction/' + correlationId + '/';
   const userData = chrome.getCurrentUser();
   const postBody = {
     'username': userData[0],
@@ -169,9 +169,9 @@ export function postReaction(eventId, reaction, comments) {
 }
 
 //This function is called to update a like/dislike to an alert along with comments.
-export function updateReaction(eventId, reaction, comments) {
+export function updateReaction(correlationId, reaction, comments) {
   let urlBase = chrome.getUrlBase();
-  urlBase += '/events_of_interest/reaction/' + eventId + '/';
+  urlBase += '/events_of_interest/reaction/' + correlationId + '/';
   const userData = chrome.getCurrentUser();
   const postBody = {
     'username': userData[0],
@@ -187,9 +187,9 @@ export function updateReaction(eventId, reaction, comments) {
 }
 
 //This function is used to get all the reactions & comments for the event.
-export function getAllReactions(eventId) {
+export function getAllReactions(correlationId) {
   let urlBase = chrome.getUrlBase();
-  urlBase += '/events_of_interest/reaction/comments/' + eventId + '/';
+  urlBase += '/events_of_interest/reaction/comments/' + correlationId + '/';
 
   return fetch(urlBase, {
     method: 'GET'
@@ -225,4 +225,28 @@ export function saveFilters(filters) {
     body: JSON.stringify(postBody)
   })
     .then(resp => resp);
+}
+
+//this function is used to get the list of Correlated alerts.
+export function getCorrelatedAlerts($http, chrome, dashboardContext, timeDurationStart, timeDurationEnd, correlationId) {
+  let urlBase = chrome.getUrlBase();
+  urlBase = urlBase + '/events_of_interest/list_of_raw_events/';
+
+  const httpListOfEventsResult = $http.post(urlBase + correlationId  + '/', {
+    extended: {
+      es: {
+        filter: dashboardContext()
+      }
+    },
+    time: { 'gte': timeDurationStart, 'lte': timeDurationEnd },
+    sample_size: 10000
+  })
+    .then(resp => { return resp.data;})
+    .catch(resp => { throw resp.data; });
+
+  return httpListOfEventsResult
+    .then(function (resp) {
+      return resp;
+    })
+    .catch(error => { throw error; });
 }

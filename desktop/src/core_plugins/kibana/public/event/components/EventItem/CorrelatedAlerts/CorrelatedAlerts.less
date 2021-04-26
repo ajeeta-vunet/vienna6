@@ -1,0 +1,101 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.correlated-events-container {
+    max-width: 300rem;
+    overflow: scroll;
+    max-height: 35rem;
+
+    .correlated-events-table {
+        width     : 100%;
+        text-align: left;
+        padding   : 2rem 5rem;
+        flex      : 4;
+
+        .search-container {
+          input {
+            border   : 1px solid @event-console-border-color;
+            font-size: 1.6rem;
+            padding  : 0.5rem 4rem 0.5rem 1rem;
+            background-image: url("/ui/vienna_images/search_icon_black.svg");
+            background-position: 96% 40%;
+            background-repeat: no-repeat;
+            background-size: 1.8rem;
+            color: @black;
+          }
+
+          margin-bottom: 2rem;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .correlated-events-table-header {
+          background-color: @event-console-detail-info-background-color;
+          font-weight     : bold;
+          line-height     : 3;
+          display         : flex;
+          width           : 300rem;
+
+          .correlated-details-header {
+              padding: 1rem;
+              min-width: 15rem;
+              cursor: pointer;
+          }
+        }
+
+        .correlated-events-table-row {
+          margin-bottom: 0.1rem;
+          display: flex;
+          line-height  : 3;
+          border       : 0.1rem solid @event-console-detail-info-background-color;
+          width        : 300rem;
+        }
+
+        .correlated-details-value {
+          padding: 1rem !important;
+          min-width: 15rem;
+        }
+
+        .severity-div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-left: 1rem;
+
+          .rectangle {
+            float: left;
+            height: 1.3rem;
+            width: 1.3rem;
+            border-radius: 4px;
+          }
+
+          .critical {
+            background: @event-console-critical-color;
+          }
+
+          .information {
+            background: @event-console-information-color;
+          }
+
+          .error {
+            background: @event-console-error-color;
+          }
+
+          .warning {
+            background: @event-console-warning-color;
+          }
+        }
+      }
+}
+
+.correlated-event-no-data {
+    padding  : 6rem 5rem;
+    font-size: 1.6rem;
+}
+
+.loading-correlated-events  {
+  padding  : 6rem 5rem;
+  font-size: 1.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -43,7 +43,7 @@ export class UserFeedback extends React.Component {
   //this method is used to fetch the data making the necessary API calls
   //which will be displayed under the UserFeedback component.
   fetchData = () => {
-    getUserReaction(this.props.alertId)
+    getUserReaction(this.props.correlationId)
       .then((data) => {
         if(data.user_reaction === 'Like') {
           $('.like-button').addClass('selected-reaction');
@@ -70,7 +70,7 @@ export class UserFeedback extends React.Component {
         dislikeComments = dislikeComments.filter(val => dislikeCommentsExamples.includes(val));
         let additionalComments = data.additional_comment.filter(val => !dislikeCommentsExamples.includes(val));
         additionalComments = additionalComments.toString();
-        getAllReactions(this.props.alertId)
+        getAllReactions(this.props.correlationId)
           .then((allReactions) => {
             this.setState({
               userReactionData: data,
@@ -118,13 +118,13 @@ export class UserFeedback extends React.Component {
     //if there is no reaction then there is no database entry of reaction for this event by this user
     //so we make a 'Post' API call to post a reaction.
     if(this.state.userReactionData.user_reaction === 'No Reaction') {
-      postReaction(this.props.alertId, this.state.reaction, comments)
+      postReaction(this.props.correlationId, this.state.reaction, comments)
         .then(() => this.fetchData());
     }
     //if there is a reaction then there is a database entry of reaction for this event by this user
     //so we make a 'PUT' API call to alter the already present reaction.
     else {
-      updateReaction(this.props.alertId, this.state.reaction, comments)
+      updateReaction(this.props.correlationId, this.state.reaction, comments)
         .then(() => this.fetchData());
     }
     this.props.addOrRemoveReaction(this.state.reaction);
@@ -195,7 +195,7 @@ export class UserFeedback extends React.Component {
   //this method is called when the user clicks on the cancel button.
   handleCancel = () => {
     if(this.state.reaction !== 'No Reaction') {
-      updateReaction(this.props.alertId, 'No Reaction', [])
+      updateReaction(this.props.correlationId, 'No Reaction', [])
         .then(() => this.fetchData());
     }else {
       this.setState({ reaction: 'No Reaction',  additionalComments: '' });

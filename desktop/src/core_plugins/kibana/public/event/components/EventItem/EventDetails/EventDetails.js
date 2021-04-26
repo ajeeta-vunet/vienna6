@@ -251,7 +251,7 @@ export class EventDetails extends React.Component {
             User Feedback Information
             </div>
             <UserFeedback
-              alertId={this.props.details.alert_details.fields.alert_id}
+              correlationId={this.props.details.alert_details.fields.corelation_id}
               addOrRemoveReaction={this.props.addOrRemoveReaction}
             />
           </div>

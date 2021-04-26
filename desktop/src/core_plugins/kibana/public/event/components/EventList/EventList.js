@@ -251,6 +251,7 @@ export class EventList extends React.Component {
   };
 
   render() {
+
     const { currentPage, eventsPerPage } = this.state;
 
     // Logic for displaying current events
@@ -272,6 +273,8 @@ export class EventList extends React.Component {
               canUpdateEvent={this.props.canUpdateEvent}
               itsmPreferencesEnabled={this.props.itsmPreferencesEnabled}
               createTicket={this.props.createTicket}
+              fetchRawEvents={this.props.fetchRawEvents}
+              allFields={this.state.allFields}
             />
           </span>
         );

@@ -411,6 +411,7 @@ export class EventConsole extends React.Component {
           exportEventsToCsv={this.exportEventsToCsv}
           itsmPreferencesEnabled={this.props.itsmPreferencesEnabled}
           createTicket={this.createTicketMethod}
+          fetchRawEvents={this.props.fetchRawEvents}
         />
       </div>
     );

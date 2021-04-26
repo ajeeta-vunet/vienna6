@@ -74,6 +74,7 @@ export class VunetSidebar extends Component {
     [VunetSidebarConstants.PREFERENCES]: [VunetSidebarConstants.PERMISSION_MANAGE_PREFERENCES],
     [VunetSidebarConstants.DEFINITIONS]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
     [VunetSidebarConstants.USER]: [VunetSidebarConstants.PERMISSION_MANAGE_USERS],
+    [VunetSidebarConstants.LICENSE_USAGE]: [VunetSidebarConstants.PERMISSION_MANAGE_LICENSE],
     [VunetSidebarConstants.ABOUT]:
     [VunetSidebarConstants.PERMISSION_VIEW_OBJECT, VunetSidebarConstants.PERMISSION_MANAGE_OBJECT,
       VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES,
@@ -92,6 +93,7 @@ export class VunetSidebar extends Component {
 
   constructor(props) {
     super(props);
+
 
     this.determineActiveSidebarMenu = this.determineActiveSidebarMenu.bind(this);
   }
@@ -171,6 +173,9 @@ export class VunetSidebar extends Component {
     } else if (currentRoute.includes('/berlin/user')) {
       $('#settingsNavContainer').addClass('active');
       $('#userLink').addClass('active');
+    } else if (currentRoute.includes('/berlin/license')) {
+      $('#settingsNavContainer').addClass('active');
+      $('#licenseUsage').addClass('active');
     } else if (currentRoute.includes('/berlin/about')) {
       $('#settingsNavContainer').addClass('active');
       $('#aboutLink').addClass('active');
@@ -490,6 +495,17 @@ export class VunetSidebar extends Component {
                   onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
                 >
                   {VunetSidebarConstants.DEFINITIONS}
+                </a>
+              }
+              {
+                chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.LICENSE_USAGE]) &&
+                <a
+                  id="licenseUsage"
+                  href="/app/vienna#/berlin/license"
+                  className="list-group-item"
+                  onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                >
+                  {VunetSidebarConstants.LICENSE_USAGE}
                 </a>
               }
               {

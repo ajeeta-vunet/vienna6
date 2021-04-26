@@ -57,6 +57,9 @@ class DataService {
     this.data_source_url = this.urlBase + '/data_source/';
     this.cred_url = this.urlBase + '/credentials/';
     this.configurationCollectionUrl = this.urlBase + '/configurations/';
+    this.licenseThresholdDetails = this.tenantUrl + '/licence/threshold/';
+    this.licenseAciveDetails = this.tenantUrl + '/licence/usage/';
+
   }
 
   /**
@@ -454,6 +457,19 @@ class DataService {
     const url = this.urlBase + '/data_enrich_config/' + groupName + '/';
     return this._getRequest(url, 'getting data enrichment content');
   }
+
+  // Get license usage limit details
+  getLicenseUsageLimit() {
+    const url = this.licenseThresholdDetails;
+    return this._getRequest(url, 'getting license usage limit deatils');
+  }
+
+  // Get license active usage details
+  getLicenseActiveUsage() {
+    const url = this.licenseAciveDetails;
+    return this._getRequest(url, 'getting license active usage deatils');
+  }
+
 
   // Update the contents of data enrichment group
   updateDataEnrichmentContent(dataEnrichment, groupName, key) {

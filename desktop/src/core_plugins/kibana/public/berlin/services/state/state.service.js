@@ -176,6 +176,16 @@ class StateService {
     return this._DataService.getRolesList();
   }
 
+  // Get list of license modules and there usage limit
+  getLicenseUsageLimit() {
+    return this._DataService.getLicenseUsageLimit();
+  }
+
+  // Get list of license modules and there active usage 
+  getLicenseActiveUsage() {
+    return this._DataService.getLicenseActiveUsage();
+  }
+
   getDataEnrichmentContents(groupName) {
     return this._DataService.getDataEnrichmentContents(groupName.toString());
   }

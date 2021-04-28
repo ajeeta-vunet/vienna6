@@ -351,10 +351,6 @@ export class LicenseUsagePage extends React.Component {
                   }}
                 >
                   <div className="license-used-percentage">
-                    <div className="used-percentage">
-                      {totalUsedPercentage}
-                      {'%'}
-                    </div>
                     <div>{licenseUsageLevel}</div>
                   </div>
                 </div>
@@ -368,7 +364,7 @@ export class LicenseUsagePage extends React.Component {
                 {licenseUsageLevel === 'impending' && (
                   <div className="license-usage-text">
                     <p>Current usage is approaching Licensed limits.</p>
-                    <p>Please contact VuNet support team immediately</p>
+                    <p>Please contact VuNet support team immediately.</p>
                   </div>
                 )}
                 {(licenseUsageLevel === 'crossed' ||
@@ -378,7 +374,7 @@ export class LicenseUsagePage extends React.Component {
                       Current usage has <b>{licenseUsageLevel}</b> Licensed
                       limits.
                       </p>
-                      <p>Please contact VuNet support team immediately</p>
+                      <p>Please contact VuNet support team immediately.</p>
                     </div>
                   )}
               </div>

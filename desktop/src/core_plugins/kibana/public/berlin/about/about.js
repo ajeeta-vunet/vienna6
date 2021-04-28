@@ -5,8 +5,6 @@ import { DocTitleProvider } from 'ui/doc_title';
 
 const app = uiModules.get('app/berlin', ['ngFileUpload']);
 
-import UploadLicenseTemplate from'./upload_license.html';
-import UploadLicenseCtrl from './upload_license.controller.js';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 import { COMPANY_NAME_HELP_OBJ, EMAIL_HELP_OBJ,  PHONE_HELP_OBJ } from './about_constants';
 
@@ -78,37 +76,6 @@ function manageAbout($injector,
     }]
   };
 
-
-  // Check if current user can upload License in the about tab..
-  $scope.canManageLicense = function () {
-    return chrome.canManageLicense();
-  };
-
-  // If the user has ManageLicense claim edit is allowed
-  if($scope.canManageLicense()) {
-    $scope.aboutTenantMeta.edit = true;
-  }
-
-  // Open licence upload Modal
-  // $scope.uploadVisible = false;
-  $scope.openLicenseModal = function () {
-    $modal.open({
-      animation: true,
-      template: UploadLicenseTemplate,
-      controller: UploadLicenseCtrl,
-      windowClass: 'upload-license-modal'
-    }).result.then(function () {
-
-      // Nothing to do once the license upload modal is submitted.
-    }, function () {
-
-      // This callback is added to avoid the following
-      // warning in console:Possibly unhandled rejection: cancel
-
-      // 'Possibly unhandled rejection: cancel'
-    });
-  };
-
   // Meta data for software release
   $scope.aboutSwReleaseMeta = {
     headers: ['Version', 'Vienna', 'Cairo'],
@@ -116,43 +83,6 @@ function manageAbout($injector,
     id: 'platformVersion',
     inverted: true,
     inverted_title: 'Software Release'
-  };
-
-  // Meta data for license
-  $scope.aboutLicenseMeta = {
-    headers: [
-      'License Valid Till',
-      'API Clients',
-      'API Endpoints',
-      'Configuration Collector',
-      'GB Per Day',
-      'Log Instances',
-      'Log Sources',
-      'Netflow Flows',
-      'Netflow Nodes',
-      'No. of Nodes',
-      'Probes',
-      'User Roles',
-      'Users'
-    ],
-    rows: [
-      'licence_expiry_date',
-      'api_clients',
-      'api_endpoints',
-      'config_collector',
-      'gbperday',
-      'log_instances',
-      'log_sources',
-      'netflow_flows',
-      'netflow_nodes',
-      'nodes',
-      'probes',
-      'user_roles',
-      'users'
-    ],
-    id: 'nodes',
-    inverted: true,
-    inverted_title: 'License Information '
   };
 
   function init() {
@@ -201,27 +131,6 @@ function manageAbout($injector,
         enterprise_name: data.enterprise_name,
         email: data.email,
         phone_no: data.phone_no,
-      }];
-    });
-  };
-
-  // Fetch licnese information
-  $scope.fetchLicenseItems = () => {
-    return StateService.getTenantInfo().then(function (data) {
-      return [{
-        api_clients: data.api_clients,
-        api_endpoints: data.api_endpoints,
-        config_collector: data.config_collector,
-        nodes: data.health_nodes,
-        gbperday: data.gb_per_day,
-        licence_expiry_date: data.licence_valid,
-        log_instances: data.log_instances,
-        log_sources: data.log_sources,
-        netflow_flows: data.netflow_flows,
-        netflow_nodes: data.netflow_nodes,
-        probes: data.probes,
-        user_roles: data.user_roles,
-        users: data.users
       }];
     });
   };

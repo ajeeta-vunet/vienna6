@@ -4,6 +4,24 @@
   height  : calc(100vh-6rem);
   overflow: scroll;
 
+  .kuiLocalNav {
+    .kuiLocalNavRow {
+      .kuiLocalNavRow__section {
+        display: none;
+      }
+
+      .kuiLocalTitle {
+        width: 100%;
+      }
+    }
+
+    .kuiLocalTitle {
+      .upload-license-column {
+        text-align: center;
+      }
+    }
+  }
+
   .severity-normal {
     background-color: @event-console-information-color;
   }
@@ -119,12 +137,9 @@
               text-transform : capitalize;
 
               .license-used-percentage {
-                text-align: center;
-
-                .used-percentage {
-                  font-family: @inter-bold;
-                  font-size  : 3.1rem;
-                }
+                text-align : center;
+                font-family: @inter-bold;
+                font-size  : 2rem;
               }
             }
           }
@@ -306,6 +321,7 @@
 
         .legend-container {
           margin-top: 2rem;
+
           .legend {
             width          : 100%;
             justify-content: center;

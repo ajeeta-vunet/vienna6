@@ -19,13 +19,25 @@
         border: none;
     }
 
-    .assets-summary{
-      margin-right: 2rem;
-      width: 25rem;
-      box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-      border-radius: 1rem;
-      border-collapse: collapse;
-      background-color: @network-white-color;
+    .assets-summary-time-filters {
+
+      .assets-summary-filter {
+        margin-right: 2rem;
+        width: 25rem;
+        box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+        border-radius: 1rem;
+        border-collapse: collapse;
+        background-color: @summary-background-color !important;
+      }
+
+      .assets-time-filter {
+        margin-right: 2rem;
+        margin-top: 2rem;
+        width: 25rem;
+        box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+        border-radius: 1rem;
+        border-collapse: collapse;
+      }
     }
 
     .assets-table{
@@ -70,6 +82,7 @@
 
             .search-input {
               border: none;
+              padding-left: 1.5rem;
             }
           }
         }
@@ -100,6 +113,7 @@
         padding-top: 12px;
         padding-bottom: 12px;
         text-align: left;
+        cursor: pointer;
       }
 
       .assets td {
@@ -169,7 +183,7 @@
   box-shadow: 0rem 0rem 1rem 0.7rem rgba(0, 0, 0, 0.06);
 }
 
-.newAssetModal, .import-asset-modal {
+.newAssetModal, .import-asset-modal, .time-input-modal {
   position: fixed;
   z-index: 1000;
   top: 0;

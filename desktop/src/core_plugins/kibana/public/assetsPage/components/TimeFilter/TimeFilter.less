@@ -1,0 +1,46 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.time-filter-wrapper {
+    background-color: @summary-background-color !important;
+    height: 100%;
+
+    .heading-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 1rem 1rem 1rem;
+        font-weight: 600;
+        border-bottom: 0.1rem solid @summary-border-color !important;
+    }
+
+    .summary-detail {
+        border-bottom: 0.1rem solid @summary-border-color !important;
+    }
+    .more-details {
+        cursor: pointer;
+        border: none;
+        color: @accent_color !important;
+        outline: none !important;
+    }
+
+    .more-details-rows {
+        max-height: 18vh;
+        overflow: auto;
+    }
+
+    .time-filter-option {
+        padding: 1rem;
+
+        .time-filter-button {
+            border: none;
+            font-weight: bolder;
+            height: 3.5rem;
+            border-radius: 1rem;
+            box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color ;
+        }
+
+        .time-filter-button:hover {
+            color: @network-button-color;
+            font-size: small;
+        }
+    }
+}

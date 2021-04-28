@@ -105,13 +105,16 @@ export function downloadAssets() {
 }
 
 // Get filtered list of Assets
-export async function fetchFilteredListOfAssets(scrollId, filter) {
+export async function fetchFilteredListOfAssets(scrollId, filter, timeFilter, sortString, searchString) {
   let urlBase = chrome.getUrlBase();
   urlBase = urlBase + '/asset/list/';
   const postBody = {
     scroll_id: scrollId,
     size: 10,
-    filter: filter
+    filter: filter,
+    time_filter: timeFilter,
+    sort_string: sortString,
+    search_string: searchString
   };
 
   const response = await fetch(urlBase, {

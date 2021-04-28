@@ -22,7 +22,7 @@ import { NodeDetails } from '../NodeDetails/NodeDetails';
 import { connect } from 'react-redux';
 import { updateViewDetails, fetchNewScanList } from '../../actions/topologyActions';
 import chrome from 'ui/chrome';
-import { createNewScan, deleteScan, fetchNodesList, fetchNodeDetailsSummary, filteredListOfNodes } from '../../api_calls';
+import { createNewScan, deleteScan, fetchNodesList, fetchNodeDetailsSummary } from '../../api_calls';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
 import './Topology.less';
 
@@ -62,6 +62,7 @@ class TopologyComponent extends React.Component {
       totalNumberOfNodes: 0,
       nodeDetailsSummary: {},
       topologyNames: {},
+      selectedTopologyId: '',
     };
   }
 
@@ -143,7 +144,7 @@ class TopologyComponent extends React.Component {
    }
 
    onRowAction = (e, rowId) => {
-     //call API to fecth node details and node details summery to be passed to NodeDetails Component.
+     //call API to fecth node details and node details summary to be passed to NodeDetails Component.
      return fetchNodesList(rowId, 0, 10)
        .then(response => response.json())
        .then(data => {
@@ -159,18 +160,7 @@ class TopologyComponent extends React.Component {
        });
    };
 
-   applyFilters = (topologyId, scrollId, filters) => {
-     filteredListOfNodes(topologyId, scrollId, filters)
-       .then(response => response.json())
-       .then(data => {
-         this.setState({
-           rowId: topologyId,
-           nodeList: data.topology.nodes,
-           totalNumberOfNodes: data.topology.no_of_nodes
-         });
-       });
-   }
-
+   //this function is used to go back to Topology page from NodeDetails page.
    goBack = () => {
      this.props.swapViewDetails();
    }
@@ -298,6 +288,7 @@ class TopologyComponent extends React.Component {
          <NodeDetails
            goBack={this.goBack}
            topologyName={this.state.topologyNames[this.state.rowId] ? this.state.topologyNames[this.state.rowId] : ''}
+           topologyId={this.state.rowId}
            nodeDetails={this.state.nodeList}
            currentPage={this.state.currentPage}
            totalNumberOfNodes={this.state.totalNumberOfNodes}

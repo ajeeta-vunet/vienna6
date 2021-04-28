@@ -1,0 +1,70 @@
+@import (reference) "~ui/styles/variables";
+@import '~ui/styles/vunet_variable_theme.less';
+@import '~ui/styles/variables/visualization_colors.less';
+
+.time-input-wrapper {
+    width: 65rem;
+    background-color: @white !important;
+    border-radius: 1rem;
+    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
+    font-size: 1.6rem !important;
+
+    .title {
+        color: @accent_color;
+        text-align: left;
+        font-family: 'Inter-Medium';
+        font-size: 2.5rem;
+        padding: 1rem 1.5rem 0.5rem 1.5rem;
+    }
+
+    .time-input-form{
+        padding: 2rem;
+
+        .within-time-input{
+            padding: 1rem;
+
+            label {
+                margin-left: 1rem;
+
+                input {
+                    width: 5rem;
+                    margin: 0rem 1rem 0rem 1rem;
+                }
+            }
+        }
+
+        .between-time-input{
+            padding: 1rem;
+
+            label {
+                margin-left: 1rem;
+
+                input {
+                    margin: 0rem 1rem 0rem 1rem;
+                }
+            }
+        }
+    }
+
+    .actions {
+        padding: 2rem 3.7em;
+        position: relative;
+        text-align: right;
+
+        .import-submit-button, .import-cancel-button {
+            border: none;
+            padding: .4rem 2rem .4rem 2rem !important;
+            font-size: 1.6rem !important;
+            height: 3.5rem !important;
+            background-color: @accent_color;
+            color: @white !important;
+            box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color;
+            border-radius: 2rem !important;
+            margin-left: 1rem;
+            &:hover{
+              font-family: @inter-medium;
+              box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
+            }
+        }
+    }
+}

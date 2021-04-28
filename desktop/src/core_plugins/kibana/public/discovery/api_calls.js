@@ -247,13 +247,15 @@ export async function deleteScheduledScan(configId) {
 }
 
 //this method is called to fetch list of nodes with applied filters.
-export async function filteredListOfNodes(topologyId, scrollId, filter) {
+export async function filteredListOfNodes(topologyId, scrollId, filter, sortString, searchString) {
   let urlBase = chrome.getUrlBase();
   urlBase = urlBase + '/asset/topology/' + topologyId + '/';
   const postBody = {
     scroll_id: scrollId,
     size: 10,
-    filter: filter
+    filter: filter,
+    sort_string: sortString,
+    search_string: searchString
   };
 
   const response = await fetch(urlBase, {

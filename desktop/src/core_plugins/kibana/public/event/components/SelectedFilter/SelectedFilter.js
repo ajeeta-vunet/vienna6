@@ -63,10 +63,12 @@ export class SelectedFilter extends React.Component {
       const searchTerm = event.target.value.toLowerCase().trim();
       const filterFieldKeys = this.props.filterFields && Object.values(this.props.filterFields[this.props.filter]);
       filterFieldKeys.map((field) => {
+        //we perform field.replaceAll to remove '.' as it is used as className and className does
+        //not allow usage of special characters as '.'
         if (field.toLowerCase().includes(searchTerm)) {
-          $(`.field.${field}`).css('display', 'block');
+          $(`.field.${field.replaceAll('.', '')}`).css('display', 'block');
         } else {
-          $(`.field.${field}`).css('display', 'none');
+          $(`.field.${field.replaceAll('.', '')}`).css('display', 'none');
         }
       });
     }
@@ -119,7 +121,9 @@ export class SelectedFilter extends React.Component {
                 checkedFlag = this.state.filterStore[this.props.filter].includes(field);
               }
               return (
-                <div className={`field ${field}`} key={field + index}>
+                //we perform field.replaceAll to remove '.' as it is used as className and className cannot
+                //have special characters such as '.'
+                <div className={`field ${field.replaceAll('.', '')}`} key={field + index}>
                   <input
                     type="checkbox"
                     id={'filter-' + field}

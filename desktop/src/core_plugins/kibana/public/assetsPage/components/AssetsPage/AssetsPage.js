@@ -38,6 +38,8 @@ import { FilterBar } from '../../../discovery/components/FilterBar/FilterBar';
 import _ from 'lodash';
 import { ImportAsset } from '../ImportAsset/ImportAsset';
 import { SingleAssetDetails } from '../SingleAssetDetails/SingleAssetDetails';
+import { TimeFilter } from '../TimeFilter/TimeFilter';
+import { TimeInputModal } from '../TimeInputModal/TimeInputModal';
 
 const notify = new Notifier({ location: 'Assets' });
 
@@ -67,10 +69,16 @@ export class AssetsPage extends React.Component {
       editAssetDetails: emptyAsset,
       assetDetailsSummary: this.props.assetDetailsSummary,
       filterObject: {},
+      displayTimeFilterObject: {},
       importAssetFlag: false,
       singleAssetDetails: {},
       singleAssetDetailsFlag: false,
-      searchString: ''
+      searchString: '',
+      sortField: '',
+      sortOrder: '',
+      timeFilter: '',
+      timeFilterInputFlag: false,
+      appliedTimeFilters: {},
     };
   }
 
@@ -95,9 +103,28 @@ export class AssetsPage extends React.Component {
   //this function is used to render the headers of the table.
   renderTableHeader() {
     const header = ['device_name', 'system_ip', 'device_type', 'vendor_name', 'addition_method',
-      'topology_name', 'last_modified_time', 'actions'];
+      'topology_name', 'creation_time', 'last_modified_time', 'actions'];
     return header.map((key, index) => {
-      return <th key={'head-' + index}>{generateHeading(key)}</th>;
+      if(key === 'actions') {
+        return (
+          <th
+            style={{ cursor: 'default' }}
+            key={index}
+          >
+            {generateHeading(key)}
+          </th>
+        );
+      }else {
+        return (
+          <th
+            key={index}
+            onClick={() => this.onSort(key)}
+          >
+            {generateHeading(key)}
+            <i className="fa fa-sort-amount-desc sort-icon" />
+          </th>
+        );
+      }
     });
   }
 
@@ -105,7 +132,7 @@ export class AssetsPage extends React.Component {
   renderTableData() {
     return this.state.assets && this.state.assets.map((asset) => {
       const { node_id, topology_name, last_modified_time, addition_method, vendor_name, device_name,
-        device_type, system_ip } = asset; //destructuring
+        device_type, system_ip, creation_time } = asset; //destructuring
       return (
         <tr key={node_id} className={'row-' + node_id}>
           <td>
@@ -132,6 +159,9 @@ export class AssetsPage extends React.Component {
           </td>
           <td>
             {topology_name}
+          </td>
+          <td>
+            {creation_time}
           </td>
           <td>
             {last_modified_time}
@@ -214,7 +244,11 @@ export class AssetsPage extends React.Component {
     });
     // )
     Promise.all(promises).then(() => {
-      fetchFilteredListOfAssets(0, this.state.filterObject)
+      fetchFilteredListOfAssets(0,
+        this.state.filterObject,
+        this.state.appliedTimeFilters,
+        this.state.sortOrder === 'Descending' ? '-' + this.state.sortField : this.state.sortField,
+        this.state.searchString)
         .then(data => {
           fetchAssetDetailsSummary()
             .then(assetDetailsSummary => {
@@ -369,7 +403,11 @@ export class AssetsPage extends React.Component {
         });
       });
     }else {
-      fetchFilteredListOfAssets((currentPage - 1) * 10, this.state.filterObject)
+      fetchFilteredListOfAssets((currentPage - 1) * 10,
+        this.state.filterObject,
+        this.state.appliedTimeFilters,
+        this.state.sortOrder === 'Descending' ? '-' + this.state.sortField : this.state.sortField,
+        this.state.searchString)
         .then(data => {
           this.setState({
             assets: data.assets,
@@ -388,46 +426,70 @@ export class AssetsPage extends React.Component {
   // Else it will be added to filterStore.
   handleFilter = (filterValue, filterField) => {
     let updatedfilterObject = this.state.filterObject;
+    let appliedTimeFilters = this.state.appliedTimeFilters;
+
+    if (_.has(this.state.appliedTimeFilters, filterField)) {
+      appliedTimeFilters = produce(this.state.appliedTimeFilters, (draft)=> {
+        delete draft[filterField];
+      });
+
+      let updatedDisplayTimeFilterObject = this.state.displayTimeFilterObject;
+      updatedDisplayTimeFilterObject = produce(this.state.displayTimeFilterObject, (draft)=> {
+        delete draft[filterField];
+      });
+
+      this.setState({ appliedTimeFilters, displayTimeFilterObject: updatedDisplayTimeFilterObject }, () => {
+        this.applyFilters(0);
+      });
+    }
+    else{
     // Check if filter with 'filterField' exists in filterObject and filterValue received is not empty.
     //If filterValue is empty then the 'cancel' filter button is clicked.
-    if (_.has(this.state.filterObject, filterField) && filterValue !== '') {
+      if (_.has(this.state.filterObject, filterField) && filterValue !== '') {
       // Check if filtered value exists in the array of filters
-      const filterValueIndex = this.state.filterObject[filterField].indexOf(
-        filterValue
-      );
+        const filterValueIndex = this.state.filterObject[filterField].indexOf(
+          filterValue
+        );
 
-      // If filterValue exists remove it as user is clicking on the same widget
-      // for the second time.
-      if (filterValueIndex > -1) {
-        updatedfilterObject = produce(this.state.filterObject, (draft) => {
-          draft[filterField].splice(filterValueIndex, 1);
-          //Delete property if there are no filters to be applied on this property
-          if (draft[filterField].length === 0) delete draft[filterField];
-        });
+        // If filterValue exists remove it as user is clicking on the same widget
+        // for the second time.
+        if (filterValueIndex > -1) {
+          updatedfilterObject = produce(this.state.filterObject, (draft) => {
+            draft[filterField].splice(filterValueIndex, 1);
+            //Delete property if there are no filters to be applied on this property
+            if (draft[filterField].length === 0) delete draft[filterField];
+          });
         // If filterValue does not exist, add it as user is clicking on the same widget
         // for the first time.
-      } else {
-        updatedfilterObject = produce(this.state.filterObject, (draft) => {
-          draft[filterField].push(filterValue);
-        });
+        } else {
+          updatedfilterObject = produce(this.state.filterObject, (draft) => {
+            draft[filterField].push(filterValue);
+          });
+        }
       }
       // If 'filterField' does not exist in filterObject, add it and update the
       // filterValue in its array.
-    } else if(filterValue !== '') {
-      updatedfilterObject = produce(this.state.filterObject, (draft) => {
-        draft[filterField] = [filterValue];
+      else if(filterValue !== '') {
+        updatedfilterObject = produce(this.state.filterObject, (draft) => {
+          draft[filterField] = [filterValue];
+        });
+      }
+
+      this.setState({ filterObject: updatedfilterObject }, () => {
+        this.applyFilters(0);
       });
     }
-    this.setState({ filterObject: updatedfilterObject }, () => {
-      this.applyFilters(0, this.state.filterObject);
-    });
   }
 
   // this method will be called to fetch the list of assets
   //based on the filter applied whose value is store in
   //filterStore.
-  applyFilters = (scrollId, filters) => {
-    fetchFilteredListOfAssets(scrollId, filters)
+  applyFilters = (scrollId) => {
+    fetchFilteredListOfAssets(scrollId,
+      this.state.filterObject,
+      this.state.appliedTimeFilters,
+      this.state.sortOrder === 'Descending' ? '-' + this.state.sortField : this.state.sortField,
+      this.state.searchString)
       .then(data => {
         this.setState({
           assets: data.assets,
@@ -443,6 +505,8 @@ export class AssetsPage extends React.Component {
       .then(data => {
         this.setState({
           filterObject: {},
+          displayTimeFilterObject: {},
+          appliedTimeFilters: {},
           assets: data.assets,
           currentPage: 1,
           totalNumberOfAssets: data.no_of_nodes,
@@ -478,7 +542,9 @@ export class AssetsPage extends React.Component {
                   selectedFlag: false,
                   assetDetailsSummary: assetDetailsSummary,
                   deleteIdList: [],
-                  filterObject: {}
+                  filterObject: {},
+                  displayTimeFilterObject: {},
+                  appliedTimeFilters: {}
                 }, () => {
                   notify.info('Assets Imported succesfully.');
                   this.cancelAssetImport();
@@ -520,7 +586,11 @@ export class AssetsPage extends React.Component {
             notify.info('Asset edit successful.');
           }
         }
-        fetchFilteredListOfAssets(0, this.state.filterObject)
+        fetchFilteredListOfAssets(0,
+          {},
+          {},
+          '',
+          '')
           .then(assetDetails => {
             fetchAssetDetailsSummary()
               .then(assetDetailsSummary => {
@@ -530,7 +600,12 @@ export class AssetsPage extends React.Component {
                   totalNumberOfAssets: assetDetails.no_of_nodes,
                   selectedFlag: false,
                   assetDetailsSummary: assetDetailsSummary,
-                  deleteIdList: []
+                  deleteIdList: [],
+                  filterObject: {},
+                  displayTimeFilterObject: {},
+                  appliedTimeFilters: {},
+                  sortField: '',
+                  searchString: ''
                 }, () => this.cancelNewAsset());
               });
           });
@@ -546,7 +621,70 @@ export class AssetsPage extends React.Component {
     this.setState({ singleAssetDetailsFlag: !this.state.singleAssetDetailsFlag });
   }
 
+  //this method is called to display timeInputModal
+  displayTimeInputModal = (timeFilter) => {
+    this.setState({ timeFilter, timeFilterInputFlag: true });
+  }
+
+  //this function adds the time filter values to the timeFilterObject
+  //which is used to make the API call.
+  applyTimeFilter = (startDateTime, endDateTime, timeFilterValue) => {
+
+    const appliedTimeFilters = produce(this.state.appliedTimeFilters, (draft) => {
+      draft[this.state.timeFilter] = {
+        start_time: startDateTime,
+        end_time: endDateTime
+      };
+    });
+
+    const displayTimeFilterObject = produce(this.state.displayTimeFilterObject, (draft) => {
+      draft[this.state.timeFilter] = [timeFilterValue];
+    });
+
+    this.setState({ appliedTimeFilters, displayTimeFilterObject, timeFilterInputFlag: false }, () => {
+      this.applyFilters(0);
+    });
+  }
+
+  //this function is called to close the InputTimeModal component.
+  cancelTimeModal = () => {
+    this.setState({ timeFilterInputFlag: false });
+  }
+
+  //this function is used to sort the assets table based the 'sortField' prop.
+  onSort = (sortField) => {
+    let sortOrder = 'Ascending';
+
+    if (
+      this.state.sortOrder === '' ||
+      this.state.sortOrder === 'Descending'
+    ) {
+      sortOrder = 'Ascending';
+    } else if (sortField === this.state.sortField) {
+      sortOrder = 'Descending';
+    }
+
+    const sortMessage = `Assets sorted in ${sortOrder} order based on ${generateHeading(sortField)}`;
+
+    fetchFilteredListOfAssets(0,
+      this.state.filterObject,
+      this.state.appliedTimeFilters,
+      sortOrder === 'Descending' ? '-' + sortField : sortField,
+      this.state.searchString)
+      .then(data => {
+        this.setState({
+          assets: data.assets,
+          totalNumberOfAssets: data.no_of_nodes,
+          sortField: sortField,
+          sortOrder: sortOrder
+        }, () => notify.info(sortMessage));
+      });
+  }
+
   render() {
+
+    const timeFilters = ['last_modified_time', 'creation_time'];
+    const displayFilters = { ...this.state.filterObject, ...this.state.displayTimeFilterObject };
 
     return (
       <div className="assetsPage-wrapper">
@@ -554,18 +692,26 @@ export class AssetsPage extends React.Component {
         <div>
           <div className="filters">
             <FilterBar
-              filterObject={this.state.filterObject}
+              filterObject={displayFilters}
               handleFilter={this.handleFilter}
               clearAllFilter={this.clearAllFilter}
             />
           </div>
           <div className="assetsPage">
-            <div className="assets-summary">
-              <Summary
-                summaryDetails={this.state.assetDetailsSummary}
-                handleFilter={this.handleFilter}
-                filterObject={this.state.filterObject}
-              />
+            <div className="assets-summary-time-filters">
+              <div className="assets-summary-filter">
+                <Summary
+                  summaryDetails={this.state.assetDetailsSummary}
+                  handleFilter={this.handleFilter}
+                  filterObject={this.state.filterObject}
+                />
+              </div>
+              <div className="assets-time-filter">
+                <TimeFilter
+                  timeFilters={timeFilters}
+                  displayTimeInputModal={this.displayTimeInputModal}
+                />
+              </div>
             </div>
             <div className="assets-table">
               <div className="table-toolbar">
@@ -603,9 +749,9 @@ export class AssetsPage extends React.Component {
               <table className="assets">
                 <thead>
                   <tr>
-                    <td>
+                    <th>
                       <input type="checkbox" className="checkAll" onChange={(e) => this.selectAll(e)}/>
-                    </td>
+                    </th>
                     {this.renderTableHeader()}
                   </tr>
                 </thead>
@@ -654,6 +800,15 @@ export class AssetsPage extends React.Component {
             <SingleAssetDetails
               singleAssetDetails={this.state.singleAssetDetails}
               goBackToDetails={this.goBackToDetails}
+            />
+          </div>
+        }
+        {this.state.timeFilterInputFlag &&
+          <div className="time-input-modal">
+            <TimeInputModal
+              timeFilter={this.state.timeFilter}
+              applyTimeFilter={this.applyTimeFilter}
+              cancelTimeModal={this.cancelTimeModal}
             />
           </div>
         }

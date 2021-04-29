@@ -17,6 +17,7 @@ import 'plugins/kibana/dashboard/index';
 import 'plugins/kibana/event/index';
 import 'plugins/kibana/discovery/index';
 import 'plugins/kibana/assetsPage/index';
+import 'plugins/kibana/networkMap/index';
 import 'plugins/kibana/berlin/index';
 import 'plugins/kibana/management/index';
 import 'plugins/kibana/doc';

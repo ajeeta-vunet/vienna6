@@ -32,6 +32,7 @@ export const VunetSidebarConstants = {
   NETWORK: 'Network',
   DISCOVERY: 'Discovery',
   ASSETS: 'Assets',
+  NETWORKMAP: 'Network Map',
   PERMISSION_VIEW_OBJECT: 'ViewObject',
   PERMISSION_MANAGE_OBJECT: 'ManageObject',
   PERMISSION_MANAGE_DATA_SOURCES: 'ManageDataSources',

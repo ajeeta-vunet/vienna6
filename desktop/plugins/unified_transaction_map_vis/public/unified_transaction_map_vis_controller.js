@@ -1007,7 +1007,6 @@ module.controller('utmVisController', function ($scope, Private, Notifier, getAp
 
     // Perform operation after getting response.
     httpResult.then(function (resp) {
-
       // Process data for template: 'Display Metric Groups'
       // Process backend response to generate json in required format
       // processed data is fed into visMap to generate graphs

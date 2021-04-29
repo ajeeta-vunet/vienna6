@@ -89,6 +89,7 @@ export class VunetSidebar extends Component {
     [VunetSidebarConstants.NETWORK]: [VunetSidebarConstants.PERMISSION_MANAGE_NETWORK],
     [VunetSidebarConstants.DISCOVERY]: [VunetSidebarConstants.PERMISSION_MANAGE_NETWORK],
     [VunetSidebarConstants.ASSETS]: [VunetSidebarConstants.PERMISSION_MANAGE_NETWORK],
+    [VunetSidebarConstants.NETWORKMAP]: [VunetSidebarConstants.PERMISSION_MANAGE_NETWORK]
   };
 
   constructor(props) {
@@ -113,6 +114,9 @@ export class VunetSidebar extends Component {
     } else if (currentRoute.includes('/assets')) {
       $('#networkNavContainer').addClass('active');
       $('#assetsLink').addClass('active');
+    } else if (currentRoute.includes('/networkMap')) {
+      $('#networkNavContainer').addClass('active');
+      $('#networkMapLink').addClass('active');
     } else if (currentRoute.includes('/discover')) {
       $('#analyticsNavContainer').addClass('active');
       $('#searchLink').addClass('active');
@@ -460,6 +464,17 @@ export class VunetSidebar extends Component {
                     onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
                   >
                     {VunetSidebarConstants.ASSETS}
+                  </a>
+                }
+                {
+                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.NETWORKMAP]) &&
+                  <a
+                    id="networkMapLink"
+                    href="/app/vienna#/networkMap"
+                    className="list-group-item"
+                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                  >
+                    {VunetSidebarConstants.NETWORKMAP}
                   </a>
                 }
               </div>

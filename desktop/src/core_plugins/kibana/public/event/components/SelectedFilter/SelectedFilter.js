@@ -63,12 +63,13 @@ export class SelectedFilter extends React.Component {
       const searchTerm = event.target.value.toLowerCase().trim();
       const filterFieldKeys = this.props.filterFields && Object.values(this.props.filterFields[this.props.filter]);
       filterFieldKeys.map((field) => {
-        //we perform field.replaceAll to remove '.' as it is used as className and className does
+        //we perform field.toString().replaceAll to remove '.' as it is used as className and className does
         //not allow usage of special characters as '.'
+        field = field.toString().replaceAll('.', '');
         if (field.toLowerCase().includes(searchTerm)) {
-          $(`.field.${field.replaceAll('.', '')}`).css('display', 'block');
+          $(`.field.${field}`).css('display', 'block');
         } else {
-          $(`.field.${field.replaceAll('.', '')}`).css('display', 'none');
+          $(`.field.${field}`).css('display', 'none');
         }
       });
     }
@@ -118,22 +119,22 @@ export class SelectedFilter extends React.Component {
           <div className="selected-filter-options">
             {filterFields && filterFields.map((field, index) => {
               if(this.state.filterStore[this.props.filter]) {
-                checkedFlag = this.state.filterStore[this.props.filter].includes(field);
+                checkedFlag = this.state.filterStore[this.props.filter].includes(field.toString());
               }
               return (
-                //we perform field.replaceAll to remove '.' as it is used as className and className cannot
+                //we perform field.toString().replaceAll to remove '.' as it is used as className and className cannot
                 //have special characters such as '.'
-                <div className={`field ${field.replaceAll('.', '')}`} key={field + index}>
+                <div className={`field ${field.toString().replaceAll('.', '')}`} key={field + index}>
                   <input
                     type="checkbox"
                     id={'filter-' + field}
                     name={field}
                     checked={checkedFlag}
                     onChange={() =>
-                      this.props.addFilter(this.props.filter, field)
+                      this.props.addFilter(this.props.filter, field.toString())
                     }
                   />
-                  <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
+                  <label htmlFor={field}>{field.toString().replace(/_/g, ' ')}</label>
                 </div>
               );
             })}

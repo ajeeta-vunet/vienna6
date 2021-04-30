@@ -31,6 +31,8 @@ export class NewAssetModal extends React.Component {
       displayInterfaceInput: false,
       editInterfaceInput: false,
       interfaceObject: {
+        interfaceName: '',
+        interfaceIp: ''
       },
       editInterfaceList: {},
       interfaceList: this.props.editAssetDetails.interface_list,
@@ -315,7 +317,10 @@ export class NewAssetModal extends React.Component {
   handleNewInterface = (e, type) => {
 
     let errorType = this.state.errorType;
-    let interfaceObject;
+    let interfaceObject = {
+      interfaceName: '',
+      interfaceIp: ''
+    };
     let validInterface;
     if(type === 'interfaceName') {
       if(e.target.value === '') {
@@ -394,10 +399,13 @@ export class NewAssetModal extends React.Component {
       draft.interfaceName = false;
       draft.interfaceNameRequired = false;
     });
-    this.setState({ interfaceObject: {},
-      displayInterfaceInput: true,
-      errorType: errorType,
-      validInterface: false
+    this.setState({ interfaceObject: {
+      interfaceName: '',
+      interfaceIp: ''
+    },
+    displayInterfaceInput: true,
+    errorType: errorType,
+    validInterface: false
     });
   }
 

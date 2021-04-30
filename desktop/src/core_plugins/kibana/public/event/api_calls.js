@@ -92,7 +92,7 @@ export function fetchFilterFields($http, chrome) {
       'created_by', 'category',
       'status', 'assignee',
       'impact', 'ip_address',
-      'region', 'source']
+      'region', 'source', 'supressed_event']
   };
 
   const httpResult = $http.post(urlBase, filterFields)

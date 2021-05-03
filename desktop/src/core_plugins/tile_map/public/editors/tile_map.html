@@ -1,5 +1,4 @@
 <!-- vis type specific options -->
-
 <div class="kuiSideBarSection">
   <div class="form-group">
     <label for="coordinateMapOptionsMapType">Map type</label>
@@ -13,7 +12,7 @@
       >
     </select>
   </div>
-
+  <marker-options ng-if="vis.params.mapType === 'Location Markers'"></marker-options>
   <div ng-if="vis.params.mapType === 'Heatmap'" class="form-group">
     <div>
       <label>

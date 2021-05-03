@@ -113,7 +113,13 @@ export function BaseMapsVisualizationProvider(serviceSettings) {
       } catch (e) {
         this._tmsService = null;
         this._tmsError = e;
-        this._notify.warning(e.message);
+        // When vuSmartmaps is not connected to internet,
+        // map can not connect to the elastic map service and
+        // throws the following warning msg.
+        // "Could not retrieve manifest from the tile service"
+        // We are disabling this warning msg by commenting the
+        // following code.
+        //this._notify.warning(e.message);
       }
       const { minZoom, maxZoom } = this._getMinMaxZoom();
       if (mapParams.wms.enabled) {

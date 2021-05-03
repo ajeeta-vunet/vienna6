@@ -1,0 +1,31 @@
+<div class="form-group">
+  <div class="form-group">
+    <label for="coordinateMapOptionsMarkerTitle">
+      Marker Popup title
+    </label>
+    <div class="kuiSideBarFormRow__control">
+      <input  
+          name="markerTitle"
+          ng-model="vis.params.markerTitle"
+          class="form-control"
+          type="text"
+          >
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="coordinateMapOptionsMetricName">
+      Red Marker Metric
+    </label>
+    <select
+      id="coordinateMapOptionsLegendMetricName"
+      name="metric"
+      class="form-control"
+      ng-model="vis.params.legendMetricName"
+      ng-init="vis.params.legendMetricName"
+      ng-options="legendMetricName as legendMetricName for legendMetricName in metrics"
+      >
+    </select>
+  </div>
+  <metric-link-info link-info-values="vis.params.linkInfoValues" link-info="vis.params.linkInfo" index-pattern="vis.indexPattern">
+  </metric-link-info>
+</div>

@@ -25,7 +25,8 @@ export function AggTypesMetricsTopHitProvider(Private) {
         name: 'field',
         onlyAggregatable: false,
         filterFieldTypes: function (vis, value) {
-          if (vis.type.name === 'table' || vis.type.name === 'metric' || vis.type.name === 'matrix') {
+          if (vis.type.name === 'tile_map' || vis.type.name === 'region_map' ||
+          vis.type.name === 'table' || vis.type.name === 'metric' || vis.type.name === 'matrix') {
             return true;
           }
           return value === 'number';
@@ -88,7 +89,7 @@ export function AggTypesMetricsTopHitProvider(Private) {
             display: 'Concatenate',
             isCompatibleType: _.constant(true),
             isCompatibleVis: function (name) {
-              return name === 'metric' || name === 'table' || name === 'matrix';
+              return name === 'tile_map' || name === 'region_map' || name === 'metric' || name === 'table' || name === 'matrix';
             },
             disabled: true,
             val: 'concat'

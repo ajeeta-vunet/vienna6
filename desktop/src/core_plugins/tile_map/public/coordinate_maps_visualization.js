@@ -5,7 +5,7 @@ import { SearchSourceProvider } from 'ui/courier/data_source/search_source';
 import { VisAggConfigProvider } from 'ui/vis/agg_config';
 import './styles/_tilemap.less';
 
-export function CoordinateMapsVisualizationProvider(Notifier, Private) {
+export function CoordinateMapsVisualizationProvider(Notifier, Private, getAppState, timefilter) {
 
   const AggConfig = Private(VisAggConfigProvider);
   const SearchSource = Private(SearchSourceProvider);
@@ -79,7 +79,8 @@ export function CoordinateMapsVisualizationProvider(Notifier, Private) {
       }
 
       const geohashOptions = this._getGeohashOptions();
-      this._geohashLayer = new GeohashLayer(this._chartData.geoJson, geohashOptions, this._kibanaMap.getZoomLevel(), this._kibanaMap);
+      this._geohashLayer = new GeohashLayer(this._chartData.geoJson, geohashOptions, this._kibanaMap.getZoomLevel(), this._kibanaMap,
+        getAppState, Private, timefilter);
       this._kibanaMap.addLayer(this._geohashLayer);
     }
 
@@ -98,6 +99,7 @@ export function CoordinateMapsVisualizationProvider(Notifier, Private) {
 
     _getGeohashOptions() {
       const newParams = this._getMapsParams();
+
       return {
         valueFormatter: this._chartData ? this._chartData.valueFormatter : null,
         tooltipFormatter: this._chartData ? this._chartData.tooltipFormatter : null,
@@ -106,7 +108,13 @@ export function CoordinateMapsVisualizationProvider(Notifier, Private) {
         fetchBounds: this.getGeohashBounds.bind(this),
         heatmap: {
           heatClusterSize: newParams.heatClusterSize
-        }
+        },
+        redMarkerMetric: newParams.legendMetricName,
+        markerPopupTitle: newParams.markerTitle,
+        linkInfo: newParams.linkInfo,
+        Private: Private,
+        getAppState: getAppState,
+        timefilter: timefilter
       };
     }
 

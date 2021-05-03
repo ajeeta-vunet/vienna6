@@ -17,12 +17,23 @@ export function AggResponseGeoJsonProvider(Private) {
 
     const geoI = columnIndex('segment');
     const metricI = columnIndex('metric');
+    // Previously map was supporting only 1 metric maximum.
+    // Now we have enabled to support more than 1 metrics.
+    // So add all the configured metrics to a list.
+    const metricsI = [];
+    table.columns.map(function (col, columnIndex) {
+      if (col.aggConfig.schema) {
+        if (col.aggConfig.schema.name === 'metric') {
+          metricsI.push(columnIndex);
+        }
+      }
+    });
     const centroidI = _.findIndex(table.columns, (col) => col.aggConfig.type.name === 'geo_centroid');
 
     const geoAgg = _.get(table.columns, [geoI, 'aggConfig']);
     const metricAgg = _.get(table.columns, [metricI, 'aggConfig']);
 
-    const features = convertRowsToFeatures(table, geoI, metricI, centroidI);
+    const features = convertRowsToFeatures(table, geoI, metricI, metricsI, centroidI);
     const values = features.map(function (feature) {
       return feature.properties.value;
     });

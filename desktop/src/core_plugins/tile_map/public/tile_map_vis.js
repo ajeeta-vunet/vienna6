@@ -1,5 +1,6 @@
 import 'plugins/kbn_vislib_vis_types/controls/vislib_basic_options';
 import './editors/wms_options';
+import './editors/marker_options';
 import { supports } from 'ui/utils/supports';
 import { CATEGORY } from 'ui/vis/vis_category';
 import { VisFactoryProvider } from 'ui/vis/vis_factory';
@@ -60,7 +61,8 @@ VisTypesRegistryProvider.register(function TileMapVisType(Private, getAppState, 
           'Scaled Circle Markers',
           'Shaded Circle Markers',
           'Shaded Geohash Grid',
-          'Heatmap'
+          'Heatmap',
+          'Location Markers'
         ],
         canDesaturate: !!supports.cssFilters
       },
@@ -71,8 +73,9 @@ VisTypesRegistryProvider.register(function TileMapVisType(Private, getAppState, 
           name: 'metric',
           title: 'Value',
           min: 1,
-          max: 1,
-          aggFilter: ['count', 'avg', 'sum', 'min', 'max', 'cardinality', 'top_hits'],
+          max: 5,
+          aggFilter: ['count', 'avg', 'sum', 'min', 'max', 'cardinality', 'top_hits',
+            'sum_bucket', 'min_bucket', 'max_bucket', 'avg_bucket'],
           defaults: [
             { schema: 'metric', type: 'count' }
           ]

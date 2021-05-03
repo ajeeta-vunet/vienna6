@@ -5,6 +5,7 @@ import { KibanaMapLayer } from './kibana_map_layer';
 import { HeatmapMarkers } from './markers/heatmap';
 import { ScaledCirclesMarkers } from './markers/scaled_circles';
 import { ShadedCirclesMarkers } from './markers/shaded_circles';
+import { ScaledLocationMarkers } from './markers/scaled_markers';
 import { GeohashGridMarkers } from './markers/geohash_grid';
 
 export class GeohashLayer extends KibanaMapLayer {
@@ -27,7 +28,13 @@ export class GeohashLayer extends KibanaMapLayer {
     const markerOptions = {
       isFilteredByCollar: this._geohashOptions.isFilteredByCollar,
       valueFormatter: this._geohashOptions.valueFormatter,
-      tooltipFormatter: this._geohashOptions.tooltipFormatter
+      tooltipFormatter: this._geohashOptions.tooltipFormatter,
+      redMarkerMetric: this._geohashOptions.redMarkerMetric,
+      markerPopupTitle: this._geohashOptions.markerPopupTitle,
+      linkInfo: this._geohashOptions.linkInfo,
+      getAppState: this._geohashOptions.getAppState,
+      Private: this._geohashOptions.Private,
+      timefilter: this._geohashOptions.timefilter
     };
     switch (this._geohashOptions.mapType) {
       case 'Scaled Circle Markers':
@@ -54,6 +61,9 @@ export class GeohashLayer extends KibanaMapLayer {
           minOpacity: 0.1,
           tooltipFormatter: this._geohashOptions.tooltipFormatter
         }, this._zoom, this._kibanaMap);
+        break;
+      case 'Location Markers':
+        this._geohashMarkers = new ScaledLocationMarkers(this._geohashGeoJson, markerOptions, this._zoom, this._kibanaMap);
         break;
       default:
         throw new Error(`${this._geohashOptions.mapType} mapType not recognized`);

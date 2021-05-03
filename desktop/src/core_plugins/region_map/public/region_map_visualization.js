@@ -33,7 +33,7 @@ export function RegionMapsVisualizationProvider(Private, Notifier, config) {
     async _updateData(tableGroup) {
       await this._updateParams();
       let results;
-      if (!tableGroup || !tableGroup.tables || !tableGroup.tables.length || tableGroup.tables[0].columns.length !== 2) {
+      if (!tableGroup || !tableGroup.tables || !tableGroup.tables.length) {
         results = [];
       } else {
         // If there is only 1 metric then by default we show this metric in the geo map.
@@ -49,7 +49,13 @@ export function RegionMapsVisualizationProvider(Private, Notifier, config) {
         }
         const buckets = tableGroup.tables[0].rows;
         results = buckets.map((bucket) => {
-          return { term: bucket[0], value: bucket[firstEnabledColumn] };
+          const value = [];
+          bucket.map((item, bucketIndex) => {
+            if (bucketIndex > 0) {
+              value.push({ [tableGroup.tables[0].columns[bucketIndex].title]: bucket[bucketIndex] });
+            }
+          });
+          return { term: bucket[0], value: bucket[firstEnabledColumn], metrics: value };
         });
       }
 
@@ -105,12 +111,6 @@ export function RegionMapsVisualizationProvider(Private, Notifier, config) {
       });
       this._choroplethLayer.on('styleChanged', (event) => {
         const shouldShowWarning = this._vis.params.isDisplayWarning && config.get('visualization:regionmap:showWarnings');
-        if (event.mismatches.length > 0 && shouldShowWarning) {
-          this._notify.warning(`Could not show ${event.mismatches.length} ${event.mismatches.length > 1 ? 'results' : 'result'} on the map.`
-            + ` To avoid this, ensure that each term can be matched to a corresponding shape on that shape's join field.`
-            + ` Could not match following terms: ${event.mismatches.join(',')}`
-          );
-        }
       });
       this._kibanaMap.addLayer(this._choroplethLayer);
     }

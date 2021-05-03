@@ -30,8 +30,24 @@ export default class ChoroplethLayer extends KibanaMapLayer {
           return bucket.term === feature.properties[this._joinField];
         });
         if (match !== undefined && this.showLabels) {
+          const value = match.metrics;
+          let metrics = '';
+          let metricIndex = 0;
+          // Go through each metric and get the value/formatted value.
+          // Let's add these metric values to a string with comma delimitted and bind
+          // to the layer's tooltip.
+          value.forEach(val => {
+            metricIndex = metricIndex + 1;
+            Object.entries(val).forEach(([key, value]) => {
+              metrics = metrics + this._metricsAgg.fieldFormatter()(value);
+            });
+            if (metricIndex !== match.metrics.length) {
+              metrics = metrics + ', ';
+            }
+          });
+
           layer.bindTooltip(
-            this._metricsAgg.fieldFormatter()(match.value),
+            metrics,
             {
               permanent: true,
               direction: 'center',
@@ -39,22 +55,44 @@ export default class ChoroplethLayer extends KibanaMapLayer {
             }
           );
         }
-        layer.on('click', () => {
+        layer.on('dblclick', () => {
           this.emit('select', feature.properties[this._joinField]);
         });
-        let location = null;
         layer.on({
+          /**
+            * This opens a popup when we move the mouse over the layer.
+            * Go though each metric, get the value and construct the content
+            * for the popup.
+            * These metric values will be shown in the mouse over popup.
+          **/
           mouseover: () => {
-            const tooltipContents = this._tooltipFormatter(feature);
-            if (!location) {
-              const leafletGeojon = L.geoJson(feature);
-              location = leafletGeojon.getBounds().getCenter();
-            }
+            if (match !== undefined) {
+              const value = match.metrics;
+              let metrics = '<div class="map_icon_nik">';
 
-            this.emit('showTooltip', {
-              content: tooltipContents,
-              position: location
-            });
+              value.forEach(val => {
+                Object.entries(val).forEach(([key, value]) => {
+
+                  metrics = metrics + `<div class="card-count">
+                                          <span class="count-label">${key}</span>
+                                          <span class="count-info"><span>` + this._metricsAgg.fieldFormatter()(value) + `</span></span>
+                                       </div>`;
+                });
+              });
+
+              metrics = metrics + '</div>';
+
+              const template = ` <div class="card">
+                            <div class="cardcontent">
+                              <div class="card-title">
+                                ${feature.properties[this._joinField]}
+                              </div>
+                            <div class="card-details">
+                              ${metrics}
+                            </div>
+                          </div>`;
+              layer.bindPopup(template);
+            }
           },
           mouseout: () => {
             this.emit('hideTooltip');
@@ -164,7 +202,7 @@ export default class ChoroplethLayer extends KibanaMapLayer {
   setShowLabels(showLabels) {
     this.showLabels = showLabels;
   }
-  
+
   equalsGeoJsonUrl(geojsonUrl) {
     return this._geojsonUrl === geojsonUrl;
   }

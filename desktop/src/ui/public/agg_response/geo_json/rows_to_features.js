@@ -10,13 +10,34 @@ function unwrap(val) {
   return getAcr(val) ? val.value : val;
 }
 
+// Previously map was supporting only 1 metric maximum.
+// Now we have enabled map to support more than 1 metrics.
+// So go though each metric and add the metric value to a list.
+function unwrapMetrics(row, metricI) {
+  const values = metricI.map(function (m) {
+    const label = row[m].aggConfig.params.customLabel;
+    return { [label]: getAcr(row[m]) ? row[m].value : row[m] };
+  });
+  return values;
+}
+
+// Go through each metric and get the agg config for that metric.
+function getAggConfigResults(row, metricsI) {
+  const AggConfigResults = metricsI.map(function (m) {
+    const label = row[m].aggConfig.params.customLabel;
+    const val = row[m];
+    return { [label]: val instanceof AggConfigResult ? val : null };
+  });
+  return AggConfigResults;
+}
+
 function clampGrid(val, min, max) {
   if (val > max) val = max;
   else if (val < min) val = min;
   return val;
 }
 
-export function convertRowsToFeatures(table, geoI, metricI, centroidI) {
+export function convertRowsToFeatures(table, geoI, metricI, metricsI, centroidI) {
 
   return _.transform(table.rows, function (features, row) {
     const geohash = unwrap(row[geoI]);
@@ -60,7 +81,9 @@ export function convertRowsToFeatures(table, geoI, metricI, centroidI) {
       properties: {
         geohash: geohash,
         value: unwrap(row[metricI]),
+        values: unwrapMetrics(row, metricsI),
         aggConfigResult: getAcr(row[metricI]),
+        aggConfigResults: getAggConfigResults(row, metricsI),
         center: centerLatLng,
         rectangle: rectangle
       }

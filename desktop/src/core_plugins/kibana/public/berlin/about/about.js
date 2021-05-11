@@ -76,6 +76,16 @@ function manageAbout($injector,
     }]
   };
 
+  // Check if current user has ManageLicense permission or not.
+  $scope.canManageLicense = function () {
+    return chrome.canManageLicense();
+  };
+
+  // If the user has ManageLicense, claim edit is allowed in Company information section
+  if($scope.canManageLicense()) {
+    $scope.aboutTenantMeta.edit = true;
+  }
+
   // Meta data for software release
   $scope.aboutSwReleaseMeta = {
     headers: ['Version', 'Vienna', 'Cairo'],

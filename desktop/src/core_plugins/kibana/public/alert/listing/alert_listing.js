@@ -10,6 +10,7 @@ import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { deHighlightRow, highlightSelectedRow } from 'ui/utils/vunet_row_highlight';
 import { DocTitleProvider } from 'ui/doc_title';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+import { SavedObjectsClientProvider } from 'ui/saved_objects';
 
 export function AlertListingController($injector, $scope, $location, $http) {
   const $filter = $injector.get('$filter');
@@ -39,6 +40,11 @@ export function AlertListingController($injector, $scope, $location, $http) {
     {
       name: 'description',
       getValue: item => item.description.toLowerCase(),
+      isAscending: true
+    },
+    {
+      name: 'enableAlert',
+      getValue: item => item.enableAlert ? 'enabled'.toLowerCase() : 'disabled'.toLowerCase(),
       isAscending: true
     }
   ],
@@ -132,6 +138,32 @@ export function AlertListingController($injector, $scope, $location, $http) {
     return selectedItems.length;
   };
 
+  // This will return whether enable button should be enabled or not
+  this.enableEnableButton = function () {
+    // When no items are selected disbale it
+    // If items are selected with status 'disable' then enable it
+    if (selectedItems.length === 0) {
+      return false;
+    } else {
+      return selectedItems.some(function (selectedItem) {
+        return selectedItem.enableAlert === false;
+      });
+    }
+  };
+
+  // This will return whether disable button should be enabled or not
+  this.enableDisableButton = function () {
+    // When no items are selected disable it
+    // If items are selected with status 'enable' then enable it
+    if (selectedItems.length === 0) {
+      return false;
+    } else {
+      return selectedItems.some(function (selectedItem) {
+        return selectedItem.enableAlert === true;
+      });
+    }
+  };
+
   this.deleteSelectedItems = function deleteSelectedItems() {
     const doDelete = () => {
       const selectedIds = selectedItems.map(item => item.id);
@@ -154,6 +186,39 @@ export function AlertListingController($injector, $scope, $location, $http) {
         onConfirm: doDelete,
         defaultFocusedButton: ConfirmationButtonTypes.CANCEL
       });
+  };
+
+
+  // This method will change the selected items status to enable/disable
+  this.changeStatusOfSelectedItems = function (changeStatusTo) {
+    const changeStatus = () => {
+      const savedObjectsClient = Private(SavedObjectsClientProvider);
+
+      selectedItems.map((item) => {
+        item.enableAlert = (changeStatusTo === 'enable') ? true : false;
+        //Updating each selected item status to the respective selected status
+        savedObjectsClient.update('alert', item.id, item);
+      });
+      //DeSelecting the selected items after changing the status
+      deselectAll();
+      //DeHighlighting the selected items after changing the status
+      deHighlightRow();
+    };
+
+    // This will decide which text need to be displayed in the status change model based on changeStatusTo value
+    const modelTitle = (changeStatusTo === 'enable') ?
+      'Are you sure to enable the selected alerts. This will enable the alerts in disabled status!' :
+      'Are you sure to disable the selected alerts. This will disable the alerts in enabled status!';
+
+    confirmModal(
+      modelTitle,
+      {
+        title: 'Warning',
+        confirmButtonText: (changeStatusTo === 'enable') ? 'Enable' : 'Disable',
+        onConfirm: changeStatus,
+        defaultFocusedButton: ConfirmationButtonTypes.CANCEL,
+      }
+    );
   };
 
   this.onPageNext = () => {

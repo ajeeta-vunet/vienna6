@@ -1217,7 +1217,7 @@ export class AlertDetails extends React.Component {
               value: errorObj.advancedConfiguration.required,
             },
             [validateInputTypes.maxLength]: {
-              value: 500,
+              value: 1000,
             }
           });
           break;
@@ -1258,11 +1258,8 @@ export class AlertDetails extends React.Component {
           savedObject.alertByEmail = !savedObject.alertByEmail;
           // if false, reset all values
           if (!savedObject.alertByEmail) {
-            savedObject.alertEmailId = '';
             errorObj.alertEmailId = { ...this.errorObjectNotRequired };
-            savedObject.alertEmailGroupHandler = [];
             errorObj.alertEmailGroupHandler = { ...this.errorObjectNotRequired };
-            savedObject.alertEmailBody = '';
             errorObj.alertEmailBody = { ...this.errorObjectNotRequired };
           } else {
             errorObj.alertEmailId = { ...this.errorObjectRequried };

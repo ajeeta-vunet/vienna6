@@ -32,6 +32,7 @@ export const VunetSidebarConstants = {
   NETWORK: 'Network',
   DISCOVERY: 'Discovery',
   ASSETS: 'Assets',
+  PIIDATA: 'PII Data',
   NETWORKMAP: 'Network Map',
   PERMISSION_VIEW_OBJECT: 'ViewObject',
   PERMISSION_MANAGE_OBJECT: 'ManageObject',
@@ -45,5 +46,6 @@ export const VunetSidebarConstants = {
   PERMISSION_MANAGE_AGENT: 'ManageAgent',
   PERMISSION_DATA_FETCH_APIS: 'DataFetchAPIs',
   PERMISSION_MANAGE_DIAGNOSTIC: 'ManageDiagnostic',
-  PERMISSION_MANAGE_NETWORK: 'ManageNetwork'
+  PERMISSION_MANAGE_NETWORK: 'ManageNetwork',
+  PERMISSION_PII_DATA: 'ManagePIIData'
 };

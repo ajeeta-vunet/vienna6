@@ -170,6 +170,13 @@ function manageRoles($scope,
             name: 'ManageNetwork',
             value: 'ManageNetwork'
           },
+
+          {
+            key: 'ManagePIIData',
+            label: 'ManagePIIData',
+            name: 'ManagePIIData',
+            value: 'ManagePIIData'
+          },
         ],
         props: {
         },

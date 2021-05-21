@@ -1,0 +1,121 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.hash-data-page-container {
+    display        : flex;
+    width          : 100%;
+    height         : 100%;
+    justify-content: center;
+    align-items    : center;
+    box-shadow     : 0rem 0rem 1rem 0.3rem @box_shadow_color;
+    border-radius  : 1rem;
+    border-collapse: collapse;
+    padding        : 1rem;
+
+    .input-section {
+        padding         : 4rem 4rem 3rem 4rem;
+        width           : 50%;
+        height          : 100%;
+        display         : flex;
+        justify-content : space-between;
+        align-items     : center;
+        border-right    : 1px solid @border_color;
+        background-color: @white;
+        flex-direction  : column;
+
+        .enter-data-div {
+            width: 100%;
+
+            .enter-data-label {
+                max-width    : 100%;
+                margin-bottom: 5px;
+                font-weight  : bold;
+            }
+
+            .data-input-wrapper {
+                width          : 100%;
+                display        : flex;
+                justify-content: flex-end;
+                height         : 3.5rem;
+                font-size      : 1.6rem;
+                padding        : .3rem .5rem;
+                line-height    : 1.5;
+                color          : @text_color1;
+                border-radius  : 1rem;
+                border         : 0.1rem solid @border_color;
+
+                .data-input {
+                    width : 100%;
+                    border: none;
+                }
+
+                .hideOrUnhide {
+                    padding: 0.5rem;
+                    cursor : pointer;
+                }
+            }
+        }
+    }
+
+    .output-section {
+        padding         : 4rem 4rem 3rem 4rem;
+        width           : 50%;
+        height          : 100%;
+        display         : flex;
+        justify-content : space-between;
+        align-items     : center;
+        background-color: @white;
+        flex-direction  : column;
+
+        .hash-data-div {
+            width: 100%;
+
+            .hash-data-label {
+                max-width    : 100%;
+                margin-bottom: 5px;
+                font-weight  : bold;
+            }
+
+            .hashed-data {
+                height          : 8rem;
+                width           : 100%;
+                background-color: @white;
+                cursor          : text;
+                resize          : none;
+                padding         : .3rem .5rem;
+                border         : 0.1rem solid @border_color;
+            }
+        }
+    }
+
+    .actions-div {
+        display        : flex;
+        justify-content: flex-end;
+        width          : 100%;
+
+        .hash-button,
+        .copyToClipboard-button {
+            display         : inline-block;
+            appearance      : none;
+            cursor          : pointer;
+            border          : none;
+            padding         : .6rem 1rem .6rem 1rem;
+            font-size       : 1.2rem !important;
+            height          : 3.5rem;
+            background-color: @accent_color;
+            color           : @white;
+            box-shadow      : 0rem 0rem 1rem 0.3rem @box_shadow_color;
+            border-radius   : 2rem;
+        }
+
+        .hash-button:disabled,
+        .copyToClipboard-button:disabled {
+            cursor          : not-allowed;
+            opacity         : 0.65;
+            background-color: @disable_button_color !important;
+            color           : @disable_button_text_color !important;
+            box-shadow      : none;
+            border          : none;
+            border-radius   : 2rem;
+        }
+    }
+}

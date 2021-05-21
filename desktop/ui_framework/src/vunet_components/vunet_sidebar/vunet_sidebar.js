@@ -59,6 +59,7 @@ export class VunetSidebar extends Component {
     [VunetSidebarConstants.SOURCES]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
     [VunetSidebarConstants.VUBLOCK]: [''],
     [VunetSidebarConstants.ENRICH]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_ENRICHMENT],
+    [VunetSidebarConstants.PIIDATA]: [VunetSidebarConstants.PERMISSION_PII_DATA],
     [VunetSidebarConstants.DATA_STORE]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SETTINGS,
       VunetSidebarConstants.PERMISSION_MANAGE_FILES],
     [VunetSidebarConstants.STORAGE]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SETTINGS],
@@ -183,6 +184,9 @@ export class VunetSidebar extends Component {
     } else if (currentRoute.includes('/berlin/about')) {
       $('#settingsNavContainer').addClass('active');
       $('#aboutLink').addClass('active');
+    } else if(currentRoute.includes('/piiData')) {
+      $('#dataNavContainer').addClass('active');
+      $('#piiDataLink').addClass('active');
     } else if(currentRoute.includes('app/vienna')) {
       $('#analyticsNavContainer').addClass('active');
       $('#dashboardsLink').addClass('active');
@@ -377,6 +381,17 @@ export class VunetSidebar extends Component {
                     onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
                   >
                     {VunetSidebarConstants.ENRICH}
+                  </a>
+                }
+                {
+                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.PIIDATA]) &&
+                  <a
+                    id="piiDataLink"
+                    href="/app/vienna#/piiData"
+                    className="list-group-item"
+                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                  >
+                    {VunetSidebarConstants.PIIDATA}
                   </a>
                 }
               </div>

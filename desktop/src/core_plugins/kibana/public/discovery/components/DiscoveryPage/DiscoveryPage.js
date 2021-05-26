@@ -42,7 +42,7 @@ export class DiscoveryPage extends React.Component {
       {
         id: 'topology',
         name: 'Topology',
-      }
+      },
     ];
 
     this.landingTab = 'scanDetails';
@@ -56,7 +56,6 @@ export class DiscoveryPage extends React.Component {
   };
 
   render() {
-
     return (
       <Provider store={store}>
         <div className="discovery-details">
@@ -89,5 +88,4 @@ export class DiscoveryPage extends React.Component {
   }
 }
 
-DiscoveryPage.propTypes = {
-};
+DiscoveryPage.propTypes = {};

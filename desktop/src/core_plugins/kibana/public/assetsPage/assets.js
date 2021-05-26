@@ -22,7 +22,6 @@ app.directive('assetsApp', function () {
     restrict: 'E',
     controllerAs: 'assetsApp',
     controller: function ($route, $scope, Private) {
-
       function init() {
         const docTitle = Private(DocTitleProvider);
         docTitle.change(VunetSidebarConstants.ASSETS);
@@ -31,8 +30,9 @@ app.directive('assetsApp', function () {
 
       //passing these to the AssetsPage react component
       $scope.assetList = $route.current.locals.assetList;
-      $scope.deviceTypeList = $route.current.locals.deviceTypeList;
-      $scope.vendorList = $route.current.locals.vendorList;
+      $scope.deviceTypeList =
+        $route.current.locals.vendorDeviceInfo.device_list;
+      $scope.vendorList = $route.current.locals.vendorDeviceInfo.vendor_list;
       $scope.assetDetailsSummary = $route.current.locals.assetDetailsSummary;
 
       init();

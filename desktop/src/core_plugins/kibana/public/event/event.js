@@ -5,15 +5,8 @@ import { DocTitleProvider } from 'ui/doc_title';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 import { EventConsole } from './EventConsole.js';
 import chrome from 'ui/chrome';
-
-import {
-  fetchListOfEvents,
-  fetchColumnSelectorInfo,
-  fetchUserList,
-  fetchFilterFields,
-  fetchPreferences,
-  getCorrelatedAlerts,
-} from './api_calls';
+import { apiProvider } from '../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider.js';
+import { EventConstants } from './event_constants.js';
 
 require('ui/courier');
 require('ui/config');
@@ -49,7 +42,15 @@ app.directive('eventApp', function () {
   return {
     restrict: 'E',
     controllerAs: 'eventApp',
-    controller: function ($route, $scope, config, $http, Private, timefilter, AppState) {
+    controller: function (
+      $route,
+      $scope,
+      config,
+      $http,
+      Private,
+      timefilter,
+      AppState
+    ) {
       timefilter.enabled = true;
 
       const queryFilter = Private(FilterBarQueryFilterProvider);
@@ -66,7 +67,9 @@ app.directive('eventApp', function () {
       $scope.eventSampleSize = config.get('event:sampleSize');
 
       //Decide the fields that needs to be mandatory in Event listing.
-      $scope.eventConsoleMandatoryFields = config.get('eventConsoleMandatoryFields');
+      $scope.eventConsoleMandatoryFields = config.get(
+        'eventConsoleMandatoryFields'
+      );
 
       //this flag is used to determine whether user has ManageEvents permission or not.
       $scope.canUpdateEvent = chrome.canManageEvents();
@@ -74,14 +77,16 @@ app.directive('eventApp', function () {
       $scope.loadingEvents = true;
 
       //this holds the data related to what should be display in teh Top Navigation bar of events console page.
-      $scope.topNavMenu = [{
-        key: 'refresh',
-        description: 'Refresh',
-        run: function () {
-          $scope.refresh();
+      $scope.topNavMenu = [
+        {
+          key: 'refresh',
+          description: 'Refresh',
+          run: function () {
+            $scope.refresh();
+          },
+          testId: 'eventConsoleRefreshButton',
         },
-        testId: 'eventConsoleRefreshButton',
-      }];
+      ];
 
       // We will call this function inside init(). This is
       // done to make the api calls to the backend on load.
@@ -94,42 +99,77 @@ app.directive('eventApp', function () {
         // from the time filter which is used to prepare the
         // data for POST call to the backend.
 
-        fetchListOfEvents(
-          $http,
-          chrome,
-          dashboardContext,
-          timeDurationStart,
-          timeDurationEnd
-        ).then((data) => {
-          $scope.listOfEvents = data;
-          $scope.loadingEvents = false;
-        });
+        const postBody = {
+          extended: {
+            es: {
+              filter: dashboardContext(),
+            },
+          },
+          time: { gte: timeDurationStart, lte: timeDurationEnd },
+          sample_size: 10000,
+        };
 
-        fetchColumnSelectorInfo($http, chrome).then((data) => {
-          $scope.columnSelectorInfo = data;
-        });
+        apiProvider
+          .post(EventConstants.FETCH_LIST_OF_EVENTS, postBody)
+          .then((data) => {
+            $scope.listOfEvents = data;
+            $scope.loadingEvents = false;
+            $scope.$digest();
+          });
+
+        const currentUser = chrome.getCurrentUser();
+        const username = currentUser[0];
+        apiProvider
+          .getAll(`${EventConstants.FETCH_COLUMN_SELECTOR_INFO}${username}/`)
+          .then((response) => {
+            $scope.columnSelectorInfo = response;
+            $scope.$digest();
+          });
       };
 
-      if($scope.canUpdateEvent) {
-        fetchUserList($http, chrome).then((data) => {
+      if ($scope.canUpdateEvent) {
+        apiProvider.getAll(EventConstants.FETCH_USERS_LIST).then((data) => {
           $scope.userList = data;
+          $scope.$digest();
         });
-      }
-      else{
+      } else {
         $scope.userList = [];
+        $scope.$digest();
       }
 
       // API call to fetch the filter fields which will be used to filter events.
-      fetchFilterFields($http, chrome).then((data) => {
-        $scope.filterFields = data;
-      });
+      const postBody = {
+        field: [
+          'alarm_state',
+          'severity',
+          'created_by',
+          'category',
+          'status',
+          'assignee',
+          'impact',
+          'ip_address',
+          'region',
+          'source',
+          'supressed_event',
+        ],
+      };
+      apiProvider
+        .post(EventConstants.FETCH_FILTER_FILEDS, postBody)
+        .then((data) => {
+          $scope.filterFields = data;
+          $scope.$digest();
+        });
 
       // API call to fetch the ITSM preferences set by logged-in user.
-      fetchPreferences($http, chrome).then(() => {
-        $scope.itsmPreferencesEnabled = true;
-      })
+      apiProvider.getAllWithoutBU(EventConstants.CHECK_ITSM_PREFERENCES)
+        .then(() => {
+          $scope.itsmPreferencesEnabled = true;
+          $scope.$digest();
+        })
+        // eslint-disable-next-line no-unused-vars
         .catch((err) => {
           $scope.itsmPreferencesEnabled = false;
+          $scope.$digest();
         });
 
       function init() {
@@ -145,22 +185,27 @@ app.directive('eventApp', function () {
         // objects created.
         title: 'Events',
         query: {
-          'query_string': {
-            'query': '*',
-            'analyze_wildcard': true
-          }
-        }
+          query_string: {
+            query: '*',
+            analyze_wildcard: true,
+          },
+        },
       };
 
       //used to fetch list of correlated event under a correlation id
       $scope.fetchRawEvents = (correlationId) => {
-        return getCorrelatedAlerts(
-          $http,
-          chrome,
-          dashboardContext,
-          timeDurationStart,
-          timeDurationEnd,
-          correlationId
+        const postBody = {
+          extended: {
+            es: {
+              filter: dashboardContext(),
+            },
+          },
+          time: { gte: timeDurationStart, lte: timeDurationEnd },
+          sample_size: 10000,
+        };
+        return apiProvider.post(
+          `${EventConstants.FETCH_LIST_OF_CORRELATED_EVENTS}${correlationId}/`,
+          postBody
         );
       };
 
@@ -168,10 +213,11 @@ app.directive('eventApp', function () {
 
       //passing these to the EventConsole react component
       $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;
-      $scope.columnSelectorInfo =  $route.current.locals.columnSelectorInfo;
+      $scope.columnSelectorInfo = $route.current.locals.columnSelectorInfo;
       $scope.userList = $route.current.locals.userList;
       $scope.filterFields = $route.current.locals.filterFields;
-      $scope.itsmPreferencesEnabled = $route.current.locals.itsmPreferencesEnabled;
+      $scope.itsmPreferencesEnabled =
+        $route.current.locals.itsmPreferencesEnabled;
 
       // When the time filter changes
       $scope.$listen(timefilter, 'fetch', $scope.search);

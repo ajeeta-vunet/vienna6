@@ -56,7 +56,6 @@ export class EventList extends React.Component {
 
       //hiddenFields - list of hidden fields (passed to ColumnSelector)
       hiddenFields: this.props.hiddenFields,
-
     };
   }
 
@@ -79,37 +78,64 @@ export class EventList extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({
-      events: newProps.events,
-      filteredEventsList: _.sortBy(newProps.events, function (o) {
-        return o.fields.correlated_id;
-      }),
-      allFields: newProps.allFields,
-      hiddenFields: newProps.hiddenFields,
-    }, () => {this.updateFieldDisplay();});
+    this.setState(
+      {
+        events: newProps.events,
+        filteredEventsList: _.sortBy(newProps.events, function (o) {
+          return o.fields.correlated_id;
+        }),
+        allFields: newProps.allFields,
+        hiddenFields: newProps.hiddenFields,
+      },
+      () => {
+        this.updateFieldDisplay();
+      }
+    );
   }
 
   sortByClickedField = (field) => {
     let newEvents = this.state.filteredEventsList;
     //The lodash sortBy does not work properly with aphanumeric text, so we use JS localCompare
     //to sort the fields with Alphanumeric values.
-    if(field === 'alert_id' || field === 'created_time'
-        || field === 'last_modified_time' || field === 'last_occurence'
-        || field === 'similar_events_count' || field === 'active_duration'
-        || field === 'total_duration' || field === 'likes' || field === 'dislikes' || field === 'ticket_creation_time') {
+    if (
+      field === 'alert_id' ||
+      field === 'created_time' ||
+      field === 'last_modified_time' ||
+      field === 'last_occurence' ||
+      field === 'similar_events_count' ||
+      field === 'active_duration' ||
+      field === 'total_duration' ||
+      field === 'likes' ||
+      field === 'dislikes' ||
+      field === 'ticket_creation_time'
+    ) {
       newEvents = _.sortBy(newEvents, function (o) {
-        if (field === 'alert_id' || field === 'active_duration'
-        || field === 'total_duration' || field === 'likes' || field === 'dislikes') {
+        if (
+          field === 'alert_id' ||
+          field === 'active_duration' ||
+          field === 'total_duration' ||
+          field === 'likes' ||
+          field === 'dislikes'
+        ) {
           return parseInt(o.fields[field]);
-        }
-        else if (field === 'created_time' || field === 'last_modified_time' ||
-        field === 'last_occurence' || field === 'ticket_creation_time') {
+        } else if (
+          field === 'created_time' ||
+          field === 'last_modified_time' ||
+          field === 'last_occurence' ||
+          field === 'ticket_creation_time'
+        ) {
           return Date.parse(o.fields[field]);
         }
         return o.fields[field];
       });
-    }else {
-      newEvents = newEvents.slice().sort((a, b) => a.fields[field].localeCompare(b.fields[field], undefined, { numeric: true }));
+    } else {
+      newEvents = newEvents
+        .slice()
+        .sort((a, b) =>
+          a.fields[field].localeCompare(b.fields[field], undefined, {
+            numeric: true,
+          })
+        );
     }
     if (
       this.state.lastSortOrder === '' ||
@@ -120,10 +146,13 @@ export class EventList extends React.Component {
       newEvents.reverse();
       this.setState({ lastSortOrder: 'Descending' });
     }
-    this.setState({
-      filteredEventsList: newEvents,
-      sortKey: field
-    }, () => notify.info(`Events sorted based on - ` + generateHeading(field)));
+    this.setState(
+      {
+        filteredEventsList: newEvents,
+        sortKey: field,
+      },
+      () => notify.info(`Events sorted based on - ` + generateHeading(field))
+    );
     // this.setState({ sortKey: field });
   };
 
@@ -190,7 +219,6 @@ export class EventList extends React.Component {
   //this function is called when filetr button is clicked in the UI.
   //This will hide and un-hide the div under the filter button which contains the filter options.
   handleFilterSelectorDisplay = () => {
-
     const container = $('#filter-selector-id');
     container.show();
 
@@ -251,7 +279,6 @@ export class EventList extends React.Component {
   };
 
   render() {
-
     const { currentPage, eventsPerPage } = this.state;
 
     // Logic for displaying current events
@@ -314,7 +341,12 @@ export class EventList extends React.Component {
           <div className="pagination-container">
             <div className="space-holder" />
             <div className="view-all-events-container">
-              <a className="view-all-events" onClick={() => this.props.showAllEvents()}>View all events</a>
+              <a
+                className="view-all-events"
+                onClick={() => this.props.showAllEvents()}
+              >
+                View all events
+              </a>
             </div>
             <div className="pagination-component">
               <div className="pagination-count">

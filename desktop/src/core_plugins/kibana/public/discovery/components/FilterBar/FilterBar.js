@@ -28,38 +28,41 @@ export class FilterBar extends React.Component {
   //this method will be called to display the applied filters,
   //which is present in the filterObject passed as props to the component.
   renderAppliedFilters = () => {
-    return this.props.filterObject && Object.keys(this.props.filterObject).map((key) => {
-      return this.props.filterObject[key].map((value) => {
-        return (
-          <div
-            className="individual-filter"
-          >
-            {value}
-            <div
-              className="cancel-filter"
-              onClick={() => this.props.handleFilter(value, key)}
-            >
-              <i className="fa fa-times-circle" aria-hidden="true" />
+    return (
+      this.props.filterObject &&
+      Object.keys(this.props.filterObject).map((key) => {
+        return this.props.filterObject[key].map((value) => {
+          return (
+            <div className="individual-filter">
+              {value}
+              <div
+                className="cancel-filter"
+                onClick={() => this.props.handleFilter(value, key)}
+              >
+                <i className="fa fa-times-circle" aria-hidden="true" />
+              </div>
             </div>
-          </div>
-        );
-      });
-    });
-  }
+          );
+        });
+      })
+    );
+  };
 
   render() {
-    return(
+    return (
       <div className="filters-bar">
         <div className="filter-title">
-          <img className="filter-funnel" src="/ui/vienna_images/filter-funnel-icon.svg" />
+          <img
+            className="filter-funnel"
+            src="/ui/vienna_images/filter-funnel-icon.svg"
+          />
         </div>
-        <div className="filter-applied">
-          {this.renderAppliedFilters()}
-        </div>
+        <div className="filter-applied">{this.renderAppliedFilters()}</div>
         <div
           className="clear-filters"
           onClick={() => this.props.clearAllFilter()}
-        >Clear All
+        >
+          Clear All
         </div>
       </div>
     );

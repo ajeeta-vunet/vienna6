@@ -1,5 +1,8 @@
 import 'plugins/kibana/event/event';
-import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/registry/feature_catalogue';
+import {
+  FeatureCatalogueRegistryProvider,
+  FeatureCatalogueCategory,
+} from 'ui/registry/feature_catalogue';
 import 'plugins/kibana/event/styles/main.less';
 import uiRoutes from 'ui/routes';
 import chrome from 'ui/chrome';
@@ -7,11 +10,14 @@ import { EventConstants } from './event_constants';
 import eventTemplate from 'plugins/kibana/event/event.html';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { findObjectByTitle } from 'ui/saved_objects/find_object_by_title.js';
-import { updateColumnSelectorInfo, fetchColumnSelectorInfo } from './api_calls';
+import { apiProvider } from '../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
+
+const currentUser = chrome.getCurrentUser();
+const username = currentUser[0];
 
 uiRoutes
   .defaults(/event/, {
-    requireDefaultIndex: true
+    requireDefaultIndex: true,
   })
   .when(EventConstants.EVENT_PATH, {
     template: eventTemplate,
@@ -23,20 +29,37 @@ uiRoutes
         const indexTitle = chrome.getVunetIndexName('notification');
 
         // Get the index object and then the 'id' using the index 'title'
-        return findObjectByTitle(savedObjectsClient, 'index-pattern', indexTitle)
-          .then(idx => idx.id)
+        return findObjectByTitle(
+          savedObjectsClient,
+          'index-pattern',
+          indexTitle
+        )
+          .then((idx) => idx.id)
           .catch(() => '');
       },
-      columnSelectorInfo: function ($http, chrome) {
-        return fetchColumnSelectorInfo($http, chrome);
+      columnSelectorInfo: function () {
+        return apiProvider.getAll(`${EventConstants.FETCH_COLUMN_SELECTOR_INFO}${username}/`);
       },
-      updateColumnSelector: function ($http, chrome) {
+      updateColumnSelector: function () {
         const updateColumnSelectorReact = function (fields, hiddenFields) {
-          updateColumnSelectorInfo($http, chrome, fields, hiddenFields);
+          const postBody = {
+            alert_details: {
+              fields: fields,
+              hidden_fields: hiddenFields,
+            },
+            ticket_details: {
+              fields: [],
+              hidden_fields: [],
+            },
+          };
+          return apiProvider.post(
+            `${EventConstants.UPDATE_COLUMN_SELECTOR_INFO}${username}/`,
+            postBody
+          );
         };
         return updateColumnSelectorReact;
       },
-    }
+    },
   });
 
 FeatureCatalogueRegistryProvider.register(() => {
@@ -47,6 +70,6 @@ FeatureCatalogueRegistryProvider.register(() => {
     icon: '/plugins/kibana/assets/app_event.svg',
     path: '/app/kibana#/event',
     showOnHomePage: true,
-    category: FeatureCatalogueCategory.DATA
+    category: FeatureCatalogueCategory.DATA,
   };
 });

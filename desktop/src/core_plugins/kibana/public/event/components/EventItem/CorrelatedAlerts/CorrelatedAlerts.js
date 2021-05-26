@@ -43,14 +43,13 @@ export class CorrelatedAlerts extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchRawEvents(this.props.correlationId)
-      .then((data) => {
-        this.setState({
-          listOfRelatedEvents: data.List_of_events,
-          searchedRelatedEvents: data.List_of_events,
-          loadingFlag: false,
-        });
+    this.props.fetchRawEvents(this.props.correlationId).then((data) => {
+      this.setState({
+        listOfRelatedEvents: data.List_of_raw_events,
+        searchedRelatedEvents: data.List_of_raw_events,
+        loadingFlag: false,
       });
+    });
   }
 
   //this method is called when the search input box is clicked to hide the placeholder text.
@@ -97,22 +96,39 @@ export class CorrelatedAlerts extends React.Component {
     let newEvents = this.state.searchedRelatedEvents;
     //The lodash sortBy does not work properly with aphanumeric text, so we use JS localCompare
     //to sort the fields with Alphanumeric values.
-    if(field === 'alert_id' || field === 'created_time'
-        || field === 'last_modified_time' || field === 'last_occurence'
-        || field === 'similar_events_count' || field === 'active_duration'
-        || field === 'total_duration') {
+    if (
+      field === 'alert_id' ||
+      field === 'created_time' ||
+      field === 'last_modified_time' ||
+      field === 'last_occurence' ||
+      field === 'similar_events_count' ||
+      field === 'active_duration' ||
+      field === 'total_duration'
+    ) {
       newEvents = _.sortBy(newEvents, function (o) {
-        if (field === 'alert_id' || field === 'active_duration'
-        || field === 'total_duration') {
+        if (
+          field === 'alert_id' ||
+          field === 'active_duration' ||
+          field === 'total_duration'
+        ) {
           return parseInt(o.fields[field]);
-        }
-        else if (field === 'created_time' || field === 'last_modified_time' || field === 'last_occurence') {
+        } else if (
+          field === 'created_time' ||
+          field === 'last_modified_time' ||
+          field === 'last_occurence'
+        ) {
           return Date.parse(o.fields[field]);
         }
         return o.fields[field];
       });
-    }else {
-      newEvents = newEvents.slice().sort((a, b) => a.fields[field].localeCompare(b.fields[field], undefined, { numeric: true }));
+    } else {
+      newEvents = newEvents
+        .slice()
+        .sort((a, b) =>
+          a.fields[field].localeCompare(b.fields[field], undefined, {
+            numeric: true,
+          })
+        );
     }
     if (
       this.state.lastSortOrder === '' ||
@@ -125,7 +141,7 @@ export class CorrelatedAlerts extends React.Component {
     }
     this.setState({
       searchedRelatedEvents: newEvents,
-      sortKey: field
+      sortKey: field,
     });
   };
 
@@ -138,41 +154,38 @@ export class CorrelatedAlerts extends React.Component {
           <div className="severity-div">
             <div className={`rectangle ${severity}`} />
           </div>
-          {Object.entries(this.state.searchedRelatedEvents[key].fields).map(([key1, value]) => {
-            if(key1 === 'summary') {
+          {Object.entries(this.state.searchedRelatedEvents[key].fields).map(
+            ([key1, value]) => {
+              if (key1 === 'summary') {
+                return (
+                  <div
+                    key={value + key1}
+                    className="correlated-details-value"
+                    style={{ width: '60rem' }}
+                  >
+                    {value}
+                  </div>
+                );
+              }
               return (
-                <div
-                  key={value + key1}
-                  className="correlated-details-value"
-                  style={{ width: '60rem' }}
-                >
+                <div key={value + key1} className="correlated-details-value">
                   {value}
                 </div>
               );
             }
-            return (
-              <div key={value + key1} className="correlated-details-value">
-                {value}
-              </div>
-            );
-          })}
+          )}
         </div>
       );
     });
   };
 
   render() {
-
-    if(this.state.loadingFlag) {
-      return(
-        <div className="loading-correlated-events">
-          Loading...
-        </div>
-      );
-    }else {
-      return(
+    if (this.state.loadingFlag) {
+      return <div className="loading-correlated-events">Loading...</div>;
+    } else {
+      return (
         <div className="correlated-events-container">
-          {this.state.searchedRelatedEvents.length ? (
+          {this.state.searchedRelatedEvents && this.state.searchedRelatedEvents.length ? (
             <div className="correlated-events-table">
               <div className="search-container ">
                 <input
@@ -188,12 +201,23 @@ export class CorrelatedAlerts extends React.Component {
                 <div className="severity-div">
                   <div className={`rectangle`} />
                 </div>
-                {Object.keys(this.state.searchedRelatedEvents[0].fields).map((key) => {
-                  if(key === 'summary') {
+                {Object.keys(this.state.searchedRelatedEvents[0].fields).map(
+                  (key) => {
+                    if (key === 'summary') {
+                      return (
+                        <div
+                          className="correlated-details-header"
+                          style={{ width: '60rem' }}
+                          onClick={() => this.sortByClickedField(key)}
+                        >
+                          <i className="fa fa-sort-amount-desc sort-icon" />
+                          {generateHeading(key)}
+                        </div>
+                      );
+                    }
                     return (
                       <div
                         className="correlated-details-header"
-                        style={{ width: '60rem' }}
                         onClick={() => this.sortByClickedField(key)}
                       >
                         <i className="fa fa-sort-amount-desc sort-icon" />
@@ -201,22 +225,13 @@ export class CorrelatedAlerts extends React.Component {
                       </div>
                     );
                   }
-                  return (
-                    <div
-                      className="correlated-details-header"
-                      onClick={() => this.sortByClickedField(key)}
-                    >
-                      <i className="fa fa-sort-amount-desc sort-icon" />
-                      {generateHeading(key)}
-                    </div>
-                  );
-                })}
+                )}
               </div>
               {this.renderCorrelatedTable()}
             </div>
           ) : (
             <div className="correlated-event-no-data">
-          No Metric Entries available for this event
+              No Correlated Alerts available for this event
             </div>
           )}
         </div>

@@ -37,26 +37,32 @@ export function EventHistory(props) {
 
   // Iterate on the history object and prepare
   // rows containing history information.
-  const renderRows = history && Object.keys(history).map((key, index) => {
-    return (
-      <div key={key + index} className="row events-display-table-row">
-        <div className="col-md-4">{key}</div>
-        <div className="col-md-2">
-          {requiresCustomDisplayList.includes(key) > 0
-            ? displayTwoTimeUnits(history[key])
-            : history[key]}
+  const renderRows =
+    history &&
+    Object.keys(history).map((key, index) => {
+      return (
+        <div key={key + index} className="row events-display-table-row">
+          <div className="col-md-4">{key}</div>
+          <div className="col-md-2">
+            {requiresCustomDisplayList.includes(key) > 0
+              ? displayTwoTimeUnits(history[key])
+              : history[key]}
+          </div>
         </div>
-      </div>
-    );
-  });
+      );
+    });
 
-  const renderOccurrences = occurrences && occurrences.map((value) => {
-    return(
-      <div key={value} className="row occurrences-display-table-row">
-        <div className="col-md-5">{moment(value).format('dddd, MMMM Do YYYY, h:mm:ss a')}</div>
-      </div>
-    );
-  });
+  const renderOccurrences =
+    occurrences &&
+    occurrences.map((value) => {
+      return (
+        <div key={value} className="row occurrences-display-table-row">
+          <div className="col-md-5">
+            {moment(value).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+          </div>
+        </div>
+      );
+    });
 
   return (
     <div className="event-history-container">
@@ -75,7 +81,7 @@ export function EventHistory(props) {
           </div>
         ) : (
           <div className="event-display-no-data">
-          No event history available for this event
+            No event history available for this event
           </div>
         )}
       </div>
@@ -91,7 +97,7 @@ export function EventHistory(props) {
           </div>
         ) : (
           <div className="event-display-no-data">
-          No previous occurrences available for this event
+            No previous occurrences available for this event
           </div>
         )}
       </div>

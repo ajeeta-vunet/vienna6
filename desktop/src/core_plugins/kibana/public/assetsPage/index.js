@@ -4,7 +4,7 @@ import 'plugins/kibana/event/styles/main.less';
 import uiRoutes from 'ui/routes';
 import { AssetConstants } from './asset_constants';
 import assetsTemplate from 'plugins/kibana/assetsPage/assets.html';
-import { fetchListOfAssets, fetchDeviceType, fetchVendorList, fetchAssetDetailsSummary } from './api_calls';
+import { apiProvider } from '../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
 
 uiRoutes
   .defaults(/assets/, {
@@ -14,16 +14,20 @@ uiRoutes
     template: assetsTemplate,
     resolve: {
       assetList: function () {
-        return fetchListOfAssets(0, 10);
+        const postBody = {
+          scroll_id: 0,
+          size: 10
+        };
+        return apiProvider.post(AssetConstants.FETCH_ASSET_LIST, postBody);
       },
-      deviceTypeList: function () {
-        return fetchDeviceType();
-      },
-      vendorList: function () {
-        return fetchVendorList();
+      vendorDeviceInfo: function () {
+        return apiProvider.getAll(AssetConstants.FETCH_VENDOR_DEVICE_INFO);
       },
       assetDetailsSummary: function () {
-        return fetchAssetDetailsSummary();
+        const postBody = {
+          fields: ['location', 'device_type', 'vendor_name', 'system_ip']
+        };
+        return apiProvider.post(AssetConstants.FETCH_ASSETS_SUMMARY, postBody);
       }
     }
   });

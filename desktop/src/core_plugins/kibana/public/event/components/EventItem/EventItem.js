@@ -28,7 +28,10 @@ import { EventDetails } from './EventDetails/EventDetails';
 import { EventHistory } from './EventHistory/EventHistory';
 import { RelatedDashboards } from './RelatedDashboards/RelatedDashboards';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
-import { generateHeading, generateClassname } from '../../utils/vunet_format_name.js';
+import {
+  generateHeading,
+  generateClassname,
+} from '../../utils/vunet_format_name.js';
 import ReactTooltip from 'react-tooltip';
 import { CorrelatedAlerts } from './CorrelatedAlerts/CorrelatedAlerts';
 
@@ -186,40 +189,40 @@ export class EventItem extends React.Component {
   //the user has given/changed his feedback to the event under UserFeedback component.
   addOrRemoveReaction = (reaction) => {
     let updatedEvent = this.state.event;
-    if(updatedEvent.fields.user_reaction === 'Like') {
-      if(reaction === 'Dislike') {
-        updatedEvent = produce(this.state.event, draft => {
+    if (updatedEvent.fields.user_reaction === 'Like') {
+      if (reaction === 'Dislike') {
+        updatedEvent = produce(this.state.event, (draft) => {
           draft.fields.likes--;
           draft.fields.dislikes++;
           draft.fields.user_reaction = 'Dislike';
         });
-      } else if(reaction === 'No Reaction') {
-        updatedEvent = produce(this.state.event, draft => {
+      } else if (reaction === 'No Reaction') {
+        updatedEvent = produce(this.state.event, (draft) => {
           draft.fields.likes--;
           draft.fields.user_reaction = 'No Reaction';
         });
       }
-    }else if(updatedEvent.fields.user_reaction === 'Dislike') {
-      if(reaction === 'Like') {
-        updatedEvent = produce(this.state.event, draft => {
+    } else if (updatedEvent.fields.user_reaction === 'Dislike') {
+      if (reaction === 'Like') {
+        updatedEvent = produce(this.state.event, (draft) => {
           draft.fields.likes++;
           draft.fields.dislikes--;
           draft.fields.user_reaction = 'Like';
         });
-      } else if(reaction === 'No Reaction') {
-        updatedEvent = produce(this.state.event, draft => {
+      } else if (reaction === 'No Reaction') {
+        updatedEvent = produce(this.state.event, (draft) => {
           draft.fields.dislikes--;
           draft.fields.user_reaction = 'No Reaction';
         });
       }
     } else {
-      if(reaction === 'Dislike') {
-        updatedEvent = produce(this.state.event, draft => {
+      if (reaction === 'Dislike') {
+        updatedEvent = produce(this.state.event, (draft) => {
           draft.fields.dislikes++;
           draft.fields.user_reaction = 'Dislike';
         });
-      } else if(reaction === 'Like') {
-        updatedEvent = produce(this.state.event, draft => {
+      } else if (reaction === 'Like') {
+        updatedEvent = produce(this.state.event, (draft) => {
           draft.fields.likes++;
           draft.fields.user_reaction = 'Like';
         });
@@ -229,16 +232,20 @@ export class EventItem extends React.Component {
     this.setState({ event: updatedEvent, showDetails: true }, () => {
       notify.info('Event feedback updated successfully');
     });
-  }
+  };
 
   render() {
     const eventDisplay = this.state.event.fields;
     const severity = this.state.event.severity;
     const displayEventItemDetails =
-      eventDisplay && Object.entries(eventDisplay).map(([key, value]) => {
-        if(key !== 'likes' && key !== 'dislikes' && key !== 'user_reaction') {
+      eventDisplay &&
+      Object.entries(eventDisplay).map(([key, value]) => {
+        if (key !== 'likes' && key !== 'dislikes' && key !== 'user_reaction') {
           return (
-            <div key={generateClassname(key)} className={'detail-item ' + generateClassname(key)}>
+            <div
+              key={generateClassname(key)}
+              className={'detail-item ' + generateClassname(key)}
+            >
               <div className="wrapper">
                 <div
                   className="detail-heading"
@@ -250,14 +257,19 @@ export class EventItem extends React.Component {
                   {generateHeading(key)}:
                 </div>
                 <div className="detail-content">
-                  {key === 'active_duration' || key === 'total_duration' ? displayTwoTimeUnits(value) : value}
+                  {key === 'active_duration' || key === 'total_duration'
+                    ? displayTwoTimeUnits(value)
+                    : value}
                 </div>
               </div>
             </div>
           );
-        }else if(key !== 'user_reaction') {
+        } else if (key !== 'user_reaction') {
           return (
-            <div key={generateClassname(key)} className={'detail-item ' + generateClassname(key)}>
+            <div
+              key={generateClassname(key)}
+              className={'detail-item ' + generateClassname(key)}
+            >
               <div className="wrapper">
                 <div
                   className="detail-heading"
@@ -266,11 +278,13 @@ export class EventItem extends React.Component {
                 >
                   <ReactTooltip />
                   <i className="fa fa-sort-amount-desc sort-icon" />
-                  {key === 'likes' ? <i className="fa fa-thumbs-o-up like-icon" /> : <i className="fa fa-thumbs-o-down dislike-icon" />}
+                  {key === 'likes' ? (
+                    <i className="fa fa-thumbs-o-up like-icon" />
+                  ) : (
+                    <i className="fa fa-thumbs-o-down dislike-icon" />
+                  )}
                 </div>
-                <div className="detail-content">
-                  {value}
-                </div>
+                <div className="detail-content">{value}</div>
               </div>
             </div>
           );
@@ -284,9 +298,7 @@ export class EventItem extends React.Component {
             <div className={`rectangle ${severity}`} />
           </div>
         </div>
-        <div className="details">
-          {displayEventItemDetails}
-        </div>
+        <div className="details">{displayEventItemDetails}</div>
         <div className="assigned-actions">
           <div className="assignee">
             <div className="assigned">
@@ -297,19 +309,33 @@ export class EventItem extends React.Component {
               <i className="fa fa-clock-o" aria-hidden="true" />
               {moment(eventDisplay.created_time).fromNow()}
             </div>
-            <div data-tip={
-              // eslint-disable-next-line no-nested-ternary
-              this.props.canUpdateEvent ? this.props.itsmPreferencesEnabled ?
-                eventDisplay.ticket_id !== 'Unavailable' ? 'Ticket already created' : 'Create Ticket'
-                : 'ITSM preferences should be set to create tickets'
-                : 'User does not have Manage Events Claim'
-            }
+            <div
+              data-tip={
+                // eslint-disable-next-line no-nested-ternary
+                this.props.canUpdateEvent
+                  ? this.props.itsmPreferencesEnabled
+                    ? eventDisplay.ticket_id !== 'Unavailable'
+                      ? 'Ticket already created'
+                      : 'Create Ticket'
+                    : 'ITSM preferences should be set to create tickets'
+                  : 'User does not have Manage Events Claim'
+              }
             >
               <ReactTooltip />
               <button
-                disabled={!this.props.itsmPreferencesEnabled || eventDisplay.ticket_id !== 'Unavailable' || !this.props.canUpdateEvent}
+                disabled={
+                  !this.props.itsmPreferencesEnabled ||
+                  eventDisplay.ticket_id !== 'Unavailable' ||
+                  !this.props.canUpdateEvent
+                }
                 className="create-ticket-button"
-                onClick={() => this.props.createTicket(this.state.event.fields.corelation_id)}
+                onClick={() =>
+                  this.props.createTicket(
+                    this.state.event.fields.corelation_id !== '-'
+                      ? this.state.event.fields.corelation_id
+                      : this.state.event.fields.alert_id
+                  )
+                }
               >
                 Create Ticket
                 <i className="fa fa-ticket fa-ticket-icon" aria-hidden="true" />
@@ -321,7 +347,12 @@ export class EventItem extends React.Component {
               className="more-details-button"
               onClick={() => this.handleMoreDetails()}
             >
-              <i className={'fa fa-lg ' + (this.state.showDetails ? 'fa-angle-up' : 'fa-angle-down')} />
+              <i
+                className={
+                  'fa fa-lg ' +
+                  (this.state.showDetails ? 'fa-angle-up' : 'fa-angle-down')
+                }
+              />
             </button>
           </div>
         </div>
@@ -362,7 +393,9 @@ export class EventItem extends React.Component {
               )}
               {this.state.currentTabId === 'correlated-alerts' && (
                 <CorrelatedAlerts
-                  correlationId={this.state.details.alert_details.fields.corelation_id}
+                  correlationId={
+                    this.state.details.alert_details.fields.corelation_id
+                  }
                   fetchRawEvents={this.props.fetchRawEvents}
                   allFields={this.props.allFields}
                 />

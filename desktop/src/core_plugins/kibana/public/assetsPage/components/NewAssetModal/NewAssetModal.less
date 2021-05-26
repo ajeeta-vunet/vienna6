@@ -1,47 +1,49 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
 .newAssetModal-wrapper {
-    width: 800px;
+    width           : 800px;
     background-color: @white;
-    border-radius: 1rem;
-    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
-    font-size: 1.6rem !important;
+    border-radius   : 1rem;
+    box-shadow      : 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
+    font-size       : 1.6rem !important;
 
     .title {
-        text-align: left !important;
+        text-align : left !important;
         font-family: 'Inter-Medium';
-        border: none;
-        color: @accent_color;
-        padding: 2rem 0rem 0rem 2.5rem;
+        border     : none;
+        color      : @accent_color;
+        padding    : 2rem 0rem 0rem 2.5rem;
     }
+
     .asset-form {
-        padding: 1rem 0rem 1rem 3rem;
-        margin-left: 0rem;
+        padding     : 1rem 0rem 1rem 3rem;
+        margin-left : 0rem;
         margin-right: 0rem;
 
         .form-body {
             padding-right: 3rem;
-            max-height: 70rem;
-            overflow-y: auto;
+            max-height   : 70rem;
+            overflow-y   : auto;
 
-            input, select {
-                width: 95%;
-                display: block;
-                height: 3.5rem;
-                padding: .3rem .5rem;
-                font-size: 1.6rem;
-                line-height: 1.5;
-                color: @text_color1;
+            input,
+            select {
+                width        : 95%;
+                display      : block;
+                height       : 3.5rem;
+                padding      : .3rem .5rem;
+                font-size    : 1.6rem;
+                line-height  : 1.5;
+                color        : @text_color1;
                 border-radius: 1rem;
-                border: 0.1rem solid @border_color;
+                border       : 0.1rem solid @border_color;
             }
 
-            label{
+            label {
                 margin-top: 1.5rem;
             }
 
             .fa-plus-circle {
-                color: @accent_color;
+                color      : @accent_color;
                 margin-left: 5px;
             }
 
@@ -52,37 +54,38 @@
             }
 
             .interface-actions {
-                display: flex;
-                height: 4rem;
-                position: relative;
+                display   : flex;
+                height    : 4rem;
+                position  : relative;
                 text-align: right;
             }
         }
     }
 
     .interface-wrapper {
-        font-size: 1.6rem;
-        border: 1px solid @border_color;
-        margin: 0.5rem 0;
-        width: 95%;
-        padding: 1.5rem;
+        font-size    : 1.6rem;
+        border       : 1px solid @border_color;
+        margin       : 0.5rem 0;
+        width        : 95%;
+        padding      : 1.5rem;
         border-radius: 1rem;
         padding-right: 3rem;
     }
 
     .actions {
-        padding: 2rem 3.7em;
-        position: relative;
+        padding   : 2rem 3.7em;
+        position  : relative;
         text-align: right;
     }
 }
 
-.interface-heading{
-    display: flex;
+.interface-heading {
+    display        : flex;
     justify-content: space-between;
 }
+
 .interface-row {
-    display: flex;
+    display        : flex;
     justify-content: space-between;
 }
 
@@ -90,34 +93,37 @@
     margin-right: 10rem;
 }
 
-.edit-button, .delete-button, .add-interface-button, .edit-interface-button {
-    border: none;
+.edit-button,
+.delete-button,
+.add-interface-button,
+.edit-interface-button {
+    border          : none;
     background-color: @white;
 }
 
 .asset-button {
-    display: inline-block;                    
-    appearance: none;
-    cursor: pointer;
-    border: none;
-    padding: .6rem 3rem .6rem 3rem !important;
-    font-size: 1.6rem!important;
-    height: 3.5rem!important;
+    display         : inline-block;
+    appearance      : none;
+    cursor          : pointer;
+    border          : none;
+    padding         : .6rem 3rem .6rem 3rem !important;
+    font-size       : 1.6rem !important;
+    height          : 3.5rem !important;
     background-color: @accent_color;
-    color: @white !important;
-    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-    border-radius: 2rem !important;
-    margin-left: 1rem;
+    color           : @white  !important;
+    box-shadow      : 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+    border-radius   : 2rem !important;
+    margin-left     : 1rem;
 }
 
 input:disabled {
-    cursor: not-allowed !important;
-    opacity: 0.65;
-    background-color: @disable_button_color !important;
-    color: @disable_button_text_color !important;
-    box-shadow: none;
-    border: none;
-    border-radius: 2rem;
+    cursor          : not-allowed !important;
+    opacity         : 0.65;
+    background-color: @disable_button_color  !important;
+    color           : @disable_button_text_color  !important;
+    box-shadow      : none;
+    border          : none;
+    border-radius   : 2rem;
 }
 
 .asset-button:hover {
@@ -125,16 +131,19 @@ input:disabled {
 }
 
 .error-message {
-    text-align: left;
-    color: @red;
-    margin-top: .5rem;
+    text-align : left;
+    color      : @red;
+    margin-top : .5rem;
     margin-left: .3rem;
 }
 
-.interfaceName-label, .interfaceIP-label, .interfaceActions-label {
+.interfaceName-label,
+.interfaceIP-label,
+.interfaceActions-label {
     flex: 0 0 15rem;
 }
 
-.interface-name, .interface-ip {
+.interface-name,
+.interface-ip {
     flex: 0 0 15rem;
 }

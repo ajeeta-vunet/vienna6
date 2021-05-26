@@ -1,46 +1,47 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .column-selector-wrapper {
-  position: absolute;
+  position        : absolute;
   background-color: @white;
-  margin-top: 65px;
-  right: 0;
-  width: 15vw;
-  z-index: 100;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  margin-top      : 65px;
+  right           : 0;
+  width           : 15vw;
+  z-index         : 100;
+  box-shadow      : 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 
   .column-selector-header {
-    width: 100%;
-    padding-left: 2%;
-    padding-right: 2%;
-    padding-top: 1%;
+    width         : 100%;
+    padding-left  : 2%;
+    padding-right : 2%;
+    padding-top   : 1%;
     padding-bottom: 1%;
-    font-size: 1.5rem;
-    font-weight: bold;
-    background: @event-console-detail-info-background-color;
+    font-size     : 1.5rem;
+    font-weight   : bold;
+    background    : @event-console-detail-info-background-color;
   }
 
   .column-selector-body {
     display: block;
-    width: 100%;
+    width  : 100%;
 
     .column-selector {
-      display: block;
-      width: 100%;
-      padding-left: 5px;
-      padding-right: 5px;
-      padding-top: 5px;
+      display       : block;
+      width         : 100%;
+      padding-left  : 5px;
+      padding-right : 5px;
+      padding-top   : 5px;
       padding-bottom: 5px;
 
       .column-selector-checkbox-wrapper {
-        border: 1px solid @event-console-border-color;
-        height: 25vh;
-        overflow-y: scroll;
+        border       : 1px solid @event-console-border-color;
+        height       : 25vh;
+        overflow-y   : scroll;
         border-radius: 3px;
-        padding: 6%;
-        margin-top: 3%;
+        padding      : 6%;
+        margin-top   : 3%;
+
         label {
-          margin-left: 6px;
+          margin-left   : 6px;
           text-transform: capitalize;
         }
       }
@@ -48,14 +49,14 @@
 
     .column-selector-buttons {
       .event-console-button {
-        float: right;
-        margin-right: 4%;
+        float        : right;
+        margin-right : 4%;
         margin-bottom: 2%;
       }
-      
+
       .column-selector-button {
-        font-size: 1.5rem;
-        padding-left: 10px;
+        font-size    : 1.5rem;
+        padding-left : 10px;
         padding-right: 10px;
       }
     }
@@ -63,12 +64,13 @@
 
   .column-selector-search {
     padding: 2%;
+
     input {
-      width: 100%;
-      border: 1px solid @event-console-border-color;
-      padding-left: 10px;
-      padding-right: 10px;
-      padding-top: 5px;
+      width         : 100%;
+      border        : 1px solid @event-console-border-color;
+      padding-left  : 10px;
+      padding-right : 10px;
+      padding-top   : 5px;
       padding-bottom: 5px;
     }
   }

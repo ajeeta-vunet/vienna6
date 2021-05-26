@@ -3,55 +3,57 @@
 @import '~ui/styles/variables/visualization_colors.less';
 
 .import-asset-wrapper {
-    width: 500px;
+    width           : 500px;
     background-color: @white;
-    border-radius: 1rem;
-    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
-    font-size: 1.6rem !important;
+    border-radius   : 1rem;
+    box-shadow      : 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
+    font-size       : 1.6rem !important;
 
     .title {
-        color: @accent_color;
-        text-align: center;
+        color      : @accent_color;
+        text-align : center;
         font-family: 'Inter-Medium';
-        font-size: 2.5rem;
-        padding: 1rem 0rem 0.5rem 0rem;
+        font-size  : 2.5rem;
+        padding    : 1rem 0rem 0.5rem 0rem;
     }
 
     .import-form {
-        padding: 3rem 2rem 2rem 2rem;
+        padding   : 3rem 2rem 2rem 2rem;
         border-top: 0.1rem solid rgba(0, 0, 0, 0.06);
 
         .assetFile {
-            background-color:@white;
-            font-size: 1.75rem;
-            box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color ;
-            border-radius:0rem;
-            margin-bottom: 2rem;
-            width: 90%;
-            margin-left: 2rem;
-            color: @black !important;
-            &:hover{
-              color: @accent_color!important;
-              font-family: @inter-bold;
-              box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color ;
-  }
+            background-color: @white;
+            font-size       : 1.75rem;
+            box-shadow      : 0rem 0rem 1rem 0.3rem @box_shadow_color ;
+            border-radius   : 0rem;
+            margin-bottom   : 2rem;
+            width           : 90%;
+            margin-left     : 2rem;
+            color           : @black  !important;
+
+            &:hover {
+                color      : @accent_color !important;
+                font-family: @inter-bold;
+                box-shadow : 0rem 0rem 1rem .7rem @box_shadow_color ;
+            }
         }
 
         .error-message {
-            text-align: left;
-            color: @red;
-            margin-top: .5rem;
+            text-align : left;
+            color      : @red;
+            margin-top : .5rem;
             margin-left: .3rem;
         }
 
         .help-block {
-            padding: 1rem 0rem 1.5rem 0rem;
-            color: @text_colr_grey;
+            padding    : 1rem 0rem 1.5rem 0rem;
+            color      : @text_colr_grey;
             font-weight: 1000;
 
             .data-source-import-template-link {
-                color: @accent_color;
+                color          : @accent_color;
                 text-decoration: none;
+
                 &:hover {
                     cursor: pointer;
                 }
@@ -60,21 +62,23 @@
     }
 
     .actions {
-        padding: 2rem 3.7em;
-        position: relative;
+        padding   : 2rem 3.7em;
+        position  : relative;
         text-align: right;
 
-        .import-submit-button, .import-cancel-button {
+        .import-submit-button,
+        .import-cancel-button {
             background-color: @accent_color;
-            font-size: 1.6rem;
-            border-radius: 2rem;
-            box-shadow: 0rem 0rem 1rem 0.3rem @box_shadow_color;
-            margin-right: 3rem;
-            margin-top: 1rem;
-            color: @white;
-            &:hover{
-              font-family: @inter-medium;
-              box-shadow: 0rem 0rem 1rem .7rem @box_shadow_color;
+            font-size       : 1.6rem;
+            border-radius   : 2rem;
+            box-shadow      : 0rem 0rem 1rem 0.3rem @box_shadow_color;
+            margin-right    : 3rem;
+            margin-top      : 1rem;
+            color           : @white;
+
+            &:hover {
+                font-family: @inter-medium;
+                box-shadow : 0rem 0rem 1rem .7rem @box_shadow_color;
             }
         }
     }

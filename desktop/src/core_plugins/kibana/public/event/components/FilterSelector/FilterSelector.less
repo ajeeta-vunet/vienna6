@@ -1,47 +1,48 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .filter-selector-wrapper {
-  position: absolute;
-  margin-right: 45rem;
+  position        : absolute;
+  margin-right    : 45rem;
   background-color: @white;
-  margin-top: 3rem;
-  right: 0;
-  width: 12vw;
-  z-index: 100;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  margin-top      : 3rem;
+  right           : 0;
+  width           : 12vw;
+  z-index         : 100;
+  box-shadow      : 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 
   .filter-selector-header {
-    width: 100%;
-    padding-left: 2%;
-    padding-right: 2%;
-    padding-top: 1%;
+    width         : 100%;
+    padding-left  : 2%;
+    padding-right : 2%;
+    padding-top   : 1%;
     padding-bottom: 1%;
-    font-size: 1.5rem;
-    font-weight: bold;
-    background: @event-console-detail-info-background-color;
+    font-size     : 1.5rem;
+    font-weight   : bold;
+    background    : @event-console-detail-info-background-color;
   }
 
   .filter-selector-body {
     display: block;
-    width: 100%;
+    width  : 100%;
 
     .filter-selector {
-      display: block;
-      width: 100%;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      padding-top: 0.5rem;
+      display       : block;
+      width         : 100%;
+      padding-left  : 0.5rem;
+      padding-right : 0.5rem;
+      padding-top   : 0.5rem;
       padding-bottom: 0.5rem;
 
       .filter-selector-checkbox-wrapper {
-        border: 1px solid @event-console-border-color;
-        height: 25vh;
-        overflow-y: scroll;
+        border       : 1px solid @event-console-border-color;
+        height       : 25vh;
+        overflow-y   : scroll;
         border-radius: 0.3rem;
-        padding: 6%;
-        margin-top: 3%;
+        padding      : 6%;
+        margin-top   : 3%;
+
         label {
-          margin-left: 0.6rem;
+          margin-left   : 0.6rem;
           text-transform: capitalize;
         }
       }
@@ -49,14 +50,14 @@
 
     .filter-selector-buttons {
       .event-console-button {
-        float: right;
-        margin-right: 4%;
+        float        : right;
+        margin-right : 4%;
         margin-bottom: 2%;
       }
 
       .filter-selector-button {
-        font-size: 1.5rem;
-        padding-left: 1rem;
+        font-size    : 1.5rem;
+        padding-left : 1rem;
         padding-right: 1rem;
       }
     }
@@ -64,12 +65,13 @@
 
   .filter-selector-search {
     padding: 2%;
+
     input {
-      width: 100%;
-      border: 1px solid @event-console-border-color;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      padding-top: 0.5rem;
+      width         : 100%;
+      border        : 1px solid @event-console-border-color;
+      padding-left  : 1rem;
+      padding-right : 1rem;
+      padding-top   : 0.5rem;
       padding-bottom: 0.5rem;
     }
   }
@@ -77,7 +79,7 @@
 
 @media screen and (max-width: 768px) {
   .filter-selector-wrapper {
-    width: 40vw;
+    width       : 40vw;
     margin-right: 25rem;
   }
 

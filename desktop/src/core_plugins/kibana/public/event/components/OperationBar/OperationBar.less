@@ -1,57 +1,62 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .operationbar-wrapper {
-  background     : @white;
-  padding        : 1%;
-  margin-bottom  : 1%;
-  font-size      : 1.6rem;
-  display        : flex;
-  flex-direction : row;
-  flex-wrap      : wrap;
+  background    : @white;
+  padding       : 1%;
+  margin-bottom : 1%;
+  font-size     : 1.6rem;
+  display       : flex;
+  flex-direction: row;
+  flex-wrap     : wrap;
 
   .filter-funnel {
     margin-right: 2rem;
   }
 
   .selected-filters-container {
-    display: flex;
+    display       : flex;
     flex-direction: row;
-    max-width: 58%;
-    flex-wrap: wrap;
+    max-width     : 58%;
+    flex-wrap     : wrap;
   }
 
   .selected-filter-container {
     display        : flex;
     flex-direction : row;
     justify-content: space-between !important;
-    flex: 2;
+    flex           : 2;
   }
 
   .filter-options-container {
     display        : flex;
     justify-content: flex-end;
     align-items    : center;
-    flex: 1;
+    flex           : 1;
 
     .search-container {
       input {
-        border   : 1px solid @event-console-border-color;
-        font-size: 1.6rem;
-        padding  : 0.5rem 4rem 0.5rem 1rem;
-        background-image: url("/ui/vienna_images/search_icon_black.svg");
+        border             : 1px solid @event-console-border-color;
+        font-size          : 1.6rem;
+        padding            : 0.5rem 4rem 0.5rem 1rem;
+        background-image   : url("/ui/vienna_images/search_icon_black.svg");
         background-position: 96% 40%;
-        background-repeat: no-repeat;
-        background-size: 1.8rem;
-        color: @black;
+        background-repeat  : no-repeat;
+        background-size    : 1.8rem;
+        color              : @black;
         // padding-right: 1.8rem;
       }
 
       margin-right: 2rem;
-      margin-left: 2rem;
+      margin-left : 2rem;
     }
 
-    .edit-button-wrapper, .filter-button-wrapper, .report-button-wrapper {
-      .edit-button, .filter-button, .report-button {
+    .edit-button-wrapper,
+    .filter-button-wrapper,
+    .report-button-wrapper {
+
+      .edit-button,
+      .filter-button,
+      .report-button {
         display         : flex;
         background-color: @white;
         color           : @black;
@@ -59,7 +64,8 @@
         border-radius   : 2px;
         padding         : 0.5rem 2rem;
 
-        .column-selector-icon, .filter-selector-icon {
+        .column-selector-icon,
+        .filter-selector-icon {
           margin-left: 3.5rem;
           font-size  : 1.35rem;
           padding-top: 0.5rem;

@@ -20,12 +20,16 @@
 import React from 'react';
 import './NetworkMap.less';
 import { produce } from 'immer';
-import { fetchFilteredAssetsList, fetchNodeDetails } from '../../api_calls';
 import { Summary } from '../../../assetsPage/components/Summary/Summary';
 import { Map } from '../Map/Map';
 import { FilterBar } from '../../../discovery/components/FilterBar/FilterBar';
 import { NodeDetails } from '../NodeDetails/NodeDetails';
+import { apiProvider } from '../../../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
+import { Notifier } from 'ui/notify';
+import _ from 'lodash';
+import { NetworkConstants } from '../../network_constants';
 
+const notify = new Notifier({ location: 'Network Map' });
 
 export class NetworkMap extends React.Component {
   constructor(props) {
@@ -34,36 +38,41 @@ export class NetworkMap extends React.Component {
       assetList: this.props.assetList,
       summaryDetails: this.props.assetDetailsSummary,
       filterObject: {},
-      showDetails: false
+      showDetails: false,
     };
   }
 
   // to hide node details when user clicks on close
   hideNodeDetails = () => {
-    this.setState({showDetails:false});
-  }
+    this.setState({ showDetails: false });
+  };
 
   // to show node details when user clicks on a node
   showNodeDetails = (nodeId) => {
     // for device_type='Broadcase-Network', node details are unavailable
-    if(nodeId === -1){
-      this.setState({nodeDetails: {available: false}, showDetails: true});
-    } else{
-      fetchNodeDetails(nodeId)
-      .then((data) => {
-        if(data){
+    if (nodeId === -1) {
+      this.setState({ nodeDetails: { available: false }, showDetails: true });
+    } else {
+      apiProvider.getAll(`${NetworkConstants.FETCH_ASSET_DETAILS}${nodeId}/`).then((data) => {
+        if (data) {
           // for nodeId whose data is unavailable, error-code is received from the backend
-          if('error-code' in data){
-            this.setState({nodeDetails: {available: false}, showDetails: true});
-          } else{
-            this.setState({nodeDetails: data, showDetails:true});
+          if ('error-code' in data) {
+            this.setState({
+              nodeDetails: { available: false },
+              showDetails: true,
+            });
+          } else {
+            this.setState({ nodeDetails: data, showDetails: true });
           }
-        } else{
-          this.setState({nodeDetails: {available: false}, showDetails: true});
+        } else {
+          this.setState({
+            nodeDetails: { available: false },
+            showDetails: true,
+          });
         }
       });
     }
-  }
+  };
 
   // In this function we use the filterStore object and
   // update the data passed to 'FilterBar' and 'Summary'
@@ -75,9 +84,8 @@ export class NetworkMap extends React.Component {
     // Check if filter with 'filterField' exists in filterObject and filterValue received is not empty.
     // If filterValue is empty then the 'close' filter button is clicked.
     if (_.has(this.state.filterObject, filterField) && filterValue !== '') {
-      const filterValueIndex = this.state.filterObject[filterField].indexOf(
-        filterValue
-      );
+      const filterValueIndex =
+        this.state.filterObject[filterField].indexOf(filterValue);
       // If filterValue exists remove it as user is clicking on the same filter
       // for the second time.
       if (filterValueIndex > -1) {
@@ -85,7 +93,7 @@ export class NetworkMap extends React.Component {
           draft[filterField].splice(filterValueIndex, 1);
           if (draft[filterField].length === 0) delete draft[filterField];
         });
-      } 
+      }
       // If filterValue does not exist, add it as user is clicking on a filter
       // for the first time.
       else {
@@ -93,10 +101,10 @@ export class NetworkMap extends React.Component {
           draft[filterField].push(filterValue);
         });
       }
-    } 
+    }
     // If 'filterField' does not exist in filterObject, add it and update the
     // filterValue in its array.
-    else if(filterValue !== '') {
+    else if (filterValue !== '') {
       updatedfilterObject = produce(this.state.filterObject, (draft) => {
         draft[filterField] = [filterValue];
       });
@@ -104,31 +112,40 @@ export class NetworkMap extends React.Component {
     this.setState({ filterObject: updatedfilterObject }, () => {
       this.applyFilters(this.state.filterObject);
     });
-  }
+  };
 
   // this method will be called to clear all filters
   // and fetch the list of all the nodes and edges
   clearAllFilter = () => {
-    fetchFilteredAssetsList({})
-      .then(data => {
-        this.setState({
+    const postBody = {
+      filter: {},
+    };
+
+    apiProvider.post(NetworkConstants.FETCH_ASSET_LIST_FOR_NETWORK, postBody).then((data) => {
+      this.setState(
+        {
           filterObject: {},
-          assetList: data
-        }, () => notify.info('All filters cleared.'));
-      });
-  }
+          assetList: data,
+        },
+        () => notify.info('All filters cleared.')
+      );
+    });
+  };
 
   // this method will be called to fetch all the nodes and edges
   // based on the filter applied whose value is stored in
   // filterStore.
   applyFilters = (filters) => {
-    fetchFilteredAssetsList(filters)
-      .then(data => {
-        this.setState({
-          assetList: data
-        });
+    const postBody = {
+      filter: filters,
+    };
+
+    apiProvider.post(NetworkConstants.FETCH_FILTERED_LIST_OF_ASSETS, postBody).then((data) => {
+      this.setState({
+        assetList: data,
       });
-  }
+    });
+  };
 
   render() {
     return (
@@ -143,20 +160,19 @@ export class NetworkMap extends React.Component {
         </div>
         <div className="assetsPage">
           <div className="assets-summary">
-            <Summary 
-            summaryDetails={this.props.assetDetailsSummary}
-            handleFilter={this.handleFilter}
-            filterObject={this.state.filterObject}
+            <Summary
+              summaryDetails={this.props.assetDetailsSummary}
+              handleFilter={this.handleFilter}
+              filterObject={this.state.filterObject}
             />
           </div>
           <div className="assets-table">
             <Map
-            assetList={this.state.assetList}
-            showNodeDetails={this.showNodeDetails}
-            hideNodeDetails={this.hideNodeDetails}
+              assetList={this.state.assetList}
+              showNodeDetails={this.showNodeDetails}
+              hideNodeDetails={this.hideNodeDetails}
             />
-            {
-              this.state.showDetails && 
+            {this.state.showDetails && (
               <div className="import-asset-modal">
                 <NodeDetails
                   nodeDetails={this.state.nodeDetails}
@@ -164,7 +180,7 @@ export class NetworkMap extends React.Component {
                   showNodeDetails={this.showNodeDetails}
                 />
               </div>
-            }
+            )}
           </div>
         </div>
       </div>

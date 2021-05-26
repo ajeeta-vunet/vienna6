@@ -36,7 +36,8 @@ export class SingleSeverity extends React.Component {
     return (
       <div
         className={
-          'single-severity ' + (this.props.type !== 'total' ? 'severity-widget-cursor' : null)
+          'single-severity ' +
+          (this.props.type !== 'total' ? 'severity-widget-cursor' : null)
         }
         onClick={() => {
           this.props.type !== 'total' &&

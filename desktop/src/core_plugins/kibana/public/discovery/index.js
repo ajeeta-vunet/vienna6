@@ -1,25 +1,37 @@
 import 'plugins/kibana/discovery/discovery';
-import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/registry/feature_catalogue';
+import {
+  FeatureCatalogueRegistryProvider,
+  FeatureCatalogueCategory,
+} from 'ui/registry/feature_catalogue';
 import 'plugins/kibana/event/styles/main.less';
 import uiRoutes from 'ui/routes';
 import { DiscoveryConstants } from './discovery_constants';
 import discoveryTemplate from 'plugins/kibana/discovery/discovery.html';
-import { fetchCredentialsList, fetchSourceIpAddressList } from './api_calls';
+import { apiProvider } from '../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
 
 uiRoutes
   .defaults(/discovery/, {
-    requireDefaultIndex: true
+    requireDefaultIndex: true,
   })
   .when(DiscoveryConstants.LANDING_PAGE_PATH, {
     template: discoveryTemplate,
     resolve: {
-      credList: function (chrome) {
-        return fetchCredentialsList(chrome);
+      credList: function () {
+        return apiProvider.getAll(DiscoveryConstants.FETCH_CRED_LIST);
       },
-      sourceIpAddressList: function (chrome) {
-        return fetchSourceIpAddressList(chrome);
+      sourceIpAddressList: function () {
+        return apiProvider.getAllWithoutBU(DiscoveryConstants.FETCH_PREFERENCES)
+          .then((responseJSON) => {
+            let SourceIpPreference;
+            responseJSON.preferences.map((preference) => {
+              SourceIpPreference = preference.SourceIpPreference
+                ? preference.SourceIpPreference
+                : 'undefined';
+            });
+            return SourceIpPreference;
+          });
       }
-    }
+    },
   });
 
 FeatureCatalogueRegistryProvider.register(() => {
@@ -30,6 +42,6 @@ FeatureCatalogueRegistryProvider.register(() => {
     icon: '',
     path: '/app/kibana#/discovery',
     showOnHomePage: true,
-    category: FeatureCatalogueCategory.DATA
+    category: FeatureCatalogueCategory.DATA,
   };
 });

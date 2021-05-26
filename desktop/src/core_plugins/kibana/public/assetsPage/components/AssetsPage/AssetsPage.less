@@ -1,87 +1,87 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
-.assetsPage-wrapper{
+.assetsPage-wrapper {
   padding: 2.7rem 7rem 0rem 2rem;
 
   .assetsPage {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
 
-      .topologyID {
-        padding-left: 2.5rem;
-      }
+    .topologyID {
+      padding-left: 2.5rem;
+    }
 
-      .title {
-          text-align: center;
-      }
+    .title {
+      text-align: center;
+    }
 
-      td {
-        border: none;
+    td {
+      border: none;
     }
 
     .assets-summary-time-filters {
 
       .assets-summary-filter {
-        margin-right: 2rem;
-        width: 25rem;
-        box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-        border-radius: 1rem;
-        border-collapse: collapse;
-        background-color: @summary-background-color !important;
+        margin-right    : 2rem;
+        width           : 25rem;
+        box-shadow      : 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+        border-radius   : 1rem;
+        border-collapse : collapse;
+        background-color: @summary-background-color  !important;
       }
 
       .assets-time-filter {
-        margin-right: 2rem;
-        margin-top: 2rem;
-        width: 25rem;
-        box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-        border-radius: 1rem;
+        margin-right   : 2rem;
+        margin-top     : 2rem;
+        width          : 25rem;
+        box-shadow     : 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+        border-radius  : 1rem;
         border-collapse: collapse;
       }
     }
 
-    .assets-table{
-      box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-      border-radius: 1rem;
-      border-collapse: collapse;
+    .assets-table {
+      box-shadow      : 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+      border-radius   : 1rem;
+      border-collapse : collapse;
       background-color: @network-white-color;
-      flex: 2;
-      height: fit-content;
+      flex            : 2;
+      height          : fit-content;
 
-      .table-toolbar{
-        display: flex;
-        justify-content: space-between;
-        height: 7.5rem;
-        min-height: 5rem;
-        max-height: 10rem;
-        border-top-left-radius: 1rem;
+      .table-toolbar {
+        display                : flex;
+        justify-content        : space-between;
+        height                 : 7.5rem;
+        min-height             : 5rem;
+        max-height             : 10rem;
+        border-top-left-radius : 1rem;
         border-top-right-radius: 1rem;
-        background-color: white;
-        border: none;
-        margin-right: 4rem;
+        background-color       : white;
+        border                 : none;
+        margin-right           : 4rem;
 
-        .toolbar-search{
+        .toolbar-search {
           margin-left: 15rem;
           padding-top: 2rem;
-          width: 50%;
+          width      : 50%;
 
           .toolbar-searchbox {
-            font-family: 'Inter-Regular';
-            transition: width 2s;
+            font-family  : 'Inter-Regular';
+            transition   : width 2s;
             border-radius: 2rem;
-            font-size: 1.6rem;
-            padding: .4rem 1.2rem .5rem 1.8rem;
-            border: 1px solid @network-toobar-searchbox;
+            font-size    : 1.6rem;
+            padding      : .4rem 1.2rem .5rem 1.8rem;
+            border       : 1px solid @network-toobar-searchbox;
 
             .search-icon {
-              top: 0.7rem;
-              left: 1.3rem;
+              top      : 0.7rem;
+              left     : 1.3rem;
               font-size: 1.6rem;
-              color: @serach-icon-color;
+              color    : @serach-icon-color;
             }
 
             .search-input {
-              border: none;
+              border      : none;
               padding-left: 1.5rem;
             }
           }
@@ -89,57 +89,59 @@
       }
     }
 
-      .assets {
-        text-align: left;
-        border-collapse: collapse;
-        border: 3px solid @network-nodes-border;
-        width: 100%;
-        border: none;
-        border-bottom: 0.1rem solid @network-border-color !important;
-      }
+    .assets {
+      text-align     : left;
+      border-collapse: collapse;
+      border         : 3px solid @network-nodes-border;
+      width          : 100%;
+      border         : none;
+      border-bottom  : 0.1rem solid @network-border-color  !important;
+    }
 
-      .assets td, .assets th {
-        border: none;
-        padding: 0.5rem 3rem 0.5rem 2rem;
-        font-size: 1.5rem;
-        padding: 7px 8px 8px;
-        line-height: 1.5;
-        text-align: left;
-        width: auto;
-        margin: 0 auto;
-      }
+    .assets td,
+    .assets th {
+      border     : none;
+      padding    : 0.5rem 3rem 0.5rem 2rem;
+      font-size  : 1.5rem;
+      padding    : 7px 8px 8px;
+      line-height: 1.5;
+      text-align : left;
+      width      : auto;
+      margin     : 0 auto;
+    }
 
-      .assets th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        cursor: pointer;
-      }
+    .assets th {
+      padding-top   : 12px;
+      padding-bottom: 12px;
+      text-align    : left;
+      cursor        : pointer;
+    }
 
-      .assets td {
-        padding: 7px 8px 8px;
-        line-height: 1.5;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .assets thead tr {
-        border-top: 0.1rem solid @network-border-color;
-        border-bottom: 0.1rem solid @network-border-color;
-      }
+    .assets td {
+      padding      : 7px 8px 8px;
+      line-height  : 1.5;
+      overflow     : hidden;
+      text-overflow: ellipsis;
+      white-space  : nowrap;
+    }
+
+    .assets thead tr {
+      border-top   : 0.1rem solid @network-border-color;
+      border-bottom: 0.1rem solid @network-border-color;
+    }
   }
 }
 
 .pagination {
-  padding-right: 1rem;
-  margin: 1rem 0rem !important;
-  display: flex;
+  padding-right  : 1rem;
+  margin         : 1rem 0rem !important;
+  display        : flex;
   justify-content: flex-end;
 
   li a {
     cursor    : pointer !important;
     border    : 1px solid @network-table-list;
-    color     : @event-console-button-background !important;
+    color     : @event-console-button-background  !important;
     background: @white;
 
     &:hover,
@@ -158,64 +160,61 @@
 }
 
 .kuiButton {
-    display: inline-block;
-    -webkit-appearance: none;
-    appearance: none;
-    cursor: pointer;
-    padding: 0.4rem 1.2rem 0.5rem;
-    height: 3rem;
-    font-size: 1.4rem;
-    border: none;
-    background-color: @network-button-color;
-    color: @network-white-color !important;
-    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-    border-radius: 2rem;
+  display           : inline-block;
+  -webkit-appearance: none;
+  appearance        : none;
+  cursor            : pointer;
+  padding           : 0.4rem 1.2rem 0.5rem;
+  height            : 3rem;
+  font-size         : 1.4rem;
+  border            : none;
+  background-color  : @network-button-color;
+  color             : @network-white-color  !important;
+  box-shadow        : 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+  border-radius     : 2rem;
 }
 
 .add-asset:enabled:hover {
-    background-color: @network-button-color !important;
-    font-size: 1.5rem;
-    box-shadow: 0rem 0rem 1rem 0.7rem rgba(0, 0, 0, 0.06);
+  background-color: @network-button-color  !important;
+  font-size       : 1.5rem;
+  box-shadow      : 0rem 0rem 1rem 0.7rem rgba(0, 0, 0, 0.06);
 }
 
 .delete-asset:enabled:hover {
-  font-size: 1.5rem;
+  font-size : 1.5rem;
   box-shadow: 0rem 0rem 1rem 0.7rem rgba(0, 0, 0, 0.06);
 }
 
-.newAssetModal, .import-asset-modal, .time-input-modal {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+.newAssetModal,
+.import-asset-modal,
+.time-input-modal {
+  position               : fixed;
+  z-index                : 1000;
+  top                    : 0;
+  left                   : 0;
+  right                  : 0;
+  bottom                 : 0;
+  display                : flex;
+  align-items            : center;
+  justify-content        : center;
+  background-color       : rgba(0, 0, 0, 0.5);
 }
 
-.edit-button, .more-details-button {
-  border: none;
+.edit-button,
+.more-details-button {
+  border          : none;
   background-color: white;
 }
 
 .row-highlight {
-  color:@accent_color;
+  color      : @accent_color;
   font-family: @inter-medium;
 }
 
 .no-asset {
-  display: flex;
+  display        : flex;
   justify-content: center;
-  margin-top: 3rem;
+  margin-top     : 3rem;
 }
 
 .report-button-wrapper {

@@ -3,58 +3,60 @@
 @import '~ui/styles/variables/visualization_colors.less';
 
 .import-asset-wrapper {
-    width: 60rem;
+    width           : 60rem;
     background-color: @white;
-    border-radius: 1rem;
-    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
-    font-size: 1.6rem;
-    padding: 2rem;
+    border-radius   : 1rem;
+    box-shadow      : 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.06);
+    font-size       : 1.6rem;
+    padding         : 2rem;
 
-    h3{
-        font-size: 2rem;
+    h3 {
+        font-size : 2rem;
         text-align: center;
-        padding: 3rem 0rem;
+        padding   : 3rem 0rem;
     }
 
     .title {
-        color: @accent_color;
-        text-align: left;
+        color      : @accent_color;
+        text-align : left;
         font-family: @inter-medium;
-        font-size: 3rem;
-        padding: 1rem 0rem 0.5rem 0rem;
+        font-size  : 3rem;
+        padding    : 1rem 0rem 0.5rem 0rem;
     }
 
-    .node-details{
+    .node-details {
         font-size: 2rem;
-        border: 1px solid @networkMap-node-details-border;
+        border   : 1px solid @networkMap-node-details-border;
 
-        .node-details-values{
-            display: flex;
+        .node-details-values {
+            display      : flex;
             border-bottom: 1px solid @networkMap-node-details-border;
-            div{
-                padding: 1.5rem;
+
+            div {
+                padding  : 1.5rem;
                 min-width: 30rem;
             }
         }
 
-        :last-child{
+        :last-child {
             border-bottom: 0rem;
         }
     }
 
     .actions {
-        padding: 2rem 0rem;
-        position: relative;
+        padding   : 2rem 0rem;
+        position  : relative;
         text-align: right;
 
         .close-button {
             background-color: @accent_color;
-            font-size: 1.6rem;
-            border-radius: 2rem;
-            border: none;
-            color: @white;
-            &:hover{
-              font-family: @inter-medium;
+            font-size       : 1.6rem;
+            border-radius   : 2rem;
+            border          : none;
+            color           : @white;
+
+            &:hover {
+                font-family: @inter-medium;
             }
         }
     }

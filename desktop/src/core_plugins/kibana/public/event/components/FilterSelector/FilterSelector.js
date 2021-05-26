@@ -34,7 +34,8 @@ export class FilterSelector extends React.Component {
   componentWillReceiveProps(newProps) {
     this.setState({
       filterFields: newProps.filterFields,
-      filterFieldKeys: newProps.filterFields && Object.keys(newProps.filterFields)
+      filterFieldKeys:
+        newProps.filterFields && Object.keys(newProps.filterFields),
     });
   }
 

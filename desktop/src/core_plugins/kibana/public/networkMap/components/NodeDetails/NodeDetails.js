@@ -26,62 +26,49 @@ export class NodeDetails extends React.Component {
 
   hideDetails = () => {
     this.props.hideNodeDetails();
-  }
+  };
 
   render() {
-    return(
+    return (
       <div className="import-asset-wrapper">
-        <p className="title">
-              Node details
-        </p>
-        { this.props.nodeDetails.available === false ? 
-          <h3>
-            No details available for this device
-          </h3> :
+        <p className="title">Node details</p>
+        {this.props.nodeDetails.available === false ? (
+          <h3>No details available for this device</h3>
+        ) : (
           <div className="node-details">
             <div className="node-details-values">
-              <div>
-                Device Name
-              </div>
+              <div>Device Name</div>
               <div className="node-values">
-              {this.props.nodeDetails.device_name}
+                {this.props.nodeDetails.device_name}
               </div>
             </div>
             <div className="node-details-values">
-              <div>
-                Device Type
-              </div>
+              <div>Device Type</div>
               <div className="node-values">
-              {this.props.nodeDetails.device_type}
+                {this.props.nodeDetails.device_type}
               </div>
             </div>
             <div className="node-details-values">
-              <div>
-                System IP
-              </div>
+              <div>System IP</div>
               <div className="node-values">
-              {this.props.nodeDetails.system_ip}
+                {this.props.nodeDetails.system_ip}
               </div>
             </div>
             <div className="node-details-values">
-              <div>
-                Vendor
-              </div>
+              <div>Vendor</div>
               <div className="node-values">
-              {this.props.nodeDetails.vendor_name}
+                {this.props.nodeDetails.vendor_name}
               </div>
             </div>
             <div className="node-details-values">
-              <div>
-                Location
-              </div>
+              <div>Location</div>
               <div className="node-values">
-              {this.props.nodeDetails.location}
+                {this.props.nodeDetails.location}
               </div>
             </div>
           </div>
-        }
-        
+        )}
+
         <div className="actions">
           <button className="close-button" onClick={this.hideDetails}>
             Close

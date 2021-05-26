@@ -33,12 +33,12 @@ export class TimeFilter extends React.Component {
   handleMoreDetails = () => {
     const moreDetailsFlag = this.state.moreDetailsFlag;
     this.setState({ moreDetailsFlag: !moreDetailsFlag });
-  }
+  };
 
   //this function is called to render the options under the 'Time Filters' header.
   renderTimeFilterOptions = () => {
     return this.state.timeFilterOptions.map((timeFilter) => {
-      return(
+      return (
         <div className={'time-filter-option ' + timeFilter} key={timeFilter}>
           <button
             className="time-filter-button"
@@ -49,30 +49,32 @@ export class TimeFilter extends React.Component {
         </div>
       );
     });
-  }
+  };
 
   render() {
-    return(
+    return (
       <div className="time-filter-wrapper">
         <div className="heading-row">
-          <div
-            className="heading-title"
-          >Time Filters
-          </div>
+          <div className="heading-title">Time Filters</div>
           <div className="more-details-wrapper">
             <div
               className="more-details"
               onClick={() => this.handleMoreDetails()}
             >
-              <i className={'fa fa-lg ' + (this.state.moreDetailsFlag ? 'fa-angle-up' : 'fa-angle-down')} />
+              <i
+                className={
+                  'fa fa-lg ' +
+                  (this.state.moreDetailsFlag ? 'fa-angle-up' : 'fa-angle-down')
+                }
+              />
             </div>
           </div>
         </div>
-        {this.state.moreDetailsFlag &&
+        {this.state.moreDetailsFlag && (
           <div className={'more-details-rows '}>
             {this.renderTimeFilterOptions()}
           </div>
-        }
+        )}
       </div>
     );
   }

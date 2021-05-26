@@ -3,33 +3,19 @@
     <!-- Transcluded elements. -->
     <div data-transclude-slots>
       <!-- Title. -->
-      <div
-        data-transclude-slot="topLeftCorner"
-        class="kuiLocalTitle"
-        role="heading"
-        aria-level="1"
-      >
+      <div data-transclude-slot="topLeftCorner" class="kuiLocalTitle" role="heading" aria-level="1">
         Event Console
       </div>
     </div>
   </kbn-top-nav>
 
-  <loader-animation
-    ng-if="loadingEvents && (!listOfEvents.List_of_events.length)"
-  ></loader-animation>
+  <loader-animation ng-if="loadingEvents && !listOfEvents.List_of_events.length"></loader-animation>
   <div class="app-container event-container">
-    <event-console
-      style="height: 100%"
-      list-of-events="listOfEvents"
-      column-selector-info="columnSelectorInfo"
-      update-column-selector="updateColumnSelector"
-      user-list="userList"
-      event-console-mandatory-fields="eventConsoleMandatoryFields"
-      can-update-event="canUpdateEvent"
-      filter-fields="filterFields"
-      itsm-preferences-enabled="itsmPreferencesEnabled",
-      fetch-raw-events='fetchRawEvents'
-    >
+    <event-console style="height: 100%" list-of-events="listOfEvents" column-selector-info="columnSelectorInfo"
+      update-column-selector="updateColumnSelector" user-list="userList"
+      event-console-mandatory-fields="eventConsoleMandatoryFields" can-update-event="canUpdateEvent"
+      filter-fields="filterFields" itsm-preferences-enabled="itsmPreferencesEnabled" ,
+      fetch-raw-events='fetchRawEvents'>
     </event-console>
   </div>
 </event-app>

@@ -1,19 +1,9 @@
 <assets-app class="assets">
-    <div
-        data-transclude-slot="topLeftCorner"
-        class="assets-title"
-        role="heading"
-        aria-level="1"
-      >
-        Assets
-      </div>
-    <div class="app-container">
-      <assets-page
-        style="height: 100%" 
-        asset-list="assetList"
-        vendor-list="vendorList"
-        device-type-list="deviceTypeList"
-        asset-details-summary="assetDetailsSummary"
-      ></assets-page>
-    </div>
-  </assets-app>
+  <div data-transclude-slot="topLeftCorner" class="assets-title" role="heading" aria-level="1">
+    Assets
+  </div>
+  <div class="app-container">
+    <assets-page style="height: 100%" asset-list="assetList" vendor-list="vendorList" device-type-list="deviceTypeList"
+      asset-details-summary="assetDetailsSummary"></assets-page>
+  </div>
+</assets-app>

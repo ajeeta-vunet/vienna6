@@ -1,4 +1,3 @@
-
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -20,18 +19,20 @@
 import React from 'react';
 import './EventDetails.less';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
-import { generateHeading, generateClassname } from '../../../utils/vunet_format_name.js';
+import {
+  generateHeading,
+  generateClassname,
+} from '../../../utils/vunet_format_name.js';
 import { DropDownSelect } from '../../../../../../../../ui_framework/src/vunet_components/DropDownSelect/DropDownSelect';
 import { UserFeedback } from '../../UserFeedback/UserFeedback';
 
 export class EventDetails extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       selectedStatus: this.props.details.alert_details.fields.status,
       selectedAssignee: this.props.details.alert_details.fields.assignee,
-      newComment: ''
+      newComment: '',
     };
   }
 
@@ -42,17 +43,17 @@ export class EventDetails extends React.Component {
     const metricName = Object.keys(metrics)[0];
     const toPrint = `${metricName}: Value: ${metrics[metricName]['Value (Now)']}`;
     return toPrint;
-  }
+  };
 
   //updates the selectedStatus state variable everytime a different option is chosen
   handleStatus = (e) => {
     this.setState({ selectedStatus: e.target.value });
-  }
+  };
 
   //updates the selectedAssignee status variable
   handleAssignee = (assignee) => {
     this.setState({ selectedAssignee: assignee });
-  }
+  };
 
   //updates the newComment status variable
   handleComment(e) {
@@ -62,39 +63,54 @@ export class EventDetails extends React.Component {
   //this function is called everytime the save button is clicked.
   //it calls the passed updateEvent function.
   handleUpdateEvent = () => {
-    this.props.updateEvent(this.props.eventId, this.state.selectedAssignee, this.state.selectedStatus, this.state.newComment);
-  }
+    this.props.updateEvent(
+      this.props.eventId,
+      this.state.selectedAssignee,
+      this.state.selectedStatus,
+      this.state.newComment
+    );
+  };
 
   render() {
     const details = this.props.details.alert_details.fields;
     const metrics = this.props.details.Metrics;
-    const statuses = [ 'assigned', 'closed', 'open'];
-    const users = this.props.userList && this.props.userList.users && this.props.userList.users.sort();
-    const exceptionDetails = ['status', 'assignee', 'summary', 'notes', 'related_dashboards', 'tenant_id', 'bu_id'];
+    const statuses = ['assigned', 'closed', 'open'];
+    const users =
+      this.props.userList &&
+      this.props.userList.users &&
+      this.props.userList.users.sort();
+    const exceptionDetails = [
+      'status',
+      'assignee',
+      'summary',
+      'notes',
+      'related_dashboards',
+      'tenant_id',
+      'bu_id',
+    ];
 
     const renderDetails =
       details &&
-        Object.entries(details).map(([key, value]) => {
-
-          if(!exceptionDetails.includes(key)) {
-            return (
-              <div
-                key={generateClassname(key)}
-                className={'detail ' + generateClassname(key)}
-              >
-                <label htmlFor={generateClassname(key)}>
-                  {generateHeading(key)}
-                </label>
-                <div
-                  className="detail-info"
-                >
-                  {key === 'active_duration' || key === 'total_duration' ? displayTwoTimeUnits(value) : value}
-                </div>
-                <br />
+      Object.entries(details).map(([key, value]) => {
+        if (!exceptionDetails.includes(key)) {
+          return (
+            <div
+              key={generateClassname(key)}
+              className={'detail ' + generateClassname(key)}
+            >
+              <label htmlFor={generateClassname(key)}>
+                {generateHeading(key)}
+              </label>
+              <div className="detail-info">
+                {key === 'active_duration' || key === 'total_duration'
+                  ? displayTwoTimeUnits(value)
+                  : value}
               </div>
-            );
-          }
-        });
+              <br />
+            </div>
+          );
+        }
+      });
 
     const renderMetricTable = Object.keys(metrics.Entries).map((key) => {
       return (
@@ -102,7 +118,10 @@ export class EventDetails extends React.Component {
           <div className="col-md-4 metrics-details-value">{key}</div>
           {Object.values(metrics.Entries[key]).map((value, index) => {
             return (
-              <div key={value + index} className="col-md-2 metrics-details-value">
+              <div
+                key={value + index}
+                className="col-md-2 metrics-details-value"
+              >
                 {value}
               </div>
             );
@@ -111,20 +130,20 @@ export class EventDetails extends React.Component {
       );
     });
 
-    const renderTagsTable = this.props.details.Tags && this.props.details.Tags.map((value) => {
-      return(
-        <div key={value} className="row events-tags-table-row">
-          <div className="col-md-2">{value}</div>
-        </div>
-      );
-    });
+    const renderTagsTable =
+      this.props.details.Tags &&
+      this.props.details.Tags.map((value) => {
+        return (
+          <div key={value} className="row events-tags-table-row">
+            <div className="col-md-2">{value}</div>
+          </div>
+        );
+      });
 
-    return(
+    return (
       <div className="event-details-wrapper">
         <div className="details">
-          <div className="non-table-details">
-            {renderDetails}
-          </div>
+          <div className="non-table-details">{renderDetails}</div>
           <div className="summary">
             <label>Summary: </label>
             <textarea rows="3" defaultValue={details.summary} disabled />
@@ -140,7 +159,9 @@ export class EventDetails extends React.Component {
                     <span className="metric-details-header">Metrics</span>
                   </div>
                   <div className="col-md-2">
-                    <span className="metric-details-header">Value (Event Duration)</span>
+                    <span className="metric-details-header">
+                      Value (Event Duration)
+                    </span>
                   </div>
                   <div className="col-md-2">
                     <span className="metric-details-header">Value (Now)</span>
@@ -156,7 +177,7 @@ export class EventDetails extends React.Component {
               </div>
             ) : (
               <div className="event-metrics-no-data">
-          No Metric Entries available for this event
+                No Metric Entries available for this event
               </div>
             )}
             {this.props.details.Tags.length ? (
@@ -170,14 +191,12 @@ export class EventDetails extends React.Component {
               </div>
             ) : (
               <div className="event-tags-no-data">
-            No Tags available for this event
+                No Tags available for this event
               </div>
             )}
           </div>
           <div className="status-assignee-info-container">
-            <div className="status-assignee-info-header">
-            Alert Management
-            </div>
+            <div className="status-assignee-info-header">Alert Management</div>
             <div className="status">
               <label htmlFor="status-select">Status: </label>
               <select
@@ -186,10 +205,12 @@ export class EventDetails extends React.Component {
                 value={this.state.selectedStatus}
                 className="status-select"
                 name="status"
-                onChange={event => this.handleStatus(event)}
+                onChange={(event) => this.handleStatus(event)}
               >
-                {statuses.map(status => (
-                  <option key={status} value={status}>{status}</option>
+                {statuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
                 ))}
               </select>
               <br />
@@ -216,25 +237,20 @@ export class EventDetails extends React.Component {
                     rows="5"
                     placeholder="Write the work note here"
                     value={this.state.newComment}
-                    onChange={event => this.handleComment(event)}
+                    onChange={(event) => this.handleComment(event)}
                   />
                 </div>
                 <div className="work-notes-list">
-                  {details.notes.map(note => (
-                    <div key={`${note.body}-${note.timestamp}`} className="note">
-                      <div className="avatar">
-                        {note.author[0]}
-                      </div>
+                  {details.notes.map((note) => (
+                    <div
+                      key={`${note.body}-${note.timestamp}`}
+                      className="note"
+                    >
+                      <div className="avatar">{note.author[0]}</div>
                       <div className="note-body">
-                        <div className="note-author">
-                          {note.author}
-                        </div>
-                        <div className="note-body">
-                          {note.text}
-                        </div>
-                        <div className="note-date">
-                          {note.timestamp}
-                        </div>
+                        <div className="note-author">{note.author}</div>
+                        <div className="note-body">{note.text}</div>
+                        <div className="note-date">{note.timestamp}</div>
                       </div>
                     </div>
                   ))}
@@ -243,15 +259,27 @@ export class EventDetails extends React.Component {
             </div>
           </div>
           <div className="action-buttons-wrapper">
-            <button className="event-console-button button-left" onClick={() => this.props.handleCancel()}>Cancel</button>
-            <button className="event-console-button" onClick={() => this.handleUpdateEvent()}>Save</button>
+            <button
+              className="event-console-button button-left"
+              onClick={() => this.props.handleCancel()}
+            >
+              Cancel
+            </button>
+            <button
+              className="event-console-button"
+              onClick={() => this.handleUpdateEvent()}
+            >
+              Save
+            </button>
           </div>
           <div className="user-feedback">
             <div className="user-feedback-header">
-            User Feedback Information
+              User Feedback Information
             </div>
             <UserFeedback
-              correlationId={this.props.details.alert_details.fields.corelation_id}
+              correlationId={
+                this.props.details.alert_details.fields.corelation_id
+              }
               addOrRemoveReaction={this.props.addOrRemoveReaction}
             />
           </div>
@@ -259,5 +287,4 @@ export class EventDetails extends React.Component {
       </div>
     );
   }
-
 }

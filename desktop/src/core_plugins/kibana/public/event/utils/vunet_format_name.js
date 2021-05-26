@@ -5,7 +5,7 @@ import _ from 'lodash';
 //first letter of each word.
 export function generateHeading(key) {
   key.replace(/[^a-zA-Z]+/g, ' ');
-  return(_.startCase(key));
+  return _.startCase(key);
 }
 
 //this function is used to generate the class name to be used in the JSX tags..

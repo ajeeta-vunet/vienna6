@@ -1,22 +1,23 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
 .filters-bar {
-    height: fit-content;
-    border-top-left-radius: 1rem;
+    height                 : fit-content;
+    border-top-left-radius : 1rem;
     border-top-right-radius: 1rem;
-    background-color: @white;
-    border: none;
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: space-between;
+    background-color       : @white;
+    border                 : none;
+    margin-bottom          : 1rem;
+    display                : flex;
+    justify-content        : space-between;
 
-    .filter-title, .clear-filters {
-        text-align: center;
+    .filter-title,
+    .clear-filters {
+        text-align    : center;
         vertical-align: middle;
-        line-height: 5rem;
-        padding-right: 2rem;
-        padding-left: 2rem;
-        padding-top: 1rem;
+        line-height   : 5rem;
+        padding-right : 2rem;
+        padding-left  : 2rem;
+        padding-top   : 1rem;
     }
 
     .clear-filters {
@@ -24,25 +25,25 @@
     }
 
     .filter-applied {
-        display: flex;
-        flex-wrap: wrap;
-        padding-top: 1rem;
+        display     : flex;
+        flex-wrap   : wrap;
+        padding-top : 1rem;
         margin-right: auto;
 
         .individual-filter {
             background-color: @white;
-            color: @accent_color;
-            border: 1px solid @accent_color;
-            border-radius: 9rem 9rem 9rem 9rem;
-            padding-right: 1.5rem;
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-            padding-left: 1.5rem;
-            height: fit-content;
-            margin-right: 1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            flex-direction: row;
+            color           : @accent_color;
+            border          : 1px solid @accent_color;
+            border-radius   : 9rem 9rem 9rem 9rem;
+            padding-right   : 1.5rem;
+            padding-top     : 0.5rem;
+            padding-bottom  : 0.5rem;
+            padding-left    : 1.5rem;
+            height          : fit-content;
+            margin-right    : 1rem;
+            margin-bottom   : 1rem;
+            display         : flex;
+            flex-direction  : row;
         }
 
         .cancel-filter {

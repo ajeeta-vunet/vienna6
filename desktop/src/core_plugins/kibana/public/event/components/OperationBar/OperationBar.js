@@ -52,25 +52,35 @@ export class OperationBar extends React.Component {
   render() {
     return (
       <div className="operationbar-wrapper">
-        <img className="filter-funnel" src="/ui/vienna_images/filter-funnel-icon.svg" />
+        <img
+          className="filter-funnel"
+          src="/ui/vienna_images/filter-funnel-icon.svg"
+        />
         <div className="selected-filters-container">
-          {this.props.selectedFilterFields && this.props.selectedFilterFields.map((filter, index) => {
-            return (
-              <SelectedFilter
-                key={index}
-                filter={filter}
-                filterFields={this.props.filterFields}
-                addFilter={this.props.addFilter}
-                filterStore={this.props.filterStore}
-              />
-            );
-          })}
+          {this.props.selectedFilterFields &&
+            this.props.selectedFilterFields.map((filter, index) => {
+              return (
+                <SelectedFilter
+                  key={index}
+                  filter={filter}
+                  filterFields={this.props.filterFields}
+                  addFilter={this.props.addFilter}
+                  filterStore={this.props.filterStore}
+                />
+              );
+            })}
         </div>
         <div className="filter-options-container">
           <div className="filter-button-wrapper">
-            <button className="filter-button" onClick={() => this.handleFilterSelectorDisplay()}>
-            Filter
-              <img className="filter-selector-icon" src="/ui/vienna_images/filter-icon.svg"/>
+            <button
+              className="filter-button"
+              onClick={() => this.handleFilterSelectorDisplay()}
+            >
+              Filter
+              <img
+                className="filter-selector-icon"
+                src="/ui/vienna_images/filter-icon.svg"
+              />
             </button>
           </div>
           <span id="filter-selector-id">
@@ -103,8 +113,11 @@ export class OperationBar extends React.Component {
             </button>
           </div>
           <div className="report-button-wrapper">
-            <button className="report-button" onClick={() => this.props.exportEventsToCsv()}>
-              <i className="fa fa-download" data-tip="Download CSV Report"/>
+            <button
+              className="report-button"
+              onClick={() => this.props.exportEventsToCsv()}
+            >
+              <i className="fa fa-download" data-tip="Download CSV Report" />
               <ReactTooltip />
             </button>
           </div>

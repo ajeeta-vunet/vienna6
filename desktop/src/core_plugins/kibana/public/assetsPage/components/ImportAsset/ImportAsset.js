@@ -24,21 +24,24 @@ export class ImportAsset extends React.Component {
     super(props);
     this.state = {
       selectedFile: null,
-      errorType: ''
+      errorType: '',
     };
   }
 
   //this method is called when the user uploads a file.
   onChange = (event) => {
-    if(event.target.files.length === 1 && event.target.files[0].name.endsWith('.xls')) {
+    if (
+      event.target.files.length === 1 &&
+      event.target.files[0].name.endsWith('.xls')
+    ) {
       document.getElementById('submitButton').disabled = false;
       this.setState({ selectedFile: event.target.files[0], errorType: '' });
-    }else {
+    } else {
       document.getElementById('submitButton').disabled = true;
       this.setState({ errorType: 'fileName' });
     }
     event.preventDefault();
-  }
+  };
 
   //this mehtod is called when user has uploaded a file
   //and the clicks on submit button.
@@ -52,18 +55,13 @@ export class ImportAsset extends React.Component {
       this.state.selectedFile.name
     );
     this.props.handleAssetImport(formData);
-  }
+  };
 
   render() {
-    return(
+    return (
       <div className="import-asset-wrapper">
-        <p className="title">
-              Import List of Assets
-        </p>
-        <form
-          className="import-form"
-          onSubmit={this.handleSubmit}
-        >
+        <p className="title">Import List of Assets</p>
+        <form className="import-form" onSubmit={this.handleSubmit}>
           <input
             type="file"
             id="assetFile"
@@ -72,15 +70,26 @@ export class ImportAsset extends React.Component {
             onChange={this.onChange}
           />
           <div className="error-message">
-            {this.state.errorType === 'fileName' && <span>Invalid file format. Only .xls type supported.</span>}
+            {this.state.errorType === 'fileName' && (
+              <span>Invalid file format. Only .xls type supported.</span>
+            )}
           </div>
           <div className="help-block">
-            <p>Only file type with *.xls is supported. Download sample xls file from
-              <a href="/ui/vienna_data/assets_import.xls"><i className="data-source-import-template-link"> here</i></a>
+            <p>
+              Only file type with *.xls is supported. Download sample xls file
+              from
+              <a href="/ui/vienna_data/assets_import.xls">
+                <i className="data-source-import-template-link"> here</i>
+              </a>
             </p>
           </div>
           <div className="actions">
-            <input className="import-cancel-button" type="button" value="Cancel" onClick={() => this.props.cancelAssetImport()}/>
+            <input
+              className="import-cancel-button"
+              type="button"
+              value="Cancel"
+              onClick={() => this.props.cancelAssetImport()}
+            />
             <input
               className="import-submit-button"
               type="submit"

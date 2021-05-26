@@ -9,10 +9,7 @@ const app = uiModules.get('app/assets', []);
 
 //Assets react component
 app.directive('networkMap', (reactDirective) => {
-  return reactDirective(NetworkMap, [
-    'assetList',
-    'assetDetailsSummary',
-  ]);
+  return reactDirective(NetworkMap, ['assetList', 'assetDetailsSummary']);
 });
 
 app.directive('networkMapApp', function () {
@@ -20,7 +17,6 @@ app.directive('networkMapApp', function () {
     restrict: 'E',
     controllerAs: 'networkMapApp',
     controller: function ($route, $scope, Private) {
-
       function init() {
         const docTitle = Private(DocTitleProvider);
         docTitle.change(VunetSidebarConstants.ASSETS);

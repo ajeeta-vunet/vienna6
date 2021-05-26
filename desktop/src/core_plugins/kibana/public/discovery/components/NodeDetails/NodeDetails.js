@@ -26,17 +26,18 @@ import { updateViewDetails } from '../../actions/topologyActions';
 import { generateHeading } from '../../../event/utils/vunet_format_name';
 import './NodeDetails.less';
 import { Summary } from '../../../assetsPage/components/Summary/Summary';
-import { filteredListOfNodes } from '../../api_calls';
 import ReactTooltip from 'react-tooltip';
 import { FilterBar } from '../FilterBar/FilterBar';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { SingleAssetDetails } from '../../../assetsPage/components/SingleAssetDetails/SingleAssetDetails';
 import { Notifier } from 'ui/notify';
+import { apiProvider } from '../../../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
+import { DiscoveryConstants } from '../../discovery_constants';
 
 const notify = new Notifier({ location: 'Node Details' });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     viewDetails: state.topologyData.viewDetails,
   };
@@ -45,7 +46,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => ({
   swapViewDetails: () => {
     return dispatch(updateViewDetails());
-  }
+  },
 });
 
 class NodeDetailsCmmponent extends React.Component {
@@ -77,11 +78,11 @@ class NodeDetailsCmmponent extends React.Component {
       viewDetails: newProps.viewDetails,
       totalNumberOfNodes: newProps.totalNumberOfNodes,
       currentPage: newProps.currentPage,
-      nodeDetails: newProps.nodeDetails
+      nodeDetails: newProps.nodeDetails,
     });
   }
   componentWillUnmount() {
-    if(this.props.viewDetails) {
+    if (this.props.viewDetails) {
       this.props.swapViewDetails();
     }
   }
@@ -95,23 +96,25 @@ class NodeDetailsCmmponent extends React.Component {
 
   //this function is called to render the Node Details table header.
   renderTableHeader() {
-    const header = [ 'system_ip', 'device_name', 'device_type', 'credential_name', 'credential_type', 'vendor_name', 'actions' ];
+    const header = [
+      'system_ip',
+      'device_name',
+      'device_type',
+      'credential_name',
+      'credential_type',
+      'vendor_name',
+      'actions',
+    ];
     return header.map((key, index) => {
-      if(key === 'actions') {
+      if (key === 'actions') {
         return (
-          <th
-            style={{ cursor: 'default' }}
-            key={index}
-          >
+          <th style={{ cursor: 'default' }} key={index}>
             {generateHeading(key)}
           </th>
         );
-      }else {
+      } else {
         return (
-          <th
-            key={index}
-            onClick={() => this.onSort(key)}
-          >
+          <th key={index} onClick={() => this.onSort(key)}>
             {generateHeading(key)}
             <i className="fa fa-sort-amount-desc sort-icon" />
           </th>
@@ -122,53 +125,52 @@ class NodeDetailsCmmponent extends React.Component {
 
   //this function is called to render the Node Details table rows.
   renderTableData() {
-    return this.state.nodeDetails && this.state.nodeDetails.map((node, index) => {
-      const { node_id, system_ip, device_name, device_type, credential_name, cred_type, vendor_name } = node; //destructuring
-      return (
-        <tr key={'row-' + index}>
-          <td>
-            <div className="tableRowCell">
-              {system_ip}
-            </div>
-          </td>
-          <td>
-            <div className="tableRowCell">
-              {device_name}
-            </div>
-          </td>
-          <td>
-            <div className="tableRowCell">
-              {device_type}
-            </div>
-          </td>
-          <td>
-            <div className="tableRowCell">
-              {credential_name}
-            </div>
-          </td>
-          <td>
-            <div className="tableRowCell">
-              {cred_type}
-            </div>
-          </td>
-          <td>
-            <div className="tableRowCell">
-              {vendor_name}
-            </div>
-          </td>
-          <td>
-            <button
-              className="more-details-button"
-              onClick={() => this.handleMoreDetails(node_id)}
-              data-tip={'More Details'}
-            >
-              <ReactTooltip />
-              <span className="fa fa-arrow-circle-right" />
-            </button>
-          </td>
-        </tr>
-      );
-    });
+    return (
+      this.state.nodeDetails &&
+      this.state.nodeDetails.map((node, index) => {
+        const {
+          node_id,
+          system_ip,
+          device_name,
+          device_type,
+          credential_name,
+          cred_type,
+          vendor_name,
+        } = node; //destructuring
+        return (
+          <tr key={'row-' + index}>
+            <td>
+              <div className="tableRowCell">{system_ip}</div>
+            </td>
+            <td>
+              <div className="tableRowCell">{device_name}</div>
+            </td>
+            <td>
+              <div className="tableRowCell">{device_type}</div>
+            </td>
+            <td>
+              <div className="tableRowCell">{credential_name}</div>
+            </td>
+            <td>
+              <div className="tableRowCell">{cred_type}</div>
+            </td>
+            <td>
+              <div className="tableRowCell">{vendor_name}</div>
+            </td>
+            <td>
+              <button
+                className="more-details-button"
+                onClick={() => this.handleMoreDetails(node_id)}
+                data-tip={'More Details'}
+              >
+                <ReactTooltip />
+                <span className="fa fa-arrow-circle-right" />
+              </button>
+            </td>
+          </tr>
+        );
+      })
+    );
   }
 
   //when the action button to display more details of an asset is clicked this mehod is called.
@@ -177,50 +179,64 @@ class NodeDetailsCmmponent extends React.Component {
   //SingleAssetDetails component.
   handleMoreDetails = (nodeId) => {
     let singleAssetDetails;
-    this.state.nodeDetails && this.state.nodeDetails.map((node) => {
-      if(node.node_id === nodeId) {
-        singleAssetDetails = node;
-      }
-    });
+    this.state.nodeDetails &&
+      this.state.nodeDetails.map((node) => {
+        if (node.node_id === nodeId) {
+          singleAssetDetails = node;
+        }
+      });
     this.setState({ singleAssetDetails, singleAssetDetailsFlag: true });
-  }
+  };
 
   //this method is called when the user types anything in the search bar abd triggers a search.
   onSearch = (e) => {
-    const searchString =  e.target.value;
-    filteredListOfNodes(
-      this.props.topologyId,
-      0,
-      this.state.filterObject,
-      this.state.sortOrder === 'Descending' ? '-' + this.state.sortField : this.state.sortField,
-      searchString)
-      .then(response => response.json())
-      .then(data => {
+    const searchString = e.target.value;
+    const postBody = {
+      scroll_id: 0,
+      size: 10,
+      filter: this.state.filterObject,
+      sort_string:
+        this.state.sortOrder === 'Descending'
+          ? '-' + this.state.sortField
+          : this.state.sortField,
+      search_string: searchString,
+    };
+    apiProvider
+      .post(DiscoveryConstants.SEARCH_ASSETS + this.props.topologyId + '/', postBody)
+      .then((response) => response.json())
+      .then((data) => {
         this.setState({
           nodeDetails: data.topology.nodes,
           currentPage: 1,
           totalNumberOfNodes: data.topology.no_of_nodes,
-          searchString: searchString
+          searchString: searchString,
         });
       });
-  }
+  };
 
   //this method is called when the user interacts with the Pagination component.
   handlePageChange = (currentPage) => {
-    filteredListOfNodes(
-      this.props.topologyId,
-      (currentPage - 1) * 10,
-      this.state.filterObject,
-      this.state.sortOrder === 'Descending' ? '-' + this.state.sortField : this.state.sortField,
-      this.state.searchString)
-      .then(response => response.json())
-      .then(data => {
+    const postBody = {
+      scroll_id: (currentPage - 1) * 10,
+      size: 10,
+      filter: this.state.filterObject,
+      sort_string:
+        this.state.sortOrder === 'Descending'
+          ? '-' + this.state.sortField
+          : this.state.sortField,
+      search_string: this.state.searchString,
+    };
+    apiProvider
+      .post(DiscoveryConstants.FETCH_NODE_DETAILS + this.props.topologyId + '/', postBody)
+      .then((response) => response.json())
+      .then((data) => {
         this.setState({
           nodeDetails: data.topology.nodes,
           currentPage: currentPage,
-          totalNumberOfNodes: data.topology.no_of_nodes });
+          totalNumberOfNodes: data.topology.no_of_nodes,
+        });
       });
-  }
+  };
 
   // In this function we use the filterStore object and
   // update the data passed to 'FilterBar' and 'Summary'
@@ -233,9 +249,8 @@ class NodeDetailsCmmponent extends React.Component {
     //If filterValue is empty then the 'cancel' filter button is clicked.
     if (_.has(this.state.filterObject, filterField) && filterValue !== '') {
       // Check if filtered value exists in the array of filters
-      const filterValueIndex = this.state.filterObject[filterField].indexOf(
-        filterValue
-      );
+      const filterValueIndex =
+        this.state.filterObject[filterField].indexOf(filterValue);
 
       // If filterValue exists remove it as user is clicking on the same widget
       // for the second time.
@@ -254,7 +269,7 @@ class NodeDetailsCmmponent extends React.Component {
       }
       // If 'filterField' does not exist in filterObject, add it and update the
       // filterValue in its array.
-    } else if(filterValue !== '') {
+    } else if (filterValue !== '') {
       updatedfilterObject = produce(this.state.filterObject, (draft) => {
         draft[filterField] = [filterValue];
       });
@@ -262,167 +277,186 @@ class NodeDetailsCmmponent extends React.Component {
     this.setState({ filterObject: updatedfilterObject }, () => {
       this.applyFilters();
     });
-  }
-
+  };
 
   //this method is called to make the API call with the filter object to fetch filtered list of objects.
   applyFilters = () => {
-    filteredListOfNodes(
-      this.props.topologyId,
-      0,
-      this.state.filterObject,
-      this.state.sortOrder === 'Descending' ? '-' + this.state.sortField : this.state.sortField,
-      this.state.searchString)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          nodeDetails: data.topology.nodes,
-          currentPage: 1,
-          totalNumberOfNodes: data.topology.no_of_nodes });
-      });
-  }
-
-  //this method is called to clear all filters
-  //and fetch the list of nodes without any filters applied.
-  clearAllFilter = () => {
-    filteredListOfNodes(
-      this.props.topologyId,
-      0,
-      {},
-      '',
-      '')
-      .then(response => response.json())
-      .then(data => {
+    const postBody = {
+      scroll_id: 0,
+      size: 10,
+      filter: this.state.filterObject,
+      sort_string:
+        this.state.sortOrder === 'Descending'
+          ? '-' + this.state.sortField
+          : this.state.sortField,
+      search_string: this.state.searchString,
+    };
+    apiProvider
+      .post(DiscoveryConstants.FILTERED_NODE_DETAILS + this.props.topologyId + '/', postBody)
+      .then((response) => response.json())
+      .then((data) => {
         this.setState({
           nodeDetails: data.topology.nodes,
           currentPage: 1,
           totalNumberOfNodes: data.topology.no_of_nodes,
-          filterObject: {},
-          searchString: '',
-          sortField: '',
-          sortOrder: '',
-        }, () => notify.info('All filters cleared.'));
+        });
       });
-  }
+  };
+
+  //this method is called to clear all filters
+  //and fetch the list of nodes without any filters applied.
+  clearAllFilter = () => {
+    const postBody = {
+      scroll_id: 0,
+      size: 10,
+      filter: {},
+      sort_string: '',
+      search_string: '',
+    };
+    apiProvider
+      .post(DiscoveryConstants.FILTERED_NODE_DETAILS + this.props.topologyId + '/', postBody)
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState(
+          {
+            nodeDetails: data.topology.nodes,
+            currentPage: 1,
+            totalNumberOfNodes: data.topology.no_of_nodes,
+            filterObject: {},
+            searchString: '',
+            sortField: '',
+            sortOrder: '',
+          },
+          () => notify.info('All filters cleared.')
+        );
+      });
+  };
 
   //this method is called to change the singleAssetDetailsFlag which controls the
   //display of Single Asset Details component.
   goBackToDetails = () => {
-    this.setState({ singleAssetDetailsFlag: !this.state.singleAssetDetailsFlag });
-  }
+    this.setState({
+      singleAssetDetailsFlag: !this.state.singleAssetDetailsFlag,
+    });
+  };
 
   //this method is called to sort the Node Details table based on the header fileds clicked on.
   onSort = (sortField) => {
     let sortOrder = 'Ascending';
 
-    if (
-      this.state.sortOrder === '' ||
-      this.state.sortOrder === 'Descending'
-    ) {
+    if (this.state.sortOrder === '' || this.state.sortOrder === 'Descending') {
       sortOrder = 'Ascending';
     } else if (sortField === this.state.sortField) {
       sortOrder = 'Descending';
     }
 
-    const sortMessage = `Node Details sorted in ${sortOrder} order based on ${generateHeading(sortField)}`;
+    const sortMessage = `Node Details sorted in ${sortOrder} order based on ${generateHeading(
+      sortField
+    )}`;
 
     //sorting is done in backend. We make an API call with sortField and get the list of assets sorted based
     //on that field.
-    filteredListOfNodes(
-      this.props.topologyId,
-      0,
-      this.state.filterObject,
-      sortOrder === 'Descending' ? '-' + sortField : sortField,
-      this.state.searchString)
-      .then(data => {
-        this.setState({
-          nodeDetails: data.topology.nodes,
-          currentPage: 1,
-          totalNumberOfNodes: data.topology.no_of_nodes,
-          sortField: sortField,
-          sortOrder: sortOrder,
-        }, () => notify.info(sortMessage));
+    const postBody = {
+      scroll_id: 0,
+      size: 10,
+      filter: this.state.filterObject,
+      sort_string: sortOrder === 'Descending' ? '-' + sortField : sortField,
+      search_string: this.state.searchString,
+    };
+    apiProvider
+      .post(DiscoveryConstants.FILTERED_NODE_DETAILS + this.props.topologyId + '/', postBody)
+      .then((data) => {
+        this.setState(
+          {
+            nodeDetails: data.topology.nodes,
+            currentPage: 1,
+            totalNumberOfNodes: data.topology.no_of_nodes,
+            sortField: sortField,
+            sortOrder: sortOrder,
+          },
+          () => notify.info(sortMessage)
+        );
       });
-  }
+  };
 
   render() {
-
     return (
       <div className="nodeDetails">
-        {!this.state.singleAssetDetailsFlag &&
-        <div>
-          <div className="top-bar">
-            <span data-tip={'Go Back to Topology'}>
-              <ReactTooltip />
-              <i
-                className="fa fa-arrow-circle-o-left fa-lg display-right-topologyID"
-                onClick={() => this.props.goBack()}
-                aria-hidden="true"
-              />
-            </span>
-          </div>
-          <div className="filters">
-            <FilterBar
-              filterObject={this.state.filterObject}
-              handleFilter={this.handleFilter}
-              clearAllFilter={this.clearAllFilter}
-            />
-          </div>
-          <div className="nodeDetails-wrapper">
-            <div className="assets-summary">
-              <Summary
-                summaryDetails={this.props.summaryDetails}
-                topologyName={this.props.topologyName}
-                handleFilter={this.handleFilter}
+        {!this.state.singleAssetDetailsFlag && (
+          <div>
+            <div className="top-bar">
+              <span data-tip={'Go Back to Topology'}>
+                <ReactTooltip />
+                <i
+                  className="fa fa-arrow-circle-o-left fa-lg display-right-topologyID"
+                  onClick={() => this.props.goBack()}
+                  aria-hidden="true"
+                />
+              </span>
+            </div>
+            <div className="filters">
+              <FilterBar
                 filterObject={this.state.filterObject}
+                handleFilter={this.handleFilter}
+                clearAllFilter={this.clearAllFilter}
               />
             </div>
-            <div className="nodeDetails-table">
-              <div className="table-toolbar">
-                <div className="toolbar-search">
-                  <div className="toolbar-searchbox">
-                    <div className="search-icon fa fa-search" />
-                    <input
-                      type="text"
-                      className="search-input"
-                      placeholder="Search"
-                      onChange={(e) => this.onSearch(e)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <table className="nodes">
-                <thead>
-                  <tr>{this.renderTableHeader()}</tr>
-                </thead>
-                <tbody>
-                  {this.renderTableData()}
-                </tbody>
-              </table>
-              <div className="pagination">
-                <Pagination
-                  hideDisabled
-                  activePage={this.state.currentPage}
-                  itemsCountPerPage={10}
-                  totalItemsCount={this.state.totalNumberOfNodes}
-                  onChange={this.handlePageChange}
+            <div className="nodeDetails-wrapper">
+              <div className="assets-summary">
+                <Summary
+                  summaryDetails={this.props.summaryDetails}
+                  topologyName={this.props.topologyName}
+                  handleFilter={this.handleFilter}
+                  filterObject={this.state.filterObject}
                 />
               </div>
+              <div className="nodeDetails-table">
+                <div className="table-toolbar">
+                  <div className="toolbar-search">
+                    <div className="toolbar-searchbox">
+                      <div className="search-icon fa fa-search" />
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Search"
+                        onChange={(e) => this.onSearch(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <table className="nodes">
+                  <thead>
+                    <tr>{this.renderTableHeader()}</tr>
+                  </thead>
+                  <tbody>{this.renderTableData()}</tbody>
+                </table>
+                <div className="pagination">
+                  <Pagination
+                    hideDisabled
+                    activePage={this.state.currentPage}
+                    itemsCountPerPage={10}
+                    totalItemsCount={this.state.totalNumberOfNodes}
+                    onChange={this.handlePageChange}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        }
-        {this.state.singleAssetDetailsFlag &&
-        <div className="single-asset-details">
-          <SingleAssetDetails
-            singleAssetDetails={this.state.singleAssetDetails}
-            goBackToDetails={this.goBackToDetails}
-          />
-        </div>
-        }
+        )}
+        {this.state.singleAssetDetailsFlag && (
+          <div className="single-asset-details">
+            <SingleAssetDetails
+              singleAssetDetails={this.state.singleAssetDetails}
+              goBackToDetails={this.goBackToDetails}
+            />
+          </div>
+        )}
       </div>
     );
   }
 }
 
-export const NodeDetails = connect(mapStateToProps, mapDispatchToProps) (NodeDetailsCmmponent);
+export const NodeDetails = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NodeDetailsCmmponent);

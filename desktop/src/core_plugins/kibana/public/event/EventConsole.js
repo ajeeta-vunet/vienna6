@@ -28,9 +28,12 @@ import { produce } from 'immer';
 import { Notifier } from 'ui/notify';
 import $ from 'jquery';
 import chrome from 'ui/chrome';
-import { createTicket, getSavedFilters, saveFilters } from './api_calls';
+import { apiProvider } from '../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
+import { EventConstants } from './event_constants';
 
 const notify = new Notifier({ location: 'Event Console' });
+
+const userData = chrome.getCurrentUser();
 
 export class EventConsole extends React.Component {
   constructor(props) {
@@ -71,8 +74,9 @@ export class EventConsole extends React.Component {
 
   componentDidMount() {
     //this get the saved filters for the current logged-in user from backend.
-    getSavedFilters()
-      .then(data => {
+    apiProvider
+      .getAll(`${EventConstants.FETCH_APPLIED_FILTERS}${userData[0]}/`)
+      .then((data) => {
         this.setState({
           filterStore: data.filter,
           selectedFilterFields: Object.keys(data.filter),
@@ -81,7 +85,6 @@ export class EventConsole extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-
     const listOfEvents = _.sortBy(
       newProps.listOfEvents && newProps.listOfEvents.List_of_events,
       function (o) {
@@ -106,10 +109,9 @@ export class EventConsole extends React.Component {
     // eslint-disable-next-line prefer-const
     let filterFields = [...this.state.selectedFilterFields];
     const filterIndex = filterFields.indexOf(filterField);
-    if(filterIndex > -1) {
+    if (filterIndex > -1) {
       filterFields.splice(filterIndex, 1);
-    }
-    else{
+    } else {
       filterFields.push(filterField);
     }
     this.setState({ selectedFilterFields: filterFields });
@@ -126,9 +128,8 @@ export class EventConsole extends React.Component {
     //If filterValue is empty then the 'cancel' filter button is clicked.
     if (_.has(this.state.filterStore, filterField) && filterValue !== '') {
       // Check if filtered value exists in the array of filters
-      const filterValueIndex = this.state.filterStore[filterField].indexOf(
-        filterValue
-      );
+      const filterValueIndex =
+        this.state.filterStore[filterField].indexOf(filterValue);
 
       // If filterValue exists remove it as user is clicking on the same widget
       // for the second time.
@@ -147,28 +148,35 @@ export class EventConsole extends React.Component {
       }
       // If 'filterField' does not exist in filterStore, add it and update the
       // filterValue in its array.
-    } else if(filterValue !== '') {
+    } else if (filterValue !== '') {
       updatedfilterStore = produce(this.state.filterStore, (draft) => {
         draft[filterField] = [filterValue];
       });
-    }
-    else {
+    } else {
       this.handleFilterSelectorChange(filterField);
       updatedfilterStore = produce(this.state.filterStore, (draft) => {
         delete draft[filterField];
       });
     }
 
-    saveFilters(updatedfilterStore)
+    const postBody = {
+      filter: updatedfilterStore,
+    };
+    apiProvider
+      .post(`${EventConstants.SAVE_FILTERS}${userData[0]}/`, postBody)
       .then(() => {
-        getSavedFilters()
-          .then(data => {
-            this.setState({
-              filterStore: updatedfilterStore,
-              selectedFilterFields: Object.keys(data.filter),
-            }, () => {
-              this.applyFilters();
-            });
+        apiProvider
+          .getAll(`${EventConstants.FETCH_APPLIED_FILTERS}${userData[0]}/`)
+          .then((data) => {
+            this.setState(
+              {
+                filterStore: updatedfilterStore,
+                selectedFilterFields: Object.keys(data.filter),
+              },
+              () => {
+                this.applyFilters();
+              }
+            );
           });
       });
   };
@@ -182,7 +190,7 @@ export class EventConsole extends React.Component {
 
     if (!_.isEmpty(filterStore)) {
       const filterKeys = Object.keys(filterStore);
-      newEventList =  newEventList.filter(function (event) {
+      newEventList = newEventList.filter(function (event) {
         return filterKeys.every(function (filterKey) {
           return filterStore[filterKey].includes(event.fields[filterKey]);
         });
@@ -242,16 +250,20 @@ export class EventConsole extends React.Component {
           severityCount.total.wip += 1;
         }
       });
-    this.setState({ filteredSeverityInfo: severityCount }, () => this.updateSeverityCheckbox());
+    this.setState({ filteredSeverityInfo: severityCount }, () =>
+      this.updateSeverityCheckbox()
+    );
   };
 
   //This is done to make sure the changes to SeverityWidget is refelcted under the Severity filter as well.
   //For example if the severity filter is selected from under the filter button and a severity widget is selected
   //the severity should be checked under the severity fuilter as well.
   updateSeverityCheckbox = () => {
-    const severityFilter = this.state.filterStore && this.state.filterStore.severity;
-    let severityFilterFields = this.props.filterFields && this.props.filterFields.severity;
-    if(severityFilter) {
+    const severityFilter =
+      this.state.filterStore && this.state.filterStore.severity;
+    let severityFilterFields =
+      this.props.filterFields && this.props.filterFields.severity;
+    if (severityFilter) {
       severityFilter.map((field) => {
         const severity = document.getElementById(field);
         severity && (severity.checked = true);
@@ -262,11 +274,12 @@ export class EventConsole extends React.Component {
       });
     }
 
-    severityFilterFields && severityFilterFields.map((field) => {
-      const severity = document.getElementById(field);
-      severity && (severity.checked = false);
-    });
-  }
+    severityFilterFields &&
+      severityFilterFields.map((field) => {
+        const severity = document.getElementById(field);
+        severity && (severity.checked = false);
+      });
+  };
 
   //this function is added to sync state variables and put request contents
   updateColumnSelector = (allFields, hiddenFields) => {
@@ -304,7 +317,9 @@ export class EventConsole extends React.Component {
   //this method is called to generate report of all the events as displyed on the screen.
   exportEventsToCsv = () => {
     // format the data
-    const fields = this.state.filteredEventList && this.state.filteredEventList.map(event => ({ ...event.fields }));
+    const fields =
+      this.state.filteredEventList &&
+      this.state.filteredEventList.map((event) => ({ ...event.fields }));
 
     const dataToExport = produce(fields, (draft) => {
       draft.map((field) => {
@@ -317,7 +332,7 @@ export class EventConsole extends React.Component {
     const data = Object.values(dataToExport);
     const headers = Object.keys(dataToExport[0]);
     data ? this.exportCSVFile(headers, data, 'eventsReport') : ''; // call the exportCSVFile() function to process the JSON and trigger the download
-  }
+  };
 
   //this method is called to create and download the report.
   //receives headers, items and fileTitle as arguments using which report is built and downloaded.
@@ -329,7 +344,8 @@ export class EventConsole extends React.Component {
     // Convert Object to JSON
     const jsonObject = JSON.stringify(items);
 
-    const array = typeof objArray !== 'object' ? JSON.parse(jsonObject) : jsonObject;
+    const array =
+      typeof objArray !== 'object' ? JSON.parse(jsonObject) : jsonObject;
 
     let csv = '';
 
@@ -349,7 +365,7 @@ export class EventConsole extends React.Component {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const saveAs = require('@elastic/filesaver').saveAs;
     saveAs(blob, exportedFilename);
-  }
+  };
 
   // This function is called to clear all the filters and display all events in Event Console page.
   showAllEvents = () => {
@@ -366,18 +382,24 @@ export class EventConsole extends React.Component {
   //This function is used to make the API call to create a ticket for the event.
   //This API call returns the ticket_id which is used to change the Event's ticket_id from the Events list .
   createTicketMethod = (eventId) => {
-    createTicket(chrome, eventId)
-      .then(resp => {
-        const ticketId = JSON.stringify(resp);
-        if(ticketId) {
-          const updatedEventList = produce(this.state.filteredEventList, (draft) => {
-            draft.map((event) => {
-              if(event.id === eventId) {
-                event.fields.ticket_id = ticketId;
-              }
-            });
-          });
-          this.setState({ filteredEventList: updatedEventList }, () => notify.info('Ticket created'));
+    apiProvider
+      .post(EventConstants.CREATE_TICKET + eventId + '/')
+      .then((resp) => {
+        const ticketId = JSON.stringify(resp.ticket_id);
+        if (ticketId) {
+          const updatedEventList = produce(
+            this.state.filteredEventList,
+            (draft) => {
+              draft.map((event) => {
+                if (event.id === eventId) {
+                  event.fields.ticket_id = ticketId;
+                }
+              });
+            }
+          );
+          this.setState({ filteredEventList: updatedEventList }, () =>
+            notify.info('Ticket created')
+          );
         } else {
           notify.error('Could not create ticket');
         }

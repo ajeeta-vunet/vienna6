@@ -54,6 +54,7 @@ export class VunetSidebar extends Component {
     [VunetSidebarConstants.MANAGE_RESOURCES]: [VunetSidebarConstants.PERMISSION_MANAGE_OBJECT,
       VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
     [VunetSidebarConstants.NETWORK_CONFIGURATION]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
+    [VunetSidebarConstants.DEVICE_CONFIGURATION]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
     [VunetSidebarConstants.DATA]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES,
       VunetSidebarConstants.PERMISSION_MANAGE_DATA_ENRICHMENT],
     [VunetSidebarConstants.SOURCES]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
@@ -145,6 +146,9 @@ export class VunetSidebar extends Component {
     } else if (currentRoute.includes('network_configuartion')) {
       $('#analyticsConfigurationNavContainer').addClass('active');
       $('#networkConfigurationLink').addClass('active');
+    } else if (currentRoute.includes('deviceConfiguration')) {
+      $('#analyticsConfigurationNavContainer').addClass('active');
+      $('#deviceConfigurationLink').addClass('active');
     } else if (currentRoute.includes('/berlin/data_source/vuBlock')) {
       $('#dataNavContainer').addClass('active');
       $('#vuBlockLink').addClass('active');
@@ -332,6 +336,17 @@ export class VunetSidebar extends Component {
                     onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
                   >
                     {VunetSidebarConstants.NETWORK_CONFIGURATION}
+                  </a>
+                }
+                {
+                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.DEVICE_CONFIGURATION]) &&
+                  <a
+                    id="deviceConfigurationLink"
+                    href="/app/vienna#/deviceConfiguration"
+                    className="list-group-item"
+                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                  >
+                    {VunetSidebarConstants.DEVICE_CONFIGURATION}
                   </a>
                 }
               </div>

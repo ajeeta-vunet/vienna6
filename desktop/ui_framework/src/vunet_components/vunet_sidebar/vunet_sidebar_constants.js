@@ -13,6 +13,7 @@ export const VunetSidebarConstants = {
   ANOMALY_DETECTION: 'Anomaly Detection',
   MANAGE_RESOURCES: 'Manage Resources',
   NETWORK_CONFIGURATION: 'Network Configuration',
+  DEVICE_CONFIGURATION: 'Device Configuration',
   DATA: 'Data',
   SOURCES: 'Sources',
   VUBLOCK: 'vuModule',

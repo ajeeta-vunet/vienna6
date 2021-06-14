@@ -66,6 +66,11 @@ export class ControlsTab extends Component {
 
   handleRemoveControl = (controlIndex) => {
     this.setVisParam('controls', removeControl(this.props.scope.vis.params.controls, controlIndex));
+    //if 'range' type is present in list of controls then set 'displayHorizontalLayout' to 'false'.
+    const rangeTypeIsPresent = this.props.scope.vis.params.controls.some(control => {
+      return control.type === 'range';
+    });
+    if(rangeTypeIsPresent) this.setVisParam('displayHorizontalLayout', false);
   }
 
   moveControl = (controlIndex, direction) => {
@@ -74,6 +79,8 @@ export class ControlsTab extends Component {
 
   handleAddControl = () => {
     this.setVisParam('controls', addControl(this.props.scope.vis.params.controls, newControl(this.state.type)));
+    //if type is equal to 'range' then set 'displayHorizontalLayout' to 'false'.
+    if(this.state.type === 'range') this.setVisParam('displayHorizontalLayout', false);
   }
 
   // To add parent property in vis params.

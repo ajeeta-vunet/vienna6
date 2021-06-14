@@ -8,9 +8,21 @@ export class InputControlVis extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      rowStyle: false
+    };
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.handleClearAll = this.handleClearAll.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    const rangeTypeIsPresent = newProps.controls.some(control => {
+      return control.type === 'range';
+    });
+    if(rangeTypeIsPresent) this.setState({ rowStyle: false });
+    else this.setState({ rowStyle: true });
   }
 
   handleSubmit() {
@@ -59,6 +71,7 @@ export class InputControlVis extends Component {
       }
       return (
         <div
+          className="inputControlVisItem"
           key={control.id}
           data-test-subj={'inputControl' + index}
         >
@@ -115,9 +128,18 @@ export class InputControlVis extends Component {
     }
 
     return (
-      <div className="inputControlVis">
-        {this.renderControls()}
-        {stagingButtons}
+      <div
+        className="inputControlVis"
+      >
+        <div
+          className="inputControlVisContainer"
+          style={this.props.displayHorizontalLayout && this.state.rowStyle ? { flexDirection: 'row' } : { flexDirection: 'column' }}
+        >
+          {this.renderControls()}
+        </div>
+        <div>
+          {stagingButtons}
+        </div>
       </div>
     );
   }
@@ -130,6 +152,7 @@ InputControlVis.propTypes = {
   clearControls: PropTypes.func.isRequired,
   controls: PropTypes.array.isRequired,
   updateFiltersOnChange: PropTypes.bool,
+  displayHorizontalLayout: PropTypes.bool,
   hasChanges: PropTypes.func.isRequired,
   hasValues: PropTypes.func.isRequired
 };

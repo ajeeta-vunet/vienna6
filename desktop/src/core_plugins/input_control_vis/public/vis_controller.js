@@ -32,6 +32,7 @@ class VisController {
     render(
       <InputControlVis
         updateFiltersOnChange={this.vis.params.updateFiltersOnChange}
+        displayHorizontalLayout={this.vis.params.displayHorizontalLayout}
         controls={this.controls}
         stageFilter={this.stageFilter.bind(this)}
         submitFilters={this.submitFilters.bind(this)}

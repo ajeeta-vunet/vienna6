@@ -95,7 +95,7 @@ export class RangeControl extends Component {
     let formatedValue = value;
 
     const decimalPlaces = _.get(this.props, 'control.options.decimalPlaces');
-    if (decimalPlaces !== null && decimalPlaces >= 0) {
+    if (decimalPlaces !== null && decimalPlaces >= 0 && value) {
       formatedValue = value.toFixed(decimalPlaces);
     }
     return formatedValue;

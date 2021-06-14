@@ -519,7 +519,7 @@ export class NewAssetModal extends React.Component {
           displayInterfaceInput: false,
         },
         () => {
-          if (this.state.assetObject.node_id !== '') {
+          if (this.state.assetObject.node_id && this.state.assetObject.node_id !== '') {
             document.getElementById('submitButton').disabled = false;
           }
         }
@@ -535,7 +535,7 @@ export class NewAssetModal extends React.Component {
           interfaceList: assetObject.interface_list,
         },
         () => {
-          if (this.state.assetObject.node_id !== '') {
+          if (this.state.assetObject.node_id && this.state.assetObject.node_id !== '') {
             document.getElementById('submitButton').disabled = false;
           }
         }

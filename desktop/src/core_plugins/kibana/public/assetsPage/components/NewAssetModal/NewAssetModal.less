@@ -53,11 +53,24 @@
                 }
             }
 
+            .error-message {
+                text-align : left;
+                color      : @red;
+                margin-top : .5rem;
+                margin-left: .3rem;
+            }
+
             .interface-actions {
                 display   : flex;
                 height    : 4rem;
                 position  : relative;
                 text-align: right;
+
+                .edit-button,
+                .delete-button {
+                    border          : none;
+                    background-color: @white;
+                }
             }
         }
     }
@@ -70,80 +83,72 @@
         padding      : 1.5rem;
         border-radius: 1rem;
         padding-right: 3rem;
+
+        .interface-heading {
+            display        : flex;
+            justify-content: space-between;
+
+            .interfaceName-label,
+            .interfaceIP-label,
+            .interfaceActions-label {
+                flex: 0 0 15rem;
+            }
+        }
+
+        .interface-list {
+            margin-right: 10rem;
+
+            .interface-row {
+                display        : flex;
+                justify-content: space-between;
+
+                .add-interface-button,
+                .edit-interface-button,
+                .delete-button {
+                    border          : none;
+                    background-color: @white;
+                }
+
+                .interface-name,
+                .interface-ip {
+                    flex: 0 0 15rem;
+                }
+            }
+        }
     }
 
     .actions {
         padding   : 2rem 3.7em;
         position  : relative;
         text-align: right;
+
+        .asset-button {
+            display         : inline-block;
+            appearance      : none;
+            cursor          : pointer;
+            border          : none;
+            padding         : .6rem 3rem .6rem 3rem !important;
+            font-size       : 1.6rem !important;
+            height          : 3.5rem !important;
+            background-color: @accent_color;
+            color           : @white  !important;
+            box-shadow      : 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+            border-radius   : 2rem !important;
+            margin-left     : 1rem;
+        
+            &:disabled {
+                cursor          : not-allowed !important;
+                opacity         : 0.65;
+                background-color: @disable_button_color  !important;
+                color           : @disable_button_text_color  !important;
+                box-shadow      : none;
+                border          : none;
+                border-radius   : 2rem;
+            }
+        
+            &:hover {
+                font-size: 1.8rem;
+            }
+        }
     }
-}
-
-.interface-heading {
-    display        : flex;
-    justify-content: space-between;
-}
-
-.interface-row {
-    display        : flex;
-    justify-content: space-between;
-}
-
-.interface-list {
-    margin-right: 10rem;
-}
-
-.edit-button,
-.delete-button,
-.add-interface-button,
-.edit-interface-button {
-    border          : none;
-    background-color: @white;
-}
-
-.asset-button {
-    display         : inline-block;
-    appearance      : none;
-    cursor          : pointer;
-    border          : none;
-    padding         : .6rem 3rem .6rem 3rem !important;
-    font-size       : 1.6rem !important;
-    height          : 3.5rem !important;
-    background-color: @accent_color;
-    color           : @white  !important;
-    box-shadow      : 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
-    border-radius   : 2rem !important;
-    margin-left     : 1rem;
-}
-
-input:disabled {
-    cursor          : not-allowed !important;
-    opacity         : 0.65;
-    background-color: @disable_button_color  !important;
-    color           : @disable_button_text_color  !important;
-    box-shadow      : none;
-    border          : none;
-    border-radius   : 2rem;
-}
-
-.asset-button:hover {
-    font-size: 1.8rem;
-}
-
-.error-message {
-    text-align : left;
-    color      : @red;
-    margin-top : .5rem;
-    margin-left: .3rem;
-}
-
-.interfaceName-label,
-.interfaceIP-label,
-.interfaceActions-label {
-    flex: 0 0 15rem;
-}
-
-.interface-name,
-.interface-ip {
-    flex: 0 0 15rem;
 }

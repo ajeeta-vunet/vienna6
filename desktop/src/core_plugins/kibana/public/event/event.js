@@ -114,7 +114,7 @@ app.directive('eventApp', function () {
           .then((data) => {
             $scope.listOfEvents = data;
             $scope.loadingEvents = false;
-            $scope.$digest();
+            $scope.$apply();
           });
 
         const currentUser = chrome.getCurrentUser();
@@ -123,18 +123,15 @@ app.directive('eventApp', function () {
           .getAll(`${EventConstants.FETCH_COLUMN_SELECTOR_INFO}${username}/`)
           .then((response) => {
             $scope.columnSelectorInfo = response;
-            $scope.$digest();
           });
       };
 
       if ($scope.canUpdateEvent) {
         apiProvider.getAll(EventConstants.FETCH_USERS_LIST).then((data) => {
           $scope.userList = data;
-          $scope.$digest();
         });
       } else {
         $scope.userList = [];
-        $scope.$digest();
       }
 
       // API call to fetch the filter fields which will be used to filter events.
@@ -157,19 +154,16 @@ app.directive('eventApp', function () {
         .post(EventConstants.FETCH_FILTER_FILEDS, postBody)
         .then((data) => {
           $scope.filterFields = data;
-          $scope.$digest();
         });
 
       // API call to fetch the ITSM preferences set by logged-in user.
       apiProvider.getAllWithoutBU(EventConstants.CHECK_ITSM_PREFERENCES)
         .then(() => {
           $scope.itsmPreferencesEnabled = true;
-          $scope.$digest();
         })
         // eslint-disable-next-line no-unused-vars
         .catch((err) => {
           $scope.itsmPreferencesEnabled = false;
-          $scope.$digest();
         });
 
       function init() {

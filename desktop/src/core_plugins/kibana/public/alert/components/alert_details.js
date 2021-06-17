@@ -1217,7 +1217,7 @@ export class AlertDetails extends React.Component {
               value: errorObj.advancedConfiguration.required,
             },
             [validateInputTypes.maxLength]: {
-              value: 1000,
+              value: 5000,
             }
           });
           break;

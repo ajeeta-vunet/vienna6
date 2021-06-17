@@ -514,7 +514,7 @@ export class AlertControlSection extends React.Component {
                 <textarea
                   className={'form-control ' + (errorObj.advancedConfiguration.errorText && 'errorInput')}
                   type="text"
-                  maxLength="1001"
+                  maxLength="5001"
                   placeholder="Advanced Configuration"
                   onChange={(e) => callbackParams.updateAlertControlInfo('advancedConfig', e.target.value)}
                   value={alertConfig.advancedConfiguration}

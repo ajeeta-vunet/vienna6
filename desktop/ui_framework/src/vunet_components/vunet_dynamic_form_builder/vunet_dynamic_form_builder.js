@@ -829,7 +829,7 @@ export class VunetDynamicFormBuilder extends Component {
         if (Array.isArray(value)) { value = value.join('\n'); }
         input = (
           <div className="textarea-container">
-            <teradioxtarea
+            <textarea
               {...props}
               rows="5"
               className="form-input textarea-height"

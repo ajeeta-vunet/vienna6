@@ -448,6 +448,7 @@ class NodeDetailsCmmponent extends React.Component {
             <SingleAssetDetails
               singleAssetDetails={this.state.singleAssetDetails}
               goBackToDetails={this.goBackToDetails}
+              canEnrichAsset={false}
             />
           </div>
         )}

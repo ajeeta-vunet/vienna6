@@ -1,6 +1,6 @@
 export const DiscoveryConstants = {
   LANDING_PAGE_PATH: '/discovery',
-  FETCH_CRED_LIST: '/asset/search/',
+  FETCH_CRED_LIST: 'asset/credentials/',
   FETCH_PREFERENCES: 'preferences',
   DELETE_SCAN: 'asset/schedule/',
   SCAN_NOW: 'asset/discovery/',

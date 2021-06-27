@@ -259,26 +259,28 @@ export class AssetsPage extends React.Component {
             : this.state.sortField,
         search_string: this.state.searchString,
       };
-      apiProvider.post(AssetConstants.FETCH_ASSET_LIST, postBody).then((data) => {
-        const postBody = {
-          fields: ['location', 'device_type', 'vendor_name', 'system_ip'],
-        };
-        apiProvider
-          .post(AssetConstants.FETCH_ASSETS_SUMMARY, postBody)
-          .then((assetDetailsSummary) => {
-            this.setState(
-              {
-                assets: data.assets,
-                currentPage: 1,
-                totalNumberOfAssets: data.no_of_nodes,
-                selectedFlag: false,
-                assetDetailsSummary: assetDetailsSummary,
-                deleteIdList: [],
-              },
-              () => notify.info('Asset deleted succesfully.')
-            );
-          });
-      });
+      apiProvider
+        .post(AssetConstants.FETCH_ASSET_LIST, postBody)
+        .then((data) => {
+          const postBody = {
+            fields: ['location', 'device_type', 'vendor_name', 'system_ip'],
+          };
+          apiProvider
+            .post(AssetConstants.FETCH_ASSETS_SUMMARY, postBody)
+            .then((assetDetailsSummary) => {
+              this.setState(
+                {
+                  assets: data.assets,
+                  currentPage: 1,
+                  totalNumberOfAssets: data.no_of_nodes,
+                  selectedFlag: false,
+                  assetDetailsSummary: assetDetailsSummary,
+                  deleteIdList: [],
+                },
+                () => notify.info('Asset deleted succesfully.')
+              );
+            });
+        });
     });
   };
 
@@ -440,14 +442,16 @@ export class AssetsPage extends React.Component {
             : this.state.sortField,
         search_string: this.state.searchString,
       };
-      apiProvider.post(AssetConstants.FETCH_ASSET_LIST, postBody).then((data) => {
-        this.setState({
-          assets: data.assets,
-          currentPage: currentPage,
-          totalNumberOfAssets: data.no_of_nodes,
-          selectedFlag: false,
+      apiProvider
+        .post(AssetConstants.FETCH_ASSET_LIST, postBody)
+        .then((data) => {
+          this.setState({
+            assets: data.assets,
+            currentPage: currentPage,
+            totalNumberOfAssets: data.no_of_nodes,
+            selectedFlag: false,
+          });
         });
-      });
     }
   };
 
@@ -587,36 +591,38 @@ export class AssetsPage extends React.Component {
           scroll_id: 0,
           size: 10,
         };
-        apiProvider.post(AssetConstants.FETCH_ASSET_LIST, postBody).then((data) => {
-          if (data.statusText === 'OK') {
-            notify.info('Assets imported successfully');
-          } else {
-            notify.error(`${data.response.data['error-string']}`);
-          }
-          const postBody = {
-            fields: ['location', 'device_type', 'vendor_name', 'system_ip'],
-          };
-          apiProvider
-            .post(AssetConstants.FETCH_ASSETS_SUMMARY, postBody)
-            .then((assetDetailsSummary) => {
-              this.setState(
-                {
-                  assets: data.assets,
-                  currentPage: 1,
-                  totalNumberOfAssets: data.no_of_nodes,
-                  selectedFlag: false,
-                  assetDetailsSummary: assetDetailsSummary,
-                  deleteIdList: [],
-                  filterObject: {},
-                  displayTimeFilterObject: {},
-                  appliedTimeFilters: {},
-                },
-                () => {
-                  this.cancelAssetImport();
-                }
-              );
-            });
-        });
+        apiProvider
+          .post(AssetConstants.FETCH_ASSET_LIST, postBody)
+          .then((data) => {
+            if (data.statusText === 'OK') {
+              notify.info('Assets imported successfully');
+            } else {
+              notify.error(`${data.response.data['error-string']}`);
+            }
+            const postBody = {
+              fields: ['location', 'device_type', 'vendor_name', 'system_ip'],
+            };
+            apiProvider
+              .post(AssetConstants.FETCH_ASSETS_SUMMARY, postBody)
+              .then((assetDetailsSummary) => {
+                this.setState(
+                  {
+                    assets: data.assets,
+                    currentPage: 1,
+                    totalNumberOfAssets: data.no_of_nodes,
+                    selectedFlag: false,
+                    assetDetailsSummary: assetDetailsSummary,
+                    deleteIdList: [],
+                    filterObject: {},
+                    displayTimeFilterObject: {},
+                    appliedTimeFilters: {},
+                  },
+                  () => {
+                    this.cancelAssetImport();
+                  }
+                );
+              });
+          });
       })
       .catch((error) => {
         notify.error(error);
@@ -658,31 +664,33 @@ export class AssetsPage extends React.Component {
           sort_string: '',
           search_string: '',
         };
-        apiProvider.post(AssetConstants.FETCH_ASSET_LIST, postBody).then((assetDetails) => {
-          const postBody = {
-            fields: ['location', 'device_type', 'vendor_name', 'system_ip'],
-          };
-          apiProvider
-            .post(AssetConstants.FETCH_ASSETS_SUMMARY, postBody)
-            .then((assetDetailsSummary) => {
-              this.setState(
-                {
-                  assets: assetDetails.assets,
-                  currentPage: 1,
-                  totalNumberOfAssets: assetDetails.no_of_nodes,
-                  selectedFlag: false,
-                  assetDetailsSummary: assetDetailsSummary,
-                  deleteIdList: [],
-                  filterObject: {},
-                  displayTimeFilterObject: {},
-                  appliedTimeFilters: {},
-                  sortField: '',
-                  searchString: '',
-                },
-                () => this.cancelNewAsset()
-              );
-            });
-        });
+        apiProvider
+          .post(AssetConstants.FETCH_ASSET_LIST, postBody)
+          .then((assetDetails) => {
+            const postBody = {
+              fields: ['location', 'device_type', 'vendor_name', 'system_ip'],
+            };
+            apiProvider
+              .post(AssetConstants.FETCH_ASSETS_SUMMARY, postBody)
+              .then((assetDetailsSummary) => {
+                this.setState(
+                  {
+                    assets: assetDetails.assets,
+                    currentPage: 1,
+                    totalNumberOfAssets: assetDetails.no_of_nodes,
+                    selectedFlag: false,
+                    assetDetailsSummary: assetDetailsSummary,
+                    deleteIdList: [],
+                    filterObject: {},
+                    displayTimeFilterObject: {},
+                    appliedTimeFilters: {},
+                    sortField: '',
+                    searchString: '',
+                  },
+                  () => this.cancelNewAsset()
+                );
+              });
+          });
       })
       .catch(() => {
         notify.error('Asset add/edit failure.');
@@ -772,6 +780,23 @@ export class AssetsPage extends React.Component {
         () => notify.info(sortMessage)
       );
     });
+  };
+
+  //this method is called to add/edit the enrich data pertaining to an asset.
+  enrichAssetMethod = (enrichData) => {
+    apiProvider
+      .put(`asset/${this.state.singleAssetDetails.node_id}/enrich/`, enrichData)
+      .then((data) => {
+        const assets = produce(this.state.assets, (draft) => {
+          draft &&
+          draft.map((asset) => {
+            if (asset.node_id === data.node_id) {
+              asset.enriched_data = data.enriched_data;
+            }
+          });
+        });
+        this.setState({ assets, singleAssetDetails: data }, () => notify.info('Enrich Data added/modified.'));
+      });
   };
 
   render() {
@@ -903,6 +928,8 @@ export class AssetsPage extends React.Component {
             <SingleAssetDetails
               singleAssetDetails={this.state.singleAssetDetails}
               goBackToDetails={this.goBackToDetails}
+              canEnrichAsset={true}
+              enrichAssetMethod={this.enrichAssetMethod}
             />
           </div>
         )}

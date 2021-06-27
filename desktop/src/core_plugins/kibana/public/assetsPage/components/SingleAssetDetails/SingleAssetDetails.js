@@ -20,15 +20,16 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import './SingleAssetDetails.less';
 import ReactTooltip from 'react-tooltip';
-import {
-  generateClassname,
-  generateHeading,
-} from '../../../event/utils/vunet_format_name';
+import { generateClassname, generateHeading } from '../../../event/utils/vunet_format_name';
+import { EnrichAsset } from '../EnrichAsset/EnrichAsset';
 
 export class SingleAssetDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      displayEnrichAssetFlag: false,
+      addNewFlag: false,
+    };
   }
 
   //this method is used to display the data passed to it in a table format.
@@ -45,7 +46,7 @@ export class SingleAssetDetails extends React.Component {
             <div className="row object-data-table-header">
               {Object.keys(data[0]).map((key) => {
                 return (
-                  <div className="col-md-4">
+                  <div key={key} className="col-md-4">
                     <span className="metric-details-header">
                       {generateHeading(key)}
                     </span>
@@ -86,7 +87,7 @@ export class SingleAssetDetails extends React.Component {
     //return the JSX in table format accordingly.
     else {
       return (
-        <table>
+        <table className="single-asset-table">
           {Object.entries(data).map(([key, value]) => {
             return (
               <tr style={{ width: '100%' }} key={key}>
@@ -122,28 +123,47 @@ export class SingleAssetDetails extends React.Component {
     );
   };
 
+  //this method is called to display the input fields for enrich asset in the UI.
+  displayEnrichAssetForm = () => {
+    this.setState({ displayEnrichAssetFlag: !this.state.displayEnrichAssetFlag, addNewFlag: true });
+  }
+
+  //this method is called to hide the input fields for enrich asset in the UI.
+  cancelEnrichAsset = () => {
+    this.setState({ displayEnrichAssetFlag: false });
+  }
+
+  //this method is called to set addNewFlag to false and call the enrichAssetMethod from parent component.
+  enrichAssetMethod = (enrichData) => {
+    this.setState({
+      displayEnrichAssetFlag: Object.keys(enrichData).length > 0,
+      addNewFlag: false }, () => this.props.enrichAssetMethod(enrichData));
+  }
+
   render() {
     return (
       <div className="single-asset-details-wrapper">
-        <div className="top-bar">
-          <div className="back-button" data-tip={'Go Back'}>
-            <ReactTooltip />
-            <i
-              className="fa fa-arrow-circle-o-left fa-lg display-right-topologyID"
-              onClick={() => this.props.goBackToDetails()}
-              aria-hidden="true"
-            />
+        <div>
+          <div className="top-bar">
+            <div
+              className="back-button"
+            >
+              <i
+                className="fa fa-arrow-circle-o-left fa-lg display-right-topologyID"
+                onClick={() => this.props.goBackToDetails()}
+                aria-hidden="true"
+                data-tip={'Go Back'}
+              />
+              <ReactTooltip />
+            </div>
+            <div className="asset-details-header">{`Device Name: ` + this.props.singleAssetDetails.device_name}</div>
           </div>
-          <div className="asset-details-header">
-            {`Device Name: ` + this.props.singleAssetDetails.device_name}
+          <div className="details">
+            {this.renderDetails()}
           </div>
-        </div>
-        <div className="details">{this.renderDetails()}</div>
-        <div className="table-data">
-          <div className="asset-table-row">
-            {this.props.singleAssetDetails.interface_list &&
-            this.props.singleAssetDetails.interface_list.length ?
-              (
+          <div className="table-data">
+            <div className="asset-table-row">
+              {this.props.singleAssetDetails.interface_list && this.props.singleAssetDetails.interface_list.length ? (
                 <div className="assets-interface-table">
                   {this.renderTable(this.props.singleAssetDetails.interface_list)}
                 </div>
@@ -154,35 +174,52 @@ export class SingleAssetDetails extends React.Component {
                       <span className="interface-details">Interface Data</span>
                     </div>
                   </div>
-                  <div className="assets-no-data">No Interfaces data.</div>
+                  <div className="assets-no-data">
+                  No Interfaces data.
+                  </div>
                 </div>
               )}
-            {this.props.singleAssetDetails.enriched_data &&
-            Object.keys(this.props.singleAssetDetails.enriched_data).length >
-              0 ? (
-                <div className="assets-enriched-table">
-                  <div className="row assets-enriched-table-header">
-                    <div className="col-md-4">
-                      <span className="enrich-details">Enriched Data</span>
-                    </div>
+              <div className="assets-enriched-table">
+                <div className="row assets-enriched-table-header-row">
+                  <div className="assets-enriched-table-header">
+                    <span className="enrich-details">Enriched Data</span>
                   </div>
-                  {this.renderTable(this.props.singleAssetDetails.enriched_data)}
-                </div>
-              ) : (
-                <div className="assets-enriched-table">
-                  <div className="row assets-enriched-table-header">
-                    <div className="col-md-4">
-                      <span className="enrich-details">Enriched Data</span>
-                    </div>
+                  {this.props.canEnrichAsset &&
+                  <div className="enrich-asset-button-div">
+                    <button
+                      className="kuiButton enrich-button kuiButton--iconText"
+                      aria-label="Add Enrich Data"
+                      onClick={() => this.displayEnrichAssetForm()}
+                      data-tip={'Add New Enrich Data'}
+                    >
+                      <ReactTooltip />
+                      <span className="kuiButton__inner">
+                        <span aria-hidden="true" className="kuiButton__icon kuiIcon fa-plus" />
+                      </span>
+                    </button>
                   </div>
-                  <div className="assets-no-data">No Enriched data.</div>
+                  }
                 </div>
-              )}
-          </div>
-          <div className="asset-table-row">
-            {this.props.singleAssetDetails.ip_address &&
-            this.props.singleAssetDetails.ip_address.length ?
-              (
+                {((this.props.singleAssetDetails.enriched_data &&
+                  Object.keys(this.props.singleAssetDetails.enriched_data).length > 0) || (this.state.displayEnrichAssetFlag)) ? (
+                    <div className="enrich-asset-modal">
+                      <EnrichAsset
+                        enrichData={this.props.singleAssetDetails.enriched_data}
+                        nodeId={this.props.singleAssetDetails.node_id}
+                        enrichAssetMethod={this.enrichAssetMethod}
+                        cancelEnrichAsset={this.cancelEnrichAsset}
+                        addNewFlag={this.state.addNewFlag}
+                      />
+                    </div>
+                  ) : (
+                    <div className="assets-no-data">
+                  No Enriched data.
+                    </div>
+                  )}
+              </div>
+            </div>
+            <div className="asset-table-row">
+              {this.props.singleAssetDetails.ip_address && this.props.singleAssetDetails.ip_address.length ? (
                 <div className="assets-ipAddress-table">
                   <div className="row assets-ipAddress-table-header">
                     <div className="col-md-4">
@@ -198,12 +235,12 @@ export class SingleAssetDetails extends React.Component {
                       <span className="ipAddress-details">IP Addresses</span>
                     </div>
                   </div>
-                  <div className="assets-no-data">No IP address data.</div>
+                  <div className="assets-no-data">
+                  No IP address data.
+                  </div>
                 </div>
               )}
-            {this.props.singleAssetDetails.port_list &&
-            this.props.singleAssetDetails.port_list.length ?
-              (
+              {this.props.singleAssetDetails.port_list && this.props.singleAssetDetails.port_list.length ? (
                 <div className="assets-portList-table">
                   <div className="row assets-portList-table-header">
                     <div className="col-md-4">
@@ -219,14 +256,14 @@ export class SingleAssetDetails extends React.Component {
                       <span className="port-details">Port List</span>
                     </div>
                   </div>
-                  <div className="assets-no-data">No Port List data.</div>
+                  <div className="assets-no-data">
+                  No Port List data.
+                  </div>
                 </div>
               )}
-          </div>
-          <div className="asset-table-row">
-            {this.props.singleAssetDetails.tags &&
-            this.props.singleAssetDetails.tags.length ?
-              (
+            </div>
+            <div className="asset-table-row">
+              {this.props.singleAssetDetails.tags && this.props.singleAssetDetails.tags.length ? (
                 <div className="assets-tags-table">
                   <div className="row assets-tags-table-header">
                     <div className="col-md-4">
@@ -242,10 +279,13 @@ export class SingleAssetDetails extends React.Component {
                       <span className="tags-details">Tags</span>
                     </div>
                   </div>
-                  <div className="assets-no-data">No Tags available.</div>
+                  <div className="assets-no-data">
+                  No Tags available.
+                  </div>
                 </div>
               )}
-            <div className="assets-tags-table" />
+              <div className="assets-tags-table"  />
+            </div>
           </div>
         </div>
       </div>

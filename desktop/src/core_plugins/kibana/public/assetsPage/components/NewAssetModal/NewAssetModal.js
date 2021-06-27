@@ -51,6 +51,7 @@ export class NewAssetModal extends React.Component {
       },
       validInterface: false,
       interfaceIndex: -1,
+      otherObjectUnderEdit: false,
     };
   }
 
@@ -478,6 +479,7 @@ export class NewAssetModal extends React.Component {
       editInterfaceInput: false,
       errorType: errorType,
       validInterface: false,
+      otherObjectUnderEdit: false,
     });
   };
 
@@ -517,6 +519,7 @@ export class NewAssetModal extends React.Component {
           assetObject: assetObject,
           editInterfaceList: editInterfaceList,
           displayInterfaceInput: false,
+          otherObjectUnderEdit: false,
         },
         () => {
           if (this.state.assetObject.node_id && this.state.assetObject.node_id !== '') {
@@ -533,6 +536,7 @@ export class NewAssetModal extends React.Component {
           assetObject: assetObject,
           displayInterfaceInput: false,
           interfaceList: assetObject.interface_list,
+          otherObjectUnderEdit: false,
         },
         () => {
           if (this.state.assetObject.node_id && this.state.assetObject.node_id !== '') {
@@ -559,6 +563,7 @@ export class NewAssetModal extends React.Component {
       editInterfaceList: editInterfaceList,
       editInterfaceInput: true,
       validInterface: false,
+      otherObjectUnderEdit: true,
     });
   };
 

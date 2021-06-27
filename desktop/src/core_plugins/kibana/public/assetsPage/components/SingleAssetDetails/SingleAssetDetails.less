@@ -1,10 +1,11 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .single-asset-details-wrapper {
-    width        : 100%;
-    padding-left : 0;
-    padding-right: 0;
-    padding-top  : 2%;
+    width           : 100%;
+    padding-left    : 0;
+    padding-right   : 0;
+    padding-top     : 2%;
+    background-color: white;
 
     .top-bar {
         display                : flex;
@@ -12,11 +13,16 @@
         border-top-right-radius: 1rem;
         border                 : none;
         padding-bottom         : 2rem;
+        padding-left           : 2rem;
         font-size              : 1.6rem;
         color                  : @network-top-bar-color  !important;
 
         .back-button {
             padding-right: 60rem;
+
+            .display-right-topologyID {
+                cursor: pointer;
+            }
         }
 
         .asset-details-header {
@@ -26,9 +32,8 @@
     }
 
     .details {
-        display  : flex;
-        width    : 100%;
-        flex-wrap: wrap;
+        width      : 100%;
+        margin-left: 8rem;
 
         .detail {
             display      : inline-block;
@@ -37,24 +42,29 @@
 
             label {
                 width        : 35%;
-                text-align   : right;
+                text-align   : left;
                 padding-right: 0.625rem;
                 font-size    : 1.6rem;
+                font-weight  : normal;
             }
 
             .detail-info {
-                display         : inline-block;
-                padding-left    : 0.625rem;
-                padding-right   : 0.625rem;
-                padding-top     : 0.3rem;
-                padding-bottom  : 0.3rem;
-                width           : 55%;
-                margin-right    : 10%;
-                border          : 1px solid @event-console-border-color;
-                background-color: @event-console-detail-info-background-color;
-                font-size       : 1.6rem;
-                min-height      : 3rem;
+                display       : inline-block;
+                padding-left  : 0.625rem;
+                padding-right : 0.625rem;
+                padding-top   : 0.3rem;
+                padding-bottom: 0.3rem;
+                width         : 55%;
+                margin-right  : 10%;
+                font-size     : 1.6rem;
+                min-height    : 3rem;
+                font-weight   : bolder;
             }
+        }
+
+        .application {
+            background-color: @view_background;
+            flex            : none;
         }
     }
 
@@ -88,7 +98,7 @@
 }
 
 .assets-interface-table-header,
-.assets-enriched-table-header,
+.assets-enriched-table-header-row,
 .assets-ipAddress-table-header,
 .assets-portList-table-header,
 .assets-tags-table-header,
@@ -110,9 +120,31 @@
 }
 
 .table-header {
-    width: 50%;
+    width     : 50%;
+    word-break: break-word;
+    padding   : 0.5rem 1rem;
 }
 
 .table-value {
-    width: 50%;
+    width     : 50%;
+    word-break: break-word;
+    padding   : 0.5rem 1rem;
+}
+
+.single-asset-table {
+    margin: 1rem 2rem;
+}
+
+.assets-enriched-table-header-row {
+    display: flex;
+    padding: 0rem 1.5rem;
+
+    .assets-enriched-table-header {
+        width: 50%;
+    }
+
+    .enrich-asset-button-div {
+        width     : 50%;
+        text-align: right;
+    }
 }

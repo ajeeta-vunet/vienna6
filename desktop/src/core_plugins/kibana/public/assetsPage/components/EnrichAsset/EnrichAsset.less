@@ -1,0 +1,171 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+//mixins are used in the file.
+.flex-row-mixin {
+    display        : flex;
+    width          : 100%;
+    justify-content: space-between;
+}
+
+.action-button-mixin {
+    cursor          : pointer;
+    border          : none;
+    padding         : .6rem 3rem .6rem 3rem !important;
+    font-size       : 1.6rem !important;
+    height          : 3.5rem !important;
+    background-color: @accent_color;
+    color           : @white  !important;
+    box-shadow      : 0rem 0rem 1rem 0.3rem @box_shadow_color;
+    border-radius   : 2rem !important;
+}
+
+.button-disabled-mixin {
+    cursor          : not-allowed !important;
+    opacity         : 0.65;
+    background-color: @disable_button_color  !important;
+    color           : @disable_button_text_color  !important;
+    box-shadow      : none;
+    border          : none;
+    border-radius   : 2rem;
+}
+
+.input-box-mixin {
+    width        : 100%;
+    display      : block;
+    height       : 3.5rem;
+    font-size    : 1.6rem;
+    line-height  : 1.5;
+    color        : @text_color1;
+    border-radius: 1rem;
+    border       : 0.1rem solid @border_color;
+    padding      : 0rem 1rem;
+}
+
+.action-buttons-mixin {
+    border          : none;
+    background-color: @white;
+}
+
+//end of mixins.
+
+//Start of styles for EnrichAsset Component.
+.enrich-asset-wrapper {
+    font-size: 1.6rem !important;
+
+    .title {
+        color      : @accent_color;
+        text-align : center;
+        font-family: @inter-medium;
+        font-size  : 2.5rem;
+        padding    : 1rem 0rem 0.5rem 0rem;
+    }
+
+    .input-form {
+        .heading-div {
+            .flex-row-mixin();
+
+            .key-heading,
+            .value-heading {
+                width      : 40%;
+                padding    : 1rem;
+                font-weight: bold;
+            }
+
+            .actions-heading {
+                width      : 20%;
+                padding    : 1rem;
+                font-weight: bold;
+            }
+        }
+
+        .entered-data {
+            .input-section {
+                display: flex;
+                width  : 100%;
+
+                .key-input-div {
+                    width       : 40%;
+                    margin-right: 1rem;
+
+                    .key-input {
+                        .input-box-mixin();
+                    }
+                }
+
+                .value-input-div {
+                    width       : 40%;
+                    margin-right: 1rem;
+
+                    .value-input {
+                        .input-box-mixin();
+                    }
+                }
+
+                .row-actions {
+                    width  : 20%;
+                    padding: 0.5rem;
+                }
+            }
+
+
+            .entered-data-row {
+                .flex-row-mixin();
+
+                .entered-key,
+                .entered-value {
+                    word-break: break-word;
+                    width     : 40%;
+                    padding   : 0rem 1rem;
+                }
+
+                .edit-delete-actions {
+                    width  : 20%;
+                    padding: 0.5rem 1rem;
+
+                    .edit-button {
+                        .action-buttons-mixin();
+                    }
+
+                    .cancel-button {
+                        .action-buttons-mixin();
+                    }
+                }
+            }
+        }
+
+        .input-section {
+            .flex-row-mixin();
+
+            .new-key-input-div {
+                width       : 40%;
+                margin-right: 1rem;
+
+                .new-key-input {
+                    .input-box-mixin();
+                }
+            }
+
+            .new-value-input-div {
+                width       : 40%;
+                margin-right: 1rem;
+
+                .new-value-input {
+                    .input-box-mixin();
+                }
+            }
+
+            .row-actions {
+                width  : 20%;
+                padding: 0.5rem;
+
+                .add-button {
+                    .action-buttons-mixin();
+                }
+
+                .cancel-button {
+                    .action-buttons-mixin();
+                }
+            }
+        }
+    }
+}

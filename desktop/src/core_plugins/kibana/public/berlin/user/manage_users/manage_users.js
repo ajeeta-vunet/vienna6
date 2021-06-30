@@ -119,7 +119,7 @@ function manageUsers($scope,
 
   // Meta-data for user table..
   $scope.userMeta = {
-    headers: ['Name', 'Email', 'Group', 'Active', 'Home Page', 'Tenant Id', 'BU Id', 'Action'],
+    headers: ['Name', 'Email', 'Groups', 'Active', 'Home Page', 'Tenant Id', 'BU Id', 'Action'],
     rows: ['name', 'email', 'user_group', 'active', 'home_page', 'tenant_id',  'bu_id'],
     columnData: [{ columnName: 'home_page', func: $scope.accessor },
       { columnName: 'mobile_kpi', func: $scope.accessor }],
@@ -177,7 +177,7 @@ function manageUsers($scope,
       {
         key: 'user_group',
         label: 'Group',
-        type: 'select',
+        type: 'multiSelect',
         callback: $scope.fetchDashboards,
         name: 'group',
         options: [],
@@ -387,7 +387,7 @@ function manageUsers($scope,
         'mobile_kpi': mobileKpi(userData.mobile_kpi),
         'email': userData.email,
         'password': userData.password,
-        'user_group': userData.user_group,
+        'user_groups': userData.user_group,
         'allow_console_login': userData.allow_console_login
       } };
       return StateService.addUser(user).then(function () {
@@ -406,7 +406,7 @@ function manageUsers($scope,
           'mobile_kpi': mobileKpi(userData.mobile_kpi),
           'email': userData.email,
           'password': userData.password,
-          'user_group': userData.user_group,
+          'user_groups': userData.user_group,
           'allow_console_login': userData.allow_console_login
         }
       };
@@ -428,7 +428,15 @@ function manageUsers($scope,
   $scope.fetchItems = () => {
     return StateService.getUsersList().then(function (userData) {
       $scope.user_data = userData;
-      return userData;
+      // Adding a space to all user groups at the end. 
+      // For example ['GroupA', 'GroupB'] -->  ['GroupA ', 'GroupB ']
+      // This is done to wrap each group to a line
+      $scope.user_data.forEach((user, index) =>{
+        user.user_group.forEach((group,i)=>{
+          $scope.user_data[index].user_group[i] = group + " "
+        })      
+      })
+      return $scope.user_data;
     });
   };
 

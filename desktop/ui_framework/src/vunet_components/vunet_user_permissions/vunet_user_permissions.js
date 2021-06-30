@@ -61,11 +61,23 @@ export async function getDefaultPermission(allowedRoles) {
           //indexOf returns -1 if ViewObject is not found.
           if(role.permissions.indexOf('ViewObject') > -1) {
             const newRole = { 'name': role.name, 'permission': '' };
-            // If the role is same as current user, mark the
-            // permission as 'modify'
-            if (role.name === currentUser[1] || role.name === 'VunetAdmin') {
+          
+            // If the role is VunetAdmin, or if the current user belongs 
+            // to the role and the role has ManageObject Permission,
+            // Set the permission to modify
+            if ((currentUser[1].includes(role.name) && role.permissions.includes('ManageObject')) || role.name === 'VunetAdmin') {
               newRole.permission = 'modify';
             }
+            
+            // If the current user belongs to the role and the role has ViewObject Permission
+            // Set the permission to view
+            else if (currentUser[1].includes(role.name) && role.permissions.includes('ViewObject')){
+              newRole.permission = 'view'; 
+            }
+            else {
+
+            }
+            
             userRoles.push(newRole);
           }
         });
@@ -209,12 +221,12 @@ export class VunetUserPermissions extends React.Component {
                 >
                   <span className="radio-title ">{role.name.charAt(0).toUpperCase() + role.name.slice(1)}</span>
                   <div className={'radio-input-container ' +
-                  (role.name === owner.role || role.name === 'VunetAdmin' || this.isModifyDisabled(role.name) ? 'disabledRadioInput' : null)}
+                  (owner.role.includes(role.name) || role.name === 'VunetAdmin' || this.isModifyDisabled(role.name) ? 'disabledRadioInput' : null)}
                   >
                     <input
                       className="form-control radio-input"
                       type="radio"
-                      disabled={role.name === owner.role || role.name === 'VunetAdmin' || this.isModifyDisabled(role.name)}
+                      disabled={owner.role.includes(role.name) || role.name === 'VunetAdmin' || this.isModifyDisabled(role.name)}
                       id={'Modify' + index}
                       value="modify"
                       name={role.name}
@@ -230,12 +242,12 @@ export class VunetUserPermissions extends React.Component {
                     </label>
                   </div>
                   <div className={'radio-input-container ' +
-                   (role.name === owner.role || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
+                   (owner.role.includes(role.name) || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
                   >
                     <input
                       className="form-control radio-input"
                       type="radio"
-                      disabled={role.name === owner.role || role.name === 'VunetAdmin'}
+                      disabled={owner.role.includes(role.name) || role.name === 'VunetAdmin'}
                       id={'View' + index}
                       value="view"
                       name={role.name}
@@ -251,12 +263,12 @@ export class VunetUserPermissions extends React.Component {
                     </label>
                   </div>
                   <div className={'radio-input-container ' +
-                  (role.name === owner.role || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
+                  (owner.role.includes(role.name) || role.name === 'VunetAdmin' ? 'disabledRadioInput' : null)}
                   >
                     <input
                       className="form-control radio-input"
                       type="radio"
-                      disabled={role.name === owner.role}
+                      disabled={owner.role.includes(role.name)}
                       id={'None' + index}
                       value=""
                       name={role.name}

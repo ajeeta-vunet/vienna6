@@ -21,13 +21,12 @@
         <tr ng-repeat="role in allowedRoles">
           <form name="roleForm">
             <td class="rbac-table-td">
-              {{role.name}}
-            </td>
+              {{role.name}}</td>
             <td>
               <label class="rbac-label">
                 <input type="radio" ng-model="role.permission" value="modify"
-                  ng-disabled=" role.name == owner.role || role.name == vunetAdminRole || isModifyDisabled(role.name)"
-                  ng-checked= " role.name == owner.role || role.name == vunetAdminRole "
+                  ng-disabled=" owner.role.includes(role.name) || role.name == vunetAdminRole || isModifyDisabled(role.name)"
+                  ng-checked= " (owner.role.includes(role.name) && role.permissions.include('ManageObject'))"
                 >
                 Modify
               </label>
@@ -35,14 +34,15 @@
             <td>
               <label class="rbac-label">
                 <input type="radio" ng-model="role.permission" value="view"
-                  ng-disabled="role.name == owner.role || role.name == vunetAdminRole ">
+                  ng-disabled="owner.role.includes(role.name) || role.name == vunetAdminRole "
+                  ng-checked= " (owner.role.includes(role.name) && !role.permissions.include('ManageObject'))">
                 View
               </label>
             </td>
             <td>
               <label class="rbac-label">
                 <input type="radio" ng-model="role.permission" value=""
-                  ng-disabled="role.name == owner.role || role.name == vunetAdminRole ">
+                  ng-disabled="owner.role.includes(role.name)  || role.name == vunetAdminRole ">
                 None
               </label>
             </td>

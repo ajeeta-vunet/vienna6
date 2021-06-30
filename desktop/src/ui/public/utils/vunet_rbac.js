@@ -32,7 +32,7 @@ export function rbacCheckForModifyPermission(chrome, type, title, visState, allo
   if (checkPermission) {
     // Add the code to check if we should allow this or not
     _.each(allowedRoles, function (role) {
-      if (role.name === currentUser[1] && _.contains(permissionList, role.permission)) {
+      if (currentUser[1].includes(role.name) && _.contains(permissionList, role.permission)) {
         operAllowed = true;
       }
     });

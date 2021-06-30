@@ -63,8 +63,8 @@ export default function (chrome, internals) {
       // If the user has a view or modify permission on this object, we allow him to
       // modify the permissions as well
       _.each(allowedRoles, function (role) {
-        if ((role.name === internals.userRole && role.permission === 'view') ||
-            (role.name === internals.userRole && role.permission === 'modify')) {
+        if ((internals.userRole.includes(role.name) && role.permission === 'view') ||
+            (internals.userRole.includes(role.name) && role.permission === 'modify')) {
           userAllowedToViewModify = true;
         }
       });
@@ -88,7 +88,7 @@ export default function (chrome, internals) {
       // If the user has a modify permission on this object, we allow him to
       // modify the permissions as well
       _.each(allowedRoles, function (role) {
-        if (role.name === internals.userRole && role.permission === 'modify') {
+        if (internals.userRole.includes(role.name) && role.permission === 'modify') {
           userAllowedToModify = true;
         }
       });

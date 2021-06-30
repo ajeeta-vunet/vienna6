@@ -49,6 +49,7 @@ function manageRoles($scope,
     title: 'Roles',
     selection: true,
     search: true,
+    wrapTableCellContents: true,
     deleteIconCheckCallback: $scope.deleteIconCheckCallback,
     editIconCheckCallback: $scope.editIconCheckCallback,
     table:
@@ -224,7 +225,7 @@ function manageRoles($scope,
   // Delete user roles
   $scope.deleteSelectedItems = (rows) => {
 
-    // Iterate over list of users to be deleted and delete
+    // Iterate over list of users roles to be deleted and delete
     // one by one. We return a list of promises which contains both
     // success and failure cases.
     const deletePromises = Promise.map(rows, function (row) {
@@ -247,11 +248,15 @@ function manageRoles($scope,
   $scope.fetchItems = () => {
     return StateService.getRolesList().then(function (data) {
       let index = 0;
-      data.user_groups.forEach(element => {
-        data.user_groups[index].permissions = element.permissions.split(',');
-        index++;
+      data.user_groups.forEach((element, index)=> {
+        data.user_groups[index].permissions = element.permissions.split(',')
+        // Adding a space at the end for each permission 
+        // For example ['Viewobject', 'ManageObject'] --> ['Viewobject ', 'ManageObject ']
+        // This is done to display each permission in one line
+        data.user_groups[index].permissions.forEach((permission, i) =>{
+          data.user_groups[index].permissions[i] = permission + " "
+        })
       });
-
       return data.user_groups;
     });
   };

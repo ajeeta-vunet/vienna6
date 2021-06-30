@@ -58,19 +58,30 @@ module.directive('rbacUserRole', function ($http) {
 
           // This seems to be a request for a new object, let us create
           // roles information for each existing role and add it. For
-          // current user's role, we automatically set the permission
-          // to modify
+          // current user's roles, we automatically set the permission
+          // to modify, if the role has ManageObject permission. Or else we set
+          // to view if the role has only ViewObject permission.
+
           _.each(data.user_groups, function (role) {
             // User Roles and Permissions are stored
             const userdetails = { 'name': role.name, 'claims': role.permissions };
             userRolePermissionDetails.push(userdetails);
+
             //indexOf returns -1 if ViewObject is not found.
             if(role.permissions.indexOf('ViewObject') > -1) {
               const newRole = { 'name': role.name, 'permission': '' };
-              // If the role is same as current user, mark the
-              // permission as 'modify'
-              if (role.name === currentUser[1] || role.name === $scope.vunetAdminRole) {
+
+              // If the role is VunetAdmin, or if the current user belongs 
+              // to the role and the role has ManageObject Permission,
+              // Set the permission to modify
+              if ((currentUser[1].includes(role.name) && role.permissions.includes('ManageObject')) || role.name === $scope.vunetAdminRole) {
                 newRole.permission = 'modify';
+              }
+              
+              // If the current user belongs to the role and the role has ViewObject Permission
+              // Set the permission to view
+              else if (currentUser[1].includes(role.name) && role.permissions.includes('ViewObject')){
+                newRole.permission = 'view'; 
               }
               userRoles.push(newRole);
             }

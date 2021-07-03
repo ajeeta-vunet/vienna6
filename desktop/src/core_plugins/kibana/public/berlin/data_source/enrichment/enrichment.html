@@ -1,27 +1,38 @@
-<vunet-enrichment class="vunet-enrichment-types-directive">
+<vunet-enrichment class="vunet-enrichment-directive">
   <!-- Local nav. -->
   <kbn-top-nav name="enrichment">
     <!-- Transcluded elements. -->
     <div data-transclude-slots>
       <!-- Title. -->
-      <div data-transclude-slot="topLeftCorner" class="kuiLocalTitle" role="heading" aria-level="1">
-        Enrichment
+      <div
+        data-transclude-slot="topLeftCorner"
+        class="kuiLocalTitle"
+        role="heading"
+        aria-level="1"
+      >
+        <div class="kuiLocalBreadcrumb">
+          <a class="kuiLocalBreadcrumb__link" href="/app/vienna#/berlin/data_source/enrichment">Enrichment Tables</a>
+        </div>
+        <div class="kuiLocalBreadcrumb  vunet-word-wrap">
+          {{ tableName }}
+        </div>
       </div>
     </div>
   </kbn-top-nav>
-
-  <div data-test-subj="enrichmentPage" class="vunet-enrichment-types-container menubar-fixed-top">
-    <div ng-if="type1">
-      <div class="increase-height-key-label">
-        <a href="/app/vienna#/berlin/data_source/enrichment" title="Go Back" class="fa fa-arrow-circle-o-left fa-lg display-right-groupname"></a>
-        <span>{{table1GroupName}}</span>
+  <div
+    data-test-subj="enrichmentPage"
+    class="vunet-enrichment-types-container menubar-fixed-top"
+  >
+    <div class="enrichment-data-list-container">
+      <div class="enrichment-data-container">
+        <vunet-data-table
+          fetch-items="fetchEnrichmentData"
+          delete-selected-items="deleteSelectedItems"
+          meta-item="enrichmentDataMeta"
+          on-submit="onSubmit"
+        >
+        </vunet-data-table>
       </div>
-      <vunet-data-table fetch-items="fetchEnrichmentItems" delete-selected-items="deleteEnrichmentData" meta-item="enrichmentMeta"
-        on-submit="addEnrichmentData">
-      </vunet-data-table>
-    </div>
-    <div ng-if="!type1">
-      <enrichment-table></enrichment-table>
     </div>
   </div>
 </vunet-enrichment>

@@ -48,6 +48,10 @@ export class VunetModal extends Component {
     };
   }
 
+  componentDidMount() {
+    this.setState({ isModalVisible: this.props.showModal, data: this.props.data });
+  }
+
   componentWillReceiveProps(props) {
     this.setState({ isModalVisible: props.showModal, data: props.data });
   }
@@ -154,6 +158,7 @@ export class VunetModal extends Component {
   * Render Modal
   */
   render() {
+
     let modal;
 
     /**

@@ -1,6 +1,5 @@
-
 /* globals window */
-import _ from 'lodash';
+import _ from "lodash";
 /**
  * ES6 classes don't have a concept of private methods. There are ways that I
  * can hack around it by either making dependent classes or weird things with
@@ -16,16 +15,19 @@ class StateService {
     this._DataService = dataService;
     this.$rootScope = $rootScope;
     this._currentState = {
-      snapshot: 'current',
-      user: null
+      snapshot: "current",
+      user: null,
     };
-    if (_.has(window.localStorage, 'username') && window.localStorage.username !== '') {
+    if (
+      _.has(window.localStorage, "username") &&
+      window.localStorage.username !== ""
+    ) {
       this._currentState.user = window.localStorage.username;
     }
   }
 
   isAuthenticated() {
-    if(!!this._currentState.user) {
+    if (!!this._currentState.user) {
       return true;
     }
     return false;
@@ -43,7 +45,9 @@ class StateService {
   getActiveSnapshotDetails() {
     return this.$q((resolve) => {
       this.getRepositoryContent().then((response) => {
-        const currentRepo = _.findWhere(response, { snapshot_id: this._currentState.snapshot });
+        const currentRepo = _.findWhere(response, {
+          snapshot_id: this._currentState.snapshot,
+        });
         resolve(currentRepo.snapshot_details);
       });
     });
@@ -85,31 +89,45 @@ class StateService {
 
   //adding a tenant attribute data
   addTenantAttribute(attributeName, newAttributeData) {
-    return this._DataService.addTenantAttribute(attributeName, newAttributeData);
+    return this._DataService.addTenantAttribute(
+      attributeName,
+      newAttributeData
+    );
   }
 
   //editing tenant attribute data
   editTenantAttribute(attributeName, editedAttributeData) {
-    return this._DataService.editTenantAttribute(attributeName, editedAttributeData);
+    return this._DataService.editTenantAttribute(
+      attributeName,
+      editedAttributeData
+    );
   }
 
   //deleting tenant attribute data
   deleteTenantAttribute(attributeName, deletedAttributeData) {
-    return this._DataService.deleteTenantAttribute(attributeName, deletedAttributeData);
+    return this._DataService.deleteTenantAttribute(
+      attributeName,
+      deletedAttributeData
+    );
   }
 
   // Export Excel of tenant attribute data
   exportEmailGroupsData(attributeName, attributeDataExportType) {
-    return this._DataService.exportEmailGroupsData(attributeName, attributeDataExportType);
+    return this._DataService.exportEmailGroupsData(
+      attributeName,
+      attributeDataExportType
+    );
   }
-
 
   getNetworkMapContent() {
     return this._DataService.getNetworkMapContent(this._currentState.snapshot);
   }
 
   getNodeDetails(nodeId) {
-    return this._DataService.getNodeDetails(this._currentState.snapshot, nodeId);
+    return this._DataService.getNodeDetails(
+      this._currentState.snapshot,
+      nodeId
+    );
   }
 
   // collect the latest router configuration
@@ -124,24 +142,39 @@ class StateService {
 
   // Get all the instances of a configured router.
   getRouterConfigInstances(configurationCollectorName) {
-    return this._DataService.getRouterConfigInstances(configurationCollectorName);
+    return this._DataService.getRouterConfigInstances(
+      configurationCollectorName
+    );
   }
 
   // Get the contents of a router configuration at a particular time.
   getRouterConfigContent(configurationCollectorName, configurationId) {
-    return this._DataService.getRouterConfigContent(configurationCollectorName, configurationId);
+    return this._DataService.getRouterConfigContent(
+      configurationCollectorName,
+      configurationId
+    );
   }
 
   // Get the diff contents of a router configuration at a particular time.
-  getRouterConfigDiffContent(configurationCollectorName, configurationId1, configurationId2) {
-    return this._DataService.getRouterConfigDiffContent(configurationCollectorName, configurationId1, configurationId2);
+  getRouterConfigDiffContent(
+    configurationCollectorName,
+    configurationId1,
+    configurationId2
+  ) {
+    return this._DataService.getRouterConfigDiffContent(
+      configurationCollectorName,
+      configurationId1,
+      configurationId2
+    );
   }
 
   // Collect the configuration of the device identified by the configuration collector datasource name.
   collectConfigurationForDevice(configurationCollectorName, ccmessage) {
-    return this._DataService.collectConfigurationForDevice(configurationCollectorName, ccmessage);
+    return this._DataService.collectConfigurationForDevice(
+      configurationCollectorName,
+      ccmessage
+    );
   }
-
 
   // Get current snapshot id
   getCurrentSnapshotId() {
@@ -181,17 +214,9 @@ class StateService {
     return this._DataService.getLicenseUsageLimit();
   }
 
-  // Get list of license modules and there active usage 
+  // Get list of license modules and there active usage
   getLicenseActiveUsage() {
     return this._DataService.getLicenseActiveUsage();
-  }
-
-  getDataEnrichmentContents(groupName) {
-    return this._DataService.getDataEnrichmentContents(groupName.toString());
-  }
-
-  getDataEnrichmentGroups() {
-    return this._DataService.getDataEnrichmentGroups();
   }
 
   // Get preference information
@@ -206,12 +231,12 @@ class StateService {
 
   // Get list of snmp credential names, used by data sources
   getSnmpCredentialNames() {
-    return this._DataService.getCredentialNames('snmp');
+    return this._DataService.getCredentialNames("snmp");
   }
 
   // Get list of SSH credential names, used by data sources
   getSshCredentialNames() {
-    return this._DataService.getCredentialNames('ssh');
+    return this._DataService.getCredentialNames("ssh");
   }
 
   // Get credentials
@@ -237,19 +262,11 @@ class StateService {
     return this._DataService.editPreference(preference, slugifiedHeader);
   }
 
-  addDataEnrichmentContent(groupName, dataEnrichment) {
-    return this._DataService.addDataEnrichmentContent(groupName, dataEnrichment);
-  }
-
-  updateDataEnrichmentContent(dataEnrichment, groupName, key) {
-    return this._DataService.updateDataEnrichmentContent(dataEnrichment, groupName, key);
-  }
-
   // Setting Internal State
   setSnapshot(snapshot) {
     this._currentState.snapshot = snapshot;
     // Others (like navbar) listen for this event and take any actions needed.
-    this.$rootScope.$broadcast('vusop:snapshotChanged', snapshot);
+    this.$rootScope.$broadcast("vusop:snapshotChanged", snapshot);
   }
 
   // POST Requests
@@ -260,7 +277,6 @@ class StateService {
   updateCredentials(credentials) {
     return this._DataService.updateCredentials(credentials);
   }
-
 
   addUser(user) {
     return this._DataService.addUser(user);
@@ -279,23 +295,40 @@ class StateService {
   }
 
   updateNodePosition(nodeId, nodePosition) {
-    return this._DataService.updateNodePosition(this._currentState.snapshot, nodeId, nodePosition);
+    return this._DataService.updateNodePosition(
+      this._currentState.snapshot,
+      nodeId,
+      nodePosition
+    );
   }
 
   updateAllNodePosition(nodePositionList) {
-    return this._DataService.updateAllNodePosition(this._currentState.snapshot, nodePositionList);
+    return this._DataService.updateAllNodePosition(
+      this._currentState.snapshot,
+      nodePositionList
+    );
   }
 
   updateMetadata(nodeId, metaData) {
-    return this._DataService.updateMetadata(this._currentState.snapshot, nodeId, metaData);
+    return this._DataService.updateMetadata(
+      this._currentState.snapshot,
+      nodeId,
+      metaData
+    );
   }
 
   doPathAnalysis(pathAnalysis) {
-    return this._DataService.doPathAnalysis(this._currentState.snapshot, pathAnalysis);
+    return this._DataService.doPathAnalysis(
+      this._currentState.snapshot,
+      pathAnalysis
+    );
   }
 
   searchNetwork(searchText) {
-    return this._DataService.searchNetwork(this._currentState.snapshot, searchText);
+    return this._DataService.searchNetwork(
+      this._currentState.snapshot,
+      searchText
+    );
   }
 
   addScanNow(scanNow) {
@@ -306,7 +339,6 @@ class StateService {
     return this._DataService.deleteSnapshot(snapshot.toString());
   }
 
-
   deleteUser(name) {
     return this._DataService.deleteUser(name.toString());
   }
@@ -316,20 +348,25 @@ class StateService {
   // tenantId and buId are added to the urlBase itself as it is always going
   // to be the logged in user's tenant / bu.
   deleteRole(name, tenantId, buId) {
-    return this._DataService.deleteRole(name.toString(), tenantId.toString(), buId.toString());
-  }
-
-  deleteDataEnrichmentContent(groupName, key) {
-    return this._DataService.deleteDataEnrichmentContent(groupName, key);
+    return this._DataService.deleteRole(
+      name.toString(),
+      tenantId.toString(),
+      buId.toString()
+    );
   }
 
   // Export data enrichment file(s)
-  exportDataEnrichment(fileNames, fileType) {
-    return this._DataService.exportDataEnrichment(fileNames, fileType);
+  exportDataEnrichment(data) {
+    return this._DataService.exportDataEnrichment(data);
   }
 
   fileImport(fileData, upload, newSnapshot) {
-    return this._DataService.fileImport(this._currentState.snapshot, fileData, upload, newSnapshot);
+    return this._DataService.fileImport(
+      this._currentState.snapshot,
+      fileData,
+      upload,
+      newSnapshot
+    );
   }
 
   // update licence
@@ -353,7 +390,11 @@ class StateService {
 
   //Start the action for the action button
   initiateAction(actionName, agrsToSend) {
-    return this._DataService.initiateAction(actionName, agrsToSend, this._currentState.user);
+    return this._DataService.initiateAction(
+      actionName,
+      agrsToSend,
+      this._currentState.user
+    );
   }
 
   // get all live indices
@@ -377,19 +418,35 @@ class StateService {
   }
 
   openDataForDate(date, identifier) {
-    return this._DataService.openDataForDate(this._currentState.snapshot, date, identifier);
+    return this._DataService.openDataForDate(
+      this._currentState.snapshot,
+      date,
+      identifier
+    );
   }
 
   archiveDataForDate(date, identifier) {
-    return this._DataService.archiveDataForDate(this._currentState.snapshot, date, identifier);
+    return this._DataService.archiveDataForDate(
+      this._currentState.snapshot,
+      date,
+      identifier
+    );
   }
 
   restoreDataForDate(date, identifier) {
-    return this._DataService.restoreDataForDate(this._currentState.snapshot, date, identifier);
+    return this._DataService.restoreDataForDate(
+      this._currentState.snapshot,
+      date,
+      identifier
+    );
   }
 
   deleteArchiveDataForDate(date, identifier) {
-    return this._DataService.deleteArchiveDataForDate(this._currentState.snapshot, date, identifier);
+    return this._DataService.deleteArchiveDataForDate(
+      this._currentState.snapshot,
+      date,
+      identifier
+    );
   }
 
   // This function is called to fetch the list of data-source-types
@@ -438,23 +495,66 @@ class StateService {
   }
 
   //Import data to elastic search
-  importData(file, indexName, docType, isTimeseries, timeField, timeFormat, customField, upload) {
-    return this._DataService.importData(file, indexName, docType, isTimeseries, timeField, timeFormat, customField, upload);
+  importData(
+    file,
+    indexName,
+    docType,
+    isTimeseries,
+    timeField,
+    timeFormat,
+    customField,
+    upload
+  ) {
+    return this._DataService.importData(
+      file,
+      indexName,
+      docType,
+      isTimeseries,
+      timeField,
+      timeFormat,
+      customField,
+      upload
+    );
   }
 
   // This function is called to refresh data receive flag for a given instance
   // of a specifc data-source-types
   refreshDataSouce(sourceType, index, esIndexName, interval) {
-    return this._DataService.refreshDataSouce(sourceType, index, esIndexName, interval);
+    return this._DataService.refreshDataSouce(
+      sourceType,
+      index,
+      esIndexName,
+      interval
+    );
   }
 
-  downloadDataSourceAgentConfiguration(dataSourceType, dataSourceinstance, environment, data) {
-    return this._DataService.downloadDataSourceAgentConfiguration(dataSourceType, dataSourceinstance, environment, data);
+  downloadDataSourceAgentConfiguration(
+    dataSourceType,
+    dataSourceinstance,
+    environment,
+    data
+  ) {
+    return this._DataService.downloadDataSourceAgentConfiguration(
+      dataSourceType,
+      dataSourceinstance,
+      environment,
+      data
+    );
   }
 
   // function to download the data source agent package and install script
-  downloadDataSourceAgent(dataSourceType, dataSourceinstance, environment, data) {
-    return this._DataService.downloadDataSourceAgent(dataSourceType, dataSourceinstance, environment, data);
+  downloadDataSourceAgent(
+    dataSourceType,
+    dataSourceinstance,
+    environment,
+    data
+  ) {
+    return this._DataService.downloadDataSourceAgent(
+      dataSourceType,
+      dataSourceinstance,
+      environment,
+      data
+    );
   }
 
   // Download the most recent configuration of all devices
@@ -464,12 +564,17 @@ class StateService {
 
   // Download most recent configuration of a device
   downloadMostRecentConfigurationOfSingleDevice(configurationCollectorName) {
-    return this._DataService.downloadMostRecentConfigurationOfSingleDevice(configurationCollectorName);
+    return this._DataService.downloadMostRecentConfigurationOfSingleDevice(
+      configurationCollectorName
+    );
   }
 
   // Download a configuration item
   downloadSingleConfigurationItem(configurationCollectorName, configurationId) {
-    return this._DataService.downloadSingleConfigurationItem(configurationCollectorName, configurationId);
+    return this._DataService.downloadSingleConfigurationItem(
+      configurationCollectorName,
+      configurationId
+    );
   }
 
   // function to download the data enrichment file
@@ -499,16 +604,26 @@ class StateService {
 
   // get wizard data for editing an instance under vuBlock
   getWizardDataForSource(vuBlockName, sourceInstanceName) {
-    return this._DataService.getWizardDataForSource(vuBlockName, sourceInstanceName);
+    return this._DataService.getWizardDataForSource(
+      vuBlockName,
+      sourceInstanceName
+    );
   }
 
   // update source instance
   updateDataSource(vuBlockName, sourceInstanceName, data) {
-    return this._DataService.updateDataSource(vuBlockName, sourceInstanceName, data);
+    return this._DataService.updateDataSource(
+      vuBlockName,
+      sourceInstanceName,
+      data
+    );
   }
 
   getAgentConfiguration(vuBlockName, sourceInstanceName) {
-    return this._DataService.getAgentConfiguration(vuBlockName, sourceInstanceName);
+    return this._DataService.getAgentConfiguration(
+      vuBlockName,
+      sourceInstanceName
+    );
   }
 
   requestDiagnostic() {
@@ -522,7 +637,11 @@ class StateService {
 
   //mobile dashboard : get details of dashboards
   getMobileDashboardsDetails(dashboard, startTime, endTime) {
-    return this._DataService.getMobileDashboardsDetails(dashboard, startTime, endTime);
+    return this._DataService.getMobileDashboardsDetails(
+      dashboard,
+      startTime,
+      endTime
+    );
   }
 
   // Gets the list of Uploaded file gate way files.
@@ -572,17 +691,21 @@ class StateService {
 
   // Uploads the Image Information.
   uploadImageFile(upload, usageType, File, imageName) {
-    return this._DataService.uploadImageFile(upload, usageType, File, imageName);
+    return this._DataService.uploadImageFile(
+      upload,
+      usageType,
+      File,
+      imageName
+    );
   }
 
   // Deletes the Image file.
   deleteUploadedImage(rowId) {
     return this._DataService.deleteUploadedImage(rowId);
   }
-
 }
 
-StateService.$inject = ['$log', '$q', 'DataService', '$rootScope'];
+StateService.$inject = ["$log", "$q", "DataService", "$rootScope"];
 /*eslint-disable */
 export default StateService;
 /*eslint-enable */

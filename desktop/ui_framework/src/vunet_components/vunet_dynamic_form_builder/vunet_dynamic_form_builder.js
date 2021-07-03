@@ -757,6 +757,7 @@ export class VunetDynamicFormBuilder extends Component {
             <select
               className="form-input"
               value={value}
+              disabled={id}
               data-error-text={errorText}
               onChange={(e) => { this.onChange(e, target); }}
             >

@@ -452,12 +452,6 @@ class DataService {
     return this._getRequest(url, 'getting user');
   }
 
-  // Get the contents of data enrichment group
-  getDataEnrichmentContents(groupName) {
-    const url = this.urlBase + '/data_enrich_config/' + groupName + '/';
-    return this._getRequest(url, 'getting data enrichment content');
-  }
-
   // Get license usage limit details
   getLicenseUsageLimit() {
     const url = this.licenseThresholdDetails;
@@ -468,25 +462,6 @@ class DataService {
   getLicenseActiveUsage() {
     const url = this.licenseAciveDetails;
     return this._getRequest(url, 'getting license active usage deatils');
-  }
-
-
-  // Update the contents of data enrichment group
-  updateDataEnrichmentContent(dataEnrichment, groupName, key) {
-    const url = this.urlBase + '/data_enrich_config/' + groupName + '/' + key + '/';
-    return this._putRequest(url, dataEnrichment, 'updating data enrichment entry');
-  }
-
-  //add an entry in data enrichment group
-  addDataEnrichmentContent(groupName, dataEnrichment) {
-    const url = this.urlBase + '/data_enrich_config/' + groupName + '/';
-    return this._postRequest(url, dataEnrichment, 'adding data enrichment entry');
-  }
-
-  // Get list of data enrichment objects.
-  getDataEnrichmentGroups() {
-    const url = this.urlBase + '/data_enrich_config/';
-    return this._getRequest(url, 'getting data enrichment groups');
   }
 
   // Get tenant information
@@ -600,7 +575,7 @@ class DataService {
 
   // downloading sample data enrichments file
   downloadSampleDataEnrichment() {
-    const url = this.urlBase + '/data_enrich_config/' + '?file_type=sample&file_format=xlsx';
+    const url = this.urlBase + '/enrichment/data/export/' + '?file_type=sample&file_format=xlsx';
     return this._getFileRequest(url, 'getting sample data enrichment files', { responseType: 'blob' });
   }
 
@@ -865,7 +840,7 @@ class DataService {
 
   // Importing data enrichment file.
   importDataEnrichment(fileData, upload) {
-    const url = this.urlBase + '/data_enrich_config/';
+    const url = this.urlBase + '/enrichment/data/import/';
     return this.$q((resolve, reject) => {
       upload.upload({ url: url, file: fileData }).then((response) => {
         resolve(response);
@@ -962,16 +937,10 @@ class DataService {
     return this._deleteRequest(url, 'deleting a role');
   }
 
-  // Delete a row in data enrichment object
-  deleteDataEnrichmentContent(groupName, key) {
-    const url = this.urlBase + '/data_enrich_config/' + groupName + '/' + key + '/';
-    return this._deleteRequest(url, 'deleting data enrichment content');
-  }
-
   // Export data enrichment file(s).
-  exportDataEnrichment(fileNames, fileType) {
-    const url = this.urlBase + '/data_enrich_config/' + '?' + 'selected_files=' + fileNames + '&file_format=' + fileType;
-    return this._getFileRequest(url, 'getting existing data enrichment files', { responseType: 'blob' });
+  exportDataEnrichment(data) {
+    const url = this.urlBase + '/enrichment/data/export/';
+    return this._postFileRequest(url, data, 'getting existing data enrichment files', { responseType: 'blob' });
   }
 
   deleteArchiveDataForDate(snapshot, date, identifier) {
@@ -1106,7 +1075,6 @@ class DataService {
     const url = this.urlBase + '/fgw/?file_type=images&image_name=' + rowId;
     return this._deleteRequest(url, 'Deleting an Image ' + rowId);
   }
-
 }
 
 DataService.$inject = ['$log',

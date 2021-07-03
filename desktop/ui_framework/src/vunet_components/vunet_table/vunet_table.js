@@ -281,6 +281,20 @@ export class VunetDataTable extends Component {
   };
 
   componentDidMount() {
+    // Create SortableProperties instance only column header is available
+    if (this.props.metaItem.rows.length > 0) {
+      if(this.props.metaItem.sortOn) {
+        this.sortableProperties = new SortableProperties(
+          this.createSortablePropertiesList(),
+          this.props.metaItem.sortOn
+        );
+      }else{
+        this.sortableProperties = new SortableProperties(
+          this.createSortablePropertiesList(),
+          this.props.metaItem.rows[0]
+        );
+      }
+    }
     this.fetchItems(this.state.filter);
   }
 
@@ -571,6 +585,14 @@ export class VunetDataTable extends Component {
     }
   }
 
+  // This function gets called when the add button is clicked.
+  // when we pass a property 'customAdd' in vunet table meta,
+  // we call this function 'onCustomAddAction' which refers to a
+  // handler defined in the module which calls vunet table.
+  onCustomAddAction = () => {
+    return this.props.onCustomAddAction();
+  }
+
   /**
   * Table level (header) action callback
   */
@@ -730,6 +752,16 @@ export class VunetDataTable extends Component {
         />
         : undefined)];
 
+    // Display custom add button when 'customAdd' prop is passed.
+    const customAddAction = [(this.props.metaItem.customAdd && !isRowsSelected && (maxRows === undefined ||
+      maxRows > this.rows.length)
+      ? (<KuiListingTableCreateButton
+        key="create"
+        onCreate={this.onCustomAddAction}
+        aria-label="Create new"
+      />)
+      : undefined)];
+
     if (this.props.metaItem.tableAction &&
       this.props.metaItem.tableAction.length) {
       for (let actionIndex = 0; actionIndex < this.props.metaItem.tableAction.length; actionIndex++) {
@@ -762,6 +794,7 @@ export class VunetDataTable extends Component {
     return [
       ...tableAction,
       ...addDeleteAction,
+      ...customAddAction,
       ...rowsSelect,
     ];
   }
@@ -1034,5 +1067,6 @@ VunetDataTable.propTypes = {
   metaItem: PropTypes.object, // Additional meta
   tableType: PropTypes.string, // table-type to identify table
   onSubmit: PropTypes.func, // On from submit callback
-  getAllEditData: PropTypes.func // function reference to get form wizard data.
+  getAllEditData: PropTypes.func, // function reference to get form wizard data.
+  onCustomAddAction: PropTypes.func // function reference for customAdd button click
 };

@@ -1,0 +1,47 @@
+@import '~ui/styles/vunet_variable_theme.less';
+@import (reference) "~ui/styles/variables";
+
+// This is the CSS defined for loading component
+.vis-loading-wrapper{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    .vunet-bars-loader {
+      display: inline-block;
+      position: relative;
+      width: 8rem;
+      height: 8rem;
+    }
+     .vunet-bars-loader div {
+      display: inline-block;
+      position: absolute;
+      left: 0.8rem;
+      width: 1.6rem;
+      background: @accent_color;
+      animation: vunet-bars-loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+    }
+     .vunet-bars-loader div:nth-child(1) {
+      left: 0.8rem;
+      animation-delay: -0.24s;
+    }
+     .vunet-bars-loader div:nth-child(2) {
+      left: 3.2rem;
+      animation-delay: -0.12s;
+    }
+     .vunet-bars-loader div:nth-child(3) {
+      left: 5.6rem;
+      animation-delay: 0;
+    }
+    @keyframes vunet-bars-loader {
+      0% {
+        top: 0.8rem;
+        height: 6.4rem;
+      }
+      50%, 100% {
+        top: 2.4rem;
+        height: 3.2rem;
+      }
+    }
+}

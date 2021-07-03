@@ -6,6 +6,7 @@ import { FeatureCatalogueRegistryProvider, FeatureCatalogueCategory } from 'ui/r
 import 'plugins/kibana/berlin/styles/main.less';
 import 'plugins/kibana/berlin/details/details.less';
 import uiRoutes from 'ui/routes';
+import { apiProvider } from 'ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
 
 import 'plugins/kibana/berlin/berlin';
 import 'plugins/kibana/berlin/user/manage_users/manage_users';
@@ -14,7 +15,7 @@ import 'plugins/kibana/berlin/data_source/configuration/configuration';
 import 'plugins/kibana/berlin/data_source/storage/storage';
 import 'plugins/kibana/berlin/data_source/storage/live_indices/live_indices';
 import 'plugins/kibana/berlin/data_source/storage/archived_indices/archived_indices';
-import 'plugins/kibana/berlin/data_source/enrichment/enrichment_groups';
+import 'plugins/kibana/berlin/data_source/enrichment/enrichment_tables';
 import 'plugins/kibana/berlin/data_source/enrichment/enrichment';
 import 'plugins/kibana/berlin/data_source/vublock/vublock_list';
 import 'plugins/kibana/berlin/data_source/vublock/vublock_details';
@@ -22,7 +23,6 @@ import 'plugins/kibana/berlin/preferences/preferences';
 import 'plugins/kibana/berlin/definitions/definition';
 import 'plugins/kibana/berlin/definitions/credentials/credentials';
 import 'plugins/kibana/berlin/definitions/email_groups/email_groups';
-import 'plugins/kibana/berlin/data_source/enrichment/enrichment_table.directive';
 import 'plugins/kibana/berlin/about/about';
 // import 'plugins/kibana/berlin/network_configuration/view_network_configuration';
 import 'plugins/kibana/berlin/details/details';
@@ -63,8 +63,8 @@ import { DataRetentionSettingsConstants } from './data_source/settings/settings_
 import { ImageManagerInterfaceConstants } from './image_manager/image_manager_constants.js';
 import { BackupConstants } from './backup/backup_constants.js';
 
-import enrichmentGroupsTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment_groups.html';
-import enrichmentTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment.html';
+import enrichmentTablesTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment_tables.html';
+import enrichmentDataTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment.html';
 import vuBlockTemplate from 'plugins/kibana/berlin/data_source/vublock/vublock_list.html';
 import vuBlockDetailsTemplate from 'plugins/kibana/berlin/data_source/vublock/vublock_details.html';
 import configurationTemplate from 'plugins/kibana/berlin/data_source/configuration/configuration.html';
@@ -87,11 +87,19 @@ uiRoutes
   .when(BerlinConstants.BERLIN_PATH + UserConstants.USER_PATH, {
     template: userTemplate,
   })
-  .when(BerlinConstants.BERLIN_PATH + EnrichmentConstants.ENRICHMENT_GROUPS_PATH, {
-    template: enrichmentGroupsTemplate,
+  .when(BerlinConstants.BERLIN_PATH + EnrichmentConstants.ENRICHMENT_TABLES_PATH, {
+    template: enrichmentTablesTemplate,
   })
-  .when(BerlinConstants.BERLIN_PATH + EnrichmentConstants.ENRICHMENT_PATH, {
-    template: enrichmentTemplate,
+  .when(BerlinConstants.BERLIN_PATH + EnrichmentConstants.ENRICHMENT_DATA_PATH, {
+    template: enrichmentDataTemplate,
+    resolve: {
+      tableMetaDataList: function () {
+        return apiProvider
+          .getAll(EnrichmentConstants.ENRICHMENT_TABLES_API_URL).then(function (data) {
+            return data.data;
+          });
+      }
+    }
   })
   .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.VUBLOCK_PATH, {
     template: vuBlockTemplate,
@@ -146,7 +154,7 @@ uiRoutes
   })
   .when(BerlinConstants.BERLIN_PATH + BackupConstants.BACKUP_PATH, {
     template: backupTemplate,
-  })
+  });
 
 FeatureCatalogueRegistryProvider.register(() => {
   return {

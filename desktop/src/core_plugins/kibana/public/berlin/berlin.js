@@ -12,8 +12,6 @@ require('datatables');
 require('angular-datatables');
 require('angular-smart-table');
 
-import DataEnrichmentUtilService from 'plugins/kibana/berlin/data_source/enrichment/data_enrichment.utils.service';
-
 const app = uiModules.get('app/berlin', ['react', 'ngFileSaver', 'ui-notification', 'ui.bootstrap', 'datatables', 'smart-table']);
 app
   .constant('SUPER_TENANT_ID', '1')
@@ -30,7 +28,6 @@ app
 
 app.service('DataService', DataService);
 app.service('StateService', StateService);
-app.service('DataEnrichmentUtilService', DataEnrichmentUtilService);
 
 app.config(function (NotificationProvider) {
   NotificationProvider.setOptions({

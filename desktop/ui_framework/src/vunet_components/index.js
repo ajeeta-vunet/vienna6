@@ -8,3 +8,4 @@ export { VunetDataTable } from './vunet_table/vunet_table';
 export { VunetUserPermissions } from './vunet_user_permissions/vunet_user_permissions';
 export { VunetNavbar } from './vunet_navbar/vunet_navbar';
 export { VunetSidebar } from './vunet_sidebar/vunet_sidebar';
+export { VunetLoader } from './VunetLoader/VunetLoader';

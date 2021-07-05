@@ -21,6 +21,7 @@ import './CorrelatedAlerts.less';
 import { generateHeading } from '../../../utils/vunet_format_name';
 import $ from 'jquery';
 import _ from 'lodash';
+import { VunetLoader } from 'ui_framework/src/vunet_components/VunetLoader/VunetLoader';
 
 export class CorrelatedAlerts extends React.Component {
   constructor(props) {
@@ -122,13 +123,11 @@ export class CorrelatedAlerts extends React.Component {
         return o.fields[field];
       });
     } else {
-      newEvents = newEvents
-        .slice()
-        .sort((a, b) =>
-          a.fields[field].localeCompare(b.fields[field], undefined, {
-            numeric: true,
-          })
-        );
+      newEvents = newEvents.slice().sort((a, b) =>
+        a.fields[field].localeCompare(b.fields[field], undefined, {
+          numeric: true,
+        })
+      );
     }
     if (
       this.state.lastSortOrder === '' ||
@@ -145,7 +144,7 @@ export class CorrelatedAlerts extends React.Component {
     });
   };
 
-  //this function is used to reender a correlated table.
+  //this function is used to render a correlated table.
   renderCorrelatedTable = () => {
     return Object.keys(this.state.searchedRelatedEvents).map((key) => {
       const severity = this.state.searchedRelatedEvents[key].fields.severity;
@@ -181,59 +180,69 @@ export class CorrelatedAlerts extends React.Component {
 
   render() {
     if (this.state.loadingFlag) {
-      return <div className="loading-correlated-events">Loading...</div>;
+      return (<VunetLoader />);
     } else {
       return (
         <div className="correlated-events-container">
-          {this.state.searchedRelatedEvents && this.state.searchedRelatedEvents.length ? (
-            <div className="correlated-events-table">
-              <div className="search-container ">
-                <input
-                  onChange={(e) => this.onSearch(e)}
-                  type="text"
-                  id="search-input"
-                  placeholder="search"
-                  onFocus={() => this.hidePlaceholder()}
-                  onBlur={() => this.showPlaceholder()}
-                />
-              </div>
-              <div className="row correlated-events-table-header">
-                <div className="severity-div">
-                  <div className={`rectangle`} />
+          {this.state.searchedRelatedEvents &&
+          this.state.searchedRelatedEvents.length ?
+            (
+              <div className="correlated-events-table">
+                <div className="search-container ">
+                  <div className="correlated-alerts-header">
+                  Overall Correlated Alerts(
+                    {this.state.searchedRelatedEvents.length})
+                  </div>
+                  <input
+                    onChange={(e) => this.onSearch(e)}
+                    type="text"
+                    id="search-input"
+                    placeholder="search"
+                    onFocus={() => this.hidePlaceholder()}
+                    onBlur={() => this.showPlaceholder()}
+                  />
                 </div>
-                {Object.keys(this.state.searchedRelatedEvents[0].fields).map(
-                  (key) => {
-                    if (key === 'summary') {
-                      return (
-                        <div
-                          className="correlated-details-header"
-                          style={{ width: '60rem' }}
-                          onClick={() => this.sortByClickedField(key)}
-                        >
-                          <i className="fa fa-sort-amount-desc sort-icon" />
-                          {generateHeading(key)}
-                        </div>
-                      );
-                    }
-                    return (
-                      <div
-                        className="correlated-details-header"
-                        onClick={() => this.sortByClickedField(key)}
-                      >
-                        <i className="fa fa-sort-amount-desc sort-icon" />
-                        {generateHeading(key)}
-                      </div>
-                    );
-                  }
-                )}
+                <div className="correlated-table-div">
+                  <div className="row correlated-events-table-header">
+                    <div className="severity-div">
+                      <div className={`rectangle`} />
+                    </div>
+                    {Object.keys(this.state.searchedRelatedEvents[0].fields).map(
+                      (key) => {
+                        if (key === 'summary') {
+                          return (
+                            <div
+                              key={key}
+                              className="correlated-details-header"
+                              style={{ width: '60rem' }}
+                              onClick={() => this.sortByClickedField(key)}
+                            >
+                              <i className="fa fa-sort-amount-desc sort-icon" />
+                              {generateHeading(key)}
+                            </div>
+                          );
+                        }
+                        return (
+                          <div
+                            key={key}
+                            className="correlated-details-header"
+                            onClick={() => this.sortByClickedField(key)}
+                          >
+                            <i className="fa fa-sort-amount-desc sort-icon" />
+                            {generateHeading(key)}
+                          </div>
+                        );
+                      }
+                    )}
+                  </div>
+                  {this.renderCorrelatedTable()}
+                </div>
               </div>
-              {this.renderCorrelatedTable()}
-            </div>
-          ) : (
-            <div className="correlated-event-no-data">
+            ) : (
+              <div className="correlated-event-no-data">
               No Correlated Alerts available for this event
-            </div>
-          )}
+              </div>
+            )}
         </div>
       );
     }

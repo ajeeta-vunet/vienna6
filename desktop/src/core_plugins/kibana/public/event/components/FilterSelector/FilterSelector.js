@@ -25,7 +25,8 @@ export class FilterSelector extends React.Component {
     super(props);
     this.state = {
       filterFields: this.props.filterFields,
-      filterFieldKeys: this.props.filterFields && Object.keys(this.props.filterFields)
+      filterFieldKeys:
+        this.props.filterFields && Object.keys(this.props.filterFields),
     };
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -68,22 +69,28 @@ export class FilterSelector extends React.Component {
         <div className="filter-selector-body">
           <div className="filter-selector">
             <div className="filter-selector-checkbox-wrapper">
-              {this.state.filterFieldKeys && this.state.filterFieldKeys.map((field, index) => {
-                return (
-                  <div className={`field ${'filter-' + field}`} key={field + index}>
-                    <input
-                      type="checkbox"
-                      id={'filter-' + field}
-                      name={field}
-                      checked={this.props.selectedFilterFields.includes(field)}
-                      onChange={() =>
-                        this.props.handleFilterSelectorChange(field)
-                      }
-                    />
-                    <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
-                  </div>
-                );
-              })}
+              {this.state.filterFieldKeys &&
+                this.state.filterFieldKeys.map((field, index) => {
+                  return (
+                    <div
+                      className={`field ${'filter-' + field}`}
+                      key={field + index}
+                    >
+                      <input
+                        type="checkbox"
+                        id={'filter-' + field}
+                        name={field}
+                        checked={this.props.selectedFilterFields.includes(
+                          field
+                        )}
+                        onChange={() =>
+                          this.props.handleFilterSelectorChange(field)
+                        }
+                      />
+                      <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

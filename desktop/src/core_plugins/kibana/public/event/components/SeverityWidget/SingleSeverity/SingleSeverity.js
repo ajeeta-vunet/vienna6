@@ -18,6 +18,7 @@
 
 import React from 'react';
 import { CheckCircleFillIcon } from '@primer/octicons-react';
+import { generateHeading } from '../../../utils/vunet_format_name';
 import './SingleSeverity.less';
 
 export class SingleSeverity extends React.Component {
@@ -35,27 +36,26 @@ export class SingleSeverity extends React.Component {
   render() {
     return (
       <div
-        className={
-          'single-severity ' +
-          (this.props.type !== 'total' ? 'severity-widget-cursor' : null)
-        }
+        className={'single-severity-container ' + this.props.type + '-severity'}
         onClick={() => {
           this.props.type !== 'total' &&
             this.props.filterBySeverity('severity', this.props.type);
         }}
       >
-        <div className="severity-info">
-          <div className="severity-heading">{this.props.type}</div>
-          <div className="severity-details">
-            NEW - {this.props.new} | IN PROGRESS - {this.props.wip}
+        <div className="total-count-wrapper">
+          <div className="total-count-number">{this.state.total}</div>
+          <div className="severity-name">
+            {generateHeading(this.props.type)}
           </div>
         </div>
-        <div className={`severity-count-wrapper event-${this.props.type}`}>
-          <div className="circle-segment">
-            <img src={`/ui/vienna_images/${this.props.type}_segment.svg`} />
+        <div className="total-count-breakdown-wrapper">
+          <div className="new-count-wrapper">
+            <div className="new-count-number">{this.props.new}</div>
+            <div className="new-count-label">New</div>
           </div>
-          <div className="severity-count">
-            <div className="count-text">{this.state.total}</div>
+          <div className="in-progress-wrapper">
+            <div className="in-progress-number">{this.props.wip}</div>
+            <div className="in-progress-label">In-Progress</div>
           </div>
         </div>
         {this.props.appliedSeverityList &&

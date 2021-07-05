@@ -1,0 +1,240 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.user-feedback-container {
+    display       : flex;
+    flex-direction: column;
+    padding       : 2rem;
+    text-align    : left;
+
+    .user-feedback-wrapper {
+        font-size  : 1.4rem;
+        padding    : 2rem 0rem;
+        font-weight: bolder;
+
+        .reactions-div {
+            display: flex;
+            padding: 3rem;
+
+            .like-wrapper {
+                padding-right: 2rem;
+
+                .like-button {
+                    padding-left   : 1.5rem;
+                    cursor         : pointer;
+                    border-radius  : 50%;
+                    color          : @green;
+                    padding        : 1rem;
+                    border         : 1px solid @event-details-sidebar-border-color;
+                    width          : 6rem;
+                    height         : 6rem;
+                    display        : flex;
+                    justify-content: center;
+                    align-items    : center;
+                }
+            }
+
+            .dislike-wrapper {
+                .dislike-button {
+                    padding-left   : 1.5rem;
+                    cursor         : pointer;
+                    border-radius  : 50%;
+                    color          : @red;
+                    padding        : 1rem;
+                    border         : 1px solid @event-details-sidebar-border-color;
+                    width          : 6rem;
+                    height         : 6rem;
+                    display        : flex;
+                    justify-content: center;
+                    align-items    : center;
+                }
+            }
+        }
+
+        .additonal-feedback-section {
+            padding-bottom: 1rem;
+            text-align    : left;
+        }
+
+        .additonal-comment-textarea {
+            width  : 100%;
+            padding: 1rem;
+            border : 1px solid @event-details-sidebar-border-color;
+        }
+
+        .actions-div {
+            margin-top: 2rem;
+            text-align: right;
+
+            .submit-button,
+            .cancel-button {
+                background    : @event-console-button-background;
+                color         : @white;
+                border        : 0;
+                padding-left  : 25px;
+                padding-right : 25px;
+                padding-top   : 7px;
+                padding-bottom: 7px;
+                border-radius : 20px;
+            }
+
+            .button-left {
+                background  : none;
+                color       : @black;
+                border      : 1px solid @event-console-button-border;
+                margin-right: 1.5%;
+            }
+        }
+    }
+
+    .overall-feedback {
+        font-size  : 1.4rem;
+        font-weight: bolder;
+
+        .overall-feedback-header-row {
+            display       : flex;
+            padding-bottom: 4rem;
+            align-items   : center;
+
+            .vertical-line {
+                border-bottom: 1px solid @event-details-sidebar-border-color;
+                flex-grow    : 1;
+                margin       : 0rem 1rem;
+            }
+
+            .hide-or-unhide-icon {
+                border-radius  : 50%;
+                padding        : .5rem;
+                border         : 1px solid @event-details-sidebar-border-color;
+                cursor         : pointer;
+                height         : 3rem;
+                width          : 3rem;
+                text-align     : center;
+                display        : flex;
+                justify-content: center;
+                align-items    : center;
+                color          : @event-console-darker-border-color;
+                font-size      : 1rem;
+            }
+        }
+
+        .like-reaction-details {
+            display       : flex;
+            border-bottom : 1px solid @event-details-sidebar-border-color;
+            padding-bottom: 1rem;
+
+            .like-icon-div {
+                padding-right: 3rem;
+                padding-left : 3rem;
+                color        : @green;
+
+                .like-icon {
+                    border-radius  : 50%;
+                    border         : 1px solid @blue;
+                    padding        : 1rem;
+                    width          : 6rem;
+                    height         : 6rem;
+                    display        : flex;
+                    justify-content: center;
+                    align-items    : center;
+                }
+            }
+
+            .like-user-details {
+                display        : flex;
+                justify-content: space-between;
+                flex-grow      : 1;
+
+                .like-comments {
+                    text-align: left;
+
+                    .like-comment {
+                        padding-bottom: 1rem;
+                        font-size     : 1.5rem;
+                    }
+                }
+
+                .user-detail-name {
+                    padding-right: 1rem;
+                    font-weight  : normal !important;
+                    font-size    : 1.3rem;
+                }
+
+                .reaction-time {
+                    font-weight: normal;
+                }
+            }
+        }
+
+        .dislike-reaction-details {
+            display       : flex;
+            border-bottom : 1px solid @event-details-sidebar-border-color;
+            padding-bottom: 1rem;
+
+            .dislike-icon-div {
+                padding-right: 3rem;
+                padding-left : 3rem;
+                color        : @red;
+
+                .dislike-icon {
+                    border-radius  : 50%;
+                    border         : 1px solid @blue;
+                    padding        : 1rem;
+                    width          : 6rem;
+                    height         : 6rem;
+                    display        : flex;
+                    justify-content: center;
+                    align-items    : center;
+                }
+            }
+
+            .dislike-user-details {
+                display        : flex;
+                justify-content: space-between;
+                flex-grow      : 1;
+
+                .dislike-comments {
+                    text-align: left;
+
+                    .dislike-comment {
+                        padding-bottom: 1rem;
+                        font-size     : 1.5rem;
+                    }
+                }
+
+                .user-detail-name {
+                    padding    : .5rem;
+                    font-weight: normal !important;
+                    font-size  : 1.3rem;
+                }
+
+                .reaction-time {
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+}
+
+.selected-reaction {
+    border       : 1px solid @blue  !important;
+    border-radius: 50%;
+}
+
+.dislike-options {
+    padding-bottom: 1rem;
+
+    .dislike-options-label {
+        width: 50%;
+    }
+
+    .checkbox-label {
+        padding-left: 3%;
+    }
+}
+
+.no-user-feedback {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    width          : 100%;
+}

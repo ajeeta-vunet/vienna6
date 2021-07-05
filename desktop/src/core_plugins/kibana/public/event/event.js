@@ -55,9 +55,6 @@ app.directive('eventApp', function () {
 
       const queryFilter = Private(FilterBarQueryFilterProvider);
       const dashboardContext = Private(dashboardContextProvider);
-      const timeDuration = timefilter.getBounds();
-      const timeDurationStart = timeDuration.min.valueOf();
-      const timeDurationEnd = timeDuration.max.valueOf();
 
       //for api call
       $scope.dashboardContext = dashboardContext;
@@ -88,6 +85,7 @@ app.directive('eventApp', function () {
         },
       ];
 
+      const currentUser = chrome.getCurrentUser();
       // We will call this function inside init(). This is
       // done to make the api calls to the backend on load.
       // We also call this function in the following cases:
@@ -105,7 +103,10 @@ app.directive('eventApp', function () {
               filter: dashboardContext(),
             },
           },
-          time: { gte: timeDurationStart, lte: timeDurationEnd },
+          time: {
+            gte: timefilter.getBounds().min.valueOf(),
+            lte: timefilter.getBounds().max.valueOf(),
+          },
           sample_size: 10000,
         };
 
@@ -117,10 +118,8 @@ app.directive('eventApp', function () {
             $scope.$apply();
           });
 
-        const currentUser = chrome.getCurrentUser();
-        const username = currentUser[0];
         apiProvider
-          .getAll(`${EventConstants.FETCH_COLUMN_SELECTOR_INFO}${username}/`)
+          .getAll(`${EventConstants.FETCH_COLUMN_SELECTOR_INFO}${currentUser[0]}/`)
           .then((response) => {
             $scope.columnSelectorInfo = response;
           });
@@ -154,10 +153,12 @@ app.directive('eventApp', function () {
         .post(EventConstants.FETCH_FILTER_FILEDS, postBody)
         .then((data) => {
           $scope.filterFields = data;
+          $scope.$apply();
         });
 
       // API call to fetch the ITSM preferences set by logged-in user.
-      apiProvider.getAllWithoutBU(EventConstants.CHECK_ITSM_PREFERENCES)
+      apiProvider
+        .getAllWithoutBU(EventConstants.CHECK_ITSM_PREFERENCES)
         .then(() => {
           $scope.itsmPreferencesEnabled = true;
         })
@@ -194,7 +195,10 @@ app.directive('eventApp', function () {
               filter: dashboardContext(),
             },
           },
-          time: { gte: timeDurationStart, lte: timeDurationEnd },
+          time: {
+            gte: timefilter.getBounds().min.valueOf(),
+            lte: timefilter.getBounds().max.valueOf(),
+          },
           sample_size: 10000,
         };
         return apiProvider.post(
@@ -203,11 +207,40 @@ app.directive('eventApp', function () {
         );
       };
 
+      apiProvider.getAll(
+        `${EventConstants.FETCH_COLUMN_SELECTOR_INFO}${currentUser[0]}/`
+      )
+        .then((data) => {
+          $scope.columnSelectorInfo = data;
+          $scope.$apply();
+        });
+
+      $scope.updateColumnSelector = () => {
+        const updateColumnSelectorReact = function (fields, hiddenFields) {
+          const postBody = {
+            alert_details: {
+              fields: fields,
+              hidden_fields: hiddenFields,
+            },
+            ticket_details: {
+              fields: [],
+              hidden_fields: [],
+            },
+          };
+
+          return apiProvider.post(
+            `${EventConstants.UPDATE_COLUMN_SELECTOR_INFO}${currentUser[0]}/`,
+            postBody
+          );
+        };
+        return updateColumnSelectorReact;
+      };
+
       $scope.state = new AppState(stateDefaults);
 
       //passing these to the EventConsole react component
-      $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;
-      $scope.columnSelectorInfo = $route.current.locals.columnSelectorInfo;
+      // $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;
+      // $scope.columnSelectorInfo = $route.current.locals.columnSelectorInfo;
       $scope.userList = $route.current.locals.userList;
       $scope.filterFields = $route.current.locals.filterFields;
       $scope.itsmPreferencesEnabled =

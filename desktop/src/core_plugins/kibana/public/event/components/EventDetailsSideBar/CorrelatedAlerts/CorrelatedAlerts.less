@@ -1,0 +1,110 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.correlated-events-container {
+  padding: 4rem 2rem;
+
+  .correlated-events-table {
+    width     : 100%;
+    text-align: left;
+    flex      : 4;
+
+    .search-container {
+      margin-bottom  : 2rem;
+      display        : flex;
+      justify-content: space-between;
+
+      .correlated-alerts-header {
+        font-size  : 1.7rem;
+        font-weight: bolder;
+      }
+
+      input {
+        border             : 1px solid @event-console-border-color;
+        font-size          : 1.6rem;
+        padding            : 0.5rem 4rem 0.5rem 1rem;
+        background-image   : url("/ui/vienna_images/search_icon_black.svg");
+        background-position: 96% 40%;
+        background-repeat  : no-repeat;
+        background-size    : 1.8rem;
+        color              : @black;
+      }
+    }
+
+    .correlated-table-div {
+      max-width : 320rem;
+      overflow  : auto;
+      max-height: 55rem;
+      border    : 0.1rem solid @event-console-detail-info-background-color;
+
+      .correlated-events-table-header {
+        background-color: @event-console-detail-info-background-color;
+        font-weight     : bold;
+        line-height     : 3;
+        display         : flex;
+        width           : 320rem;
+
+        .correlated-details-header {
+          padding  : 1rem;
+          min-width: 18rem;
+          cursor   : pointer;
+        }
+      }
+
+      .correlated-events-table-row {
+        margin-bottom: 0.1rem;
+        display      : flex;
+        line-height  : 3;
+        border       : 0.1rem solid @event-console-detail-info-background-color;
+        width        : 320rem;
+      }
+
+      .correlated-details-value {
+        padding  : 1rem !important;
+        min-width: 18rem;
+      }
+
+      .severity-div {
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+        margin-left    : 3rem;
+
+        .rectangle {
+          float        : left;
+          height       : 1.3rem;
+          width        : 1.3rem;
+          border-radius: 4px;
+        }
+
+        .critical {
+          background: @event-console-critical-color;
+        }
+
+        .information {
+          background: @event-console-information-color;
+        }
+
+        .error {
+          background: @event-console-error-color;
+        }
+
+        .warning {
+          background: @event-console-warning-color;
+        }
+      }
+    }
+  }
+
+  .correlated-event-no-data {
+    padding  : 6rem 5rem;
+    font-size: 1.6rem;
+  }
+}
+
+.loading-correlated-events {
+  padding        : 6rem 5rem;
+  font-size      : 1.6rem;
+  display        : flex;
+  justify-content: center;
+  align-items    : center;
+}

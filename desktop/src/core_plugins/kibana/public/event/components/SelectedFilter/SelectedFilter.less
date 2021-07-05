@@ -1,9 +1,8 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .selected-filter-wrapper {
-  position        : relative;
-  background-color: @white;
-  right           : 0;
+  position: relative;
+  right   : 0;
 
   .selected-filter-dropdown {
     background-color: @white;
@@ -35,31 +34,28 @@
   }
 
   .selected-button-wrapper {
-    padding-right   : 0.7rem;
-    font-size       : 1.5rem;
-    background-color: white;
-    color           : #5A4FEF;
-    border          : 1px solid #5A4FEF;
-    border-radius   : 9rem 9rem 9rem 9rem;
-    padding-right   : 1.5rem;
-    padding-top     : 0.5rem;
-    padding-bottom  : 0.5rem;
-    padding-left    : 1.5rem;
-    margin-right    : 1rem;
-    margin-bottom   : 1rem;
-    display         : flex;
-    flex-direction  : row;
-    cursor          : pointer;
+    padding-right : 0.7rem;
+    font-size     : 1.5rem;
+    color         : @accent_color;
+    border        : 1px solid @event-console-button-border;
+    border-radius : 9rem 9rem 9rem 9rem;
+    padding-right : 1.5rem;
+    padding-top   : 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left  : 1.5rem;
+    margin-right  : 1rem;
+    margin-bottom : 1rem;
+    display       : flex;
+    flex-direction: row;
+    cursor        : pointer;
 
-    // .selected-filter-button,
     .cancel-filter {
       padding-left: 1.2rem;
     }
   }
 
   .selected-button-wrapper:hover div {
-    background-color: white;
-    color           : #5A4FEF;
+    color: @accent_color;
   }
 
   .selected-filter-search {

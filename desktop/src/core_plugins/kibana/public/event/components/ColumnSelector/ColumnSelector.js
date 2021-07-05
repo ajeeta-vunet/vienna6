@@ -18,102 +18,136 @@
 
 import React from 'react';
 import './ColumnSelector.less';
-import $ from 'jquery';
+import { produce } from 'immer';
 
 export class ColumnSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       allFields: this.props.allFields,
+      hiddenFields: this.props.hiddenFields,
+      searchResultsFields: this.props.allFields,
     };
-
-    this.handleSearch = this.handleSearch.bind(this);
   }
 
   //this function handles the search functionality (by altering the display attribute)
-  handleSearch(event) {
+  handleSearch = (event) => {
     if (event.target.value !== null) {
       //convert the search string into lowerCase, remove whitespaces at the end(if any) and replace spaces
-      //inbetween words with '_'(underscore). This is done to match the filednames as present in allFields.
+      //inbetween words with '_'(underscore). This is done to match the field names as present in allFields.
       const searchTerm = event.target.value
         .toLowerCase()
         .trim()
         .replace(' ', '_');
 
-      this.state.allFields.map((field) => {
-        field = field.replace(/[^a-zA-Z-_]+/g, '');
-        if (field.toLowerCase().includes(searchTerm)) {
-          $(`.field.${field}`).css('display', 'block');
-        } else {
-          $(`.field.${field}`).css('display', 'none');
-        }
+      const searchResultsFields = this.state.allFields.filter((field) => {
+        return field.toLowerCase().includes(searchTerm);
       });
+      this.setState({ searchResultsFields });
+    } else {
+      this.setState({ searchResultsFields: this.state.allFields });
     }
   }
+
+  //this method is called when one of the checkboxes under column selector is checked or unchecked.
+  handleColumnSelectorChange = (field) => {
+    let hiddenFields;
+    if (this.state.hiddenFields.includes(field)) {
+      hiddenFields = produce(this.state.hiddenFields, (draft) => {
+        return draft.filter((entry) => !(entry === field));
+      });
+    } else {
+      hiddenFields = produce(this.state.hiddenFields, (draft) => {
+        draft.push(field);
+      });
+    }
+    this.setState({ hiddenFields });
+  };
 
   render() {
     //This array contains names of columns that are to be disabled.
     const disabledColumns = this.props.eventConsoleMandatoryFields.sort();
-    let allFields = [];
+    let searchResultsFields = [];
     //check whether disabledColumns array contains an empty string, if it does then skip filtering allFields based on disabledColumns
     //just sort it and use in in the JSX.
-    if (disabledColumns[0] !== '') {
-      //this filter and concat is done to push disabled columns to the end of array so that it will be displayed at the end in the UI.
-      allFields =
-        this.state.allFields &&
-        this.state.allFields.filter(
+    if (disabledColumns.length > 0) {
+      //this filter and map is done to push disabled columns to the end of array so that it will be displayed at the end in the UI.
+      searchResultsFields =
+        this.state.searchResultsFields &&
+        this.state.searchResultsFields.filter(
           (field) => !disabledColumns.includes(field)
         );
-      allFields.sort();
-      allFields = allFields.concat(disabledColumns);
+      searchResultsFields.sort();
+      disabledColumns.map((disabledColumn) => {
+        if (
+          this.state.searchResultsFields &&
+          this.state.searchResultsFields.includes(disabledColumn)
+        ) {
+          searchResultsFields.push(disabledColumn);
+        }
+      });
     } else {
-      allFields = this.state.allFields.sort();
+      searchResultsFields = this.state.searchResultsFields.sort();
     }
+
     return (
-      <div className="column-selector-wrapper" id="column-selector-wrapper">
-        <div className="column-selector-header">Edit Row Headers</div>
-        <div className="column-selector-search">
-          <input
-            placeholder="Search"
-            type="text"
-            onChange={(event) => this.handleSearch(event)}
-          />
-        </div>
-        <div className="column-selector-body">
-          <div className="column-selector">
-            Default Row Attributes
-            <div className="column-selector-checkbox-wrapper">
-              {allFields &&
-                allFields.map((field) => {
-                  field = field.replace(/[^a-zA-Z-_]+/g, '');
-                  //let id = 'column-selector-' + field;
-                  return (
-                    <div className={`field ${field}`} key={field}>
-                      <input
-                        type="checkbox"
-                        id={'edit-' + field}
-                        name={field}
-                        onChange={() =>
-                          this.props.handleColumnSelectorChange(field)
-                        }
-                        disabled={disabledColumns.includes(field) && true}
-                      />
-                      <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
-                    </div>
-                  );
-                })}
-            </div>
+      <div className="column-selector-container" id="column-selector-wrapper">
+        <div className="column-selector-wrapper">
+          <div className="column-selector-header">Add or Remove Columns</div>
+          <div className="column-selector-search">
+            <input
+              placeholder="Search"
+              type="text"
+              onChange={(event) => this.handleSearch(event)}
+            />
           </div>
-          <div className="action-buttons column-selector-buttons">
-            <button
-              className="event-console-button column-selector-button"
-              onClick={() => {
-                this.props.handleUpdateColumnSelector();
-                $('#column-selector-id').hide();
-              }}
-            >
-              Save
-            </button>
+          <div className="column-selector-body">
+            <div className="column-selector">
+              <div className="column-selector-checkbox-wrapper">
+                {searchResultsFields &&
+                  searchResultsFields.map((field) => {
+                    field = field.replace(/[^a-zA-Z-_]+/g, '');
+                    return (
+                      <div className={`field ${field}`} key={field}>
+                        <input
+                          type="checkbox"
+                          id={'edit-' + field}
+                          name={field}
+                          checked={!this.state.hiddenFields.includes(field)}
+                          onChange={() =>
+                            this.handleColumnSelectorChange(field)
+                          }
+                          disabled={disabledColumns.includes(field) && true}
+                        />
+                        <label htmlFor={field}>
+                          {field.replace(/_/g, ' ')}
+                        </label>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+            <div className="action-buttons column-selector-buttons">
+              <button
+                className="event-console-button column-selector-button"
+                onClick={() => {
+                  this.props.handleUpdateColumnSelector(
+                    this.state.hiddenFields
+                  );
+                  this.props.handleColumnSelectorDisplay();
+                }}
+              >
+                Save
+              </button>
+              <button
+                className="event-console-button cancel-button column-selector-button"
+                onClick={() => {
+                  this.props.handleColumnSelectorDisplay();
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </div>

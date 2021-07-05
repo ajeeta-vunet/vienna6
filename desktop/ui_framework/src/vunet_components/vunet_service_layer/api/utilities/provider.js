@@ -63,7 +63,7 @@ const remove = (resource, id) => {
 /** @param {string} resource */
 const getAllWithoutBU = (resource) => {
   return axios
-    .get(`${urlWithoutBU}/${resource}`)
+    .get(`${urlWithoutBU}${resource}`)
     .then(handleResponse)
     .catch(handleError);
 };

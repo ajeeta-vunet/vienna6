@@ -20,15 +20,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './EventConsole.less';
 import { SeverityWidget } from './components/SeverityWidget/SeverityWidget';
-
 import _ from 'lodash';
 import { EventList } from './components/EventList/EventList';
 import { produce } from 'immer';
-
 import { Notifier } from 'ui/notify';
-import $ from 'jquery';
 import chrome from 'ui/chrome';
-import { apiProvider } from '../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
+import { apiProvider } from 'ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
 import { EventConstants } from './event_constants';
 
 const notify = new Notifier({ location: 'Event Console' });
@@ -85,19 +82,22 @@ export class EventConsole extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const listOfEvents = _.sortBy(
-      newProps.listOfEvents && newProps.listOfEvents.List_of_events,
-      function (o) {
-        return Date.parse(o.fields.last_occurence);
-      }
-    ).reverse();
+    const listOfEvents = produce(newProps.listOfEvents && newProps.listOfEvents.List_of_events, (draft) => {
+      _.sortBy(draft,
+        function (o) {
+          return Date.parse(o.fields.last_occurence);
+        }
+      ).reverse();
+    });
 
     this.setState(
       {
         allEventList: listOfEvents,
         filteredEventList: listOfEvents,
-        allFields: newProps.columnSelectorInfo.alert_details.fields,
-        hiddenFields: newProps.columnSelectorInfo.alert_details.hidden_fields,
+        allFields: newProps.columnSelectorInfo &&
+                    newProps.columnSelectorInfo.alert_details && newProps.columnSelectorInfo.alert_details.fields,
+        hiddenFields: newProps.columnSelectorInfo &&
+                    newProps.columnSelectorInfo.alert_details && newProps.columnSelectorInfo.alert_details.hidden_fields,
       },
       () => this.applyFilters()
     );
@@ -186,13 +186,14 @@ export class EventConsole extends React.Component {
   // filteredEventList which will case the EventList component to re-render and show only the filtered events.
   applyFilters = function () {
     const filterStore = this.state.filterStore;
-    let newEventList = this.state.allEventList;
 
     if (!_.isEmpty(filterStore)) {
       const filterKeys = Object.keys(filterStore);
-      newEventList = newEventList.filter(function (event) {
-        return filterKeys.every(function (filterKey) {
-          return filterStore[filterKey].includes(event.fields[filterKey]);
+      const newEventList = produce(this.state.allEventList, (draft) => {
+        draft.filter(function (event) {
+          return filterKeys.every(function (filterKey) {
+            return filterStore[filterKey].includes(event.fields[filterKey]);
+          });
         });
       });
 
@@ -269,9 +270,11 @@ export class EventConsole extends React.Component {
         severity && (severity.checked = true);
       });
 
-      severityFilterFields = severityFilterFields.filter((field) => {
-        return !severityFilter.includes(field);
-      });
+      severityFilterFields =
+        severityFilterFields &&
+        severityFilterFields.filter((field) => {
+          return !severityFilter.includes(field);
+        });
     }
 
     severityFilterFields &&
@@ -285,33 +288,6 @@ export class EventConsole extends React.Component {
   updateColumnSelector = (allFields, hiddenFields) => {
     this.setState({ allFields: allFields, hiddenFields: hiddenFields });
     this.props.updateColumnSelector(allFields, hiddenFields);
-  };
-
-  //this receives the field name checked/unchecked by column selector and acts on it.
-  //it will add the hide/show class to clicked field.
-  handleColumnSelectorChange = (field) => {
-    let newHiddenFields = this.state.hiddenFields;
-    field = field.replace(/[^a-zA-Z-_]+/g, '');
-    const value = document.getElementById('edit-' + field).checked;
-    if (value === true) {
-      newHiddenFields = newHiddenFields.filter((f) => f !== field);
-      const className = '.detail-item.' + field;
-      $(className).removeClass('detail-item-hide');
-      $(className).addClass('detail-item-show');
-    } else {
-      if (!newHiddenFields.includes(field)) {
-        newHiddenFields.push(field);
-        newHiddenFields.map((field) => {
-          field = field.replace(/[^a-zA-Z-_]+/g, '');
-          const className = '.detail-item.' + field;
-          $(className).addClass('detail-item-hide');
-          $(className).removeClass('detail-item-show');
-        });
-      }
-    }
-    this.setState({
-      hiddenFields: newHiddenFields,
-    });
   };
 
   //this method is called to generate report of all the events as displyed on the screen.
@@ -421,8 +397,7 @@ export class EventConsole extends React.Component {
           filterFields={this.props.filterFields}
           allFields={this.state.allFields}
           hiddenFields={this.state.hiddenFields}
-          updateColumnSelector={this.props.updateColumnSelector}
-          handleColumnSelectorChange={this.handleColumnSelectorChange}
+          updateColumnSelector={this.updateColumnSelector}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
           showAllEvents={this.showAllEvents}
           addFilter={this.addFilter}

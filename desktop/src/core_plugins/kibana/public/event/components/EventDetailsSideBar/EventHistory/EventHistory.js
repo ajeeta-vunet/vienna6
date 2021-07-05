@@ -42,8 +42,8 @@ export function EventHistory(props) {
     Object.keys(history).map((key, index) => {
       return (
         <div key={key + index} className="row events-display-table-row">
-          <div className="col-md-4">{key}</div>
-          <div className="col-md-2">
+          <div className="col-md-6">{key}</div>
+          <div className="col-md-6">
             {requiresCustomDisplayList.includes(key) > 0
               ? displayTwoTimeUnits(history[key])
               : history[key]}
@@ -57,7 +57,7 @@ export function EventHistory(props) {
     occurrences.map((value) => {
       return (
         <div key={value} className="row occurrences-display-table-row">
-          <div className="col-md-5">
+          <div className="col-md-6">
             {moment(value).format('dddd, MMMM Do YYYY, h:mm:ss a')}
           </div>
         </div>
@@ -70,10 +70,10 @@ export function EventHistory(props) {
         {history && Object.keys(history).length ? (
           <div className="events-display-table">
             <div className="row events-display-table-header">
-              <div className="col-md-4">
+              <div className="col-md-6">
                 <span className="history-details">Name</span>
               </div>
-              <div className="col-md-2">
+              <div className="col-md-6">
                 <span className="values">Details</span>
               </div>
             </div>
@@ -89,7 +89,7 @@ export function EventHistory(props) {
         {occurrences.length ? (
           <div className="occurrences-display-table">
             <div className="row occurrences-display-table-header">
-              <div className="col-md-5">
+              <div className="col-md-6">
                 <span className="occurrences-details">Occurrences</span>
               </div>
             </div>

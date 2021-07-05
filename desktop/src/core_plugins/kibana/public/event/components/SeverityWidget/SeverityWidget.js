@@ -25,27 +25,55 @@ export class SeverityWidget extends React.Component {
     super(props);
     this.state = {
       severityInfo: this.props.severityInfo,
+      displaySeverityWidgets: true,
     };
   }
+
+  //this method is used to hide or unhide alert overview.
+  hideOrUnhideSeverityWidgets = () => {
+    this.setState({
+      displaySeverityWidgets: !this.state.displaySeverityWidgets,
+    });
+  };
 
   render() {
     if (this.props.severityInfo) {
       return (
-        <div className="severity-widget-wrapper">
-          {Object.keys(this.props.severityInfo).map((key) => {
-            if (key !== 'period') {
-              return (
-                <SingleSeverity
-                  key={key}
-                  type={key}
-                  new={this.props.severityInfo[key].new}
-                  wip={this.props.severityInfo[key].wip}
-                  filterBySeverity={this.props.filterBySeverity}
-                  appliedSeverityList={this.props.appliedSeverityList}
-                />
-              );
-            }
-          })}
+        <div className="severity-widget-container">
+          <div className="severity-widget-header-row">
+            <div className="severity-header">Alert Overview</div>
+            <button
+              className="hide-or-unhide-button"
+              onClick={() => this.hideOrUnhideSeverityWidgets()}
+            >
+              <i
+                className={
+                  'fa ' +
+                  (this.state.displaySeverityWidgets
+                    ? 'fa-angle-up'
+                    : 'fa-angle-down')
+                }
+              />
+            </button>
+          </div>
+          {this.state.displaySeverityWidgets && (
+            <div className="severity-widget-wrapper">
+              {Object.keys(this.props.severityInfo).map((key) => {
+                if (key !== 'period') {
+                  return (
+                    <SingleSeverity
+                      key={key}
+                      type={key}
+                      new={this.props.severityInfo[key].new}
+                      wip={this.props.severityInfo[key].wip}
+                      filterBySeverity={this.props.filterBySeverity}
+                      appliedSeverityList={this.props.appliedSeverityList}
+                    />
+                  );
+                }
+              })}
+            </div>
+          )}
         </div>
       );
     } else {

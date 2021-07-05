@@ -27,10 +27,14 @@ import ReactTooltip from 'react-tooltip';
 export class OperationBar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      displayColumnSelectorFlag: false,
+    };
   }
 
+  //this is used to hide or unhide column selector view.
   handleColumnSelectorDisplay = () => {
-    return this.props.handleColumnSelectorDisplay();
+    this.setState({ displayColumnSelectorFlag: !this.state.displayColumnSelectorFlag });
   };
 
   handleFilterSelectorDisplay = () => {
@@ -43,6 +47,7 @@ export class OperationBar extends React.Component {
       $(this).removeAttr('placeholder');
     });
   };
+
   //this method is called bring back the placeholder text when the user clicks outside search box after clicking inside it once.
   showPlaceholder = () => {
     $('input,textarea').blur(function () {
@@ -52,10 +57,32 @@ export class OperationBar extends React.Component {
   render() {
     return (
       <div className="operationbar-wrapper">
-        <img
-          className="filter-funnel"
-          src="/ui/vienna_images/filter-funnel-icon.svg"
-        />
+        <div
+          className="open-close-sort"
+          onClick={() => this.props.hideAndUnhideSortbar()}
+        >
+          <i className={'fa ' + (this.props.showSortDetails ? 'fa-angle-left' : 'fa-angle-right')} />
+          <i className={'fa ' + (this.props.showSortDetails ? 'fa-angle-left' : 'fa-angle-right')} />
+        </div>
+        <div className="filter-button-wrapper">
+          <button
+            className="filter-button"
+            onClick={() => this.handleFilterSelectorDisplay()}
+          >
+            <img
+              className="filter-selector-icon"
+              src="/ui/vienna_images/filter-icon.svg"
+            />
+              Filter
+          </button>
+        </div>
+        <span id="filter-selector-id">
+          <FilterSelector
+            filterFields={this.props.filterFields}
+            handleFilterSelectorChange={this.props.handleFilterSelectorChange}
+            selectedFilterFields={this.props.selectedFilterFields}
+          />
+        </span>
         <div className="selected-filters-container">
           {this.props.selectedFilterFields &&
             this.props.selectedFilterFields.map((filter, index) => {
@@ -71,25 +98,6 @@ export class OperationBar extends React.Component {
             })}
         </div>
         <div className="filter-options-container">
-          <div className="filter-button-wrapper">
-            <button
-              className="filter-button"
-              onClick={() => this.handleFilterSelectorDisplay()}
-            >
-              Filter
-              <img
-                className="filter-selector-icon"
-                src="/ui/vienna_images/filter-icon.svg"
-              />
-            </button>
-          </div>
-          <span id="filter-selector-id">
-            <FilterSelector
-              filterFields={this.props.filterFields}
-              handleFilterSelectorChange={this.props.handleFilterSelectorChange}
-              selectedFilterFields={this.props.selectedFilterFields}
-            />
-          </span>
           <div className="search-container ">
             <input
               onChange={(e) => this.props.onSearch(e)}
@@ -105,11 +113,11 @@ export class OperationBar extends React.Component {
               className="edit-button"
               onClick={() => this.handleColumnSelectorDisplay()}
             >
-              Edit
               <i
                 className="fa fa-pencil column-selector-icon"
                 aria-hidden="true"
               />
+              Manage Columns
             </button>
           </div>
           <div className="report-button-wrapper">
@@ -122,15 +130,17 @@ export class OperationBar extends React.Component {
             </button>
           </div>
         </div>
-        <span id="column-selector-id">
-          <ColumnSelector
-            allFields={this.props.allFields}
-            hiddenFields={this.props.hiddenFields}
-            handleColumnSelectorChange={this.props.handleColumnSelectorChange}
-            handleUpdateColumnSelector={this.props.handleUpdateColumnSelector}
-            eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
-          />
-        </span>
+        {this.state.displayColumnSelectorFlag &&
+          <span id="column-selector-id">
+            <ColumnSelector
+              allFields={this.props.allFields}
+              hiddenFields={this.props.hiddenFields}
+              handleUpdateColumnSelector={this.props.handleUpdateColumnSelector}
+              eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
+              handleColumnSelectorDisplay={this.handleColumnSelectorDisplay}
+            />
+          </span>
+        }
       </div>
     );
   }

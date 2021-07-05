@@ -1,8 +1,54 @@
-.severity-widget-wrapper {
-  position     : relative;
-  display      : flex;
-  flex-wrap    : wrap;
-  width        : 100%;
-  height       : auto;
-  margin-bottom: 1%;
+@import "~ui/styles/vunet_variable_theme.less";
+
+.severity-widget-container {
+  padding      : 1rem;
+  margin-bottom: 1rem;
+  border       : 1px solid @event-console-border-color;
+  border-radius: 4px;
+
+  .severity-widget-header-row {
+    display        : flex;
+    justify-content: space-between;
+    margin-bottom  : 0.5rem;
+
+    .severity-header {
+      font-weight: bolder;
+      font-size  : 14px;
+    }
+
+    .hide-or-unhide-button {
+      background-color: @white;
+      border          : 1px solid @event-console-border-color;
+    }
+  }
+
+  .severity-widget-wrapper {
+    position : relative;
+    display  : flex;
+    flex-wrap: wrap;
+    width    : 100%;
+    height   : auto;
+
+    .error-severity {
+      border-left: 0.7rem solid @event-console-error-color;
+    }
+
+    .critical-severity {
+      border-left: 0.7rem solid @event-console-critical-color;
+    }
+
+    .information-severity {
+      border-left: 0.7rem solid @event-console-information-color;
+    }
+
+    .warning-severity {
+      border-left: 0.7rem solid @event-console-warning-color;
+    }
+
+    .total-severity {
+      border-left: 0.7rem solid @event-console-total-color;
+      cursor     : initial;
+    }
+
+  }
 }

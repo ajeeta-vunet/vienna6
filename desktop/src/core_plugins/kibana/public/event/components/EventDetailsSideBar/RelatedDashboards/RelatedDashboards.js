@@ -26,6 +26,8 @@ import './RelatedDashboards.less';
 export function RelatedDashboards(props) {
   const { dashboardList } = props;
 
+  dashboardList.push('Home');
+  dashboardList.push('COVID-19');
   // Iterate on the dashboardlist and prepare
   // rows containing dashboard name and link.
   const renderRows =
@@ -34,9 +36,9 @@ export function RelatedDashboards(props) {
       const name = dashboard.replace(/-/g, ' ');
       const link = '#/dashboard/' + dashboard;
       return (
-        <div className="row events-display-table-row">
-          <div className="col-md-2">{name}</div>
-          <div className="col-md-2">
+        <div key={dashboard} className="row events-display-table-row">
+          <div className="col-md-9">{name}</div>
+          <div className="col-md-3">
             <a href={link}>
               <i
                 className="fa fa-arrow-circle-o-right"
@@ -54,7 +56,7 @@ export function RelatedDashboards(props) {
       {dashboardList.length ? (
         <div className="events-display-table">
           <div className="row events-display-table-header">
-            <div className="col-md-2"> Name </div>
+            <div className="col-md-5"> Name </div>
             <div className="col-md-2"> Link </div>
           </div>
           {renderRows}

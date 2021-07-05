@@ -28,8 +28,6 @@ export class SelectedFilter extends React.Component {
       filterFields: this.props.filterFields,
       filterStore: this.props.filterStore,
     };
-
-    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -58,16 +56,16 @@ export class SelectedFilter extends React.Component {
   };
 
   //this function handles the search functionality (by altering the display attribute)
-  handleSearch(event) {
+  handleSearch = (event) => {
     if (event.target.value !== null) {
-      const searchTerm = event.target.value.toLowerCase().trim();
+      const searchTerm = event.target.value.toLowerCase().trim().replaceAll(/[. ]/gi, '');
       const filterFieldKeys =
         this.props.filterFields &&
         Object.values(this.props.filterFields[this.props.filter]);
       filterFieldKeys.map((field) => {
         //we perform field.toString().replaceAll to remove '.' as it is used as className and className does
         //not allow usage of special characters as '.'
-        field = field.toString().replaceAll('.', '');
+        field = field.toString().replaceAll(/[. ]/gi, '');
         if (field.toLowerCase().includes(searchTerm)) {
           $(`.field.${field}`).css('display', 'block');
         } else {
@@ -140,7 +138,7 @@ export class SelectedFilter extends React.Component {
                   //we perform field.toString().replaceAll to remove '.' as it is used as className and className cannot
                   //have special characters such as '.'
                   <div
-                    className={`field ${field.toString().replaceAll('.', '')}`}
+                    className={`field ${field.replaceAll(/[. ]/gi, '')}`}
                     key={field + index}
                   >
                     <input

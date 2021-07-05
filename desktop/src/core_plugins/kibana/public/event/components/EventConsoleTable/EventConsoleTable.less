@@ -1,0 +1,133 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.events-table-wrapper {
+    overflow-y: hidden;
+    overflow-x: scroll;
+
+    .events-table {
+        border-collapse: separate;
+
+        .header-row {
+            border: 1px solid @event-console-border-color;
+
+            .alert_id {
+                position  : sticky;
+                left      : 0;
+                z-index   : 10;
+                box-shadow: inset 1px 0 0 @event-console-border-color, inset -1px 0 0 @event-console-border-color;
+            }
+
+            th {
+                word-break      : break-word;
+                min-width       : 18rem;
+                padding         : 1rem 1.5rem;
+                z-index         : 0;
+                position        : relative;
+                background-color: @event-console-table-header-color;
+                cursor          : pointer;
+                border-bottom   : 1px solid @event-console-border-color;
+                border-top      : 1px solid @event-console-border-color;
+
+                .sort-icon {
+                    font-size   : 1.3rem;
+                    padding-left: 0.5rem;
+                    color       : @event-console-darker-border-color;
+                }
+            }
+
+            .summary {
+                min-width: 40rem;
+            }
+
+            .last_modified_time,
+            .created_time,
+            .last_occurence {
+                min-width: 20rem;
+            }
+
+            .actions-col {
+                position        : sticky;
+                right           : 0;
+                z-index         : 10;
+                background-color: @event-console-table-header-color;
+                box-shadow      : inset 1px 0 0 @event-console-border-color, inset -1px 0 0 @event-console-border-color;
+                min-width       : 10rem;
+                cursor          : alias;
+            }
+        }
+
+        .event-console-data-row {
+            cursor: pointer;
+
+            td {
+                word-break      : break-word;
+                min-width       : 18rem;
+                text-align      : left;
+                padding         : 1.5rem 1.6rem;
+                z-index         : 0;
+                position        : relative;
+                background-color: @white;
+                border-bottom   : 1px solid @event-console-border-color;
+            }
+
+            .alert_id {
+                position: sticky;
+                left    : 0;
+                z-index : 10;
+            }
+
+            .summary {
+                min-width: 40rem;
+            }
+
+            .last_modified_time,
+            .created_time,
+            .last_occurence {
+                min-width: 20rem;
+            }
+
+            .error-severity {
+                box-shadow: inset 4px 0 0 @event-console-error-color, inset -1px 0 0 @event-console-border-color;
+            }
+
+            .critical-severity {
+                box-shadow: inset 4px 0 0 @event-console-critical-color, inset -1px 0 0 @event-console-border-color;
+            }
+
+            .information-severity {
+                box-shadow: inset 4px 0 0 @event-console-information-color, inset -1px 0 0 @event-console-border-color;
+            }
+
+            .warning-severity {
+                box-shadow: inset 4px 0 0 @event-console-warning-color, inset -1px 0 0 @event-console-border-color;
+            }
+
+            .actions-col {
+                position  : sticky;
+                right     : 0;
+                z-index   : 10;
+                min-width : 10rem;
+                box-shadow: inset 1px 0 0 @event-console-border-color, inset -1px 0 0 @event-console-border-color;
+
+                .action-buttons-wrapper {
+                    display: flex;
+
+                    .more-details-div,
+                    .create-ticket-div {
+                        border   : none;
+                        font-size: 1.5rem;
+                        padding  : 0rem 1rem;
+
+                        :active {
+                            outline: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        .event-console-data-row:hover td {
+            background-color: @event-console-table-header-color  !important;
+        }
+    }
+}

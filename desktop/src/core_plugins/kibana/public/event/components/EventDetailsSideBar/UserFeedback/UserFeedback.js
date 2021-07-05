@@ -22,8 +22,8 @@ import $ from 'jquery';
 import { produce } from 'immer';
 import moment from 'moment';
 import chrome from 'ui/chrome';
-import { apiProvider } from '../../../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
-import { EventConstants } from '../../event_constants';
+import { apiProvider } from 'ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
+import { EventConstants } from '../../../event_constants';
 
 const userData = chrome.getCurrentUser();
 
@@ -36,6 +36,7 @@ export class UserFeedback extends React.Component {
       reaction: '',
       dislikeComments: [],
       allReactions: [],
+      hideOverallFeedback: true,
     };
   }
 
@@ -183,61 +184,36 @@ export class UserFeedback extends React.Component {
   //this method is called when the user clicks on 'rect; reaction and we have to display the
   //checkboxes with labels of reject reaction.
   displayDislikeComments = () => {
+    const dislikeLabelsText = [
+      'This alert is not relevant to me.',
+      'This alert is not important.',
+      'The information in the alert is not accurate.',
+    ];
     return (
       <div className="dislike-options">
-        <div>
-          <label className="dislike-options-label">
-            <input
-              className="not-relavant"
-              type="checkbox"
-              onClick={() =>
-                this.onChecked('This alert is not relevant to me.')
-              }
-              checked={
-                this.state.dislikeComments.indexOf(
-                  'This alert is not relevant to me.'
-                ) > -1
-              }
-            />
-            <span className="checkbox-label">
-              This alert is not relevant to me.
-            </span>
-          </label>
-        </div>
-        <div>
-          <label className="dislike-options-label">
-            <input
-              className="not-important"
-              type="checkbox"
-              onClick={() => this.onChecked('This alert is not important.')}
-              checked={
-                this.state.dislikeComments.indexOf(
-                  'This alert is not important.'
-                ) > -1
-              }
-            />
-            <span className="checkbox-label">This alert is not important.</span>
-          </label>
-        </div>
-        <div>
-          <label className="dislike-options-label">
-            <input
-              className="not-accurate"
-              type="checkbox"
-              onClick={() =>
-                this.onChecked('The information in the alert is not accurate.')
-              }
-              checked={
-                this.state.dislikeComments.indexOf(
-                  'The information in the alert is not accurate.'
-                ) > -1
-              }
-            />
-            <span className="checkbox-label">
-              The information in the alert is not accurate.
-            </span>
-          </label>
-        </div>
+        {dislikeLabelsText.map((label, index) => {
+          return(
+            <div key={index}>
+              <label className="dislike-options-label">
+                <input
+                  className="dislike-text-input"
+                  type="checkbox"
+                  onClick={() =>
+                    this.onChecked(label)
+                  }
+                  checked={
+                    this.state.dislikeComments.indexOf(
+                      label
+                    ) > -1
+                  }
+                />
+                <span className="checkbox-label">
+                  {label}
+                </span>
+              </label>
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -263,6 +239,11 @@ export class UserFeedback extends React.Component {
     this.props.addOrRemoveReaction('No Reaction');
   };
 
+  //this method is used to hide or unhide overall feedback section.
+  hideOrUnhideOverall = () => {
+    this.setState({ hideOverallFeedback: !this.state.hideOverallFeedback });
+  };
+
   //this method is called to render the user feedback if there is any.
   renderUserFeedback = () => {
     return (
@@ -272,15 +253,21 @@ export class UserFeedback extends React.Component {
           return (
             <div key={reactionIndex} className="like-reaction-details">
               <div className="like-icon-div">
-                <i className="fa fa-3x fa-thumbs-o-up like-icon" />
+                <i className="fa fa-2x fa-thumbs-o-up like-icon" />
               </div>
-              <div className="like-comments">
-                {reaction.additional_comment.map((comment, commentIndex) => {
-                  return <div key={commentIndex}>{comment}</div>;
-                })}
-                <div className="like-user-details">
+              <div className="like-user-details">
+                <div className="like-comments">
+                  {reaction.additional_comment.map((comment, commentIndex) => {
+                    return (
+                      <div className="like-comment" key={commentIndex}>
+                        {comment}
+                      </div>
+                    );
+                  })}
                   <div className="user-detail-name">{reaction.username}</div>
-                  <div>{moment(reaction.time_added).fromNow()}</div>
+                </div>
+                <div className="reaction-time">
+                  {moment(reaction.time_added).fromNow()}
                 </div>
               </div>
             </div>
@@ -289,15 +276,21 @@ export class UserFeedback extends React.Component {
           return (
             <div className="dislike-reaction-details">
               <div className="dislike-icon-div">
-                <i className="fa fa-3x fa-thumbs-o-down dislike-icon" />
+                <i className="fa fa-2x fa-thumbs-o-down dislike-icon" />
               </div>
-              <div className="like-comments">
-                {reaction.additional_comment.map((comment, commentIndex) => {
-                  return <div key={commentIndex}>{comment}</div>;
-                })}
-                <div className="dislike-user-details">
+              <div className="dislike-user-details">
+                <div className="dislike-comments">
+                  {reaction.additional_comment.map((comment, commentIndex) => {
+                    return (
+                      <div className="dislike-comment" key={commentIndex}>
+                        {comment}
+                      </div>
+                    );
+                  })}
                   <div className="user-detail-name">{reaction.username}</div>
-                  <div>{moment(reaction.time_added).fromNow()}</div>
+                </div>
+                <div className="reaction-time">
+                  {moment(reaction.time_added).fromNow()}
                 </div>
               </div>
             </div>
@@ -320,7 +313,7 @@ export class UserFeedback extends React.Component {
                 className="like-button-div"
                 onClick={() => this.handleReaction('Like')}
               >
-                <i className="fa fa-3x fa-thumbs-o-up like-button" />
+                <i className="fa fa-2x fa-thumbs-o-up like-button" />
               </div>
               <div>Accept</div>
             </div>
@@ -329,7 +322,7 @@ export class UserFeedback extends React.Component {
                 className="dislike-button-div"
                 onClick={() => this.handleReaction('Dislike')}
               >
-                <i className="fa fa-3x fa-thumbs-o-down dislike-button" />
+                <i className="fa fa-2x fa-thumbs-o-down dislike-button" />
               </div>
               <div>Reject</div>
             </div>
@@ -361,12 +354,30 @@ export class UserFeedback extends React.Component {
           </div>
         </div>
         <div className="overall-feedback">
-          <div className="overall-feedback-header">Overall User Feedback</div>
-          {this.state.allReactions.length > 0 ? (
-            this.renderUserFeedback()
-          ) : (
-            <div className="no-user-feedback">
-              No User feedback received yet.
+          <div className="overall-feedback-header-row">
+            <div className="overall-feedback-header">Overall User Feedback</div>
+            <div className="vertical-line" />
+            <div
+              className="hide-or-unhide-icon"
+              onClick={() => this.hideOrUnhideOverall()}
+            >
+              <i
+                className={
+                  'fa ' +
+                  (this.state.hideOverallFeedback ? 'fa-minus' : 'fa-plus')
+                }
+              />
+            </div>
+          </div>
+          {this.state.hideOverallFeedback && (
+            <div>
+              {this.state.allReactions.length > 0 ? (
+                this.renderUserFeedback()
+              ) : (
+                <div className="no-user-feedback">
+                  No User feedback received yet.
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -10,10 +10,6 @@ import { EventConstants } from './event_constants';
 import eventTemplate from 'plugins/kibana/event/event.html';
 import { SavedObjectsClientProvider } from 'ui/saved_objects';
 import { findObjectByTitle } from 'ui/saved_objects/find_object_by_title.js';
-import { apiProvider } from '../../../../../ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
-
-const currentUser = chrome.getCurrentUser();
-const username = currentUser[0];
 
 uiRoutes
   .defaults(/event/, {
@@ -36,28 +32,6 @@ uiRoutes
         )
           .then((idx) => idx.id)
           .catch(() => '');
-      },
-      columnSelectorInfo: function () {
-        return apiProvider.getAll(`${EventConstants.FETCH_COLUMN_SELECTOR_INFO}${username}/`);
-      },
-      updateColumnSelector: function () {
-        const updateColumnSelectorReact = function (fields, hiddenFields) {
-          const postBody = {
-            alert_details: {
-              fields: fields,
-              hidden_fields: hiddenFields,
-            },
-            ticket_details: {
-              fields: [],
-              hidden_fields: [],
-            },
-          };
-          return apiProvider.post(
-            `${EventConstants.UPDATE_COLUMN_SELECTOR_INFO}${username}/`,
-            postBody
-          );
-        };
-        return updateColumnSelectorReact;
       },
     },
   });

@@ -3,21 +3,25 @@
 .event-list-container {
 
   .events-table-container {
-    height: ~"calc(100vh - 36rem)";
 
     .event-listing-wrapper {
-      font-size    : 1.25rem;
-      position     : relative;
-      margin-top   : 1%;
-      height       : 100%;
-      overflow     : scroll;
-      padding-right: 0.5%;
+      font-size : 1.25rem;
+      position  : relative;
+      margin-top: 1%;
+      height    : 100%;
+      display   : flex;
+
+      .event-sort-list-wrapper {
+        max-width   : 50%;
+        min-width   : 20%;
+        margin-right: 2rem;
+      }
     }
 
     .pagination-container {
       display        : flex;
       justify-content: space-between;
-      margin         : 1rem 0px;
+      margin         : 2rem 0px;
 
       .space-holder {
         margin : 0;
@@ -42,7 +46,7 @@
 
         select {
           height : 100%;
-          border : 1px solid #efefef;
+          border : 1px solid @event-console-border-color;
           padding: 0 1rem;
         }
       }
@@ -53,7 +57,7 @@
 
         li a {
           cursor    : pointer !important;
-          border    : 1px solid #efefef;
+          border    : 1px solid @event-console-border-color;
           color     : @event-console-button-background  !important;
           background: @white;
 

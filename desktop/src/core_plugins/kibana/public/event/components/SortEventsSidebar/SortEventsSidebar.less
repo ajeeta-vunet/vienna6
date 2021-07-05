@@ -1,0 +1,109 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.sort-list-sidebar-container {
+    .sort-list-sidebar-wrapper {
+        .sort-header-row {
+            display        : flex;
+            justify-content: space-between;
+            padding        : .5rem 0rem;
+            border-bottom  : 1px solid @event-details-sidebar-border-color;
+
+            .sort-header {
+                font-size  : 1.7rem;
+                font-weight: bolder;
+            }
+
+            .clear-all-div {
+                display: flex;
+                cursor : pointer;
+
+                .clear-all-label {
+                    font-size    : 1.5rem;
+                    padding-right: 1rem;
+                    display      : flex;
+                }
+
+                .clear-all-icon-div {
+                    height         : 2rem;
+                    width          : 2rem;
+                    border         : 1px solid @event-details-sidebar-border-color;
+                    border-radius  : 50%;
+                    display        : flex;
+                    justify-content: center;
+                    align-items    : center;
+                    padding        : .5rem;
+                    margin-left    : 1rem;
+
+                    .clear-all-icon {
+                        color: @event-console-darker-border-color;
+                    }
+                }
+            }
+        }
+
+        .sort-list-items-container {
+            padding-top: .5rem;
+
+            .sort-item-row {
+                display        : flex;
+                justify-content: space-between;
+                width          : 100%;
+                padding        : 1rem 0rem;
+                display        : flex;
+
+                .row-number {
+                    display        : flex;
+                    justify-content: center;
+                    align-items    : center;
+                    border         : 1px solid @event-details-sidebar-border-color;
+                    border-radius  : 4px;
+                    padding        : .4rem;
+                    width          : 7%;
+                }
+
+                .row-name {
+                    width        : 70%;
+                    border       : 1px solid @event-details-sidebar-border-color;
+                    border-radius: 4px;
+                    padding      : .4rem;
+                }
+
+                .sort-row-actions {
+                    display: flex;
+                    width  : 20%;
+
+                    .sort-icon-div {
+                        display        : flex;
+                        justify-content: center;
+                        align-items    : center;
+                        border         : 1px solid @event-details-sidebar-border-color;
+                        border-radius  : 4px;
+                        padding        : .4rem;
+                        width          : 40%;
+                        margin-right   : .5rem;
+                        cursor         : pointer;
+
+                        .sort-icon {
+                            color: @event-console-darker-border-color;
+                        }
+                    }
+
+                    .remove-sort-item {
+                        display        : flex;
+                        justify-content: center;
+                        align-items    : center;
+                        border         : 1px solid @event-details-sidebar-border-color;
+                        border-radius  : 4px;
+                        padding        : .4rem;
+                        width          : 40%;
+                        cursor         : pointer;
+
+                        .remove-sort-icon {
+                            color: @event-console-darker-border-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

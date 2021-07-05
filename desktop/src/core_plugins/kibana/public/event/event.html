@@ -1,4 +1,4 @@
-<event-app class="event app-container">
+<event-app class="event">
   <kbn-top-nav name="event" config="topNavMenu">
     <!-- Transcluded elements. -->
     <div data-transclude-slots>
@@ -10,12 +10,11 @@
   </kbn-top-nav>
 
   <loader-animation ng-if="loadingEvents && !listOfEvents.List_of_events.length"></loader-animation>
-  <div class="app-container event-container" ng-if="listOfEvents.List_of_events.length">
+  <div class="event-container">
     <event-console style="height: 100%" list-of-events="listOfEvents" column-selector-info="columnSelectorInfo"
       update-column-selector="updateColumnSelector" user-list="userList"
       event-console-mandatory-fields="eventConsoleMandatoryFields" can-update-event="canUpdateEvent"
-      filter-fields="filterFields" itsm-preferences-enabled="itsmPreferencesEnabled"
-      fetch-raw-events='fetchRawEvents'>
+      filter-fields="filterFields" itsm-preferences-enabled="itsmPreferencesEnabled" fetch-raw-events='fetchRawEvents'>
     </event-console>
   </div>
 </event-app>

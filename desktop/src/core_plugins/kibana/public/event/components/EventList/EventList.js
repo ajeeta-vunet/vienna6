@@ -19,15 +19,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './EventList.less';
-import { EventItem } from '../EventItem/EventItem';
 import { OperationBar } from '../OperationBar/OperationBar';
 import Pagination from 'react-js-pagination';
 import $ from 'jquery';
 import _ from 'lodash';
-import { generateHeading } from '../../utils/vunet_format_name';
-import { Notifier } from 'ui/notify';
+// import { generateHeading } from '../../utils/vunet_format_name';
+// import { Notifier } from 'ui/notify';
+import { EventConsoleTable } from '../EventConsoleTable/EventConsoleTable';
+import { SortEventsSidebar } from '../SortEventsSidebar/SortEventsSidebar';
+import { produce } from 'immer';
 
-const notify = new Notifier({ location: 'Event Console' });
+// const notify = new Notifier({ location: 'Event Console' });
 
 export class EventList extends React.Component {
   constructor(props) {
@@ -45,22 +47,21 @@ export class EventList extends React.Component {
       //filteredEventsList -
       filteredEventsList: this.props.events,
 
-      //sortKey - used to store which field was used to sort the events
-      sortKey: '',
-
-      //lastSortOrder - used to store which order the last sort was done in. ascending/descending
-      lastSortOrder: '',
-
       //allFields - list of all fields (passed to ColumnSelector)
       allFields: this.props.allFields,
 
       //hiddenFields - list of hidden fields (passed to ColumnSelector)
       hiddenFields: this.props.hiddenFields,
+
+      //showSortDetails - if true then display the sort details section
+      showSortDetails: false,
+
+      //sortItemsList - list of columns selected to sort the events.
+      sortItemsList: [],
     };
   }
 
   componentDidMount() {
-    this.updateFieldDisplay();
     //this is to avoid redirection to homepage after click of the button in pagination component.
     $('.pagination li a').on('click', function (e) {
       e.preventDefault();
@@ -68,9 +69,6 @@ export class EventList extends React.Component {
   }
 
   componentDidUpdate() {
-    //this is added because when any local state variables change we need to hide the fileds in
-    // hiddenFields and updateFieldDisplay method does this.
-    this.updateFieldDisplay();
     //this is to avoid redirection to homepage after click of the button in pagination component.
     $('.pagination li a').on('click', function (e) {
       e.preventDefault();
@@ -78,145 +76,104 @@ export class EventList extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState(
-      {
-        events: newProps.events,
-        filteredEventsList: _.sortBy(newProps.events, function (o) {
-          return o.fields.correlated_id;
-        }),
-        allFields: newProps.allFields,
-        hiddenFields: newProps.hiddenFields,
-      },
-      () => {
-        this.updateFieldDisplay();
-      }
-    );
+    this.setState({
+      events: newProps.events,
+      filteredEventsList: _.sortBy(newProps.events, function (o) {
+        return o.fields.correlated_id;
+      }),
+      allFields: newProps.allFields,
+      hiddenFields: newProps.hiddenFields,
+    });
   }
 
+  //convert sortItemsList to state variable.
+  //direction 1 indicates ascending order, -1 indicates descending.
   sortByClickedField = (field) => {
-    let newEvents = this.state.filteredEventsList;
-    //The lodash sortBy does not work properly with aphanumeric text, so we use JS localCompare
-    //to sort the fields with Alphanumeric values.
-    if (
-      field === 'alert_id' ||
-      field === 'created_time' ||
-      field === 'last_modified_time' ||
-      field === 'last_occurence' ||
-      field === 'similar_events_count' ||
-      field === 'active_duration' ||
-      field === 'total_duration' ||
-      field === 'likes' ||
-      field === 'dislikes' ||
-      field === 'ticket_creation_time'
-    ) {
-      newEvents = _.sortBy(newEvents, function (o) {
-        if (
-          field === 'alert_id' ||
-          field === 'active_duration' ||
-          field === 'total_duration' ||
-          field === 'likes' ||
-          field === 'dislikes'
-        ) {
-          return parseInt(o.fields[field]);
-        } else if (
-          field === 'created_time' ||
-          field === 'last_modified_time' ||
-          field === 'last_occurence' ||
-          field === 'ticket_creation_time'
-        ) {
-          return Date.parse(o.fields[field]);
-        }
-        return o.fields[field];
+    let sortItemsList = [];
+    if (this.state.sortItemsList.find((sortItem) => sortItem.name === field)) {
+      sortItemsList = produce(this.state.sortItemsList, (draft) => {
+        draft.find((eachItem) => {
+          if (field === eachItem.name) {
+            eachItem.direction = eachItem.direction === 1 ? -1 : 1;
+          }
+        });
       });
     } else {
-      newEvents = newEvents
-        .slice()
-        .sort((a, b) =>
-          a.fields[field].localeCompare(b.fields[field], undefined, {
-            numeric: true,
-          })
-        );
-    }
-    if (
-      this.state.lastSortOrder === '' ||
-      this.state.lastSortOrder === 'Descending'
-    ) {
-      this.setState({ lastSortOrder: 'Ascending' });
-    } else if (field === this.state.sortKey) {
-      newEvents.reverse();
-      this.setState({ lastSortOrder: 'Descending' });
-    }
-    this.setState(
-      {
-        filteredEventsList: newEvents,
-        sortKey: field,
-      },
-      () => notify.info(`Events sorted based on - ` + generateHeading(field))
-    );
-    // this.setState({ sortKey: field });
-  };
-
-  //This function traverses through the allFields and hiddenFields arrays
-  //to add show or hide classes respectively.
-  updateFieldDisplay = () => {
-    // Show the fields that are selected in the
-    // column selector UI.
-    this.state.allFields &&
-      this.state.allFields.map((field) => {
-        field = field.replace(/[^a-zA-Z-_]+/g, '');
-        // Get an element from multiple classes. Here
-        // we get the element containing the field to be shown
-        // and add a class to show the item.
-        const className = '.detail-item.' + field;
-        $(className).addClass('detail-item-show');
-        // }
-      });
-
-    // Show the fields that are selected in the
-    // column selector UI.
-    this.state.hiddenFields &&
-      this.state.hiddenFields.map((field) => {
-        field = field.replace(/[^a-zA-Z-_]+/g, '');
-        // Get an element from multiple classes. Here
-        // we get the element containing the field to be hidden
-        // and add a class to hide the item
-        const className = '.detail-item.' + field;
-        $(className).removeClass('detail-item-show');
-        $(className).addClass('detail-item-hide');
-        // }
-      });
-  };
-
-  //Used for the initial load of ColumnSelector.
-  //It will check/uncheck based on the allFields and hiddenFields
-  handleColumnSelectorDisplay = () => {
-    this.state.allFields &&
-      this.state.allFields.map((field) => {
-        field = field.replace(/[^a-zA-Z-_]+/g, '');
-        document.getElementById('edit-' + field).checked = true;
-      });
-
-    this.state.hiddenFields &&
-      this.state.hiddenFields.map((field) => {
-        field = field.replace(/[^a-zA-Z-_]+/g, '');
-        document.getElementById('edit-' + field).checked = false;
-      });
-    const container = $('#column-selector-id');
-    container.show();
-
-    function handleToggle(e) {
-      if ($(e.target).closest('#column-selector-id').length === 0) {
-        $('#column-selector-id').hide();
-        $(document).unbind('click');
+      if (this.state.sortItemsList.length < 3) {
+        sortItemsList = produce(this.state.sortItemsList, (draft) => {
+          draft.push({
+            name: field,
+            direction: 1,
+          });
+        });
+      } else {
+        sortItemsList = this.state.sortItemsList;
       }
-    }
 
-    $(document).on('click', function (e) {
-      handleToggle(e);
+    }
+    this.sortEventsList(sortItemsList);
+  };
+
+  //The events will be sorted based on multiple selected columns as per the direction of each column
+  sortEventsList = (sortItemsList) => {
+    const newFilteredEventsList = produce(
+      this.state.filteredEventsList,
+      (draft) => {
+        draft.sort(function (event1, event2) {
+          let i = 0;
+          let result = 0;
+          while (i < sortItemsList.length && result === 0) {
+            const compareResult = event1.fields[sortItemsList[i].name]
+              .toString()
+              .localeCompare(event2.fields[sortItemsList[i].name], undefined, {
+                numeric: true,
+              });
+            result = sortItemsList[i].direction * compareResult;
+            i++;
+          }
+          return result;
+        });
+      }
+    );
+    this.setState({
+      filteredEventsList: newFilteredEventsList,
+      sortItemsList,
+      showSortDetails: true,
     });
   };
 
-  //this function is called when filetr button is clicked in the UI.
+  //This removes all the sorting performed on the tables.
+  clearAllSorting = () => {
+    this.setState({
+      filteredEventsList: _.sortBy(this.props.events, function (o) {
+        return Date.parse(o.fields.last_occurence);
+      }).reverse(),
+      sortItemsList: [],
+      showSortDetails: false,
+    });
+  };
+
+  //This removes an column from sorting list and rearranges the sorting of events
+  //based the remaining sorting columns
+  removeSortItem = (field) => {
+    const sortItemsList = produce(this.state.sortItemsList, (draft) => {
+      return draft.filter((sortItem) => sortItem.name !== field);
+    });
+
+    if (sortItemsList.length > 0) {
+      this.sortEventsList(sortItemsList);
+    } else {
+      const listOfSortItems = _.sortBy(this.props.events, function (o) {
+        return o.fields.last_modified_time;
+      });
+      this.setState({
+        filteredEventsList: listOfSortItems,
+        sortItemsList,
+      });
+    }
+  };
+
+  //this function is called when filter button is clicked in the UI.
   //This will hide and un-hide the div under the filter button which contains the filter options.
   handleFilterSelectorDisplay = () => {
     const container = $('#filter-selector-id');
@@ -235,13 +192,11 @@ export class EventList extends React.Component {
   };
 
   //this function is passed onto ColumnSelector to handle ColumnSelector updates.
-  handleUpdateColumnSelector = () => {
-    this.props.updateColumnSelector(
-      this.state.allFields,
-      this.state.hiddenFields
-    );
+  handleUpdateColumnSelector = (hiddenFields) => {
+    this.props.updateColumnSelector(this.state.allFields, hiddenFields);
   };
 
+  //this method is used to search for data in the event console tables.
   onSearch = (e) => {
     const searchString = e.target.value;
     if (searchString === '') {
@@ -261,7 +216,7 @@ export class EventList extends React.Component {
             }
           });
         });
-      this.setState({ filteredEventsList: filteredEventsList });
+      this.setState({ filteredEventsList: filteredEventsList, currentPage: 1 });
     }
   };
 
@@ -278,34 +233,52 @@ export class EventList extends React.Component {
     this.setState({ eventsPerPage: Number(e.target.value), currentPage: 1 });
   };
 
+  //this method is called to open and close sort sidebar from operationBar component.
+  hideAndUnhideSortbar = () => {
+    this.setState({
+      showSortDetails: !this.state.showSortDetails,
+    });
+  };
+
   render() {
     const { currentPage, eventsPerPage } = this.state;
 
     // Logic for displaying current events
     const indexOfLastEvent = currentPage * eventsPerPage;
     const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+
     const currentEvents =
       this.state.filteredEventsList &&
       this.state.filteredEventsList.slice(indexOfFirstEvent, indexOfLastEvent);
 
-    const renderEvents =
-      currentEvents &&
-      currentEvents.map((event, index) => {
-        return (
-          <span key={index}>
-            <EventItem
-              event={event}
-              userList={this.props.userList}
-              getClickedField={this.sortByClickedField}
-              canUpdateEvent={this.props.canUpdateEvent}
-              itsmPreferencesEnabled={this.props.itsmPreferencesEnabled}
-              createTicket={this.props.createTicket}
-              fetchRawEvents={this.props.fetchRawEvents}
-              allFields={this.state.allFields}
-            />
-          </span>
-        );
-      });
+    const renderEventConsoleTable = () => {
+      return (
+        currentEvents && (
+          <EventConsoleTable
+            currentEvents={currentEvents}
+            sortByClickedField={_.debounce(this.sortByClickedField, 1000)}
+            hiddenFields={this.state.hiddenFields}
+            canUpdateEvent={this.props.canUpdateEvent}
+            itsmPreferencesEnabled={this.props.itsmPreferencesEnabled}
+            createTicket={this.props.createTicket}
+            userList={this.props.userList}
+            fetchRawEvents={this.props.fetchRawEvents}
+            allFields={this.state.allFields}
+          />
+        )
+      );
+    };
+
+    const sortEventsSideBar = () => {
+      return (
+        <SortEventsSidebar
+          columnsList={this.state.sortItemsList}
+          clearAllSorting={this.clearAllSorting}
+          sortByClickedField={this.sortByClickedField}
+          removeSortItem={this.removeSortItem}
+        />
+      );
+    };
 
     const totalItemsCount = this.state.filteredEventsList
       ? this.state.filteredEventsList.length
@@ -316,7 +289,6 @@ export class EventList extends React.Component {
         <OperationBar
           allFields={this.state.allFields}
           hiddenFields={this.state.hiddenFields}
-          handleColumnSelectorDisplay={this.handleColumnSelectorDisplay}
           handleFilterSelectorDisplay={this.handleFilterSelectorDisplay}
           handleColumnSelectorChange={this.props.handleColumnSelectorChange}
           handleUpdateColumnSelector={this.handleUpdateColumnSelector}
@@ -328,10 +300,17 @@ export class EventList extends React.Component {
           addFilter={this.props.addFilter}
           filterStore={this.props.filterStore}
           exportEventsToCsv={this.props.exportEventsToCsv}
+          hideAndUnhideSortbar={this.hideAndUnhideSortbar}
+          showSortDetails={this.state.showSortDetails}
         />
         <div className="events-table-container">
           <div className="event-listing-wrapper">
-            {renderEvents}
+            {this.state.showSortDetails && (
+              <div className="event-sort-list-wrapper">
+                {sortEventsSideBar()}
+              </div>
+            )}
+            {renderEventConsoleTable()}
             {currentEvents && currentEvents.length === 0 && (
               <div>
                 <h3>No Events to Display</h3>
@@ -339,7 +318,6 @@ export class EventList extends React.Component {
             )}
           </div>
           <div className="pagination-container">
-            <div className="space-holder" />
             <div className="view-all-events-container">
               <a
                 className="view-all-events"

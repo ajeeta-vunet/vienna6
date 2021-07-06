@@ -1,0 +1,174 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.vunet-dynamic-table {
+    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+    border-radius: 1rem;
+    border-collapse: collapse;
+    background-color: @white;
+    // flex: 2;
+    height: fit-content;
+    padding: 10px;
+    .table-toolbar {
+        display: flex;
+        justify-content: space-between;
+        height: 30px;
+        margin-bottom: 1rem;
+        .toolbar-search {
+            display: flex;
+            width: 50%;
+            border-radius: 2rem;
+            border: @vublock-table-border-color 0.5px solid;
+            .search-icon {
+                padding: 0.95rem 2rem;
+                font-size: 1.6rem;
+                color: @vublock-table-border-color;
+            }
+            .search-input {
+                flex-grow: 1;
+                border-radius: 2rem;
+                border: none;
+            }
+        }
+        .toolbar-action-group {
+            display: flex;
+            button {
+                margin: 0 0.5rem;
+                min-height: 30px;
+                border-radius: 4rem;
+                border: none;
+                font-size: 1.6rem;
+                font-family: @inter-bold;
+                box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+                &.addBtn {
+                    background-color: @vublock-store-accent-color;
+                    color: @white;
+                    padding: 0 1.3rem;
+                }
+                &.importBtn {
+                    background-color: @vublock-import-button-bg;
+                    color: @white;
+                    padding: 0 1.3rem;
+                }
+                &.exportBtn {
+                    background-color: @vublock-export-button-bg;
+                    color: @white;
+                    padding: 0 1.3rem;
+                }
+                &.deleteBtn {
+                    background-color: @red;
+                    color: @white;
+                    padding: 0 1.3rem;
+                }
+                &.rowActionBtn {
+                    background-color: @vublock-store-accent-color;
+                    color: @white;
+                    padding: 0 1.3rem;
+                }
+                .btnIcon {
+                    margin-right: 0.6rem;
+                }
+            }
+            .rowsSelect {
+                border-radius: 3rem;
+                margin-left: 1rem;
+            }
+        }
+    }
+    .table-content {
+        table {
+            border-bottom: 0.1rem solid @seperator_color;
+            width: 100%;
+            thead {
+                tr {
+                    border-top: 0.1rem solid @seperator_color;
+                    border-bottom: 0.1rem solid @seperator_color;
+                    line-height: 2.5;
+                    th {
+                        cursor: pointer;
+                        font-size: 1.6rem;
+                        font-family: @inter-medium;
+                        font-weight: 400;
+                        .sortIcon {
+                            font: normal normal normal 14px/1 FontAwesome;
+                            font-size: 14px;
+                            font-size: inherit;
+                            text-rendering: auto;
+                            pointer-events: none;
+                            margin-left: 4px;
+                        }
+                    }
+                    .checkAllCell {
+                        width: 30px;
+                        text-align: center;
+                    }
+                }
+            }
+            tbody {
+                tr {
+                    line-height: 2.5;
+                    .checkCell {
+                        width: 60px;
+                        text-align: center;
+                    }
+                    td {
+                        font-size: 1.6rem;
+                        font-family: @inter-regular;
+                        font-weight: 400;
+                        .editIcon {
+                            font: normal normal normal 14px/1 FontAwesome;
+                            font-size: 14px;
+                            font-size: inherit;
+                            text-rendering: auto;
+                            pointer-events: none;
+                            padding-left: 2rem;
+                        }}
+                }
+            }
+            .checkSingle, .checkAll {
+            }
+        }
+        .table-status-text {
+            text-align: center;
+            padding: 20px 0;
+            color: @vublock-store-grey;
+        }
+    }
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        margin: 1rem 2rem 0 2rem;
+        font-size: 1.6rem;
+        font-family: @inter-regular;
+        font-weight: 400;
+        .rowSelectionIndication {
+            color: @vublock-store-grey;
+        }
+        .pageNumberIndication {
+            margin-right: 1rem;
+        }
+        .pageIcon {
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: 1.6rem;
+            font-size: inherit;
+            text-rendering: auto;
+            pointer-events: none;
+        }
+        .previousPageBtn {
+            box-shadow: none;
+            border: none;
+            color: @white;
+            background: @vublock-store-accent-color;
+            border-radius: 50% 0 0 50%;
+            margin-right: 0.5rem;
+            padding: 0.2rem 1rem;
+        }
+        .nextPageBtn {
+            box-shadow: none;
+            border: none;
+            color: @white;
+            background: @vublock-store-accent-color;
+            border-radius: 0 50% 50% 0;
+            padding: 0.2rem 1rem;
+        }
+    }
+}

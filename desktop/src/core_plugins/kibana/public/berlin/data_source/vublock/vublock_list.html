@@ -1,65 +1,53 @@
 <vu-block-list>
+  <div class="vublock-navbar">
+    <p class="vublock-breadcrumb">vuModule</p>
+  </div>
   <div class="vu-block-app-container" data-test-subj="vublock">
-    <div class="vu-block-toolbar">
-      <div class="vu-block-search-wrapper toolbar-item">
-        <input
-          type="text"
-          ng-model="searchQuery"
-          placeholder="Search vuBlocks"
-          class="vu-block-search">
-      </div>
-      <div class="toolbar-item">
-        <vunet-switch
-          on-change="onToggleActivateVuBlock"
-          checked="showActivatedVuBlocks"
-        >
-        </vunet-switch>
-        <span class="toolbar-item-text">Active</span>
-      </div>
-      <div class="toolbar-item">
-        <vunet-switch
-          on-change="onToggleTouchPointVuBlock"
-          checked="showTouchPointVuBlocks"
-        >
-        </vunet-switch>
-        <span class="toolbar-item-text">Touch Point Blocks</span>
-      </div>
-      <div class="toolbar-item">
-        <vunet-switch
-          on-change="onToggleLogicalVuBlock"
-          checked="showLogicalVuBlocks"
-        >
-        </vunet-switch>
-        <span class="toolbar-item-text">Logical Blocks</span>
-      </div>
-      <div class="toolbar-item">
-        <span class="toolbar-item-text">
-          <a href="">Add New Block</a>
-        </span>
-      </div>
-      <div class="toolbar-item">
-        <span class="toolbar-item-text">
-          <a href="">Import</a>
-        </span>
+    <div class="vu-block-filter-header"> Filter </div>
+    <div class="vu-block-toolbar-wrapper">
+      <div class="vu-block-toolbar">
+        <div class="vu-block-search-wrapper toolbar-item">
+          <input type="text" ng-model="searchQuery" placeholder="Search" class="vu-block-search" />
+        </div>
+        <div class="toolbar-item">
+          <input type="checkbox" ng-model="showEnabledVuBlocks" ng-change="onToggleEnabledVuBlock()" />
+          <span class="toolbar-item-text">Enabled ({{ enabledVuBlockCount }})</span>
+        </div>
+        <div class="toolbar-item">
+          <input type="checkbox" ng-model="showDisabledVuBlocks" ng-change="onToggleDisabledVuBlock()" />
+          <span class="toolbar-item-text">Disabled ({{ disabledVuBlockCount }})</span>
+        </div>
+        <div class="toolbar-item">
+          <input type="checkbox" ng-model="enableComponentVuBlocks" ng-change="onToggleComponentVuBlock()" />
+          <span class="toolbar-item-text">Component Blocks ({{ componentVuBlockCount }})</span>
+        </div>
+        <div class="toolbar-item">
+          <span class="toolbar-item-text">
+            <a href="">
+              <button class="btn vublock-btn-import" ng-click="importVublock()">
+                Import
+              </button>
+            </a>
+          </span>
+        </div>
+        <div class="toolbar-item">
+          <span class="toolbar-item-text">
+            <a href="">
+              <button class="btn vublock-btn-export" ng-click="exportVublock()">
+                Export
+              </button>
+            </a>
+          </span>
+        </div>
       </div>
     </div>
     <div class="vu-block-section-wrapper">
-      <div ng-if="showLogicalVuBlocks">
-        <vu-block-section
-          name="'Logical Blocks'"
-          search-query="searchQuery"
-          vu-block-list="logicalVuBlockList">
-        </vu-block-section>
-      </div>
-      <div 
-        ng-if="showLogicalVuBlocks && showTouchPointVuBlocks"
-        class="section-separator">
-      </div>
-      <div ng-if="showTouchPointVuBlocks">
-        <vu-block-section
-          name="'Touch Point Blocks'"
-          search-query="searchQuery"
-          vu-block-list="touchPointVuBlockList">
+      <div ng-if="showComponentVuBlocks">
+        <vu-block-section name="Component Blocks" description="Packaged for standard integrations with pre-configured
+                        Data sources, Storyboards and Alert Rules.
+                        To start the data pipeline and enable the ETL process for a block,
+                        complete the data source configuration and enable the block" search-query="searchQuery"
+          vu-block-list="componentVuBlockList">
         </vu-block-section>
       </div>
     </div>

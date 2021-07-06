@@ -1,0 +1,130 @@
+<host-landscape>
+  <div data-transclude-slot="topLeftCorner" class="host-landscape-title" role="heading" aria-level="1">
+    Host Landscape
+  </div>
+  <div
+    class='host-landscape-container' data-test-subj='hostLandscapePage'>
+
+    <div class='row host-landscape-summary'>
+      <div class='col-md-2 col-sm-2 col-xs-2'>
+        <div class='landscape-card'>
+          <h6 class='card-key'>TARGETS AVAILABLE</h6>
+          <span class='card-value'>{{active_targets}}</span>
+        </div>
+      </div>
+      <div class='col-md-2 col-sm-2 col-xs-2'>
+        <div class='landscape-card'>
+          <h6 class='card-key'>TOTAL TARGETS</h6>
+          <span class='card-value'>{{total_targets}}</span>
+        </div>
+      </div>
+      <div class='col-md-2 col-sm-2 col-xs-2'>
+        <div class='landscape-card'>
+          <h6 class='card-key'>TOTAL SOURCES</h6>
+          <span class='card-value'>{{total_sources}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class='table-wrapper'>
+      <div class="table-toolbar">
+        <div class="toolbar-search">
+          <span class="search-icon fa fa-search" />
+          <input
+            class="search-input"
+            type="text"
+            placeholder="Search by targets, sources, collection methods or vublocks"
+            aria-label="Filter"
+            ng-model="searchText"
+          />
+        </div>
+        <select
+          class='kuiSelect rowsSelect'
+          label='Number of entries'
+          key="value"
+          name="pageItems"
+          ng-change="setItemsPerPage(itemsPerPage)"
+          ng-model="itemsPerPage"
+        >
+          <option value="10" label="10">10</option>
+          <option value="50" label="50">50</option>
+          <option value="100" label="100">100</option>
+          <option value="All" label="All">All</option>
+        </select>
+      </div>
+
+      <div class="data-table">
+        <table class="host-landscape-table">
+          <tr class="host-landscape-row-header">
+            <th class="targets">
+              Targets
+            </th>
+            <th class="datasources">
+              Data Sources
+            </th>
+            <th class="collection-methods">
+              Agents
+            </th>
+            <th class="vublocks">
+              vuBlocks
+            </th>
+            <th class="target-type">
+              Type
+            </th>
+            <th class="action">
+              Actions
+            </th>
+          </tr>
+          <tr class="host-landscape-row-data"
+            ng-repeat="(key, value) in targets.slice(((currentPage-1)*noOfRecords), ((currentPage)*noOfRecords)) | filter: searchText track by $index">
+            <td class="targets">
+              <p style="word-break: break-all; margin: 0;">
+                <i
+                  ng-class="{
+                    'glyphicon glyphicon-stop success-shade': value.data_reception_status === 'ACTIVE',
+                    'glyphicon glyphicon-stop danger-shade': value.data_reception_status === 'INACTIVE',
+                    'glyphicon glyphicon-stop warning-shade': value.data_reception_status === 'PARTIAL'
+                  }" 
+                />
+                {{value.name}}
+              </p>
+              <!-- <p style="word-break: break-all; margin: 0;">
+                <span class="cell-badge danger-badge">
+                  <i class="badge-icon glyphicon glyphicon-remove"></i>
+                  {{value.name}}
+                </span>
+              </p> -->
+            </td>
+            <td class="datasources">
+              <div style="display: inline;" ng-bind-html="concatenateValue(value.data_sources)"></div>
+            </td>
+            <td class="collection-methods">
+              <div style="display: inline;" ng-bind-html="concatenateValue(value.agents)"></div>
+            </td>
+            <td class="vublocks">
+              <div style="display: inline;" ng-bind-html="concatenateValue(value.vublocks)"></div>
+            </td>
+            <td class="target-type">{{value.type}}</td>
+            <td class="action" >
+              <div class="download-agent-config" ng-click="DownloadAgentConfig(value.name)">
+                <kbn-tooltip
+                  text="Download Agent"
+                  placement="left"
+                  tooltip-append-to-body="1"
+                >
+                  <span class="glyphicon glyphicon-download-alt" />
+                </kbn-tooltip>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td ng-if="hostList.length === 0" class="no-data-message" colspan="5">
+              Looks like there is no data
+            </td>
+          </tr>
+        </table>
+      <div>
+    </div>
+
+  <div>
+</host-landscape>

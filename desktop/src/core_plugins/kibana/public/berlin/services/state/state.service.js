@@ -480,6 +480,29 @@ class StateService {
     return this._DataService.importDataSources(fileData, upload);
   }
 
+  // This function is called to import xls file containing
+  // one or multiple data-source-types for a vublock
+  importVublockDataSources(fileData, upload, vuBlockId) {
+    return this._DataService.importVublockDataSources(fileData, upload, vuBlockId);
+  }
+
+  // This function is called to export all the data-source-types
+  // for a vublock to a xls file
+  exportDataSources(vuBlockID) {
+    return this._DataService.exportDataSources(vuBlockID);
+  }
+
+  // Export one or more vublocks to a json file
+  exportvuBlock(vuBlockList) {
+    return this._DataService.exportvuBlock(vuBlockList);
+  }
+
+  // Import the json file containing the data for one or more vublocks
+  // into the vublock configuration index.
+  importvuBlock(fileData, upload) {
+    return this._DataService.importvuBlock(fileData, upload);
+  }
+
   // get vendor and devices list
   getVendorAndDeviceList() {
     return this._DataService.getVendorAndDeviceList();
@@ -582,6 +605,11 @@ class StateService {
     return this._DataService.downloadSampleDataEnrichment();
   }
 
+  // Get all the configured hosts
+  getHostLandscapeList() {
+    return this._DataService.getHostLandscapeList();
+  }
+
   // Get all the vuBlocks
   getvuBlockList() {
     return this._DataService.getvuBlockList();
@@ -595,6 +623,11 @@ class StateService {
   // Get details of a tab clicked on vuBlock details page
   getvuBlockTabDetails(vuBlockName, tabName) {
     return this._DataService.getvuBlockTabDetails(vuBlockName, tabName);
+  }
+
+  // Get details of a tab clicked on vuBlock details page
+  getLogicalvuBlockComponentsDetails(vuBlockName, tabName) {
+    return this._DataService.getLogicalvuBlockComponentsDetails(vuBlockName, tabName);
   }
 
   // update vuBlock status
@@ -617,6 +650,16 @@ class StateService {
       sourceInstanceName,
       data
     );
+  }
+
+  // add source instance
+  addDataSource(vuBlockName, data) {
+    return this._DataService.addDataSource(vuBlockName, data);
+  }
+
+  // delete source instance
+  deleteDataSource(vuBlockName, sourceInstanceID) {
+    return this._DataService.deleteDataSource(vuBlockName, sourceInstanceID);
   }
 
   getAgentConfiguration(vuBlockName, sourceInstanceName) {
@@ -667,6 +710,11 @@ class StateService {
   // Downloads the file (File Management Interface).
   downloadFgwFile(rowId) {
     return this._DataService.downloadFgwFile(rowId);
+  }
+
+  // Download the agent and configuration.
+  downloadAgentConfig(target, agentConfig, env, agentName) {
+    return this._DataService.downloadAgentConfig(target, agentConfig, env, agentName);
   }
 
   // Deletes a file.

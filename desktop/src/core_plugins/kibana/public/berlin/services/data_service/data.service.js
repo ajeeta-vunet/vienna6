@@ -579,6 +579,12 @@ class DataService {
     return this._getFileRequest(url, 'getting sample data enrichment files', { responseType: 'blob' });
   }
 
+  // Get all the configured hosts
+  getHostLandscapeList() {
+    const url = this.urlBase + '/targets';
+    return this._getRequest(url, 'getting host list');
+  }
+
   // Get all the vuBlocks
   getvuBlockList() {
     const url = this.urlBase + '/vublock';
@@ -587,7 +593,7 @@ class DataService {
 
   // Get all details of a vuBlock
   getvuBlockDetails(vuBlockName) {
-    const url = this.urlBase + '/vublock/' + vuBlockName + '/storyboard';
+    const url = this.urlBase + '/vublock/' + vuBlockName;
     return this._getRequest(url, 'getting vublock details');
   }
 
@@ -595,6 +601,12 @@ class DataService {
   getvuBlockTabDetails(vuBlockName, tabName) {
     const url = this.urlBase + '/vublock/' + vuBlockName + '/' + tabName;
     return this._getRequest(url, 'getting tab details for' + tabName);
+  }
+
+  // Get components details of a tab clicked on vuBlock details page
+  getLogicalvuBlockComponentsDetails(vuBlockName, sourceInstanceId) {
+    const url = this.urlBase + '/vublock/' + vuBlockName + '/source-instances/' + sourceInstanceId + '?components';
+    return this._getRequest(url, 'getting tab details for' + sourceInstanceId);
   }
 
   // update the current status of vuBlock
@@ -615,6 +627,27 @@ class DataService {
     const url = this.urlBase + '/vublock/' + vuBlockName +
       '/source/' + sourceInstanceName;
     return this._putRequest(url, data, 'update data source');
+  }
+
+  // add source instance
+  addDataSource(vuBlockName, data) {
+    const url = this.urlBase + '/vublock/' + vuBlockName +
+      '/source/';
+    return this._postRequest(url, data, 'add data source');
+  }
+
+  // Download agent and configuration
+  downloadAgentConfig(target, agentConfig, env, agentName) {
+    const url = this.urlBase + '/targets/' + target +
+      '?agent-download=' + agentConfig + '&env=' + env + '&agent_name=' + agentName;
+    return this._getFileRequest(url, 'downloading agents', { responseType: 'blob' });
+  }
+
+  // delete source instance
+  deleteDataSource(vuBlockName, sourceInstanceID) {
+    const url = this.urlBase + '/vublock/' + vuBlockName +
+      '/source/' + sourceInstanceID;
+    return this._deleteRequest(url, 'delete data source');
   }
 
   getAgentConfiguration(vuBlockName, sourceInstanceName) {
@@ -821,6 +854,46 @@ class DataService {
         resolve(response);
       }, (errorResponse) => {
         this._handleErrorResponseForFileUpload(errorResponse, 'importing data sources. Please check the file.');
+        reject(errorResponse);
+      });
+    });
+  }
+
+  // Function to import one or more data source types for a vublock from a xls file.
+  importVublockDataSources(fileData, upload, vuBlockId) {
+    const url = this.urlBase + '/vublock/' + vuBlockId + '/source_bulk/import';
+    return this.$q((resolve, reject) => {
+      upload.upload({ url: url, file: fileData }).then((response) => {
+        resolve(response);
+      }, (errorResponse) => {
+        this._handleErrorResponseForFileUpload(errorResponse);
+        reject(errorResponse);
+      });
+    });
+  }
+
+  // Function to export all the data source types for a vublock to xls file.
+  exportDataSources(vuBlockId) {
+    const url = this.urlBase + '/vublock/' + vuBlockId + '/source_bulk/export';
+    return this._getFileRequest(url, 'exporting data sources', { responseType: 'blob' });
+  }
+
+  // Export one or more vublocks to a json file
+  exportvuBlock(data) {
+    const url = this.urlBase + '/vuBlock/export/' + '?' + 'vuBlocks=' + data;
+    return this._getFileRequest(url, data, 'getting the file of vublock', { responseType: 'blob' });
+    //return this._getRequest(url, 'exporting vuBlock');
+  }
+
+  // Import the json file containing the data for one or more vublocks
+  // into the vublock configuration index.
+  importvuBlock(fileData, upload) {
+    const url = this.urlBase + '/vuBlock/import_file/';
+    return this.$q((resolve, reject) => {
+      upload.upload({ url: url, file: fileData }).then((response) => {
+        resolve(response);
+      }, (errorResponse) => {
+        this._handleErrorResponse(errorResponse, 'importing data sources. Please check the file.');
         reject(errorResponse);
       });
     });

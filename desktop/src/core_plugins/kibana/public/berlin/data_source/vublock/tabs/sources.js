@@ -1,9 +1,10 @@
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
-import '../styles/vublock.less';
 import { VuBlockConstants } from '../vu_block_constants';
+import importvublockPopupTemplate from '../import_vublock_popup.html';
+import importvublockPopupCtrl from '../import_vublock_popup';
 
-
+app.controller('importvublockPopupCtrl', importvublockPopupCtrl);
 // This directive takes care of displaying data sources and
 // their instances.
 app.directive('vuBlockSources', function () {
@@ -16,85 +17,12 @@ app.directive('vuBlockSources', function () {
 });
 
 function vuBlockSources($scope,
-  StateService
+  StateService,
+  Promise,
+  $route,
+  $uibModal
+
 ) {
-
-  // sources meta data
-  $scope.sourcesMeta = {
-    headers: ['Name'],
-    rows: ['name'],
-    id: 'name',
-    add: false,
-    edit: false,
-    selection: false,
-    search: true,
-    tableAction: [],
-    default: {},
-    forceUpdate: false,
-    inverted: false,
-    hasSubTable: true,
-    useBoxShadowForTable: false,
-    subTable: {
-      fetch: $scope.fetchSubTableContents,
-      meta: {
-        headers: [],
-        rows: [],
-        id: '',
-      }
-    }
-  };
-
-  // This function gets called when the form wizard data is to
-  // be saved to the backend. The reference of this function
-  // is passed as metadata to components.
-  $scope.saveData = function (restApiId, name, data) {
-
-    // Initialize a list to store data to be sent
-    // to the back end.
-    const submitDataList = [];
-    if (data.wizardData) {
-
-      // Iterate wizardData list received from form wizard
-      // and push the data objects to the 'submitDataList'.
-      // We do this until we encounter a flag: 'formSubmit'
-      // which is set to true.
-      data.wizardData.some(function (dataObj) {
-        submitDataList.push(dataObj.data);
-        if (dataObj.formSubmit &&
-            dataObj.formSubmit === true) {
-          return true;
-        }
-      });
-
-      // Api call for adding a new data source instance
-      if (name === undefined) {
-        return StateService.addDataSource($scope.vuBlock.id, submitDataList[0]).then(function () {
-          return Promise.resolve('false');
-        });
-
-      // Api call for editing an existing data source instance
-      } else {
-        return StateService.updateDataSource($scope.vuBlock.id, name, submitDataList[0]).then(function () {
-          return Promise.resolve('false');
-        });
-      }
-    }
-  };
-
-  // This function gets called when the last form in the
-  // form wizard gets submitted.
-  $scope.onModalSubmit = () => {
-    return Promise.resolve('true');
-  };
-
-  // Fetch the data required for sub table.
-  $scope.fetchSubTableContents = function (type) {
-    return StateService.getvuBlockTabDetails($scope.vuBlock.id, 'source')
-      .then(function (data) {
-        return data.source_types.find(x => x.name === type).instances;
-      });
-  };
-
   // This function gets called when the edit button in front of data source
   // instances is clicked. The reference of this function is passed as metadata
   // to components. This is used to populate the data and meta data required by
@@ -121,8 +49,19 @@ function vuBlockSources($scope,
         .then(function (data) {
           return Promise.resolve(data);
         });
-    } else if (buttonName === VuBlockConstants.AGENT_CONFIGURATION) {
+    }
+    // else if button name is 'getAgentConfiguration' we make a backend call
+    // to get the agent configuration
+    else if (buttonName === VuBlockConstants.AGENT_CONFIGURATION) {
       return StateService.getAgentConfiguration($scope.vuBlock.id, name)
+        .then(function (data) {
+          return Promise.resolve(data);
+        });
+    }
+    // else if button name is 'getHostValidation' we make a backend call
+    // to check whether the given host is reachable or not
+    else if (buttonName === VuBlockConstants.HOST_VALIDATION) {
+      return StateService.getHostValidation($scope.vuBlock.id, name)
         .then(function (data) {
           return Promise.resolve(data);
         });
@@ -142,43 +81,58 @@ function vuBlockSources($scope,
     }
   };
 
-  // Callback function to fetch sources information
-  $scope.fetchSourceItems = () => {
-    return StateService.getvuBlockTabDetails($scope.vuBlock.id, 'source').then(function (data) {
-      const sourceList = [];
-      data.source_types.forEach(source => {
-        const sourceObj = { 'name': source.name };
-        sourceObj.subTable = {};
-        sourceObj.subTable.meta = {};
-        sourceObj.subTable.meta.containerClassName = 'nested-table-container';
-        sourceObj.subTable.meta.headers = ['name', 'type', 'description'];
-        sourceObj.subTable.meta.rows = ['name', 'type', 'description'];
-        sourceObj.subTable.meta.id = 'id';
-        sourceObj.subTable.meta.name = source.name;
-        sourceObj.subTable.meta.restApiId = source.name;
-        sourceObj.subTable.meta.add = false;
-        sourceObj.subTable.meta.edit = true;
-        sourceObj.subTable.meta.isFormWizard = true;
-        sourceObj.subTable.meta.isSubTable = true;
-        sourceObj.subTable.meta.useBoxShadowForTable = false;
-        sourceObj.subTable.meta.getAllEditData = $scope.getAllEditData;
-        sourceObj.subTable.fetch = $scope.fetchSubTableContents;
-        sourceObj.subTable.meta.saveData = $scope.saveData;
-        sourceObj.subTable.meta.buttonCallback = $scope.buttonCallback;
-        sourceObj.subTable.meta.onSubmit = $scope.onModalSubmit;
+  // Delete source instance
+  $scope.deleteSelectedItems = (rows) => {
 
-        // The following code will be used for vuBlock phase 2
-        // dataSource.subTable.meta.deleteSelectedItems = $scope.deleteSelectedItems;
-        // dataSource.subTable.onSubTableRowAction = $scope.onSubTableRowAction;
-        // source.subTable.meta.rowAction = [
-        //   { name: 'verify data', icon: 'fa-terminal', toolTip: 'Verify Data' },
-        //   { name: 'remote configuration', icon: 'fa-terminal', toolTip: 'Remote Configuration' },
-        // ];
+    // Iterate over list of source instances to be deleted and delete
+    // one by one. We return a list of promises which contains both
+    // success and failure cases.
+    const deletePromises = Promise.map(rows, function (row) {
+      return StateService.deleteDataSource($scope.vuBlock.id, row[Object.keys(row)[0]])
+        .then(function () {
+          return '';
+        })
+        .catch(function () {
+          return '';
+        });
+    });
 
-        sourceList.push(sourceObj);
-      });
-      return sourceList;
+    // Wait till all Promises(deletePromises) are resolved
+    // and return single Promise
+    return Promise.all(deletePromises);
+  };
+
+  // When the import button is clicked, we show a pop up where user
+  // can choose a xls file containing the data sources for a vublock and import.
+  $scope.importDataSources = () => {
+    $uibModal.open({
+      animation: true,
+      template: importvublockPopupTemplate,
+      controller: 'importvublockPopupCtrl',
+      resolve: {
+        vublockList: function () {
+          return [];
+        },
+        importType: function () {
+          return 'datasource';
+        },
+        vuBlockId: function () {
+          return $scope.vuBlock.id;
+        }
+      }
+    }).result.then(function () {
+    }, function () {
+      $rootScope.currentTab = 'sources';
+      $route.reload();
     });
   };
 
+  // This function exports all the data source types for a vublock into a xls file.
+  $scope.exportDataSources = function () {
+    StateService.exportDataSources($scope.vuBlock.id).then(() => {
+      return Promise.resolve(true);
+    }, function () {
+      return Promise.resolve(false);
+    });
+  };
 }

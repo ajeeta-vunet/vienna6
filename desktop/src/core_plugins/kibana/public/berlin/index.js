@@ -19,12 +19,15 @@ import 'plugins/kibana/berlin/data_source/enrichment/enrichment_tables';
 import 'plugins/kibana/berlin/data_source/enrichment/enrichment';
 import 'plugins/kibana/berlin/data_source/vublock/vublock_list';
 import 'plugins/kibana/berlin/data_source/vublock/vublock_details';
+import 'plugins/kibana/berlin/data_source/vublock_store/vublock_store_list';
+import 'plugins/kibana/berlin/data_source/vublock_store/vublock_modify_data';
+import 'plugins/kibana/berlin/data_source/landscape/host_landscape';
 import 'plugins/kibana/berlin/preferences/preferences';
 import 'plugins/kibana/berlin/definitions/definition';
 import 'plugins/kibana/berlin/definitions/credentials/credentials';
 import 'plugins/kibana/berlin/definitions/email_groups/email_groups';
 import 'plugins/kibana/berlin/about/about';
-// import 'plugins/kibana/berlin/network_configuration/view_network_configuration';
+import 'plugins/kibana/berlin/network_configuration/view_network_configuration';
 import 'plugins/kibana/berlin/details/details';
 import 'plugins/kibana/berlin/user/user';
 import 'plugins/kibana/berlin/network_configuration/network_configuration';
@@ -66,6 +69,7 @@ import { BackupConstants } from './backup/backup_constants.js';
 import enrichmentTablesTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment_tables.html';
 import enrichmentDataTemplate from 'plugins/kibana/berlin/data_source/enrichment/enrichment.html';
 import vuBlockTemplate from 'plugins/kibana/berlin/data_source/vublock/vublock_list.html';
+import hostLandscapeTemplate from 'plugins/kibana/berlin/data_source/landscape/host_landscape.html';
 import vuBlockDetailsTemplate from 'plugins/kibana/berlin/data_source/vublock/vublock_details.html';
 import configurationTemplate from 'plugins/kibana/berlin/data_source/configuration/configuration.html';
 import storageTemplate from 'plugins/kibana/berlin/data_source/storage/storage.html';
@@ -75,6 +79,8 @@ import aboutTemplate from 'plugins/kibana/berlin/about/about.html';
 import networkConfiguartionTemplate from 'plugins/kibana/berlin/network_configuration/network_configuration.html';
 import detailsTemplate from 'plugins/kibana/berlin/details/details.html';
 import userTemplate from './user/user.html';
+import vuBlockStoreTemplate from 'plugins/kibana/berlin/data_source/vublock_store/vublock_store_list.html';
+import vuBlockModifyTemplate from 'plugins/kibana/berlin/data_source/vublock_store/vublock_modify_data.html';
 import filesTemplate from 'plugins/kibana/berlin/data_source/files/files.html';
 import settingsTemplate from 'plugins/kibana/berlin/data_source/settings/settings.html';
 import imageManagerTemplate from 'plugins/kibana/berlin/image_manager/image_manager.html';
@@ -103,6 +109,20 @@ uiRoutes
   })
   .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.VUBLOCK_PATH, {
     template: vuBlockTemplate,
+  })
+  .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.VUBLOCK_STORE_PATH, {
+    template: vuBlockStoreTemplate,
+  })
+  .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.VUBLOCK_MODIFY_PATH, {
+    template: vuBlockModifyTemplate,
+    resolve: {
+      vuBlockId: function ($route) {
+        return $route.current.params.vuBlockName;
+      },
+    }
+  })
+  .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.HOST_LANDSCAPE_PATH, {
+    template: hostLandscapeTemplate,
   })
   .when(BerlinConstants.BERLIN_PATH + VuBlockConstants.VUBLOCK_DETAILS_PATH, {
     template: vuBlockDetailsTemplate,

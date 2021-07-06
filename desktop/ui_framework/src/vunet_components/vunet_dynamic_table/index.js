@@ -1,0 +1,1 @@
+export { VunetDynamicTable } from './vunet_dynamic_table.js';

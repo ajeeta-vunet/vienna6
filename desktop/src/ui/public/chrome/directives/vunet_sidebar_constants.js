@@ -26,6 +26,7 @@ export const VunetSidebarConstants = {
   PREFERENCES: 'Preferences',
   DEFINITIONS: 'Definitions',
   USER: 'User',
+  VUBLOCK_STORE: 'vuBlock Store',
   LICENSE_USAGE: 'License Usage',
   ABOUT: 'About',
   IMAGEMANAGR: 'Manage Images'

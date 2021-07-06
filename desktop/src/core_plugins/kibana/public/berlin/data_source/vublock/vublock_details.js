@@ -1,14 +1,34 @@
 import { uiModules } from 'ui/modules';
 const app = uiModules.get('app/berlin');
 import { Notifier } from 'ui/notify';
-
+import { Sources } from './components/SourcesTab/Sources';
+import { GetStarted } from '../vublock_store/components/GetStartedTab/GetStarted';
 import './tabs/fields';
 import './tabs/alert_rules';
-import './tabs/docs';
+import './tabs/get_started';
 import './tabs/map';
 import './tabs/golden_signals';
 import './tabs/storyboards';
 import './tabs/sources';
+import './tabs/logical_sources';
+
+// GetStarted react component
+app.directive('getStarted', (reactDirective) => {
+  return reactDirective(GetStarted, [
+    'vuBlockId'
+  ]);
+});
+
+// Sources react component
+app.directive('sources', (reactDirective) => {
+  return reactDirective(Sources, [
+    'vuBlockId',
+    'importDataSources',
+    'exportDataSources',
+    'buttonCallback',
+    'deleteSelectedItems'
+  ]);
+});
 
 // This directive is used to display detailed information
 // of a vuBlock
@@ -19,6 +39,8 @@ app.directive('vuBlockDetails', function () {
     controller: vuBlockDetails,
   };
 });
+
+app.filter('unsafe', function ($sce) { return $sce.trustAsHtml; });
 
 function vuBlockDetails($scope,
   $http,
@@ -38,33 +60,37 @@ function vuBlockDetails($scope,
     // Get the resolved data required by the control
     // from route.current.locals
     $scope.vuBlock = $route.current.locals.vuBlock;
+    $scope.vuBlockId = $scope.vuBlock.id;
     $scope.vuBlockStatus = $scope.vuBlock.status;
 
-    // If the status of vuBlock is active, we dispay
-    // a button to deactivate the vublock and vice versa.
-    if ($scope.vuBlockStatus === 'Active') {
-      $scope.vuBlockStatusButtonText = 'Deactivate';
+    // If the status of vuBlock is enabled, we dispay
+    // a button to disable the vublock and vice versa.
+    if ($scope.vuBlockStatus === 'Enabled') {
+      $scope.vuBlockStatusButtonText = 'Disable';
     } else {
-      $scope.vuBlockStatusButtonText = 'Activate';
+      $scope.vuBlockStatusButtonText = 'Enable';
     }
 
     // Get the tags to be shown for the vuBlock
-    $scope.vuBlockTags = $scope.vuBlock.tags && $scope.vuBlock.tags.toString();
+    $scope.vuBlockTags = $scope.vuBlock.tags;
 
     // Prepare the tabs list from the response received.
     $scope.tabs = [
+      { id: 'get_started', name: 'Get Started' },
       { id: 'storyboards', name: 'Storyboards' },
       { id: 'sources', name: 'Sources' },
       { id: 'fields', name: 'Fields' },
       { id: 'golden_signals', name: 'Golden Signals' },
       { id: 'alert_rules', name: 'Alert Rules' },
-      { id: 'docs', name: 'Docs' },
     ];
 
+    $scope.showModal = false;
+    $scope.modalData = {};
+    $scope.modalData.isForm = false;
     // Set the landing tab to be displayed when
     // this page loads.
-    $scope.landingTab = 'storyboards';
-    $scope.id = 'storyboards';
+    $scope.landingTab = 'get_started';
+    $scope.id = 'get_started';
 
     // Use white color as background color for tabs
     $scope.tabStyle = {
@@ -72,38 +98,64 @@ function vuBlockDetails($scope,
     };
   }
 
-  // This function updates the vuBlock state from 'Active' to
-  // 'Inactive' and vice versa.
+  // This function updates the vuBlock state from 'Enabled' to
+  // 'Disabled' and vice versa.
   $scope.changeVuBlockStatus = function () {
-
-    // If the vuBlock is in 'Active' state, The vuBlock button will
-    // show the next action possible: Deactivate.
-    // When 'Deactivate' button is clicked we make a back end call
+    // If the vuBlock is in 'Enabled' state, The vuBlock button will
+    // show the next action possible: Disable.
+    // If the vuBlock is in 'Disabled' state,
+    // the next action possible: Enable.
+    // When 'Enable/Disable' button is clicked we make a back end call
     // with the next state of vuBlock as request data.
-    if ($scope.vuBlockStatusButtonText === 'Deactivate') {
-      $scope.vuBlockStatus = { status: 'Inactive' };
+    const status = $scope.vuBlockStatusButtonText;
+    if (status === 'Disable') {
+      $scope.vuBlockStatus = { status: 'Disabled' };
     } else {
-
-      // If the vuBlock is in 'Inactive' state, The vuBlock button will
-      // show the next action possible: Activate.
-      // When 'Activate' button is clicked we make a back end call
-      // with the next state of vuBlock as request data.
-      $scope.vuBlockStatus = { status: 'Active' };
+      $scope.vuBlockStatus = { status: 'Enabled' };
     }
-
     // When the api call is successful then we toggle
     // the button text and vuBlock state.
     StateService.updateVuBlockStatus($scope.vuBlock.id, $scope.vuBlockStatus).then(function () {
-      if ($scope.vuBlockStatusButtonText === 'Deactivate') {
-        $scope.vuBlockStatusButtonText = 'Activate';
-        $scope.vuBlock.status = 'Inactive';
+      if (status === 'Disable') {
+        $scope.vuBlockStatusButtonText = 'Enable';
+        $scope.vuBlock.status = 'Disabled';
       } else {
-        $scope.vuBlockStatusButtonText = 'Deactivate';
-        $scope.vuBlock.status = 'Active';
+        $scope.vuBlockStatusButtonText = 'Disable';
+        $scope.vuBlock.status = 'Enabled';
       }
     }).catch(function (e) {
       notify.error(e);
     });
+  };
+
+  // This function is called when the 'enable'/'disable'
+  // button is clicked
+  $scope.handleVuBlockStatus = () => {
+    if ($scope.vuBlockStatusButtonText === 'Disable') {
+      $scope.modalData.title = `Disable ${$scope.vuBlock.name} ?`;
+      $scope.modalData.message = `<div class="vublock-modal-message"> Are you sure you
+      want to disable ${$scope.vuBlock.name}  ? This disables the data pipeline,
+      storyboards and alerts associated with it </div>`;
+    } else {
+      $scope.modalData.title = 'Enable ' + $scope.vuBlock.name + ' ?';
+      $scope.modalData.message = `<div class="vublock-modal-message"> Are you sure
+       you want to enable ${$scope.vuBlock.name} ? This enables the data
+       pipeline to receive ${$scope.vuBlock.name} metrics and load the
+       storyboards / alert rules </div>`;
+    }
+    $scope.showModal = true;
+  };
+
+
+  // Close the modal
+  $scope.onModalClose = () => {
+    $scope.showModal = false;
+  };
+
+  // This is called on modal submit..
+  $scope.onModalSubmit = () => {
+    $scope.showModal = false;
+    $scope.changeVuBlockStatus();
   };
 
   init();

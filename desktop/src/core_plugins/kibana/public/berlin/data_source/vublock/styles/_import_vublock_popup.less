@@ -1,0 +1,29 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.vu-block-popup-container {
+    padding: 2rem;
+    text-align: end;
+    font-family: @inter-regular;
+    input {
+        width: 100%;
+        font-family: @inter-regular;
+    }
+    .help-block.help-text {
+        text-align: left;
+        p {
+            margin: 0;
+            font-family: @inter-regular;
+        }
+    }
+    .error-text {
+        text-align: left;
+        p {
+            margin: 0;
+            font-family: @inter-regular;
+            color: @vublock-store-error-text-color;
+            a {
+                color: @vublock-store-link-text-color;
+            }
+        }
+    }
+}

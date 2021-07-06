@@ -17,6 +17,9 @@ const KuiButtonIcon = props => {
   const typeToClassNameMap = {
     create: 'fa-plus',
     delete: 'fa-trash',
+    publish: 'fa-upload',
+    import: 'glyphicon glyphicon-import',
+    export: 'glyphicon glyphicon-export',
     previous: 'fa-chevron-left',
     next: 'fa-chevron-right',
     loading: 'fa-spinner fa-spin',

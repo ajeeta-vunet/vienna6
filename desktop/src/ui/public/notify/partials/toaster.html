@@ -26,16 +26,16 @@
 
           <a
             ng-if="notif.stack && !notif.showStack"
-            class="kuiButton"
             ng-class="notif.getContentShadeClass()"
+            class="toastButton"
             ng-click="notif.cancelTimer(); notif.showStack = true"
           >
             More Info
           </a>
           <a
             ng-if="notif.stack && notif.showStack"
-            class="kuiButton"
             ng-class="notif.getContentShadeClass()"
+            class="toastButton"
             ng-click="notif.showStack = false"
           >
             Less Info
@@ -51,17 +51,17 @@
           <button
             type="button"
             ng-if="notif.address"
-            class="kuiButton"
             ng-class="notif.getButtonClass()"
+            class="toastButton"
             ng-click="notif.address()"
           >
             Fix it
           </button>
           <button
             type="button"
-            class="kuiButton"
-            ng-repeat="action in notif.customActions"
             ng-class="action.getButtonClass()"
+            class="toastButton"
+            ng-repeat="action in notif.customActions"
             ng-click="action.callback()"
             ng-bind="action.key"
             data-test-subj="{{action.dataTestSubj}}"

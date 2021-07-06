@@ -30,6 +30,8 @@ const BUTTON_TYPES = [
   'warning',
   'primary',
   'secondary',
+  'export',
+  'import'
 ];
 
 const ICON_POSITIONS = [
@@ -46,6 +48,8 @@ const buttonTypeToClassNameMap = {
   warning: 'kuiButton--warning',
   primary: 'kuiButton--primary',
   secondary: 'kuiButton--secondary',
+  export: 'kuiButton--export',
+  import: 'kuiButton--import',
 };
 
 const getClassName = ({ className, buttonType, hasIcon = false }) =>

@@ -426,10 +426,10 @@ export class VunetDataTable extends Component {
       if (typeof (item[row]) === 'object' && item[row].image) {
         cells.push({ value: <img src={item[row].image}/> });
       } else {
-        let columnData, columnDataObj;
+        let columnDataObj;
         if (this.props.metaItem.columnData)
         {columnDataObj = this.props.metaItem.columnData.find(cd => cd.columnName === row);}
-        columnData = columnDataObj ? columnDataObj.func : undefined;
+        const columnData = columnDataObj ? columnDataObj.func : undefined;
         // If we have some resolver data then we'll use that, otherwise we'll show raw value
         if (columnData) {
           cells.push({ value: columnData(row, item[row]) });

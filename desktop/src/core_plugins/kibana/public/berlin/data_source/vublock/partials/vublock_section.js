@@ -8,7 +8,8 @@ app.directive('vuBlockSection', function () {
     restrict: 'E',
     template: require('plugins/kibana/berlin/data_source/vublock/partials/vublock_section.html'),
     scope: {
-      name: '=',
+      name: '@',
+      description: '@',
       vuBlockList: '=',
       searchQuery: '='
     },
@@ -16,9 +17,9 @@ app.directive('vuBlockSection', function () {
 
       // This function handles the redirection to the vuBlock details
       // page when any vuBlock is clicked.
-      scope.viewVuBlockConfiguration = function (vuBlockName) {
+      scope.viewVuBlockConfiguration = function (vuBlockName, vuBlockType) {
         window.location.href = 'vienna#/berlin' +
-          VuBlockConstants.VUBLOCK_PATH + vuBlockName;
+          VuBlockConstants.VUBLOCK_PATH + vuBlockName + '?type=' + vuBlockType;
       };
     }
   };

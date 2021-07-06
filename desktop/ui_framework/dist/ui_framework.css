@@ -54,7 +54,7 @@
  * 4. Fix an IE bug which causes the last child to overflow the container.
  * 5. Fixing this bug means we now need to align the children to the right.
  */
-* {
+ * {
   box-sizing: border-box; }
   *:before, *:after {
     box-sizing: border-box; }
@@ -3626,7 +3626,7 @@ input[type="button"] {
 .kuiTableRowCell__liner {
   padding: 7px 8px 8px;
   /* 2 */
-  line-height: 1.5;
+  line-height: 1rem;
   /* 1 */
   overflow: hidden;
   /* 3 */
@@ -3825,7 +3825,7 @@ input[type="button"] {
   min-height: 30px;
   /* 1 */
   padding: 10px;
-  height: 50px;
+  height: 4rem;
   background-color: transparent;
   border: solid 1px #D9D9D9; }
   .kuiToolBar .kuiButton:not(a):enabled:focus {
@@ -3881,8 +3881,8 @@ input[type="button"] {
   -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
-  margin-left: 25px;
-  margin-right: 25px; }
+  margin-left: 0rem;
+  margin-right: 0rem; }
   .kuiToolBarSection:not(:first-child):not(:last-child):not(:only-child) {
     -webkit-box-pack: center;
     -webkit-justify-content: center;

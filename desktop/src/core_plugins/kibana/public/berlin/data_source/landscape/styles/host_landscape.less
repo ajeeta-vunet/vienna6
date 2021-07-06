@@ -1,0 +1,204 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.host-landscape-title {
+  font-family     : 'Inter-Medium';
+  font-weight     : normal;
+  color           : @network-asset-title-color;
+  position        : relative;
+  padding         : 2rem 0rem 0rem 3rem;
+  font-size       : 1.9rem;
+  min-height      : 7rem;
+  background-color: @network-title-color;
+  border          : none;
+}
+
+.host-landscape-container {
+  height: 100%;
+  overflow: hidden;
+
+  .host-landscape-summary {
+      padding: 2rem;
+      .landscape-card {
+          background-color: #FFFFFF;
+          padding: 2rem 2.5rem;
+          border-radius: 0.5rem;
+          border: 1px solid #edf2f9;
+          box-shadow: 0 .75rem 1.5rem rgba(18,38,63,.03);
+          .card-key {
+              color: #7D7D7D;
+              font-size: 1.4rem;
+              font-family: 'Inter-Regular';
+              letter-spacing: 0.05rem;
+              margin: 0;
+          }
+          .card-value {
+              color: #000000;
+              font-size: 3.25rem;
+              font-family: 'Inter-Medium';
+          }
+      }
+  }
+
+  .table-wrapper {
+    background-color: #FFFFFF;
+    border-radius: 2rem;
+    margin: 2rem;
+    box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 2rem 2rem 3rem 2rem;
+      .toolbar-search {
+          display: flex;
+          width: 50%;
+          background-color: #FFFFFF;
+          border-radius: 2rem;
+          border: #b4b4b4 0.5px solid;
+          .search-icon {
+              padding: 1.5rem 2rem;
+              font-size: 1.6rem;
+              color: #b4b4b4;
+          }
+          .search-input {
+              background-color: #FFFFFF;
+              flex-grow: 1;
+              border-radius: 2rem;
+              border: none;
+          }
+      }
+      .rowsSelect {
+          border-radius: 3rem;
+          margin-left: 1rem;
+      }
+    }
+
+    .data-table{
+      text-align: left;
+      height: 50rem;
+      padding: 2rem;
+      overflow: auto;
+      .host-landscape-table{
+        width: 100%;
+        background-color: white;
+        border-bottom: 0.1rem solid #f2f3f4;
+        .host-landscape-row-header {
+          padding:10px 10px 10px 10px;
+          border-top: 0.1rem solid #f2f3f4;
+          border-bottom: 0.1rem solid #f2f3f4;
+          th {
+            font-size: 1.6rem;
+            font-family: 'Inter-Medium';
+            font-weight: 400;
+            padding: 10px;
+          }
+          .targets {
+            padding-left: 10px;
+            width: 23%;
+          }
+          .datasources {
+            width: 25%;
+          }
+          .collection-methods {
+            width: 25%;
+          }
+          .vublocks {
+            width: 20%;
+          }
+          .target-type {
+            width: 4%;
+          }
+          .action {
+            width: 3%;
+          }
+        }
+        .download-agent-config {
+          display: inline-block;
+          color: @accent_color;
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+            span {
+              text-decoration: underline;
+            }
+          }
+        }
+        .host-landscape-row-data {
+          vertical-align: top;
+          padding: 10px;
+          line-height: 2.5;
+          td {
+            font-size: 1.6rem;
+            font-family: 'Inter-Regular';
+            font-weight: 400;
+            padding-left: 10px;
+          }
+          .targets {
+            padding-left: 10px;
+            width: 23%;
+          }
+          .datasources {
+            width: 25%;
+          }
+          .collection-methods {
+            width: 25%;
+          }
+          .vublocks {
+            width: 20%;
+          }
+          .target-type {
+            width: 4%;
+          }
+          .action {
+            width: 3%;
+          }
+          .cell-badge {
+            border-radius: 0.4rem;
+            padding: 0.4rem;
+            margin: 0 0.2rem;
+            display: inline-block;
+            line-height: 1;
+            .badge-icon {
+              display: inline-block;
+              margin: 0.4rem;
+              font-size: 1.4rem;
+            }
+          }
+          .danger-badge {
+            background-color: #F44E2D;
+            color: #FFFFFF;
+          }
+          .success-badge {
+            background-color: #29A746;
+            color: #FFFFFF;
+          }
+          .warning-badge {
+            background-color: #FFC107;
+            color: #000000;
+          }
+          .generic-badge {
+            background-color: #e5e7e8;
+            color: #000000;
+          }
+          .danger-shade {
+            color: #F44E2D;
+          }
+          .success-shade {
+            color: #29A746;
+          }
+          .warning-shade {
+            color: #FFC107;
+          }
+          .generic-shade {
+            color: #e5e7e8;
+          }
+        }
+        .no-data-message {
+          text-align: center;
+          padding: 8rem 0;
+          font-size: 1.6rem;
+          color: grey;
+        }
+      }
+    }
+  }
+}

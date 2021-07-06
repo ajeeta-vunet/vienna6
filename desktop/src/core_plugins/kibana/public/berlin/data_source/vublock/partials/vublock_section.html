@@ -1,9 +1,12 @@
 <div>
   <div class="vu-block-section-header"> {{ name }} </div>
+  <div class="vu-block-description">
+    {{ description }}
+  </div>
   <div class="vu-block-list-container">
-    <div ng-click="viewVuBlockConfiguration(vuBlock.id)"
+    <div ng-click="viewVuBlockConfiguration(vuBlock.id, vuBlock.type)"
       class="vu-block"
-      ng-repeat="vuBlock in vuBlockList | orderBy:'status' | filter:searchQuery">
+      ng-repeat="vuBlock in vuBlockList | orderBy:['-status','name'] | filter:searchQuery">
       <div class="vu-block-header">
         {{ vuBlock.name }}
       </div>
@@ -11,7 +14,7 @@
         class="vu-block-icon"
         ng-style="{'background-image':'url(/ui/vienna_images/{{vuBlock.icon}})'}">
       </div>
-      <div class="vu-block-status-div" ng-class="{'active-vu-block': vuBlock.status==='Active' }">
+      <div class="vu-block-status-div" ng-class="{'active-vu-block': vuBlock.status==='Enabled' }">
         {{vuBlock.status}}
       </div>
     </div>

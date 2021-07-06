@@ -1,0 +1,84 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.basic-details-wrapper {
+    .action-buttons-section {
+        display: flex;
+        justify-content: flex-end;
+        button {
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1.4rem;
+            font-family: 'Inter-Bold';
+            padding: 1.2rem 4.6rem;
+            box-shadow: none;
+            outline: 0;
+            margin: 0 1rem;
+        }
+        .vublock-edit-button {
+            border: 1px solid @vublock-store-accent-color;
+            background: @vublock-store-accent-color;
+        }
+        .vublock-discard-button {
+            border: 1px solid @vublock-store-grey;
+            background: @vublock-store-grey;
+        }
+        .vublock-save-button {
+            border: 1px solid @vublock-store-accent-color;
+            background: @vublock-store-accent-color;
+        }
+    }
+    .vublock-basic-details-content {
+        .vublock-fieldset {
+            display: flex;
+            width: 70%;
+            margin: auto;
+            margin: 2rem auto;
+            .basic-details-label {
+                font-size: 14px;
+                color: @vublock-store-grey;
+                margin: 0;
+                width: 20%;
+                text-align: start;
+                padding: 0 1rem;
+            }
+            .basic-details-value {
+                font-size: 14px;
+                color: @vublock-store-text-color;
+                margin: 0;
+                width: 80%;
+                text-align: start;
+                padding: 0 1rem;
+            }
+            .tags-container {
+                margin: 0;
+                width: 80%;
+                .tag-value {
+                    display: inline-flex;
+                    background: @vublock-store-tag-bg;
+                    margin: 0.5rem;
+                    border-radius: 0.6rem;
+                    color: @vublock-store-tag-text-color;
+                    padding: 0.5rem 1rem;
+                    font-size: 12px;
+                }
+            }
+            .input-container {
+                width: 100%;
+                margin: 0 5rem;
+                .basic-details-input {
+                    height: auto;
+                    &:disabled {
+                        border-radius: 4px;
+                    }
+                }
+                .vublock-description-text-area,
+                .vublock-tags-text-area {
+                    height: 80px;
+                }
+                .errorFieldText {
+                    color: @vublock-store-error-text-color;
+                }
+            }
+        }
+    }
+}

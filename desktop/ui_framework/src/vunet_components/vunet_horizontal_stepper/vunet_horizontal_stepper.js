@@ -110,7 +110,7 @@ export class VunetHorizontalStepper extends Component {
         };
 
         iconStyle = {
-          color: nodeObj.node_color,
+          color: '#fff',
         };
 
         textStyle = {

@@ -24,6 +24,7 @@ import React, {
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import './_vunet_dynamic_form_builder.less';
+import DualListBox from 'react-dual-listbox';
 import { VunetSelect } from '../vunet_select/vunet_select';
 import { VunetCronTab } from '../vunet_cron_tab/vunet_cron_tab';
 import { VunetHelp } from 'ui_framework/src/vunet_components/vunet_help/vunet_help';
@@ -48,9 +49,12 @@ export class VunetDynamicFormBuilder extends Component {
       listOperDict: listOperDictCopy,
       helpOperationsDict: {},
       hideElm: [],
-      operDict: {}
+      operDict: {},
+      selected: [],
+      components: [],
     };
   }
+
 
   static defaultProps = { buttonsList: ['Cancel', 'Submit'] }
 
@@ -84,7 +88,6 @@ export class VunetDynamicFormBuilder extends Component {
     // helpOperationsDict is an object which maintains boolean values to
     // hide / show the help content for a field.
     const helpOperationsDictCopy = _.cloneDeep(this.state.helpOperationsDict);
-
     if (initial) {
       this.props.formData.item.forEach(_item => {
         if (_item.rules) {
@@ -173,6 +176,18 @@ export class VunetDynamicFormBuilder extends Component {
   }
 
   /*
+  * Function to carry out form submit when the user presses Enter
+  */
+  handleKeyUp = (e) => {
+    if(e.key === 'Enter') {
+      e.preventDefault();
+      if (this.props.onSubmit && this.validate()) {
+        this.props.onSubmit(this.state);
+      }
+    }
+  }
+
+  /*
   * Submit callback of form
   */
   onSubmit = (e) => {
@@ -216,10 +231,12 @@ export class VunetDynamicFormBuilder extends Component {
     const formGroupStateKeys = childKeyList.map(chKey => { return parentKey + '$' + chKey; });
     let formGroupData = this.state[parentKey] ? this.state[parentKey] : [];
     const formGroupInnerData = {};
-
     // Create a dict with the formGroup object's field keys
     childKeyList.forEach(chKey => {
       formGroupInnerData[chKey] = this.state[parentKey + '$' + chKey];
+      // if (Array.isArray(this.state[parentKey + '$' + chKey])) {
+      //   formGroupInnerData[chKey] = this.state[parentKey + '$' + chKey].toString();
+      // }
     });
 
     // Get the rowIndex for this entry
@@ -321,12 +338,51 @@ export class VunetDynamicFormBuilder extends Component {
   * On change of form value will update the state
   * And also apply rule if applicabale
   */
+  onChange1 = (selected) => {
+    const components1 = this.convertArraytoJson(selected);
+    this.setState({ selected });
+    this.setState({
+      components: components1
+    });
+  };
+
+  convertArraytoJson = (selected) => {
+    const jsonToBeUsed = [];
+    let host;
+    for (const i in selected) {
+      let hosts = [];
+      let j = 0;
+      let found = false;
+      host = selected[i];
+      const key = host.split('|')[0];
+      for (j in jsonToBeUsed) {
+        if (jsonToBeUsed[j].hasOwnProperty(key)) {
+          hosts = jsonToBeUsed[j][key];
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        hosts.push(host.split('|')[1]);
+        jsonToBeUsed[j][key] = hosts;
+      }
+      else
+      {
+        const hosts = [];
+        const item = {};
+        hosts.push(host.split('|')[1]);
+        item[key] = hosts;
+        jsonToBeUsed.push(item);
+      }
+    }
+    return jsonToBeUsed;
+  }
+
   onChange = (e, key, type = 'single') => {
     // Find the element from props..
     let parentElm = {};
     let elm = {};
     let formGroup = false;
-
     // If we find a '$' in key, we consider it
     // to be a key of a form element under form group.
     if (key.indexOf('$') > 0) {
@@ -334,7 +390,6 @@ export class VunetDynamicFormBuilder extends Component {
       // get the parent and child keys in an array (keys).
       // the string before the $ has the parent key.
       const keys = key.split('$');
-
       // get the form group
       parentElm = this.props.formData.item.find(_item => _item.key === keys[0]);
 
@@ -550,23 +605,6 @@ export class VunetDynamicFormBuilder extends Component {
             return false;
           } else {
             errorLabel.textContent = '';
-            // Check if error messages are shown for any of the form inputs. If yes,
-            // invalidate the form. This is added to take care of multiple validation
-            // callbacks in a form. For example: schedule name and backup location in
-            // Backup section.
-            for (let formElemIndex = 0; formElemIndex < formLength; formElemIndex++) {
-              const elem = formEl[formElemIndex];
-              const errorLabel = elem.parentNode.parentNode.parentNode.querySelector('.error-row .invalid');
-              if (errorLabel && elem.nodeName.toLowerCase() !== 'button' &&
-                errorLabel.textContent !== null &&
-                errorLabel.textContent.length > 0 && e.target.type !== 'checkbox') {
-                return false;
-              }
-              else {
-                if(errorLabel !== null)
-                {errorLabel.textContent = '';}
-              }
-            }
           }
         }
       } else {
@@ -644,8 +682,8 @@ export class VunetDynamicFormBuilder extends Component {
   * }
   */
   renderForm = (formData, parentKey = '') => {
-    const isAddOrEdit = this.props.formData.action === 'add' ? true : false;
 
+    //const isAddOrEdit = this.props.formData.action === 'add' ? true : false;
     const formUI = formData.map((m) => {
 
       const key = m.key;
@@ -654,7 +692,7 @@ export class VunetDynamicFormBuilder extends Component {
       if (this.isHidden(key)) {
         return null;
       }
-      const id = (!isAddOrEdit && m.id) ? true : false;
+      const id = m.primary_key && m.operation === 'edit' ? true : false;
       const type = m.type || 'text';
       const props = m.props || {};
       const name = m.name;
@@ -663,8 +701,12 @@ export class VunetDynamicFormBuilder extends Component {
       // If the form element belongs to a form group, we prepend the
       // key with parentKey received as argument with a '$' in the middle.
       const target = parentKey !== '' ? parentKey + '$' + key : key;
-      value = this.state[target] || '';
+      value = value ? value : this.state[target];
 
+      //if ((m.hasOwnProperty('primary_key')))
+      //{
+      //this.props.data.name = value;
+      //}
       // This is default input element.. We update this for type specific
       // input below..
       let input = (
@@ -743,7 +785,7 @@ export class VunetDynamicFormBuilder extends Component {
               {...props}
               key={o.key}
               value={o.value}
-            >{accessor ? accessor.func(m.key, o.value) : o.label}
+            >{accessor ? accessor.func(m.key, o.value) : o.value}
             </option>
           );
         });
@@ -766,6 +808,19 @@ export class VunetDynamicFormBuilder extends Component {
           </div>);
       }
 
+      if (type === 'dualListbox') {
+        const { selected } = this.state;
+        input = (
+          <div className="select-input-container">
+            <DualListBox
+              canFilter
+              options={m.options}
+              selected={selected}
+              onChange={this.onChange1}
+              filterPlaceholder="Search available hosts..."
+            />
+          </div>);
+      }
       if (type === 'multiSelect') {
 
         const accessor = this.props.formData.accessor && this.props.formData.accessor.find(acc => acc.columnName === m.key);
@@ -866,7 +921,6 @@ export class VunetDynamicFormBuilder extends Component {
 
         // This is a form group... We need to add an object for this in
         // state's operDict as well
-
         const formGroupKeys = m.content.metaData.map((o) => o.key);
         const tableRows = this.state[m.key] && this.state[m.key].map((row, rowIndex) => {
           return (
@@ -903,7 +957,7 @@ export class VunetDynamicFormBuilder extends Component {
             </table>
             {this.state.listOperDict[key].showFormGroup &&
               <div>
-                <fieldset key={key}>
+                <fieldset className="form-group-fieldset" key={key}>
                   {inputGroup}
                 </fieldset>
                 <div
@@ -1074,7 +1128,10 @@ export class VunetDynamicFormBuilder extends Component {
   // Render the form
   render() {
     return (
-      <div className="vunet-dynamic-form-div">
+      <div
+        className="vunet-dynamic-form-div"
+        onKeyPress={(e) => { this.handleKeyUp(e); }}
+      >
         <form
           name="dynamic-form"
           className={'vunet-dynamic-form ' + (this.state.isValidated ? 'was-validated' : '')}
@@ -1109,6 +1166,7 @@ export class VunetDynamicFormBuilder extends Component {
 VunetDynamicFormBuilder.propTypes = {
   className: PropTypes.string, //form class for applying custom css
   formData: PropTypes.object, // formData - data for edit
+  data: PropTypes.object,
   onSubmit: PropTypes.func, // submit callback
   onCancel: PropTypes.func, // cancel callback
   buttonsList: PropTypes.array // display names for the form action buttons

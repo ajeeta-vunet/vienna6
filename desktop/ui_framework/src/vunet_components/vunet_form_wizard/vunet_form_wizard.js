@@ -23,12 +23,14 @@ import './_vunet_form_wizard.less';
 import PropTypes from 'prop-types';
 import { VunetDynamicFormBuilder } from '../vunet_dynamic_form_builder';
 import { VunetHorizontalStepper } from '../vunet_horizontal_stepper/vunet_horizontal_stepper';
+import { VunetLoader } from '../VunetLoader/VunetLoader';
 
 export class VunetFormWizard extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      loading: true,
       currentStep: 0,
       data: {},
       currentForm: {},
@@ -39,6 +41,7 @@ export class VunetFormWizard extends Component {
   }
 
   componentDidMount() {
+
     const restApiId = this.props.data.restApiId;
     const name = this.props.data.name;
     const step = this.props.data.step || 0;
@@ -47,10 +50,10 @@ export class VunetFormWizard extends Component {
         data: data,
         currentForm: { ...data.wizardData[step] },
         wizardTabs: data.wizardTabs,
-
         // This is used to set the color of visited tabs
         // in the wizard.
         visitedColor: data.wizardTabs[0].node_color,
+        loading: false
       });
     });
   }
@@ -68,7 +71,7 @@ export class VunetFormWizard extends Component {
     // and submit the form wizard. We call the onSubmit callback function passed
     // to carry out any operation required. For example: table refresh to update
     // the newly added rows.
-    if ((this.state.currentStep + 1) >= this.state.data.wizardData.length) {
+    if (this.state.data.wizardData.length > 1 && (this.state.currentStep + 1) >= this.state.data.wizardData.length) {
       this.props.onSubmit();
       return;
     }
@@ -78,6 +81,7 @@ export class VunetFormWizard extends Component {
     dataCopy.wizardData[currentStep].data = formData;
     currentStep = currentStep + 1;
 
+
     // When we encounter 'formSubmit' flag in the currentForm obj
     // we make a back end call to save the data in the wizard.
     if (this.state.currentForm.formSubmit === true) {
@@ -86,13 +90,16 @@ export class VunetFormWizard extends Component {
           currentStep: currentStep,
           data: { ...dataCopy },
           currentForm: { ...this.state.data.wizardData[currentStep] }
+        }, () => {
+          if (currentStep >= this.state.data.wizardData.length) {
+            this.props.onSubmit();
+          }
         });
-      }).catch((e) => {
-
+      }).catch(() => {
         // If the save fails, catch the error and
         // display the error message to the user
         const operDictCopy = this.state.operDict;
-        operDictCopy.errorMsg = e.data['error-string'];
+        //operDictCopy.errorMsg = e.data['error-string'];
         this.setState({ operDict: operDictCopy });
       });
     } else {
@@ -106,7 +113,7 @@ export class VunetFormWizard extends Component {
     // Set the color of the current node and the line
     // connecting to the previous node to active when we
     // move to the next step.
-    const wizardTabsCopy = [ ...this.state.wizardTabs];
+    const wizardTabsCopy = [...this.state.wizardTabs];
     wizardTabsCopy[currentStep - 1].link_color = this.state.visitedColor;
 
     // The first node in the stepper is colored by default from back end. We
@@ -127,6 +134,14 @@ export class VunetFormWizard extends Component {
   // VunetDynamicFormBuilder
   prevStep(formData) {
 
+    // If the currentstep holds the first form of the form wizard.
+    // and is closed, we call the onClose callback function passed
+    // to close the modal.
+    if (this.state.currentStep <= 0) {
+      this.props.onCancel();
+      return;
+    }
+
     let currentStep = this.state.currentStep;
     const dataCopy = { ...this.state.data };
     dataCopy.wizardData[currentStep].data = formData;
@@ -145,7 +160,7 @@ export class VunetFormWizard extends Component {
   // This function updates the tab content when
   // user moves between the tabs by clicking on the step
   // icon at the top.
-  switchStep =(index) => {
+  switchStep = (index) => {
     this.setState({
       currentStep: index,
       currentForm: { ...this.state.data.wizardData[index] }
@@ -157,6 +172,7 @@ export class VunetFormWizard extends Component {
   saveData() {
     const restApiId = this.props.data.restApiId;
     const name = this.props.data.name;
+
     return this.props.data.saveData(restApiId, name, this.state.data);
   }
 
@@ -172,7 +188,7 @@ export class VunetFormWizard extends Component {
       .then((data) => {
 
         // Do not proceed if there is no data.
-        if(Object.keys(data).length) {
+        if (Object.keys(data).length) {
           const currentFormCopy = {
             ...this.state.currentForm
           };
@@ -188,18 +204,33 @@ export class VunetFormWizard extends Component {
           // replace the meta data just below the button with the new data
           // received.
           if (this.state.operDict.buttonName) {
-            currentFormCopy.metaData.splice(
-              buttonIndex + 1,
-              1,
-              data
-            );
+            if (Array.isArray(data)) {
+              data.map((m, index) => {
+                // insert the data received just below the button clicked.
+                currentFormCopy.metaData.splice(
+                  buttonIndex + 1,
+                  1,
+                  data[index]
+                );
+              });
+            }
+            else {
+              currentFormCopy.metaData.splice(buttonIndex + 1, 1, data);
+            }
           } else {
-            // insert the data received just below the button clicked.
-            currentFormCopy.metaData.splice(
-              buttonIndex + 1,
-              0,
-              data
-            );
+            if (Array.isArray(data)) {
+              data.map((m, index) => {
+                // insert the data received just below the button clicked.
+                currentFormCopy.metaData.splice(
+                  buttonIndex + 1,
+                  0,
+                  data[index]
+                );
+              });
+            }
+            else {
+              currentFormCopy.metaData.splice(buttonIndex + 1, 0, data);
+            }
 
             // When the button is clicked for the first time, we set
             // the button name as the boolean flag in an operDict and
@@ -219,69 +250,75 @@ export class VunetFormWizard extends Component {
    * render form wizard component
    */
   render() {
+    if (this.state.loading) {
+      return (
+        <VunetLoader />
+      );
+    } else {
+      let formWizard = '';
+      if (Object.keys(this.state.currentForm).length > 0) {
 
-    let formWizard = '';
-    if (Object.keys(this.state.currentForm).length > 0) {
+        // prepare data to be passed to the dynamic form builder
+        // component.
+        const formData = {};
+        const errorSection = (
+          <div className="row error-msg-container">
+            {this.state.operDict.errorMsg}
+          </div>);
+        formData.editData = { ...this.state.currentForm.data };
+        formData.item = [...this.state.currentForm.metaData];
+        formData.isParentFormWizard = true;
+        formData.buttonCallback = this.buttonCallback;
 
-      // prepare data to be passed to the dynamic form builder
-      // component.
-      const formData = {};
-      const errorSection = (
-        <div className="row error-msg-container">
-          {this.state.operDict.errorMsg}
-        </div>);
-      formData.editData = { ...this.state.currentForm.data };
-      formData.item = [...this.state.currentForm.metaData];
-      formData.isParentFormWizard = true;
-      formData.buttonCallback = this.buttonCallback;
-
-      // Prepare data required by the horizontal stepper
-      // component.
-      // steps:       List of objects, where each object is a step.
-      // action:      User action can be 'add' or 'edit'
-      // currentStep: Current step in form wizard.
-      const stepperData = {};
-      stepperData.steps = this.state.wizardTabs;
-      stepperData.action = this.props.data.action;
-      stepperData.currentStep = this.state.currentStep;
-      formWizard = (
-        <div className="wizard-container">
-          <div className="row wizard-tabs-container">
-            <VunetHorizontalStepper
-              data={stepperData}
-              onSwitch={this.switchStep}
-            />
+        // Prepare data required by the horizontal stepper
+        // component.
+        // steps:       List of objects, where each object is a step.
+        // action:      User action can be 'add' or 'edit'
+        // currentStep: Current step in form wizard.
+        const stepperData = {};
+        stepperData.steps = this.state.wizardTabs;
+        stepperData.action = this.props.data.action;
+        stepperData.currentStep = this.state.currentStep;
+        formWizard = (
+          <div className="wizard-container">
+            <div className="row wizard-tabs-container">
+              <VunetHorizontalStepper
+                data={stepperData}
+                onSwitch={this.switchStep}
+              />
+            </div>
+            <div key={this.state.currentStep} className="row wizard-view">
+              {/* Call the dynamic form builder component to display the
+                  forms in form wizard. We pass the following to the
+                  'VunetDynamicFormBuilder' component:
+                  formData: contains data and metadata to display elements in form.
+                  buttonTitle: contains the names of the buttons for each form.
+                  nextStep: callback function to be called on form submit.
+                  prevStep: callback function to be called on form cancel.
+              */}
+              <VunetDynamicFormBuilder
+                className="form"
+                formData={formData}
+                data={this.props.data}
+                buttonsList={this.state.currentForm.buttonTitle}
+                onSubmit={formData => {
+                  this.nextStep(formData);
+                }}
+                onCancel={formData2 => {
+                  this.prevStep(formData2);
+                }}
+              />
+              <div>{this.state.operDict.errorMsg !== '' && errorSection}</div>
+            </div>
           </div>
-          <div key={this.state.currentStep} className="row wizard-view">
-            {/* Call the dynamic form builder component to display the
-                forms in form wizard. We pass the following to the
-                'VunetDynamicFormBuilder' component:
-                formData: contains data and metadata to display elements in form.
-                buttonTitle: contains the names of the buttons for each form.
-                nextStep: callback function to be called on form submit.
-                prevStep: callback function to be called on form cancel.
-            */}
-            <VunetDynamicFormBuilder
-              className="form"
-              formData={formData}
-              buttonsList={this.state.currentForm.buttonTitle}
-              onSubmit={formData => {
-                this.nextStep(formData);
-              }}
-              onCancel={formData2 => {
-                this.prevStep(formData2);
-              }}
-            />
-          </div>
-          <div>{this.state.operDict.errorMsg !== '' && errorSection}</div>
+        );
+      }
+      return (
+        <div className="vunet-form-wizard-container">
+          {formWizard}
         </div>
       );
     }
-    return (
-      <div className="vunet-form-wizard-container">
-        {formWizard}
-      </div>
-    );
   }
 }
 

@@ -1,0 +1,49 @@
+<div class="import-success " ng-if="successfulUpload">
+  <i class="fa fa-check"></i>
+  File has been imported successfully .
+</div>
+
+<div class="vu-block-popup-container" ng-show="importType==='datasource' && !successfulUpload">
+  <div ng-if="loading === true" class="loader">
+    <vunet-loader></vunet-loader>
+  </div>
+  
+  <form ng-if="loading === false" name="myForm">
+    <div>
+      <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select ng-model="File" name="file"
+        ngf-multiple="false" required>
+    </div>
+    <div class="help-block help-text">
+      <p>Only file types with *.xlsx and *.xls are supported. You can download the template from
+        <a href="{{dataSourceImportLink}}" target="_blank">
+          <i class="data-source-import-template-link">here</i>
+        </a>
+      </p>
+    </div>
+    <div ng-if="errorMessage" class="error-text">
+      <p>{{errorMessage}} - <a href={{errorFile}} target="_blank">Link</a></p>
+    </div>
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid"
+      ng-click="upload_data_source_file(File)">Submit</button>
+  </form>
+</div>
+
+<div class="vu-block-popup-container" ng-show="importType==='vublock'">
+  <div ng-if="loading === true" class="loader">
+    <vunet-loader></vunet-loader>
+  </div>
+
+  <form ng-if="loading === false" name="myForm">
+    <div>
+      <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select ng-model="File" name="file"
+        ngf-multiple="false" required>
+    </div>
+    <div class="help-block help-text">Only file type with *.json is supported.
+    </div>
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid"
+      ng-click="upload_vuBlock_file(File)">Submit</button>
+  </form>
+  <hr>
+</div>

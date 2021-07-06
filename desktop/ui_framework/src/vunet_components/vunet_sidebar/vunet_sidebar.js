@@ -58,7 +58,8 @@ export class VunetSidebar extends Component {
     [VunetSidebarConstants.DATA]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES,
       VunetSidebarConstants.PERMISSION_MANAGE_DATA_ENRICHMENT],
     [VunetSidebarConstants.SOURCES]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
-    [VunetSidebarConstants.VUBLOCK]: [''],
+    [VunetSidebarConstants.VUBLOCK]: [VunetSidebarConstants.PERMISSION_VIEW_OBJECT, VunetSidebarConstants.PERMISSION_MANAGE_OBJECT],
+    [VunetSidebarConstants.HOST_LANDSCAPE]: [VunetSidebarConstants.PERMISSION_VIEW_OBJECT, VunetSidebarConstants.PERMISSION_MANAGE_OBJECT],
     [VunetSidebarConstants.ENRICH]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_ENRICHMENT],
     [VunetSidebarConstants.PIIDATA]: [VunetSidebarConstants.PERMISSION_PII_DATA],
     [VunetSidebarConstants.DATA_STORE]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SETTINGS,
@@ -76,6 +77,7 @@ export class VunetSidebar extends Component {
     [VunetSidebarConstants.PREFERENCES]: [VunetSidebarConstants.PERMISSION_MANAGE_PREFERENCES],
     [VunetSidebarConstants.DEFINITIONS]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
     [VunetSidebarConstants.USER]: [VunetSidebarConstants.PERMISSION_MANAGE_USERS],
+    [VunetSidebarConstants.VUBLOCK_STORE]: [VunetSidebarConstants.PERMISSION_MANAGE_USERS],
     [VunetSidebarConstants.LICENSE_USAGE]: [VunetSidebarConstants.PERMISSION_MANAGE_LICENSE],
     [VunetSidebarConstants.ABOUT]:
     [VunetSidebarConstants.PERMISSION_VIEW_OBJECT, VunetSidebarConstants.PERMISSION_MANAGE_OBJECT,
@@ -146,12 +148,18 @@ export class VunetSidebar extends Component {
     } else if (currentRoute.includes('network_configuartion')) {
       $('#analyticsConfigurationNavContainer').addClass('active');
       $('#networkConfigurationLink').addClass('active');
+    } else if (currentRoute.includes('/berlin/data_source/vuBlock_Store')) {
+      $('#settingsNavContainer').addClass('active');
+      $('#vuBlockStoreLink').addClass('active');
     } else if (currentRoute.includes('deviceConfiguration')) {
       $('#analyticsConfigurationNavContainer').addClass('active');
       $('#deviceConfigurationLink').addClass('active');
     } else if (currentRoute.includes('/berlin/data_source/vuBlock')) {
       $('#dataNavContainer').addClass('active');
       $('#vuBlockLink').addClass('active');
+    } else if (currentRoute.includes('/berlin/data_source/landscape')) {
+      $('#dataNavContainer').addClass('active');
+      $('#landscapeLink').addClass('active');
     } else if (currentRoute.includes('/berlin/data_source/configuration')) {
       $('#dataNavContainer').addClass('active');
       $('#sourcesLink').addClass('active');
@@ -376,6 +384,17 @@ export class VunetSidebar extends Component {
                     {VunetSidebarConstants.VUBLOCK}
                   </a>
                 }
+                {/*
+                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.HOST_LANDSCAPE]) &&
+                  <a
+                    id="landscapeLink"
+                    href="/app/vienna#/berlin/data_source/landscape"
+                    className="list-group-item"
+                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                  >
+                    {VunetSidebarConstants.HOST_LANDSCAPE}
+                  </a>
+                */}
                 {
                   chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.SOURCES]) &&
                   <a
@@ -586,6 +605,17 @@ export class VunetSidebar extends Component {
                   {VunetSidebarConstants.USER}
                 </a>
               }
+              {/*
+                chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.VUBLOCK_STORE]) &&
+                <a
+                  id="vuBlockStoreLink"
+                  href="/app/vienna#/berlin/data_source/vuBlock_Store"
+                  className="list-group-item"
+                  onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                >
+                  {VunetSidebarConstants.VUBLOCK_STORE}
+                </a>
+              */}
               {
                 chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.ABOUT]) &&
                 <a

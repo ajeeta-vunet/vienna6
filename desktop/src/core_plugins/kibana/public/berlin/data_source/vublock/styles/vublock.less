@@ -1,8 +1,34 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
+.vublock-navbar{
+  background-color: @vublock-navbar-bg;
+  width: 100%;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .vublock-breadcrumb {
+    font-family     : @inter-medium;
+    font-weight     : normal;
+    color           : @network-asset-title-color;
+    font-size: 1.9rem;
+    margin: 0;
+  }
+
+  .vublock-separator {
+    font-size: 1.9rem;
+    margin: 0 4px;
+  }
+}
+
 .vu-block-app-container {
   box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color;
-  background: #fff;
+  background: @white;
   margin: 2rem;
   padding: 2rem;
   border-radius: 1rem;
@@ -40,7 +66,7 @@
     }
   }
   .vu-block-section-wrapper {
-    height: calc(100vh - @topbar-height - 22rem);
+    height: calc(100vh - @topbar-height - 55rem);
     overflow-y: auto;
     .vu-block-section-header {
       font-family: @inter-medium;
@@ -107,15 +133,17 @@
 
   .vu-block-details-tabs-container {
     border-bottom: 1px solid @grey_smoke;
+    padding-top: 0rem;
+    height: 6.1rem;
     .kuiTab {
       margin-bottom: 0;
     }
   }
 
   box-shadow: 0rem 0rem 1rem .3rem @box_shadow_color;
-  height: calc(100vh - @topbar-height - 8rem)!important;
+  height: calc(100vh - @topbar-height - 20rem) !important;
   overflow-y: auto;
-  background: #fff;
+  background: @white;
   margin: 2rem;
   padding: 2rem;
   border-radius: 1rem;
@@ -133,6 +161,9 @@
     display: flex;
     align-items: center;
     padding: 2rem 0;
+    height: 16rem;
+    padding-bottom: 0.1rem;
+    padding-top: 0rem;
     .vu-block-details-icon-section {
       border-radius: 1rem;
       width: 16.6rem;
@@ -168,13 +199,13 @@
       flex: 1 1 auto;
       margin-left: 3rem;
       .vu-block-details-header {
-        font-size: 3rem;
+        font-size: 2rem;
         font-family: @inter-medium;
         color: @black_shade1;
       }
       .vu-block-details-description {
         color: @grey_light;
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         font-family: @inter-regular;
         margin-bottom: 1.5rem;
       }
@@ -209,7 +240,7 @@
             margin-left: 3rem;
             border-radius: 0.5rem;
             border: 1px solid @accent_color;
-            color: #fff;
+            color: @white;
             font-size: 1.5rem;
             font-family: @inter-bold;
             padding: 1.3rem 5rem;
@@ -222,4 +253,8 @@
       }
     }
   }
+}
+
+.vublock-store-table-container {
+  margin: 2rem;
 }

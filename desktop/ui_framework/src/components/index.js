@@ -161,6 +161,9 @@ export {
   KuiTableBody,
   KuiListingTable,
   KuiListingTableCreateButton,
+  KuiListingTablePublishButton,
+  KuiListingTableImportButton,
+  KuiListingTableExportButton,
   KuiListingTableDeleteButton,
   KuiListingTableNoMatchesPrompt,
   KuiListingTableLoadingPrompt

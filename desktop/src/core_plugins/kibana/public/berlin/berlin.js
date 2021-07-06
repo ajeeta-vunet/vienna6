@@ -2,12 +2,15 @@ import DataService from 'plugins/kibana/berlin/services/data_service/data.servic
 import StateService from 'plugins/kibana/berlin/services/state/state.service';
 import { uiModules } from 'ui/modules';
 import { VunetDataTable } from 'ui_framework/src/vunet_components/vunet_table/vunet_table';
+import { VunetVublockTable } from 'ui_framework/src/vunet_components/vunet_table/vublock_table';
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
 import { VunetTab } from 'ui_framework/src/vunet_components/vunet_tab/vunet_tab';
 import { VunetSwitch } from 'ui_framework/src/vunet_components/vunet_switch/vunet_switch';
 import { VunetCronTab } from 'ui_framework/src/vunet_components/vunet_cron_tab/vunet_cron_tab';
 import { VunetNavbar } from 'ui_framework/src/vunet_components/vunet_navbar/vunet_navbar';
 import { VunetSidebar } from 'ui_framework/src/vunet_components/vunet_sidebar/vunet_sidebar';
+import { VunetLoader } from 'ui_framework/src/vunet_components/VunetLoader/VunetLoader';
+
 require('datatables');
 require('angular-datatables');
 require('angular-smart-table');
@@ -46,6 +49,11 @@ app.directive('vunetDataTable', function (reactDirective) {
   return reactDirective(VunetDataTable);
 });
 
+app.directive('vunetVublockTable', function (reactDirective) {
+
+  return reactDirective(VunetVublockTable);
+});
+
 app.directive('vunetNavbar', function (reactDirective) {
 
   return reactDirective(VunetNavbar);
@@ -69,4 +77,9 @@ app.directive('vunetTab', function (reactDirective) {
 app.directive('vunetCronTab', function (reactDirective) {
 
   return reactDirective(VunetCronTab);
+});
+
+app.directive('vunetLoader', function (reactDirective) {
+
+  return reactDirective(VunetLoader);
 });

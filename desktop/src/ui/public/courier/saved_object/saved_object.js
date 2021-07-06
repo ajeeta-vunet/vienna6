@@ -207,7 +207,7 @@ export function SavedObjectProvider(Promise, Private, Notifier, confirmModalProm
       const allowedRoles = this._source.allowedRolesJSON ? JSON.parse(this._source.allowedRolesJSON) : [];
 
       const loadAllowed = rbacCheckForModifyPermission(chrome, resp._type, this._source.title, visState, allowedRoles, ['modify', 'view']);
-      if (!loadAllowed) {
+      if (!loadAllowed && resp._type !== 'storyboard') {
         throw new SavedObjectNotAllowed(esType, this.id);
       }
 

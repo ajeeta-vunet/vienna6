@@ -1,0 +1,52 @@
+<div class="download-success " ng-if="successDownload">
+  <i class="fa fa-check"></i>
+  Agent has been downloaded successfully .
+  <h4 class="download-data-message">Please check the agents and Configurations</h4>
+</div>
+
+<div class="modal-form-content" ng-show='!successDownload'>
+  <p class="download-modal-header">Download Agents and Configurations</p>
+  <form class="form-horizontal downloadAgents" name="downloadAgentsForm" novalidate>
+
+    <!-- Download Agents  -->
+    <div class="form-group downloadAgents-form-group">
+      <div class="fieldset row">
+        <label class="col-sm-3 control-label zero-padding">
+          Environment
+        </label>
+        <div class="col-sm-9">
+          <select ng-model="environment" class="form-control" required>
+            <option value="windows_64">Windows 64</option>
+            <option value="linux_64">Linux 64</option>
+          </select>
+        </div>
+      </div>
+      <div class="fieldset row">
+        <label class="col-sm-3 control-label zero-padding">
+          Agent
+        </label>
+        <div class="col-sm-9">
+          <searchable-multiselect value-attr="name" recipient-index="0" ng-model="selectedAgents"
+            selected-items="selectedAgents" all-items="allAgents" add-item="addAdditionalFields"
+            remove-item="removeAdditionalFields">
+          </searchable-multiselect>
+        </div>
+      </div>
+      <div class="fieldset row">
+        <label class="col-sm-3 control-label zero-padding">
+          Download
+        </label>
+        <div class="col-sm-9">
+          <input type="radio" ng-model="downloadSelection" value="agents">
+          Agents
+          <input type="radio" ng-model="downloadSelection" value="configs">
+          Configs Only
+        </div>
+      </div>
+    </div>
+    <div class='modal-footer-buttons'>
+      <button class="btn btn-vunet-cancel" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-vunet-submit" ng-click="downloadAgents()">Download</button>
+    </div>
+  </form>
+</div>

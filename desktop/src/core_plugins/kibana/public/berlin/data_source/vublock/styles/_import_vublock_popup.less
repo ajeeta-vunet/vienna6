@@ -1,28 +1,90 @@
 @import '~ui/styles/vunet_variable_theme.less';
 
+.modal-content {
+    border-radius: 8px;
+}
+
 .vu-block-popup-container {
-    padding: 2rem;
-    text-align: end;
     font-family: @inter-regular;
+    .popup-header {
+        font-family: @inter-medium;
+        color: @vublock-import-popup-header-text-color;
+        font-size: 2.2rem;
+        text-align: start;
+        margin: 3rem 3rem 0 3rem;
+    }
+    .popup-tip {
+        color: @vublock-import-popup-tip-color;
+        background-color: @vublock-import-popup-tip-bg;
+        text-align: left;
+        font-size: 1.8rem;
+        font-family: @inter-regular;
+        margin: 2rem 3rem;
+        padding: 1.5rem;
+        border-radius: 0.8rem;
+        .tip-title {
+            font-family: @inter-medium;
+            font-size: 2rem;
+            i {
+                color: @vublock-import-popup-tip-color;
+            }
+        }
+        a {
+            color: @vublock-import-popup-tip-color;
+        }
+    }
+    .popup-error {
+        color: @vublock-import-popup-error-color;
+        background-color: @vublock-import-popup-error-bg;
+        text-align: left;
+        font-size: 1.8rem;
+        font-family: @inter-regular;
+        margin: 2rem 3rem;
+        padding: 1.5rem;
+        border-radius: 0.8rem;
+        .error-title {
+            font-family: @inter-medium;
+            font-size: 2rem;
+            i {
+                color: @vublock-import-popup-error-color;
+            }
+        }
+        a {
+            color: @vublock-import-popup-error-color;
+        }
+    }
     input {
         width: 100%;
         font-family: @inter-regular;
+        margin: 2rem 3rem;
+        font-size: 1.8rem;
     }
-    .help-block.help-text {
-        text-align: left;
-        p {
-            margin: 0;
-            font-family: @inter-regular;
+    .popup-divider {
+        border-top: 1px solid @vublock-import-popup-divider-color;
+        margin: 0 3rem 2rem 3rem;
+    }
+    .popup-footer {
+        display: flex;
+        margin: 0 3rem 3rem 3rem;
+        justify-content: end;
+        button {
+            margin-left: 1.5rem;
+            font-size: 1.6rem;
         }
-    }
-    .error-text {
-        text-align: left;
-        p {
-            margin: 0;
-            font-family: @inter-regular;
-            color: @vublock-store-error-text-color;
-            a {
-                color: @vublock-store-link-text-color;
+        .btn-positive {
+            background-color: @vublock-import-popup-positive-button-bg;
+            color: @vublock-import-popup-button-dark-color;
+            &:hover {
+                border: 1px solid @vublock-import-popup-positive-button-bg;
+            }
+        }
+        .btn-negative {
+            background-color: transparent;
+            color: @vublock-import-popup-header-text-color;
+            border: 1px solid @vublock-import-popup-header-text-color;
+            &:hover {
+                background-color: @vublock-import-popup-header-text-color;
+                color: @vublock-import-popup-button-dark-color;
             }
         }
     }

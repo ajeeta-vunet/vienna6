@@ -872,6 +872,12 @@ class DataService {
     });
   }
 
+  // Download the error logs for import data source failure
+  downloadImportVuBlockErrors(vuBlockId) {
+    const url = this.urlBase + '/vublock/' + vuBlockId + '/source_bulk/import?error_file=True';
+    return this._postFileRequest(url, {}, 'downloading error logs', { responseType: 'blob' });
+  }
+
   // Function to export all the data source types for a vublock to xls file.
   exportDataSources(vuBlockId) {
     const url = this.urlBase + '/vublock/' + vuBlockId + '/source_bulk/export';
@@ -893,7 +899,7 @@ class DataService {
       upload.upload({ url: url, file: fileData }).then((response) => {
         resolve(response);
       }, (errorResponse) => {
-        this._handleErrorResponse(errorResponse, 'importing data sources. Please check the file.');
+        this._handleErrorResponseForFileUpload(errorResponse, 'importing data sources. Please check the file.');
         reject(errorResponse);
       });
     });

@@ -1,5 +1,5 @@
 /* globals window */
-import _ from "lodash";
+import _ from 'lodash';
 /**
  * ES6 classes don't have a concept of private methods. There are ways that I
  * can hack around it by either making dependent classes or weird things with
@@ -15,12 +15,12 @@ class StateService {
     this._DataService = dataService;
     this.$rootScope = $rootScope;
     this._currentState = {
-      snapshot: "current",
+      snapshot: 'current',
       user: null,
     };
     if (
-      _.has(window.localStorage, "username") &&
-      window.localStorage.username !== ""
+      _.has(window.localStorage, 'username') &&
+      window.localStorage.username !== ''
     ) {
       this._currentState.user = window.localStorage.username;
     }
@@ -231,12 +231,12 @@ class StateService {
 
   // Get list of snmp credential names, used by data sources
   getSnmpCredentialNames() {
-    return this._DataService.getCredentialNames("snmp");
+    return this._DataService.getCredentialNames('snmp');
   }
 
   // Get list of SSH credential names, used by data sources
   getSshCredentialNames() {
-    return this._DataService.getCredentialNames("ssh");
+    return this._DataService.getCredentialNames('ssh');
   }
 
   // Get credentials
@@ -266,7 +266,7 @@ class StateService {
   setSnapshot(snapshot) {
     this._currentState.snapshot = snapshot;
     // Others (like navbar) listen for this event and take any actions needed.
-    this.$rootScope.$broadcast("vusop:snapshotChanged", snapshot);
+    this.$rootScope.$broadcast('vusop:snapshotChanged', snapshot);
   }
 
   // POST Requests
@@ -484,6 +484,10 @@ class StateService {
   // one or multiple data-source-types for a vublock
   importVublockDataSources(fileData, upload, vuBlockId) {
     return this._DataService.importVublockDataSources(fileData, upload, vuBlockId);
+  }
+
+  downloadImportVuBlockErrors(vuBlockId) {
+    return this._DataService.downloadImportVuBlockErrors(vuBlockId);
   }
 
   // This function is called to export all the data-source-types
@@ -753,7 +757,7 @@ class StateService {
   }
 }
 
-StateService.$inject = ["$log", "$q", "DataService", "$rootScope"];
+StateService.$inject = ['$log', '$q', 'DataService', '$rootScope'];
 /*eslint-disable */
 export default StateService;
 /*eslint-enable */

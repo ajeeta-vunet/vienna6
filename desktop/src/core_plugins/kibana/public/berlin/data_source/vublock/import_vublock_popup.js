@@ -11,6 +11,7 @@ class importvublockPopupCtrl {
     const tentantInfo = chrome.getTenantBu();
     $scope.indexStringInfo = tentantInfo[0] + '-' + tentantInfo[1];
     $scope.loading = false;
+    $scope.errorFile = false;
 
     $scope.dataSourceImportLink =
       chrome.getUrlBase() +
@@ -33,11 +34,22 @@ class importvublockPopupCtrl {
         })
         .catch((err) => {
           $scope.loading = false;
-          $scope.errorFile = 'file://' + err.data.error_file;
-          $scope.errorMessage = err.data.message;
+          if(err.data && err.data['error-string']) {
+            $scope.errorMessage = err.data['error-string'];
+            $scope.errorFile = true;
+          } else {
+            $scope.errorMessage = 'Some unknown error occured while importing';
+            $scope.errorFile = false;
+          }
         });
       // This is to reset the variable after the upload is done
       $scope.successfulUpload = false;
+    };
+
+    $scope.download_import_data_source_errors = function () {
+      StateService.downloadImportVuBlockErrors(vuBlockId);
+      $scope.errorMessage = '';
+      $scope.errorFile = false;
     };
 
     // This function imports a json file containing the data for one or more vublock
@@ -55,9 +67,15 @@ class importvublockPopupCtrl {
         })
         .catch(() => {
           $scope.loading = false;
+          $scope.errorMessage = 'File error. Please check the file';
         });
       // This is to reset the variable after the upload is done
       $scope.successfulUpload = false;
+    };
+
+    $scope.tryAgain = function () {
+      $scope.errorMessage = '';
+      $scope.errorFile = false;
     };
   }
 }

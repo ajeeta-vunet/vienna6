@@ -4,46 +4,109 @@
 </div>
 
 <div class="vu-block-popup-container" ng-show="importType==='datasource' && !successfulUpload">
+
+  <p class='popup-header'>Import Source Instances</p>
+
   <div ng-if="loading === true" class="loader">
     <vunet-loader></vunet-loader>
   </div>
-  
-  <form ng-if="loading === false" name="myForm">
-    <div>
-      <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select ng-model="File" name="file"
-        ngf-multiple="false" required>
+
+  <form ng-if="loading === false && !errorMessage" name="myForm">
+    <p class="popup-tip">
+      <span class="tip-title">
+        <i class="fa fa-info-circle"></i>
+        Note
+      </span>
+      <br />
+      Only file types with *.xlsx and *.xls are supported.
+      You can download the template from
+      <a href="{{dataSourceImportLink}}" target="_blank">
+        <span><b>here</b></span>
+      </a>
+    </p>
+
+    <input type="file" ngf-select ng-model="File" name="file" ngf-multiple="false" required>
+
+    <hr class="popup-divider" />
+
+    <div class="popup-footer">
+      <button type="button" class="btn btn-negative" ng-click="$dismiss()">Cancel</button>
+      <button type="submit" class="btn btn-positive" ng-disabled="!myForm.$valid"
+        ng-click="upload_data_source_file(File)">Submit</button>
     </div>
-    <div class="help-block help-text">
-      <p>Only file types with *.xlsx and *.xls are supported. You can download the template from
-        <a href="{{dataSourceImportLink}}" target="_blank">
-          <i class="data-source-import-template-link">here</i>
-        </a>
-      </p>
-    </div>
-    <div ng-if="errorMessage" class="error-text">
-      <p>{{errorMessage}} - <a href={{errorFile}} target="_blank">Link</a></p>
-    </div>
-    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
-    <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid"
-      ng-click="upload_data_source_file(File)">Submit</button>
+
   </form>
+
+  <div ng-if="loading === false && errorMessage">
+    <p ng-if="errorMessage" class="popup-error">
+      <span class="error-title">
+        <i class="fa fa-times-circle"></i>
+        Failed!
+      </span>
+      <br />
+      {{errorMessage}}
+      <br />
+      <span ng-if="errorFile === true">
+        <br />
+        You can download the entire list of errors from this file
+        <a>
+          <span ng-click="download_import_data_source_errors()"><b>here</b></span>
+        </a>
+      </span>
+    </p>
+
+    <hr class="popup-divider" />
+
+    <div class="popup-footer">
+      <button class="btn btn-positive" ng-click="tryAgain()">Try Again</button>
+    </div>
+  </div>
 </div>
 
-<div class="vu-block-popup-container" ng-show="importType==='vublock'">
+<div class="vu-block-popup-container" ng-show="importType==='vublock' && !successfulUpload">
+
+  <p class='popup-header'>Import VuBlocks</p>
+
   <div ng-if="loading === true" class="loader">
     <vunet-loader></vunet-loader>
   </div>
 
-  <form ng-if="loading === false" name="myForm">
-    <div>
-      <input class="btn btn-default btn-file btn-browse-vunet" type="file" ngf-select ng-model="File" name="file"
-        ngf-multiple="false" required>
+  <form ng-if="loading === false && !errorMessage" name="myForm">
+    <p class="popup-tip">
+      <span class="tip-title">
+        <i class="fa fa-info-circle"></i>
+        Note
+      </span>
+      <br />
+      Only file type with *.json is supported
+    </p>
+
+    <input type="file" ngf-select ng-model="File" name="file" ngf-multiple="false" required>
+
+    <hr class="popup-divider" />
+
+    <div class="popup-footer">
+      <button type="button" class="btn btn-negative" ng-click="$dismiss()">Cancel</button>
+      <button type="submit" class="btn btn-positive" ng-disabled="!myForm.$valid"
+        ng-click="upload_vuBlock_file(File)">Submit</button>
     </div>
-    <div class="help-block help-text">Only file type with *.json is supported.
-    </div>
-    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
-    <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid"
-      ng-click="upload_vuBlock_file(File)">Submit</button>
+
   </form>
-  <hr>
+
+  <div ng-if="loading === false && errorMessage">
+    <p ng-if="errorMessage" class="popup-error">
+      <span class="error-title">
+        <i class="fa fa-times-circle"></i>
+        Failed!
+      </span>
+      <br />
+      {{errorMessage}}
+    </p>
+
+    <hr class="popup-divider" />
+
+    <div class="popup-footer">
+      <button class="btn btn-positive" ng-click="tryAgain()">Try Again</button>
+    </div>
+  </div>
 </div>

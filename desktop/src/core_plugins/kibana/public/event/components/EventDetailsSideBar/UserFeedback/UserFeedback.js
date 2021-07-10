@@ -315,7 +315,7 @@ export class UserFeedback extends React.Component {
               >
                 <i className="fa fa-2x fa-thumbs-o-up like-button" />
               </div>
-              <div>Accept</div>
+              <div className="accept-div">Accept</div>
             </div>
             <div className="dislike-wrapper">
               <div
@@ -324,7 +324,7 @@ export class UserFeedback extends React.Component {
               >
                 <i className="fa fa-2x fa-thumbs-o-down dislike-button" />
               </div>
-              <div>Reject</div>
+              <div  className="reject-div">Reject</div>
             </div>
           </div>
           {this.state.reaction === 'Dislike' && this.displayDislikeComments()}
@@ -348,6 +348,7 @@ export class UserFeedback extends React.Component {
             <button
               className="submit-button"
               onClick={() => this.handleSubmit()}
+              disabled={this.state.reaction === 'No Reaction'}
             >
               Submit
             </button>

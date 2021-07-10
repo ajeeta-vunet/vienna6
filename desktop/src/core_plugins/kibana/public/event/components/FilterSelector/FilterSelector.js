@@ -18,7 +18,7 @@
 
 import React from 'react';
 import './FilterSelector.less';
-import $ from 'jquery';
+import { produce } from 'immer';
 
 export class FilterSelector extends React.Component {
   constructor(props) {
@@ -26,6 +26,8 @@ export class FilterSelector extends React.Component {
     this.state = {
       filterFields: this.props.filterFields,
       filterFieldKeys:
+        this.props.filterFields && Object.keys(this.props.filterFields),
+      searchResultsKeys:
         this.props.filterFields && Object.keys(this.props.filterFields),
     };
 
@@ -37,24 +39,30 @@ export class FilterSelector extends React.Component {
       filterFields: newProps.filterFields,
       filterFieldKeys:
         newProps.filterFields && Object.keys(newProps.filterFields),
+      searchResultsKeys:
+        newProps.filterFields && Object.keys(newProps.filterFields),
     });
   }
 
-  //this function handles the search functionality (by altering the display attribute)
-  handleSearch(event) {
+  handleSearch = (event) => {
     if (event.target.value !== null) {
-      const searchTerm = event.target.value.toLowerCase().trim();
+      //convert the search string into lowerCase, remove whitespaces at the end(if any) and replace spaces
+      //inbetween words with '_'(underscore). This is done to match the field names as present in allFields.
+      const searchTerm = event.target.value
+        .toLowerCase()
+        .trim()
+        .replace(' ', '_');
 
-      const filterFieldKeys = this.state.filterFieldKeys;
-      filterFieldKeys.map((field) => {
-        if (field.toLowerCase().includes(searchTerm)) {
-          $(`.field.filter-${field}`).css('display', 'block');
-        } else {
-          $(`.field.${field}`).css('display', 'none');
-        }
+      const searchResultsKeys = produce(this.state.filterFieldKeys, (draft) => {
+        return draft.filter((field) => {
+          return field.toLowerCase().includes(searchTerm);
+        });
       });
+      this.setState({ searchResultsKeys });
+    } else {
+      this.setState({ searchResultsKeys: this.state.filterFieldKeys });
     }
-  }
+  };
 
   render() {
     return (
@@ -69,8 +77,8 @@ export class FilterSelector extends React.Component {
         <div className="filter-selector-body">
           <div className="filter-selector">
             <div className="filter-selector-checkbox-wrapper">
-              {this.state.filterFieldKeys &&
-                this.state.filterFieldKeys.map((field, index) => {
+              {this.state.searchResultsKeys &&
+                this.state.searchResultsKeys.map((field, index) => {
                   return (
                     <div
                       className={`field ${'filter-' + field}`}

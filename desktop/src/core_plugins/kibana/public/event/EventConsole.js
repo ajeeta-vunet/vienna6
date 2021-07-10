@@ -109,12 +109,38 @@ export class EventConsole extends React.Component {
     // eslint-disable-next-line prefer-const
     let filterFields = [...this.state.selectedFilterFields];
     const filterIndex = filterFields.indexOf(filterField);
+    let filterStore;
     if (filterIndex > -1) {
       filterFields.splice(filterIndex, 1);
+      filterStore = produce(this.state.filterStore, (draft) => {
+        delete draft[filterField];
+      });
     } else {
       filterFields.push(filterField);
+      filterStore = produce(this.state.filterStore, (draft) => {
+        draft[filterField] = this.props.filterFields[filterField];
+      });
     }
-    this.setState({ selectedFilterFields: filterFields });
+    const postBody = {
+      filter: filterStore,
+    };
+    apiProvider
+      .post(`${EventConstants.SAVE_FILTERS}${userData[0]}/`, postBody)
+      .then(() => {
+        apiProvider
+          .getAll(`${EventConstants.FETCH_APPLIED_FILTERS}${userData[0]}/`)
+          .then(() => {
+            this.setState(
+              {
+                selectedFilterFields: filterFields,
+                filterStore: filterStore,
+              },
+              () => {
+                this.applyFilters();
+              }
+            );
+          });
+      });
   };
 
   // In this function we use the filterStore object and
@@ -189,7 +215,7 @@ export class EventConsole extends React.Component {
 
     if (!_.isEmpty(filterStore)) {
       const filterKeys = Object.keys(filterStore);
-      const newEventList = produce(this.state.allEventList, (draft) => {
+      const newEventList = this.state.allEventList && produce(this.state.allEventList, (draft) => {
         draft.filter(function (event) {
           return filterKeys.every(function (filterKey) {
             return filterStore[filterKey].includes(event.fields[filterKey]);

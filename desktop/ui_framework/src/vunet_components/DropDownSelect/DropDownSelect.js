@@ -94,8 +94,8 @@ export class DropDownSelect extends React.Component {
     return(
       <div className="dropdown-select-wrapper">
         <div
-          className="dropdown-select-header"
-          onClick={() => this.onClickDropdown()}
+          className={'dropdown-select-header ' + (this.props.isDisabled ? 'isDisabled' : '')}
+          onClick={() => !this.props.isDisabled && this.onClickDropdown()}
         >
           <div className="select-value">
             {this.state.value === '' ? 'Unassigned' : this.state.value}

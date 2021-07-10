@@ -1,19 +1,22 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
 .events-table-wrapper {
-    overflow-y: hidden;
     overflow-x: scroll;
+    height    : 59vh;
+    width     : 100%;
+    overflow-y: auto;
 
     .events-table {
         border-collapse: separate;
+        position       : relative;
+        width          : 100%;
 
         .header-row {
             border: 1px solid @event-console-border-color;
 
             .alert_id {
-                position  : sticky;
                 left      : 0;
-                z-index   : 10;
+                z-index   : 2;
                 box-shadow: inset 1px 0 0 @event-console-border-color, inset -1px 0 0 @event-console-border-color;
             }
 
@@ -21,8 +24,9 @@
                 word-break      : break-word;
                 min-width       : 18rem;
                 padding         : 1rem 1.5rem;
-                z-index         : 0;
-                position        : relative;
+                position        : sticky;
+                top             : 0;
+                z-index         : 1;
                 background-color: @event-console-table-header-color;
                 cursor          : pointer;
                 border-bottom   : 1px solid @event-console-border-color;
@@ -46,9 +50,8 @@
             }
 
             .actions-col {
-                position        : sticky;
                 right           : 0;
-                z-index         : 10;
+                z-index         : 2;
                 background-color: @event-console-table-header-color;
                 box-shadow      : inset 1px 0 0 @event-console-border-color, inset -1px 0 0 @event-console-border-color;
                 min-width       : 10rem;
@@ -63,9 +66,10 @@
                 word-break      : break-word;
                 min-width       : 18rem;
                 text-align      : left;
-                padding         : 1.5rem 1.6rem;
+                padding         : 1.4rem 1.6rem;
                 z-index         : 0;
-                position        : relative;
+                position        : sticky;
+                top             : 0;
                 background-color: @white;
                 border-bottom   : 1px solid @event-console-border-color;
             }
@@ -73,7 +77,7 @@
             .alert_id {
                 position: sticky;
                 left    : 0;
-                z-index : 10;
+                z-index : 1;
             }
 
             .summary {
@@ -103,9 +107,8 @@
             }
 
             .actions-col {
-                position  : sticky;
                 right     : 0;
-                z-index   : 10;
+                z-index   : 1;
                 min-width : 10rem;
                 box-shadow: inset 1px 0 0 @event-console-border-color, inset -1px 0 0 @event-console-border-color;
 

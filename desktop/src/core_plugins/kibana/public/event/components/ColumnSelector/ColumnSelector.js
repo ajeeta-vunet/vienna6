@@ -30,7 +30,7 @@ export class ColumnSelector extends React.Component {
     };
   }
 
-  //this function handles the search functionality (by altering the display attribute)
+  //this function handles the search functionality.
   handleSearch = (event) => {
     if (event.target.value !== null) {
       //convert the search string into lowerCase, remove whitespaces at the end(if any) and replace spaces
@@ -63,6 +63,22 @@ export class ColumnSelector extends React.Component {
     }
     this.setState({ hiddenFields });
   };
+
+  //this method is used to select or deselect all the entries
+  //under Manage Columns.
+  selectOrDeselectAll = () => {
+    const disabledColumns = this.props.eventConsoleMandatoryFields.sort();
+    const searchResultsFields =
+        this.state.searchResultsFields &&
+        this.state.searchResultsFields.filter(
+          (field) => !disabledColumns.includes(field)
+        );
+    if(this.state.hiddenFields && this.state.hiddenFields.length > 0) {
+      this.setState({ hiddenFields: [] });
+    }else {
+      this.setState({ hiddenFields: searchResultsFields });
+    }
+  }
 
   render() {
     //This array contains names of columns that are to be disabled.
@@ -100,6 +116,14 @@ export class ColumnSelector extends React.Component {
               type="text"
               onChange={(event) => this.handleSearch(event)}
             />
+          </div>
+          <div className="select-deselect-wrapper">
+            <button
+              className="select-deselect-button"
+              onClick={() => this.selectOrDeselectAll()}
+            >
+              {this.state.hiddenFields && this.state.hiddenFields.length > 0 ? 'Select All' : 'Deselect All'}
+            </button>
           </div>
           <div className="column-selector-body">
             <div className="column-selector">

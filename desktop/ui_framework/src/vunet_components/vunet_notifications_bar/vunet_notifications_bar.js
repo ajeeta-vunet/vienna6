@@ -331,6 +331,18 @@ export class VunetNotificationsBar extends Component {
 
   componentWillUnmount() {
     clearInterval(this.notificationsPoll);
+    document.removeEventListener('mousedown', this.handleClickOutside, false);
+  }
+
+  componentWillMount() {
+    document.addEventListener('mousedown', this.handleClickOutside, false);
+  }
+
+  //this method is used to close the event details sidebar when clicked outside its viewport.
+  handleClickOutside = (event) => {
+    if (!this.node.contains(event.target)) {
+      this.props.hideNotificationsPanel();
+    }
   }
 
   // Rendering final JSX of Vunet Notification Bar
@@ -340,7 +352,7 @@ export class VunetNotificationsBar extends Component {
     const isDarkThemeEnabled = this.props.darkTheme ? 'dark-theme' : 'light-theme';
 
     return (
-      <div id="notificationsPanel" className={`${notificationBarActive} ${isDarkThemeEnabled}`}>
+      <div id="notificationsPanel" className={`${notificationBarActive} ${isDarkThemeEnabled}`} ref={node => this.node = node}>
         <div className="header">
           <p>Notifications</p>
           <a id="viewAllNotifications">View All</a>

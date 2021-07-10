@@ -39,6 +39,13 @@ export class EventDetails extends React.Component {
     };
   }
 
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      selectedStatus: newProps.details.alert_details.fields.status,
+      selectedAssignee: newProps.details.alert_details.fields.assignee,
+    });
+  }
+
   //this function picks up the first metric in the entries object, and generates a string
   //using its value. Used to display the metric info.
   generateMetricText = () => {
@@ -243,17 +250,19 @@ export class EventDetails extends React.Component {
                     ))}
                   </select>
                 </div>
+                {this.state.selectedStatus !== 'open' &&
                 <div className="select-assignee-dropdown">
                   <div className="assignee-label">Assignee</div>
                   <div className="assignee-select">
                     <DropDownSelect
-                      isDisabled={!this.props.canUpdateEvent}
+                      isDisabled={!this.props.canUpdateEvent || this.state.selectedStatus === 'closed'}
                       options={users}
                       value={this.state.selectedAssignee}
                       handleAssignee={this.handleAssignee}
                     />
                   </div>
                 </div>
+                }
               </div>
               <div className="work-notes">
                 <div className="work-notes-body">

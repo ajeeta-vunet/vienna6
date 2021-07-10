@@ -68,7 +68,7 @@ export class EventDetailsSideBar extends React.Component {
 
   //this method is used to close the event details sidebar when clicked outside its viewport.
   handleClickOutside = (event) => {
-    if (!this.node.contains(event.target)) {
+    if (this.node && !this.node.contains(event.target)) {
       this.props.closeEventDetailsSideBar();
     }
   }

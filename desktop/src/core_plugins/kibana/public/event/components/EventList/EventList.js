@@ -310,7 +310,7 @@ export class EventList extends React.Component {
                 {sortEventsSideBar()}
               </div>
             )}
-            {renderEventConsoleTable()}
+            {currentEvents && currentEvents.length !== 0 && renderEventConsoleTable()}
             {currentEvents && currentEvents.length === 0 && (
               <div>
                 <h3>No Events to Display</h3>
@@ -338,7 +338,7 @@ export class EventList extends React.Component {
                   <option value="10"> 10 </option>
                   <option value="20"> 20 </option>
                   <option value="50"> 50 </option>
-                  <option value={totalItemsCount}> All </option>
+                  {/* <option value={totalItemsCount}> All </option> */}
                 </select>
               </div>
               <Pagination

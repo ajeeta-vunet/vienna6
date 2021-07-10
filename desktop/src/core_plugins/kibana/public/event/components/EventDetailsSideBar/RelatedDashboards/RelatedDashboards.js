@@ -26,8 +26,6 @@ import './RelatedDashboards.less';
 export function RelatedDashboards(props) {
   const { dashboardList } = props;
 
-  dashboardList.push('Home');
-  dashboardList.push('COVID-19');
   // Iterate on the dashboardlist and prepare
   // rows containing dashboard name and link.
   const renderRows =

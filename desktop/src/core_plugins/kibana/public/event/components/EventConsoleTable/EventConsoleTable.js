@@ -46,7 +46,7 @@ export class EventConsoleTable extends React.Component {
       return (
         <tr className="header-row" key={event.id}>
           {headerKeys.map((header) => {
-            if (!this.props.hiddenFields.includes(header)) {
+            if (this.props.hiddenFields && !this.props.hiddenFields.includes(header)) {
               return (
                 <th
                   key={header}
@@ -82,7 +82,7 @@ export class EventConsoleTable extends React.Component {
                   key === 'alert_id'
                     ? key + ' ' + event.severity + '-severity'
                     : key;
-                if (!this.props.hiddenFields.includes(key)) {
+                if (this.props.hiddenFields && !this.props.hiddenFields.includes(key)) {
                   return (
                     <td key={key} className={className}>
                       {key === 'active_duration' || key === 'total_duration'
@@ -123,9 +123,7 @@ export class EventConsoleTable extends React.Component {
                       className="create-ticket-div"
                       onClick={() =>
                         this.props.createTicket(
-                          event.fields.corelation_id !== '-'
-                            ? event.fields.corelation_id
-                            : event.fields.alert_id
+                          event.id
                         )
                       }
                     >

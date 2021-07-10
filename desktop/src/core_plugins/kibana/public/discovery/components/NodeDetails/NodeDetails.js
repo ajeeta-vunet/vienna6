@@ -228,7 +228,6 @@ class NodeDetailsCmmponent extends React.Component {
     };
     apiProvider
       .post(DiscoveryConstants.FETCH_NODE_DETAILS + this.props.topologyId + '/', postBody)
-      .then((response) => response.json())
       .then((data) => {
         this.setState({
           nodeDetails: data.topology.nodes,

@@ -16,5 +16,7 @@ export const VuBlockConstants = {
   AGENT_CONFIGURATION: 'getAgentConfiguration', // Constant for get agent configuration button
   VUBLOCK_API_BASE_PATH: 'vublock',
   VUBLOCK_SOURCES: 'source',
+  VUBLOCK_SOURCES_IMPORT: 'source_bulk/import',
+  VUBLOCK_SOURCES_ERROR: '?error_file=True',
   SOURCE_INSTANCE_TEMPLATE: '?template',
 };

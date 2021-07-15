@@ -106,14 +106,14 @@ export class VunetDynamicFormBuilder extends Component {
         // Set the help contents collapsed for all the fields in form group
         // on loading the form. This is not in use for now. Lets keep this
         // commented for now.
-        // if (_item.type === 'formGroup') {
-        //   helpOperationsDictCopy[_item.key] = {};
-        //   _item.content.metaData.forEach((obj) => {
-        //     if (obj.helpObj) {
-        //       helpOperationsDictCopy[_item.key][obj.key] = false;
-        //     }
-        //   });
-        // }
+        if (_item.type === 'formGroup') {
+          helpOperationsDictCopy[_item.key] = {};
+          _item.content.metaData.forEach((obj) => {
+            if (obj.helpObj) {
+              helpOperationsDictCopy[_item.key][obj.key] = false;
+            }
+          });
+        }
       });
       this.setState({ helpOperationsDict: helpOperationsDictCopy });
     } else {
@@ -1099,7 +1099,7 @@ export class VunetDynamicFormBuilder extends Component {
 
                 {/* Help component for form Group that will be displayed when help icon is clicked.
                 Lets keep this commented as this is not being used as of now */}
-                {/* {m.helpObj && parentKey.length > 0 &&
+                {m.helpObj && parentKey.length > 0 &&
                   this.state.helpOperationsDict &&
                   Object.keys(this.state.helpOperationsDict).length &&
                   this.state.helpOperationsDict[parentKey] &&
@@ -1110,7 +1110,7 @@ export class VunetDynamicFormBuilder extends Component {
                     metaData={m.helpObj}
                     onClose={() => { this.toggleHelpContent(target); }}
                   />
-                } */}
+                }
               </div>
           }
           <div className="row">

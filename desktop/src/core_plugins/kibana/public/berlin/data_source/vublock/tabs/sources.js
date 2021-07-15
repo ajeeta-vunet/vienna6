@@ -23,16 +23,6 @@ function vuBlockSources($scope,
   $uibModal
 
 ) {
-  // This function gets called when the edit button in front of data source
-  // instances is clicked. The reference of this function is passed as metadata
-  // to components. This is used to populate the data and meta data required by
-  // form wizard.
-  $scope.getAllEditData = function (restApiId, name = '') {
-    return StateService.getWizardDataForSource($scope.vuBlock.id, name).then(function (data) {
-      return data;
-    });
-  };
-
   // This function gets called when any button in form wizard is clicked.
   // This function takes the following inputs:
   // buttonName : Name of the button clicked. This will be used
@@ -81,52 +71,6 @@ function vuBlockSources($scope,
     }
   };
 
-  // Delete source instance
-  $scope.deleteSelectedItems = (rows) => {
-
-    // Iterate over list of source instances to be deleted and delete
-    // one by one. We return a list of promises which contains both
-    // success and failure cases.
-    const deletePromises = Promise.map(rows, function (row) {
-      return StateService.deleteDataSource($scope.vuBlock.id, row[Object.keys(row)[0]])
-        .then(function () {
-          return '';
-        })
-        .catch(function () {
-          return '';
-        });
-    });
-
-    // Wait till all Promises(deletePromises) are resolved
-    // and return single Promise
-    return Promise.all(deletePromises);
-  };
-
-  // When the import button is clicked, we show a pop up where user
-  // can choose a xls file containing the data sources for a vublock and import.
-  $scope.importDataSources = () => {
-    $uibModal.open({
-      animation: true,
-      template: importvublockPopupTemplate,
-      controller: 'importvublockPopupCtrl',
-      resolve: {
-        vublockList: function () {
-          return [];
-        },
-        importType: function () {
-          return 'datasource';
-        },
-        vuBlockId: function () {
-          return $scope.vuBlock.id;
-        }
-      }
-    }).result.then(function () {
-    }, function () {
-      $rootScope.currentTab = 'sources';
-      $route.reload();
-    });
-  };
-
   // This function exports all the data source types for a vublock into a xls file.
   $scope.exportDataSources = function () {
     StateService.exportDataSources($scope.vuBlock.id).then(() => {
@@ -134,5 +78,10 @@ function vuBlockSources($scope,
     }, function () {
       return Promise.resolve(false);
     });
+  };
+
+  // This function downloads the errors generated while importing data sources
+  $scope.downloadImportErrors = () => {
+    StateService.downloadImportVuBlockErrors($scope.vuBlock.id);
   };
 }

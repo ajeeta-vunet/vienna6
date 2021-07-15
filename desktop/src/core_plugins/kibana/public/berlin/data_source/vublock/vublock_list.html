@@ -17,22 +17,6 @@
           <input type="checkbox" ng-model="showDisabledVuBlocks" ng-change="onToggleDisabledVuBlock()" />
           <span class="toolbar-item-text">Disabled ({{ disabledVuBlockCount }})</span>
         </div>
-        <div class="toolbar-item">
-          <input type="checkbox" ng-model="enableComponentVuBlocks" ng-change="onToggleComponentVuBlock()" />
-          <span class="toolbar-item-text">Component Blocks ({{ componentVuBlockCount }})</span>
-        </div>
-        <div class="toolbar-item">
-          <button class="btn vublock-btn-import" ng-click="importVublock()">
-            <span class="btnIcon kuiButton__icon kuiIcon glyphicon glyphicon-import" />
-            Import
-          </button>
-        </div>
-        <div class="toolbar-item">
-          <button class="btn vublock-btn-export" ng-click="exportVublock()">
-            <span class="btnIcon kuiButton__icon kuiIcon glyphicon glyphicon-export" />
-            Export
-          </button>
-        </div>
       </div>
     </div>
     <div class="vu-block-section-wrapper">

@@ -23,10 +23,9 @@ app.directive('getStarted', (reactDirective) => {
 app.directive('sources', (reactDirective) => {
   return reactDirective(Sources, [
     'vuBlockId',
-    'importDataSources',
+    'downloadImportErrors',
     'exportDataSources',
     'buttonCallback',
-    'deleteSelectedItems'
   ]);
 });
 

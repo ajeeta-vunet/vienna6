@@ -20,6 +20,7 @@ import React from 'react';
 import './Sources.less';
 import { VunetDynamicTable } from 'ui_framework/src/vunet_components/vunet_dynamic_table/vunet_dynamic_table';
 import { VunetModal } from 'ui_framework/src/vunet_components/vunet_modal/vunet_modal';
+import { VunetImportModal } from 'ui_framework/src/vunet_components/vunet_import_modal/VunetImportModal';
 import chrome from 'ui/chrome';
 const urlBase = chrome.getUrlBase();
 import { apiProvider } from 'ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider.js';
@@ -30,6 +31,22 @@ export class Sources extends React.Component {
 
   constructor(props) {
     super(props);
+
+    const importTemplateLink =
+      chrome.getUrlBase() +
+      '/vublock/' +
+      this.props.vuBlockId +
+      '/source_bulk/export?blank=True';
+
+    this.defaultImportModalData = {
+      title: 'Import Data Sources',
+      tip: 'Only file types with *.xlsx and *.xls are supported.',
+      templateLink: importTemplateLink,
+      downloadErrors: null,
+      success: false,
+      error: ''
+    };
+
     this.state = {
       size: 10, // Number of rows to be shown
       headers: {}, // Headers for the table
@@ -42,6 +59,8 @@ export class Sources extends React.Component {
       rows: [], // The rows to be displayed
       modalStatus: false, // Add or Edit Modal to be shown or not
       modalFormData: {}, // Form data inside the modal
+      importModalStatus: false,
+      importModalData: this.defaultImportModalData,
       selectedItems: [], // Selected rows
       page: 1, // Page Number in the table
       action: 'next', // Page Action Direction (Next or Previous)
@@ -103,6 +122,8 @@ export class Sources extends React.Component {
       headers: {},
       modalStatus: false,
       modalFormData: {},
+      importModalStatus: false,
+      importModalData: this.defaultImportModalData,
       actionType: null,
       page: 1,
       action: 'next'
@@ -345,6 +366,58 @@ export class Sources extends React.Component {
     });
   }
 
+  // API Call to upload data via import
+  importDataSources = (formData) => {
+    // API call to upload data source file
+    apiProvider.post(`${VuBlockConstants.VUBLOCK_API_BASE_PATH}/` +
+    `${this.props.vuBlockId}/${VuBlockConstants.VUBLOCK_SOURCES_IMPORT}`, formData)
+      .then((data) => {
+        const importModalDataCopy = { ...this.state.importModalData };
+        if (data.status === 200) {
+          // If the file upload was successful
+          importModalDataCopy.success = true;
+        } else {
+          // If the file upload fails
+          if(data.response.data && data.response.data['error-string']) {
+            // If error string is present, set the error 
+            // and provide the function to download the error logs
+            importModalDataCopy.error = data.response.data['error-string'];
+            importModalDataCopy.downloadErrors = this.downloadImportErrors;
+          } else {
+            // Generic error message when the error string is not present
+            importModalDataCopy.error = 'Error while uploading. Please check the file!';
+          }
+        }
+        // Updating the modal content
+        this.setState({
+          importModalData: importModalDataCopy
+        });
+      });
+  }
+
+  // Function to download the error logs
+  downloadImportErrors = () => {
+    this.props.downloadImportErrors();
+    this.setState({
+      importModalData: this.defaultImportModalData
+    });
+  };
+
+  // Function to dismiss the import modal
+  onImportModalClose = (success) => {
+    const refresh = success || false;
+    if(refresh) {
+      // If the file upload was successful, refresh the table
+      this.resetDataAndRefresh();
+    } else {
+      // If the file upload failed, reset the modal content
+      this.setState({
+        importModalStatus: false,
+        importModalData: this.defaultImportModalData
+      });
+    }
+  }
+
   // Array that contains any custom row actions
   sourceTableActionButtons = [
     {
@@ -386,7 +459,7 @@ export class Sources extends React.Component {
           pageNumber={this.state.page}
           sortField={this.sortSourceInstances}
           totalRecords={this.state.totalRecords}
-          importData={this.props.importDataSources}
+          importData={() => { this.setState({ importModalStatus: true }); }}
           exportData={this.showExportModal}
           rowLimits={[10, 20, 50]}
           changeRowLimit={this.changeRowLimit}
@@ -397,6 +470,13 @@ export class Sources extends React.Component {
           onClose={() => { this.setState({ modalStatus: false }); }}
           onSubmit={this.onModalSubmit}
           clickOutsideToCloseModal={true}
+        />
+        <VunetImportModal
+          showModal={this.state.importModalStatus}
+          data={this.state.importModalData}
+          onClose={this.onImportModalClose}
+          onUpload={this.importDataSources}
+          onUpdateModal={(data) => { this.setState({ importModalData: data }); }}
         />
       </div>
     );

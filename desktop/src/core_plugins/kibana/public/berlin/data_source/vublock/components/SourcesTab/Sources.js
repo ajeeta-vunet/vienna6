@@ -103,6 +103,7 @@ export class Sources extends React.Component {
       headers: {},
       modalStatus: false,
       modalFormData: {},
+      actionType: null,
       page: 1,
       action: 'next'
     }, () => {
@@ -173,7 +174,7 @@ export class Sources extends React.Component {
   // Promise to carry out enable / disable operation
   newEnablePromise = (item, actionType) => {
     return apiProvider.put(`${VuBlockConstants.VUBLOCK_API_BASE_PATH}/` +
-    `${this.props.vuBlockId}/${VuBlockConstants.VUBLOCK_SOURCES}?action=${actionType}`, item);
+    `${this.props.vuBlockId}/${VuBlockConstants.VUBLOCK_SOURCES}/?action=${actionType}`, item);
   }
 
   // Callback to submit modal

@@ -37,6 +37,7 @@ export class UserFeedback extends React.Component {
       dislikeComments: [],
       allReactions: [],
       hideOverallFeedback: true,
+      disableSubmitButton: true,
     };
   }
 
@@ -92,6 +93,7 @@ export class UserFeedback extends React.Component {
               dislikeComments,
               allReactions: allReactions.comments,
               additionalComments: additionalComments,
+              disableSubmitButton: true,
             });
           });
       });
@@ -100,7 +102,7 @@ export class UserFeedback extends React.Component {
   //this method is called when the additional comment text-area changes.
   handleAdditonalComment = (e) => {
     const additionalComments = e.target.value;
-    this.setState({ additionalComments: additionalComments });
+    this.setState({ additionalComments: additionalComments, disableSubmitButton: this.state.reaction === 'No Reaction', });
   };
 
   //this method is called when the user clicks on either 'Accept' or 'Reject' actions.
@@ -116,6 +118,7 @@ export class UserFeedback extends React.Component {
       reaction: reaction,
       dislikeComments: [],
       additionalComments: '',
+      disableSubmitButton: false,
     });
   };
 
@@ -220,29 +223,31 @@ export class UserFeedback extends React.Component {
 
   //this method is called when the user clicks on the cancel button.
   handleCancel = () => {
-    if (this.state.reaction !== 'No Reaction') {
-      const postBody = {
-        username: userData[0],
-        user_reaction: 'No Reaction',
-        additional_comment: [],
-      };
-      apiProvider
-        .put(
-          `${EventConstants.EDIT_USER_REACTION}${this.props.correlationId}/`,
-          postBody
-        )
-        .then(() => this.fetchData());
-    } else {
-      this.setState({ reaction: 'No Reaction', additionalComments: '' });
-    }
-
-    this.props.addOrRemoveReaction('No Reaction');
+    $('.like-button').removeClass('selected-reaction');
+    $('.dislike-button').removeClass('selected-reaction');
+    this.setState({ reaction: 'No Reaction', additionalComments: '', disableSubmitButton: true, });
   };
 
   //this method is used to hide or unhide overall feedback section.
   hideOrUnhideOverall = () => {
     this.setState({ hideOverallFeedback: !this.state.hideOverallFeedback });
   };
+
+  //this method is used to delete a user related to the logged in user, if it exists.
+  handleDeleteReaction = () => {
+    const postBody = {
+      username: userData[0],
+      user_reaction: 'No Reaction',
+      additional_comment: [],
+    };
+    apiProvider
+      .put(
+        `${EventConstants.EDIT_USER_REACTION}${this.props.correlationId}/`,
+        postBody
+      )
+      .then(() => this.fetchData());
+    this.props.addOrRemoveReaction('No Reaction');
+  }
 
   //this method is called to render the user feedback if there is any.
   renderUserFeedback = () => {
@@ -266,8 +271,19 @@ export class UserFeedback extends React.Component {
                   })}
                   <div className="user-detail-name">{reaction.username}</div>
                 </div>
-                <div className="reaction-time">
-                  {moment(reaction.time_added).fromNow()}
+                <div className="reaction-delete-wrapper">
+                  <div className="reaction-time">
+                    {moment(reaction.time_added).fromNow()}
+                  </div>
+                  {userData[0] === reaction.username &&
+                  (
+                    <div
+                      className="delete-feedback"
+                      onClick={() => this.handleDeleteReaction()}
+                    >
+                      <i className="fa fa-lg fa-trash"/>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -289,8 +305,19 @@ export class UserFeedback extends React.Component {
                   })}
                   <div className="user-detail-name">{reaction.username}</div>
                 </div>
-                <div className="reaction-time">
-                  {moment(reaction.time_added).fromNow()}
+                <div className="reaction-delete-wrapper">
+                  <div className="reaction-time">
+                    {moment(reaction.time_added).fromNow()}
+                  </div>
+                  {userData[0] === reaction.username &&
+                  (
+                    <div
+                      className="delete-feedback"
+                      onClick={() => this.handleDeleteReaction()}
+                    >
+                      <i className="fa fa-lg fa-trash"/>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -348,7 +375,7 @@ export class UserFeedback extends React.Component {
             <button
               className="submit-button"
               onClick={() => this.handleSubmit()}
-              disabled={this.state.reaction === 'No Reaction'}
+              disabled={this.state.disableSubmitButton}
             >
               Submit
             </button>

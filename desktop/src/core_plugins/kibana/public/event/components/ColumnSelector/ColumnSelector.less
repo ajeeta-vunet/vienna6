@@ -29,6 +29,21 @@
       border-top-left-radius : 1.5rem;
     }
 
+    .select-deselect-wrapper {
+      display        : flex;
+      justify-content: flex-end;
+      padding        : 0rem 2rem;
+
+      .select-deselect-button {
+        background-color: @white;
+        color           : @accent_color;
+        border          : 1px solid @accent_color;
+        font-size       : 1.5rem;
+        padding         : .7rem 2.5rem;
+        border-radius   : 2rem;
+      }
+    }
+
     .column-selector-body {
       display: block;
       width  : 100%;
@@ -54,7 +69,7 @@
             label {
               margin-left   : 6px;
               text-transform: capitalize;
-              font-weight: normal;
+              font-weight   : normal;
             }
           }
         }
@@ -85,12 +100,9 @@
       padding: 4%;
 
       input {
-        width         : 100%;
-        border        : 1px solid @event-console-border-color;
-        padding-left  : 10px;
-        padding-right : 10px;
-        padding-top   : 5px;
-        padding-bottom: 5px;
+        width  : 100%;
+        border : 1px solid @event-console-border-color;
+        padding: .5rem 1rem;
       }
     }
   }

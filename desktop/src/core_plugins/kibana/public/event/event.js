@@ -215,32 +215,27 @@ app.directive('eventApp', function () {
           $scope.$apply();
         });
 
-      $scope.updateColumnSelector = () => {
-        const updateColumnSelectorReact = function (fields, hiddenFields) {
-          const postBody = {
-            alert_details: {
-              fields: fields,
-              hidden_fields: hiddenFields,
-            },
-            ticket_details: {
-              fields: [],
-              hidden_fields: [],
-            },
-          };
-
-          return apiProvider.post(
-            `${EventConstants.UPDATE_COLUMN_SELECTOR_INFO}${currentUser[0]}/`,
-            postBody
-          );
+      $scope.updateColumnSelector = (fields, hiddenFields) => {
+        const postBody = {
+          alert_details: {
+            fields: fields,
+            hidden_fields: hiddenFields,
+          },
+          ticket_details: {
+            fields: [],
+            hidden_fields: [],
+          },
         };
-        return updateColumnSelectorReact;
+
+        apiProvider.post(
+          `${EventConstants.UPDATE_COLUMN_SELECTOR_INFO}${currentUser[0]}/`,
+          postBody
+        );
       };
 
       $scope.state = new AppState(stateDefaults);
 
       //passing these to the EventConsole react component
-      // $scope.updateColumnSelector = $route.current.locals.updateColumnSelector;
-      // $scope.columnSelectorInfo = $route.current.locals.columnSelectorInfo;
       $scope.userList = $route.current.locals.userList;
       $scope.filterFields = $route.current.locals.filterFields;
       $scope.itsmPreferencesEnabled =

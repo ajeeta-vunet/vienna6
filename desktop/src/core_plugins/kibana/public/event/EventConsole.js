@@ -216,7 +216,7 @@ export class EventConsole extends React.Component {
     if (!_.isEmpty(filterStore)) {
       const filterKeys = Object.keys(filterStore);
       const newEventList = this.state.allEventList && produce(this.state.allEventList, (draft) => {
-        draft.filter(function (event) {
+        return draft.filter(function (event) {
           return filterKeys.every(function (filterKey) {
             return filterStore[filterKey].includes(event.fields[filterKey]);
           });

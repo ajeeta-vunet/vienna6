@@ -36,6 +36,7 @@ export class EventDetails extends React.Component {
       hideAlertMangement: true,
       hideAllWorknotes: true,
       hideAdditonalInfo: true,
+      disableSaveButton: true,
     };
   }
 
@@ -57,17 +58,17 @@ export class EventDetails extends React.Component {
 
   //updates the selectedStatus state variable everytime a different option is chosen
   handleStatus = (e) => {
-    this.setState({ selectedStatus: e.target.value });
+    this.setState({ selectedStatus: e.target.value, disableSaveButton: false });
   };
 
   //updates the selectedAssignee status variable
   handleAssignee = (assignee) => {
-    this.setState({ selectedAssignee: assignee });
+    this.setState({ selectedAssignee: assignee, disableSaveButton: false });
   };
 
   //updates the newComment status variable
   handleComment(e) {
-    this.setState({ newComment: e.target.value });
+    this.setState({ newComment: e.target.value, disableSaveButton: false });
   }
 
   //this method is used to clear event management data entered.
@@ -82,6 +83,7 @@ export class EventDetails extends React.Component {
   //this function is called everytime the save button is clicked.
   //it calls the passed updateEvent function.
   handleUpdateEvent = () => {
+    this.setState({ newComment: '', disableSaveButton: true });
     this.props.updateEvent(
       this.props.eventId,
       this.state.selectedAssignee,
@@ -289,6 +291,7 @@ export class EventDetails extends React.Component {
                 <button
                   className="event-console-button"
                   onClick={() => this.handleUpdateEvent()}
+                  disabled={this.state.disableSaveButton}
                 >
                   Save
                 </button>

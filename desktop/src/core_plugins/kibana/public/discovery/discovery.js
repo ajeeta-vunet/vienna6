@@ -1,6 +1,6 @@
 import { uiModules } from 'ui/modules';
 import { DocTitleProvider } from 'ui/doc_title';
-import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
+import { VunetSidebarConstants } from 'ui_framework/src/vunet_components/vunet_sidebar/vunet_sidebar_constants';
 import { DiscoveryPage } from './components/DiscoveryPage/DiscoveryPage';
 
 require('plugins/kibana/discovery/discovery.less');

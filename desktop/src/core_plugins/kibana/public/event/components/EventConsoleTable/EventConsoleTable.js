@@ -35,12 +35,17 @@ export class EventConsoleTable extends React.Component {
     this.state = {
       displayEventDetailsSideBar: false,
       details: {},
+      currentEvents: this.props.currentEvents,
     };
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.setState({ currentEvents: newProps.currentEvents });
   }
 
   //this method is used to generate JSX for event console table headers.
   renderEventConsoleTableHeaders() {
-    const event = this.props.currentEvents && this.props.currentEvents[0];
+    const event = this.state.currentEvents && this.state.currentEvents[0];
     const headerKeys = event && Object.keys(event.fields);
     if (event) {
       return (
@@ -68,8 +73,8 @@ export class EventConsoleTable extends React.Component {
   //this method is used to generate JSX for event console tables data row.
   renderEventConsoleTableData() {
     return (
-      this.props.currentEvents &&
-      this.props.currentEvents.map((event) => {
+      this.state.currentEvents &&
+      this.state.currentEvents.map((event) => {
         if (event) {
           return (
             <tr
@@ -99,7 +104,7 @@ export class EventConsoleTable extends React.Component {
                     onClick={() => this.handleDisplayEventDetails(event)}
                     data-tip={'More Details'}
                   >
-                    <ReactTooltip />
+                    <ReactTooltip place="bottom" />
                     <i className="fa fa-info-circle" />
                   </div>
                   <div
@@ -113,7 +118,7 @@ export class EventConsoleTable extends React.Component {
                         : 'User does not have Manage Events Claim'
                     }
                   >
-                    <ReactTooltip />
+                    <ReactTooltip place="bottom" />
                     <div
                       disabled={
                         !this.props.itsmPreferencesEnabled ||
@@ -196,16 +201,31 @@ export class EventConsoleTable extends React.Component {
         draft.fields.assignee = assignee;
         draft.fields.status = status;
       });
-      this.setState({ clickedEvent: updatedEvent }, () => {
-        notify.info('Event has been updated successfully');
+
+      const updatedDetails = produce(this.state.details, (draft) => {
+        if (noteText !== '') {
+          draft.alert_details.fields.notes.push(toSend.notes[0]);
+          draft.alert_details.fields.assignee = assignee;
+          draft.alert_details.fields.status = status;
+        }
       });
 
-      if (noteText !== '') {
-        const updatedDetails = produce(this.state.details, (draft) => {
-          draft.alert_details.fields.notes.push(toSend.notes[0]);
+      const currentEvents = produce(this.state.currentEvents, (draft) => {
+        draft.map((event) => {
+          if(event.id === eventId) {
+            event.fields.assignee = assignee;
+            event.fields.status = status;
+          }
         });
-        this.setState({ details: updatedDetails });
-      }
+      });
+
+      this.setState({
+        clickedEvent: updatedEvent,
+        details: updatedDetails,
+        currentEvents
+      }, () => {
+        notify.info('Event has been updated successfully');
+      });
     });
   };
 
@@ -264,7 +284,7 @@ export class EventConsoleTable extends React.Component {
         <table id="events" className="events-table">
           <tbody>
             {this.renderEventConsoleTableHeaders()}
-            {this.props.currentEvents && this.renderEventConsoleTableData()}
+            {this.state.currentEvents && this.renderEventConsoleTableData()}
           </tbody>
         </table>
         {this.state.displayEventDetailsSideBar && (

@@ -1,0 +1,57 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.config-management {
+
+  .config-management-form {
+    padding-bottom: 2rem;
+
+    label {
+      font-weight: normal;
+      width      : 20rem;
+    }
+
+    .config-collect-title {
+      margin     : 1rem 0 2rem 0;
+      font-weight: bold;
+    }
+
+    .schedule-time {
+      display      : flex;
+      align-items  : flex-start;
+      margin-bottom: 2rem;
+
+      .schedule-at {
+        width        : 30rem;
+        border       : 1px solid @grey_smoke;
+        border-radius: @box-border-radius;
+        padding      : @input-padding;
+      }
+
+      .supporting-words {
+        font-size  : 1.8rem;
+        margin-left: 0;
+      }
+
+      .schedule-time-cron {
+
+        .cron-tab-container {
+          align-items: flex-start;
+
+          select {
+            font-size : 1.8rem;
+            margin-top: 0;
+          }
+        }
+      }
+    }
+
+    input[type=checkbox] {
+      width       : max-content;
+      margin-right: 1rem;
+    }
+  }
+
+  .add-or-edit-continue {
+    margin-left: 1rem;
+  }
+}

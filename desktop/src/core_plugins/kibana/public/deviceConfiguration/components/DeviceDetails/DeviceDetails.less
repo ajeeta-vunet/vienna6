@@ -1,0 +1,38 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.dcm-device-details {
+
+  .dcm-device-details-form {
+    padding-bottom: 2rem;
+
+    label {
+      width      : 30rem;
+      margin     : 1rem 0;
+      font-weight: normal;
+    }
+
+    input,
+    select {
+      border       : 1px solid @grey_smoke;
+      border-radius: @box-border-radius;
+      padding      : @input-padding;
+      width        : 25rem;
+      margin       : 1rem 0rem;
+    }
+
+    select {
+      padding: @select-padding;
+      width  : 15rem;
+    }
+
+    .error-message {
+      color      : @red;
+      margin-left: 30rem;
+      font-size  : 1.5rem;
+    }
+  }
+
+  .add-or-edit-continue {
+    margin-left: 1rem;
+  }
+}

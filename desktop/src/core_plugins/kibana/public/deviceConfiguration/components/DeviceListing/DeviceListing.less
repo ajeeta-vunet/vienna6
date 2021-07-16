@@ -1,0 +1,104 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.dcm-devices {
+
+  .dcm-device-listing {
+    margin : 2.5rem 3rem 0rem 3rem;
+    padding: 0rem 0rem 1rem 0rem;
+
+    h4 {
+      font-weight: 600;
+      margin     : 0rem 0rem 2rem 0rem;
+    }
+
+    .dcm-device-actions {
+      display: flex;
+      margin : 2rem 0rem;
+
+      .addDevice {
+        margin-left: auto;
+      }
+    }
+
+    .dcm-device-actions>* {
+      margin-left: 1.5rem;
+    }
+
+    .search-input {
+      border       : 1px solid @grey_smoke;
+      border-radius: @box-border-radius;
+      padding      : @input-padding;
+      margin-left  : 0rem;
+    }
+
+    .summary-and-devices {
+      display        : flex;
+      justify-content: flex-start;
+      align-items    : flex-start;
+
+      .dcm-summary-container {
+        margin          : 2rem 2rem 2rem 0rem;
+        border-radius   : 1rem;
+        border-collapse : collapse;
+        background-color: @summary-background-color  !important;
+      }
+
+      .dcm-table-container {
+        margin: 2rem 0rem;
+        flex  : 4;
+
+        .dcm-devices-table {
+          background-color: @white;
+
+          thead {
+            tr {
+              th {
+                padding         : 1.5rem 1rem;
+                text-align      : left;
+                vertical-align  : middle;
+                background-color: @tbl-header-bg;
+                border          : none; // to override default CSS
+                border-bottom   : 1px solid @tbl-border;
+              }
+            }
+          }
+
+          tbody {
+            tr {
+              border-bottom: 1px solid @tbl-border;
+
+              td {
+                text-align    : left;
+                vertical-align: middle;
+                border        : none; // to override default CSS
+              }
+            }
+          }
+
+          .dcm-table-actions {
+            display: flex;
+
+            .row-actions-icon {
+              padding: 0.75rem 1rem 0.75rem 0;
+              cursor : pointer;
+            }
+          }
+
+          .sort-icon {
+            margin-left: 0.5rem;
+          }
+
+          .multi-check,
+          .single-check {
+            margin-left: 2rem;
+          }
+        }
+
+      }
+    }
+
+    .pagination {
+      padding-right: 0;
+    }
+  }
+}

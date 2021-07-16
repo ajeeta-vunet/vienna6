@@ -1,0 +1,85 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.dcm-snapshots-wrapper {
+
+  .snapshots {
+
+    .snap-actions {
+      display        : flex;
+      justify-content: space-between;
+      align-items    : center;
+
+      .search-input {
+        border       : 1px solid @grey_smoke;
+        border-radius: @box-border-radius;
+        padding      : @input-padding;
+      }
+    }
+
+    .compare-snaps-wrapper {
+      display    : flex;
+      align-items: center;
+      margin-top : 1.5rem;
+
+      .compare-snaps {
+        border       : 1px solid @grey_smoke;
+        border-radius: @box-border-radius;
+        padding      : @input-padding;
+        margin-right : 1rem;
+      }
+
+      .compare {
+        border: 1px solid @grey_smoke;
+        color : @grey_dark;
+      }
+    }
+
+    .tbl {
+      background-color: @white;
+      margin-top      : 1.5rem;
+
+      .snap-table-actions {
+        display: flex;
+
+        .icons {
+          padding: 1rem 1.5rem 1rem 0rem;
+          cursor : pointer;
+        }
+      }
+
+      .sort-icon {
+        margin-left: 0.5rem;
+      }
+
+      th {
+        padding         : 1rem;
+        text-align      : left;
+        vertical-align  : middle;
+        background-color: @tbl-header-bg;
+        border-bottom   : 1px solid @tbl-border;
+      }
+
+      tr {
+        td {
+          text-align    : left;
+          vertical-align: middle;
+          border-bottom : 1px solid @tbl-border;
+        }
+      }
+
+      .multi-check,
+      .single-check {
+        margin-left: 2rem;
+      }
+    }
+  }
+
+  .empty-snaps {
+    text-align : center;
+    font-weight: bolder;
+  }
+
+  .snapshots-cancel {
+    margin-left: 1rem;
+  }
+}

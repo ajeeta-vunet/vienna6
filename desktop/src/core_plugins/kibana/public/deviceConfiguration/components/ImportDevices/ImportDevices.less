@@ -1,0 +1,42 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.dcm-import {
+  position        : fixed;
+  z-index         : 1000;
+  top             : 0;
+  left            : 0;
+  right           : 0;
+  bottom          : 0;
+  display         : flex;
+  flex-direction  : column;
+  align-items     : center;
+  justify-content : center;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  .dcm-import-wrapper {
+    background-color: @white;
+    padding         : 1rem;
+    border-radius   : 1rem;
+    width           : 50rem;
+
+    h4 {
+      text-align: center;
+      color     : @title-color;
+      margin    : 2rem;
+    }
+
+    .import-file {
+      padding: 0 1rem;
+    }
+
+    .import-actions {
+      display        : flex;
+      justify-content: flex-end;
+      margin         : 1rem;
+
+      .import-submit {
+        margin-left: 1rem;
+      }
+    }
+  }
+}

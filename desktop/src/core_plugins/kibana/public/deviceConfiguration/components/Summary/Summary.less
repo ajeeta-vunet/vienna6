@@ -1,0 +1,48 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.dcm-summary-wrapper {
+  .heading-row {
+    display        : flex;
+    justify-content: space-between;
+    padding        : 1.5rem;
+  }
+
+  .summary-detail {
+    .countAndMore {
+      display: flex;
+    }
+  }
+
+  .more-details {
+    cursor: pointer;
+    border: none;
+    color : @accent_color;
+  }
+
+  .heading-row {
+    font-weight  : 600;
+    border-bottom: 0.1rem solid @summary-border-color;
+  }
+
+  .more-details-rows {
+    max-height: 18vh;
+    overflow  : auto;
+  }
+
+  .row-item-div {
+    padding: 1rem;
+
+    label {
+      font-weight: normal;
+    }
+  }
+
+  .row-item-checkbox {
+    margin-right: 1rem;
+  }
+
+  .topology-name {
+    font-size : 2.5rem;
+    word-break: break-word;
+  }
+}

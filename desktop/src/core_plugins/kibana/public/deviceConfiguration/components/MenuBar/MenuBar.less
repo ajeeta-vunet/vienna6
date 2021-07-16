@@ -1,0 +1,23 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.dcm-tabs-section {
+  display        : flex;
+  justify-content: flex-start;
+  padding        : 0rem 3rem;
+
+  .individual-tab {
+    border : none;
+    padding: 0.5rem;
+    cursor : pointer;
+    margin : 1rem 2rem 0rem 2rem;
+  }
+
+  .devices {
+    margin-left: 0rem;
+  }
+
+  .selected-tab {
+    border-bottom: 0.4rem solid @accent_color;
+    font-weight  : bold;
+  }
+}

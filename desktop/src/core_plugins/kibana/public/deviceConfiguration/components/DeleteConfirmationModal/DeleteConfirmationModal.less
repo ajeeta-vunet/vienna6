@@ -1,0 +1,44 @@
+@import "~ui/styles/vunet_variable_theme.less";
+
+.dcm-delete-modal {
+  position        : fixed;
+  z-index         : 1000;
+  top             : 0;
+  left            : 0;
+  right           : 0;
+  bottom          : 0;
+  display         : flex;
+  flex-direction  : column;
+  align-items     : center;
+  justify-content : center;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  .dcm-delete-wrapper {
+    background-color: @white;
+    padding         : 2rem;
+    border-radius   : 1rem;
+    width           : 50rem;
+
+    .dcm-delete-title {
+      margin-bottom: 2rem;
+    }
+
+    hr {
+      margin: 0;
+    }
+
+    .dcm-delete-content {
+      margin: 4rem 0;
+    }
+
+    .dcm-delete-actions {
+      display        : flex;
+      justify-content: flex-end;
+      margin-top     : 1rem;
+
+      .dcm-delete-submit {
+        margin-left: 1rem;
+      }
+    }
+  }
+}

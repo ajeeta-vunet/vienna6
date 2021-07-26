@@ -25,6 +25,7 @@ import { DeviceConfigConstants } from '../../device_configuration_constants';
 import { ConfigManagement } from '../ConfigManagement/ConfigManagement';
 import { Snapshots } from '../Snapshots/Snapshots';
 import { produce } from 'immer';
+import { VunetLoader } from 'ui_framework/src/vunet_components/VunetLoader/VunetLoader';
 
 const notify = new Notifier({ location: 'DCM' });
 
@@ -41,7 +42,7 @@ export class AddOrEditDevice extends Component {
         device_family_name: '',
         collect_schedule_status: 'Disable',
         config_collection_settings: [
-          { schedule_at: '', periodic_schedule: '' },
+          { schedule_at: '', periodic_schedule: '', frequency: '' },
         ],
         config_upload_settings: [],
         firmware_upload_settings: [],
@@ -49,6 +50,7 @@ export class AddOrEditDevice extends Component {
         credentials: '',
       },
       deviceId: '',
+      loading: this.props.action === 'addDevice' ? false : true,
     };
   }
 
@@ -73,7 +75,7 @@ export class AddOrEditDevice extends Component {
           draft.config_policy = response.device_details.config_policy;
           draft.credentials = response.device_details.credentials;
         });
-        this.setState({ deviceObj, deviceId });
+        this.setState({ deviceObj, deviceId, loading: false });
       });
     }
   }
@@ -142,8 +144,7 @@ export class AddOrEditDevice extends Component {
           .then((response) => {
             if(response.status === 200) {
               notify.info(`${putBody.device_name} edited successfully`);
-            }
-            else {
+            } else {
               notify.error(`${response.response.data['error-string']}`);
             }
           })
@@ -165,7 +166,7 @@ export class AddOrEditDevice extends Component {
     } else if(this.state.currentSubSection === 'configManagement' && this.props.action === 'viewSnapshots') {
       return 'Continue';
     } else if(this.props.action === 'addDevice' ||
-    (this.state.currentSubSection === 'configManagement' && this.props.deviceId)) {
+      (this.state.currentSubSection === 'configManagement' && this.props.deviceId)) {
       // for 'Add' and 'Edit' device API calls
       return 'Save';
     } else {
@@ -185,6 +186,7 @@ export class AddOrEditDevice extends Component {
   render() {
     return (
       <div className="dcm-add-or-edit-device">
+        {this.state.loading && <VunetLoader />}
         <h4>
           { this.displayTitle() }
         </h4>
@@ -195,7 +197,7 @@ export class AddOrEditDevice extends Component {
               this.state.currentSubSection === 'deviceDetails' && 'selected'
             }`}
           >
-              Device Details
+            Device Details
           </div>
           {/* Add Device only contains Device Details section */}
           {this.props.action !== 'addDevice' ? (
@@ -205,7 +207,7 @@ export class AddOrEditDevice extends Component {
                   'selected'
               }`}
             >
-                Config Management
+              Config Management
             </div>
           ) : null}
           {/* Only View Device contains a Snapshot section */}
@@ -215,35 +217,38 @@ export class AddOrEditDevice extends Component {
                 this.state.currentSubSection === 'snapshots' && 'selected'
               }`}
             >
-                Snapshots
+              Snapshots
             </div>
           ) : null}
         </div>
-        {this.state.currentSubSection === 'deviceDetails' && (
-          <DeviceDetails
-            deviceObj={this.state.deviceObj}
-            disable={this.props.action === 'viewSnapshots' && true}
-            action={this.props.action}
-            navigateToPrevious={this.navigateToPrevious}
-            navigateToNext={this.navigateToNext}
-          />
-        )}
-        {this.state.currentSubSection === 'configManagement' && (
-          <ConfigManagement
-            deviceObj={this.state.deviceObj}
-            deviceId={this.state.deviceId}
-            navigateToPrevious={this.navigateToPrevious}
-            navigateToNext={this.navigateToNext}
-            action={this.props.action}
-          />
-        )}
-        {this.state.currentSubSection === 'snapshots' && (
-          <Snapshots
-            deviceId={this.props.deviceId}
-            navigateToPrevious={this.navigateToPrevious}
-            navigateToNext={this.navigateToNext}
-          />
-        )}
+        {this.state.currentSubSection === 'deviceDetails' &&
+          !this.state.loading && (
+            <DeviceDetails
+              deviceObj={this.state.deviceObj}
+              disable={this.props.action === 'viewSnapshots' && true}
+              action={this.props.action}
+              navigateToPrevious={this.navigateToPrevious}
+              navigateToNext={this.navigateToNext}
+            />
+          )}
+        {this.state.currentSubSection === 'configManagement' &&
+          !this.state.loading && (
+            <ConfigManagement
+              deviceObj={this.state.deviceObj}
+              deviceId={this.state.deviceId}
+              navigateToPrevious={this.navigateToPrevious}
+              navigateToNext={this.navigateToNext}
+              action={this.props.action}
+            />
+          )}
+        {this.state.currentSubSection === 'snapshots' &&
+          !this.state.loading && (
+            <Snapshots
+              deviceId={this.props.deviceId}
+              navigateToPrevious={this.navigateToPrevious}
+              navigateToNext={this.navigateToNext}
+            />
+          )}
       </div>
     );
   }

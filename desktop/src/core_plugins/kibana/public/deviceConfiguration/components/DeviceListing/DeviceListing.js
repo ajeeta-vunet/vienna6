@@ -30,6 +30,7 @@ import { Summary } from '../Summary/Summary';
 import { AddOrEditDevice } from '../AddOrEditDevice/AddOrEditDevice';
 import { ImportDevices } from '../ImportDevices/ImportDevices';
 import { DeleteConfirmationModal } from '../DeleteConfirmationModal/DeleteConfirmationModal';
+import { CollectConfigCommitModal } from '../CollectConfigCommitModal/CollectConfigCommitModal';
 import _ from 'lodash';
 import ReactTooltip from 'react-tooltip';
 
@@ -54,6 +55,7 @@ export class DeviceListing extends Component {
       deviceIdForRowActions: '',
       showDeleteConfirmationForSingleDevice: false,
       showDeleteConfirmationForSelectedDevices: false,
+      showCommitInputForSelectedDevices: false,
       deleteConfirmationMessage: ''
     };
   }
@@ -106,16 +108,15 @@ export class DeviceListing extends Component {
     } else if (action === 'importDevices') {
       this.setState({ showImportDevices: true });
     }
-    // else if (action === 'collectConfig') {
-    //   const requestBody = {
-    //     configuration_collector_message: 'Daily commit message',
-    //   };
-    //   apiProvider
-    //     .post('dcm/device/40/collection/snapshot/', requestBody)
-    //     .then((response) => {
-    //       console.log(response);
-    //     });
-    // }
+    else if (action === 'collectConfig') {
+      if(this.state.selectedItems.length > 0) {
+        this.setState({
+          showCommitInputForSelectedDevices: true
+        });
+      } else {
+        notify.info('Select one or more devices to start Configuration Collection!');
+      }
+    }
   };
 
   // When user clicks on delete, edit or view in table row
@@ -133,7 +134,32 @@ export class DeviceListing extends Component {
     }
   }
 
-  // when user clicks on Cancel during confirmation
+  // when user clicks on Cancel while providing a commit message for Config collection
+  cancelConfigCollection = () => {
+    this.setState({ showCommitInputForSelectedDevices: false });
+  }
+
+  // to begin configuration collection
+  startConfigCollection = (commitMessage) => {
+    const requestBody = {
+      configuration_collector_message: commitMessage,
+    };
+    const collectConfigPromise = this.state.selectedItems.map((item) =>
+      apiProvider.post('dcm/device/' + item + '/collection/snapshot/', requestBody)
+    );
+    Promise.all(collectConfigPromise).then((responses) =>{
+      if(responses[responses.length - 1].status === 201) {
+        this.setState({ showCommitInputForSelectedDevices: false }, notify.info(
+          'Successfully started Configuration Collection!'
+        ));
+      } else {
+        notify.error(`${responses[responses.length - 1].response.data['error-string']}`);
+      }
+      this.setState({ showCommitInputForSelectedDevices: false });
+    });
+  }
+
+  // when user clicks on Cancel during Delete confirmation
   cancelDeleteOperation = () => {
     this.setState({
       showDeleteConfirmationForSingleDevice: false,
@@ -203,7 +229,11 @@ export class DeviceListing extends Component {
               showDeleteConfirmationForSingleDevice: false,
               showDeleteConfirmationForSelectedDevices: false
             }, () => {
+              // uncheck all the checkboxes
               $('.single-check').each(function () {
+                this.checked = false;
+              });
+              $('.multi-check').each(function () {
                 this.checked = false;
               });
             }
@@ -509,12 +539,12 @@ export class DeviceListing extends Component {
                 id="importDevices"
                 onClick={() => this.setState({ showImportDevices: true })}
               />
-              {/* <VunetButton
+              <VunetButton
                 className="table-action-secondary"
                 text="Collect Config"
                 id="collectConfig"
-                onClick={this.onTableAction}
-              /> */}
+                onClick={() => this.onTableAction('collectConfig')}
+              />
             </div>
 
             <div className="filters">
@@ -678,6 +708,13 @@ export class DeviceListing extends Component {
             confirmationMessage={this.state.deleteConfirmationMessage}
             cancelDeleteOperation={this.cancelDeleteOperation}
             deleteDevice={this.deleteSelectedDevices}
+          />
+        }
+        {/* take commit message from user for Config Collection*/}
+        {this.state.showCommitInputForSelectedDevices &&
+          <CollectConfigCommitModal
+            cancelConfigCollection={this.cancelConfigCollection}
+            startConfigCollection={this.startConfigCollection}
           />
         }
       </div>

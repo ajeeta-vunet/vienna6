@@ -28,6 +28,7 @@ import { ViewSnapshot } from '../ViewSnapshot/ViewSnapshot';
 import { CompareSnaps } from '../CompareSnaps/CompareSnaps';
 import { Notifier } from 'ui/notify';
 import ReactTooltip from 'react-tooltip';
+import { VunetLoader } from 'ui_framework/src/vunet_components/VunetLoader/VunetLoader';
 
 const notify = new Notifier({ location: 'Snapshots' });
 
@@ -41,7 +42,8 @@ export class Snapshots extends Component {
     selectedItems: [],
     snapsToCompare: [],
     currentPage: 1,
-    totalNumberOfDevices: 0
+    totalNumberOfDevices: 0,
+    loading: true
   };
 
   componentDidMount() {
@@ -62,7 +64,10 @@ export class Snapshots extends Component {
         this.setState({
           snapList,
           totalNumberOfDevices: data.no_of_nodes,
+          loading: false
         });
+      } else {
+        this.setState({ loading: false });
       }
     });
   }
@@ -266,7 +271,7 @@ export class Snapshots extends Component {
       this.setState({
         snapList,
         totalNumberOfDevices: data.no_of_nodes,
-      }, () => notify.info(`Successfully sorted in ${sortSelected.sort_method} order of name`));
+      }, () => notify.info(`Successfully sorted in ${sortSelected.sort_method} order of date`));
     });
   }
 
@@ -281,8 +286,9 @@ export class Snapshots extends Component {
   render() {
     return(
       <div className="dcm-snapshots-wrapper">
+        {this.state.loading && <VunetLoader />}
         {
-          this.state.currentSection === 'snapshots' &&
+          this.state.currentSection === 'snapshots' && !this.state.loading &&
           <div className="snapshots">
             <div className="snap-actions">
               <input

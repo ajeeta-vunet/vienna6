@@ -38,7 +38,7 @@ export class ViewSnapshot extends Component {
     return(
       <div className="view-snapshot">
         <VunetButton
-          className="tableAction"
+          className="table-action-secondary"
           text="<-"
           id="backToSnaps"
           onClick={this.props.snapshotListing}

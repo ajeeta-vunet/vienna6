@@ -48,9 +48,8 @@ export class ConfigManagement extends Component {
     ) {
       periodicSchedule =
         this.props.deviceObj.config_collection_settings[0].periodic_schedule;
-      const lastIndex = periodicSchedule.lastIndexOf(' ');
-      scheduleFrequency = periodicSchedule.substring(lastIndex + 1);
-      periodicSchedule = periodicSchedule.substring(0, lastIndex);
+      scheduleFrequency =
+        this.props.deviceObj.config_collection_settings[0].frequency;
     }
     this.state = {
       deviceObj: this.props.deviceObj,
@@ -93,27 +92,28 @@ export class ConfigManagement extends Component {
       .slice(0, -6)
       .replace('T', ' ');
     let periodicSchedule = '';
+    let frequency = '';
     if (this.state.periodicSchedule.length > 0) {
-      periodicSchedule =
-        this.state.periodicSchedule + ' ' + this.state.scheduleFrequency;
+      periodicSchedule = this.state.periodicSchedule;
+      frequency = this.state.scheduleFrequency;
     }
     const configCollectionSettings = [
       {
         schedule_at: scheduleAt,
         periodic_schedule: periodicSchedule,
+        frequency: frequency
       },
     ];
     const deviceObj = produce(this.state.deviceObj, (draft) => {
       draft.config_collection_settings = configCollectionSettings;
     });
-    // if the check-box corresponding to 'Schedule At' is clicked,
-    // call the parent component's method to store the request body
     this.setState({ deviceObj, scheduleAt: e.target.value });
   };
 
   // on user's interaction with cron tab
   saveConfigCollectSchedule = (e) => {
-    const periodicSchedule = e.cronString + ' ' + e.scheduleFrequency;
+    const periodicSchedule = e.cronString;
+    const frequency = e.scheduleFrequency;
     let scheduleAt = '';
     if (this.state.scheduleAt.length > 0) {
       scheduleAt = moment(this.state.scheduleAt)
@@ -125,13 +125,12 @@ export class ConfigManagement extends Component {
       {
         schedule_at: scheduleAt,
         periodic_schedule: periodicSchedule,
+        frequency: frequency
       },
     ];
     const deviceObj = produce(this.state.deviceObj, (draft) => {
       draft.config_collection_settings = configCollectionSettings;
     });
-    // if the check-box corresponding to 'Periodic' is clicked,
-    // call the parent component's method to store the request body
     this.setState(
       {
         deviceObj,
@@ -149,16 +148,17 @@ export class ConfigManagement extends Component {
       this.state.scheduleAt.length > 0
         ? moment(this.state.scheduleAt).format().slice(0, -6).replace('T', ' ')
         : '';
-    const periodicSchedule =
-      this.state.periodicSchedule.length > 0
-        ? this.state.periodicSchedule + ' ' + this.state.scheduleFrequency
-        : '';
+    const periodicSchedule = this.state.periodicSchedule.length > 0
+      ? this.state.periodicSchedule : '';
+    const frequency = this.state.periodicSchedule.length > 0
+      ? this.state.scheduleFrequency : '';
     // if both the checkboxes are clicked
     if ($('#schedule').prop('checked') && $('#periodic').prop('checked')) {
       configCollectionSettings = [
         {
           schedule_at: scheduleAt,
           periodic_schedule: periodicSchedule,
+          frequency: frequency
         },
       ];
       this.setState({ showScheduleAt: true, showPeriodicSchedule: true });
@@ -167,6 +167,7 @@ export class ConfigManagement extends Component {
         {
           schedule_at: scheduleAt,
           periodic_schedule: '',
+          frequency: ''
         },
       ];
       this.setState({
@@ -180,6 +181,7 @@ export class ConfigManagement extends Component {
         {
           schedule_at: '',
           periodic_schedule: periodicSchedule,
+          frequency: frequency
         },
       ];
       this.setState({
@@ -193,6 +195,7 @@ export class ConfigManagement extends Component {
         {
           schedule_at: '',
           periodic_schedule: '',
+          frequency: ''
         },
       ];
       this.setState({

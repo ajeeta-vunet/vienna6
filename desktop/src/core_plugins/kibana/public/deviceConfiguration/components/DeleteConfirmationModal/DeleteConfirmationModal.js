@@ -32,13 +32,13 @@ export function DeleteConfirmationModal(props) {
 
         <div className="dcm-delete-actions">
           <VunetButton
-            className="table-action-secondary delete-cancel"
+            className="secondary delete-cancel"
             text="Cancel"
             id="delete-cancel"
             onClick={props.cancelDeleteOperation}
           />
           <VunetButton
-            className="table-action-primary dcm-delete-submit"
+            className="primary dcm-delete-submit"
             text="Yes, Delete"
             id="delete-submit"
             onClick={props.deleteDevice}

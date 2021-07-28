@@ -71,7 +71,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Name
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Name of this device heartbeat configuration. The heartbeat data sources with the same name within the different types of heartbeat monitoring (Device Heartbeat, Service Heartbeat, Tracepath and URL Heartbeat) are bundled together and a single heartbeat configuration is generated." tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Name of this device heartbeat configuration. The heartbeat data sources with the same name within the different types of heartbeat monitoring (Device Heartbeat, Service Heartbeat, Tracepath and URL Heartbeat) are bundled together and a single heartbeat configuration is generated."
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -106,7 +112,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Port
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="TCP Port on which data is sent to vuSmartMaps" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="TCP Port on which data is sent to vuSmartMaps"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -143,7 +155,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Run in Shipper
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Run the Heartbeat Agent in the Shipper or not?" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Run the Heartbeat Agent in the Shipper or not?"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            <div class="col-sm-6 col-md-6 align-down">
@@ -164,13 +182,19 @@
          <div class="form-group" ng-class="{'has-error':
             addDataSourceForm.standalone_shipper.$invalid &&
             !addDataSourceForm.standalone_shipper.$pristine}"
-            ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
+            ng-if="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
          
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Collector IP
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="IP Address of the standalone shipper,if configuring for main shipper add 127.0.0.1" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="IP Address of the standalone shipper,if configuring for main shipper add 127.0.0.1"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -182,7 +206,7 @@
                          name="standalone_shipper"
                          ng-options="standalone_shipper for
                          standalone_shipper in
-                         standalone_shipper_list">
+                         standalone_shipper_list" required>
                          </select>
                       
                     </div>
@@ -222,7 +246,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Interval
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Interval in seconds for each heartbeat" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Interval in seconds for each heartbeat" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  
@@ -255,7 +279,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Count
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Number of echo requests to send" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Number of echo requests to send" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  
@@ -288,7 +312,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Timeout
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Timeout for each ping packet in msec." tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Timeout for each ping packet in msec." tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  
@@ -321,7 +345,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Size
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Size of the packet [for 64bit m/c 20 bytes is the minimum size]" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Size of the packet [for 64bit m/c 20 bytes is the minimum size]" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  
@@ -354,7 +378,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Overall Timeout
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Overall Timeout for ping (in msec). If ping does not finishes within this time, we decalre the host unreachable" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Overall Timeout for ping (in msec). If ping does not finishes within this time, we decalre the host unreachable" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  
@@ -383,7 +407,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Device
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Device information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Device information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -416,10 +440,9 @@
                                                 
                                              
                                              <td>
-                                             <a href="">
-                                              <span class="data-source-target-action-delete"
-                                                  ng-click="delete_dh_device(row); addDataSourceForm.$setDirty(true);"><i class="fa fa-trash-o"></i></span>
-                                             </a>
+                                             <button class="data-source-button" ng-click="delete_dh_device(row); addDataSourceForm.$setDirty(true);">
+                                              <span class="data-source-target-action-delete"><i class="fa fa-trash-o"></i></span>
+                                             </button>
                                              </td>
                                            </tr>
                                            <tr ng-repeat="row in new_dh_device track by $index">
@@ -451,10 +474,9 @@
                                                 
                                              
                                              <td>
-                                             <a href="">
-                                              <span class="data-source-target-action-delete"
-                                                  ng-click="delete_new_dh_device(row); addDataSourceForm.$setDirty(true);"><i class="fa fa-trash-o"></i></span>
-                                             </a>
+                                             <button class="data-source-button" ng-click="delete_new_dh_device(row); addDataSourceForm.$setDirty(true);">
+                                              <span class="data-source-target-action-delete"><i class="fa fa-trash-o"></i></span>
+                                             </button>
                                              </td>
                                            </tr>
                                        </tbody>
@@ -538,17 +560,25 @@
                   <label>Data Received:</label>
              </div>
              <div class="col-sm-6 col-md-6 align-down">
-                    <a href='' ng-if="data_received == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == true"
+                     uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon add_data_source_data_received_icon_green"></i>
                         </span>
-                    </a>
-                    <a href='' ng-if="data_received == false" uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == false"
+                     uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon"></i>
                             <i class="fa fa-ban fa-stack-2x add_data_source_data_received_icon_red"></i>
                         </span>
-                    </a>
+                    </button>
              </div>
            </div>
        </div>  <!-- form group -->

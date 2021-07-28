@@ -58,7 +58,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Name
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Name of this Configuration Collector Data Source" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Name of this Configuration Collector Data Source"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -93,7 +99,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Target
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="IP Address of the device" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="IP Address of the device"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -131,7 +143,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Interval
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Scheduling interval to collect configuration from n/w device for standalone shipper" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Scheduling interval to collect configuration from n/w device for standalone shipper"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -167,7 +185,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Vendor
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Vendor of the device" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Vendor of the device"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            <div class="col-sm-6 col-md-6 align-down">
@@ -191,7 +215,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Device Model
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Device model of the device" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Device model of the device"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            <div class="col-sm-6 col-md-6 align-down">
@@ -215,7 +245,13 @@
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Credential
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Credential for this device" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Credential for this device"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -241,13 +277,19 @@
          <div class="form-group" ng-class="{'has-error':
             addDataSourceForm.standalone_shipper.$invalid &&
             !addDataSourceForm.standalone_shipper.$pristine}"
-            ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
+            ng-if="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
          
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Collector IP
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="IP Address of the standalone shipper,if configuring for main shipper add 127.0.0.1" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="IP Address of the standalone shipper,if configuring for main shipper add 127.0.0.1"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -259,7 +301,7 @@
                          name="standalone_shipper"
                          ng-options="standalone_shipper for
                          standalone_shipper in
-                         standalone_shipper_list">
+                         standalone_shipper_list" required>
                          </select>
                       
                     </div>
@@ -343,17 +385,25 @@
                   <label>Data Received:</label>
              </div>
              <div class="col-sm-6 col-md-6 align-down">
-                    <a href='' ng-if="data_received == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == true"
+                     uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon add_data_source_data_received_icon_green"></i>
                         </span>
-                    </a>
-                    <a href='' ng-if="data_received == false" uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == false"
+                     uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon"></i>
                             <i class="fa fa-ban fa-stack-2x add_data_source_data_received_icon_red"></i>
                         </span>
-                    </a>
+                    </button>
              </div>
            </div>
        </div>  <!-- form group -->

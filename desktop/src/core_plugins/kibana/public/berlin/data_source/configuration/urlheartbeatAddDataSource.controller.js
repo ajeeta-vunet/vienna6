@@ -51,9 +51,8 @@ class urlheartbeatAddDataSourceCtrl {
        
       
          $scope.run_in_shipper = $uibModalInstance.row.run_in_shipper;
-
-
-
+       
+      
          $scope.standalone_shipper = $uibModalInstance.row.standalone_shipper;
        
       $scope.uh_heartbeat = angular.copy($uibModalInstance.row.uh_heartbeat);
@@ -112,6 +111,7 @@ class urlheartbeatAddDataSourceCtrl {
            
         
        
+
       $scope.data_received = false;
       $scope.interval = 'minutes_15';
     }

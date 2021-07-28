@@ -18,7 +18,6 @@
  			 	
  			 	
                   
-                  
                         	
                         
                         	
@@ -43,6 +42,7 @@
                         
                      
                   
+                  
     		   
     		 
     	
@@ -50,7 +50,9 @@
         <table datatable="ng" class="table table-striped table-hover table-bordered table-width table-lightBorder">
             <thead>
     	<tr>
-	            <th rowspan="2">Name</th>
+	            
+                           <th rowspan="2">Name</th>
+                        
 		                    
                         
 		            
@@ -62,11 +64,15 @@
 		             	    <th rowspan="2">SSL</th>
 		                
 		            
-		        <th rowspan="2">Ssl-certificate</th>
+		        
+                           <th rowspan="2">Ssl-certificate</th>
+                        
 		                    
                         
 		            
-		        <th rowspan="2">Ssl-key</th>
+		        
+                           <th rowspan="2">Ssl-key</th>
+                        
 		                    
                         
 		            
@@ -83,7 +89,6 @@
 	            
 	            
 	            
-	                  
 	                  
 	                             <th>Interval
                                      
@@ -147,6 +152,7 @@
 	                        
 	                     
 	                  
+	                  
 	            	
 	            
             </tr>
@@ -155,7 +161,9 @@
             <tbody>
             <tr ng-repeat="row in data track by $index">
               
-	                 <td>{{row.name}} </td>
+	                 
+                              <td>{{row.name}} </td>
+                           
                         
                      
                    
@@ -170,18 +178,21 @@
                      
                    
               
-	                 <td>{{row.certificate}} </td>
+	                 
+                              <td>{{row.certificate}} </td>
+                           
                         
                      
                    
               
-	                 <td>{{row.key}} </td>
+	                 
+                              <td>{{row.key}} </td>
+                           
                         
                      
                    
               
                      
-                       
                        <td>
                                  
 	                               
@@ -255,13 +266,13 @@
                              <td>
                                  <div ng-repeat="int_row in row.healthbeat.processes track by $index">
                                    
+                                      
                                       {{int_row.process}}
                                                     
                                                  
                                                
                                             
                                          
-                                      
                                       
                                    
                                    </div>
@@ -270,41 +281,61 @@
                              
                           
                        
+                       
                      
                    
               
                 <td>
-                    <a href='' ng-if="data_receive_list[$index] == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row,
-                            data_receive_list[$index], true, false)">
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], true, false)"
+                     ng-if="data_receive_list[$index] == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database data-source-data-received-icon-green"></i>
                         </span>
-                    </a>
-                    <a href='' ng-if="data_receive_list[$index] == false" uib-tooltip="Data is not being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row,
-                            data_receive_list[$index], true, false)">
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], true, false)"
+                     ng-if="data_receive_list[$index] == false" uib-tooltip="Data is not being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database"></i>
                             <i class="fa fa-ban fa-stack-2x data-source-data-received-icon-red"></i>
                         </span>
-                    </a>
-                    <a href='' uib-tooltip="Configuration for this data source" tooltip-placement="bottom">
-                        <i ng-click="editConfig(row, data_receive_list[$index], false, true)" class="fa
-                            fa-file-text-o data-source-resource-icon"></i></a>
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], false, true)"
+                     uib-tooltip="Configuration for this data source" tooltip-placement="bottom">
+                        <i class="fa
+                            fa-file-text-o">
+                        </i>
+                    </button>
                 </td>
-                <td> <a href='' uib-tooltip="Edit data source"
-                        tooltip-placement="bottom"><i
-                            ng-click="editConfig(row, data_receive_list[$index], false, false)" title="Edit" class="fa fa-pencil-square-o"></i></a>
-                     <a href='' uib-tooltip="Delete data source"
-                         tooltip-placement="bottom"><i
-                             ng-click="deleteDataSourceConfig(row, $index)"
-                             title="Delete" class="fa
-                             fa-trash-o data-source-resource-icon"></i></a></td>
+                <td>
+                  <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], false, false)"
+                     uib-tooltip="Edit data source"
+                     tooltip-placement="bottom">
+                        <i title="Edit" class="fa fa-pencil-square-o"></i>
+                  </button>
+                  <button
+                     class="data-source-button"
+                     ng-click="deleteDataSourceConfig(row, $index)"
+                     uib-tooltip="Delete data source"
+                     tooltip-placement="bottom">
+                     <i
+                        title="Delete" class="fa
+                        fa-trash-o">
+                     </i>
+                  </button>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
   </div>
-
-  <vunet-modal show-modal="showHealthbeatModal" on-close="onHealthbeatModalClose" data="healthbeatModalData" on-submit="onHealthbeatModalSubmit">
+  <vunet-modal show-modal="showhealthbeatModal" on-close="onhealthbeatModalClose" data="healthbeatModalData" on-submit="onhealthbeatModalSubmit">
   </vunet-modal>
 </div>

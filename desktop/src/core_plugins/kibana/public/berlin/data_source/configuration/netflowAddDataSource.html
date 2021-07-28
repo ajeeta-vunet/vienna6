@@ -49,14 +49,22 @@
    
       
       
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.name.$invalid &&
-       !addDataSourceForm.name.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.name.$invalid &&
+            !addDataSourceForm.name.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Name
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Name of this Netflow" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Name of this Netflow"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -82,14 +90,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.port.$invalid &&
-       !addDataSourceForm.port.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.port.$invalid &&
+            !addDataSourceForm.port.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Port
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="TCP Port on which data is sent to vuSmartMaps" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="TCP Port on which data is sent to vuSmartMaps"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -98,7 +114,8 @@
                     <div class="col-sm-6 col-md-6 align-down">
                       
                          
-                            <input type="text"
+                            <input type="number"
+                            
                          
                          class="form-control"
                          ng-model="port"
@@ -116,14 +133,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.netflow_device.$invalid &&
-       !addDataSourceForm.netflow_device.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.netflow_device.$invalid &&
+            !addDataSourceForm.netflow_device.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Device
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="IP Address of the device" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="IP Address of the device"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -132,7 +157,9 @@
                     <div class="col-sm-6 col-md-6 align-down">
                       
                          
-                            <input type="text"
+                            
+                                <input type="text"
+                            
                          
                          class="form-control"
                          ng-model="netflow_device"
@@ -150,22 +177,33 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.netflow_version.$invalid &&
-       !addDataSourceForm.netflow_version.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.netflow_version.$invalid &&
+            !addDataSourceForm.netflow_version.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Version
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Netflow version enabled on the device" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Netflow version enabled on the device"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            <div class="col-sm-6 col-md-6 align-down">
-                <select class="form-control" ng-model="netflow_version" name="netflow_version" required>
+                <select class="form-control"
+                 ng-model="netflow_version"
+                 name="netflow_version" required>
                 <option value="v5">v5</option>
-                <option value="v9">v9</option>
-                <option value="v10">v10</option>
-                
+                   <option value="v9">v9</option>
+                   <option value="v10">v10</option>
+                   
+                 
                 </select>
              </div>
            
@@ -211,10 +249,10 @@
      <div class="modal-body">
          <div class="add_data_source_configuration_tab">
         <div class="form-group" ng-class="{'has-error': addDataSourceForm.vendor.$invalid && !addDataSourceForm.vendor.$pristine}">
-            <h4 class="add_data_source_dataReceived_text">
+            <h4 class="add_data_source_data_received_text">
              Verify if data has been received from this data source. Data from
              this data source will be indexed and ready for your use.</h4>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
              <div class="col-sm-3 col-md-3">
                   <label>Index Name:</label>
@@ -223,7 +261,7 @@
                  {{index}}
              </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
                <div class="col-sm-1 col-md-1"> </div>
                <div class="col-sm-3 col-md-3">
                  <label>Interval:</label>
@@ -240,23 +278,31 @@
                  <button class="btn btn-primary" ng-click="refreshDataSource()">Refresh</button>
                </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
-             <div class="col-sm-3 col-md-3 add_data_source_dataReceived_row_label">
+             <div class="col-sm-3 col-md-3 add_data_source_data_received_row_label">
                   <label>Data Received:</label>
              </div>
              <div class="col-sm-6 col-md-6 align-down">
-                    <a href='' ng-if="dataReceived" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon add_data_source_dataReceived_icon_green"></i>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == true"
+                     uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon add_data_source_data_received_icon_green"></i>
                         </span>
-                    </a>
-                    <a href='' ng-if="!dataReceived" uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon"></i>
-                            <i class="fa fa-ban fa-stack-2x add_data_source_dataReceived_icon_red"></i>
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == false"
+                     uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
+                        <span class="fa-stack">
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon"></i>
+                            <i class="fa fa-ban fa-stack-2x add_data_source_data_received_icon_red"></i>
                         </span>
-                    </a>
+                    </button>
              </div>
            </div>
        </div>  <!-- form group -->

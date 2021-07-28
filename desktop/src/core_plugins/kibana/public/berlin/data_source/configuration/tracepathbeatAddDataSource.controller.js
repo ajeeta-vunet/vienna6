@@ -209,6 +209,7 @@ class tracepathbeatAddDataSourceCtrl {
         
         $scope.data_obj.standalone_shipper = $scope.standalone_shipper;
         
+        
            
             $scope.data_obj.tp_tracepathbeat = {};
                  

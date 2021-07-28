@@ -25,27 +25,37 @@
     	
         	<tr>
             
-	              <th>Name</th>
+	              
+                           <th>Name</th>
+                        
                      
                   
                
             
-	              <th>Driver-Library</th>
+	              
+                           <th>Driver-Library</th>
+                        
                      
                   
                
             
-	              <th>Driver-Class</th>
+	              
+                           <th>Driver-Class</th>
+                        
                      
                   
                
             
-	              <th>Connection</th>
+	              
+                           <th>Connection</th>
+                        
                      
                   
                
             
-	              <th>User</th>
+	              
+                           <th>User</th>
+                        
                      
                   
                
@@ -54,12 +64,16 @@
                   
                
             
-	              <th>MetaDataPath</th>
+	              
+                           <th>MetaDataPath</th>
+                        
                      
                   
                
             
-	              <th>Schedule</th>
+	              
+                           <th>Schedule</th>
+                        
                      
                   
                
@@ -77,7 +91,9 @@
                   
                
             
-	              <th>AdditionalConfiguration</th>
+	              
+                           <th>AdditionalConfiguration</th>
+                        
                      
                   
                
@@ -90,27 +106,37 @@
             <tbody>
             <tr ng-repeat="row in data track by $index">
               
-	                 <td>{{row.name}} </td>
+	                 
+                              <td>{{row.name}} </td>
+                           
                         
                      
                    
               
-	                 <td>{{row.driverlibrary}} </td>
+	                 
+                              <td>{{row.driverlibrary}} </td>
+                           
                         
                      
                    
               
-	                 <td>{{row.jdbc_driverclass}} </td>
+	                 
+                              <td>{{row.jdbc_driverclass}} </td>
+                           
                         
                      
                    
               
-	                 <td>{{row.connection}} </td>
+	                 
+                              <td>{{row.connection}} </td>
+                           
                         
                      
                    
               
-	                 <td>{{row.user}} </td>
+	                 
+                              <td>{{row.user}} </td>
+                           
                         
                      
                    
@@ -119,12 +145,16 @@
                      
                    
               
-	                 <td>{{row.metaDataPath}} </td>
+	                 
+                              <td>{{row.metaDataPath}} </td>
+                           
                         
                      
                    
               
-	                 <td>{{row.jdbc_schedule}} </td>
+	                 
+                              <td>{{row.jdbc_schedule}} </td>
+                           
                         
                      
                    
@@ -144,43 +174,64 @@
                      
                    
               
-	                 <td>{{row.additionalconfiguration}} </td>
+	                 
+                              <td>{{row.additionalconfiguration}} </td>
+                           
                         
                      
                    
               
                 <td>
-                    <a href='' ng-if="data_receive_list[$index] == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row,
-                            data_receive_list[$index], true, false)">
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], true, false)"
+                     ng-if="data_receive_list[$index] == true" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database data-source-data-received-icon-green"></i>
                         </span>
-                    </a>
-                    <a href='' ng-if="data_receive_list[$index] == false" uib-tooltip="Data is not being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row,
-                            data_receive_list[$index], true, false)">
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], true, false)"
+                     ng-if="data_receive_list[$index] == false" uib-tooltip="Data is not being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
                             <i class="fa-stack-1x fa fa-database"></i>
                             <i class="fa fa-ban fa-stack-2x data-source-data-received-icon-red"></i>
                         </span>
-                    </a>
-                    <a href='' uib-tooltip="Configuration for this data source" tooltip-placement="bottom">
-                        <i ng-click="editConfig(row, data_receive_list[$index], false, true)" class="fa
-                            fa-file-text-o data-source-resource-icon"></i></a>
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], false, true)"
+                     uib-tooltip="Configuration for this data source" tooltip-placement="bottom">
+                        <i class="fa
+                            fa-file-text-o">
+                        </i>
+                    </button>
                 </td>
-                <td> <a href='' uib-tooltip="Edit data source"
-                        tooltip-placement="bottom"><i
-                            ng-click="editConfig(row, data_receive_list[$index], false, false)" title="Edit" class="fa fa-pencil-square-o"></i></a>
-                     <a href='' uib-tooltip="Delete data source"
-                         tooltip-placement="bottom"><i
-                             ng-click="deleteDataSourceConfig(row, $index)"
-                             title="Delete" class="fa
-                             fa-trash-o data-source-resource-icon"></i></a></td>
+                <td>
+                  <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, data_receive_list[$index], false, false)"
+                     uib-tooltip="Edit data source"
+                     tooltip-placement="bottom">
+                        <i title="Edit" class="fa fa-pencil-square-o"></i>
+                  </button>
+                  <button
+                     class="data-source-button"
+                     ng-click="deleteDataSourceConfig(row, $index)"
+                     uib-tooltip="Delete data source"
+                     tooltip-placement="bottom">
+                     <i
+                        title="Delete" class="fa
+                        fa-trash-o">
+                     </i>
+                  </button>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
   </div>
-  <vunet-modal show-modal="showJdbcModal" on-close="onJdbcModalClose" data="jdbcModalData" on-submit="onJdbcModalSubmit">
+  <vunet-modal show-modal="showjdbcModal" on-close="onjdbcModalClose" data="jdbcModalData" on-submit="onjdbcModalSubmit">
   </vunet-modal>
-
 </div>

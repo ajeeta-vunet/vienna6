@@ -62,14 +62,22 @@
    
       
       
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.name.$invalid &&
-       !addDataSourceForm.name.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.name.$invalid &&
+            !addDataSourceForm.name.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Name
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Name of this healthbeat configuration" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Name of this healthbeat configuration"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -95,14 +103,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.port.$invalid &&
-       !addDataSourceForm.port.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.port.$invalid &&
+            !addDataSourceForm.port.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Port
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="TCP Port on which data is sent to vuSmartMaps" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="TCP Port on which data is sent to vuSmartMaps"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -111,7 +127,8 @@
                     <div class="col-sm-6 col-md-6 align-down">
                       
                          
-                            <input type="text"
+                            <input type="number"
+                            
                          
                          class="form-control"
                          ng-model="port"
@@ -129,21 +146,32 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.ssl.$invalid &&
-       !addDataSourceForm.ssl.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.ssl.$invalid &&
+            !addDataSourceForm.ssl.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">SSL
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Enable SSL" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Enable SSL"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            <div class="col-sm-6 col-md-6 align-down">
-                <select class="form-control" ng-model="ssl" name="ssl" required>
+                <select class="form-control"
+                 ng-model="ssl"
+                 name="ssl" required>
                 <option value="No">No</option>
-                <option value="Yes">Yes</option>
-                
+                   <option value="Yes">Yes</option>
+                   
+                 
                 </select>
              </div>
            
@@ -151,14 +179,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.certificate.$invalid &&
-       !addDataSourceForm.certificate.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.certificate.$invalid &&
+            !addDataSourceForm.certificate.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Ssl-certificate
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Ssl-certificate" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Ssl-certificate"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -185,14 +221,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.key.$invalid &&
-       !addDataSourceForm.key.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.key.$invalid &&
+            !addDataSourceForm.key.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Ssl-key
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Ssl-key" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Ssl-key"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -242,7 +286,6 @@
             
             
             
-                  
           <div class="form-group" ng-class="{'has-error':
                  addDataSourceForm.healthbeathb_interval.$invalid &&
                  !addDataSourceForm.healthbeathb_interval.$pristine}">
@@ -250,13 +293,15 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Interval
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Interval in seconds for each healthbeat" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Interval in seconds for each healthbeat" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  
                                  <div class="col-sm-6 col-md-6">
                                    
-                                      <input type="text"
+                                      
+                                          <input type="text"
+                                      
                                     
                                     <input type="text" class="form-control"
                                     ng-model="healthbeat.hb_interval"
@@ -281,7 +326,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Cpu
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of cpu information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of cpu information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -305,7 +350,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Core
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of Core information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of Core information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -329,7 +374,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">DiskIO
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of diskIO information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of diskIO information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -353,7 +398,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">File-system
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of File System information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of File System information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -377,7 +422,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Fsstat
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of Fsstat information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of Fsstat information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -401,7 +446,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Memory
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of memory information " tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of memory information " tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -425,7 +470,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Network
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of Network information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of Network information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -449,7 +494,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Process
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of Process information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of Process information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -473,7 +518,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Process-summary
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="Enable collection of process_summary information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="Enable collection of process_summary information" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -493,7 +538,7 @@
                                  <div class="col-sm-3 col-md-3">
                                        <label class="control-label data_source_configuration_attribute_name">Processes
                                           <span class="data-source-field-tooltip">
-                                          <a href="" uib-tooltip="List of processes. To monitor multiple processes, use regular expressions like .*" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+                                          <button class="data-source-button" uib-tooltip="List of processes. To monitor multiple processes, use regular expressions like .*" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></button><span>
                                        </label>
                                  </div>
                                  <div class="col-sm-6 col-md-6 align-down">
@@ -501,12 +546,12 @@
                                        <thead>
                                            <tr>
                                              
+                                                
                                                 <th>
                                                             Process
                                                             </th>
                                                       
                                                    
-                                                
                                                 
                                              
                                              <th>
@@ -517,23 +562,23 @@
                                        <tbody>
                                           <tr ng-repeat="row in healthbeat.processes track by $index">
                                              
+                                                
                                                 <td>
                                                          {{row.process}}
                                                       </td>
                                                       
                                                    
                                                 
-                                                
                                              
                                              <td>
-                                             <a href="">
-                                              <span class="data-source-target-action-delete"
-                                                  ng-click="delete_processes(row); addDataSourceForm.$setDirty(true);"><i class="fa fa-trash-o"></i></span>
-                                             </a>
+                                             <button class="data-source-button" ng-click="delete_processes(row); addDataSourceForm.$setDirty(true);">
+                                              <span class="data-source-target-action-delete"><i class="fa fa-trash-o"></i></span>
+                                             </button>
                                              </td>
                                            </tr>
                                            <tr ng-repeat="row in new_processes track by $index">
                                              
+                                                
                                                 <td>
                                              <div
                                              ng-form="processesFormprocess"
@@ -558,13 +603,11 @@
                                                       
                                                    
                                                 
-                                                
                                              
                                              <td>
-                                             <a href="">
-                                              <span class="data-source-target-action-delete"
-                                                  ng-click="delete_new_processes(row); addDataSourceForm.$setDirty(true);"><i class="fa fa-trash-o"></i></span>
-                                             </a>
+                                             <button class="data-source-button" ng-click="delete_new_processes(row); addDataSourceForm.$setDirty(true);">
+                                              <span class="data-source-target-action-delete"><i class="fa fa-trash-o"></i></span>
+                                             </button>
                                              </td>
                                            </tr>
                                        </tbody>
@@ -578,6 +621,7 @@
                            
                         
                      
+                  
                   
                
             
@@ -612,10 +656,10 @@
      <div class="modal-body">
          <div class="add_data_source_configuration_tab">
         <div class="form-group" ng-class="{'has-error': addDataSourceForm.vendor.$invalid && !addDataSourceForm.vendor.$pristine}">
-            <h4 class="add_data_source_dataReceived_text">
+            <h4 class="add_data_source_data_received_text">
              Verify if data has been received from this data source. Data from
              this data source will be indexed and ready for your use.</h4>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
              <div class="col-sm-3 col-md-3">
                   <label>Index Name:</label>
@@ -624,7 +668,7 @@
                  {{index}}
              </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
                <div class="col-sm-1 col-md-1"> </div>
                <div class="col-sm-3 col-md-3">
                  <label>Interval:</label>
@@ -641,23 +685,31 @@
                  <button class="btn btn-primary" ng-click="refreshDataSource()">Refresh</button>
                </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
-             <div class="col-sm-3 col-md-3 add_data_source_dataReceived_row_label">
+             <div class="col-sm-3 col-md-3 add_data_source_data_received_row_label">
                   <label>Data Received:</label>
              </div>
              <div class="col-sm-6 col-md-6 align-down">
-                    <a href='' ng-if="dataReceived" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon add_data_source_dataReceived_icon_green"></i>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == true"
+                     uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon add_data_source_data_received_icon_green"></i>
                         </span>
-                    </a>
-                    <a href='' ng-if="!dataReceived" uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon"></i>
-                            <i class="fa fa-ban fa-stack-2x add_data_source_dataReceived_icon_red"></i>
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == false"
+                     uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
+                        <span class="fa-stack">
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon"></i>
+                            <i class="fa fa-ban fa-stack-2x add_data_source_data_received_icon_red"></i>
                         </span>
-                    </a>
+                    </button>
              </div>
            </div>
        </div>  <!-- form group -->

@@ -49,14 +49,22 @@
    
       
       
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.name.$invalid &&
-       !addDataSourceForm.name.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.name.$invalid &&
+            !addDataSourceForm.name.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Name
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Name for this jdbc input config" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Name for this jdbc input config"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -82,14 +90,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.driverlibrary.$invalid &&
-       !addDataSourceForm.driverlibrary.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.driverlibrary.$invalid &&
+            !addDataSourceForm.driverlibrary.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Driver-Library
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Filesystem path of the jdbc driver jar file.(ex: /opt/ojdbc-11.1.0.jar) " tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Filesystem path of the jdbc driver jar file.(ex: /opt/ojdbc-11.1.0.jar) "
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -117,14 +133,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.jdbc_driverclass.$invalid &&
-       !addDataSourceForm.jdbc_driverclass.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.jdbc_driverclass.$invalid &&
+            !addDataSourceForm.jdbc_driverclass.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Driver-Class
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Java Class string for this jdbc driver ex: (Java::oracle.jdbc.driver.OracleDriver)" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Java Class string for this jdbc driver ex: (Java::oracle.jdbc.driver.OracleDriver)"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -152,14 +176,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.connection.$invalid &&
-       !addDataSourceForm.connection.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.connection.$invalid &&
+            !addDataSourceForm.connection.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Connection
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="jdbc connection string to connect to the db ex: (jdbc:oracle:thin:@192.168.1.1:1521/mydb1)" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="jdbc connection string to connect to the db ex: (jdbc:oracle:thin:@192.168.1.1:1521/mydb1)"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -187,14 +219,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.user.$invalid &&
-       !addDataSourceForm.user.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.user.$invalid &&
+            !addDataSourceForm.user.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">User
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Jdbc user name" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Jdbc user name"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -222,14 +262,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.password.$invalid &&
-       !addDataSourceForm.password.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.password.$invalid &&
+            !addDataSourceForm.password.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Password
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Jdbc password" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Jdbc password"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -256,14 +304,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.metaDataPath.$invalid &&
-       !addDataSourceForm.metaDataPath.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.metaDataPath.$invalid &&
+            !addDataSourceForm.metaDataPath.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">MetaDataPath
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Filename where the last run timestamp is stored. The file will be created in /tmp " tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Filename where the last run timestamp is stored. The file will be created in /tmp "
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -291,14 +347,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.jdbc_schedule.$invalid &&
-       !addDataSourceForm.jdbc_schedule.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.jdbc_schedule.$invalid &&
+            !addDataSourceForm.jdbc_schedule.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Schedule
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Time schedule in cron format to specify the frequency at which configured SQLs are run(ex: */5 * * * * for every 5 minutes) " tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Time schedule in cron format to specify the frequency at which configured SQLs are run(ex: */5 * * * * for every 5 minutes) "
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -326,14 +390,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.query.$invalid &&
-       !addDataSourceForm.query.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.query.$invalid &&
+            !addDataSourceForm.query.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">Query
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="List of files containing SQL statements and their corresponding doc type with which the results will be indexed to elasticsearch" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="List of files containing SQL statements and their corresponding doc type with which the results will be indexed to elasticsearch"
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -366,7 +438,14 @@
                          </td>
                          
                          <td>
-                         <a href=""><span class="data-source-target-action-delete" ng-click="delete_query(row); addDataSourceForm.$setDirty(true);"><i class="fa fa-trash-o"></i></span></a> 
+                         <button
+                           class="data-source-button"
+                           ng-click="delete_query(row); addDataSourceForm.$setDirty(true);"
+                         >
+                           <span class="data-source-target-action-delete" >
+                              <i class="fa fa-trash-o"></i>
+                           </span>
+                         </button> 
                          </td>
                          </tr>
                          <tr ng-repeat="row in new_query track by $index">
@@ -410,9 +489,14 @@
                            </td>
                          
                          <td>
-                         <a href=""><span
-                         class="data-source-target-action-delete"
-                         ng-click="delete_new_query(row); addDataSourceForm.$setDirty(true);"><i class="fa fa-trash-o"></i></span></a>
+                         <button
+                           class="data-source-button"
+                           ng-click="delete_new_query(row); addDataSourceForm.$setDirty(true);"
+                         >
+                           <span class="data-source-target-action-delete">
+                              <i class="fa fa-trash-o"></i>
+                           </span>
+                         </button>
                          </td>
                          </tr>
                          </tbody>
@@ -429,14 +513,22 @@
        </div>
         
        
-       <div class="form-group" ng-class="{'has-error':
-       addDataSourceForm.additionalconfiguration.$invalid &&
-       !addDataSourceForm.additionalconfiguration.$pristine}">
+         
+            <div class="form-group" ng-class="{'has-error':
+            addDataSourceForm.additionalconfiguration.$invalid &&
+            !addDataSourceForm.additionalconfiguration.$pristine}">
+         
          <div class="row">
            <div class="col-sm-3 col-md-3">
              <label class="control-label data_source_configuration_attribute_name">AdditionalConfiguration
              <span class="data-source-field-tooltip">
-             <a href="" uib-tooltip="Add optional configurations here for adding new fields or setting input codec or setting custom document id. For ex. add_field => {newfield => newvalue } " tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a><span>
+               <button
+                  class="data-source-button"
+                  uib-tooltip="Add optional configurations here for adding new fields or setting input codec or setting custom document id. For ex. add_field => {newfield => newvalue } "
+                  tooltip-placement="bottom">
+                     <i class="fa fa-question-circle"></i>
+               </button>
+               <span>
              </label>
            </div>
            
@@ -501,10 +593,10 @@
      <div class="modal-body">
          <div class="add_data_source_configuration_tab">
         <div class="form-group" ng-class="{'has-error': addDataSourceForm.vendor.$invalid && !addDataSourceForm.vendor.$pristine}">
-            <h4 class="add_data_source_dataReceived_text">
+            <h4 class="add_data_source_data_received_text">
              Verify if data has been received from this data source. Data from
              this data source will be indexed and ready for your use.</h4>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
              <div class="col-sm-3 col-md-3">
                   <label>Index Name:</label>
@@ -513,7 +605,7 @@
                  {{index}}
              </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
                <div class="col-sm-1 col-md-1"> </div>
                <div class="col-sm-3 col-md-3">
                  <label>Interval:</label>
@@ -530,23 +622,31 @@
                  <button class="btn btn-primary" ng-click="refreshDataSource()">Refresh</button>
                </div>
            </div>
-           <div class="row add_data_source_dataReceived_row">
+           <div class="row add_data_source_data_received_row">
              <div class="col-sm-1 col-md-1"> </div>
-             <div class="col-sm-3 col-md-3 add_data_source_dataReceived_row_label">
+             <div class="col-sm-3 col-md-3 add_data_source_data_received_row_label">
                   <label>Data Received:</label>
              </div>
              <div class="col-sm-6 col-md-6 align-down">
-                    <a href='' ng-if="dataReceived" uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon add_data_source_dataReceived_icon_green"></i>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == true"
+                     uib-tooltip="Data is being received from this data source" tooltip-placement="bottom">
+                        <span class="fa-stack">
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon add_data_source_data_received_icon_green"></i>
                         </span>
-                    </a>
-                    <a href='' ng-if="!dataReceived" uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
-                        <span class="fa-stack" ng-click="editConfig(row, true, false)">
-                            <i class="fa-stack-1x fa fa-database add_data_source_dataReceived_icon"></i>
-                            <i class="fa fa-ban fa-stack-2x add_data_source_dataReceived_icon_red"></i>
+                    </button>
+                    <button
+                     class="data-source-button"
+                     ng-click="editConfig(row, true, false)"
+                     ng-if="data_received == false"
+                     uib-tooltip="Data has not been received from this data source in last 15 minutes" tooltip-placement="bottom">
+                        <span class="fa-stack">
+                            <i class="fa-stack-1x fa fa-database add_data_source_data_received_icon"></i>
+                            <i class="fa fa-ban fa-stack-2x add_data_source_data_received_icon_red"></i>
                         </span>
-                    </a>
+                    </button>
              </div>
            </div>
        </div>  <!-- form group -->

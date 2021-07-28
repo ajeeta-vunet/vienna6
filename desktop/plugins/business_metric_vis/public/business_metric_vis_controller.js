@@ -769,7 +769,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
         let value;
         let formattedValue;
         let color;
-        angular.forEach(metricList, function (metricObj) {
+        angular.forEach(metricList, function (metricObj, metricIndex) {
           //for (let index = 0; index < metricList.length; index++) {
           const label = metricObj.label;
           if (metric.label === label) {
@@ -788,7 +788,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
             // Add historic Data
             if (metric.hasOwnProperty('historicalData')) {
               angular.forEach(metric.historicalData, function (hist, index) {
-                const histColor = $scope.setTrendColor(hist.icon, metricList[index].upTrendColor);
+                const histColor = $scope.setTrendColor(hist.icon, metricList[metricIndex].upTrendColor);
                 row[columnName + colIndex] = {
                   value: hist.value,
                   formattedValue: hist.formattedValue,
@@ -813,7 +813,7 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
       const updateHistoricalDataForMatrix = function (key, list) {
         if (key.metric.hasOwnProperty('historicalData')) {
           angular.forEach(key.metric.historicalData, function (hist) {
-            list[key.key][key.metric.label][hist.label] = {
+            list[key.metric.label][hist.label] = {
               value: hist.formattedValue, color: hist.color,
               icon: hist.icon,
               percentageChange: hist.percentageChange

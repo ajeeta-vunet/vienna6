@@ -92,8 +92,13 @@ kibana.factory('responseInterceptor', ($rootScope) => {
         notify.error(config.statusText || 'Access denied!');
       } else if (config.status === 500) {
         // Server Error
+
+        // Use error string if available else use statusText.
+        // If both are not availabe, display 'Internal Server Error'.
+        const errorMessage = config.data && config.data['error-string'] !== '' ?
+          config.data['error-string'] : config.statusText;
         const notify = new Notifier();
-        notify.error(config.statusText);
+        notify.error(errorMessage || 'Internal Server Error');
       }
       return Promise.reject(config);
     }

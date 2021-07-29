@@ -84,7 +84,7 @@ class LoginFormInternal extends React.Component<LoginFormProps, LoginFormState> 
       (captcha) => {
         this.setState({
           captchaKey: captcha.key,
-          captchaImage: captcha.image_url,
+          captchaImage: captcha.image_url.slice(0,captcha.image_url.length-1)+ "@2/",
         });
         this.refreshed$.next();
       },
@@ -163,13 +163,13 @@ class LoginFormInternal extends React.Component<LoginFormProps, LoginFormState> 
                 Type the characters you see in this image
               </Label>
               <Row className="py-2">
-                <Col className="col-auto">
-                  <img src={this.state.captchaImage} alt="Captcha challenge" />
+                <Col className="col-auto col-xl-6 col-sm-10 ml-xs-3 ml-sm-0">
+                  <img src={this.state.captchaImage} className="captchaImage" alt="Captcha challenge" />
                 </Col>
-                <Col className="col-auto px-0 refresh-btn">
+                <Col className="col-auto px-0 refresh-btn ml-xs-3 ml-sm-0">
                   <FontAwesomeIcon title="Refresh Captcha" icon={faRedo} size="2x" onClick={this.refreshCaptcha} />
                 </Col>
-                <Col>
+                <Col className="captchaSolutionContainer col-xs-12 col-sm-12 col-xl-5">
                   <Input
                     type="text"
                     name="captchaSolution"

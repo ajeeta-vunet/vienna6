@@ -74,6 +74,15 @@ $screen-md: 768px;
               font-weight: bold;
               text-transform: uppercase;
             }
+          .captchaImage {
+              width:100%;
+
+          }
+          .captchaSolutionContainer{
+            display:flex;
+            align-items: center;
+            padding: 1rem;
+          }
           }
             .login-btn{
               width: 33%;

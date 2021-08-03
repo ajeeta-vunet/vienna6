@@ -26,7 +26,7 @@ import { logUserOperation } from 'plugins/kibana/log_user_operation';
 import { migrateLegacyQuery } from 'ui/utils/migrateLegacyQuery';
 import { updateVunetObjectOperation } from 'ui/utils/vunet_object_operation';
 import { getTenantEmailGroups } from 'ui/utils/vunet_tenant_email_groups';
-import { getValueToStoreInKibana } from 'ui/utils/kibana_object.js';
+import { getValueToStoreInKibana, getSavedObject } from 'ui/utils/kibana_object.js';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
 
 require('ui/directives/searchable_multiselect.js');
@@ -118,7 +118,7 @@ uiModules
   });
 
 function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Private, $http, AppState, courier,
-  timefilter, kbnUrl, config, $rootScope) {
+  timefilter, kbnUrl, config, $rootScope, StateService) {
 
   const filterBar = Private(FilterBarQueryFilterProvider);
 
@@ -131,6 +131,18 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   $scope.cronConfig = {
     allowMultiple: true
   };
+
+  $scope.reportFormats = ['pdf', 'csv'];
+
+  // Fetch all the dashbords for the logged in user and
+  // populate in the dashboard link list
+  Promise.resolve(getSavedObject('dashboard', ['title', 'allowedRolesJSON'], 10000, Private))
+    .then(function (response) {
+      $scope.dashboardList = response;
+      // If the user doesn't want to use the dashboard link in the report then
+      // they can choose None.
+      $scope.dashboardList.unshift({ id: 'None', title: 'None', allowedRolesJSON: [] });
+    });
 
   // Initialization of the height for report page conatiner. Set timeout has been used so the the topbar is formed before the caculations
   setTimeout(function () {
@@ -163,6 +175,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // in report scheduling
   $scope.cronObj = {};
   $scope.enable_scheduling = false;
+  $scope.disalbeReportFormat = false;
   $scope.recipientsList = [];
 
   // Is scheduling enabled... Used by time restore during report save
@@ -189,6 +202,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   const reportEmailBody = reportcfg.reportEmailBody;
   $scope.opts = { reportEmailBody: reportEmailBody };
+  const reportFormat = reportcfg.reportFormat;
+  const reportDashboardLink = reportcfg.reportDashboardLink;
   // Load the recipients information in the UI.
   $scope.recipientsData = [];
 
@@ -249,7 +264,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
       // Display only those user groups with ViewObject permissions
       // All ManageObject user roles will also have Viewobject permissions in them.
-      $scope.userGroups = data.user_groups.filter(role => role.permissions.indexOf('ViewObject')>=0)
+      $scope.userGroups = data.user_groups.filter(role => role.permissions.indexOf('ViewObject') >= 0);
     }).catch(function () {
       $scope.userGroups = [];
       notify.error('Failed to find user roles');
@@ -542,6 +557,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // adds an empty section into list of sections
   $scope.addSection = function () {
     $scope.sections.push({ id: '', description: '', visuals: [] });
+    showReportFormat();
     $scope.refresh();
   };
 
@@ -549,6 +565,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // Everything about the section is lost..
   $scope.removeSection = function (section) {
     $scope.sections = _.without($scope.sections, section);
+    showReportFormat();
   };
 
   // This function is called when a user clicks on add visualization.
@@ -571,6 +588,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // a section.
   $scope.removeVisFromSection = function (section, vis) {
     section.visuals = _.without(section.visuals, vis);
+    showReportFormat();
   };
 
   // This function is called when a user clicks on UP arrow icon to move
@@ -680,63 +698,73 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // This function is called to print a report. Backend returns the pdf report
   $scope.downloadReport = function () {
 
-    $scope.kbnTopNav.close('download');
-    $scope.reportDate = new Date();
-    let url = reportcfg.id;
-    // Check whether any dashboard is added to the report.
-    // Send this argument to phantomjs. Because based on this argument, we are
-    // calculating the waiting time and page size for the dashboard.
-    $scope.isDashboardUsed = 'false';
-    $scope.sections.forEach(function (sec) {
-      sec.visuals.forEach(function (vis) {
-        if (vis.visType === 'dashboard') {
-          $scope.isDashboardUsed = 'true';
-          return;
-        }
-      })
-    });
-
-
-    // Get query parameters for downloading report.
-    const queryParams = getQueryParamsForReportUrl();
-
-    // Create the url using the time from timefilter selected
-    //url = url + '?_g=(time:(from:' + timefilter.time.from + ',mode:' + timefilter.time.mode + ',to:' + timefilter.time.to + '))';
-    url = url + queryParams;
-
-    // Get current user
-    const currentUser = chrome.getCurrentUser();
-    const tenantBu = chrome.getTenantBu();
-    const searchString = chrome.getSearchString();
-
-    const httpResult = $http({
-      method: 'POST',
-      url: '/vienna_print_report/',
-      data: {
-        reportName: url,
-        timeDuration: timeDurationHours,
-        username: currentUser[0],
-        userRole: currentUser[1],
-        permissions: currentUser[2],
-        tenantId: tenantBu[0],
-        buId: tenantBu[1],
-        shipperUrl: $scope.shipperAddress,
-        searchString: searchString,
-        isDashboardUsed: $scope.isDashboardUsed
-      },
-      responseType: 'blob'
-    })
-      .then(resp => resp.data)
-      .catch(resp => { throw resp.data; });
-
-    httpResult
-      .then(function (resp) {
-        const blob = new Blob([resp], { type: 'application/pdf' });
-        const fileName = reportcfg.title + '.pdf';
-        saveAs(blob, fileName);
-      }).catch(function () {
-        notify.error('Unable to print the report');
+    if ($scope.opts.reportFormat === 'csv') {
+      const queryParams = getQueryParamsForReportUrl();
+      const data = { 'url_query': queryParams };
+      StateService.downloadCSVReport(reportcfg.id, 'download', data)
+        .then (function () {
+        })
+        .catch(function () {
+          notify.error('Unable to download the csv report');
+        });
+    }
+    else if ($scope.opts.reportFormat === 'pdf') {
+      $scope.kbnTopNav.close('download');
+      $scope.reportDate = new Date();
+      let url = reportcfg.id;
+      // Check whether any dashboard is added to the report.
+      // Send this argument to phantomjs. Because based on this argument, we are
+      // calculating the waiting time and page size for the dashboard.
+      $scope.isDashboardUsed = 'false';
+      $scope.sections.forEach(function (sec) {
+        sec.visuals.forEach(function (vis) {
+          if (vis.visType === 'dashboard') {
+            $scope.isDashboardUsed = 'true';
+            return;
+          }
+        });
       });
+
+
+      // Get query parameters for downloading report.
+      const queryParams = getQueryParamsForReportUrl();
+
+      url = url + queryParams;
+
+      // Get current user
+      const currentUser = chrome.getCurrentUser();
+      const tenantBu = chrome.getTenantBu();
+      const searchString = chrome.getSearchString();
+
+      const httpResult = $http({
+        method: 'POST',
+        url: '/vienna_print_report/',
+        data: {
+          reportName: url,
+          timeDuration: timeDurationHours,
+          username: currentUser[0],
+          userRole: currentUser[1],
+          permissions: currentUser[2],
+          tenantId: tenantBu[0],
+          buId: tenantBu[1],
+          shipperUrl: $scope.shipperAddress,
+          searchString: searchString,
+          isDashboardUsed: $scope.isDashboardUsed
+        },
+        responseType: 'blob'
+      })
+        .then(resp => resp.data)
+        .catch(resp => { throw resp.data; });
+
+      httpResult
+        .then(function (resp) {
+          const blob = new Blob([resp], { type: 'application/pdf' });
+          const fileName = reportcfg.title + '.pdf';
+          saveAs(blob, fileName);
+        }).catch(function () {
+          notify.error('Unable to print the report');
+        });
+    }
   };
 
   function saveReport(reportcfg) {
@@ -777,6 +805,8 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     reportcfg.company_name = $scope.company_name;
     reportcfg.scheduleFrequency = $scope.cronObj.value;
     reportcfg.reportEmailBody = $scope.opts.reportEmailBody;
+    reportcfg.reportFormat = $scope.opts.reportFormat;
+    reportcfg.reportDashboardLink = $scope.opts.reportDashboardLink;
     // Take a copy of recipientslist and assign to a new variable.
     // In the report object, save only the name of the email groups
     // with comma separated string not in dictionary format.
@@ -859,16 +889,36 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // called by the saved-object-finder when a user clicks a vis
   $scope.addVis = function (hit) {
     $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: hit.type.name, type: 'visualization' });
+    showReportFormat();
   };
 
   // called by the saved-object-finder when a user clicks a dashboard
   $scope.addDashboard = function (hit) {
     $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: 'dashboard', type: 'dashboard' });
+    showReportFormat();
   };
+
+  // Show report formats based on the vis type added to the section.
+  function showReportFormat() {
+    $scope.disalbeReportFormat = false;
+    $scope.sections.forEach(function (sec) {
+      sec.visuals.forEach(function (vis) {
+        // if more than 1 section is addded or more than 1 viz is added or
+        // the viz is not data table or search then show only pdf format.
+        if ($scope.sections.length > 1 || sec.visuals.length > 1 || (vis.visType !== 'table' && vis.visType !== 'search')) {
+          //$scope.reportFormats = ['pdf'];
+          $scope.disalbeReportFormat = true;
+          $scope.opts.reportFormat = 'pdf';
+          return;
+        }
+      });
+    });
+  }
 
   // called by the saved-object-finder when a user clicks a vis
   $scope.addSearch = function (hit) {
     $scope.cur_section.visuals.push({ id: hit.id, title: hit.title, visType: 'search', type: 'search' });
+    showReportFormat();
   };
 
   // Function called when the search query is added in search bar in the UI
@@ -888,7 +938,9 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     addDashboard: $scope.addDashboard,
     addSearch: $scope.addSearch,
     owner: $scope.owner,
-    reportEmailBody: reportEmailBody
+    reportEmailBody: reportEmailBody,
+    reportFormat: reportFormat,
+    reportDashboardLink: reportDashboardLink
   };
 
   // Adds selected email group to the list
@@ -906,6 +958,6 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
     // index is the index of the selected item in the selectEmailGroupList
     $scope.recipientsList[itemIndex].selectEmailGroupList.splice(index, 1);
   };
-
+  showReportFormat();
   init();
 }

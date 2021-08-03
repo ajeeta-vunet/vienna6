@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { AppShellStore } from '../store';
 import { AuthState } from '@vu/store';
 import { LoginUrl } from '../config';
-
+import _ from 'lodash';
 /**
  * Will render the default page
  * when any route is not matched
@@ -38,6 +38,15 @@ export const NotfoundInternal = (props: { auth: AuthState; isMobile: boolean }) 
   if (window.location !== window.parent.location) {
     setTimeout(window.parent.window.location.reload, 2000);
   }
+  // If user lands in the not found page means user is trying to
+  // log in to vuSmartMaps from external link or access pages directly
+  // other than login
+  // So check whether return_url key already exists in the local storage
+  // If exists, remove that first.
+  if (_.has(window.localStorage, 'return_url')) {
+    window.localStorage.removeItem('return_url');
+  }
+  window.localStorage.setItem('return_url', window.location.hash);
   const {
     auth: { isAuthenticated },
     isMobile,

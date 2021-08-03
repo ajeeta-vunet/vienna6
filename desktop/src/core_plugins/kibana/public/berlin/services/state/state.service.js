@@ -119,6 +119,11 @@ class StateService {
     );
   }
 
+  // Download report in csv format
+  downloadCSVReport(reportID, action, data) {
+    return this._DataService.downloadCSVReport(reportID, action, data);
+  }
+
   getNetworkMapContent() {
     return this._DataService.getNetworkMapContent(this._currentState.snapshot);
   }

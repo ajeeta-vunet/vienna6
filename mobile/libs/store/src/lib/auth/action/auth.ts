@@ -72,6 +72,10 @@ export function LoginUser({ name, password, captchaKey, captchaSolution }: Login
       .subscribe(
         (_) => {
           if (!isMobile()) {
+            // Check whether return_url exists in the local storage.
+            // This key exists in the local storage if user comes from
+            // external link or accessing vuSmartMaps without login.
+            const return_url = window.localStorage.getItem('return_url')
             window.localStorage.clear();
             UserSettingStore.UserName = name;
             // If the url has the next parameter, we should redirect to url
@@ -79,6 +83,11 @@ export function LoginUser({ name, password, captchaKey, captchaSolution }: Login
             const params = new URLSearchParams(window.location.search);
             if(window.location.search.indexOf('next') > -1) {
               window.location.href = window.location.origin + params.get('next');
+            }
+            // If return_url exists then redirect the user to the corresponding
+            // page after successful authentication.
+            else if (return_url !== null) {
+              window.location.href = window.location.origin + '/app/vienna' + return_url;
             }
             else {
               window.location.href = window.location.origin + '/app/vienna';

@@ -856,7 +856,6 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
                 rowExists = true;
               }
             });
-
             // If the bucket already exists then add the new metric to the existing bucket
             // rather than duplicating the bucket.
             if (rowExists) {
@@ -1234,7 +1233,6 @@ module.controller('BusinessMetricVisController', function ($scope, Private,
                 }
               }
               $scope.columnMeta.push(refLink);
-
               // Go though historical data and get show/hide, bg color, historical data
               // and add to the column data array
               angular.forEach($scope.vis.params.historicalData, function (hist) {

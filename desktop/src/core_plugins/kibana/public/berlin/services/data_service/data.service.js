@@ -401,6 +401,12 @@ class DataService {
     return this._getFileRequest(url, 'getting the' + attributeDataExportType + 'file of ' + attributeName, { responseType: 'blob' });
   }
 
+  // Download report in csv format
+  downloadCSVReport(reportID, action, data) {
+    const url = this.urlBase + '/reports/' + reportID + '/?action=' + action;
+    return this._postFileRequest(url, data, 'downloading the csv file', { responseType: 'blob' }, '');
+  }
+
   getNetworkMapContent(snapshot) {
     return this._fetchSnapshot(snapshot)
       .then(_.bind(this._pluckNetworkMapContent, this));

@@ -493,6 +493,60 @@
             </p>
           </div>
         </div>
+        <h4 class="step-title">
+          <span class="step-indicator">4</span>
+          Additional Configuration
+        </h4>
+        <div class="report-section">
+          <div class="row">
+            <div class="col-md-1">
+              <p class="report-component-label report-element-inline">
+                Report Format
+                <kbn-tooltip
+                  text="Select the report format"
+                  placement="right"
+                  tooltip-append-to-body="1">
+                  <span>
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                  </span>
+                </kbn-tooltip>
+              </p>
+            </div>
+            <div class="col-md-10">
+              <select
+                class="report-format"
+                name="reportFormat"
+                ng-options="format for format in reportFormats"
+                ng-model="opts.reportFormat"
+                ng-disabled="disableReportFormat"
+                required>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-1">
+              <p class="report-component-label">
+                Dashboard Link
+                <kbn-tooltip
+                  text="Select the dashboard which will be printed in the report email body"
+                  placement="right"
+                  tooltip-append-to-body="1">
+                  <span>
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                  </span>
+                </kbn-tooltip>
+              </p>
+            </div>
+            <div class="col-md-10">
+              <select
+                name="dashboard"
+                ng-model="opts.reportDashboardLink"
+                ng-options="option as option.title for option in dashboardList track by option.id"
+                ng-model="dashboard"
+              ></select>
+            </div>
+          </div>
+        </div>
     </form>
   </div>
 </report-app>

@@ -7,6 +7,7 @@ export const VunetSidebarConstants = {
   SEARCH: 'Search',
   EVENTS: 'Events',
   REPORTS: 'Reports',
+  SERVICE_PORTAL: 'Service Portal',
   ANALYTICS_CONFIGURATIONS: 'Analytics Configurations',
   VISUALIZATIONS: 'Visualizations',
   ALERT_RULES: 'Alert Rules',
@@ -50,5 +51,6 @@ export const VunetSidebarConstants = {
   PERMISSION_DATA_FETCH_APIS: 'DataFetchAPIs',
   PERMISSION_MANAGE_DIAGNOSTIC: 'ManageDiagnostic',
   PERMISSION_MANAGE_NETWORK: 'ManageNetwork',
-  PERMISSION_PII_DATA: 'ManagePIIData'
+  PERMISSION_PII_DATA: 'ManagePIIData',
+  PERMISSION_SERVICE_PORTAL: "ManageServicePortal"
 };

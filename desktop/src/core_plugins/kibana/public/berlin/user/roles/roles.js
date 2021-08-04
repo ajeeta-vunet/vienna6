@@ -178,6 +178,13 @@ function manageRoles($scope,
             name: 'ManagePIIData',
             value: 'ManagePIIData'
           },
+
+          {
+            key: 'ManageServicePortal',
+            label: 'ManageServicePortal',
+            name: 'ManageServicePortal',
+            value: 'ManageServicePortal'
+          },
         ],
         props: {
         },

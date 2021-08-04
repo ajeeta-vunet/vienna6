@@ -1,4 +1,3 @@
-
 // ------------------------- NOTICE ------------------------------- //
 //                                                                  //
 //                   CONFIDENTIAL INFORMATION                       //
@@ -42,6 +41,7 @@ export class VunetSidebar extends Component {
       VunetSidebarConstants.PERMISSION_MANAGE_OBJECT],
     [VunetSidebarConstants.REPORTS]: [VunetSidebarConstants.PERMISSION_VIEW_OBJECT,
       VunetSidebarConstants.PERMISSION_MANAGE_OBJECT],
+    [VunetSidebarConstants.SERVICE_PORTAL]: [VunetSidebarConstants.PERMISSION_SERVICE_PORTAL],
     [VunetSidebarConstants.ANALYTICS_CONFIGURATIONS]: [VunetSidebarConstants.PERMISSION_VIEW_OBJECT,
       VunetSidebarConstants.PERMISSION_MANAGE_OBJECT,
       VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
@@ -130,6 +130,9 @@ export class VunetSidebar extends Component {
     } else if (currentRoute.includes('/report')) {
       $('#analyticsNavContainer').addClass('active');
       $('#reportsLink').addClass('active');
+    } else if (currentRoute.includes('/service_portal')) {
+      $('#analyticsNavContainer').addClass('active');
+      $('#servicePortalLink').addClass('active');
     } else if (currentRoute.includes('/visualize')) {
       $('#analyticsConfigurationNavContainer').addClass('active');
       $('#visualizationsLink').addClass('active');
@@ -273,6 +276,17 @@ export class VunetSidebar extends Component {
                     onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
                   >
                     {VunetSidebarConstants.REPORTS}
+                  </a>
+                }
+                {
+                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.SERVICE_PORTAL]) &&
+                  <a
+                    id="servicePortalLink"
+                    href="/app/vienna#/service_portal"
+                    className="list-group-item"
+                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
+                  >
+                    {VunetSidebarConstants.SERVICE_PORTAL}
                   </a>
                 }
               </div>

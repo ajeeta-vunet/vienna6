@@ -32,6 +32,7 @@ import 'ui/timepicker';
 import { Notifier } from 'ui/notify/notifier';
 import 'leaflet';
 import { KibanaRootController } from './kibana_root_controller';
+import 'plugins/kibana/servicePortal/index';
 
 routes.enable();
 

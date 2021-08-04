@@ -213,20 +213,11 @@ export class EventConsoleTable extends React.Component {
         }
       });
 
-      const currentEvents = produce(this.state.currentEvents, (draft) => {
-        draft.map((event) => {
-          if(event.id === eventId) {
-            event.fields.assignee = assignee;
-            event.fields.status = status;
-          }
-        });
-      });
-
       this.setState({
         clickedEvent: updatedEvent,
-        details: updatedDetails,
-        currentEvents
+        details: updatedDetails
       }, () => {
+        this.props.updateListOfEvents(eventId, assignee, status);
         notify.info('Event has been updated successfully');
       });
     });

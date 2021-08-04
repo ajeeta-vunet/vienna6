@@ -9,9 +9,9 @@ export class Map extends React.Component {
     super(props);
     this.state = {
       graph: this.props.assetList,
-      timeout: setTimeout(() => {
-        this.state.network.fit();
-      }, 1000),
+      // timeout: setTimeout(() => {
+      //   this.state.network.fit();
+      // }, 1000),
       network: null,
     };
   }
@@ -19,9 +19,9 @@ export class Map extends React.Component {
   // to fit the map in the canvas and to re-render the graph when filters are applied
   componentWillReceiveProps(newProps) {
     this.setState({
-      timeout: setTimeout(() => {
-        this.state.network.fit();
-      }, 1000),
+      // timeout: setTimeout(() => {
+      //   this.state.network.fit();
+      // }, 1000),
       graph: newProps.assetList,
     });
   }

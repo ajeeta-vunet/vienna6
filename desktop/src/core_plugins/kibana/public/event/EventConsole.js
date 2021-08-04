@@ -82,25 +82,28 @@ export class EventConsole extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const listOfEvents = produce(newProps.listOfEvents && newProps.listOfEvents.List_of_events, (draft) => {
-      _.sortBy(draft,
-        function (o) {
-          return Date.parse(o.fields.last_occurence);
-        }
-      ).reverse();
-    });
+    if(!_.isEqual(newProps.listOfEvents, this.props.listOfEvents) ||
+      !_.isEqual(newProps.columnSelectorInfo, this.props.columnSelectorInfo)) {
+      const listOfEvents = produce(newProps.listOfEvents && newProps.listOfEvents.List_of_events, (draft) => {
+        _.sortBy(draft,
+          function (o) {
+            return Date.parse(o.fields.last_occurence);
+          }
+        ).reverse();
+      });
 
-    this.setState(
-      {
-        allEventList: listOfEvents,
-        filteredEventList: listOfEvents,
-        allFields: newProps.columnSelectorInfo &&
-                    newProps.columnSelectorInfo.alert_details && newProps.columnSelectorInfo.alert_details.fields,
-        hiddenFields: newProps.columnSelectorInfo &&
-                    newProps.columnSelectorInfo.alert_details && newProps.columnSelectorInfo.alert_details.hidden_fields,
-      },
-      () => this.applyFilters()
-    );
+      this.setState(
+        {
+          allEventList: listOfEvents,
+          filteredEventList: listOfEvents,
+          allFields: newProps.columnSelectorInfo &&
+                      newProps.columnSelectorInfo.alert_details && newProps.columnSelectorInfo.alert_details.fields,
+          hiddenFields: newProps.columnSelectorInfo &&
+                      newProps.columnSelectorInfo.alert_details && newProps.columnSelectorInfo.alert_details.hidden_fields,
+        },
+        () => this.applyFilters()
+      );
+    }
   }
 
   //this receives the field name checked/unchecked by column selector and acts on it.
@@ -373,7 +376,7 @@ export class EventConsole extends React.Component {
   };
 
   // This function is called to clear all the filters and display all events in Event Console page.
-  showAllEvents = () => {
+  clearAllFilters = () => {
     window.location.href = '/app/vienna#/event';
     this.saveFilters({});
     notify.info('Showing all Events');
@@ -406,6 +409,20 @@ export class EventConsole extends React.Component {
       });
   };
 
+  //this method is called to update the status and assignee of the event modifies under
+  //EventDetailsSidebar component.
+  updateListOfEvents = (eventId, assignee, status) => {
+    const filteredEventList = produce(this.state.filteredEventList, (draft) => {
+      draft.forEach((event) => {
+        if(event.id === eventId) {
+          event.fields.assignee = assignee;
+          event.fields.status = status;
+        }
+      });
+    });
+    this.setState({ filteredEventList });
+  }
+
   render() {
     return (
       <div className="event-console-wrapper">
@@ -423,7 +440,7 @@ export class EventConsole extends React.Component {
           hiddenFields={this.state.hiddenFields}
           updateColumnSelector={this.updateColumnSelector}
           eventConsoleMandatoryFields={this.props.eventConsoleMandatoryFields}
-          showAllEvents={this.showAllEvents}
+          clearAllFilters={this.clearAllFilters}
           addFilter={this.addFilter}
           canUpdateEvent={this.props.canUpdateEvent}
           filterStore={this.state.filterStore}
@@ -433,6 +450,8 @@ export class EventConsole extends React.Component {
           itsmPreferencesEnabled={this.props.itsmPreferencesEnabled}
           createTicket={this.createTicketMethod}
           fetchRawEvents={this.props.fetchRawEvents}
+          summary={this.props.summary}
+          updateListOfEvents={this.updateListOfEvents}
         />
       </div>
     );

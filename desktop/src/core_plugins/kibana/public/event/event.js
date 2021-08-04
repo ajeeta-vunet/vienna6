@@ -35,6 +35,7 @@ app.directive('eventConsole', (reactDirective) => {
     'filterFields',
     'itsmPreferencesEnabled',
     'fetchRawEvents',
+    'summary'
   ]);
 });
 
@@ -97,6 +98,12 @@ app.directive('eventApp', function () {
         // from the time filter which is used to prepare the
         // data for POST call to the backend.
 
+        //this is used to pass summary as props to Operation bar component.
+        //When user navigates to Event Console from Notifications Sidebar, we display this filter in Filter Bar to
+        //indicate that the user is seeing only events related to Event he/she clicked on under Notifications.
+        if(dashboardContext().bool.must[0]) {
+          $scope.summary = dashboardContext().bool.must[0].match_phrase.summary.query;
+        }
         const postBody = {
           extended: {
             es: {

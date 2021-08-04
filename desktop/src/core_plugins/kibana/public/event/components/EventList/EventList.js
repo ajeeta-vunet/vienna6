@@ -264,6 +264,7 @@ export class EventList extends React.Component {
             userList={this.props.userList}
             fetchRawEvents={this.props.fetchRawEvents}
             allFields={this.state.allFields}
+            updateListOfEvents={this.props.updateListOfEvents}
           />
         )
       );
@@ -302,6 +303,8 @@ export class EventList extends React.Component {
           exportEventsToCsv={this.props.exportEventsToCsv}
           hideAndUnhideSortbar={this.hideAndUnhideSortbar}
           showSortDetails={this.state.showSortDetails}
+          summary={this.props.summary}
+          clearAllFilters={this.props.clearAllFilters}
         />
         <div className="events-table-container">
           <div className="event-listing-wrapper">
@@ -318,14 +321,6 @@ export class EventList extends React.Component {
             )}
           </div>
           <div className="pagination-container">
-            <div className="view-all-events-container">
-              <a
-                className="view-all-events"
-                onClick={() => this.props.showAllEvents()}
-              >
-                Clear All Filters
-              </a>
-            </div>
             <div className="pagination-component">
               <div className="pagination-count">
                 <select

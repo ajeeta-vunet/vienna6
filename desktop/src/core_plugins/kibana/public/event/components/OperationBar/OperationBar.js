@@ -23,6 +23,9 @@ import $ from 'jquery';
 import { FilterSelector } from '../FilterSelector/FilterSelector';
 import { SelectedFilter } from '../SelectedFilter/SelectedFilter';
 import ReactTooltip from 'react-tooltip';
+import { Notifier } from 'ui/notify';
+
+const notify = new Notifier({ location: 'Event Console' });
 
 export class OperationBar extends React.Component {
   constructor(props) {
@@ -54,6 +57,13 @@ export class OperationBar extends React.Component {
       $(this).attr('placeholder', 'search');
     });
   };
+
+  //this method is used to refresh the page and URL to show all the events as per the time filter selected.s
+  showAllEvents = () => {
+    window.location.href = '/app/vienna#/event';
+    notify.info('Showing all Events');
+  }
+
   render() {
     return (
       <div className="operationbar-wrapper">
@@ -96,8 +106,27 @@ export class OperationBar extends React.Component {
                 />
               );
             })}
+          {this.props.summary &&
+          <div className="summary-filter">
+            Summary : {this.props.summary}
+            <div
+              className="cancel-filter"
+              onClick={() => this.showAllEvents()}
+            >
+            x
+            </div>
+          </div>
+          }
         </div>
         <div className="filter-options-container">
+          <div className="clear-all-filters">
+            <a
+              className="view-all-events"
+              onClick={() => this.props.clearAllFilters()}
+            >
+                Clear All Filters
+            </a>
+          </div>
           <div className="search-container ">
             <input
               onChange={(e) => this.props.onSearch(e)}

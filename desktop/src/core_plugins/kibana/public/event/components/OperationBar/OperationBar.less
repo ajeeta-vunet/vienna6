@@ -41,9 +41,30 @@
   .selected-filters-container {
     display       : flex;
     flex-direction: row;
-    max-width     : 58%;
+    max-width     : 40%;
     flex-wrap     : wrap;
     margin-right  : 1rem;
+
+    .summary-filter {
+      padding-right : 0.7rem;
+      font-size     : 1.5rem;
+      color         : @accent_color;
+      border        : 1px solid @accent_color;
+      border-radius : 9rem 9rem 9rem 9rem;
+      padding-right : 1.5rem;
+      padding-top   : 0.5rem;
+      padding-bottom: 0.5rem;
+      padding-left  : 1.5rem;
+      margin-right  : 1rem;
+      margin-bottom : 1rem;
+      display       : flex;
+      flex-direction: row;
+      cursor        : pointer;
+
+      .cancel-filter {
+        padding-left: 1.2rem;
+      }
+    }
   }
 
   .selected-filter-container {
@@ -56,8 +77,16 @@
   .filter-options-container {
     display        : flex;
     justify-content: flex-end;
-    align-items    : center;
+    align-items    : flex-start;
     flex           : 1;
+
+    .view-all-events {
+      cursor: pointer;
+    }
+
+    .clear-all-filters:hover {
+      text-decoration: underline;
+    }
 
     .search-container {
       input {

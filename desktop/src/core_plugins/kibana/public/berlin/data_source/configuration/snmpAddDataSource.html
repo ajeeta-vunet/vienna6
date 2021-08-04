@@ -254,7 +254,11 @@
                          name="credential"
                          ng-options="credential for
                          credential in
-                         credential_list" required>
+                         credential_list" 
+                         
+                           required
+                         
+                         >
                          </select>
                       
                     </div>
@@ -311,7 +315,7 @@
          <div class="form-group" ng-class="{'has-error':
             addDataSourceForm.standalone_shipper.$invalid &&
             !addDataSourceForm.standalone_shipper.$pristine}"
-            ng-if="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
+            ng-show="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
          
          <div class="row">
            <div class="col-sm-3 col-md-3">
@@ -335,7 +339,10 @@
                          name="standalone_shipper"
                          ng-options="standalone_shipper for
                          standalone_shipper in
-                         standalone_shipper_list" required>
+                         standalone_shipper_list" 
+                         ng-required="standalone_shipper_list.length > 0 && standalone_shipper_list[0] !== ''"
+                         
+                         >
                          </select>
                       
                     </div>

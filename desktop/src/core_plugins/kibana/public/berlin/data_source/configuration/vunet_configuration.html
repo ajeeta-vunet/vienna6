@@ -24,7 +24,7 @@
         file from
         <a href="/ui/vienna_data/data_source.xlsx" target="_blank"><i class="data-source-import-template-link">here</i></a>
       </div>
-      <div class="error-block" ng-show="fileUploadError">
+      <div class="error-block multiple-errors" ng-show="fileUploadError">
         {{fileUploadErrorMessage}}
       </div>
       <button type="submit" class="btn btn-primary" ng-disabled="!myForm.$valid || fileUploadError" ng-click="upload_data_source_file(File)">Submit</button>

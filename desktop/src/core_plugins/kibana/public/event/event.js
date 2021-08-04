@@ -253,6 +253,7 @@ app.directive('eventApp', function () {
       $scope.$on('fetch', $scope.search);
 
       $scope.refresh = function () {
+        $scope.loadingEvents = true;
         $scope.search();
       };
 

@@ -184,9 +184,12 @@ export class EventConsole extends React.Component {
         delete draft[filterField];
       });
     }
+    this.saveFilters(updatedfilterStore);
+  };
 
+  saveFilters = (filterStore) => {
     const postBody = {
-      filter: updatedfilterStore,
+      filter: filterStore,
     };
     apiProvider
       .post(`${EventConstants.SAVE_FILTERS}${userData[0]}/`, postBody)
@@ -196,7 +199,7 @@ export class EventConsole extends React.Component {
           .then((data) => {
             this.setState(
               {
-                filterStore: updatedfilterStore,
+                filterStore: filterStore,
                 selectedFilterFields: Object.keys(data.filter),
               },
               () => {
@@ -205,7 +208,7 @@ export class EventConsole extends React.Component {
             );
           });
       });
-  };
+  }
 
   // This function is called when the filterStore is updated by addition or deletion of a filterField.
   // This will filter the events based on the filterField and it's corresponding values and update the
@@ -372,13 +375,8 @@ export class EventConsole extends React.Component {
   // This function is called to clear all the filters and display all events in Event Console page.
   showAllEvents = () => {
     window.location.href = '/app/vienna#/event';
-    this.setState(
-      {
-        filteredEventList: this.state.allEventList,
-        filterStore: {},
-      },
-      () => notify.info('Showing all Events')
-    );
+    this.saveFilters({});
+    notify.info('Showing all Events');
   };
 
   //This function is used to make the API call to create a ticket for the event.

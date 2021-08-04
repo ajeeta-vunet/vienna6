@@ -207,6 +207,9 @@ export class EventConsoleTable extends React.Component {
           draft.alert_details.fields.notes.push(toSend.notes[0]);
           draft.alert_details.fields.assignee = assignee;
           draft.alert_details.fields.status = status;
+        }else {
+          draft.alert_details.fields.assignee = assignee;
+          draft.alert_details.fields.status = status;
         }
       });
 
@@ -273,7 +276,11 @@ export class EventConsoleTable extends React.Component {
       }
     }
 
-    this.setState({ clickedEvent: updatedEvent }, () => {
+    const currentEvents = produce(this.state.currentEvents, (draft) => {
+      return draft.map(obj => (obj.id === updatedEvent.id) ? updatedEvent : obj);
+    });
+
+    this.setState({ clickedEvent: updatedEvent, currentEvents }, () => {
       notify.info('Event feedback updated successfully');
     });
   };

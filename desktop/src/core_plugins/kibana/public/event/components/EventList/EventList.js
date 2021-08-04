@@ -323,7 +323,7 @@ export class EventList extends React.Component {
                 className="view-all-events"
                 onClick={() => this.props.showAllEvents()}
               >
-                View all events
+                Clear All Filters
               </a>
             </div>
             <div className="pagination-component">

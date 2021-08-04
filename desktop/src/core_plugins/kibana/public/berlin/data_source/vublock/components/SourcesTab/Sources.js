@@ -73,15 +73,28 @@ export class Sources extends React.Component {
     // feed the data returned into state variables
     this.fetchSourcesAndUpdateRows();
 
-    this.searchForKeyword = _.debounce(keyword => {
-      this.setState({
-        search: keyword === '' ? null : keyword,
-        scroll_id: null,
-        page: 1
-      }, () => {
-        this.fetchSourcesAndUpdateRows();
-      });
-    }, 1000);
+    // Array that contains any custom row actions
+    this.sourceTableActionButtons = [];
+
+    // For the following vu-blocks we are showing enable and disable options
+    if(VuBlockConstants.VUBLOCKS_ENABLE_DISABLE.includes(this.props.vuBlockId)) {
+      this.sourceTableActionButtons = [
+        {
+          title: 'Enable',
+          label: 'enable',
+          onPerform: (selectedRows) => {
+            this.showEnableDisableModal(selectedRows, 'enable');
+          }
+        },
+        {
+          title: 'Disable',
+          label: 'disable',
+          onPerform: (selectedRows) => {
+            this.showEnableDisableModal(selectedRows, 'disable');
+          }
+        }
+      ];
+    }
   }
 
   // Function to create the URL for fetching source instances
@@ -155,6 +168,17 @@ export class Sources extends React.Component {
         }
       });
   };
+
+  // Called when search string is entered
+  searchForKeyword = _.debounce(keyword => {
+    this.setState({
+      search: keyword === '' ? null : keyword,
+      scroll_id: null,
+      page: 1
+    }, () => {
+      this.fetchSourcesAndUpdateRows();
+    });
+  }, VuBlockConstants.SEARCH_DEBOUNCE_DELAY);
 
   // Called when save button is clicked in modal
   submitSourceInstance = (restApiId, name, data) => {
@@ -379,7 +403,7 @@ export class Sources extends React.Component {
         } else {
           // If the file upload fails
           if(data.response.data && data.response.data['error-string']) {
-            // If error string is present, set the error 
+            // If error string is present, set the error
             // and provide the function to download the error logs
             importModalDataCopy.error = data.response.data['error-string'];
             importModalDataCopy.downloadErrors = this.downloadImportErrors;
@@ -417,30 +441,6 @@ export class Sources extends React.Component {
       });
     }
   }
-
-  // Array that contains any custom row actions
-  sourceTableActionButtons = [
-    {
-      title: 'Enable',
-      label: 'enable',
-      styling: {
-        backgroundColor: '#0d6efd',
-      },
-      onPerform: (selectedRows) => {
-        this.showEnableDisableModal(selectedRows, 'enable');
-      }
-    },
-    {
-      title: 'Disable',
-      label: 'disable',
-      styling: {
-        backgroundColor: '#6c757d',
-      },
-      onPerform: (selectedRows) => {
-        this.showEnableDisableModal(selectedRows, 'disable');
-      }
-    }
-  ];
 
   // Final rendering of Sources tab content
   render() {

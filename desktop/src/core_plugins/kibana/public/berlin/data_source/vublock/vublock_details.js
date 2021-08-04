@@ -3,6 +3,8 @@ const app = uiModules.get('app/berlin');
 import { Notifier } from 'ui/notify';
 import { Sources } from './components/SourcesTab/Sources';
 import { GetStarted } from '../vublock_store/components/GetStartedTab/GetStarted';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui_framework/src/vunet_components/vunet_sidebar/vunet_sidebar_constants';
 import './tabs/fields';
 import './tabs/alert_rules';
 import './tabs/get_started';
@@ -44,7 +46,8 @@ app.filter('unsafe', function ($sce) { return $sce.trustAsHtml; });
 function vuBlockDetails($scope,
   $http,
   StateService,
-  $route
+  $route,
+  Private
 ) {
 
   const notify = new Notifier();
@@ -55,6 +58,8 @@ function vuBlockDetails($scope,
   };
 
   function init() {
+    const docTitle = Private(DocTitleProvider);
+    docTitle.change(VunetSidebarConstants.VUBLOCK);
 
     // Get the resolved data required by the control
     // from route.current.locals

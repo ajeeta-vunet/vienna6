@@ -19,4 +19,12 @@ export const VuBlockConstants = {
   VUBLOCK_SOURCES_IMPORT: 'source_bulk/import',
   VUBLOCK_SOURCES_ERROR: '?error_file=True',
   SOURCE_INSTANCE_TEMPLATE: '?template',
+  VUBLOCKS_ENABLE_DISABLE: [
+    'snmp',
+    'device_heartbeat',
+    'url_heartbeat',
+    'service_heartbeat',
+    'tracepath_heartbeat'
+  ],
+  SEARCH_DEBOUNCE_DELAY: 1000
 };

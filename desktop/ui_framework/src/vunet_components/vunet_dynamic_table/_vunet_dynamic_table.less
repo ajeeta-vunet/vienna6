@@ -11,6 +11,7 @@
     .table-toolbar {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         height: 5rem;
         margin-bottom: 1rem;
         .toolbar-search {
@@ -37,30 +38,24 @@
                 border-radius: 1rem;
                 border: none;
                 font-size: 1.6rem;
-                font-family: @inter-bold;
+                font-family: @inter-medium;
                 box-shadow: 0rem 0rem 1rem 0.3rem rgba(0, 0, 0, 0.06);
                 &.addBtn {
                     background-color: @vublock-store-accent-color;
                     color: @white;
                     padding: 0 1.3rem;
                 }
-                &.importBtn {
-                    background-color: @vublock-import-button-bg;
-                    color: @white;
+                &.importBtn, &.exportBtn, &.rowActionBtn {
+                    background-color: @white;
+                    color: @text_color1;
                     padding: 0 1.3rem;
-                }
-                &.exportBtn {
-                    background-color: @vublock-export-button-bg;
-                    color: @white;
-                    padding: 0 1.3rem;
+                    border: 0.2rem solid @border_color;
+                    &:hover {
+                        color: @vublock-store-accent-color;
+                    }
                 }
                 &.deleteBtn {
                     background-color: @red;
-                    color: @white;
-                    padding: 0 1.3rem;
-                }
-                &.rowActionBtn {
-                    background-color: @vublock-store-accent-color;
                     color: @white;
                     padding: 0 1.3rem;
                 }

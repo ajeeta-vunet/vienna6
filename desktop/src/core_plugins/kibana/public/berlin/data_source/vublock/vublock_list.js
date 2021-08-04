@@ -4,8 +4,9 @@ import './styles/_index.less';
 import './partials/vublock_section';
 import 'react-toggle/style.css';
 import { VuBlockConstants } from './vu_block_constants';
+import { DocTitleProvider } from 'ui/doc_title';
+import { VunetSidebarConstants } from 'ui_framework/src/vunet_components/vunet_sidebar/vunet_sidebar_constants';
 import importvublockPopupTemplate from './import_vublock_popup.html';
-import importvublockPopupCtrl from './import_vublock_popup';
 
 // This directive displays the list of vuBlocks
 // configured in the system
@@ -20,7 +21,8 @@ app.directive('vuBlockList', function () {
 function vuBlockList($scope,
   $http,
   StateService,
-  $uibModal
+  $uibModal,
+  Private
 ) {
 
   // Flags to show or hide vuBlocks based on their
@@ -142,6 +144,8 @@ function vuBlockList($scope,
   };
 
   function init() {
+    const docTitle = Private(DocTitleProvider);
+    docTitle.change(VunetSidebarConstants.VUBLOCK);
 
     // Get the the list of vuBlocks configured in
     // the system

@@ -24,10 +24,11 @@ import React, {
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import './_vunet_dynamic_form_builder.less';
-import DualListBox from 'react-dual-listbox';
 import { VunetSelect } from '../vunet_select/vunet_select';
 import { VunetCronTab } from '../vunet_cron_tab/vunet_cron_tab';
 import { VunetHelp } from 'ui_framework/src/vunet_components/vunet_help/vunet_help';
+// import { convertArraytoJSON } from '../utils/convertArrayToJson';
+// import DualListBox from 'react-dual-listbox';
 
 export class VunetDynamicFormBuilder extends Component {
 
@@ -50,8 +51,8 @@ export class VunetDynamicFormBuilder extends Component {
       helpOperationsDict: {},
       hideElm: [],
       operDict: {},
-      selected: [],
-      components: [],
+      // selected: [], // Used for DualList
+      // components: [], // Used for DualList
     };
   }
 
@@ -334,50 +335,6 @@ export class VunetDynamicFormBuilder extends Component {
     }
   }
 
-  /*
-  * On change of form value will update the state
-  * And also apply rule if applicabale
-  */
-  onChange1 = (selected) => {
-    const components1 = this.convertArraytoJson(selected);
-    this.setState({ selected });
-    this.setState({
-      components: components1
-    });
-  };
-
-  convertArraytoJson = (selected) => {
-    const jsonToBeUsed = [];
-    let host;
-    for (const i in selected) {
-      let hosts = [];
-      let j = 0;
-      let found = false;
-      host = selected[i];
-      const key = host.split('|')[0];
-      for (j in jsonToBeUsed) {
-        if (jsonToBeUsed[j].hasOwnProperty(key)) {
-          hosts = jsonToBeUsed[j][key];
-          found = true;
-          break;
-        }
-      }
-      if (found) {
-        hosts.push(host.split('|')[1]);
-        jsonToBeUsed[j][key] = hosts;
-      }
-      else
-      {
-        const hosts = [];
-        const item = {};
-        hosts.push(host.split('|')[1]);
-        item[key] = hosts;
-        jsonToBeUsed.push(item);
-      }
-    }
-    return jsonToBeUsed;
-  }
-
   onChange = (e, key, type = 'single') => {
     // Find the element from props..
     let parentElm = {};
@@ -515,6 +472,16 @@ export class VunetDynamicFormBuilder extends Component {
       this.setState({
         [key]: e.values
       }, () => this.init(false));
+    /*
+      DUAL LIST BOX IS CURRENTLY COMMENTED OUT
+      AS IT IS NOT BEING USED ANYWHERE
+    } else if (type === 'duallist') {
+      const components1 = convertArraytoJSON(selected);
+      this.setState({ selected });
+      this.setState({
+        components: components1
+      });
+    */
     } else {
       const found = this.state[key] ?
         this.state[key].find((d) => d === e.target.value) : false;
@@ -683,7 +650,7 @@ export class VunetDynamicFormBuilder extends Component {
   */
   renderForm = (formData, parentKey = '') => {
 
-    //const isAddOrEdit = this.props.formData.action === 'add' ? true : false;
+    const isAddOrEdit = this.props.formData.action === 'add' ? true : false;
     const formUI = formData.map((m) => {
 
       const key = m.key;
@@ -692,7 +659,7 @@ export class VunetDynamicFormBuilder extends Component {
       if (this.isHidden(key)) {
         return null;
       }
-      const id = m.primary_key && m.operation === 'edit' ? true : false;
+      const id = (!isAddOrEdit && m.id) || (m.primary_key && m.operation === 'edit') ? true : false;
       const type = m.type || 'text';
       const props = m.props || {};
       const name = m.name;
@@ -808,6 +775,8 @@ export class VunetDynamicFormBuilder extends Component {
           </div>);
       }
 
+      /* DUAL LIST BOX IS CURRENTLY COMMENTED OUT
+      AS IT IS NOT BEING USED ANYWHERE
       if (type === 'dualListbox') {
         const { selected } = this.state;
         input = (
@@ -816,11 +785,12 @@ export class VunetDynamicFormBuilder extends Component {
               canFilter
               options={m.options}
               selected={selected}
-              onChange={this.onChange1}
+              onChange={(e) => { this.onChange(e, target, 'duallist'); }}
               filterPlaceholder="Search available hosts..."
             />
           </div>);
-      }
+      } */
+
       if (type === 'multiSelect') {
 
         const accessor = this.props.formData.accessor && this.props.formData.accessor.find(acc => acc.columnName === m.key);

@@ -10,7 +10,7 @@ export const VunetSidebarConstants = {
   ANALYTICS_CONFIGURATIONS: 'Analytics Configurations',
   VISUALIZATIONS: 'Visualizations',
   ALERT_RULES: 'Alert Rules',
-  ANOMALY_DETECTION: 'Anomaly Detection',
+
   MANAGE_RESOURCES: 'Manage Resources',
   NETWORK_CONFIGURATION: 'Network Configuration',
   DATA: 'Data',

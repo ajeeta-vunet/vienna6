@@ -69,7 +69,6 @@
       .menubar-fixed-top,
       .report-listing-container,
       .alert-listing-container,
-      .anomaly-listing-container,
       .backup-listing-container,
       .data-sources-container {
         height: @view-content-fullscreen-height-small!important;
@@ -1899,17 +1898,6 @@ button[disabled] {
 
 // Table look and feel for reports listing page
 .report-listing-container {
-  padding: 2.7rem 7rem 0 7rem;
-  overflow-y: auto;
-  height: @view-content-height-menubaronly ;
-  .kuiViewContentItem {
-    padding-left: 0rem;
-    padding-right: 0rem;
-  }
-}
-
-// Table look and feel for anomaly listing page
-.anomaly-listing-container {
   padding: 2.7rem 7rem 0 7rem;
   overflow-y: auto;
   height: @view-content-height-menubaronly ;

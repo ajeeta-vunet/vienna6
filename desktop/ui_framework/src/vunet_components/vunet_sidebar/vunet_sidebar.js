@@ -49,8 +49,6 @@ export class VunetSidebar extends Component {
       VunetSidebarConstants.PERMISSION_MANAGE_OBJECT],
     [VunetSidebarConstants.ALERT_RULES]: [VunetSidebarConstants.PERMISSION_VIEW_OBJECT,
       VunetSidebarConstants.PERMISSION_MANAGE_OBJECT],
-    [VunetSidebarConstants.ANOMALY_DETECTION]: [VunetSidebarConstants.PERMISSION_VIEW_OBJECT,
-      VunetSidebarConstants.PERMISSION_MANAGE_OBJECT],
     [VunetSidebarConstants.MANAGE_RESOURCES]: [VunetSidebarConstants.PERMISSION_MANAGE_OBJECT,
       VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
     [VunetSidebarConstants.NETWORK_CONFIGURATION]: [VunetSidebarConstants.PERMISSION_MANAGE_DATA_SOURCES],
@@ -142,9 +140,6 @@ export class VunetSidebar extends Component {
     } else if (currentRoute.includes('/alert')) {
       $('#analyticsConfigurationNavContainer').addClass('active');
       $('#alertRulesLink').addClass('active');
-    } else if (currentRoute.includes('/anomaly')) {
-      $('#analyticsConfigurationNavContainer').addClass('active');
-      $('#anomalyDetectionLink').addClass('active');
     } else if (currentRoute.includes('/management')) {
       $('#analyticsConfigurationNavContainer').addClass('active');
       $('#manageResourcesLink').addClass('active');
@@ -325,17 +320,6 @@ export class VunetSidebar extends Component {
                     onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
                   >
                     {VunetSidebarConstants.ALERT_RULES}
-                  </a>
-                }
-                {
-                  chrome.hideShowSideBarTab(this.sideBarTabsClaim[VunetSidebarConstants.ANOMALY_DETECTION]) &&
-                  <a
-                    id="anomalyDetectionLink"
-                    href="/app/vienna#/anomalys"
-                    className="list-group-item"
-                    onClick={(e) => { this.determineActiveSidebarMenu(e.target.href); }}
-                  >
-                    {VunetSidebarConstants.ANOMALY_DETECTION}
                   </a>
                 }
                 {

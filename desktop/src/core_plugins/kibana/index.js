@@ -61,7 +61,6 @@ export default function (kibana) {
         'plugins/kibana/discover/saved_searches/saved_search_register',
         'plugins/kibana/dashboard/saved_dashboard/saved_dashboard_register',
         'plugins/kibana/alert/saved_alert/saved_alert_register',
-        'plugins/kibana/anomaly/saved_anomaly/saved_anomaly_register',
         'plugins/kibana/report/saved_report/saved_report_register',
       ],
       app: {
@@ -106,15 +105,7 @@ export default function (kibana) {
         url: `${kbnBaseUrl}#/berlin/about`,
         icon: 'plugins/kibana/assets/app_advanced_settings.svg',
         group: 'Settings'
-      }, {
-        id: 'kibana:anomaly',
-        title: 'Anomaly Detection',
-        order: -1001,
-        url: `${kbnBaseUrl}#/anomalys`,
-        description: 'Anomaly Detection',
-        subUrlBase: `${kbnBaseUrl}#/anomaly`,
-        group: 'Monitors'
-      }, {
+      },  {
         id: 'kibana:report',
         title: 'Report',
         order: -1002,

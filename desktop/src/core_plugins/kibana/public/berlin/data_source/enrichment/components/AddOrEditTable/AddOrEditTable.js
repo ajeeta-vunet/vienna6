@@ -49,6 +49,7 @@ export class AddOrEditTable extends React.Component {
         tableNameRequired: false,
         duplicateTableNameFound: false,
         descriptionRequired: false,
+        namePatternWrong: false,
       },
       helpOperationsDict: {
         tableName: false,
@@ -80,9 +81,9 @@ export class AddOrEditTable extends React.Component {
         props: {
           required: true,
           maxLength: '120',
-          pattern: '^[a-zA-Z0-9]+([a-zA-Z0-9_]+)*$',
+          pattern: '^[a-zA-Z0-9-]+([a-zA-Z0-9- ]+)*$',
         },
-        errorText: `Label should be unique and can have alpha-numeric characters. _ and - 
+        errorText: `Label should be unique and can have alpha-numeric characters. - and space
   is also allowed but the name should not exceed 120 characters.`,
       },
       {
@@ -101,9 +102,9 @@ export class AddOrEditTable extends React.Component {
         props: {
           required: true,
           maxLength: '120',
-          pattern: '^[a-zA-Z0-9]+([a-zA-Z0-9_.]+)*$',
+          pattern: '^[a-zA-Z0-9@-_]+([a-zA-Z0-9_@-]+)*$',
         },
-        errorText: `Field Name should be unique and can have alpha-numeric characters. _, . and - 
+        errorText: `Field Name should be unique and can have alpha-numeric characters. _, @ and -
   is also allowed but the name should not exceed 120 characters.`,
       },
       {
@@ -218,9 +219,12 @@ export class AddOrEditTable extends React.Component {
   // Check if table name already exists when creating a new
   // enrichment table.
   isTableNameExists = (tableValue) => {
-    return this.state.tableMetaDataList && this.state.tableMetaDataList.find((obj) => {
-      return obj.table_name === tableValue ? true : false;
-    });
+    return (
+      this.state.tableMetaDataList &&
+      this.state.tableMetaDataList.find((obj) => {
+        return obj.table_name === tableValue ? true : false;
+      })
+    );
   };
 
   // This function checks for atleast one key and
@@ -275,6 +279,11 @@ export class AddOrEditTable extends React.Component {
     let table = this.state.tableObj;
     switch (field) {
       case 'tableName':
+        const regex = RegExp('^[a-zA-Z0-9-]{1,120}$');
+        const isTableNamePatternMatched = regex.test(e.target.value)
+          ? true
+          : false;
+
         if (
           e.target.value === '' &&
           document.getElementById('tableName').value === ''
@@ -287,13 +296,16 @@ export class AddOrEditTable extends React.Component {
           errorType = produce(this.state.errorType, (draft) => {
             draft.duplicateTableNameFound = true;
             draft.tableNameRequired = false;
+            draft.namePatternWrong = !isTableNamePatternMatched;
           });
         } else {
           errorType = produce(this.state.errorType, (draft) => {
             draft.duplicateTableNameFound = false;
             draft.tableNameRequired = false;
+            draft.namePatternWrong = !isTableNamePatternMatched;
           });
         }
+
         table = produce(this.state.tableObj, (draft) => {
           draft.tableName = e.target.value;
         });
@@ -530,6 +542,13 @@ export class AddOrEditTable extends React.Component {
                     <span>
                       A table with this name already exists. Please choose a
                       different name
+                    </span>
+                  )}
+                  {this.state.errorType.namePatternWrong && (
+                    <span>
+                      Table name should be unique and can have alpha-numeric
+                      characters, - is also allowed but the name should not have
+                      spaces and it should not exceed 120 characters.
                     </span>
                   )}
                 </div>

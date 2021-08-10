@@ -60,7 +60,6 @@ export class VunetDynamicFormBuilder extends Component {
   static defaultProps = { buttonsList: ['Cancel', 'Submit'] }
 
   componentDidMount() {
-
     // If the 'vunet_dynamic_form_builder' component is being called from
     // 'vunet_form_wizard' component, then check for 'isParentFormWizard'
     // flag and do a form validation. This is done to enable the buttons
@@ -649,7 +648,6 @@ export class VunetDynamicFormBuilder extends Component {
   * }
   */
   renderForm = (formData, parentKey = '') => {
-
     const isAddOrEdit = this.props.formData.action === 'add' ? true : false;
     const formUI = formData.map((m) => {
 

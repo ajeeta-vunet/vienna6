@@ -209,7 +209,7 @@ function enrichmentData($injector, Promise, $scope, $route) {
   // This function is used to prepare the vunet table metadata
   // for add or edit workflows using the table metadata
   // configured.
-  const prepareDataInputFieldsFromTableMetaData = function (inputMetaDataList) {
+  const prepareDataInputFieldsFromTableMetaData = function (inputMetaDataList, type) {
     inputMetaDataList &&
       inputMetaDataList.forEach((obj) => {
         const inputFieldObj = {};
@@ -256,6 +256,10 @@ function enrichmentData($injector, Promise, $scope, $route) {
             '^(([1-9]?\\d|1\\d\\d|25[0-5]|2[0-4]\\d)\\.){3}([1-9]?\\d|1\\d\\d|25[0-5]|2[0-4]\\d)$';
           inputFieldObj.errorText = `Please provide a valid IP Address`;
         }
+
+        if (type === 'keys') {
+          inputFieldObj.id = true;
+        }
         $scope.enrichmentDataMeta.table.push(inputFieldObj);
       });
   };
@@ -264,14 +268,14 @@ function enrichmentData($injector, Promise, $scope, $route) {
   // required to display the data fields for add / edit
   // workflow.
   const getMetaForAddOrEditData = function () {
-    prepareDataInputFieldsFromTableMetaData(tableMetaData.keys);
+    prepareDataInputFieldsFromTableMetaData(tableMetaData.keys, 'keys');
     const separatorMeta = {
       key: 'separator',
       name: 'separator',
       type: 'separator',
     };
     $scope.enrichmentDataMeta.table.push(separatorMeta);
-    prepareDataInputFieldsFromTableMetaData(tableMetaData.values);
+    prepareDataInputFieldsFromTableMetaData(tableMetaData.values, 'values');
   };
 
   function init() {

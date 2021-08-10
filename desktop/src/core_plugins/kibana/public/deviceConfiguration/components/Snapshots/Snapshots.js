@@ -51,8 +51,12 @@ export class Snapshots extends Component {
     const postBody = {
       scroll_id: 0,
       size: 10,
-      sort_string: {},
+      sort_string: {
+        sort_column: 'date',
+        sort_method: 'des',
+      },
       search_string: '',
+      action: 'get_list'
     };
     const url = `dcm/device/${id}/collection/snapshot/`;
     // to get the default list of snapshots
@@ -89,7 +93,8 @@ export class Snapshots extends Component {
         scroll_id: 0,
         size: 10,
         sort_string: this.state.sort_string,
-        search_string: search
+        search_string: search,
+        action: 'get_list'
       };
       apiProvider.post(url, postBody).then((data) => {
         if(data.configurations.length > 0) {
@@ -214,7 +219,8 @@ export class Snapshots extends Component {
       scroll_id: (currentPage - 1) * 10,
       size: 10,
       sort_string: this.state.sort_string,
-      search_string: searchString
+      search_string: searchString,
+      action: 'get_list'
     };
     // fetch the snapshots for the currentPage
     apiProvider.post(url, postBody).then((data) => {
@@ -260,6 +266,7 @@ export class Snapshots extends Component {
       size: 10,
       sort_string: sortSelected,
       search_string: searchString,
+      action: 'get_list'
     };
     const id = this.props.deviceId;
     const url = `dcm/device/${id}/collection/snapshot/`;
@@ -286,7 +293,6 @@ export class Snapshots extends Component {
   render() {
     return(
       <div className="dcm-snapshots-wrapper">
-        {this.state.loading && <VunetLoader />}
         {
           this.state.currentSection === 'snapshots' && !this.state.loading &&
           <div className="snapshots">
@@ -314,7 +320,7 @@ export class Snapshots extends Component {
                 <VunetButton
                   id="compare"
                   onClick={this.onTableAction}
-                  text="Compare"
+                  data-text="Compare"
                   disabled={this.state.snapsToCompare.length !== 2}
                   className="table-action-secondary compare"
                 />
@@ -345,6 +351,7 @@ export class Snapshots extends Component {
                     </tr>
                   </thead>
                   <tbody>
+                    {this.state.loading && <VunetLoader />}
                     {this.state.snapList.map((snap) => (
                       <tr key={snap.id}>
                         <td>
@@ -394,6 +401,7 @@ export class Snapshots extends Component {
           </div>
         }
         { this.state.currentSection === 'snapshots' &&
+          this.state.loading === false &&
           this.state.snapList.length === 0 && (
             <div className="empty-snaps">
               No snapshots to display!
@@ -421,13 +429,13 @@ export class Snapshots extends Component {
         <VunetButton
           id="backBtn"
           className="secondary"
-          text="Back"
+          data-text="Back"
           onClick={this.previousSection}
         />
         <VunetButton
           id="nextBtn"
           className="primary snapshots-cancel"
-          text="Cancel"
+          data-text="Cancel"
           onClick={this.nextSection}
         />
       </div>

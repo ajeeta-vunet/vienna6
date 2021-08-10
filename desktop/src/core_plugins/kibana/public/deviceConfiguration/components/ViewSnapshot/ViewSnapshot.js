@@ -37,12 +37,14 @@ export class ViewSnapshot extends Component {
   render() {
     return(
       <div className="view-snapshot">
-        <VunetButton
-          className="table-action-secondary"
-          text="<-"
-          id="backToSnaps"
-          onClick={this.props.snapshotListing}
-        />
+        <div className="navigate-to-snaps">
+          <VunetButton
+            className="table-action-secondary"
+            data-text="<-"
+            onClick={this.props.snapshotListing}
+          />
+        </div>
+
         <div className="snap-data">
           <pre>
             {this.state.snapData}

@@ -67,13 +67,13 @@ export class ImportDevices extends Component {
           <div className="import-actions">
             <VunetButton
               className="secondary"
-              text="Cancel"
+              data-text="Cancel"
               id="import-cancel"
               onClick={() => this.props.cancelImport()}
             />
             <VunetButton
               className="primary import-submit"
-              text="Import"
+              data-text="Import"
               id="import-submit"
               disabled={this.state.importFile.length === 0 && true}
               onClick={this.importDevices}

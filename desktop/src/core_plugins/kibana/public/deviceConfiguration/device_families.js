@@ -19,34 +19,33 @@
 import { uiModules } from 'ui/modules';
 import { DocTitleProvider } from 'ui/doc_title';
 import { VunetSidebarConstants } from 'ui/chrome/directives/vunet_sidebar_constants';
-import { AddOrEditDevice } from './components/AddOrEditDevice/AddOrEditDevice';
+import { DeviceFamilies } from './components/DeviceFamiliesSection/DeviceFamilies/DeviceFamilies';
 import { MenuBar } from './components/MenuBar/MenuBar';
 
-require('./add_or_edit_device.less');
+require('./device_families.less');
 
 const app = uiModules.get('app/deviceConfiguration', []);
 
-// AddDevice react component
-app.directive('addOrEditDevice', (reactDirective) => {
-  return reactDirective(AddOrEditDevice, ['deviceId']);
+// DeviceFamilies react component
+app.directive('deviceFamilies', (reactDirective) => {
+  return reactDirective(DeviceFamilies, ['deviceId']);
 });
 
 app.directive('menuBar', (reactDirective) => {
   return reactDirective(MenuBar, ['currentSection']);
 });
 
-app.directive('addOrEditDeviceApp', function () {
+app.directive('deviceFamiliesApp', function () {
   return {
     restrict: 'E',
     controllerAs: 'deviceConfigurationApp',
-    controller: function ($route, $scope, Private) {
+    controller: function ($scope, Private) {
       function init() {
         const docTitle = Private(DocTitleProvider);
         docTitle.change(VunetSidebarConstants.DEVICE_CONFIGURATION);
         $scope.$emit('application.load');
       }
-      $scope.deviceId = $route.current.params.id;
-      $scope.currentSection = 'devices';
+      $scope.currentSection = 'deviceFamilies';
       init();
     },
   };

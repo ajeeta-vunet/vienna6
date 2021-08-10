@@ -17,31 +17,31 @@
 // Use of copyright notice does not imply publication.
 
 import React from 'react';
-import './DeleteConfirmationModal.less';
+import './ConfirmationModal.less';
 import { VunetButton } from 'ui_framework/src/vunet_components/vunet_button/vunet_button';
 
-export function DeleteConfirmationModal(props) {
+export function ConfirmationModal(props) {
   return(
-    <div className="dcm-delete-modal">
-      <div className="dcm-delete-wrapper">
+    <div className="dcm-confirmation-modal">
+      <div className="dcm-confirmation-wrapper">
 
-        <div className="dcm-delete-title">Delete device</div>
+        <div className="dcm-confirmation-title">Confirm {props.action}</div>
         <hr/>
 
-        <div className="dcm-delete-content">{props.confirmationMessage}</div>
+        <div className="dcm-confirmation-content">{props.confirmationMessage}</div>
 
-        <div className="dcm-delete-actions">
+        <div className="dcm-confirmation-actions">
           <VunetButton
-            className="secondary delete-cancel"
-            text="Cancel"
+            className="secondary"
+            data-text="Cancel"
             id="delete-cancel"
-            onClick={props.cancelDeleteOperation}
+            onClick={props.cancelAction}
           />
           <VunetButton
-            className="primary dcm-delete-submit"
-            text="Yes, Delete"
+            className="primary dcm-confirmation-submit"
+            data-text={props.confirmButtonText}
             id="delete-submit"
-            onClick={props.deleteDevice}
+            onClick={props.confirmAction}
           />
         </div>
       </div>

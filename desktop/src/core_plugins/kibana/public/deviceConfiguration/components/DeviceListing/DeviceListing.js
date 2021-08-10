@@ -29,10 +29,11 @@ import { FilterBar } from '../../../discovery/components/FilterBar/FilterBar';
 import { Summary } from '../Summary/Summary';
 import { AddOrEditDevice } from '../AddOrEditDevice/AddOrEditDevice';
 import { ImportDevices } from '../ImportDevices/ImportDevices';
-import { DeleteConfirmationModal } from '../DeleteConfirmationModal/DeleteConfirmationModal';
+import { ConfirmationModal } from '../ConfirmationModal/ConfirmationModal';
 import { CollectConfigCommitModal } from '../CollectConfigCommitModal/CollectConfigCommitModal';
 import _ from 'lodash';
 import ReactTooltip from 'react-tooltip';
+import { VunetLoader } from 'ui_framework/src/vunet_components/VunetLoader/VunetLoader';
 
 // to notify the user on success/failure of operations like add, edit, delete etc.
 const notify = new Notifier({ location: 'DCM' });
@@ -51,12 +52,14 @@ export class DeviceListing extends Component {
       deviceDetailsSummary: this.props.deviceDetailsSummary,
       filterObject: {},
       showImportDevices: false,
+      showExportDevices: false,
       importFile: '',
       deviceIdForRowActions: '',
       showDeleteConfirmationForSingleDevice: false,
       showDeleteConfirmationForSelectedDevices: false,
       showCommitInputForSelectedDevices: false,
-      deleteConfirmationMessage: ''
+      deleteConfirmationMessage: '',
+      loading: true
     };
   }
 
@@ -79,6 +82,7 @@ export class DeviceListing extends Component {
       this.setState({
         deviceListing: data.device_list,
         totalNumberOfDevices: data.no_of_nodes,
+        loading: false
       });
     });
   }
@@ -93,29 +97,20 @@ export class DeviceListing extends Component {
   // 'Add Device', 'Delete Multiple Devices' and 'Import' functionalities
   onTableAction = (action) => {
     if (action === 'addDevice') {
-      this.setState({
-        currentSection: 'addDevice',
-      });
+      this.setState({ currentSection: 'addDevice' });
     } else if (action === 'deleteDevices') {
-      if(this.state.selectedItems.length > 0) {
-        this.setState({
-          showDeleteConfirmationForSelectedDevices: true,
-          deleteConfirmationMessage: `Are you sure you'd want to delete selected devices?`
-        });
-      } else {
-        notify.info('Select one or more devices to delete!');
-      }
+      this.setState({
+        showDeleteConfirmationForSelectedDevices: true,
+        deleteConfirmationMessage: `Are you sure you'd want to delete selected devices?`
+      });
     } else if (action === 'importDevices') {
       this.setState({ showImportDevices: true });
-    }
-    else if (action === 'collectConfig') {
-      if(this.state.selectedItems.length > 0) {
-        this.setState({
-          showCommitInputForSelectedDevices: true
-        });
-      } else {
-        notify.info('Select one or more devices to start Configuration Collection!');
-      }
+    } else if (action === 'exportDevices') {
+      this.setState({ showExportDevices: true });
+    } else if (action === 'collectConfig') {
+      this.setState({
+        showCommitInputForSelectedDevices: true
+      });
     }
   };
 
@@ -143,6 +138,7 @@ export class DeviceListing extends Component {
   startConfigCollection = (commitMessage) => {
     const requestBody = {
       configuration_collector_message: commitMessage,
+      action: 'trigger_collection',
     };
     const collectConfigPromise = this.state.selectedItems.map((item) =>
       apiProvider.post('dcm/device/' + item + '/collection/snapshot/', requestBody)
@@ -181,7 +177,7 @@ export class DeviceListing extends Component {
       });
   }
 
-  // // When user clicks on delete during confirmation for selected devices
+  // When user clicks on delete during confirmation for selected devices
   deleteSelectedDevices = () => {
     const deletePromise = this.state.selectedItems.map((item) =>
       apiProvider.remove('dcm/device/' + item + '/', '')
@@ -494,6 +490,7 @@ export class DeviceListing extends Component {
             totalNumberOfDevices: response.no_of_nodes,
             currentPage: 1,
             currentSection: 'deviceListing',
+            showImportDevices: false,
             selectedItems: []
           });
         });
@@ -503,6 +500,24 @@ export class DeviceListing extends Component {
   // when user clicks on Cancel button during Import operation
   cancelImport = () => {
     this.setState({ showImportDevices: false });
+  }
+
+  exportDevices = () => {
+    const url = 'dcm/device/export';
+    apiProvider.getAll(url)
+      .then((data) => {
+        const saveAs = require('@elastic/filesaver').saveAs;
+        const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'deviceList.csv');
+      })
+      .then(
+        this.setState({ showExportDevices: false })
+      );
+  }
+
+  // when user clicks on Cancel button during Export operation
+  cancelExport = () => {
+    this.setState({ showExportDevices: false });
   }
 
   render() {
@@ -523,28 +538,40 @@ export class DeviceListing extends Component {
               />
               <VunetButton
                 className="table-action-secondary addDevice"
-                text="Add"
-                id="addDevice"
+                data-text="Add"
                 onClick={() => this.onTableAction('addDevice')}
+                disabled={this.state.selectedItems.length > 0}
+              />
+              <div data-tip={this.state.selectedItems.length === 0 ? 'Select items to delete' : ''}>
+                <ReactTooltip />
+                <VunetButton
+                  className="table-action-secondary"
+                  data-text="Delete"
+                  onClick={() => this.onTableAction('deleteDevices')}
+                  disabled={this.state.selectedItems.length === 0}
+                />
+              </div>
+              <VunetButton
+                className="table-action-secondary"
+                data-text="Import"
+                onClick={() => this.onTableAction('importDevices')}
+                disabled={this.state.selectedItems.length > 0}
               />
               <VunetButton
                 className="table-action-secondary"
-                text="Delete"
-                id="deleteDevice"
-                onClick={() => this.onTableAction('deleteDevices')}
+                data-text="Export"
+                onClick={() => this.onTableAction('exportDevices')}
+                disabled={this.state.selectedItems.length > 0}
               />
-              <VunetButton
-                className="table-action-secondary"
-                text="Import"
-                id="importDevices"
-                onClick={() => this.setState({ showImportDevices: true })}
-              />
-              <VunetButton
-                className="table-action-secondary"
-                text="Collect Config"
-                id="collectConfig"
-                onClick={() => this.onTableAction('collectConfig')}
-              />
+              <div data-tip={this.state.selectedItems.length === 0 ? 'Select items to start collection' : ''}>
+                <ReactTooltip />
+                <VunetButton
+                  className="table-action-secondary"
+                  data-text="Collect Config"
+                  onClick={() => this.onTableAction('collectConfig')}
+                  disabled={this.state.selectedItems.length === 0}
+                />
+              </div>
             </div>
 
             <div className="filters">
@@ -596,19 +623,11 @@ export class DeviceListing extends Component {
                           onClick={() => this.sortTable('device_family_name')}
                         />
                       </th>
-                      <th>
-                        {generateHeading('Collect Schedule ')}
-                        <i
-                          className="fa fa-sort-amount-desc sort-icon"
-                          onClick={() =>
-                            this.sortTable('collect_schedule_status')
-                          }
-                        />
-                      </th>
                       <th>{generateHeading('Actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {this.state.loading && <VunetLoader />}
                     {this.state.deviceListing.map((eachDevice) => (
                       <tr key={eachDevice.id}>
                         <td>
@@ -623,7 +642,6 @@ export class DeviceListing extends Component {
                         <td>{eachDevice.device_name}</td>
                         <td>{eachDevice.device_address}</td>
                         <td>{eachDevice.device_family_name}</td>
-                        <td>{eachDevice.collect_schedule_status}</td>
                         <td className="dcm-table-actions">
                           <div className="row-actions-icon" data-tip={'Delete'}>
                             <ReactTooltip />
@@ -690,24 +708,37 @@ export class DeviceListing extends Component {
         {this.state.showImportDevices && (
           <ImportDevices
             cancelImport={this.cancelImport}
-            importDevices={this.importDevices}
             displayDeviceListingPage={this.displayDeviceListingPage}
+          />
+        )}
+        {/* when user clicks on Export button */}
+        {this.state.showExportDevices && (
+          <ConfirmationModal
+            confirmationMessage="Export all the devices in a .csv file?"
+            confirmButtonText="Export"
+            action="Export"
+            cancelAction={this.cancelExport}
+            confirmAction={this.exportDevices}
           />
         )}
         {/* show confirmation message for deleting a single device*/}
         {this.state.showDeleteConfirmationForSingleDevice &&
-          <DeleteConfirmationModal
+          <ConfirmationModal
             confirmationMessage={this.state.deleteConfirmationMessage}
-            cancelDeleteOperation={this.cancelDeleteOperation}
-            deleteDevice={this.deleteSingleDevice}
+            confirmButtonText="Yes, Delete"
+            action="Delete"
+            cancelAction={this.cancelDeleteOperation}
+            confirmAction={this.deleteSingleDevice}
           />
         }
         {/* show confirmation message for deleting selected devices*/}
         {this.state.showDeleteConfirmationForSelectedDevices &&
-          <DeleteConfirmationModal
+          <ConfirmationModal
             confirmationMessage={this.state.deleteConfirmationMessage}
-            cancelDeleteOperation={this.cancelDeleteOperation}
-            deleteDevice={this.deleteSelectedDevices}
+            confirmButtonText="Yes, Delete"
+            action="Delete"
+            cancelAction={this.cancelDeleteOperation}
+            confirmAction={this.deleteSelectedDevices}
           />
         }
         {/* take commit message from user for Config Collection*/}

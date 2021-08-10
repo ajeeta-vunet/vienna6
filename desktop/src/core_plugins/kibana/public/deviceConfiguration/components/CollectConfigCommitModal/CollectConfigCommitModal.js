@@ -70,12 +70,12 @@ export class CollectConfigCommitModal extends Component {
           <div className="dcm-collect-config-actions">
             <VunetButton
               className="secondary collect-config-cancel"
-              text="Cancel"
+              data-text="Cancel"
               onClick={this.props.cancelConfigCollection}
             />
             <VunetButton
               className="primary collect-config-submit"
-              text="Collect"
+              data-text="Collect"
               onClick={() => this.props.startConfigCollection(this.state.commitMessageForConfigCollection)}
               disabled={this.state.commitMessageForConfigCollection.length === 0}
             />

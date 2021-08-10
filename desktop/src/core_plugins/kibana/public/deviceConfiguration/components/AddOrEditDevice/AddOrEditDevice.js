@@ -40,7 +40,7 @@ export class AddOrEditDevice extends Component {
         device_name: '',
         device_address: '',
         device_family_name: '',
-        collect_schedule_status: 'Disable',
+        collect_schedule_status: 'Enable',
         config_collection_settings: [
           { schedule_at: '', periodic_schedule: '', frequency: '' },
         ],

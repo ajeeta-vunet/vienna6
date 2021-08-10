@@ -288,13 +288,13 @@ export class ConfigManagement extends Component {
         <VunetButton
           id="backBtn"
           className="secondary"
-          text="Back"
+          data-text="Back"
           onClick={this.previousSection}
         />
         <VunetButton
           id="nextBtn"
           className="primary add-or-edit-continue"
-          text={this.props.action === 'viewSnapshots' ? 'Next' : 'Save'}
+          data-text={this.props.action === 'viewSnapshots' ? 'Next' : 'Save'}
           onClick={this.nextSection}
         />
       </div>

@@ -25,7 +25,7 @@ export function VunetButton(props) {
     <button
       {...props}
     >
-      {props.text}
+      {props['data-text']}
     </button>
   );
 }

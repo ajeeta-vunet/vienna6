@@ -1,0 +1,36 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.add-or-edit-device-families-wrapper {
+  padding         : 2rem;
+  padding         : 2rem;
+  margin-top      : 2rem;
+  background-color: @white;
+  border-radius   : 0.5rem;
+
+  h4 {
+    font-weight: 600;
+    margin     : 0rem;
+  }
+
+  .add-or-edit-sub-sections {
+    display        : flex;
+    justify-content: flex-start;
+
+    .tab {
+      border : none;
+      padding: 0.5rem;
+      cursor : pointer;
+      margin : 1.5rem 1rem;
+      width  : max-content;
+    }
+
+    .selected {
+      border-bottom: 0.4rem solid @accent_color;
+      font-weight  : bold;
+    }
+
+    .device-family-details {
+      margin-left: 0rem;
+    }
+  }
+}

@@ -109,7 +109,7 @@ export class DeviceDetails extends Component {
   // since all the fields in 'Device Details' are mandatory, Save/Continue button
   // will be disabled even if atleast one input field is left empty
   disableSaveButton = () => {
-    if (this.state.deviceObj.device_name.length < 1 ||
+    if (this.state.deviceObj.device_name.trim().length < 1 ||
         this.state.deviceObj.device_address.length < 1 ||
         this.state.deviceObj.device_family_name.length < 1 ||
         this.state.deviceObj.credentials.length < 1 ||
@@ -221,14 +221,14 @@ export class DeviceDetails extends Component {
         <VunetButton
           id="backBtn"
           className="secondary"
-          text="Cancel"
+          data-text="Cancel"
           onClick={this.previousSection}
         />
         <VunetButton
           disabled={this.disableSaveButton()}
           id="nextBtn"
           className="primary add-or-edit-continue"
-          text={this.props.action === 'addDevice' ? 'Save' : 'Next'}
+          data-text={this.props.action === 'addDevice' ? 'Save' : 'Next'}
           onClick={this.nextSection}
         />
       </div>

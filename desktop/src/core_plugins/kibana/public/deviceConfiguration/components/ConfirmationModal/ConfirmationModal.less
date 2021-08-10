@@ -1,6 +1,6 @@
 @import "~ui/styles/vunet_variable_theme.less";
 
-.dcm-delete-modal {
+.dcm-confirmation-modal {
   position        : fixed;
   z-index         : 1000;
   top             : 0;
@@ -13,13 +13,13 @@
   justify-content : center;
   background-color: rgba(0, 0, 0, 0.5);
 
-  .dcm-delete-wrapper {
+  .dcm-confirmation-wrapper {
     background-color: @white;
     padding         : 2rem;
     border-radius   : 1rem;
     width           : 50rem;
 
-    .dcm-delete-title {
+    .dcm-confirmation-title {
       margin-bottom: 2rem;
     }
 
@@ -27,16 +27,16 @@
       margin: 0;
     }
 
-    .dcm-delete-content {
+    .dcm-confirmation-content {
       margin: 4rem 0;
     }
 
-    .dcm-delete-actions {
+    .dcm-confirmation-actions {
       display        : flex;
       justify-content: flex-end;
       margin-top     : 1rem;
 
-      .dcm-delete-submit {
+      .dcm-confirmation-submit {
         margin-left: 1rem;
       }
     }

@@ -25,6 +25,8 @@ import deviceConfigurationTemplate from './device_configuration.html';
 import './device_configuration';
 import addOrEditDeviceTemplate from './add_or_edit_device.html';
 import './add_or_edit_device';
+import deviceFamiliesTemplate from './device_families.html';
+import './device_families';
 
 uiRoutes
   .defaults(/deviceConfiguration/, {
@@ -36,7 +38,7 @@ uiRoutes
     resolve: {
       deviceDetailsSummary: function () {
         const postBody = {
-          fields: ['device_family_name', 'collect_schedule_status', 'device_name', 'device_address' ]
+          fields: ['device_name', 'device_address', 'device_family_name']
         };
         return apiProvider.post('/dcm/device/unique/', postBody);
       }
@@ -45,10 +47,10 @@ uiRoutes
   // for 'Edit Device' route i.e. '/deviceConfiguration/devices/device/:id'
   .when(DeviceConfigConstants.ADD_EDIT_DEVICE, {
     template: addOrEditDeviceTemplate
+  })
+  .when(DeviceConfigConstants.DEVICE_FAMILIES, {
+    template: deviceFamiliesTemplate
   });
-// .when(DeviceConfigConstants.DEVICE_FAMILIES, {
-//   template: deviceFamiliesTemplate
-// });
 
 FeatureCatalogueRegistryProvider.register(() => {
   return {

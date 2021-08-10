@@ -1,0 +1,37 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.device-families-config-management {
+
+  .config-management-form {
+    padding-bottom: 2rem;
+
+    label {
+      font-weight: normal;
+      width      : 20rem;
+    }
+
+    .config-collect-title {
+      margin     : 1rem 0 2rem 0;
+      font-weight: bold;
+    }
+
+    .startup-config-wrapper,
+    .running-config-wrapper {
+      display      : flex;
+      align-items  : center;
+      margin-bottom: 2rem;
+
+      .startup-config,
+      .running-config {
+        width        : 30rem;
+        border       : 1px solid @grey_smoke;
+        border-radius: @box-border-radius;
+        padding      : @input-padding;
+      }
+    }
+  }
+
+  .add-or-edit-continue {
+    margin-left: 1rem;
+  }
+}

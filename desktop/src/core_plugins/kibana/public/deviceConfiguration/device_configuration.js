@@ -22,6 +22,8 @@ import { VunetSidebarConstants } from 'ui_framework/src/vunet_components/vunet_s
 import { DeviceListing } from './components/DeviceListing/DeviceListing';
 import { MenuBar } from './components/MenuBar/MenuBar';
 
+require('./device_configuration.less');
+
 const app = uiModules.get('app/deviceConfiguration', []);
 
 // DeviceListing react component

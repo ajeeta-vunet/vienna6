@@ -28,8 +28,9 @@ export class CompareSnaps extends Component {
 
   // get the diff between selected snapshots
   componentDidMount() {
-    const url = `dcm/device/${this.props.deviceId}/collection/snapshot/` +
-    `${this.props.snapshots[0].id}/?datatype=diff&id=${this.props.snapshots[1].id}`;
+    const url =
+      `dcm/device/${this.props.deviceId}/collection/snapshot/` +
+      `${this.props.snapshots[0].id}/?datatype=diff&id=${this.props.snapshots[1].id}`;
     apiProvider.getAll(url).then((response) => {
       this.setState({ snapData: response });
     });
@@ -38,12 +39,13 @@ export class CompareSnaps extends Component {
   render() {
     return (
       <div className="compare-snapshots">
-        <VunetButton
-          className="table-action-secondary"
-          text="<-"
-          id="backToSnaps"
-          onClick={this.props.snapshotListing}
-        />
+        <div className="navigate-to-snaps">
+          <VunetButton
+            className="table-action-secondary"
+            data-text="<-"
+            onClick={this.props.snapshotListing}
+          />
+        </div>
         <div className="snap-data">
           <pre>{this.state.snapData}</pre>
         </div>

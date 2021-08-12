@@ -1,0 +1,30 @@
+<kbn-management-app section="kibana">
+  <manage-visualizations-app class="app-container">
+    <!-- Warning -->
+    <div
+      class="
+        kuiInfoPanel kuiInfoPanel--warning
+        kuiVerticalRhythm
+        manage-visualizations-warning
+      "
+    >
+      <div class="kuiInfoPanelBody">
+        <div class="kuiInfoPanelBody__message">
+          List of visualizations and the usage of visualizations across
+          different objects ( Dashboards,Reports, Alerts & Visualizations ) is
+          given below .
+        </div>
+      </div>
+    </div>
+    <div className="app-container">
+      <manage-visualizations-page
+        style="height: 100%"
+        dashboards-list="dashboardsList"
+        visualizations-list="visualizationsList"
+        alert-rules-list="alertRulesList"
+        reports-list="reportsList"
+        delete-vizs="deleteVizs"
+      />
+    </div>
+  </manage-visualizations-app> </kbn-management-app
+>;

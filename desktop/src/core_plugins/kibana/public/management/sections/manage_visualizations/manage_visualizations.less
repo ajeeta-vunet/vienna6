@@ -1,0 +1,67 @@
+@import '~ui/styles/vunet_variable_theme.less';
+
+.app-container {
+	.manage-visualizations-warning {
+		margin: 3rem;
+	}
+
+	.visualizations-details {
+		padding: 3rem;
+
+		.delete-vizs-popup {
+			ul {
+				padding         : 5rem 0rem 0rem 1rem;
+				background-color: rgb(235, 235, 228);
+				height          : 15rem;
+				overflow-y      : auto;
+				border-radius   : 10px;
+				border          : 1px solid rgb(183, 218, 227);
+				width           : 97%;
+				font-size       : 1.6rem;
+			}
+		}
+
+		.wrap-table-cell-contents {
+			.kuiControlledTable {
+				.kuiTable {
+					tbody {
+						.kuiTableRow {
+							.kuiTableRowCell:nth-child(2) {
+								width: 22rem !important;
+
+								.kuiTableRowCell__liner {
+									overflow     : hidden;
+									word-spacing : 99999px;
+									text-overflow: ellipsis;
+									word-break   : unset;
+								}
+							}
+
+							.kuiTableRowCell:nth-child(3),
+							.kuiTableRowCell:nth-child(4),
+							.kuiTableRowCell:nth-child(6),
+							.kuiTableRowCell:nth-child(8),
+							.kuiTableRowCell:nth-child(10) {
+								width: 13rem !important;
+							}
+
+							.kuiTableRowCell:nth-child(5),
+							.kuiTableRowCell:nth-child(7),
+							.kuiTableRowCell:nth-child(9),
+							.kuiTableRowCell:nth-child(11) {
+								width: 22rem !important;
+
+								.kuiTableRowCell__liner {
+									overflow     : hidden;
+									text-overflow: ellipsis;
+									word-break   : unset;
+									word-spacing : 99999px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

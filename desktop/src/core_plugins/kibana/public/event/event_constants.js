@@ -15,4 +15,6 @@ export const EventConstants = {
   FETCH_USER_COMMENTS: 'events_of_interest/reaction/comments/',
   EDIT_USER_REACTION: 'events_of_interest/reaction/',
   ADD_USER_REACTION: 'events_of_interest/reaction/',
+  FETCH_EVENT_DETAILS: '/events_of_interest/individual_event/',
+  UPDATE_EVENT_DETAILS: '/events_of_interest/individual_event/',
 };

@@ -39,7 +39,7 @@ export class EventList extends React.Component {
       events: this.props.events,
 
       //eventsPerPage - count of how many events to show per page
-      eventsPerPage: 10,
+      eventsPerPage: 12,
 
       //currentPage - used to store the active page number
       currentPage: 1,
@@ -329,10 +329,10 @@ export class EventList extends React.Component {
                   }}
                   value={this.state.eventsPerPage}
                 >
-                  <option value="5"> 5 </option>
-                  <option value="10"> 10 </option>
-                  <option value="20"> 20 </option>
-                  <option value="50"> 50 </option>
+                  <option value="6"> 6 </option>
+                  <option value="12"> 12 </option>
+                  <option value="24"> 24 </option>
+                  <option value="50"> 48 </option>
                   {/* <option value={totalItemsCount}> All </option> */}
                 </select>
               </div>

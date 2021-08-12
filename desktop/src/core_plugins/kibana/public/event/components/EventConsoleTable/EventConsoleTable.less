@@ -66,7 +66,7 @@
                 word-break      : break-word;
                 min-width       : 18rem;
                 text-align      : left;
-                padding         : 1.4rem 1.6rem;
+                padding         : 1rem 1.5rem;
                 z-index         : 0;
                 position        : sticky;
                 top             : 0;
@@ -81,7 +81,10 @@
             }
 
             .summary {
-                min-width: 40rem;
+                max-width    : 40rem;
+                text-overflow: ellipsis;
+                overflow     : hidden;
+                white-space  : nowrap;
             }
 
             .last_modified_time,

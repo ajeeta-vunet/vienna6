@@ -112,7 +112,10 @@
         }
 
         .content-body {
-            height    : 75rem;
+            //this height is calculated based on height of application topbar, event details sidebar header,
+            //event details tabs bar and padding at the bottom of event details sidebar.
+            //So 100vh - 5vh - 6vh - 6vh -8vh = 75vh.
+            height    : 75vh;
             overflow-y: auto;
         }
     }

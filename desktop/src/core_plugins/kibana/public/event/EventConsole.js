@@ -129,20 +129,22 @@ export class EventConsole extends React.Component {
     };
     apiProvider
       .post(`${EventConstants.SAVE_FILTERS}${userData[0]}/`, postBody)
-      .then(() => {
-        apiProvider
-          .getAll(`${EventConstants.FETCH_APPLIED_FILTERS}${userData[0]}/`)
-          .then(() => {
-            this.setState(
-              {
-                selectedFilterFields: filterFields,
-                filterStore: filterStore,
-              },
-              () => {
-                this.applyFilters();
-              }
-            );
-          });
+      .then((response) => {
+        //if the save_filters API fails then we display an appropriate message and
+        //else we go ahead and perform the filter operation.
+        if(response.status !== 200) {
+          notify.error('Failed to apply filter.');
+        }else {
+          this.setState(
+            {
+              selectedFilterFields: filterFields,
+              filterStore: filterStore,
+            },
+            () => {
+              this.applyFilters();
+            }
+          );
+        }
       });
   };
 
@@ -196,20 +198,22 @@ export class EventConsole extends React.Component {
     };
     apiProvider
       .post(`${EventConstants.SAVE_FILTERS}${userData[0]}/`, postBody)
-      .then(() => {
-        apiProvider
-          .getAll(`${EventConstants.FETCH_APPLIED_FILTERS}${userData[0]}/`)
-          .then((data) => {
-            this.setState(
-              {
-                filterStore: filterStore,
-                selectedFilterFields: Object.keys(data.filter),
-              },
-              () => {
-                this.applyFilters();
-              }
-            );
-          });
+      .then((response) => {
+        //if the save_filters API fails then we display an appropriate message and
+        //else we go ahead and perform the filter operation.
+        if(response.status && response.status !== 200) {
+          notify.error('Failed to apply filter.');
+        }else {
+          this.setState(
+            {
+              filterStore: filterStore,
+              selectedFilterFields: Object.keys(filterStore),
+            },
+            () => {
+              this.applyFilters();
+            }
+          );
+        }
       });
   }
 

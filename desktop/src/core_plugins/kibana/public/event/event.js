@@ -145,7 +145,6 @@ app.directive('eventApp', function () {
         field: [
           'alarm_state',
           'severity',
-          'created_by',
           'category',
           'status',
           'assignee',

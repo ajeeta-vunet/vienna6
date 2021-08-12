@@ -25,6 +25,8 @@ import { EventDetailsSideBar } from '../EventDetailsSideBar/EventDetailsSideBar'
 import chrome from 'ui/chrome';
 import { produce } from 'immer';
 import { displayTwoTimeUnits } from 'ui/utils/vunet_get_time_values.js';
+import { apiProvider } from 'ui_framework/src/vunet_components/vunet_service_layer/api/utilities/provider';
+import { EventConstants } from '../../event_constants';
 import { Notifier } from 'ui/notify';
 
 const notify = new Notifier({ location: 'Event Console' });
@@ -145,21 +147,26 @@ export class EventConsoleTable extends React.Component {
   }
 
   //this function is used to fetch the details of an individual event.
-  fetchEventDetails = async (id) => {
-    let urlBase = chrome.getUrlBase();
-    urlBase = urlBase + `/events_of_interest/individual_event/${id}`;
-    await fetch(urlBase)
-      .then((response) => response.json())
+  fetchEventDetails = async (event) => {
+    apiProvider.getAll(EventConstants.FETCH_EVENT_DETAILS + event.id)
+      .then((response) => {
+        if (response.status && response.status !== 200) {
+          throw Error(response.statusText);
+        }
+        return response;
+      })
       .then((data) => {
-        this.setState({ details: data });
+        this.setState({ details: data, displayEventDetailsSideBar: true, clickedEvent: event });
+      })
+      .catch((error) =>  {
+        notify.error('Event details not found');
       });
   };
 
   //this method is called to fetch details pertaining to a particular event and store it in
   //state variable.
   handleDisplayEventDetails = async (event) => {
-    await this.fetchEventDetails(event.id);
-    this.setState({ displayEventDetailsSideBar: true, clickedEvent: event });
+    await this.fetchEventDetails(event);
   };
 
   //this method is called to close the event details sidebar.
@@ -169,8 +176,6 @@ export class EventConsoleTable extends React.Component {
 
   //This function is used to update the assignee, status, and add a new note to an event.
   updateEventDetails = (eventId, assignee, status, noteText) => {
-    let urlBase = chrome.getUrlBase();
-    urlBase = urlBase + '/events_of_interest/individual_event/' + eventId + '/';
     const currentUser = chrome.getCurrentUser();
     const username = currentUser[0];
     const d = new Date();
@@ -190,37 +195,32 @@ export class EventConsoleTable extends React.Component {
       toSend.notes = notes;
     }
 
-    fetch(urlBase, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(toSend),
-    }).then(() => {
-      const updatedEvent = produce(this.state.clickedEvent, (draft) => {
-        draft.fields.assignee = assignee;
-        draft.fields.status = status;
-      });
+    apiProvider.put(EventConstants.UPDATE_EVENT_DETAILS + eventId + '/', toSend)
+      .then(() => {
+        const updatedEvent = produce(this.state.clickedEvent, (draft) => {
+          draft.fields.assignee = assignee;
+          draft.fields.status = status;
+        });
 
-      const updatedDetails = produce(this.state.details, (draft) => {
-        if (noteText !== '') {
-          draft.alert_details.fields.notes.push(toSend.notes[0]);
-          draft.alert_details.fields.assignee = assignee;
-          draft.alert_details.fields.status = status;
-        }else {
-          draft.alert_details.fields.assignee = assignee;
-          draft.alert_details.fields.status = status;
-        }
-      });
+        const updatedDetails = produce(this.state.details, (draft) => {
+          if (noteText !== '') {
+            draft.alert_details.fields.notes.push(toSend.notes[0]);
+            draft.alert_details.fields.assignee = assignee;
+            draft.alert_details.fields.status = status;
+          }else {
+            draft.alert_details.fields.assignee = assignee;
+            draft.alert_details.fields.status = status;
+          }
+        });
 
-      this.setState({
-        clickedEvent: updatedEvent,
-        details: updatedDetails
-      }, () => {
-        this.props.updateListOfEvents(eventId, assignee, status);
-        notify.info('Event has been updated successfully');
+        this.setState({
+          clickedEvent: updatedEvent,
+          details: updatedDetails
+        }, () => {
+          this.props.updateListOfEvents(eventId, assignee, status);
+          notify.info('Event has been updated successfully');
+        });
       });
-    });
   };
 
   //this method is called to modify the likes and dislike count displayed in Event List view after

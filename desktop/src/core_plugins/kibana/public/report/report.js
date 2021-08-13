@@ -175,7 +175,7 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
   // in report scheduling
   $scope.cronObj = {};
   $scope.enable_scheduling = false;
-  $scope.disalbeReportFormat = false;
+  $scope.disableReportFormat = false;
   $scope.recipientsList = [];
 
   // Is scheduling enabled... Used by time restore during report save
@@ -900,14 +900,13 @@ function reportAppEditor($scope, $route, Notifier, $routeParams, $location, Priv
 
   // Show report formats based on the vis type added to the section.
   function showReportFormat() {
-    $scope.disalbeReportFormat = false;
+    $scope.disableReportFormat = false;
     $scope.sections.forEach(function (sec) {
       sec.visuals.forEach(function (vis) {
         // if more than 1 section is addded or more than 1 viz is added or
         // the viz is not data table or search then show only pdf format.
         if ($scope.sections.length > 1 || sec.visuals.length > 1 || (vis.visType !== 'table' && vis.visType !== 'search')) {
-          //$scope.reportFormats = ['pdf'];
-          $scope.disalbeReportFormat = true;
+          $scope.disableReportFormat = true;
           $scope.opts.reportFormat = 'pdf';
           return;
         }
